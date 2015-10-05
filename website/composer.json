@@ -1,0 +1,8 @@
+{
+    "config": {
+        "vendor-dir": "Vendor"
+    },
+    "require": {
+         "sasco/libredte": "dev-master"
+    }
+}

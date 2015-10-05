@@ -1,0 +1,17 @@
+[
+    {
+        "Encabezado": {
+            "IdDoc": {
+                "TipoDTE": 33,
+                "Folio": 1
+            }
+        },
+        "Detalle": [
+            {
+                "NmbItem": "Producto A",
+                "QtyItem": 1,
+                "PrcItem": 10000
+            }
+        ]
+    }
+]

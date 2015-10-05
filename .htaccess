@@ -1,0 +1,21 @@
+#
+# SowerPHP: Minimalist Framework for PHP
+# Copyright (C) SowerPHP (http://sowerphp.org)
+#
+# Archivo de configuración para Apache
+#
+
+# mod_rewrite es necesario (es obligatorio reescribir las URLs)
+RewriteEngine On
+
+# Si se utiliza mod_userdir para este sitio indicar la url para accederlo
+#RewriteBase /~usuario/ruta/al/proyecto/
+
+# Reglas para redireccionar las solicitudes al archivo index.php que despacha
+# la página
+RewriteRule (.*) website/webroot/$1 [L]
+RewriteRule ^$ website/webroot/ [L]
+
+# Evitar que se acceda a los directorios directamente (si no hay index.*)
+#Options -Indexes
+
