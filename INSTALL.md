@@ -54,20 +54,20 @@ Instalación aplicación web
 4.	Editar configuración de la aplicación en el archivo
 	*website/Config/core.php*, obligatoriamente se deberá configurar:
 
-		- Configuración para la base de datos
-		- Configuración para el correo electrónico
-		- Contraseña que se usará para encriptar datos sensibles en la BD
+	- Configuración para la base de datos
+	- Configuración para el correo electrónico
+	- Contraseña que se usará para encriptar datos sensibles en la BD
 
 	Si se ofrecerán las utilidades y/o los servicios web se deberá
 	configurar:
 
-		- Configuración para firma electrónica
-		- Configuración para autenticación en API a usuarios no logueados
+	- Configuración para firma electrónica
+	- Configuración para autenticación en API a usuarios no logueados
 
 	Adicionalmente se recomienda configurar, por razones de seguridad:
 
-		- Configuración para autorización secundaria
-		- Configuración para reCAPTCHA
+	- Configuración para autorización secundaria
+	- Configuración para reCAPTCHA
 
 5.	Crear base de datos (debe coincidir con configuración en core.php):
 
