@@ -5,6 +5,7 @@
         "This file is @generated automatically"
     ],
     "hash": "6fd1b653c40728328564fc66f3c34b22",
+    "content-hash": "e1cb174db016fa83b641ac49c5348c3d",
     "packages": [
         {
             "name": "phpseclib/phpseclib",
@@ -100,19 +101,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "8025f0b6701549c1f76a4c46581037539cbf6701"
+                "reference": "5d88a1e99aef081b8c4574d3f4f342deb12732af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/8025f0b6701549c1f76a4c46581037539cbf6701",
-                "reference": "8025f0b6701549c1f76a4c46581037539cbf6701",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/5d88a1e99aef081b8c4574d3f4f342deb12732af",
+                "reference": "5d88a1e99aef081b8c4574d3f4f342deb12732af",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-openssl": "*",
                 "ext-soap": "*",
-                "php": "~5.5",
+                "php": ">=5.5",
                 "phpseclib/phpseclib": "2.0.0",
                 "tecnick.com/tcpdf": "6.0.096"
             },
@@ -139,7 +140,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2015-10-04 18:26:49"
+            "time": "2015-11-03 14:58:30"
         },
         {
             "name": "tecnick.com/tcpdf",
