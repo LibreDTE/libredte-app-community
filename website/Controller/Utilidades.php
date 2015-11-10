@@ -48,6 +48,11 @@ class Controller_Utilidades extends \Controller_App
             'desc' => 'Generar XML Libro de Compras o Ventas a partir de un archivo CSV con los datos',
             'icon' => 'fa fa-book',
         ],
+        '/firmar_xml' => [
+            'name' => 'Firmar XML',
+            'desc' => 'Generar la firma de un XML e incluira en el mismo archivo',
+            'icon' => 'fa fa-certificate',
+        ],
     ]; ///< Menú web del controlador
 
     /**
@@ -370,6 +375,41 @@ class Controller_Utilidades extends \Controller_App
         file_put_contents($file, $xml);
         \sasco\LibreDTE\File::compress($file, ['format'=>'zip', 'delete'=>true]);
         exit;
+    }
+
+    /**
+     * Acción para firmar un XML
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2015-11-09
+     */
+    public function firmar_xml()
+    {
+        if (isset($_POST['submit'])) {
+            $xml = file_get_contents($_FILES['xml']['tmp_name']);
+            // obtener nombre del tag y del ID
+            $XML = new \sasco\LibreDTE\XML();
+            $XML->loadXML($xml);
+            foreach($XML->documentElement->childNodes as $child) {
+                if ($child instanceof \DOMElement) {
+                    $tag = $child->tagName;
+                    $id = $child->getAttribute('ID');
+                    break;
+                }
+            }
+            // firmar
+            $Firma = new \sasco\LibreDTE\FirmaElectronica([
+                'file' => $_FILES['firma']['tmp_name'],
+                'pass'=>$_POST['contrasenia']
+            ]);
+            $xmlSigned = $Firma->signXML($xml, $id, $tag);
+            // entregar datos
+            ob_end_clean();
+            header('Content-Type: application/xml; charset='.$XML->encoding);
+            header('Content-Length: '.strlen($xmlSigned));
+            header('Content-Disposition: attachement; filename="'.$id.'_firmado.xml"');
+            print $xmlSigned;
+            exit;
+        }
     }
 
 }
