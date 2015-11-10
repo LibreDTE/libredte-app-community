@@ -62,7 +62,7 @@ class Controller_Utilidades extends \Controller_App
      */
     public function beforeFilter()
     {
-        $this->Auth->allow('index', 'generar_xml', 'generar_pdf', 'generar_libro');
+        $this->Auth->allow('index', 'generar_xml', 'generar_pdf', 'generar_libro', 'firmar_xml');
         parent::beforeFilter();
     }
 
