@@ -20,9 +20,9 @@
 </div>
 
 <div class="jumbotron">
-  <h1>¡Módulo DTE habilitado!</h1>
-  <p>Se ha habilitado la interfaz web para facturación electrónica usando LibreDTE. Durante el mes de octubre de 2015 el módulo estará en etapa de pruebas. ¿Tienes dudas o comentarios? ¿encontraste un problema? <a href="<?=$_base?>/contacto">¡escríbenos!</a></p>
-  <p><a class="btn btn-primary btn-lg" href="<?=$_base?>/usuarios/registrar" role="button">¡Regístrate gratis aquí y empieza a facturar!</a></p>
+  <h1>¡Únete a la comunidad!</h1>
+  <p>¿Tienes dudas, sugerencias o comentarios? No dudes en escribirnos a través de nuestras redes sociales.</p>
+  <p><a class="btn btn-primary btn-lg" href="https://groups.google.com/forum/#!forum/libredte" role="button">Soporte a través del grupo de LibreDTE</a></p>
 </div>
 
 <div class="row">
