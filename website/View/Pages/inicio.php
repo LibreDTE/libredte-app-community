@@ -136,3 +136,21 @@
         </div>
     </div>
 </div>
+
+<div class="panel panel-default"  style="margin-top:3em">
+    <div class="panel-heading"><h3 class="panel-title">Firmas oficialmente soportadas</h3></div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-6 center">
+                <a href="https://www.acepta.com" title="Ir al sitio de Acepta">
+                    <img src="<?=$_base?>/img/ca/acepta.png" alt="Acepta" class="img-responsibe" />
+                </a>
+            </div>
+            <div class="col-xs-6 center">
+                <a href="https://www.e-sign.cl" title="Ir al sitio de E-Sign">
+                    <img src="<?=$_base?>/img/ca/e-sign.jpg" alt="E-Sign" class="img-responsibe" />
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
