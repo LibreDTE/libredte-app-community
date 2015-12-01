@@ -22,7 +22,7 @@
 <div class="jumbotron">
   <h1>¡Únete a la comunidad!</h1>
   <p>¿Tienes dudas, sugerencias o comentarios? No dudes en escribirnos a través de nuestras redes sociales.</p>
-  <p><a class="btn btn-primary btn-lg" href="https://groups.google.com/forum/#!forum/libredte" role="button">Soporte a través del grupo de LibreDTE</a></p>
+  <p><a class="btn btn-primary btn-lg" href="https://groups.google.com/forum/#!forum/libredte" role="button">Soporte en grupo de LibreDTE</a></p>
 </div>
 
 <div class="row">
@@ -103,32 +103,32 @@
     </div>
     <div class="col-xs-12 col-md-5 center">
         <div class="row">
-            <div class="col-xs-4 center">
+            <div class="col-xs-6 col-md-4 center">
                 <a href="https://twitter.com/LibreDTE" title="Síguenos en Twitter">
                     <span class="fa fa-twitter-square" style="font-size:128px"></span>
                 </a>
             </div>
-            <div class="col-xs-4 center">
+            <div class="col-xs-6 col-md-4 center">
                 <a href="https://www.facebook.com/LibreDTE" title="Síguenos en Facebook">
                     <span class="fa fa-facebook-square" style="font-size:128px"></span>
                 </a>
             </div>
-            <div class="col-xs-4 center">
+            <div class="col-xs-6 col-md-4 center">
                 <a href="https://plus.google.com/u/0/101078963971350176990/about" title="Síguenos en Google+">
                     <span class="fa fa-google-plus-square" style="font-size:128px"></span>
                 </a>
             </div>
-            <div class="col-xs-4 center">
+            <div class="col-xs-6 col-md-4 center">
                 <a href="https://www.linkedin.com/grp/home?gid=8403251" title="Síguenos en Linkedin">
                     <span class="fa fa-linkedin-square" style="font-size:128px"></span>
                 </a>
             </div>
-            <div class="col-xs-4 center">
+            <div class="col-xs-6 col-md-4 center">
                 <a href="https://www.youtube.com/channel/UCnh5duQUXmo4l8AD28PakiQ" title="Síguenos en Youtube">
                     <span class="fa fa-youtube-square" style="font-size:128px"></span>
                 </a>
             </div>
-            <div class="col-xs-4 center">
+            <div class="col-xs-6 col-md-4 center">
                 <a href="https://github.com/LibreDTE" title="Código fuente en GitHub">
                     <span class="fa fa-github-square" style="font-size:128px"></span>
                 </a>
@@ -141,12 +141,12 @@
     <div class="panel-heading"><h3 class="panel-title">Firmas oficialmente soportadas</h3></div>
     <div class="panel-body">
         <div class="row">
-            <div class="col-xs-6 center">
+            <div class="col-md-6 center">
                 <a href="https://www.acepta.com" title="Ir al sitio de Acepta">
                     <img src="<?=$_base?>/img/ca/acepta.png" alt="Acepta" class="img-responsibe" />
                 </a>
             </div>
-            <div class="col-xs-6 center">
+            <div class="col-md-6 center">
                 <a href="https://www.e-sign.cl" title="Ir al sitio de E-Sign">
                     <img src="<?=$_base?>/img/ca/e-sign.jpg" alt="E-Sign" class="img-responsibe" />
                 </a>
