@@ -47,6 +47,7 @@ echo $f->input([
     'label' => 'Set pruebas ventas',
     'check' => 'notempty',
     'help' => 'Archivo del set de pruebas con los casos (de un mismo SET) que se desean generar, debe estar codificado en ISO-8859-1. Puedes ver un ejemplo del archivo que se espera <a href="https://github.com/sascocl/LibreDTE/blob/master/examples/set_pruebas/001-basico.txt" target="_blank">para el set básico</a> o <a href="https://github.com/sascocl/LibreDTE/blob/master/examples/set_pruebas/004-factura_exenta.txt" target="_blank">para el set de factura exenta</a>',
+    'attr' => 'accept=".txt"',
 ]);
 echo $f->input([
     'type' => 'js',
@@ -73,6 +74,7 @@ echo $f->input([
     'label' => 'XML EnvioDTE',
     'check' => 'notempty',
     'help' => 'Archivo XML del EnvioDTE generado a partir del caso de prueba que se desea crear su libro de ventas',
+    'attr' => 'accept=".xml"',
 ]);
 echo $f->input([
     'name' => 'PeriodoTributario',

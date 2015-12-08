@@ -67,6 +67,7 @@ echo $f->input([
     'label' => 'Archivo detalle',
     'help' => 'Archivo CSV (separado por punto y coma) con el detalle del Libro de Compras o Ventas que se desea generar en XML: <a href="'.$_base.'/ejemplos/libro_ventas.csv">ejemplo archivo CSV ventas</a> o <a href="'.$_base.'/ejemplos/libro_compras.csv">ejemplo archivo CSV compras</a>',
     'check' => 'notempty',
+    'attr' => 'accept=".csv"',
 ]);
 echo $f->input([
     'type' => 'file',
@@ -74,6 +75,7 @@ echo $f->input([
     'label' => 'Firma electrónica',
     'help' => 'Certificado digital con extensión .p12',
     'check' => 'notempty',
+    'attr' => 'accept=".p12,.pfx"',
 ]);
 echo $f->input([
     'type' => 'password',

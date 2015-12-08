@@ -159,7 +159,7 @@ echo $f->input([
     'name' => 'folios',
     'label' => 'Folios',
     'titles' => ['Archivo CAF'],
-    'inputs' => [['type'=>'file', 'name'=>'folios']],
+    'inputs' => [['type'=>'file', 'name'=>'folios', 'attr' => 'accept=".xml"']],
     'help' => 'Todos los archivos de folios CAF de los documentos a generar',
     'check' => 'notempty',
 ]);
@@ -170,6 +170,7 @@ echo $f->input([
     'label' => 'Firma electrónica',
     'help' => 'Certificado digital con extensión .p12',
     'check' => 'notempty',
+    'attr' => 'accept=".p12,.pfx"',
 ]);
 echo $f->input([
     'type' => 'password',

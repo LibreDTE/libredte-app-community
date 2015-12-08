@@ -27,6 +27,7 @@ echo $f->input([
     'label' => 'XML EnvioDTE',
     'help' => 'Archivo XML de EnvioDTE envíados por el SII para intercambio',
     'check' => 'notempty',
+    'attr' => 'accept=".xml"',
 ]);
 echo $f->input([
     'name' => 'emisor',
@@ -49,6 +50,7 @@ echo $f->input([
     'label' => 'Firma electrónica',
     'help' => 'Certificado digital con extensión .p12',
     'check' => 'notempty',
+    'attr' => 'accept=".p12,.pfx"',
 ]);
 echo $f->input([
     'type' => 'password',

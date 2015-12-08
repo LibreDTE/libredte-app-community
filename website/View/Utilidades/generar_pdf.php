@@ -8,12 +8,14 @@ echo $f->input([
     'label' => 'XML EnvioDTE',
     'help' => 'Archivo XML de EnvioDTE',
     'check' => 'notempty',
+    'attr' => 'accept=".xml"',
 ]);
 echo $f->input([
     'type' => 'file',
     'name' => 'logo',
     'label' => 'Logo PNG',
     'help' => 'Logo del emisor en formato PNG',
+    'attr' => 'accept=".png"',
 ]);
 echo $f->input([
     'type' => 'checkbox',

@@ -8,6 +8,7 @@ echo $f->input([
     'label' => 'Archivo XML',
     'check' => 'notempty',
     'help' => 'Archivo XML que se desea firmar',
+    'attr' => 'accept=".xml"',
 ]);
 echo $f->input([
     'type' => 'file',
@@ -15,6 +16,7 @@ echo $f->input([
     'label' => 'Firma electrónica',
     'help' => 'Certificado digital con extensión .p12',
     'check' => 'notempty',
+    'attr' => 'accept=".p12,.pfx"',
 ]);
 echo $f->input([
     'type' => 'password',
