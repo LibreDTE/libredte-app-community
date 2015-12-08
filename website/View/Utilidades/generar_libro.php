@@ -4,6 +4,14 @@ $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin(['onsubmit'=>'Form.check()']);
 echo $f->input([
     'type' => 'select',
+    'name' => 'simplificado',
+    'label' => '¿Libro normal o simplificado?',
+    'options' => ['Normal', 'Simplificado'],
+    'check' => 'notempty',
+    'help' => 'Si el libro es simplificado no se firmará'
+]);
+echo $f->input([
+    'type' => 'select',
     'name' => 'TipoOperacion',
     'label' => 'Tipo operación',
     'options' => ['COMPRA'=>'COMPRA', 'VENTA'=>'VENTA'],
@@ -20,7 +28,7 @@ echo $f->input([
     'name' => 'PeriodoTributario',
     'label' => 'Período tributario',
     'placeholder' => '2000-01',
-    'help' => 'En certificación debe ser un mes del año 2000 (compras) o 1980 (ventas)',
+    'help' => 'En certificación o simplificado debe ser un mes del año 2000 (compras) o 1980 (ventas)',
     'check' => 'notempty',
 ]);
 echo $f->input([
@@ -28,14 +36,14 @@ echo $f->input([
     'name' => 'FchResol',
     'label' => 'Fecha resolución',
     'placeholder' => '2006-01-20',
-    'help' => 'En certificación debe ser: 2006-01-20',
+    'help' => 'En certificación o simplificado debe ser: 2006-01-20',
     'check' => 'notempty date',
 ]);
 echo $f->input([
     'name' => 'NroResol',
     'label' => 'Número resolución',
     'placeholder' => 102006,
-    'help' => 'En certificación debe ser: 102006',
+    'help' => 'En certificación o simplificado debe ser: 102006',
     'check' => 'notempty integer',
 ]);
 echo $f->input([
@@ -43,7 +51,7 @@ echo $f->input([
     'name' => 'TipoLibro',
     'label' => 'Tipo libro',
     'options' => ['MENSUAL'=>'MENSUAL', 'ESPECIAL'=>'ESPECIAL'],
-    'help' => 'En certificación debe ser: ESPECIAL',
+    'help' => 'En certificación o simplificado debe ser: ESPECIAL',
     'check' => 'notempty',
 ]);
 echo $f->input([
@@ -51,14 +59,14 @@ echo $f->input([
     'name' => 'TipoEnvio',
     'label' => 'Tipo envío',
     'options' => ['TOTAL'=>'TOTAL'],
-    'help' => 'En certificación debe ser: TOTAL',
+    'help' => 'En certificación o simplificado debe ser: TOTAL',
     'check' => 'notempty',
 ]);
 echo $f->input([
     'name' => 'FolioNotificacion',
     'label' => 'Folio notificación',
     'placeholder' => 102006,
-    'help' => 'En certificación debe ser: 102006',
+    'help' => 'En certificación o simplificado debe ser: 102006',
     'check' => 'notempty integer',
 ]);
 echo $f->input([

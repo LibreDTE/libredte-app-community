@@ -265,7 +265,7 @@ class Controller_Utilidades extends \Controller_App
      * Método que permite generar un libro de Compras o Ventas a partir de un
      * archivo CSV con el detalle del mismo
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-10-05
+     * @version 2015-12-08
      */
     public function generar_libro()
     {
@@ -357,15 +357,14 @@ class Controller_Utilidades extends \Controller_App
             }
         }
         // generar libro de compras o venta
-        $LibroCompraVenta = new \sasco\LibreDTE\Sii\LibroCompraVenta();
+        $LibroCompraVenta = new \sasco\LibreDTE\Sii\LibroCompraVenta((bool)$_POST['simplificado']);
         if ($caratula['TipoOperacion']==='COMPRA')
             $LibroCompraVenta->agregarComprasCSV($_FILES['archivo']['tmp_name']);
         else
             $LibroCompraVenta->agregarVentasCSV($_FILES['archivo']['tmp_name']);
         $LibroCompraVenta->setCaratula($caratula);
-        if (!$certificacion)
-            $LibroCompraVenta->setFirma($Firma);
-        $xml = $LibroCompraVenta->generar($caratula['TipoOperacion']=='COMPRA');
+        $LibroCompraVenta->setFirma($Firma);
+        $xml = $LibroCompraVenta->generar();
         if (!$certificacion and !$LibroCompraVenta->schemaValidate()) {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
             return;
