@@ -26,3 +26,16 @@
     'module' => 'Dte',
     'action' => 'api',
 ]);
+
+// ruta para consultar DTE
+\sowerphp\core\Routing_Router::connect('/consultar', [
+    'module' => 'Dte',
+    'controller' => 'Documentos',
+    'action' => 'consultar',
+]);
+\sowerphp\core\Routing_Router::connect('/boletas', [
+    'module' => 'Dte',
+    'controller' => 'Documentos',
+    'action' => 'consultar',
+    39,
+]);
