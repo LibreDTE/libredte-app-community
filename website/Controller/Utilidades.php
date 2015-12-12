@@ -224,7 +224,7 @@ class Controller_Utilidades extends \Controller_App
      * Acción que permite la generación del PDF con los DTEs contenidos en un
      * XML de EnvioDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-20
+     * @version 2015-12-12
      */
     public function generar_pdf()
     {
@@ -238,6 +238,8 @@ class Controller_Utilidades extends \Controller_App
             $data = [
                 'xml' => base64_encode(file_get_contents($_FILES['xml']['tmp_name'])),
                 'cedible' => isset($_POST['cedible']),
+                'papelContinuo' => $_POST['papelContinuo'],
+                'webVerificacion' => $_POST['webVerificacion'],
             ];
             // si se pasó un logo se agrega el archivo a los datos que se enviarán
             if (isset($_FILES['logo']) and !$_FILES['logo']['error']) {
