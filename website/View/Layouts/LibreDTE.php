@@ -4,6 +4,9 @@
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="LibreDTE ¡facturación electrónica libre para Chile!">
+        <meta name="keywords" content="factura electrónica, facturación electrónica, sii, dte">
+        <meta name="author" content="SASCO SpA">
         <title><?=$_header_title?></title>
         <link rel="shortcut icon" href="<?=$_base?>/img/favicon.png" />
         <link rel="stylesheet" href="<?=$_base?>/layouts/Bootstrap/css/bootstrap.min.css" />
