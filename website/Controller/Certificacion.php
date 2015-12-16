@@ -137,7 +137,7 @@ class Controller_Certificacion extends \Controller_App
      * Acción que genera el libro de ventas a partir del XML de EnvioDTE creado
      * para la certificación
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-10-05
+     * @version 2015-12-16
      */
     public function set_pruebas_ventas()
     {
@@ -166,13 +166,20 @@ class Controller_Certificacion extends \Controller_App
             'FolioNotificacion' => 102006,
         ];
         // armar libro de ventas
-        $LibroCompraVenta = new \sasco\LibreDTE\Sii\LibroCompraVenta();
+        $LibroCompraVenta = new \sasco\LibreDTE\Sii\LibroCompraVenta(true); // libro simplificado
         foreach ($Documentos as $DTE) {
             $LibroCompraVenta->agregar($DTE->getResumen(), false); // agregar detalle sin normalizar
         }
         // generar XML con el libro de ventas
         $LibroCompraVenta->setCaratula($caratula);
         $xml = $LibroCompraVenta->generar(false); // generar XML sin firma y sin detalle
+        // verificar problemas de esquema
+        /*if (!$LibroCompraVenta->schemaValidate()) {
+            \sowerphp\core\Model_Datasource_Session::message(
+                implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+            );
+            $this->redirect('/certificacion/set_pruebas#ventas');
+        }*/
         // descargar XML
         $file = TMP.'/'.$LibroCompraVenta->getID().'.xml';
         file_put_contents($file, $xml);
