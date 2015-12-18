@@ -20,10 +20,23 @@
 </div>
 
 <div class="jumbotron">
-  <h1>¡Únete a la comunidad!</h1>
-  <p>¿Tienes dudas, sugerencias o comentarios? No dudes en escribirnos a través de nuestras redes sociales.</p>
-  <p><a class="btn btn-primary btn-lg" href="https://groups.google.com/forum/#!forum/libredte" role="button">Soporte en grupo de LibreDTE</a></p>
+    <h1>¡Únete a la comunidad!</h1>
+    <p>¿Tienes dudas, sugerencias o comentarios? No dudes en escribirnos a través de nuestras redes sociales.</p>
+    <p>
+        <a class="btn btn-primary btn-lg" href="https://groups.google.com/forum/#!forum/libredte" role="button">Lista de correo</a>
+        <a class="btn btn-default btn-lg" href="http://wiki.libredte.cl/doku.php" role="button">Wiki</a>
+    </p>
+    <div class="row">
+        <div class="col-xs-6">
+
+        </div>
+        <div class="col-xs-6">
+
+        </div>
+    </div>
 </div>
+
+wiki.libredte.cl/doku.php
 
 <div class="row">
     <div class="col-sm-8 col-md-8">
