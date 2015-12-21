@@ -19,23 +19,6 @@
   <h1>LibreDTE <small>¡facturación electrónica libre para Chile!</small></h1>
 </div>
 
-<div class="jumbotron">
-    <h1>¡Únete a la comunidad!</h1>
-    <p>¿Tienes dudas, sugerencias o comentarios? No dudes en escribirnos a través de nuestras redes sociales.</p>
-    <p>
-        <a class="btn btn-primary btn-lg" href="https://groups.google.com/forum/#!forum/libredte" role="button">Lista de correo</a>
-        <a class="btn btn-default btn-lg" href="http://wiki.libredte.cl/doku.php" role="button">Wiki</a>
-    </p>
-    <div class="row">
-        <div class="col-xs-6">
-
-        </div>
-        <div class="col-xs-6">
-
-        </div>
-    </div>
-</div>
-
 <div class="row">
     <div class="col-sm-8 col-md-8">
         <p class="objetivo lead">LibreDTE corresponde a un proyecto para interactuar con el SII de Chile, específicamente el sistema de Documentos Tributarios Electrónicos (DTE). Se considera la generación de DTE, timbraje, firma electrónica, envío de documentos y generación de versión en PDF de los mismos.</p>
@@ -46,7 +29,29 @@
     </div>
 </div>
 
-<div class="row" style="margin-top:3em">
+<div class="row" style="margin-top:2em">
+    <div class="col-xs-7">
+        <div class="jumbotron">
+            <h1>¡Únete a la comunidad!</h1>
+            <p>¿Tienes dudas, sugerencias o comentarios? No dudes en escribirnos a través de nuestras redes sociales.</p>
+            <p>
+                <a class="btn btn-primary btn-lg" href="https://groups.google.com/forum/#!forum/libredte" role="button">Lista de correo</a>
+                <a class="btn btn-primary btn-lg" href="http://wiki.libredte.cl/doku.php" role="button">Wiki</a>
+            </p>
+        </div>
+    </div>
+    <div class="col-xs-5">
+        <div class="jumbotron">
+            <h1>Soporte oficial</h1>
+            <p>¿Necesitas asesoría o consultoría con el uso de LibreDTE?</p>
+            <p>
+                <a class="btn btn-primary btn-lg" href="https://sasco.cl/servicios/facturacion_electronica" role="button">Servicios y planes</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
     <div class="col-sm-6 col-md-6">
         <p class="bg-primary lead center" style="padding:1em">Empresas</p>
         <div class="row">
