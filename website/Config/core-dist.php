@@ -26,7 +26,7 @@
 /**
  * @file core.php
  * Configuración de la aplicación web de LibreDTE
- * @version 2015-12-12
+ * @version 2015-12-21
  */
 
 // Configuración depuración
@@ -58,17 +58,11 @@ ini_set('max_execution_time', 600);
     '/dte' => 'Módulo DTE',
     '/certificacion' => 'Certificación',
     '/utilidades' => 'Utilidades',
-    '/biblioteca' => ['name'=>'Biblioteca PHP', 'nav'=>[
-        '/libredte' => 'Descripción de la biblioteca',
-        'https://github.com/LibreDTE/libredte-lib'=>'Código fuente en Github',
-        'https://github.com/LibreDTE/libredte-lib/tree/master/examples'=>'Ejemplos de uso',
-        'https://github.com/LibreDTE/libredte-lib/issues'=>'Reportar un bug o solicitar funcionalidad',
-        'https://stackoverflow.com/tags/libredte'=>'Foro en Stack Overflow',
-        'https://groups.google.com/forum/#!forum/libredte' => 'Foro en Google Groups',
-        'http://libredte.cl/doxygen/annotated.html'=>'Documentación de clases y sus métodos',
+    '/soporte' => ['name'=>'Soporte', 'nav'=>[
+        'https://groups.google.com/forum/#!forum/libredte' => 'Lista de correo en Google Groups',
+        'http://wiki.libredte.cl'=>'Wiki de documentación',
+        'https://sasco.cl/servicios/facturacion_electronica'=>'Costos de servicios y planes',
     ]],
-    '/doc/api'=>'API',
-    '/faq' => 'Preguntas frecuentes',
 ]);
 
 // Menú principal de la aplicación web
