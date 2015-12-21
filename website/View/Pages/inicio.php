@@ -36,8 +36,6 @@
     </div>
 </div>
 
-wiki.libredte.cl/doku.php
-
 <div class="row">
     <div class="col-sm-8 col-md-8">
         <p class="objetivo lead">LibreDTE corresponde a un proyecto para interactuar con el SII de Chile, específicamente el sistema de Documentos Tributarios Electrónicos (DTE). Se considera la generación de DTE, timbraje, firma electrónica, envío de documentos y generación de versión en PDF de los mismos.</p>
