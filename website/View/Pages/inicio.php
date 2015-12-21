@@ -92,7 +92,7 @@
                     <div class="caption">
                         <h3>Biblioteca PHP</h3>
                         <p>Podrás integrar LibreDTE directamente en proyectos que estén desarrollados con PHP 5.5 o superior usando composer</p>
-                        <p><a href="<?=$_base?>/biblioteca/libredte" class="btn btn-primary btn-block" role="button">leer más &raquo;</a></p>
+                        <p><a href="http://wiki.libredte.cl/doku.php/lib" class="btn btn-primary btn-block" role="button">leer más &raquo;</a></p>
                     </div>
                 </div>
             </div>
@@ -102,9 +102,9 @@
                         <img src="<?=$_base?>/img/menus/api.png" alt="Logo API" />
                     </a>
                     <div class="caption">
-                        <h3>API</h3>
+                        <h3>Servicios web</h3>
                         <p>Si no usas PHP puedes utilizar la API disponible para consumir vía HTTP los servicios que ofrece en la nube LibreDTE</p>
-                        <p><a href="<?=$_base?>/doc/api" class="btn btn-primary btn-block" role="button">ver documentación &raquo;</a></p>
+                        <p><a href="http://wiki.libredte.cl/doku.php/webapp/api" class="btn btn-primary btn-block" role="button">ver documentación &raquo;</a></p>
                     </div>
                 </div>
             </div>
