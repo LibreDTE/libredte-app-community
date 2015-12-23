@@ -104,7 +104,7 @@
                     <div class="caption">
                         <h3>Servicios web</h3>
                         <p>Si no usas PHP puedes utilizar la API disponible para consumir vía HTTP los servicios que ofrece en la nube LibreDTE</p>
-                        <p><a href="http://wiki.libredte.cl/doku.php/webapp/api" class="btn btn-primary btn-block" role="button">ver documentación &raquo;</a></p>
+                        <p><a href="http://wiki.libredte.cl/doku.php/sowerphp/api" class="btn btn-primary btn-block" role="button">ver documentación &raquo;</a></p>
                     </div>
                 </div>
             </div>
