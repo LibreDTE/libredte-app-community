@@ -27,7 +27,7 @@ namespace website;
 /**
  * Controlador para la interfaz web de diversas utilidades de LibreDTE
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2015-10-05
+ * @version 2015-12-24
  */
 class Controller_Utilidades extends \Controller_App
 {
@@ -48,6 +48,11 @@ class Controller_Utilidades extends \Controller_App
             'desc' => 'Generar XML Libro de Compras o Ventas a partir de un archivo CSV con los datos',
             'icon' => 'fa fa-book',
         ],
+        '/generar_libro_guia' => [
+            'name' => 'Generar XML Libro de Guías',
+            'desc' => 'Generar XML Libro de Guías de Despacho a partir de un archivo CSV con los datos',
+            'icon' => 'fa fa-book',
+        ],
         '/firmar_xml' => [
             'name' => 'Firmar XML',
             'desc' => 'Generar la firma de un XML e incluira en el mismo archivo',
@@ -58,11 +63,11 @@ class Controller_Utilidades extends \Controller_App
     /**
      * Método para permitir acciones sin estar autenticado
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-13
+     * @version 2015-12-24
      */
     public function beforeFilter()
     {
-        $this->Auth->allow('index', 'generar_xml', 'generar_pdf', 'generar_libro', 'firmar_xml');
+        $this->Auth->allow('index', 'generar_xml', 'generar_pdf', 'generar_libro', 'generar_libro_guia', 'firmar_xml');
         parent::beforeFilter();
     }
 
@@ -267,7 +272,7 @@ class Controller_Utilidades extends \Controller_App
      * Método que permite generar un libro de Compras o Ventas a partir de un
      * archivo CSV con el detalle del mismo
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-12-08
+     * @version 2015-12-24
      */
     public function generar_libro()
     {
@@ -367,12 +372,95 @@ class Controller_Utilidades extends \Controller_App
         $LibroCompraVenta->setCaratula($caratula);
         $LibroCompraVenta->setFirma($Firma);
         $xml = $LibroCompraVenta->generar();
-        if (!$certificacion and !$LibroCompraVenta->schemaValidate()) {
+        if (!$LibroCompraVenta->schemaValidate()) {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
             return;
         }
         // descargar XML
         $file = TMP.'/'.$LibroCompraVenta->getID().'.xml';
+        file_put_contents($file, $xml);
+        \sasco\LibreDTE\File::compress($file, ['format'=>'zip', 'delete'=>true]);
+        exit;
+    }
+
+    /**
+     * Método que permite generar un libro de guías de despacho a partir de un
+     * archivo CSV con el detalle del mismo
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2015-12-24
+     */
+    public function generar_libro_guia()
+    {
+        // si no se viene por post terminar
+        if (!isset($_POST['submit']))
+            return;
+        // verificar campos no estén vacíos
+        $campos = [
+            'RutEmisorLibro',
+            'PeriodoTributario',
+            'FchResol',
+            'NroResol',
+            'TipoLibro',
+            'TipoEnvio',
+            'FolioNotificacion',
+            'contrasenia',
+        ];
+        foreach ($campos as $campo) {
+            if (!isset($_POST[$campo][0])) {
+                 \sowerphp\core\Model_Datasource_Session::message(
+                    $campo.' no puede estar en blanco', 'error'
+                );
+                return;
+            }
+        }
+        // si no se pasó el archivo error
+        if (!isset($_FILES['archivo']) or $_FILES['archivo']['error']) {
+            \sowerphp\core\Model_Datasource_Session::message(
+                'Debes enviar el archivo CSV con el detalle de las guías a la que deseas generar su XML', 'error'
+            );
+            return;
+        }
+        // si no se pasó la firma error
+        if (!isset($_FILES['firma']) or $_FILES['firma']['error']) {
+            \sowerphp\core\Model_Datasource_Session::message(
+                'Debes enviar el archivo con la firma digital', 'error'
+            );
+            return;
+        }
+        // Objeto de la Firma
+        try {
+            $Firma = new \sasco\LibreDTE\FirmaElectronica([
+                'data' => file_get_contents($_FILES['firma']['tmp_name']),
+                'pass' => $_POST['contrasenia'],
+            ]);
+        } catch (\Exception $e) {
+            \sowerphp\core\Model_Datasource_Session::message(
+                'No fue posible abrir la firma digital, quizás contraseña incorrecta', 'error'
+            );
+            return;
+        }
+        // generar caratula del libro
+        $caratula = [
+            'RutEmisorLibro' => str_replace('.', '', $_POST['RutEmisorLibro']),
+            'PeriodoTributario' => $_POST['PeriodoTributario'],
+            'FchResol' => $_POST['FchResol'],
+            'NroResol' => $_POST['NroResol'],
+            'TipoLibro' => $_POST['TipoLibro'],
+            'TipoEnvio' => $_POST['TipoEnvio'],
+            'FolioNotificacion' => $_POST['FolioNotificacion'],
+        ];
+        // generar libro de guías
+        $LibroGuia = new \sasco\LibreDTE\Sii\LibroGuia();
+        $LibroGuia->agregarCSV($_FILES['archivo']['tmp_name']);
+        $LibroGuia->setFirma($Firma);
+        $LibroGuia->setCaratula($caratula);
+        $xml = $LibroGuia->generar();
+        if (!$LibroGuia->schemaValidate()) {
+            \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
+            return;
+        }
+        // descargar XML
+        $file = TMP.'/'.$LibroGuia->getID().'.xml';
         file_put_contents($file, $xml);
         \sasco\LibreDTE\File::compress($file, ['format'=>'zip', 'delete'=>true]);
         exit;
