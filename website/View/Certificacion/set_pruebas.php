@@ -33,6 +33,7 @@ $(function() {
         <li role="presentation" class="active"><a href="#dte" aria-controls="dte" role="tab" data-toggle="tab">Emisión de DTE</a></li>
         <li role="presentation"><a href="#ventas" aria-controls="ventas" role="tab" data-toggle="tab">Libro de Ventas</a></li>
         <li role="presentation"><a href="#compras" aria-controls="compras" role="tab" data-toggle="tab">Libro de Compras</a></li>
+        <li role="presentation"><a href="#guias" aria-controls="guias" role="tab" data-toggle="tab">Libro de Guías de Despacho</a></li>
     </ul>
     <div class="tab-content">
 
@@ -95,11 +96,23 @@ echo $f->end('Descargar Libro de Ventas');
     <p>Ejemplos archivos:</p>
     <ul>
         <li><a href="https://github.com/sascocl/LibreDTE/blob/master/examples/set_pruebas/003-compras.txt">Ejemplo set de pruebas de compras entregado por el SII</a></li>
-        <li><a href="<?=$_base?>/ejemplos/libro_compras.csv">Ejemplo archivo CSV generado con los datos del set de pruebas</a></li>
+        <li><a href="https://raw.githubusercontent.com/LibreDTE/libredte-lib/master/examples/libros/libro_compras.csv">Ejemplo archivo CSV generado con los datos del set de pruebas</a></li>
     </ul>
     <a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/utilidades/generar_libro" role="button">Generar XML de Libro de Compras usando archivo CSV</a>
 </div>
 <!-- FIN COMPRAS -->
+
+<!-- INICIO GUÍAS -->
+<div role="tabpanel" class="tab-pane" id="guias">
+    <p>Para generar el libro de guías de despacho deberá crear un archivo en formato CSV que contendrá los datos de las guías del set de pruebas entregado por el SII. Luego deberá cargar dicho archivo CSV en el <a href="<?=$_base?>/utilidades/generar_libro_guia">Generador de XML de Libro de Guías de Despacho</a> de LibreDTE.</p>
+    <p>Ejemplos archivos:</p>
+    <ul>
+        <li><a href="https://github.com/sascocl/LibreDTE/blob/master/examples/set_pruebas/006-libro_guias.txt">Ejemplo set de pruebas de guías entregado por el SII</a></li>
+        <li><a href="https://raw.githubusercontent.com/LibreDTE/libredte-lib/master/examples/libros/libro_guias.csv">Ejemplo archivo CSV generado con los datos del set de pruebas</a></li>
+    </ul>
+    <a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/utilidades/generar_libro_guia" role="button">Generar XML de Libro de Guías de Despacho usando archivo CSV</a>
+</div>
+<!-- FIN GUÍAS -->
 
     </div>
 </div>
