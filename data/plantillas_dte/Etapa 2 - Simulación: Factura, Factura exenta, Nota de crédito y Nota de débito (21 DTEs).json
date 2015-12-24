@@ -428,7 +428,8 @@
         "DscRcgGlobal": {
             "TpoMov": "D",
             "TpoValor": "%",
-            "ValorDR": 50
+            "ValorDR": 50,
+            "IndExeDR": 1
         }
     },
     {
