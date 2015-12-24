@@ -73,7 +73,7 @@ echo $f->input([
     'type' => 'file',
     'name' => 'archivo',
     'label' => 'Archivo detalle',
-    'help' => 'Archivo CSV (separado por punto y coma) con el detalle del Libro de Compras o Ventas que se desea generar en XML: <a href="'.$_base.'/ejemplos/libro_ventas.csv">ejemplo archivo CSV ventas</a> o <a href="'.$_base.'/ejemplos/libro_compras.csv">ejemplo archivo CSV compras</a>',
+    'help' => 'Archivo CSV (separado por punto y coma) con el detalle del Libro de Compras o Ventas que se desea generar en XML: <a href="https://raw.githubusercontent.com/LibreDTE/libredte-lib/master/examples/libros/libro_ventas.csv">ejemplo archivo CSV ventas</a> o <a href="https://raw.githubusercontent.com/LibreDTE/libredte-lib/master/examples/libros/libro_compras.csv">ejemplo archivo CSV compras</a>',
     'check' => 'notempty',
     'attr' => 'accept=".csv"',
 ]);
