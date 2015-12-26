@@ -69,7 +69,7 @@ class Controller_Certificacion extends \Controller_App
     /**
      * Acción que muestra la página principal de certificación
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-20
+     * @version 2015-12-26
      */
     public function index()
     {
@@ -78,8 +78,6 @@ class Controller_Certificacion extends \Controller_App
             'nav' => $this->nav,
             'module' => 'certificacion'
         ]);
-        $this->autoRender = false;
-        $this->render('Module/index');
     }
 
     /**
