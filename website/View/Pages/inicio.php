@@ -30,7 +30,20 @@
 </div>
 
 <div class="row" style="margin-top:2em">
-    <div class="col-xs-7">
+    <div class="col-md-6">
+        <div class="center video-container">
+            <iframe width="420" height="315" src="https://www.youtube.com/embed/u8MmH-16hKI" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="center video-container">
+            <iframe width="420" height="315" src="https://www.youtube.com/embed/CeOFxVmC1Z4" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="margin-top:2em">
+    <div class="col-md-7">
         <div class="jumbotron">
             <h1>¡Únete a la comunidad!</h1>
             <p>¿Tienes dudas, sugerencias o comentarios? No dudes en escribirnos a través de nuestras redes sociales.</p>
@@ -40,7 +53,7 @@
             </p>
         </div>
     </div>
-    <div class="col-xs-5">
+    <div class="col-md-5">
         <div class="jumbotron">
             <h1>Soporte oficial</h1>
             <p>¿Necesitas asesoría o consultoría con el uso de LibreDTE?</p>

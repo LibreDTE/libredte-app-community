@@ -12,6 +12,7 @@
         <link rel="stylesheet" href="<?=$_base?>/layouts/Bootstrap/css/bootstrap.min.css" />
         <link rel="stylesheet" href="<?=$_base?>/layouts/Bootstrap/css/bootstrap-theme.min.css" />
         <link rel="stylesheet" href="<?=$_base?>/layouts/Bootstrap/css/style.css" />
+        <link rel="stylesheet" href="<?=$_base?>/css/style.css" />
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
             <script src="<?=$_base?>/js/html5shiv.js"></script>
