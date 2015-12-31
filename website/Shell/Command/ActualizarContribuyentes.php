@@ -26,7 +26,7 @@ namespace website;
 /**
  * Comando para actualizar los contribuyentes desde el SII
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2015-09-30
+ * @version 2015-12-30
  */
 class Shell_Command_ActualizarContribuyentes extends \Shell_App
 {
@@ -34,12 +34,24 @@ class Shell_Command_ActualizarContribuyentes extends \Shell_App
     /**
      * Método principal del comando
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-30
+     * @version 2015-12-30
      */
     public function main($ambiente = \sasco\LibreDTE\Sii::PRODUCCION)
     {
-        // obtener conexión a la base de datos
-        $db = &\sowerphp\core\Model_Datasource_Database::get();
+        $this->listadoSII($ambiente);
+        $this->corregirDatos();
+        $this->showStats();
+        return 0;
+    }
+
+    /**
+     * Método que carga actualiza los datos de los contribuyentes desde el
+     * listado de contribuyentes del SII
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2015-12-30
+     */
+    private function listadoSII($ambiente)
+    {
         // obtener firma electrónica
         try {
             $Firma = new \sasco\LibreDTE\FirmaElectronica();
@@ -89,8 +101,67 @@ class Shell_Command_ActualizarContribuyentes extends \Shell_App
                 }
             }
         }
-        $this->showStats();
-        return 0;
+    }
+
+    /**
+     * Método que corrige los datos de los contribuyentes existentes, cargando:
+     *  - razon social
+     *  - giro
+     *  - actividad económica
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2015-12-31
+     */
+    public function corregirDatos()
+    {
+        $db = &\sowerphp\core\Model_Datasource_Database::get();
+        $contribuyentes = $db->getCol('
+            SELECT rut
+            FROM contribuyente
+            WHERE
+                usuario IS NULL
+                AND (
+                    giro IS NULL
+                    OR actividad_economica IS NULL
+                    OR REPLACE(razon_social, \'.\', \'\') = '.$db->concat('rut', '-', 'dv').'
+                )
+        ');
+        $registros = num(count($contribuyentes));
+        $procesados = 0;
+        $actualizados = 0;
+        foreach ($contribuyentes as $rut) {
+            $Contribuyente = new \website\Dte\Model_Contribuyente($rut);
+            $response = \sowerphp\core\Network_Http_Socket::get(
+                'https://sasco.cl/api/servicios/enlinea/sii/actividad_economica/'.$Contribuyente->rut.'/'.$Contribuyente->dv
+            );
+            if ($response['status']['code']==200) {
+                $info = json_decode($response['body'], true);
+                $procesados++;
+                if ($this->verbose) {
+                    $this->out('Procesando '.num($procesados).'/'.$registros.': contribuyente '.$Contribuyente->rut.'-'.$Contribuyente->dv);
+                }
+                $cambios = false;
+                if ($Contribuyente->razon_social==\sowerphp\app\Utility_Rut::addDV($Contribuyente->rut) and !empty($info['razon_social'])) {
+                    $Contribuyente->razon_social = substr($info['razon_social'], 0, 100);
+                    $cambios = true;
+                }
+                if (!$Contribuyente->actividad_economica and !empty($info['actividades'][0]['codigo'])) {
+                    $Contribuyente->actividad_economica = $info['actividades'][0]['codigo'];
+                    $cambios = true;
+                }
+                if (!$Contribuyente->giro and !empty($info['actividades'][0]['glosa'])) {
+                    $Contribuyente->giro = substr($info['actividades'][0]['glosa'], 0, 80);
+                    $cambios = true;
+                }
+                if ($cambios) {
+                    try {
+                        if ($Contribuyente->save())
+                            $actualizados++;
+                    } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+                    }
+                }
+            }
+        }
+        $this->out('Se actualizaron '.num($actualizados).' contribuyentes de un total de '.$registros);
     }
 
 }
