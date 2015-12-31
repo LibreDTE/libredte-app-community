@@ -143,7 +143,7 @@
                 </a>
             </div>
             <div class="col-xs-6 col-md-4 center">
-                <a href="https://plus.google.com/u/0/101078963971350176990/about" title="Síguenos en Google+">
+                <a href="https://plus.google.com/+LibredteCl" title="Síguenos en Google+">
                     <span class="fa fa-google-plus-square" style="font-size:128px"></span>
                 </a>
             </div>
@@ -153,7 +153,7 @@
                 </a>
             </div>
             <div class="col-xs-6 col-md-4 center">
-                <a href="https://www.youtube.com/channel/UCnh5duQUXmo4l8AD28PakiQ" title="Síguenos en Youtube">
+                <a href="https://www.youtube.com/c/LibredteCl" title="Síguenos en Youtube">
                     <span class="fa fa-youtube-square" style="font-size:128px"></span>
                 </a>
             </div>
