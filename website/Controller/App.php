@@ -26,7 +26,7 @@ namespace website;
 /**
  * Controlador base de la aplicación
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2015-09-30
+ * @version 2016-01-02
  */
 abstract class Controller_App extends \sowerphp\app\Controller_App
 {
@@ -46,10 +46,12 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
         'Notify',
     ]; ///< Componentes usados por el controlador
 
+    private $Contribuyente = null; ///< Contribuyente con el que se está trabajando
+
     /**
      * Método que fuerza la selección de un contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-12-12
+     * @version 2016-01-02
      */
     public function beforeFilter()
     {
@@ -57,17 +59,39 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
         // configuración previa para el módulo Dte y sus submódulos
         if (strpos($this->request->params['module'], 'Dte')===0 and $this->request->params['controller']!='contribuyentes' and !$this->Auth->allowedWithoutLogin()) {
             // obtener emisor
-            $Emisor = \sowerphp\core\Model_Datasource_Session::read('dte.Emisor');
-            if (!$Emisor) {
+            if (!$this->getContribuyente()) {
                 \sowerphp\core\Model_Datasource_Session::message('Antes de utilizar el módulo DTE debe seleccionar un contribuyente con el que operará', 'error');
                 \sowerphp\core\Model_Datasource_Session::write('referer', $this->request->request);
                 $this->redirect('/dte/contribuyentes/seleccionar');
             }
             // si no existe la definición de ambiente y es de certificación se asigna
-            if (!defined('_LibreDTE_CERTIFICACION_') and $Emisor->certificacion) {
+            if (!defined('_LibreDTE_CERTIFICACION_') and $this->Contribuyente->certificacion) {
                 define('_LibreDTE_CERTIFICACION_', true);
             }
         }
+    }
+
+    /**
+     * Método que asigna el objeto del contribuyente para ser "recordado"
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2016-01-02
+     */
+    protected function setContribuyente(\website\Dte\Model_Contribuyente $Contribuyente)
+    {
+        \sowerphp\core\Model_Datasource_Session::write('dte.Contribuyente', $Contribuyente);
+    }
+
+    /**
+     * Método que entrega el objeto del contribuyente que ha sido seleccionado
+     * @return \website\Dte\Model_Contribuyente
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2016-01-02
+     */
+    protected function getContribuyente()
+    {
+        if (!isset($this->Contribuyente))
+            $this->Contribuyente = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente');
+        return $this->Contribuyente;
     }
 
 }
