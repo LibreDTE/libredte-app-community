@@ -137,7 +137,7 @@ ini_set('max_execution_time', 600);
 // configuración general del módulo DTE
 \sowerphp\core\Configure::write('dte', [
     // contraseña que se usará para encriptar datos sensibles en la BD
-    'pkey' => '',
+    'pkey' => '', // DEBE ser de 32 chars
     // directorio para logos de las empresas
     'logos' => [
         'dir' => DIR_PROJECT.'/data/logos',
