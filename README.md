@@ -8,7 +8,7 @@ Aquí podrás encontrar el código fuente de la aplicación web disponible en
 <http://libredte.cl>
 
 Esta aplicación web utiliza la
-[biblioteca PHP LibreDTE](https://github.com/LibreDTE/libredte-webapp) y el
+[biblioteca PHP LibreDTE](https://github.com/LibreDTE/libredte-lib) y el
 [módulo Dte](https://github.com/LibreDTE/libredte-sowerphp) del framework
 [SowerPHP](http://sowerphp.org).
 
