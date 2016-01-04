@@ -10,7 +10,7 @@
             </div>
             <div class="col-md-8 text-center">
                 <span class="h1"><?=num($contribuyentes_sii)?></span><br/>
-                <span>Emisores electrónicos</span>
+                <span>Contribuyentes SII</span>
             </div>
         </div>
     </div>
