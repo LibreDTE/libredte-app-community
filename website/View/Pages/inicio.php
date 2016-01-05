@@ -58,7 +58,7 @@
             <h1>Soporte oficial</h1>
             <p>¿Necesitas asesoría o consultoría con el uso de LibreDTE?</p>
             <p>
-                <a class="btn btn-primary btn-lg" href="https://sasco.cl/servicios/facturacion_electronica" role="button">Servicios y planes</a>
+                <a class="btn btn-primary btn-lg" href="<?=$_base?>/contacto" role="button">¡Solicítala aquí!</a>
             </p>
         </div>
     </div>
