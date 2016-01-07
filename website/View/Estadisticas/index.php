@@ -1,5 +1,5 @@
 <div class="page-header">
-    <h1>Estadísticas <small>ambiente de producción</small></h1>
+    <h1>Estadísticas <small>ambiente de <?=$certificacion?'certificación':'producción'?></small></h1>
 </div>
 
 <div class="row">
@@ -50,5 +50,14 @@
 </div>
 
 <div style="margin-top:2em">
-    <img src="estadisticas/grafico_usuarios_ingreso" alt="Usuarios mensuales" class="center img-responsive thumbnail" >
+    <img src="<?=$_base?>/estadisticas/grafico_usuarios_ingreso" alt="Usuarios mensuales" class="center img-responsive thumbnail" >
 </div>
+
+<?php
+if (!empty($contribuyentes_activos)) {
+    echo '<h2>Contribuyentes con movimientos</h2>',"\n";
+    echo '<ul>',"\n";
+    foreach ($contribuyentes_activos as $razon_social)
+        echo '<li>',$razon_social,'</li>',"\n";
+    echo '</ul>',"\n";
+}

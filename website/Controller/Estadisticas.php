@@ -27,7 +27,7 @@ namespace website;
 /**
  * Controlador para mostrar estadísticas públicas del sitio
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2016-01-04
+ * @version 2016-01-07
  */
 class Controller_Estadisticas extends \Controller_App
 {
@@ -35,35 +35,80 @@ class Controller_Estadisticas extends \Controller_App
     /**
      * Método para permitir acciones sin estar autenticado
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-01-04
+     * @version 2016-01-07
      */
     public function beforeFilter()
     {
-        $this->Auth->allow('index', 'grafico_usuarios_ingreso');
+        $this->Auth->allow('index', 'produccion', 'certificacion', 'grafico_usuarios_ingreso');
         parent::beforeFilter();
     }
 
     /**
      * Acción que muestra la página principal de estadísticas
+     * @param certificacion =true se generan estadísticas para el ambiente de certificación
+     * @param desde Desde cuando considerar la actividad de los contribuyentes
+     * @param hasta Hasta cuando considerar la actividad de los contribuyentes
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-01-04
+     * @version 2016-01-07
      */
-    public function index()
+    public function index($certificacion = false, $desde = 1, $hasta = 0)
     {
         $Contribuyentes = new \website\Dte\Model_Contribuyentes();
         $contribuyentes_sii = $Contribuyentes->count();
-        $Contribuyentes->setWhereStatement(['usuario IS NOT NULL', 'certificacion = false']);
+        $Contribuyentes->setWhereStatement(
+            ['usuario IS NOT NULL', 'certificacion = :certificacion'],
+            [':certificacion' => (int)$certificacion]
+        );
         $empresas_registradas = $Contribuyentes->count();
         $DteEmitidos = new \website\Dte\Model_DteEmitidos();
-        $DteEmitidos->setWhereStatement(['certificacion = false']);
+        $DteEmitidos->setWhereStatement(
+            ['certificacion = :certificacion'],
+            [':certificacion' => (int)$certificacion]
+        );
         $Usuarios = new \sowerphp\app\Sistema\Usuarios\Model_Usuarios();
         $Usuarios->setWhereStatement(['activo = true']);
+        try {
+            $contribuyentes_activos = $Contribuyentes->getConMovimientos($desde, $hasta, $certificacion, false);
+        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+            \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
+            $contribuyentes_activos = [];
+        }
         $this->set([
+            'certificacion' => $certificacion,
             'contribuyentes_sii' => $contribuyentes_sii,
             'usuarios_registrados' => $Usuarios->count(),
             'empresas_registradas' => $empresas_registradas,
             'documentos_emitidos' => $DteEmitidos->count(),
+            'contribuyentes_activos' => $contribuyentes_activos,
         ]);
+        $this->autoRender = false;
+        $this->render('Estadisticas/index');
+    }
+
+    /**
+     * Acción que muestra la página principal de estadísticas para ambiente de
+     * producción
+     * @param desde Desde cuando considerar la actividad de los contribuyentes
+     * @param hasta Hasta cuando considerar la actividad de los contribuyentes
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2016-01-07
+     */
+    public function produccion($desde = 1, $hasta = 0)
+    {
+        $this->index(false, $desde, $hasta);
+    }
+
+    /**
+     * Acción que muestra la página principal de estadísticas para ambiente de
+     * certificación
+     * @param desde Desde cuando considerar la actividad de los contribuyentes
+     * @param hasta Hasta cuando considerar la actividad de los contribuyentes
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2016-01-07
+     */
+    public function certificacion($desde = 1, $hasta = 0)
+    {
+        $this->index(true, $desde, $hasta);
     }
 
     /**
