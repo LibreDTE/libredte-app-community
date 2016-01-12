@@ -101,12 +101,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "27711985e2c5ca52d6dd4dfb0690833cfdce06fc"
+                "reference": "0faf45e8107735e3460d5a5f299f92af60b4d81b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/27711985e2c5ca52d6dd4dfb0690833cfdce06fc",
-                "reference": "27711985e2c5ca52d6dd4dfb0690833cfdce06fc",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/0faf45e8107735e3460d5a5f299f92af60b4d81b",
+                "reference": "0faf45e8107735e3460d5a5f299f92af60b4d81b",
                 "shasum": ""
             },
             "require": {
@@ -115,7 +115,7 @@
                 "ext-soap": "*",
                 "php": ">=5.5",
                 "phpseclib/phpseclib": "2.0.0",
-                "tecnick.com/tcpdf": "6.0.096"
+                "tecnickcom/tcpdf": "6.2.12"
             },
             "type": "library",
             "autoload": {
@@ -140,20 +140,20 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2016-01-12 04:34:30"
+            "time": "2016-01-12 19:26:20"
         },
         {
-            "name": "tecnick.com/tcpdf",
-            "version": "6.0.096",
+            "name": "tecnickcom/tcpdf",
+            "version": "6.2.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tecnickcom/TCPDF.git",
-                "reference": "ff8799164231d5c99a69bee276ce33bcb7f52a54"
+                "reference": "2f732eaa91b5665274689b1d40b285a7bacdc37f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/ff8799164231d5c99a69bee276ce33bcb7f52a54",
-                "reference": "ff8799164231d5c99a69bee276ce33bcb7f52a54",
+                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/2f732eaa91b5665274689b1d40b285a7bacdc37f",
+                "reference": "2f732eaa91b5665274689b1d40b285a7bacdc37f",
                 "shasum": ""
             },
             "require": {
@@ -203,7 +203,7 @@
                 "pdf417",
                 "qrcode"
             ],
-            "time": "2014-10-06 17:50:43"
+            "time": "2015-09-12 10:08:34"
         }
     ],
     "packages-dev": [],
