@@ -170,19 +170,24 @@
     <div class="panel-heading"><h3 class="panel-title">Firmas oficialmente soportadas</h3></div>
     <div class="panel-body">
         <div class="row">
-            <div class="col-md-4 center">
+            <div class="col-md-3 center">
                 <a href="https://www.acepta.com" title="Ir al sitio de Acepta">
                     <img src="<?=$_base?>/img/ca/acepta.png" alt="Acepta" class="img-responsibe" />
                 </a>
             </div>
-            <div class="col-md-4 center">
+            <div class="col-md-3 center">
                 <a href="https://www.e-sign.cl" title="Ir al sitio de E-Sign">
                     <img src="<?=$_base?>/img/ca/e-sign.jpg" alt="E-Sign" class="img-responsibe" />
                 </a>
             </div>
-            <div class="col-md-4 center">
+            <div class="col-md-3 center">
                 <a href="https://www.e-certchile.cl" title="Ir al sitio de E-CERTCHILE">
                     <img src="<?=$_base?>/img/ca/e-certchile.png" alt="E-CERTCHILE" class="img-responsibe" />
+                </a>
+            </div>
+            <div class="col-md-3 center">
+                <a href="https://www.pkichile.cl" title="Ir al sitio de PKI Chile">
+                    <img src="<?=$_base?>/img/ca/pki_chile.png" alt="PKI Chile" class="img-responsibe" />
                 </a>
             </div>
         </div>
