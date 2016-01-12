@@ -25,7 +25,7 @@ echo $f->input([
     'help' => 'Contraseña que permite abrir el certificado digital de la firma electrónica',
     'check' => 'notempty',
 ]);
-echo $f->end('Generar XML del libro');
+echo $f->end('Generar XML firmado');
 ?>
 <p>Se firmará el primer nodo que sea hijo de la raíz, en el siguiente ejemplo la raíz es A y se firmaría el contenido del nodo B:</p>
 <pre>
