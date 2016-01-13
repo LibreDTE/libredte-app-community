@@ -49,8 +49,8 @@ ini_set('max_execution_time', 600);
 \sowerphp\core\Configure::write('page.header.title', 'LibreDTE');
 \sowerphp\core\Configure::write('page.body.title', 'LibreDTE');
 \sowerphp\core\Configure::write('page.footer', [
-    'left' => '&copy; 2016 LibreDTE<br/><span>Un proyecto de <a href="https://sasco.cl">SASCO SpA</a> - <a href="/terminos">Términos y condiciones</a> - <a href="/screenshots">Screenshots</a> - <a href="/consultar" title="Consultar documentos (incluyendo boletas)">Consultar DTE</a>',
-    'right' => '<a href="http://creativecommons.org/licenses/by-sa/3.0/cl" title="Contenido bajo licencia CC BY-SA 3.0"><img src="/img/powered/cc_by-sa.png" alt="cc_by-sa" /></a>',
+    'left' => '&copy; 2016 LibreDTE<br/><span>Un proyecto de <a href="https://sasco.cl">SASCO SpA</a> - <a href="/consultar" title="Consultar documentos (incluyendo boletas)">Consultar DTE</a>',
+    'right' => '',
 ]);
 
 // Menú principal del sitio web
