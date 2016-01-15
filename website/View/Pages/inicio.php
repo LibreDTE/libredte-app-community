@@ -21,7 +21,7 @@
 
 <div class="row">
     <div class="col-sm-8 col-md-8">
-        <p class="objetivo lead">LibreDTE corresponde a un proyecto para interactuar con el SII de Chile, específicamente el sistema de Documentos Tributarios Electrónicos (DTE). Se considera la generación de DTE, timbraje, firma electrónica, envío de documentos y generación de versión en PDF de los mismos.</p>
+        <p class="objetivo lead">Somos la primera solución de facturación electrónica para Chile 100% libre. Con LibreDTE podrá administrar múltiples empresas, trabajar colaborativamente con diferentes usuarios y emitir documentos tributarios sin ningún límite en cantidad. Y todo esto ¡desde costo $0.-!</p>
         <div class="fb-like" data-share="true" data-width="450" data-show-faces="true"></div>
     </div>
     <div class="col-sm-4 col-md-4">
