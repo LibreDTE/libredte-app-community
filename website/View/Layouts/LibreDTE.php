@@ -76,7 +76,8 @@ foreach ($_nav_website as $link=>$name) {
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
 <?php if (!$_Auth->logged()) : ?>
-                        <li><a href="<?=$_base?>/usuarios/ingresar"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Iniciar sesión</a></li>
+                        <li><a href="<?=$_base?>/usuarios/registrar"><span class="text-primary"> ¡Regístrate gratis!</span></a></li>
+                        <li><a href="<?=$_base?>/usuarios/ingresar"><span class="fa fa-sign-in" aria-hidden="true"></span> Iniciar sesión</a></li>
 <?php else : ?>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><strong>Aplicación <span class="caret"></span></strong></a>
@@ -90,10 +91,10 @@ foreach ($_nav_app as $link=>&$info) {
 }
 ?>
                                 <li class="divider"></li>
-                                <li><a href="<?=$_base?>/documentacion"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Documentación</a></li>
+                                <li><a href="<?=$_base?>/documentacion"><span class="fa fa-book" aria-hidden="true"></span> Documentación</a></li>
                                 <li class="divider"></li>
-                                <li><a href="<?=$_base?>/usuarios/perfil"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Perfil de usuario</a></li>
-                                <li><a href="<?=$_base?>/usuarios/salir"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Cerrar sesión</a></li>
+                                <li><a href="<?=$_base?>/usuarios/perfil"><span class="fa fa-user" aria-hidden="true"></span> Perfil de usuario</a></li>
+                                <li><a href="<?=$_base?>/usuarios/salir"><span class="fa fa-sign-out" aria-hidden="true"></span> Cerrar sesión</a></li>
                             </ul>
                         </li>
 <?php endif; ?>
