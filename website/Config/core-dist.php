@@ -55,7 +55,7 @@ ini_set('max_execution_time', 600);
 
 // Menú principal del sitio web
 \sowerphp\core\Configure::write('nav.website', [
-    '/dte' => 'Módulo DTE',
+    '/dte' => 'Módulo facturación',
     '/certificacion' => 'Certificación',
     '/utilidades' => 'Utilidades',
     '/soporte' => ['name'=>'Soporte', 'nav'=>[
@@ -67,7 +67,7 @@ ini_set('max_execution_time', 600);
 
 // Menú principal de la aplicación web
 \sowerphp\core\Configure::write('nav.app', [
-    '/dte' => 'Módulo DTE',
+    '/dte' => 'Facturación',
     '/certificacion' => 'Certificación',
     '/utilidades' => 'Utilidades',
     '/dte/contribuyentes/seleccionar' => 'Seleccionar empresa',
