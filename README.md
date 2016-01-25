@@ -42,9 +42,8 @@ Si deseas contribuir con el proyecto, especialmente resolviendo alguna de las
 5. Crear un *pull request* para unir la nueva *branch* con LibreDTE.
 
 **IMPORTANTE**: antes de hacer un *pull request* verificar que el código
-cumpla con los estándares [PSR-1](http://www.php-fig.org/psr/psr-1),
-[PSR-2](http://www.php-fig.org/psr/psr-2) y
-[PSR-4](http://www.php-fig.org/psr/psr-4).
+cumpla con los estándares [PSR-1](http://www.php-fig.org/psr/psr-1)
+y [PSR-2](http://www.php-fig.org/psr/psr-2).
 
 Contacto y redes sociales
 -------------------------
