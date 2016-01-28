@@ -51,7 +51,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
     /**
      * Método que fuerza la selección de un contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-01-02
+     * @version 2016-01-27
      */
     public function beforeFilter()
     {
@@ -65,7 +65,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
                 $this->redirect('/dte/contribuyentes/seleccionar');
             }
             // si no existe la definición de ambiente y es de certificación se asigna
-            if (!defined('_LibreDTE_CERTIFICACION_') and $this->Contribuyente->certificacion) {
+            if (!defined('_LibreDTE_CERTIFICACION_') and $this->Contribuyente->config_ambiente_en_certificacion) {
                 define('_LibreDTE_CERTIFICACION_', true);
             }
         }
