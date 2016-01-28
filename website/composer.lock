@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "phpseclib/phpseclib",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "a74aa9efbe61430fcb60157c8e025a48ec8ff604"
+                "reference": "ba6fb78f727cd09f2a649113b95468019e490585"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/a74aa9efbe61430fcb60157c8e025a48ec8ff604",
-                "reference": "a74aa9efbe61430fcb60157c8e025a48ec8ff604",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/ba6fb78f727cd09f2a649113b95468019e490585",
+                "reference": "ba6fb78f727cd09f2a649113b95468019e490585",
                 "shasum": ""
             },
             "require": {
@@ -34,8 +34,7 @@
                 "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
                 "ext-libsodium": "SSH2/SFTP can make use of some algorithms provided by the libsodium-php extension.",
                 "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
-                "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations.",
-                "pear-pear/PHP_Compat": "Install PHP_Compat to get phpseclib working on PHP < 5.0.0."
+                "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
             "type": "library",
             "autoload": {
@@ -44,9 +43,6 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "include-path": [
-                "phpseclib/"
-            ],
             "license": [
                 "MIT"
             ],
@@ -69,6 +65,11 @@
                 {
                     "name": "Hans-Jürgen Petrich",
                     "email": "petrich@tronic-media.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Graham Campbell",
+                    "email": "graham@alt-three.com",
                     "role": "Developer"
                 }
             ],
@@ -93,7 +94,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2015-08-04 04:48:03"
+            "time": "2016-01-18 17:07:21"
         },
         {
             "name": "sasco/libredte",
@@ -101,12 +102,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "0faf45e8107735e3460d5a5f299f92af60b4d81b"
+                "reference": "3e8c750b97d72b4e57a0994835408c01e2ea6690"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/0faf45e8107735e3460d5a5f299f92af60b4d81b",
-                "reference": "0faf45e8107735e3460d5a5f299f92af60b4d81b",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/3e8c750b97d72b4e57a0994835408c01e2ea6690",
+                "reference": "3e8c750b97d72b4e57a0994835408c01e2ea6690",
                 "shasum": ""
             },
             "require": {
@@ -114,8 +115,11 @@
                 "ext-openssl": "*",
                 "ext-soap": "*",
                 "php": ">=5.5",
-                "phpseclib/phpseclib": "2.0.0",
+                "phpseclib/phpseclib": "2.0.1",
                 "tecnickcom/tcpdf": "6.2.12"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "5.1.*"
             },
             "type": "library",
             "autoload": {
@@ -140,7 +144,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2016-01-12 19:26:20"
+            "time": "2016-01-28 03:49:52"
         },
         {
             "name": "tecnickcom/tcpdf",
