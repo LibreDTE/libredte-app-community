@@ -49,17 +49,13 @@ class Controller_Estadisticas extends \Controller_App
      * @param desde Desde cuando considerar la actividad de los contribuyentes
      * @param hasta Hasta cuando considerar la actividad de los contribuyentes
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-01-07
+     * @version 2016-01-28
      */
     public function index($certificacion = false, $desde = 1, $hasta = 0)
     {
         $Contribuyentes = new \website\Dte\Model_Contribuyentes();
         $contribuyentes_sii = $Contribuyentes->count();
-        $Contribuyentes->setWhereStatement(
-            ['usuario IS NOT NULL', 'certificacion = :certificacion'],
-            [':certificacion' => (int)$certificacion]
-        );
-        $empresas_registradas = $Contribuyentes->count();
+        $empresas_registradas = $Contribuyentes->countRegistrados($certificacion);
         $DteEmitidos = new \website\Dte\Model_DteEmitidos();
         $DteEmitidos->setWhereStatement(
             ['certificacion = :certificacion'],
