@@ -158,3 +158,8 @@ ini_set('max_execution_time', 600);
 \sowerphp\core\Configure::write('api.default', [
     'token' => '',
 ]);
+
+// configuración para preautenticación
+\sowerphp\core\Configure::write('preauth', [
+    'enabled' => false,
+]);
