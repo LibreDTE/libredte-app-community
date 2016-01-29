@@ -1,6 +1,8 @@
 LibreDTE: Aplicación web
 ========================
 
+[![Dependency Status](https://www.versioneye.com/user/projects/56aab2d77e03c7003ba40ae9/badge.svg?style=flat)](https://www.versioneye.com/user/projects/56aab2d77e03c7003ba40ae9)
+
 LibreDTE es un proyecto que tiene por objetivo proveer facturación electrónica
 libre para Chile.
 
