@@ -65,13 +65,6 @@ echo $f->input([
     'placeholder' => 'Email del emisor (opcional)',
     'attr' => 'maxlength="80"',
 ]); echo '<br/>';
-echo $f->input([
-    'name' => 'CdgSIISucur',
-    'label' => 'Sucursal SII',
-    'placeholder' => 'Código sucursal SII del emisor (opcional)',
-    'check' => 'integer',
-    'attr' => 'maxlength="9"',
-]); echo '<br/>';
 ?>
     </div>
     <div class="col-md-6">
