@@ -26,7 +26,7 @@ namespace website;
 /**
  * Controlador base de la aplicación
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2016-01-02
+ * @version 2016-01-29
  */
 abstract class Controller_App extends \sowerphp\app\Controller_App
 {
@@ -92,6 +92,19 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
         if (!isset($this->Contribuyente))
             $this->Contribuyente = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente');
         return $this->Contribuyente;
+    }
+
+    /**
+     * Método que permite consumir por post un recurso de la misma aplicación
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2016-01-29
+     */
+    protected function consume($recurso, $datos, $assoc = true)
+    {
+        $rest = new \sowerphp\core\Network_Http_Rest();
+        $rest->setAuth($this->Auth->User ? $this->Auth->User->hash : \sowerphp\core\Configure::read('api.default.token'));
+        $rest->setAssoc($assoc);
+        return $rest->post($this->request->url.$recurso, $datos);
     }
 
 }
