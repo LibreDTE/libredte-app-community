@@ -22,8 +22,10 @@ directorio por defecto */usr/share/sowerphp*:
 	$ chmod +x sowerpkg.sh
 	$ ./sowerpkg.sh install -e "empresa app general" -W
 
-La instalación de la extensión empresa se realiza porque es necesario obtener
-*schemas* SQL y datos desde ella.
+Esto instalará el framework SowerPHP, y las extensiones obligatorias general y
+app. Adicionalmente se instalará la extensión empresa, esto se realiza porque es
+necesario obtener *schemas* SQL y datos desde ella (pero no se usa la extensión
+en si en la aplicación web).
 
 Instalación aplicación web
 --------------------------
