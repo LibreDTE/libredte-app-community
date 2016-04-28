@@ -102,12 +102,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "cdaf5737b09812f0b93507d39cfbdc59998cc9bf"
+                "reference": "9cb22bfb6fb1a0f374b8248bc1664a857a89cc10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/cdaf5737b09812f0b93507d39cfbdc59998cc9bf",
-                "reference": "cdaf5737b09812f0b93507d39cfbdc59998cc9bf",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/9cb22bfb6fb1a0f374b8248bc1664a857a89cc10",
+                "reference": "9cb22bfb6fb1a0f374b8248bc1664a857a89cc10",
                 "shasum": ""
             },
             "require": {
@@ -144,7 +144,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2016-04-10 20:38:01"
+            "time": "2016-04-28 20:41:02"
         },
         {
             "name": "tecnickcom/tcpdf",
