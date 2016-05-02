@@ -17,6 +17,6 @@
 </div>
 <div style="clear:both;margin-top:2em">&nbsp;</div>
 
-<a class="btn btn-primary btn-lg btn-block" href="http://wiki.libredte.cl/doku.php/webapp/certificacion" role="button">
+<a class="btn btn-primary btn-lg btn-block" href="http://wiki.libredte.cl/doku.php/faq/libredte/webapp/certificacion" role="button">
     ¿Cómo realizo el proceso de certificación utilizando LibreDTE?
 </a>
