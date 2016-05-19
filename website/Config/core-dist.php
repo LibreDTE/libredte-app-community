@@ -26,7 +26,7 @@
 /**
  * @file core.php
  * Configuración de la aplicación web de LibreDTE
- * @version 2015-12-21
+ * @version 2016-05-18
  */
 
 // Configuración depuración
@@ -56,20 +56,22 @@ ini_set('max_execution_time', 600);
 // Menú principal del sitio web
 \sowerphp\core\Configure::write('nav.website', [
     '/dte' => 'Módulo facturación',
-    '/certificacion' => 'Certificación',
-    '/utilidades' => 'Utilidades',
+    //'/certificacion' => 'Certificación',
+    //'/utilidades' => 'Utilidades',
     '/soporte' => ['name'=>'Soporte', 'nav'=>[
+        'https://wiki.libredte.cl/doku.php/faq'=>'Preguntas y respuestas frecuentes',
         'https://groups.google.com/forum/#!forum/libredte' => 'Lista de correo en Google Groups',
-        'http://wiki.libredte.cl'=>'Wiki de documentación',
-        '/../contacto'=>'Solicitar asesoría o consultoría',
+        'https://wiki.libredte.cl'=>'Wiki de documentación',
+        'https://sasco.cl/servicios/facturacion' => 'Soporte y asesoría entregado por SASCO SpA',
+        'https://libredte.cl' => 'Aplicación oficial en libredte.cl',
     ]],
 ]);
 
 // Menú principal de la aplicación web
 \sowerphp\core\Configure::write('nav.app', [
     '/dte' => 'Facturación',
-    '/certificacion' => 'Certificación',
-    '/utilidades' => 'Utilidades',
+    //'/certificacion' => 'Certificación',
+    //'/utilidades' => 'Utilidades',
     '/dte/contribuyentes/seleccionar' => 'Seleccionar empresa',
     '/sistema' => 'Sistema',
 ]);
@@ -99,7 +101,6 @@ ini_set('max_execution_time', 600);
     'Dte.Admin',
     'Sistema.General',
     'Sistema.General.DivisionGeopolitica',
-    'Multimedia',
 ]);
 
 // Configuración para autorización secundaria (extensión: sowerphp/app)
@@ -119,7 +120,7 @@ ini_set('max_execution_time', 600);
 
 // Configuración para auto registro de usuarios (extensión: sowerphp/app)
 \sowerphp\core\Configure::write('app.self_register', [
-    'groups' => ['usuarios', 'usuarios_dte'],
+    'groups' => ['usuarios', 'dte_basico'],
 ]);
 
 // Configuración para Telegram
@@ -149,17 +150,17 @@ ini_set('max_execution_time', 600);
 ]);
 
 // configuración para firma electrónica
-\sowerphp\core\Configure::write('firma_electronica.default', [
+/*\sowerphp\core\Configure::write('firma_electronica.default', [
     'file' => DIR_PROJECT.'/data/firma_electronica/default.p12',
     'pass' => '',
-]);
+]);*/
 
 // configuración para autenticación en API a usuarios no logueados
-\sowerphp\core\Configure::write('api.default', [
+/*\sowerphp\core\Configure::write('api.default', [
     'token' => '',
-]);
+]);*/
 
 // configuración para preautenticación
-\sowerphp\core\Configure::write('preauth', [
+/*\sowerphp\core\Configure::write('preauth', [
     'enabled' => false,
-]);
+]);*/
