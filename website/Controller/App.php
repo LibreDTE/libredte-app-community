@@ -26,19 +26,29 @@ namespace website;
 /**
  * Controlador base de la aplicación
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2016-01-29
+ * @version 2016-03-20
  */
 abstract class Controller_App extends \sowerphp\app\Controller_App
 {
 
     public $components = [
-        'Auth'=>[
+        'Auth' => [
             'redirect' => [
                 'login' => '/dte/contribuyentes/seleccionar',
             ],
         ],
-        'Api',
+        'Api' => [
+            'log' => LOG_UUCP,
+        ],
         'Log' => [
+            'report' => [
+                LOG_USER => [
+                    LOG_DEBUG => ['file'],
+                ],
+                LOG_UUCP => [
+                    LOG_INFO => ['file'],
+                ],
+            ],
             'report_email' => [
                 'attach' => true,
             ],
@@ -51,16 +61,18 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
     /**
      * Método que fuerza la selección de un contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-01-27
+     * @version 2016-02-07
      */
     public function beforeFilter()
     {
         parent::beforeFilter();
         // configuración previa para el módulo Dte y sus submódulos
-        if (strpos($this->request->params['module'], 'Dte')===0 and $this->request->params['controller']!='contribuyentes' and !$this->Auth->allowedWithoutLogin()) {
+        $dte = (strpos($this->request->params['module'], 'Dte')===0 and $this->request->params['controller']!='contribuyentes' and !$this->Auth->allowedWithoutLogin());
+        $lce = (strpos($this->request->params['module'], 'Lce')===0);
+        if ($dte or $lce) {
             // obtener emisor
             if (!$this->getContribuyente()) {
-                \sowerphp\core\Model_Datasource_Session::message('Antes de utilizar el módulo DTE debe seleccionar un contribuyente con el que operará', 'error');
+                \sowerphp\core\Model_Datasource_Session::message('Antes de utilizar el módulo '.$this->request->params['module'].' debe seleccionar un contribuyente con el que operará', 'error');
                 \sowerphp\core\Model_Datasource_Session::write('referer', $this->request->request);
                 $this->redirect('/dte/contribuyentes/seleccionar');
             }
