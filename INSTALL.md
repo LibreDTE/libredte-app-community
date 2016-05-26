@@ -99,9 +99,7 @@ Instalación aplicación web
 
 		$ psql libredte < libredte/website/Module/Dte/Model/Sql/PostgreSQL.sql
 
-10.	Cargar datos del módulo Dte:
-
-		$ psql libredte < libredte/website/Module/Dte/Model/Sql/datos.sql
+10.	Cargar datos del módulo Dte del archivo *libredte/website/Module/Dte/Model/Sql/datos.ods* a través de la página de carga de datos.
 
 11.	¡Listo! Ahora puede ingresar a la aplicación web de LibreDTE a través de
 	<http://example.com/libredte>.
