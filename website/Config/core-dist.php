@@ -26,7 +26,7 @@
 /**
  * @file core.php
  * Configuración de la aplicación web de LibreDTE
- * @version 2016-05-18
+ * @version 2016-05-21
  */
 
 // Configuración depuración
@@ -49,16 +49,16 @@ ini_set('max_execution_time', 600);
 \sowerphp\core\Configure::write('page.header.title', 'LibreDTE');
 \sowerphp\core\Configure::write('page.body.title', 'LibreDTE');
 \sowerphp\core\Configure::write('page.footer', [
-    'left' => '&copy; 2016 LibreDTE<br/><span>Un proyecto de <a href="https://sasco.cl">SASCO SpA</a> - <a href="/consultar" title="Consultar documentos (incluyendo boletas)">Consultar DTE</a>',
+    'left' => '&copy; 2016 '.\sowerphp\core\Configure::read('page.header.title').' - <a href="/consultar" title="Consultar documentos (incluyendo boletas)">Consultar DTE</a><br/><span>Aplicación de facturación basada en <a href="https://libredte.cl">LibreDTE</a>, el cual es un proyecto de <a href="https://sasco.cl">SASCO SpA</a> que tiene como misión proveer de facturación electrónica libre para Chile</span>',
     'right' => '',
 ]);
 
 // Menú principal del sitio web
 \sowerphp\core\Configure::write('nav.website', [
-    '/dte' => 'Módulo facturación',
-    //'/certificacion' => 'Certificación',
-    //'/utilidades' => 'Utilidades',
-    '/soporte' => ['name'=>'Soporte', 'nav'=>[
+    '/dte' => ['name'=>'Módulo facturación', 'desc'=>'Accede al módulo de facturación electrónica', 'icon'=>'fa fa-file-o'],
+    //'/certificacion' => ['name'=>'Certificación', 'desc'=>'Proceso de certificación hecho simple', 'icon'=>'fa fa-certificate'],
+    //'/utilidades' => ['name'=>'Utilidades', 'desc'=>'Utilidades y herramientas para generar documentos asociados a la facturación electrónica', 'icon'=>'fa fa-wrench'],
+    '/soporte' => ['name'=>'Soporte', 'desc'=>'¿Necesitas ayuda o tienes alguna consulta?', 'icon'=>'fa fa-support', 'nav'=>[
         'https://wiki.libredte.cl/doku.php/faq'=>'Preguntas y respuestas frecuentes',
         'https://groups.google.com/forum/#!forum/libredte' => 'Lista de correo en Google Groups',
         'https://wiki.libredte.cl'=>'Wiki de documentación',
@@ -70,6 +70,7 @@ ini_set('max_execution_time', 600);
 // Menú principal de la aplicación web
 \sowerphp\core\Configure::write('nav.app', [
     '/dte' => 'Facturación',
+    //'/lce' => 'Contabilidad',
     //'/certificacion' => 'Certificación',
     //'/utilidades' => 'Utilidades',
     '/dte/contribuyentes/seleccionar' => 'Seleccionar empresa',
@@ -98,7 +99,13 @@ ini_set('max_execution_time', 600);
 // Módulos que utiliza la aplicación
 \sowerphp\core\Module::uses([
     'Dte',
+    //'Dte.Informes',
     'Dte.Admin',
+    //'Dte.Admin.Informes',
+    'Dte.Admin.Mantenedores',
+    //'Lce',
+    //'Lce.Admin',
+    //'Lce.Admin.Mantenedores',
     'Sistema.General',
     'Sistema.General.DivisionGeopolitica',
 ]);
@@ -163,4 +170,10 @@ ini_set('max_execution_time', 600);
 // configuración para preautenticación
 /*\sowerphp\core\Configure::write('preauth', [
     'enabled' => false,
+]);*/
+
+// configuración para API de Dropbox
+/*\sowerphp\core\Configure::write('backup.dropbox', [
+    'key' => '',
+    'secret' => '',
 ]);*/
