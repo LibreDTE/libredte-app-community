@@ -1,3 +1,4 @@
+<?php $Emisor = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente'); ?>
 <!DOCTYPE html>
 <html lang="es">
     <head>
@@ -5,7 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="LibreDTE ¡facturación electrónica libre para Chile!">
-        <meta name="keywords" content="factura electrónica, facturación electrónica, sii, dte">
+        <meta name="keywords" content="factura electrónica, facturación electrónica, sii, dte, software libre, open source">
         <meta name="author" content="SASCO SpA">
         <title><?=$_header_title?></title>
         <link rel="shortcut icon" href="<?=$_base?>/img/favicon.png" />
@@ -55,8 +56,10 @@ foreach ($_nav_website as $link=>$name) {
     $active = $_page == $link ? ' active' : '';
     if ($link[0]=='/') $link = $_base.$link;
     if (isset($name['nav'])) {
+        $title = isset($name['desc']) ? $name['desc'] : (isset($name['title']) ? $name['title'] : '');
+        $icon = isset($name['icon']) ? '<span class="'.$name['icon'].'"></span> ' : '';
         echo '                        <li class="dropdown',$active,'">',"\n";
-        echo '                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">',$name['name'],' <span class="caret"></span></a>',"\n";
+        echo '                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" title="',$title,'">',$icon,$name['name'],' <span class="caret"></span></a>',"\n";
         echo '                            <ul class="dropdown-menu" role="menu">',"\n";
         foreach($name['nav'] as $l=>$n) {
             if ($l[0]=='/') $l = $link.$l;
@@ -67,9 +70,10 @@ foreach ($_nav_website as $link=>$name) {
     } else {
         if (is_array($name)) {
             $title = isset($name['desc']) ? $name['desc'] : (isset($name['title']) ? $name['title'] : '');
+            $icon = isset($name['icon']) ? '<span class="'.$name['icon'].'"></span> ' : '';
             $name = $name['name'];
-        } else $title = '';
-        echo '                        <li class="'.$active.'"><a href="',$link,'" title="',$title,'">',$name,'</a></li>',"\n";
+        } else $title = $icon = '';
+        echo '                        <li class="'.$active.'"><a href="',$link,'" title="',$title,'">',$icon.$name,'</a></li>',"\n";
     }
 }
 ?>
@@ -79,6 +83,21 @@ foreach ($_nav_website as $link=>$name) {
                         <li><a href="<?=$_base?>/usuarios/registrar"><span class="text-primary"> ¡Regístrate gratis!</span></a></li>
                         <li><a href="<?=$_base?>/usuarios/ingresar"><span class="fa fa-sign-in" aria-hidden="true"></span> Iniciar sesión</a></li>
 <?php else : ?>
+<?php if($Emisor) : ?>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                <strong><?=$Emisor->getRUT()?> <span class="caret"></span></strong>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="<?=$_base?>/dte/documentos/emitir"><span class="fa fa-file-text"></span> Emitir DTE</a></li>
+<?php if ($Emisor->usuario == $_Auth->User->id or $_Auth->User->inGroup(['soporte'])) : ?>
+                                <li class="divider"></li>
+                                <li><a href="<?=$_base?>/dte/contribuyentes/modificar/<?=$Emisor->rut?>"><span class="fa fa-edit"></span> Modificar</a></li>
+                                <li><a href="<?=$_base?>/dte/contribuyentes/usuarios/<?=$Emisor->rut?>"><span class="fa fa-users"></span> Usuarios</a></li>
+<?php endif; ?>
+                            </ul>
+                        </li>
+<?php endif; ?>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><strong>Aplicación <span class="caret"></span></strong></a>
                             <ul class="dropdown-menu" role="menu">
@@ -106,13 +125,12 @@ foreach ($_nav_app as $link=>&$info) {
 <!-- BEGIN MAIN CONTENT -->
 <?php
 // mensaje si la empresa está en certificación
-$Emisor = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente');
 if ($Emisor and ($Emisor->config_ambiente_en_certificacion or (defined('_LibreDTE_CERTIFICACION_') and _LibreDTE_CERTIFICACION_))) {
     echo '<div class="bg-warning center lead" style="padding:0.5em"><strong>AMBIENTE DE CERTIFICACIÓN: '.$Emisor->razon_social.'</strong></div>',"\n";
 }
 // menú de módulos si hay sesión iniciada
 if ($_Auth->logged() and $_module_breadcrumb) {
-    echo '<ol class="breadcrumb">',"\n";
+    echo '<ol class="breadcrumb hidden-print">',"\n";
     $url = '/';
     foreach ($_module_breadcrumb as $link => &$name) {
         if (is_string($link)) {
@@ -136,27 +154,15 @@ if ($message) {
     echo '<div class="alert alert-',$message['type'],'" role="alert">',"\n";
     echo '    <span class="glyphicon glyphicon-',$icons[$message['type']],'" aria-hidden="true"></span>',"\n";
     echo '    <span class="sr-only">',$message['type'],': </span>',$message['text'],"\n";
+    echo '    <a href="#" class="close" data-dismiss="alert" aria-label="close" title="Cerrar">&times;</a>',"\n";
     echo '</div>'."\n";
 }
 // contenido de la página
 echo $_content;
 ?>
 <!-- END MAIN CONTENT -->
-            <div class="center" id="google" style="margin: 2em 0">
-                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3829973028217596" data-ad-slot="3431080345" data-ad-format="auto"></ins>
-                <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script>
-                <script>
-                    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-                    ga('create', 'UA-67606610-1', 'auto');
-                    ga('send', 'pageview');
-                </script>
-            </div>
         </div>
-         <footer class="footer">
+        <footer class="footer hidden-print">
             <div class="container">
                 <div class="text-muted pull-left">
                     <?=(is_array($_footer)?$_footer['left']:$_footer)."\n"?>
