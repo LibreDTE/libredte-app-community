@@ -1,9 +1,8 @@
 data/firma_electronica
 data/logos
+data/var
+tmp
 website/Config/core.php
 website/Vendor
-website/webroot/doxygen
-website/webroot/archivos
-website/webroot/wiki
 website/View/Pages/inicio.php
 
