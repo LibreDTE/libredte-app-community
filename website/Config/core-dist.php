@@ -49,7 +49,7 @@ ini_set('max_execution_time', 600);
 \sowerphp\core\Configure::write('page.header.title', 'LibreDTE');
 \sowerphp\core\Configure::write('page.body.title', 'LibreDTE');
 \sowerphp\core\Configure::write('page.footer', [
-    'left' => '&copy; 2016 '.\sowerphp\core\Configure::read('page.header.title').' - <a href="/consultar" title="Consultar documentos (incluyendo boletas)">Consultar DTE</a><br/><span>Aplicación de facturación basada en <a href="https://libredte.cl">LibreDTE</a>, el cual es un proyecto de <a href="https://sasco.cl">SASCO SpA</a> que tiene como misión proveer de facturación electrónica libre para Chile</span>',
+    'left' => '&copy; 2016 '.\sowerphp\core\Configure::read('page.header.title').' - <a href="/consultar" title="Consultar documentos (incluyendo boletas)">Consultar DTE</a><br/><span>Aplicación de facturación basada en <a href="https://libredte.cl">LibreDTE</a>, el cual es un proyecto de <a href="https://sasco.cl">SASCO SpA</a> que tiene como misión proveer facturación electrónica libre para Chile</span>',
     'right' => '',
 ]);
 
