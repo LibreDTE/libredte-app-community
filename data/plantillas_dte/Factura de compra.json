@@ -1,0 +1,78 @@
+[
+    {
+        "Encabezado": {
+            "IdDoc": {
+                "TipoDTE": 46,
+                "Folio": "7"
+            }
+        },
+        "Detalle": [
+            {
+                "NmbItem": "Antena Yagi 16 dBi",
+                "QtyItem": "3",
+                "PrcItem": "15000",
+                "CodImpAdic": 15
+            }
+        ]
+    },
+    {
+        "Encabezado": {
+            "IdDoc": {
+                "TipoDTE": 61,
+                "Folio": "66"
+            },
+            "Totales": {
+                "MntNeto": 0,
+                "TasaIVA": 19,
+                "IVA": 0,
+                "MntTotal": 0
+            }
+        },
+        "Detalle": [
+            {
+                "NmbItem": "Antena Yagi 16 dBi",
+                "QtyItem": "1",
+                "PrcItem": "15000",
+                "CodImpAdic": 15
+            }
+        ],
+        "Referencia": [
+            {
+                "TpoDocRef": 46,
+                "FolioRef": "7",
+                "CodRef": 3,
+                "RazonRef": "DEVOLUCION DE MERCADERIA"
+            }
+        ]
+    },
+    {
+        "Encabezado": {
+            "IdDoc": {
+                "TipoDTE": 56,
+                "Folio": "34"
+            },
+            "Totales": {
+                "MntNeto": 0,
+                "TasaIVA": 19,
+                "IVA": 0,
+                "MntTotal": 0
+            }
+        },
+        "Detalle": [
+            {
+                "NmbItem": "Antena Yagi 16 dBi",
+                "QtyItem": "1",
+                "PrcItem": "15000",
+                "CodImpAdic": 15
+            }
+        ],
+        "Referencia": [
+            {
+                "TpoDocRef": 61,
+                "FolioRef": "66",
+                "CodRef": 1,
+                "RazonRef": "ANULA NOTA DE CREDITO ELECTRONICA"
+            }
+        ]
+    }
+]

@@ -1,0 +1,196 @@
+[
+    {
+        "Encabezado": {
+            "IdDoc": {
+                "TipoDTE": 39,
+                "Folio": 1
+            }
+        },
+        "Detalle": [
+            {
+                "NmbItem": "Punto de Acceso WAP54G",
+                "QtyItem": 4,
+                "PrcItem": 35000
+            },
+            {
+                "NmbItem": "Router WRT54GL",
+                "QtyItem": 1,
+                "PrcItem": 55000
+            }
+        ]
+    },
+    {
+        "Encabezado": {
+            "IdDoc": {
+                "TipoDTE": 39,
+                "Folio": 2
+            }
+        },
+        "Detalle": [
+            {
+                "NmbItem": "Cables de red UTP CAT6 1.5m",
+                "QtyItem": 20,
+                "PrcItem": 1500
+            }
+        ]
+    },
+    {
+        "Encabezado": {
+            "IdDoc": {
+                "TipoDTE": 39,
+                "Folio": 3
+            }
+        },
+        "Detalle": [
+            {
+                "NmbItem": "Rack 45U",
+                "QtyItem": 1,
+                "PrcItem": 650000
+            },
+            {
+                "NmbItem": "Bandejas 19\"",
+                "QtyItem": 4,
+                "PrcItem": 27000
+            }
+        ]
+    },
+    {
+        "Encabezado": {
+            "IdDoc": {
+                "TipoDTE": 39,
+                "Folio": 4
+            }
+        },
+        "Detalle": [
+            {
+                "NmbItem": "Servidor HP Proliant XYZ",
+                "QtyItem": 1,
+                "PrcItem": 1500000
+            },
+            {
+                "IndExe": 1,
+                "NmbItem": "Intalaci\u00f3n sistema operativo",
+                "QtyItem": 1,
+                "PrcItem": 8000
+            },
+            {
+                "IndExe": 1,
+                "NmbItem": "Instalaci\u00f3n servicios ambiente web",
+                "QtyItem": 1,
+                "PrcItem": 50000
+            }
+        ]
+    },
+    {
+        "Encabezado": {
+            "IdDoc": {
+                "TipoDTE": 39,
+                "Folio": 5
+            }
+        },
+        "Detalle": [
+            {
+                "NmbItem": "Pendrive con Debian GNU\/Linux",
+                "QtyItem": 1,
+                "PrcItem": 10000
+            }
+        ]
+    },
+    {
+        "Encabezado": {
+            "IdDoc": {
+                "TipoDTE": 39,
+                "Folio": 6
+            }
+        },
+        "Detalle": [
+            {
+                "NmbItem": "Tarjeta de red 100\/1000 Mbps",
+                "QtyItem": 2,
+                "PrcItem": 5000
+            },
+            {
+                "IndExe": 1,
+                "NmbItem": "Instalaci\u00f3n tarjeta de red y puesta en marcha VLANs",
+                "QtyItem": 1,
+                "PrcItem": 200000
+            }
+        ]
+    },
+    {
+        "Encabezado": {
+            "IdDoc": {
+                "TipoDTE": 39,
+                "Folio": 7
+            }
+        },
+        "Detalle": [
+            {
+                "NmbItem": "Antena yagi 13 dBi",
+                "QtyItem": 2,
+                "PrcItem": 34000
+            }
+        ]
+    },
+    {
+        "Encabezado": {
+            "IdDoc": {
+                "TipoDTE": 39,
+                "Folio": 8
+            }
+        },
+        "Detalle": [
+            {
+                "NmbItem": "Antena yagi 11 dBi",
+                "QtyItem": 1,
+                "PrcItem": 30000
+            },
+            {
+                "NmbItem": "Antena omnidirecional 16 dBi",
+                "QtyItem": 1,
+                "PrcItem": 70000
+            }
+        ]
+    },
+    {
+        "Encabezado": {
+            "IdDoc": {
+                "TipoDTE": 39,
+                "Folio": 9
+            }
+        },
+        "Detalle": [
+            {
+                "NmbItem": "Cable de red UTP cat6 1.5 m",
+                "QtyItem": 10,
+                "PrcItem": 1500
+            },
+            {
+                "NmbItem": "Tel\u00e9fono VoIP",
+                "QtyItem": 10,
+                "PrcItem": 45000
+            },
+            {
+                "NmbItem": "Adaptador enchufe",
+                "QtyItem": 10,
+                "PrcItem": 250
+            }
+        ]
+    },
+    {
+        "Encabezado": {
+            "IdDoc": {
+                "TipoDTE": 39,
+                "Folio": 10
+            }
+        },
+        "Detalle": [
+            {
+                "NmbItem": "Cable de red sin conectores",
+                "QtyItem": 17,
+                "UnmdItem": "m",
+                "PrcItem": 400
+            }
+        ]
+    }
+]
