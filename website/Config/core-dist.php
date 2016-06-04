@@ -26,7 +26,7 @@
 /**
  * @file core.php
  * Configuración de la aplicación web de LibreDTE
- * @version 2016-05-21
+ * @version 2016-06-04
  */
 
 // Configuración depuración
@@ -99,6 +99,7 @@ ini_set('max_execution_time', 600);
 // Módulos que utiliza la aplicación
 \sowerphp\core\Module::uses([
     'Dte',
+    'Dte.Cobranzas',
     //'Dte.Informes',
     'Dte.Admin',
     'Dte.Admin.Informes',
