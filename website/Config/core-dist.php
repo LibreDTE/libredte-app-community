@@ -101,7 +101,7 @@ ini_set('max_execution_time', 600);
     'Dte',
     //'Dte.Informes',
     'Dte.Admin',
-    //'Dte.Admin.Informes',
+    'Dte.Admin.Informes',
     'Dte.Admin.Mantenedores',
     //'Lce',
     //'Lce.Admin',
