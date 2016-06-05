@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "phpseclib/phpseclib",
-            "version": "2.0.1",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "ba6fb78f727cd09f2a649113b95468019e490585"
+                "reference": "3d265f7c079f5b37d33475f996d7a383c5fc8aeb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/ba6fb78f727cd09f2a649113b95468019e490585",
-                "reference": "ba6fb78f727cd09f2a649113b95468019e490585",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/3d265f7c079f5b37d33475f996d7a383c5fc8aeb",
+                "reference": "3d265f7c079f5b37d33475f996d7a383c5fc8aeb",
                 "shasum": ""
             },
             "require": {
@@ -38,6 +38,9 @@
             },
             "type": "library",
             "autoload": {
+                "files": [
+                    "phpseclib/bootstrap.php"
+                ],
                 "psr-4": {
                     "phpseclib\\": "phpseclib/"
                 }
@@ -94,7 +97,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2016-01-18 17:07:21"
+            "time": "2016-05-13 01:15:21"
         },
         {
             "name": "sasco/libredte",
@@ -102,12 +105,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "d86e9cb4b4ae5591d01dfa91b100a9f00d781d21"
+                "reference": "3069a66e59baad53093b6b7401a01ec6949df029"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/d86e9cb4b4ae5591d01dfa91b100a9f00d781d21",
-                "reference": "d86e9cb4b4ae5591d01dfa91b100a9f00d781d21",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/3069a66e59baad53093b6b7401a01ec6949df029",
+                "reference": "3069a66e59baad53093b6b7401a01ec6949df029",
                 "shasum": ""
             },
             "require": {
@@ -115,7 +118,7 @@
                 "ext-openssl": "*",
                 "ext-soap": "*",
                 "php": ">=5.5",
-                "phpseclib/phpseclib": "2.0.1",
+                "phpseclib/phpseclib": "2.0.2",
                 "tecnickcom/tcpdf": "6.2.12"
             },
             "require-dev": {
@@ -138,13 +141,13 @@
                 }
             ],
             "description": "Biblioteca para trabajo con DTE del SII de Chile",
-            "homepage": "http://libredte.cl",
+            "homepage": "https://libredte.cl",
             "keywords": [
                 "dte",
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2016-06-04 18:12:50"
+            "time": "2016-06-05 15:55:38"
         },
         {
             "name": "tecnickcom/tcpdf",
