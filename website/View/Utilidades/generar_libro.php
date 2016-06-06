@@ -8,7 +8,7 @@ echo $f->input([
     'label' => '¿Libro normal o simplificado?',
     'options' => ['Normal', 'Simplificado'],
     'check' => 'notempty',
-    'help' => 'Si el libro es simplificado no se firmará'
+    'help' => 'En certificación debe ser simplificado'
 ]);
 echo $f->input([
     'type' => 'select',
@@ -28,7 +28,7 @@ echo $f->input([
     'name' => 'PeriodoTributario',
     'label' => 'Período tributario',
     'placeholder' => '2000-01',
-    'help' => 'En certificación o simplificado debe ser un mes del año 2000 (compras) o 1980 (ventas)',
+    'help' => 'En certificación debe ser un mes del año 2000 (compras) o 1980 (ventas)',
     'check' => 'notempty',
 ]);
 echo $f->input([
@@ -36,22 +36,22 @@ echo $f->input([
     'name' => 'FchResol',
     'label' => 'Fecha resolución',
     'placeholder' => '2006-01-20',
-    'help' => 'En certificación o simplificado debe ser: 2006-01-20',
+    'help' => 'En simplificado debe ser: 2006-01-20',
     'check' => 'notempty date',
 ]);
 echo $f->input([
     'name' => 'NroResol',
     'label' => 'Número resolución',
     'placeholder' => 102006,
-    'help' => 'En certificación o simplificado debe ser: 102006',
+    'help' => 'En simplificado debe ser: 102006',
     'check' => 'notempty integer',
 ]);
 echo $f->input([
     'type' => 'select',
     'name' => 'TipoLibro',
     'label' => 'Tipo libro',
-    'options' => ['MENSUAL'=>'MENSUAL', 'ESPECIAL'=>'ESPECIAL'],
-    'help' => 'En certificación o simplificado debe ser: ESPECIAL',
+    'options' => ['MENSUAL'=>'MENSUAL', 'ESPECIAL'=>'ESPECIAL', 'RECTIFICA'=>'RECTIFICA'],
+    'help' => 'En simplificado debe ser: ESPECIAL',
     'check' => 'notempty',
 ]);
 echo $f->input([
@@ -59,21 +59,26 @@ echo $f->input([
     'name' => 'TipoEnvio',
     'label' => 'Tipo envío',
     'options' => ['TOTAL'=>'TOTAL'],
-    'help' => 'En certificación o simplificado debe ser: TOTAL',
+    'help' => 'En simplificado debe ser: TOTAL',
     'check' => 'notempty',
 ]);
 echo $f->input([
     'name' => 'FolioNotificacion',
     'label' => 'Folio notificación',
     'placeholder' => 102006,
-    'help' => 'En certificación o simplificado debe ser: 102006',
-    'check' => 'notempty integer',
+    'help' => 'Es obligatorio si el tipo de libro es: ESPECIAL. En simplificado debe ser: 102006',
+    'check' => 'integer',
+]);
+echo $f->input([
+    'name' => 'CodAutRec',
+    'label' => 'Autorización rectificación',
+    'help' => 'Código de autorización de rectificación, es obligatorio si el tipo de libro es: RECTIFICA',
 ]);
 echo $f->input([
     'type' => 'file',
     'name' => 'archivo',
     'label' => 'Archivo detalle',
-    'help' => 'Archivo CSV (separado por punto y coma) con el detalle del Libro de Compras o Ventas que se desea generar en XML: <a href="https://raw.githubusercontent.com/LibreDTE/libredte-lib/master/examples/libros/libro_ventas.csv">ejemplo archivo CSV ventas</a> o <a href="https://raw.githubusercontent.com/LibreDTE/libredte-lib/master/examples/libros/libro_compras.csv">ejemplo archivo CSV compras</a>',
+    'help' => 'Archivo CSV (separado por punto y coma) con el detalle del Libro de Compras o Ventas que se desea generar en XML: <a href="https://raw.githubusercontent.com/LibreDTE/libredte-lib/master/examples/libros/libro_ventas.csv">ejemplo archivo CSV ventas</a>, <a href="https://raw.githubusercontent.com/LibreDTE/libredte-lib/master/examples/libros/libro_compras.csv">ejemplo archivo CSV compras</a> o <a href="https://raw.githubusercontent.com/LibreDTE/libredte-lib/master/examples/libros/libro_compras_exentos.csv">ejemplo archivo CSV compras empresas no afectas</a>',
     'check' => 'notempty',
     'attr' => 'accept=".csv"',
 ]);
@@ -81,7 +86,7 @@ echo $f->input([
     'type' => 'file',
     'name' => 'firma',
     'label' => 'Firma electrónica',
-    'help' => 'Certificado digital con extensión .p12',
+    'help' => 'Certificado digital con extensión .p12 o .pfx',
     'check' => 'notempty',
     'attr' => 'accept=".p12,.pfx"',
 ]);

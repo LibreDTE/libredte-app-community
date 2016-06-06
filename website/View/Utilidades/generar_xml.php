@@ -161,7 +161,7 @@ echo $f->input([
     'type' => 'file',
     'name' => 'firma',
     'label' => 'Firma electrónica',
-    'help' => 'Certificado digital con extensión .p12',
+    'help' => 'Certificado digital con extensión .p12 o .pfx',
     'check' => 'notempty',
     'attr' => 'accept=".p12,.pfx"',
 ]);
@@ -169,6 +169,7 @@ echo $f->input([
     'type' => 'password',
     'name' => 'contrasenia',
     'label' => 'Contraseña firma',
+    'check' => 'notempty',
     'help' => 'Contraseña que permite abrir el certificado digital de la firma electrónica',
 ]);
 echo '<h2>Resolución</h2>',"\n";

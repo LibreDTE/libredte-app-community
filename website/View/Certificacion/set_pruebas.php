@@ -34,6 +34,7 @@ $(function() {
         <li role="presentation"><a href="#ventas" aria-controls="ventas" role="tab" data-toggle="tab">Libro de Ventas</a></li>
         <li role="presentation"><a href="#compras" aria-controls="compras" role="tab" data-toggle="tab">Libro de Compras</a></li>
         <li role="presentation"><a href="#guias" aria-controls="guias" role="tab" data-toggle="tab">Libro de Guías de Despacho</a></li>
+        <li role="presentation"><a href="#boletas" aria-controls="boletas" role="tab" data-toggle="tab">Boletas</a></li>
     </ul>
     <div class="tab-content">
 
@@ -78,12 +79,43 @@ echo $f->input([
     'attr' => 'accept=".xml"',
 ]);
 echo $f->input([
+    'type' => 'select',
+    'name' => 'simplificado',
+    'label' => '¿Libro normal o simplificado?',
+    'options' => ['Normal', 'Simplificado'],
+    'value' => 1,
+    'check' => 'notempty',
+    'help' => 'Si el contribuyente nunca ha sido autorizado debe ser simplificado'
+]);
+echo $f->input([
     'name' => 'PeriodoTributario',
     'label' => 'Periodo tributario',
     'value' => '1980-01',
     'placeholder' => '1980-01',
     'check' => 'notempty',
-    'help' => 'Debe ser un mes del año 1980',
+    'help' => 'Si el libro es simplificado, debe ser un mes del año 1980',
+]);
+echo $f->input([
+    'type' => 'date',
+    'name' => 'FchResol',
+    'label' => 'Fecha resolución',
+    'value' => '2006-01-20',
+    'placeholder' => '2006-01-20',
+    'check' => 'notempty date',
+    'help' => 'Si el libro es simplificado, debe ser 2006-01-20',
+]);
+echo $f->input([
+    'type' => 'file',
+    'name' => 'firma',
+    'label' => 'Firma electrónica',
+    'help' => 'Obligatorio si libro es normal. Certificado digital con extensión .p12 o .pfx',
+    'attr' => 'accept=".p12,.pfx"',
+]);
+echo $f->input([
+    'type' => 'password',
+    'name' => 'contrasenia',
+    'label' => 'Contraseña firma',
+    'help' => 'Contraseña que permite abrir el certificado digital de la firma electrónica',
 ]);
 echo $f->end('Descargar Libro de Ventas');
 ?>
@@ -113,6 +145,120 @@ echo $f->end('Descargar Libro de Ventas');
     <a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/utilidades/generar_libro_guia" role="button">Generar XML de Libro de Guías de Despacho usando archivo CSV</a>
 </div>
 <!-- FIN GUÍAS -->
+
+<!-- INICIO BOLETAS -->
+<div role="tabpanel" class="tab-pane" id="boletas">
+<?php
+$f = new \sowerphp\general\View_Helper_Form();
+echo $f->begin(['action'=>$_base.'/certificacion/set_pruebas_boletas', 'id'=>'form_boletas', 'onsubmit'=>'Form.check(\'form_boletas\')']);
+echo $f->input([
+    'name' => 'RUTEmisor',
+    'label' => 'RUT',
+    'placeholder' => 'RUT del emisor: 11222333-4',
+    'check' => 'notempty rut',
+    'attr' => 'maxlength="12" onblur="Emisor.setDatos(\'form_boletas\')"',
+]);
+echo $f->input([
+    'name' => 'RznSoc',
+    'label' => 'Razón social',
+    'placeholder' => 'Razón social del emisor: Empresa S.A.',
+    'check' => 'notempty',
+    'attr' => 'maxlength="100"',
+]);
+echo $f->input([
+    'name' => 'GiroEmis',
+    'label' => 'Giro',
+    'placeholder' => 'Giro del emisor',
+    'check' => 'notempty',
+    'attr' => 'maxlength="80"',
+]);
+echo $f->input([
+    'type' => 'select',
+    'name' => 'Acteco',
+    'label' => 'Actividad económica',
+    'options' => [''=>'Actividad económica del emisor'] + $actividades_economicas,
+    'check' => 'notempty',
+]);
+echo $f->input([
+    'name' => 'DirOrigen',
+    'label' => 'Dirección',
+    'placeholder' => 'Dirección del emisor',
+    'check' => 'notempty',
+    'attr' => 'maxlength="70"',
+]);
+echo $f->input([
+    'type' => 'select',
+    'name' => 'CmnaOrigen',
+    'label' => 'Comuna',
+    'options' => [''=>'Comuna del emisor'] + $comunas,
+    'check' => 'notempty',
+]);
+echo $f->input([
+    'type' => 'hidden',
+    'name' => 'Telefono',
+]);
+echo $f->input([
+    'type' => 'hidden',
+    'name' => 'CorreoEmisor',
+]);
+echo $f->input([
+    'type' => 'date',
+    'name' => 'FchResol',
+    'label' => 'Fecha resolución',
+    'help' => 'Fecha en que fue otorgada la resolución',
+    'check' => 'notempty date',
+]);
+echo $f->input([
+    'type' => 'hidden',
+    'name' => 'NroResol',
+]);
+echo $f->input([
+    'type' => 'file',
+    'name' => 'archivo',
+    'label' => 'Set de pruebas',
+    'check' => 'notempty',
+    'help' => 'Archivo CSV (separado por punto y coma) con el set de pruebas de las boletas electrónicas: <a href="https://raw.githubusercontent.com/LibreDTE/libredte-lib/master/examples/set_pruebas/007-boletas.csv">ejemplo archivo CSV</a>',
+    'attr' => 'accept=".csv"',
+]);
+echo $f->input([
+    'type' => 'js',
+    'name' => 'folios_boletas',
+    'label' => 'Folios a usar',
+    'titles' => ['Tipo documento', 'Folio desde', 'CAF'],
+    'inputs' => [
+        ['name'=>'folios', 'check'=>'notempty integer'],
+        ['name'=>'desde', 'check'=>'notempty integer'],
+        ['type'=>'file', 'name'=>'caf', 'check'=>'notempty', 'attr' => 'accept=".xml"'],
+    ],
+    'check' => 'notempty',
+    'help' => 'Se debe indicar el código del tipo de documento, el folio desde el cual se generarán los documentos y el XML del CAF para cada tipo de documento',
+]);
+echo $f->input([
+    'name' => 'web_verificacion',
+    'label' => 'Web verificación',
+    'value' => 'libredte.cl/boletas',
+    'check' => 'notempty',
+    'help' => 'Página web para verificar las boletas (se coloca bajo el timbre en el PDF)',
+]);
+echo $f->input([
+    'type' => 'file',
+    'name' => 'firma',
+    'label' => 'Firma electrónica',
+    'help' => 'Certificado digital con extensión .p12',
+    'check' => 'notempty',
+    'attr' => 'accept=".p12,.pfx"',
+]);
+echo $f->input([
+    'type' => 'password',
+    'name' => 'contrasenia',
+    'label' => 'Contraseña firma',
+    'check' => 'notempty',
+    'help' => 'Contraseña que permite abrir el certificado digital de la firma electrónica',
+]);
+echo $f->end('Generar boletas, notas de crédito, consumo de folios, libro de boletas y muestras impresas');
+?>
+</div>
+<!-- FIN BOLETAS -->
 
     </div>
 </div>

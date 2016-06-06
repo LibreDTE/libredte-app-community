@@ -14,7 +14,7 @@ echo $f->input([
     'type' => 'file',
     'name' => 'firma',
     'label' => 'Firma electrónica',
-    'help' => 'Certificado digital con extensión .p12',
+    'help' => 'Certificado digital con extensión .p12 o .pfx',
     'check' => 'notempty',
     'attr' => 'accept=".p12,.pfx"',
 ]);

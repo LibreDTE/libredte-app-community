@@ -27,7 +27,7 @@ namespace website;
 /**
  * Controlador para el proceso de certificación ante el SII
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2015-09-10
+ * @version 2016-02-15
  */
 class Controller_Certificacion extends \Controller_App
 {
@@ -58,11 +58,14 @@ class Controller_Certificacion extends \Controller_App
     /**
      * Método para permitir acciones sin estar autenticado
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-13
+     * @version 2016-02-18
      */
     public function beforeFilter()
     {
-        $this->Auth->allow('index', 'set_pruebas', 'simulacion', 'intercambio', 'muestras_impresas', 'set_pruebas_dte', 'set_pruebas_ventas', 'set_pruebas_compras');
+        $this->Auth->allow('index');
+        if (\sowerphp\core\Configure::read('api.default.token')) {
+            $this->Auth->allow('set_pruebas', 'simulacion', 'intercambio', 'muestras_impresas', 'set_pruebas_dte', 'set_pruebas_ventas', 'set_pruebas_boletas');
+        }
         parent::beforeFilter();
     }
 
@@ -84,11 +87,14 @@ class Controller_Certificacion extends \Controller_App
      * Acción para la etapa de certificación de generación de DTEs del set de
      * pruebas
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-12
+     * @version 2016-02-15
      */
     public function set_pruebas()
     {
         $this->set([
+            '_header_extra' => ['js'=>['/dte/js/dte.js']],
+            'actividades_economicas' => (new \website\Sistema\General\Model_ActividadEconomicas())->getList(),
+            'comunas' => (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->getList(),
             'nav' => $this->nav,
         ]);
     }
@@ -135,7 +141,7 @@ class Controller_Certificacion extends \Controller_App
      * Acción que genera el libro de ventas a partir del XML de EnvioDTE creado
      * para la certificación
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-12-16
+     * @version 2016-03-11
      */
     public function set_pruebas_ventas()
     {
@@ -156,32 +162,345 @@ class Controller_Certificacion extends \Controller_App
             'RutEmisorLibro' => $Caratula['RutEmisor'],
             'RutEnvia' => $Caratula['RutEnvia'],
             'PeriodoTributario' => $_POST['PeriodoTributario'],
-            'FchResol' => '2006-01-20',
-            'NroResol' => 102006,
+            'FchResol' => $_POST['FchResol'],
+            'NroResol' => $_POST['simplificado'] ? 102006 : 0,
             'TipoOperacion' => 'VENTA',
-            'TipoLibro' => 'ESPECIAL',
+            'TipoLibro' => $_POST['simplificado'] ? 'ESPECIAL' : 'MENSUAL',
             'TipoEnvio' => 'TOTAL',
-            'FolioNotificacion' => 102006,
+            'FolioNotificacion' => $_POST['simplificado'] ? 102006 : false,
         ];
         // armar libro de ventas
-        $LibroCompraVenta = new \sasco\LibreDTE\Sii\LibroCompraVenta(true); // libro simplificado
+        $LibroCompraVenta = new \sasco\LibreDTE\Sii\LibroCompraVenta($_POST['simplificado']);
         foreach ($Documentos as $DTE) {
             $LibroCompraVenta->agregar($DTE->getResumen(), false); // agregar detalle sin normalizar
         }
+        // si es libro normal se solicita la firma
+        if (!$_POST['simplificado']) {
+            try {
+                $Firma = new \sasco\LibreDTE\FirmaElectronica([
+                    'file' => $_FILES['firma']['tmp_name'],
+                    'pass' => $_POST['contrasenia'],
+                ]);
+                $LibroCompraVenta->setFirma($Firma);
+            } catch (\Exception $e) {
+                \sowerphp\core\Model_Datasource_Session::message(
+                    'No fue posible abrir la firma digital, quizás contraseña incorrecta', 'error'
+            );
+                $this->redirect('/certificacion/set_pruebas#ventas');
+            }
+        }
         // generar XML con el libro de ventas
         $LibroCompraVenta->setCaratula($caratula);
-        $xml = $LibroCompraVenta->generar(false); // generar XML sin firma y sin detalle
+        $xml = $LibroCompraVenta->generar(!$_POST['simplificado']);
         // verificar problemas de esquema
-        /*if (!$LibroCompraVenta->schemaValidate()) {
+        if (!$LibroCompraVenta->schemaValidate()) {
             \sowerphp\core\Model_Datasource_Session::message(
                 implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
             );
             $this->redirect('/certificacion/set_pruebas#ventas');
-        }*/
+        }
         // descargar XML
         $file = TMP.'/'.$LibroCompraVenta->getID().'.xml';
         file_put_contents($file, $xml);
         \sasco\LibreDTE\File::compress($file, ['format'=>'zip', 'delete'=>true]);
+        exit;
+    }
+
+    /**
+     * Acción que genera EnvioBOLETA, consumo de folios, libro de boletas y las
+     * muestras impresas a partir de un set de pruebas de boleta electrónica
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2016-02-17
+     */
+    public function set_pruebas_boletas()
+    {
+        // si no se pasó el archivo error
+        if (!isset($_FILES['archivo']) or $_FILES['archivo']['error']) {
+            \sowerphp\core\Model_Datasource_Session::message(
+                'Debes enviar la planilla con el set de pruebas de las boletas electrónicas', 'error'
+            );
+            $this->redirect('/certificacion/set_pruebas#boletas');
+        }
+        // determinar tipo de DTE a generar (afecto o exento)
+        $TipoDTE = in_array(39, $_POST['folios']) ? 39 : 41;
+        // crear documentos
+        $data = \sowerphp\general\Utility_Spreadsheet::read($_FILES['archivo']);
+        $n_data = count($data);
+        $set_pruebas = [];
+        $folio_actual = 0;
+        $folios_anulados = [];
+        $folios_rebajados = [];
+        for ($i=1; $i<$n_data; $i++) {
+            // crear dte
+            if ($data[$i][0]) {
+                $folio_actual = $data[$i][0];
+                $set_pruebas[$folio_actual] = [
+                    'Encabezado' => [
+                        'IdDoc' => [
+                            'TipoDTE' => $TipoDTE,
+                            'Folio' => $folio_actual,
+                            'FchEmis' => date('Y-m-d'),
+                        ],
+                    ],
+                    'Detalle' => [],
+                ];
+            }
+            // agregar datos de detalle
+            $set_pruebas[$folio_actual]['Detalle'][] = [
+                'IndExe' => $data[$i][1] ? $data[$i][1] : false,
+                'NmbItem' => $data[$i][2],
+                'QtyItem' => $data[$i][3],
+                'UnmdItem'  => $data[$i][4] ? $data[$i][4] : false,
+                'PrcItem' => $data[$i][5],
+            ];
+            // recordar folios anulados
+            if ($data[$i][6]) {
+                $folios_anulados[] = $folio_actual;
+            }
+            // recordar folios rebajados
+            if ($data[$i][7]) {
+                $folios_rebajados[$folio_actual] = $data[$i][7];
+            }
+        }
+        // directorio temporal
+        $dir = TMP.'/set_boletas_'.$_POST['RUTEmisor'];
+        if (is_dir($dir)) {
+            \sowerphp\general\Utility_File::rmdir($dir);
+        }
+        mkdir($dir);
+        mkdir($dir.'/xml');
+        mkdir($dir.'/pdf');
+        if (!is_dir($dir)) {
+            \sowerphp\core\Model_Datasource_Session::message(
+                'No fue posible generar el directorio para archivos del set de boleta', 'error'
+            );
+            $this->redirect('/certificacion/set_pruebas#boletas');
+        }
+        // crear set de boletas
+        $caratula = [
+            'RutReceptor' => '60803000-K',
+            'FchResol' => $_POST['FchResol'],
+            'NroResol' => 0,
+        ];
+        $Emisor = [
+            'RUTEmisor' => str_replace('.', '', $_POST['RUTEmisor']),
+            'RznSoc' => $_POST['RznSoc'],
+            'GiroEmis' => $_POST['GiroEmis'],
+            'Acteco' => $_POST['Acteco'],
+            'DirOrigen' => $_POST['DirOrigen'],
+            'CmnaOrigen' => (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna($_POST['CmnaOrigen']))->comuna,
+        ];
+        $SASCO = new \website\Dte\Model_Contribuyente(76192083);
+        $Receptor = [
+            'RUTRecep' => $SASCO->rut.'-'.$SASCO->dv,
+            'RznSocRecep' => $SASCO->razon_social,
+            'DirRecep' => $SASCO->direccion,
+            'CmnaRecep' => $SASCO->getComuna()->comuna,
+        ];
+        try {
+            $Firma = new \sasco\LibreDTE\FirmaElectronica([
+                'file' => $_FILES['firma']['tmp_name'],
+                'pass' => $_POST['contrasenia'],
+            ]);
+        } catch (\Exception $e) {
+            \sowerphp\core\Model_Datasource_Session::message(
+                'No fue posible abrir la firma digital, quizás contraseña incorrecta', 'error'
+            );
+            $this->redirect('/certificacion/set_pruebas#boletas');
+        }
+        $Folios = []; // CAF
+        $folios = []; // desde donde partir
+        $n_folios = count($_POST['folios']);
+        for ($i=0; $i<$n_folios; $i++) {
+            $folios[$_POST['folios'][$i]] = $_POST['desde'][$i];
+            $Folios[$_POST['folios'][$i]] = new \sasco\LibreDTE\Sii\Folios(file_get_contents($_FILES['caf']['tmp_name'][$i]));
+        }
+        $EnvioBOLETA = new \sasco\LibreDTE\Sii\EnvioDte();
+        foreach ($set_pruebas as &$documento) {
+            $documento['Encabezado']['Emisor'] = $Emisor;
+            $documento['Encabezado']['Receptor'] = $Receptor;
+            $DTE = new \sasco\LibreDTE\Sii\Dte($documento);
+            if (!$DTE->timbrar($Folios[$DTE->getTipo()]))
+                break;
+            if (!$DTE->firmar($Firma))
+                break;
+            $EnvioBOLETA->agregar($DTE);
+        }
+        $EnvioBOLETA->setFirma($Firma);
+        $EnvioBOLETA->setCaratula($caratula);
+        $EnvioBOLETA->generar();
+        if ($EnvioBOLETA->schemaValidate()) {
+            file_put_contents($dir.'/xml/EnvioBOLETA.xml', $EnvioBOLETA->generar());
+        } else {
+            \sowerphp\core\Model_Datasource_Session::message(
+                'No fue posible generar EnvioBOLETA.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+            );
+            $this->redirect('/certificacion/set_pruebas#boletas');
+        }
+        // crear set de notas de crédito
+        $notas_credito = [];
+        $n_folios_anulados = count($folios_anulados);
+        for ($i=0; $i<$n_folios_anulados; $i++) {
+            $notas_credito[] = \sasco\LibreDTE\Arreglo::mergeRecursiveDistinct($set_pruebas[$folios_anulados[$i]], [
+                'Encabezado' => [
+                    'IdDoc' => [
+                        'TipoDTE' => 61,
+                        'Folio' => $folios[61]+$i,
+                        'MntBruto' => 1,
+                    ],
+                    'Totales' => [
+                        // estos valores serán calculados automáticamente
+                        'MntNeto' => 0,
+                        'TasaIVA' => \sasco\LibreDTE\Sii::getIVA(),
+                        'IVA' => 0,
+                        'MntTotal' => 0,
+                    ],
+                ],
+                'Referencia' => [
+                    'TpoDocRef' => $set_pruebas[$folios_anulados[$i]]['Encabezado']['IdDoc']['TipoDTE'],
+                    'FolioRef' => $set_pruebas[$folios_anulados[$i]]['Encabezado']['IdDoc']['Folio'],
+                    'CodRef' => 1,
+                    'RazonRef' => 'ANULA BOLETA',
+                ],
+            ]);
+        }
+        $i = 0;
+        foreach ($folios_rebajados as $f => $r) {
+            $Detalle = $set_pruebas[$f]['Detalle'];
+            foreach ($Detalle as &$d) {
+                $d['QtyItem'] = $d['QtyItem']*($r/100);
+            }
+            $notas_credito[] = \sasco\LibreDTE\Arreglo::mergeRecursiveDistinct($set_pruebas[$f], [
+                'Encabezado' => [
+                    'IdDoc' => [
+                        'TipoDTE' => 61,
+                        'Folio' => $folios[61]+$i+$n_folios_anulados,
+                        'MntBruto' => 1,
+                    ],
+                    'Totales' => [
+                        // estos valores serán calculados automáticamente
+                        'MntNeto' => 0,
+                        'TasaIVA' => \sasco\LibreDTE\Sii::getIVA(),
+                        'IVA' => 0,
+                        'MntTotal' => 0,
+                    ],
+                ],
+                'Detalle' => $Detalle,
+                'Referencia' => [
+                    'TpoDocRef' => $set_pruebas[$f]['Encabezado']['IdDoc']['TipoDTE'],
+                    'FolioRef' => $set_pruebas[$f]['Encabezado']['IdDoc']['Folio'],
+                    'CodRef' => 3,
+                    'RazonRef' => 'SE REBAJA EN UN '.$r.'%',
+                ],
+            ]);
+            $i++;
+        }
+        $EnvioDTE = new \sasco\LibreDTE\Sii\EnvioDte();
+        foreach ($notas_credito as $documento) {
+            $DTE = new \sasco\LibreDTE\Sii\Dte($documento);
+            if (!$DTE->timbrar($Folios[$DTE->getTipo()]))
+                break;
+            if (!$DTE->firmar($Firma))
+                break;
+            $EnvioDTE->agregar($DTE);
+        }
+        $EnvioDTE->setFirma($Firma);
+        $EnvioDTE->setCaratula($caratula);
+        $EnvioDTE->generar();
+        if ($EnvioDTE->schemaValidate()) {
+                file_put_contents($dir.'/xml/NotasCredito.xml', $EnvioDTE->generar());
+        } else {
+            \sowerphp\core\Model_Datasource_Session::message(
+                'No fue posible generar NotasCredito.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+            );
+            $this->redirect('/certificacion/set_pruebas#boletas');
+        }
+        // crear consumo de folios
+        $EnvioBOLETA = new \sasco\LibreDTE\Sii\EnvioDte();
+        $EnvioBOLETA->loadXML(file_get_contents($dir.'/xml/EnvioBOLETA.xml'));
+        $EnvioDTE = new \sasco\LibreDTE\Sii\EnvioDte();
+        $EnvioDTE->loadXML(file_get_contents($dir.'/xml/NotasCredito.xml'));
+        $ConsumoFolio = new \sasco\LibreDTE\Sii\ConsumoFolio();
+        $ConsumoFolio->setFirma($Firma);
+        foreach ($EnvioBOLETA->getDocumentos() as $Dte) {
+            $ConsumoFolio->agregar($Dte->getResumen());
+        }
+        foreach ($EnvioDTE->getDocumentos() as $Dte) {
+            $ConsumoFolio->agregar($Dte->getResumen());
+        }
+        $CaratulaEnvioBOLETA = $EnvioBOLETA->getCaratula();
+        $ConsumoFolio->setCaratula([
+            'RutEmisor' => $CaratulaEnvioBOLETA['RutEmisor'],
+            'FchResol' => $CaratulaEnvioBOLETA['FchResol'],
+            'NroResol' => $CaratulaEnvioBOLETA['NroResol'],
+        ]);
+        $ConsumoFolio->generar();
+        if ($ConsumoFolio->schemaValidate()) {
+            file_put_contents($dir.'/xml/ConsumoFolios.xml', $ConsumoFolio->generar());
+        } else {
+            \sowerphp\core\Model_Datasource_Session::message(
+                'No fue posible generar ConsumoFolios.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+            );
+            $this->redirect('/certificacion/set_pruebas#boletas');
+        }
+        // crear libro de boletas
+        $LibroBoleta = new \sasco\LibreDTE\Sii\LibroBoleta();
+        $LibroBoleta->setFirma($Firma);
+        foreach ($EnvioBOLETA->getDocumentos() as $Dte) {
+            $r = $Dte->getResumen();
+            $LibroBoleta->agregar([
+                'TpoDoc' => $r['TpoDoc'],
+                'FolioDoc' => $r['NroDoc'],
+                'Anulado' => in_array($r['NroDoc'], $folios_anulados) ? 'A' : false,
+                'FchEmiDoc' => $r['FchDoc'],
+                'RUTCliente' => $r['RUTDoc'],
+                'MntExe' => $r['MntExe'] ? $r['MntExe'] : false,
+                'MntTotal' => $r['MntTotal'],
+            ]);
+        }
+        $CaratulaEnvioBOLETA = $EnvioBOLETA->getCaratula();
+        $LibroBoleta->setCaratula([
+            'RutEmisorLibro' => $CaratulaEnvioBOLETA['RutEmisor'],
+            'FchResol' => $CaratulaEnvioBOLETA['FchResol'],
+            'NroResol' => $CaratulaEnvioBOLETA['NroResol'],
+            'FolioNotificacion' => 1,
+        ]);
+        $LibroBoleta->generar();
+        if ($LibroBoleta->schemaValidate()) {
+            file_put_contents($dir.'/xml/LibroBoletas.xml', $LibroBoleta->generar());
+        } else {
+            \sowerphp\core\Model_Datasource_Session::message(
+                'No fue posible generar LibroBoletas.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+            );
+            $this->redirect('/certificacion/set_pruebas#boletas');
+        }
+        // generar muestras impresas
+        $rest = new \sowerphp\core\Network_Http_Rest();
+        $rest->setAuth($this->Auth->User ? $this->Auth->User->hash : \sowerphp\core\Configure::read('api.default.token'));
+        $data = [
+            'xml' => base64_encode(file_get_contents($dir.'/xml/EnvioBOLETA.xml')),
+            'webVerificacion' => $_POST['web_verificacion'],
+            'compress' => true,
+        ];
+        $response = $rest->post($this->request->url.'/api/dte/documentos/generar_pdf', $data);
+        if ($response['status']['code']!=200) {
+            \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
+            $this->redirect('/certificacion/set_pruebas#boletas');
+        }
+        file_put_contents($dir.'/pdf/EnvioBOLETA.zip', $response['body']);
+        $data = [
+            'xml' => base64_encode(file_get_contents($dir.'/xml/NotasCredito.xml')),
+            'cedible' => true,
+            'compress' => true,
+        ];
+        $response = $rest->post($this->request->url.'/api/dte/documentos/generar_pdf', $data);
+        if ($response['status']['code']!=200) {
+            \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
+            $this->redirect('/certificacion/set_pruebas#boletas');
+        }
+        file_put_contents($dir.'/pdf/NotasCredito.zip', $response['body']);
+        // descargar archivo comprimido con los XML
+        \sasco\LibreDTE\File::compress($dir, ['format'=>'zip', 'delete'=>true]);
         exit;
     }
 
@@ -201,7 +520,7 @@ class Controller_Certificacion extends \Controller_App
     /**
      * Acción para la etapa de certificación de intercambio de DTEs
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-11
+     * @version 2016-02-17
      */
     public function intercambio()
     {
@@ -254,10 +573,10 @@ class Controller_Certificacion extends \Controller_App
         // generar XML RecepcionDTE.xml
         $RecepcionDTE = $this->intercambio_RecepcionDTE(
             $EnvioDte,
-            $_POST['emisor'], // emisor esperado
-            $_POST['receptor'], // receptor esperado
+            str_replace('.', '', $_POST['emisor']), // emisor esperado
+            str_replace('.', '', $_POST['receptor']), // receptor esperado
             [ // caratula
-                'RutResponde' => $_POST['receptor'],
+                'RutResponde' => str_replace('.', '', $_POST['receptor']),
                 'RutRecibe' => $Caratula['RutEmisor'],
                 'IdRespuesta' => 1,
                 'NmbContacto' => $Firma->getName(),
@@ -267,7 +586,7 @@ class Controller_Certificacion extends \Controller_App
         );
         if (!$RecepcionDTE) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible generar RecepcionDTE.xml', 'error'
+                'No fue posible generar RecepcionDTE.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
             );
             return;
         }
@@ -275,7 +594,7 @@ class Controller_Certificacion extends \Controller_App
         $EnvioRecibos = $this->intercambio_EnvioRecibos(
             $EnvioDte,
             [ // caratula
-                'RutResponde' => $_POST['receptor'],
+                'RutResponde' => str_replace('.', '', $_POST['receptor']),
                 'RutRecibe' => $Caratula['RutEmisor'],
                 'NmbContacto' => $Firma->getName(),
                 'MailContacto' => $Firma->getEmail(),
@@ -284,17 +603,17 @@ class Controller_Certificacion extends \Controller_App
         );
         if (!$EnvioRecibos) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible generar EnvioRecibos.xml', 'error'
+                'No fue posible generar EnvioRecibos.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
             );
             return;
         }
         // generar XML ResultadoDTE.xml
         $ResultadoDTE = $this->intercambio_ResultadoDTE(
             $EnvioDte,
-            $_POST['emisor'], // emisor esperado
-            $_POST['receptor'], // receptor esperado
+            str_replace('.', '', $_POST['emisor']), // emisor esperado
+            str_replace('.', '', $_POST['receptor']), // receptor esperado
             [ // caratula
-                'RutResponde' => $_POST['receptor'],
+                'RutResponde' => str_replace('.', '', $_POST['receptor']),
                 'RutRecibe' => $Caratula['RutEmisor'],
                 'IdRespuesta' => 1,
                 'NmbContacto' => $Firma->getName(),
@@ -304,7 +623,7 @@ class Controller_Certificacion extends \Controller_App
         );
         if (!$ResultadoDTE) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible generar ResultadoDTE.xml', 'error'
+                'No fue posible generar ResultadoDTE.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
             );
             return;
         }

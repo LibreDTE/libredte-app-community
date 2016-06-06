@@ -18,16 +18,17 @@ echo $f->input([
     'attr' => 'accept=".png"',
 ]);
 echo $f->input([
-    'type' => 'checkbox',
+    'type' => 'select',
     'name' => 'cedible',
     'label' => '¿Cedible?',
+    'options' => ['Sin copia cedible', 'Con copia cedible en mismo PDF', 'Con copia cedible en PDF separado'],
     'help' => 'Si se selecciona, se generará adicionalmente versión del documento con leyenda: CEDIBLE',
 ]);
 echo $f->input([
     'type' => 'radios',
     'name' => 'papelContinuo',
     'label' => 'Tipo papel',
-    'options' => [0=>'Hoja carta', 74=>'Papel contínuo 74mm'],
+    'options' => [0=>'Hoja carta', 75=>'Papel contínuo 75mm', 80=>'Papel contínuo 80mm'],
     'checked' => isset($_POST['papelContinuo']) ? $_POST['papelContinuo'] : 0,
 ]);
 echo $f->input([

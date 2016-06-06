@@ -27,12 +27,17 @@ namespace website;
 /**
  * Controlador para la interfaz web de diversas utilidades de LibreDTE
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2015-12-24
+ * @version 2016-02-24
  */
 class Controller_Utilidades extends \Controller_App
 {
 
     private $nav = [
+        '/buscar' => [
+            'name' => 'Buscar contribuyente',
+            'desc' => 'Buscador datos contribuyente',
+            'icon' => 'fa fa-search',
+        ],
         '/generar_xml' => [
             'name' => 'Generar XML DTE y EnvioDTE',
             'desc' => 'Generar XML de DTE y, opcionalmente, EnvioDTE',
@@ -53,6 +58,11 @@ class Controller_Utilidades extends \Controller_App
             'desc' => 'Generar XML Libro de Guías de Despacho a partir de un archivo CSV con los datos',
             'icon' => 'fa fa-book',
         ],
+        '/verificar_enviodte' => [
+            'name' => 'Verificar EnvioDTE',
+            'desc' => 'Verificar datos de un XML de EnvioDTE',
+            'icon' => 'fa fa-certificate',
+        ],
         '/firmar_xml' => [
             'name' => 'Firmar XML',
             'desc' => 'Generar la firma de un XML e incluira en el mismo archivo',
@@ -63,11 +73,14 @@ class Controller_Utilidades extends \Controller_App
     /**
      * Método para permitir acciones sin estar autenticado
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-12-24
+     * @version 2016-05-13
      */
     public function beforeFilter()
     {
-        $this->Auth->allow('index', 'generar_xml', 'generar_pdf', 'generar_libro', 'generar_libro_guia', 'firmar_xml');
+        $this->Auth->allow('index');
+        if (\sowerphp\core\Configure::read('api.default.token')) {
+            $this->Auth->allow('buscar', 'generar_xml', 'generar_pdf', 'generar_libro', 'generar_libro_guia', 'verificar_enviodte', 'firmar_xml');
+        }
         parent::beforeFilter();
     }
 
@@ -85,6 +98,25 @@ class Controller_Utilidades extends \Controller_App
         ]);
         $this->autoRender = false;
         $this->render('Module/index');
+    }
+
+    /**
+     * Acción que permite buscar los datos de un contribuyente
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2015-09-24
+     */
+    public function buscar()
+    {
+        if (!empty($_POST['rut'])) {
+            $Contribuyente = new \website\Dte\Model_Contribuyente($_POST['rut']);
+            if ($Contribuyente->exists()) {
+                $this->set('Contribuyente', $Contribuyente);
+            } else {
+                \sowerphp\core\Model_Datasource_Session::message(
+                    'No se encontró contribuyente para el RUT indicado', 'info'
+                );
+            }
+        }
     }
 
     /**
@@ -229,7 +261,7 @@ class Controller_Utilidades extends \Controller_App
      * Acción que permite la generación del PDF con los DTEs contenidos en un
      * XML de EnvioDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-12-12
+     * @version 2016-05-28
      */
     public function generar_pdf()
     {
@@ -242,7 +274,7 @@ class Controller_Utilidades extends \Controller_App
             // armar datos con archivo XML y flag para indicar si es cedible o no
             $data = [
                 'xml' => base64_encode(file_get_contents($_FILES['xml']['tmp_name'])),
-                'cedible' => isset($_POST['cedible']),
+                'cedible' => (int)$_POST['cedible'],
                 'papelContinuo' => $_POST['papelContinuo'],
                 'webVerificacion' => $_POST['webVerificacion'],
             ];
@@ -272,7 +304,7 @@ class Controller_Utilidades extends \Controller_App
      * Método que permite generar un libro de Compras o Ventas a partir de un
      * archivo CSV con el detalle del mismo
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-12-24
+     * @version 2016-04-03
      */
     public function generar_libro()
     {
@@ -288,11 +320,10 @@ class Controller_Utilidades extends \Controller_App
             'NroResol',
             'TipoLibro',
             'TipoEnvio',
-            'FolioNotificacion',
             'contrasenia',
         ];
         foreach ($campos as $campo) {
-            if (empty($_POST[$campo])) {
+            if (!strlen($_POST[$campo])) {
                  \sowerphp\core\Model_Datasource_Session::message(
                     $campo.' no puede estar en blanco', 'error'
                 );
@@ -335,7 +366,8 @@ class Controller_Utilidades extends \Controller_App
             'TipoOperacion' => $_POST['TipoOperacion'],
             'TipoLibro' => $_POST['TipoLibro'],
             'TipoEnvio' => $_POST['TipoEnvio'],
-            'FolioNotificacion' => $_POST['FolioNotificacion'],
+            'FolioNotificacion' => !empty($_POST['FolioNotificacion']) ? $_POST['FolioNotificacion'] : false,
+            'CodAutRec' => !empty($_POST['CodAutRec']) ? $_POST['CodAutRec'] : false,
         ];
         // definir si es certificacion
         $caratula_certificacion = [
@@ -371,7 +403,14 @@ class Controller_Utilidades extends \Controller_App
             $LibroCompraVenta->agregarVentasCSV($_FILES['archivo']['tmp_name']);
         $LibroCompraVenta->setCaratula($caratula);
         $LibroCompraVenta->setFirma($Firma);
-        $xml = $LibroCompraVenta->generar();
+        try {
+            $xml = $LibroCompraVenta->generar();
+        } catch (\Exception $e) {
+            \sowerphp\core\Model_Datasource_Session::message(
+                'No fue posible generar el XML del libro, quizás hay caracteres especiales (ej: eñes o tildes)', 'error'
+            );
+            return;
+        }
         if (!$LibroCompraVenta->schemaValidate()) {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
             return;
@@ -464,6 +503,57 @@ class Controller_Utilidades extends \Controller_App
         file_put_contents($file, $xml);
         \sasco\LibreDTE\File::compress($file, ['format'=>'zip', 'delete'=>true]);
         exit;
+    }
+
+    /**
+     * Acción para verificar la firma de un XML EnvioDTE
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2016-02-18
+     */
+    public function verificar_enviodte()
+    {
+        if (isset($_FILES['xml']) and !$_FILES['xml']['error']) {
+            $EnvioDTE = new \sasco\LibreDTE\Sii\EnvioDte();
+            $EnvioDTE->loadXML(file_get_contents($_FILES['xml']['tmp_name']));
+            // verificar la firma de cada documento
+            $resultado_documentos = [];
+            foreach ($EnvioDTE->getDocumentos() as $DTE) {
+                // consultar estado del timbre
+                $rest = new \sowerphp\core\Network_Http_Rest();
+                $rest->setAuth($this->Auth->User ? $this->Auth->User->hash : \sowerphp\core\Configure::read('api.default.token'));
+                $response = $rest->post(
+                    $this->request->url.'/api/dte/documentos/verificar_ted',
+                    json_encode(base64_encode($DTE->getTED()))
+                );
+                if ($response['status']['code']!=200) {
+                    $validacion_ted = $response['body'];
+                } else {
+                    $xml =  new \SimpleXMLElement(utf8_encode($DTE->getTED()), LIBXML_COMPACT);
+                    list($rut, $dv) = explode('-', $xml->xpath('/TED/DD/RE')[0]);
+                    $validacion_ted = (new \website\Dte\Admin\Mantenedores\Model_DteTipo($xml->xpath('/TED/DD/TD')[0]))->tipo.
+                        ' N° '.$xml->xpath('/TED/DD/F')[0].
+                        ' del '.\sowerphp\general\Utility_Date::format($xml->xpath('/TED/DD/FE')[0]).
+                        ' por $'.num($xml->xpath('/TED/DD/MNT')[0]).'.-'.
+                        ' emitida por '.$xml->xpath('/TED/DD/CAF/DA/RS')[0].' ('.num($rut).'-'.$dv.')'.
+                        ' a '.$xml->xpath('/TED/DD/RSR')[0].': '.
+                        $response['body']['ESTADO'].' - '.$response['body']['GLOSA_ESTADO'].
+                        ' ('.$response['body']['GLOSA_ERR'].')'
+                    ;
+                }
+                // armar resultado
+                $resultado_documentos[] = [
+                    $DTE->getID(),
+                    $DTE->checkFirma() ? 'Ok' : ':-(',
+                    $validacion_ted,
+                ];
+            }
+            // asignar variables para la vista
+            $this->set([
+                'EnvioDTE' => $EnvioDTE,
+                'documentos' => $resultado_documentos,
+                'errores' => \sasco\LibreDTE\Log::readAll(),
+            ]);
+        }
     }
 
     /**
