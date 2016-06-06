@@ -1,13 +1,16 @@
 Instalación aplicación web LibreDTE
 ===================================
 
-Se explica la instalación para ambiente GNU/Linux.
+La aplicación web está soportada oficialmente en Debian GNU/Linux 8. Es posible
+usarla en otros sistemas GNU/Linux, como Arch Linux o Ubuntu, pero no se
+soportan de manera oficial por el momento.
 
 Requisitos
 ----------
 
-- Apache 2.x y PHP 5.5 o superior
+- Apache 2.x y PHP 5.5 o superior (no usar PHP 7, problemas con PDF417)
 - Base de datos PostgreSQL 9.x
+- Memcached con PHP usándolo como backend para las sesiones
 - [Otros requisitos de SowerPHP](https://github.com/SowerPHP/sowerphp/blob/master/INSTALL.md)
 - Tener [SowerPHP](https://github.com/SowerPHP/sowerphp) instalado con las
 extensiones [app](https://github.com/SowerPHP/extension-app) y
@@ -26,6 +29,12 @@ Esto instalará el framework SowerPHP, y las extensiones obligatorias general y
 app. Adicionalmente se instalará la extensión empresa, esto se realiza porque es
 necesario obtener *schemas* SQL y datos desde ella (pero no se usa la extensión
 en si en la aplicación web).
+
+SowerPKG requiere que esté instalado curl, git y mercurial (hg).
+
+Adicionalmente SowerPKG dejará composer en el directorio ~/bin por lo cual se
+recomienda agregarlo al PATH del usuario para evitar tener que escribir la ruta
+completa al momento de usar composer.
 
 Instalación aplicación web
 --------------------------
@@ -85,7 +94,7 @@ Instalación aplicación web
 
 	Cargar datos de actividades económicas: se deberán cargar desde el archivo
 	*/usr/share/sowerphp/extensions/sowerphp/empresa/Module/Sistema/Module/General/Model/Sql/actividad_economica.ods*,
-	esto se puede realizar utilizando el módulo Dev y la opción disponible en <http://example.com/libredte/dev/bd/poblar>.
+	esto se puede realizar utilizando el módulo Dev y la opción disponible en <http://example.com/libredte/dev/bd/poblar> (se debe habilitar el módulo Dev en Config/core.php).
 
 8.	Cargar *schema* para división geopolítica (regiones, provincias y comunas) del módulo Sistema.General.DivisionGeopolitica de la extensión app:
 
@@ -93,7 +102,7 @@ Instalación aplicación web
 
 	Cargar datos de división geopolítica: se deberán cargar desde el archivo
 	*/usr/share/sowerphp/extensions/sowerphp/app/Module/Sistema/Module/General/Module/DivisionGeopolitica/Model/Sql/division_geopolitica.ods*,
-	esto se puede realizar utilizando el módulo Dev y la opción disponible en <http://example.com/libredte/dev/bd/poblar>.
+	esto se puede realizar utilizando el módulo Dev y la opción disponible en <http://example.com/libredte/dev/bd/poblar> (se debe habilitar el módulo Dev en Config/core.php).
 
 9.	Cargar *schema* del módulo Dte
 
