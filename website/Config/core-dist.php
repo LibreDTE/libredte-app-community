@@ -26,7 +26,7 @@
 /**
  * @file core.php
  * Configuración de la aplicación web de LibreDTE
- * @version 2016-06-04
+ * @version 2016-06-06
  */
 
 // Configuración depuración
@@ -56,8 +56,8 @@ ini_set('max_execution_time', 600);
 // Menú principal del sitio web
 \sowerphp\core\Configure::write('nav.website', [
     '/dte' => ['name'=>'Módulo facturación', 'desc'=>'Accede al módulo de facturación electrónica', 'icon'=>'fa fa-file-o'],
-    //'/certificacion' => ['name'=>'Certificación', 'desc'=>'Proceso de certificación hecho simple', 'icon'=>'fa fa-certificate'],
-    //'/utilidades' => ['name'=>'Utilidades', 'desc'=>'Utilidades y herramientas para generar documentos asociados a la facturación electrónica', 'icon'=>'fa fa-wrench'],
+    '/certificacion' => ['name'=>'Certificación', 'desc'=>'Proceso de certificación hecho simple', 'icon'=>'fa fa-certificate'],
+    '/utilidades' => ['name'=>'Utilidades', 'desc'=>'Utilidades y herramientas para generar documentos asociados a la facturación electrónica', 'icon'=>'fa fa-wrench'],
     '/soporte' => ['name'=>'Soporte', 'desc'=>'¿Necesitas ayuda o tienes alguna consulta?', 'icon'=>'fa fa-support', 'nav'=>[
         'https://wiki.libredte.cl/doku.php/faq'=>'Preguntas y respuestas frecuentes',
         'https://groups.google.com/forum/#!forum/libredte' => 'Lista de correo en Google Groups',
@@ -71,8 +71,8 @@ ini_set('max_execution_time', 600);
 \sowerphp\core\Configure::write('nav.app', [
     '/dte' => 'Facturación',
     //'/lce' => 'Contabilidad',
-    //'/certificacion' => 'Certificación',
-    //'/utilidades' => 'Utilidades',
+    '/certificacion' => 'Certificación',
+    '/utilidades' => 'Utilidades',
     '/dte/contribuyentes/seleccionar' => 'Seleccionar empresa',
     '/sistema' => 'Sistema',
 ]);
@@ -98,9 +98,10 @@ ini_set('max_execution_time', 600);
 
 // Módulos que utiliza la aplicación
 \sowerphp\core\Module::uses([
+    //'Dev',
     'Dte',
     'Dte.Cobranzas',
-    //'Dte.Informes',
+    'Dte.Informes',
     'Dte.Admin',
     'Dte.Admin.Informes',
     'Dte.Admin.Mantenedores',
