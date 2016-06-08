@@ -26,7 +26,7 @@
 /**
  * @file core.php
  * Configuración de la aplicación web de LibreDTE
- * @version 2016-06-06
+ * @version 2016-06-08
  */
 
 // Configuración depuración
@@ -148,7 +148,7 @@ ini_set('max_execution_time', 600);
 \sowerphp\core\Configure::write('dte', [
     // contraseña que se usará para encriptar datos sensibles en la BD
     'pkey' => '', // DEBE ser de 32 chars
-    // directorio para logos de las empresas
+    // directorio para logos de las empresas (debe tener permisos de escritura)
     'logos' => [
         'dir' => DIR_PROJECT.'/data/logos',
         'width' => 150,
@@ -156,6 +156,11 @@ ini_set('max_execution_time', 600);
     ],
     // DTEs autorizados por defecto para ser usados por las nuevas empresas
     'dtes' => [33, 56, 61],
+    // opciones para los PDF
+    'pdf' => [
+        // =true se asignará texto por defecto. String al lado izquiero o bien arreglo con índices left y right con sus textos
+        'footer' => true,
+    ],
 ]);
 
 // configuración para firma electrónica
