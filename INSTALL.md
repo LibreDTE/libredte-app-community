@@ -88,7 +88,11 @@ Instalación aplicación web
 
 		$ psql libredte < /usr/share/sowerphp/extensions/sowerphp/app/Module/Sistema/Module/Usuarios/Model/Sql/PostgreSQL/usuarios.sql
 
-7.	Cargar *schema* para actividades económicas del módulo Sistema.General de la extensión empresa:
+7.	Cargar *schema* para cambios de moneda:
+
+		$ psql libredte < /usr/share/sowerphp/extensions/sowerphp/app/Module/Sistema/Module/General/Model/Sql/moneda.sql
+
+8.	Cargar *schema* para actividades económicas del módulo Sistema.General de la extensión empresa:
 
 		$ psql libredte < /usr/share/sowerphp/extensions/sowerphp/empresa/Module/Sistema/Module/General/Model/Sql/PostgreSQL/actividad_economica.sql
 
@@ -96,7 +100,7 @@ Instalación aplicación web
 	*/usr/share/sowerphp/extensions/sowerphp/empresa/Module/Sistema/Module/General/Model/Sql/actividad_economica.ods*,
 	esto se puede realizar utilizando el módulo Dev y la opción disponible en <http://example.com/libredte/dev/bd/poblar> (se debe habilitar el módulo Dev en Config/core.php).
 
-8.	Cargar *schema* para división geopolítica (regiones, provincias y comunas) del módulo Sistema.General.DivisionGeopolitica de la extensión app:
+9.	Cargar *schema* para división geopolítica (regiones, provincias y comunas) del módulo Sistema.General.DivisionGeopolitica de la extensión app:
 
 		$ psql libredte < /usr/share/sowerphp/extensions/sowerphp/app/Module/Sistema/Module/General/Module/DivisionGeopolitica/Model/Sql/PostgreSQL/division_geopolitica.sql
 
@@ -104,13 +108,13 @@ Instalación aplicación web
 	*/usr/share/sowerphp/extensions/sowerphp/app/Module/Sistema/Module/General/Module/DivisionGeopolitica/Model/Sql/division_geopolitica.ods*,
 	esto se puede realizar utilizando el módulo Dev y la opción disponible en <http://example.com/libredte/dev/bd/poblar> (se debe habilitar el módulo Dev en Config/core.php).
 
-9.	Cargar *schema* del módulo Dte
+10.	Cargar *schema* del módulo Dte
 
 		$ psql libredte < libredte/website/Module/Dte/Model/Sql/PostgreSQL.sql
 
-10.	Cargar datos del módulo Dte del archivo *libredte/website/Module/Dte/Model/Sql/datos.ods* a través de la página de carga de datos.
+11.	Cargar datos del módulo Dte del archivo *libredte/website/Module/Dte/Model/Sql/datos.ods* a través de la página de carga de datos.
 
-11.	¡Listo! Ahora puede ingresar a la aplicación web de LibreDTE a través de
+12.	¡Listo! Ahora puede ingresar a la aplicación web de LibreDTE a través de
 	<http://example.com/libredte>.
 
 	El usuario por defecto es *admin* con contraseña *admin*. Se recomienda
