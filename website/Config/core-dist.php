@@ -80,7 +80,7 @@ ini_set('max_execution_time', 600);
 // Configuración para la base de datos
 \sowerphp\core\Configure::write('database.default', array(
     'type' => 'PostgreSQL',
-    'user' => '',
+    'user' => 'libredte',
     'pass' => '',
     'name' => 'libredte',
 ));
