@@ -89,11 +89,22 @@ foreach ($_nav_website as $link=>$name) {
                                 <strong><?=$Emisor->getRUT()?> <span class="caret"></span></strong>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="<?=$_base?>/dte/documentos/emitir"><span class="fa fa-file-text"></span> Emitir DTE</a></li>
+                                <li><a href="<?=$_base?>/dte/documentos/emitir"><span class="fa fa-file-text"></span> Emitir documento</a></li>
+                                <li><a href="<?=$_base?>/dte/dte_tmps"><span class="fa fa-file-o"></span> Documentos temporales</a></li>
+                                <li><a href="<?=$_base?>/dte/dte_emitidos/listar"><span class="fa fa-sign-out"></span> Documentos emitidos</a></li>
+                                <li><a href="<?=$_base?>/dte/dte_recibidos/listar"><span class="fa fa-sign-in"></span> Documentos recibidos</a></li>
+                                <li><a href="<?=$_base?>/dte/dte_intercambios/listar"><span class="fa fa-exchange"></span> Bandeja intercambio</a></li>
+                                <li><a href="<?=$_base?>/dte/informes"><span class="fa fa-file"></span> Informes facturación</a></li>
+<?php if ($_Auth->check('/lce')) : ?>
+                                <li class="divider"></li>
+                                <li><a href="<?=$_base?>/lce/lce_asientos/crear"><span class="fa fa-edit"></span> Crear asiento</a></li>
+                                <li><a href="<?=$_base?>/lce/libro_diario"><span class="fa fa-book"></span> Libro diario</a></li>
+                                <li><a href="<?=$_base?>/lce/balance_general"><span class="fa fa-balance-scale"></span> Balance general</a></li>
+<?php endif; ?>
 <?php if ($Emisor->usuario == $_Auth->User->id or $_Auth->User->inGroup(['soporte'])) : ?>
                                 <li class="divider"></li>
-                                <li><a href="<?=$_base?>/dte/contribuyentes/modificar/<?=$Emisor->rut?>"><span class="fa fa-edit"></span> Modificar</a></li>
-                                <li><a href="<?=$_base?>/dte/contribuyentes/usuarios/<?=$Emisor->rut?>"><span class="fa fa-users"></span> Usuarios</a></li>
+                                <li><a href="<?=$_base?>/dte/contribuyentes/modificar/<?=$Emisor->rut?>"><span class="fa fa-building"></span> Modificar empresa</a></li>
+                                <li><a href="<?=$_base?>/dte/contribuyentes/usuarios/<?=$Emisor->rut?>"><span class="fa fa-users"></span> Autorizar usuarios</a></li>
 <?php endif; ?>
                             </ul>
                         </li>
