@@ -3,6 +3,7 @@
         "vendor-dir": "Vendor"
     },
     "require": {
-         "sasco/libredte": "dev-master"
+         "sasco/libredte": "dev-master",
+         "dropbox/dropbox-sdk": "1.1.*"
     }
 }
