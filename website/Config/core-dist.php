@@ -130,6 +130,7 @@ ini_set('max_execution_time', 600);
 // Configuración para auto registro de usuarios (extensión: sowerphp/app)
 \sowerphp\core\Configure::write('app.self_register', [
     'groups' => ['usuarios', 'dte_basico'],
+    'terms' => 'https://wiki.libredte.cl/doku.php/terminos',
 ]);
 
 // Configuración para Telegram
