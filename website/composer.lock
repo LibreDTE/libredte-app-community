@@ -4,9 +4,48 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6fd1b653c40728328564fc66f3c34b22",
-    "content-hash": "e1cb174db016fa83b641ac49c5348c3d",
+    "hash": "b1c38150a554aec9e636e8df6cdcbbea",
+    "content-hash": "583551d26f269e64d288644850b1b3a7",
     "packages": [
+        {
+            "name": "dropbox/dropbox-sdk",
+            "version": "v1.1.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dropbox/dropbox-sdk-php.git",
+                "reference": "6901f8122458e0ce7e391468c0cf6cca465bd0ee"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dropbox/dropbox-sdk-php/zipball/6901f8122458e0ce7e391468c0cf6cca465bd0ee",
+                "reference": "6901f8122458e0ce7e391468c0cf6cca465bd0ee",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">= 5.3"
+            },
+            "require-dev": {
+                "apigen/apigen": "2.8.2",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "2.0.0RC3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Dropbox": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Dropbox SDK for PHP",
+            "keywords": [
+                "dropbox"
+            ],
+            "time": "2015-06-29 21:47:57"
+        },
         {
             "name": "phpseclib/phpseclib",
             "version": "2.0.2",
@@ -105,12 +144,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "d7fe1bab0d8ea004072ded7c28aa3e5ee96ab23d"
+                "reference": "d9bf3494b98622954b8b11447e9d1231c5936012"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/d7fe1bab0d8ea004072ded7c28aa3e5ee96ab23d",
-                "reference": "d7fe1bab0d8ea004072ded7c28aa3e5ee96ab23d",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/d9bf3494b98622954b8b11447e9d1231c5936012",
+                "reference": "d9bf3494b98622954b8b11447e9d1231c5936012",
                 "shasum": ""
             },
             "require": {
@@ -147,7 +186,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2016-06-11 23:41:07"
+            "time": "2016-06-16 01:52:03"
         },
         {
             "name": "tecnickcom/tcpdf",
