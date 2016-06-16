@@ -108,13 +108,21 @@ Instalación aplicación web
 	*/usr/share/sowerphp/extensions/sowerphp/app/Module/Sistema/Module/General/Module/DivisionGeopolitica/Model/Sql/division_geopolitica.ods*,
 	esto se puede realizar utilizando el módulo Dev y la opción disponible en <http://example.com/libredte/dev/bd/poblar> (se debe habilitar el módulo Dev en Config/core.php).
 
-10.	Cargar *schema* del módulo Dte
+10.	Cargar *schema* del módulo Dte:
 
 		$ psql libredte < libredte/website/Module/Dte/Model/Sql/PostgreSQL.sql
 
 11.	Cargar datos del módulo Dte del archivo *libredte/website/Module/Dte/Model/Sql/datos.ods* a través de la página de carga de datos.
 
-12.	¡Listo! Ahora puede ingresar a la aplicación web de LibreDTE a través de
+12.	Cargar *schema* del módulo Lce:
+
+		$ psql libredte < libredte/website/Module/Lce/Model/Sql/PostgreSQL.sql
+
+13.	Cargar datos del módulo Lce del archivo *libredte/website/Module/Lce/Model/Sql/datos.ods* a través de la página de carga de datos.
+
+14.	Crear directorio *data/logos* y permitir que el usuario del servidor web pueda escribir en ellos.
+
+15.	¡Listo! Ahora puede ingresar a la aplicación web de LibreDTE a través de
 	<http://example.com/libredte>.
 
 	El usuario por defecto es *admin* con contraseña *admin*. Se recomienda
