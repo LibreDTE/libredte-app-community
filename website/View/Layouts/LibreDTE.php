@@ -80,7 +80,9 @@ foreach ($_nav_website as $link=>$name) {
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
 <?php if (!$_Auth->logged()) : ?>
+<?php if (\sowerphp\core\Configure::read('app.self_register')) : ?>
                         <li><a href="<?=$_base?>/usuarios/registrar"><span class="text-primary"> ¡Regístrate gratis!</span></a></li>
+<?php endif; ?>
                         <li><a href="<?=$_base?>/usuarios/ingresar"><span class="fa fa-sign-in" aria-hidden="true"></span> Iniciar sesión</a></li>
 <?php else : ?>
 <?php if($Emisor) : ?>
