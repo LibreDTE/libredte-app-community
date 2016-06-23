@@ -3,7 +3,7 @@
 #
 # Script para actualizar la aplicación web de LibreDTE
 # @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-# @version 2016-06-17
+# @version 2016-06-22
 #
 
 WEBAPP=$(dirname $(cd $(dirname $0) && pwd))
@@ -16,6 +16,27 @@ echo "Actualizando composer"
 cd $WEBAPP/website
 composer install
 
-echo "Actualizar submódulos de git (Dte y Lce)"
+echo "Actualizar submódulos de git (pdf417decode, Dte y Lce)"
 cd $WEBAPP
 git submodule foreach git pull origin master
+
+echo "Actualizar pdf417decode"
+cd $WEBAPP/app/pdf417decode
+git stash
+git checkout master
+git stash pop
+git pull
+
+echo "Actualizar Dte"
+cd $WEBAPP/website/Module/Dte
+git stash
+git checkout master
+git stash pop
+git pull
+
+echo "Actualizar Lce"
+cd $WEBAPP/website/Module/Lce
+git stash
+git checkout master
+git stash pop
+git pull
