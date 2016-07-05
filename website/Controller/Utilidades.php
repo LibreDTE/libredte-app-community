@@ -27,7 +27,7 @@ namespace website;
 /**
  * Controlador para la interfaz web de diversas utilidades de LibreDTE
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2016-02-24
+ * @version 2016-07-04
  */
 class Controller_Utilidades extends \Controller_App
 {
@@ -68,18 +68,23 @@ class Controller_Utilidades extends \Controller_App
             'desc' => 'Generar la firma de un XML e incluira en el mismo archivo',
             'icon' => 'fa fa-certificate',
         ],
+        '/xml2json' => [
+            'name' => 'XML a JSON',
+            'desc' => 'Convertir un DTE en XML a su representación en JSON',
+            'icon' => 'fa fa-code',
+        ],
     ]; ///< Menú web del controlador
 
     /**
      * Método para permitir acciones sin estar autenticado
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-05-13
+     * @version 2016-07-04
      */
     public function beforeFilter()
     {
         $this->Auth->allow('index');
         if (\sowerphp\core\Configure::read('api.default.token')) {
-            $this->Auth->allow('buscar', 'generar_xml', 'generar_pdf', 'generar_libro', 'generar_libro_guia', 'verificar_enviodte', 'firmar_xml');
+            $this->Auth->allow('buscar', 'generar_xml', 'generar_pdf', 'generar_libro', 'generar_libro_guia', 'verificar_enviodte', 'firmar_xml', 'json2xml');
         }
         parent::beforeFilter();
     }
@@ -588,6 +593,73 @@ class Controller_Utilidades extends \Controller_App
             header('Content-Disposition: attachement; filename="'.$id.'_firmado.xml"');
             print $xmlSigned;
             exit;
+        }
+    }
+
+    /**
+     * Acción para convertir un XML de DTEs a JSONs
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2016-07-04
+     */
+    public function xml2json()
+    {
+        if (isset($_POST['submit'])) {
+            $xml = file_get_contents($_FILES['xml']['tmp_name']);
+            $dtes = [];
+            // es EnvioDTE o EnvioBOLETA
+            $EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
+            if ($EnvioDte->loadXML($xml)) {
+                foreach ($EnvioDte->getDocumentos() as $Dte) {
+                    $datos = $Dte->getDatos();
+                    unset($datos['@attributes'], $datos['TED'], $datos['TmstFirma']);
+                    $dtes[] = $datos;
+                }
+            }
+            // se trata de cargar cómo un sólo DTE
+            else {
+                $Dte = new \sasco\LibreDTE\Sii\Dte($xml);
+                $datos = $Dte->getDatos();
+                unset($datos['@attributes'], $datos['TED'], $datos['TmstFirma']);
+                $dtes = [$datos];
+            }
+            // si no hay DTEs error
+            if (!isset($dtes[0])) {
+                \sowerphp\core\Model_Datasource_Session::message(
+                    'No fue posible leer DTEs desde el archivo', 'error'
+                );
+                $this->redirect('/utilidades/xml2json');
+            }
+            // si hay sólo un DTE se entrega directamente
+            if (!isset($dtes[1])) {
+                $name = $dtes[0]['Encabezado']['Emisor']['RUTEmisor'].'_T'.$dtes[0]['Encabezado']['IdDoc']['TipoDTE'].'F'.$dtes[0]['Encabezado']['IdDoc']['Folio'].'.json';
+                $json = json_encode($dtes[0], JSON_PRETTY_PRINT);
+                $this->response->sendFile([
+                    'name' =>  $name,
+                    'type' => 'application/json',
+                    'size' => strlen($json),
+                    'data' => $json,
+                ], [
+                    'disposition' => 'attachement',
+                ]);
+            }
+            // si es más de un DTE se comprimirán
+            else {
+                $dir = sys_get_temp_dir().'/xml2json_'.date('U');
+                if (is_dir($dir))
+                    \sasco\LibreDTE\File::rmdir($dir);
+                if (!mkdir($dir)) {
+                    \sowerphp\core\Model_Datasource_Session::message(
+                        'No fue posible crear directorio temporal para DTEs', 'error'
+                    );
+                    $this->redirect('/utilidades/xml2json');
+                }
+                foreach ($dtes as $dte) {
+                    $name = $dte['Encabezado']['Emisor']['RUTEmisor'].'_T'.$dte['Encabezado']['IdDoc']['TipoDTE'].'F'.$dte['Encabezado']['IdDoc']['Folio'].'.json';
+                    $json = json_encode($dte, JSON_PRETTY_PRINT);
+                    file_put_contents($dir.'/'.$name, $json);
+                }
+                \sasco\LibreDTE\File::compress($dir, ['format'=>'zip', 'delete'=>true]);
+            }
         }
     }
 
