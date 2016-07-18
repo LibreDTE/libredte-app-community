@@ -99,7 +99,7 @@ foreach ($_nav_website as $link=>$name) {
                                 <li><a href="<?=$_base?>/dte/informes"><span class="fa fa-file"></span> Informes facturación</a></li>
 <?php if ($_Auth->check('/lce')) : ?>
                                 <li class="divider"></li>
-                                <li><a href="<?=$_base?>/lce/lce_asientos/crear"><span class="fa fa-edit"></span> Crear asiento</a></li>
+                                <li><a href="<?=$_base?>/lce/lce_asientos/crear?listar=<?=base64_encode('/lce_asientos/listar/1/asiento/D?search=periodo:'.date('Y').',anulado:0')?>"><span class="fa fa-edit"></span> Crear asiento</a></li>
                                 <li><a href="<?=$_base?>/lce/libro_diario"><span class="fa fa-book"></span> Libro diario</a></li>
                                 <li><a href="<?=$_base?>/lce/balance_general"><span class="fa fa-balance-scale"></span> Balance general</a></li>
 <?php endif; ?>
