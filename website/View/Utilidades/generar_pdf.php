@@ -25,11 +25,11 @@ echo $f->input([
     'help' => 'Si se selecciona, se generará adicionalmente versión del documento con leyenda: CEDIBLE',
 ]);
 echo $f->input([
-    'type' => 'radios',
+    'type' => 'select',
     'name' => 'papelContinuo',
     'label' => 'Tipo papel',
-    'options' => [0=>'Hoja carta', 75=>'Papel contínuo 75mm', 80=>'Papel contínuo 80mm'],
-    'checked' => isset($_POST['papelContinuo']) ? $_POST['papelContinuo'] : 0,
+    'options' => \sasco\LibreDTE\Sii\PDF\Dte::$papel,
+    'value' => isset($_POST['papelContinuo']) ? $_POST['papelContinuo'] : 0,
 ]);
 echo $f->input([
     'name' => 'webVerificacion',
