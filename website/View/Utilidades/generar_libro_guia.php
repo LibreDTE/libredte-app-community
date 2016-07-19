@@ -49,6 +49,7 @@ echo $f->input([
     'name' => 'FolioNotificacion',
     'label' => 'Folio notificación',
     'value' => 1,
+    'help' => 'Cada envío debe tener un folio diferente (incremental)',
     'check' => 'notempty integer',
 ]);
 echo $f->input([
