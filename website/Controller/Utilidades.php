@@ -309,10 +309,13 @@ class Controller_Utilidades extends \Controller_App
      * Método que permite generar un libro de Compras o Ventas a partir de un
      * archivo CSV con el detalle del mismo
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-04-03
+     * @version 2016-07-24
      */
     public function generar_libro()
     {
+        $this->set([
+            '_header_extra' => ['js'=>['/js/utilidades.js']],
+        ]);
         // si no se viene por post terminar
         if (!isset($_POST['submit']))
             return;

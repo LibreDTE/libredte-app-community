@@ -8,7 +8,8 @@ echo $f->input([
     'label' => '¿Libro normal o simplificado?',
     'options' => ['Normal', 'Simplificado'],
     'check' => 'notempty',
-    'help' => 'En certificación debe ser simplificado'
+    'help' => 'En certificación debe ser simplificado',
+    'attr' => 'onchange="libro_generar_tipo(this.value)"',
 ]);
 echo $f->input([
     'type' => 'select',

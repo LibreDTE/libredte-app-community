@@ -24,3 +24,19 @@ function dte_generar_xml_plantilla(id) {
         }
     }
 }
+
+function libro_generar_tipo(simplificado) {
+    if (simplificado==1) {
+        document.getElementById('PeriodoTributarioField').value = '2000-01';
+        document.getElementById('FchResolField').value = '2006-01-20';
+        document.getElementById('NroResolField').value = '102006';
+        document.getElementById('TipoLibroField').value = 'ESPECIAL';
+        document.getElementById('FolioNotificacionField').value = '102006';
+    } else {
+        document.getElementById('PeriodoTributarioField').value = '';
+        document.getElementById('FchResolField').value = '';
+        document.getElementById('NroResolField').value = '';
+        document.getElementById('TipoLibroField').value = 'MENSUAL';
+        document.getElementById('FolioNotificacionField').value = '';
+    }
+}
