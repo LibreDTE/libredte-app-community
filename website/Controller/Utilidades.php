@@ -44,14 +44,19 @@ class Controller_Utilidades extends \Controller_App
             'icon' => 'fa fa-file-code-o',
         ],
         '/generar_pdf' => [
-            'name' => 'Generar PDF a partir de XML',
-            'desc' => 'Generar PDF a partir de un archivo XML EnvioDTE generado previamente',
+            'name' => 'Generar PDF DTE',
+            'desc' => 'Generar PDF a partir de un archivo XML EnvioDTE o EnvioBOLETA',
             'icon' => 'fa fa-file-pdf-o',
         ],
         '/generar_libro' => [
             'name' => 'Generar XML Libro de Compra o Venta',
             'desc' => 'Generar XML Libro de Compras o Ventas a partir de un archivo CSV con los datos',
             'icon' => 'fa fa-book',
+        ],
+        '/generar_pdf_libro' => [
+            'name' => 'Generar PDF IECV',
+            'desc' => 'Generar PDF a partir de un archivo XML de libro de compras o ventas',
+            'icon' => 'fa fa-file-pdf-o',
         ],
         '/generar_libro_guia' => [
             'name' => 'Generar XML Libro de Guías',
@@ -428,6 +433,24 @@ class Controller_Utilidades extends \Controller_App
         file_put_contents($file, $xml);
         \sasco\LibreDTE\File::compress($file, ['format'=>'zip', 'delete'=>true]);
         exit;
+    }
+
+    /**
+     * Acción que permite la generación del PDF de un IECV
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2016-07-28
+     */
+    public function generar_pdf_libro()
+    {
+        if (isset($_POST['submit']) and !empty($_FILES['xml']) and !$_FILES['xml']['error']) {
+            $LibroCompraVenta = new \sasco\LibreDTE\Sii\LibroCompraVenta();
+            $LibroCompraVenta->loadXML(file_get_contents($_FILES['xml']['tmp_name']));
+            $pdf = new \sasco\LibreDTE\Sii\PDF\LibroCompraVenta();
+            $pdf->setFooterText(\sowerphp\core\Configure::read('dte.pdf.footer'));
+            $pdf->agregar($LibroCompraVenta->toArray());
+            $pdf->Output($LibroCompraVenta->getID().'.pdf', 'D');
+            exit;
+        }
     }
 
     /**
