@@ -451,7 +451,7 @@ class Controller_Certificacion extends \Controller_App
             $LibroBoleta->agregar([
                 'TpoDoc' => $r['TpoDoc'],
                 'FolioDoc' => $r['NroDoc'],
-                'Anulado' => in_array($r['NroDoc'], $folios_anulados) ? 'A' : false,
+                //'Anulado' => in_array($r['NroDoc'], $folios_anulados) ? 'A' : false,
                 'FchEmiDoc' => $r['FchDoc'],
                 'RUTCliente' => $r['RUTDoc'],
                 'MntExe' => $r['MntExe'] ? $r['MntExe'] : false,
