@@ -23,6 +23,11 @@
 
 // Menú para el módulo
 Configure::write('nav.module', array(
+    '/moneda_cambios/listar/1/fecha/D' => array(
+        'name' => 'Cambios de moneda',
+        'desc' => 'Listado de tipos de cambio de monedas',
+        'icon' => 'fa fa-money',
+    ),
     '/actividad_economicas/listar' => array(
         'name' => 'Actividad económica',
         'desc' => 'Listado de actividades económicas del SII',
