@@ -84,6 +84,29 @@ echo $f->input([
     'attr' => 'accept=".csv"',
 ]);
 echo $f->input([
+    'type' => 'js',
+    'label' => 'Resúmenes',
+    'id' => 'resumenes',
+    'titles' => ['Tipo Doc.', '# docs', 'Anulados', 'Op. exen.', 'Exento', 'Neto', 'IVA', 'IVA propio', 'IVA terc.', 'Ley 18211', 'Monto total', 'No fact.', 'Total periodo'],
+    'inputs' => [
+        ['type'=>'select', 'name'=>'TpoDoc', 'options'=>[35=>'Boleta', 38=>'Boleta exenta', 48=>'Pago electrónico'], 'attr'=>'style="width:10em"'],
+        ['name'=>'TotDoc', 'check'=>'notempty integer'],
+        ['name'=>'TotAnulado', 'check'=>'integer'],
+        ['name'=>'TotOpExe', 'check'=>'integer'],
+        ['name'=>'TotMntExe', 'check'=>'integer'],
+        ['name'=>'TotMntNeto', 'check'=>'integer'],
+        ['name'=>'TotMntIVA', 'check'=>'integer'],
+        ['name'=>'TotIVAPropio', 'check'=>'integer'],
+        ['name'=>'TotIVATerceros', 'check'=>'integer'],
+        ['name'=>'TotLey18211', 'check'=>'integer'],
+        ['name'=>'TotMntTotal', 'check'=>'notempty integer'],
+        ['name'=>'TotMntNoFact', 'check'=>'integer'],
+        ['name'=>'TotMntPeriodo', 'check'=>'integer'],
+    ],
+    'values' => [],
+    'help' => 'Resúmenes manuales para boletas no electrónicas y pagos electrónicos (ej: transbank) que se deben incluir en el libro de ventas'
+]);
+echo $f->input([
     'type' => 'file',
     'name' => 'firma',
     'label' => 'Firma electrónica',

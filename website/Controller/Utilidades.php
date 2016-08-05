@@ -408,7 +408,7 @@ class Controller_Utilidades extends \Controller_App
                 break;
             }
         }
-        // generar libro de compras o venta
+        // crear libro de compras o venta
         $LibroCompraVenta = new \sasco\LibreDTE\Sii\LibroCompraVenta((bool)$_POST['simplificado']);
         if ($caratula['TipoOperacion']==='COMPRA')
             $LibroCompraVenta->agregarComprasCSV($_FILES['archivo']['tmp_name']);
@@ -416,6 +416,37 @@ class Controller_Utilidades extends \Controller_App
             $LibroCompraVenta->agregarVentasCSV($_FILES['archivo']['tmp_name']);
         $LibroCompraVenta->setCaratula($caratula);
         $LibroCompraVenta->setFirma($Firma);
+        // se setean resúmenes manuales enviados por post
+        if ($caratula['TipoOperacion']==='VENTA' and isset($_POST['TpoDoc'])) {
+            $resumen = [];
+            $n_tipos = count($_POST['TpoDoc']);
+            for ($i=0; $i<$n_tipos; $i++) {
+                $cols = [
+                    'TpoDoc',
+                    'TotDoc',
+                    'TotAnulado',
+                    'TotOpExe',
+                    'TotMntExe',
+                    'TotMntNeto',
+                    'TotMntIVA',
+                    'TotIVAPropio',
+                    'TotIVATerceros',
+                    'TotLey18211',
+                    'TotMntTotal',
+                    'TotMntNoFact',
+                    'TotMntPeriodo',
+                ];
+                $row = [];
+                foreach ($cols as $col) {
+                    if (!empty($_POST[$col][$i])) {
+                        $row[$col] = $_POST[$col][$i];
+                    }
+                }
+                $resumen[] = $row;
+            }
+            $LibroCompraVenta->setResumen($resumen);
+        }
+        // generar libro
         try {
             $xml = $LibroCompraVenta->generar();
         } catch (\Exception $e) {
