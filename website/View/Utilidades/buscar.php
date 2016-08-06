@@ -16,6 +16,6 @@ if (isset($Contribuyente)) {
     echo $f->input(['type'=>'div', 'label'=>'Dirección', 'value'=>$Contribuyente->direccion.', '.$Contribuyente->getComuna()->comuna]);
     echo $f->input(['type'=>'div', 'label'=>'Sitio web', 'value'=>'<a href="'.$Contribuyente->config_extra_web.'" target="_blank">'.$Contribuyente->config_extra_web.'</a>']);
     echo $f->input(['type'=>'div', 'label'=>'Intercambio', 'value'=>$Contribuyente->config_email_intercambio_user]);
-    echo $f->input(['type'=>'div', 'label'=>'Certificado', 'value'=>$Contribuyente->config_ambiente_produccion_numero?'Si':'No']);
+    echo $f->input(['type'=>'div', 'label'=>'Autorizado', 'value'=>$Contribuyente->config_ambiente_produccion_numero?'Si':'No']);
 }
 echo $f->end('Buscar contribuyente');
