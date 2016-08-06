@@ -49,13 +49,13 @@ class Controller_Estadisticas extends \Controller_App
      * @param desde Desde cuando considerar la actividad de los contribuyentes
      * @param hasta Hasta cuando considerar la actividad de los contribuyentes
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-01-28
+     * @version 2016-08-06
      */
     public function index($certificacion = false, $desde = 1, $hasta = 0)
     {
-        $response = (new \sowerphp\core\Network_Http_Rest())->get(
-            $this->request->url.'/api/estadisticas/'.($certificacion?'certificacion':'produccion')
-        );
+        $rest = new \sowerphp\core\Network_Http_Rest();
+        $rest->setAuth($this->Auth->User ? $this->Auth->User->hash : \sowerphp\core\Configure::read('api.default.token'));
+        $response = $rest->get($this->request->url.'/api/estadisticas/'.($certificacion?'certificacion':'produccion'));
         $this->set($response['body']);
         $this->autoRender = false;
         $this->render('Estadisticas/index');
