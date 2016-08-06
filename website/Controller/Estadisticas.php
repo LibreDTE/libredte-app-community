@@ -35,11 +35,11 @@ class Controller_Estadisticas extends \Controller_App
     /**
      * Método para permitir acciones sin estar autenticado
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-18
+     * @version 2016-08-06
      */
     public function beforeFilter()
     {
-        $this->Auth->allow('index', 'produccion', 'certificacion');
+        $this->Auth->allow('index', 'produccion', 'certificacion', '_api_produccion_GET', '_api_certificacion_GET');
         parent::beforeFilter();
     }
 
@@ -54,7 +54,6 @@ class Controller_Estadisticas extends \Controller_App
     public function index($certificacion = false, $desde = 1, $hasta = 0)
     {
         $rest = new \sowerphp\core\Network_Http_Rest();
-        $rest->setAuth($this->Auth->User ? $this->Auth->User->hash : \sowerphp\core\Configure::read('api.default.token'));
         $response = $rest->get($this->request->url.'/api/estadisticas/'.($certificacion?'certificacion':'produccion'));
         $this->set($response['body']);
         $this->autoRender = false;
