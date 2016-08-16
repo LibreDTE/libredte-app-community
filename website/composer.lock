@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "dropbox/dropbox-sdk",
-            "version": "v1.1.6",
+            "version": "v1.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dropbox/dropbox-sdk-php.git",
-                "reference": "6901f8122458e0ce7e391468c0cf6cca465bd0ee"
+                "reference": "0f1a178ca9c0271bca6426dde8f5a2241578deae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dropbox/dropbox-sdk-php/zipball/6901f8122458e0ce7e391468c0cf6cca465bd0ee",
-                "reference": "6901f8122458e0ce7e391468c0cf6cca465bd0ee",
+                "url": "https://api.github.com/repos/dropbox/dropbox-sdk-php/zipball/0f1a178ca9c0271bca6426dde8f5a2241578deae",
+                "reference": "0f1a178ca9c0271bca6426dde8f5a2241578deae",
                 "shasum": ""
             },
             "require": {
@@ -26,7 +26,7 @@
                 "php": ">= 5.3"
             },
             "require-dev": {
-                "apigen/apigen": "2.8.2",
+                "apigen/apigen": "4.1.2",
                 "phpunit/phpunit": "~4.0",
                 "squizlabs/php_codesniffer": "2.0.0RC3"
             },
@@ -44,7 +44,7 @@
             "keywords": [
                 "dropbox"
             ],
-            "time": "2015-06-29 21:47:57"
+            "time": "2016-08-08 23:48:49"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -144,12 +144,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "a552df05eb61e44daad2936ac3b83a9c3f7f5f9e"
+                "reference": "91a35e30417747338c2ffa9054042677ccc58736"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/a552df05eb61e44daad2936ac3b83a9c3f7f5f9e",
-                "reference": "a552df05eb61e44daad2936ac3b83a9c3f7f5f9e",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/91a35e30417747338c2ffa9054042677ccc58736",
+                "reference": "91a35e30417747338c2ffa9054042677ccc58736",
                 "shasum": ""
             },
             "require": {
@@ -161,7 +161,7 @@
                 "tecnickcom/tcpdf": "6.2.12"
             },
             "require-dev": {
-                "phpunit/phpunit": "5.4.*"
+                "phpunit/phpunit": "5.5.*"
             },
             "type": "library",
             "autoload": {
@@ -186,7 +186,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2016-07-06 07:34:32"
+            "time": "2016-08-12 17:07:14"
         },
         {
             "name": "tecnickcom/tcpdf",
