@@ -14,6 +14,11 @@ echo $f->end('Realizar verificación');
 
 if (isset($_POST['submit'])) {
 
+    if (!$EnvioDTE->schemaValidate()) {
+        echo '<h2>Validación de esquema</h2>',"\n";
+        debug(implode("\n\n", \sasco\LibreDTE\Log::readAll()));
+    }
+
     // cabecera del envío
     echo '<h2>Cabecera del envío</h2>',"\n";
     new \sowerphp\general\View_Helper_Table([
