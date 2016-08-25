@@ -58,14 +58,11 @@ class Controller_Certificacion extends \Controller_App
     /**
      * Método para permitir acciones sin estar autenticado
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-18
+     * @version 2016-08-24
      */
     public function beforeFilter()
     {
         $this->Auth->allow('index');
-        if (\sowerphp\core\Configure::read('api.default.token')) {
-            $this->Auth->allow('set_pruebas', 'simulacion', 'intercambio', 'muestras_impresas', 'set_pruebas_dte', 'set_pruebas_ventas', 'set_pruebas_boletas');
-        }
         parent::beforeFilter();
     }
 
@@ -210,7 +207,7 @@ class Controller_Certificacion extends \Controller_App
      * Acción que genera EnvioBOLETA, consumo de folios, libro de boletas y las
      * muestras impresas a partir de un set de pruebas de boleta electrónica
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-17
+     * @version 2016-08-24
      */
     public function set_pruebas_boletas()
     {
@@ -476,7 +473,7 @@ class Controller_Certificacion extends \Controller_App
         }
         // generar muestras impresas
         $rest = new \sowerphp\core\Network_Http_Rest();
-        $rest->setAuth($this->Auth->User ? $this->Auth->User->hash : \sowerphp\core\Configure::read('api.default.token'));
+        $rest->setAuth($this->Auth->User->hash);
         $data = [
             'xml' => base64_encode(file_get_contents($dir.'/xml/EnvioBOLETA.xml')),
             'webVerificacion' => $_POST['web_verificacion'],

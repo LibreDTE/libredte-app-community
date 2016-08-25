@@ -83,14 +83,11 @@ class Controller_Utilidades extends \Controller_App
     /**
      * Método para permitir acciones sin estar autenticado
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-07-04
+     * @version 2016-08-24
      */
     public function beforeFilter()
     {
         $this->Auth->allow('index');
-        if (\sowerphp\core\Configure::read('api.default.token')) {
-            $this->Auth->allow('buscar', 'generar_xml', 'generar_pdf', 'generar_libro', 'generar_libro_guia', 'verificar_enviodte', 'firmar_xml', 'json2xml');
-        }
         parent::beforeFilter();
     }
 
@@ -133,7 +130,7 @@ class Controller_Utilidades extends \Controller_App
      * Acción que permite la generación del XML del EnvioDTE a partir de los
      * datos en JSON
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-20
+     * @version 2016-08-24
      */
     public function generar_xml()
     {
@@ -249,7 +246,7 @@ class Controller_Utilidades extends \Controller_App
             ];
             // realizar consulta a la API
             $rest = new \sowerphp\core\Network_Http_Rest();
-            $rest->setAuth($this->Auth->User ? $this->Auth->User->hash : \sowerphp\core\Configure::read('api.default.token'));
+            $rest->setAuth($this->Auth->User->hash);
             $response = $rest->post($this->request->url.'/api/dte/documentos/generar_xml', $data);
             if ($response['status']['code']!=200) {
                 \sowerphp\core\Model_Datasource_Session::message(
@@ -271,7 +268,7 @@ class Controller_Utilidades extends \Controller_App
      * Acción que permite la generación del PDF con los DTEs contenidos en un
      * XML de EnvioDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-05-28
+     * @version 2016-08-24
      */
     public function generar_pdf()
     {
@@ -294,7 +291,7 @@ class Controller_Utilidades extends \Controller_App
             }
             // realizar consulta a la API
             $rest = new \sowerphp\core\Network_Http_Rest();
-            $rest->setAuth($this->Auth->User ? $this->Auth->User->hash : \sowerphp\core\Configure::read('api.default.token'));
+            $rest->setAuth($this->Auth->User->hash);
             $response = $rest->post($this->request->url.'/api/dte/documentos/generar_pdf', $data);
             if ($response['status']['code']!=200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
@@ -570,7 +567,7 @@ class Controller_Utilidades extends \Controller_App
     /**
      * Acción para verificar la firma de un XML EnvioDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-18
+     * @version 2016-08-24
      */
     public function verificar_enviodte()
     {
@@ -582,7 +579,7 @@ class Controller_Utilidades extends \Controller_App
             foreach ($EnvioDTE->getDocumentos() as $DTE) {
                 // consultar estado del timbre
                 $rest = new \sowerphp\core\Network_Http_Rest();
-                $rest->setAuth($this->Auth->User ? $this->Auth->User->hash : \sowerphp\core\Configure::read('api.default.token'));
+                $rest->setAuth($this->Auth->User->hash);
                 $response = $rest->post(
                     $this->request->url.'/api/dte/documentos/verificar_ted',
                     json_encode(base64_encode($DTE->getTED()))
