@@ -61,7 +61,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
     /**
      * Método que fuerza la selección de un contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-07
+     * @version 2016-08-28
      */
     public function beforeFilter()
     {
@@ -70,16 +70,14 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
         $dte = (strpos($this->request->params['module'], 'Dte')===0 and $this->request->params['controller']!='contribuyentes' and !$this->Auth->allowedWithoutLogin());
         $lce = (strpos($this->request->params['module'], 'Lce')===0);
         if ($dte or $lce) {
-            // obtener emisor
+            // obtener el contribuyente
             if (!$this->getContribuyente()) {
                 \sowerphp\core\Model_Datasource_Session::message('Antes de utilizar el módulo '.$this->request->params['module'].' debe seleccionar un contribuyente con el que operará', 'error');
                 \sowerphp\core\Model_Datasource_Session::write('referer', $this->request->request);
                 $this->redirect('/dte/contribuyentes/seleccionar');
             }
-            // si no existe la definición de ambiente y es de certificación se asigna
-            if (!defined('_LibreDTE_CERTIFICACION_') and $this->Contribuyente->config_ambiente_en_certificacion) {
-                define('_LibreDTE_CERTIFICACION_', true);
-            }
+            // se asigna el ambiente que usará el contribuyente
+            \sasco\LibreDTE\Sii::setAmbiente((int)$this->Contribuyente->config_ambiente_en_certificacion);
         }
     }
 

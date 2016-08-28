@@ -138,7 +138,7 @@ foreach ($_nav_app as $link=>&$info) {
 <!-- BEGIN MAIN CONTENT -->
 <?php
 // mensaje si la empresa está en certificación
-if ($Emisor and ($Emisor->config_ambiente_en_certificacion or (defined('_LibreDTE_CERTIFICACION_') and _LibreDTE_CERTIFICACION_))) {
+if ($Emisor and $Emisor->config_ambiente_en_certificacion) {
     echo '<div class="bg-warning center lead" style="padding:0.5em"><strong>AMBIENTE DE CERTIFICACIÓN: '.$Emisor->razon_social.'</strong></div>',"\n";
 }
 // menú de módulos si hay sesión iniciada
