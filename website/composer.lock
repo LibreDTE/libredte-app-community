@@ -48,16 +48,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "2.0.2",
+            "version": "2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "3d265f7c079f5b37d33475f996d7a383c5fc8aeb"
+                "reference": "41f85e9c2582b3f6d1b7d20395fb40c687ad5370"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/3d265f7c079f5b37d33475f996d7a383c5fc8aeb",
-                "reference": "3d265f7c079f5b37d33475f996d7a383c5fc8aeb",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/41f85e9c2582b3f6d1b7d20395fb40c687ad5370",
+                "reference": "41f85e9c2582b3f6d1b7d20395fb40c687ad5370",
                 "shasum": ""
             },
             "require": {
@@ -136,7 +136,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2016-05-13 01:15:21"
+            "time": "2016-08-18 18:49:14"
         },
         {
             "name": "sasco/libredte",
@@ -144,12 +144,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "b614f7694d8effe2fab1a9391b6a77ca6cf2836a"
+                "reference": "0dadda14d6cdc56af64e6c7accb44d7dd39a83e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/b614f7694d8effe2fab1a9391b6a77ca6cf2836a",
-                "reference": "b614f7694d8effe2fab1a9391b6a77ca6cf2836a",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/0dadda14d6cdc56af64e6c7accb44d7dd39a83e3",
+                "reference": "0dadda14d6cdc56af64e6c7accb44d7dd39a83e3",
                 "shasum": ""
             },
             "require": {
@@ -157,7 +157,7 @@
                 "ext-openssl": "*",
                 "ext-soap": "*",
                 "php": ">=5.5",
-                "phpseclib/phpseclib": "2.0.2",
+                "phpseclib/phpseclib": "2.0.3",
                 "tecnickcom/tcpdf": "6.2.12"
             },
             "require-dev": {
@@ -186,7 +186,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2016-08-18 01:52:48"
+            "time": "2016-09-01 19:50:44"
         },
         {
             "name": "tecnickcom/tcpdf",
