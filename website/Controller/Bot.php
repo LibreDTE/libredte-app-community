@@ -50,10 +50,31 @@ class Controller_Bot extends \sowerphp\app\Controller_Bot
     }
 
     /**
+     * Comando que se ejecuta por defecto al no entender lo que el bot quiere
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2016-08-28
+     */
+    protected function defaultCommand($command)
+    {
+        if (!$this->getNextCommand() and !empty($command)) {
+            $command = str_replace('>TED version="1.0">', '<TED version="1.0">', $command);
+            // se está pidiendo validar un XML de un DTE
+            if (strpos($command, '<TED ')===0) {
+                return $this->_bot_timbre($command);
+            }
+            // se están pidiendo los datos de un contribuyente ingresando el rut
+            else if (!isset($command[12]) and \sowerphp\app\Utility_Rut::check($command)) {
+                return $this->_bot_contribuyente($command);
+            }
+        }
+        return parent::defaultCommand($command);
+    }
+
+    /**
      * Comando que verifica el timbre del documento (sus datos)
      * @param ted String con el timbre electrónico
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-08
+     * @version 2016-08-24
      */
     protected function _bot_timbre($timbre_xml = null)
     {
@@ -68,18 +89,17 @@ class Controller_Bot extends \sowerphp\app\Controller_Bot
             $this->Bot->sendChatAction();
             $timbre_xml = implode(' ', func_get_args());
             $rest = new \sowerphp\core\Network_Http_Rest();
-            $rest->setAuth(\sowerphp\core\Configure::read('api.default.token_bot'));
+            $rest->setAuth(\sowerphp\core\Configure::read('api.default.token'));
             $response = $rest->post(
                 $this->request->url.'/api/dte/documentos/verificar_ted',
                 json_encode(base64_encode($timbre_xml))
             );
             if ($response['status']['code']!=200) {
-                'Lo siento: '.$this->Bot->send($response['body']);
-                return;
+                return $this->Bot->send($this->Bot->send(json_encode($response['body'])));
             }
             $xml =  new \SimpleXMLElement(utf8_encode($timbre_xml), LIBXML_COMPACT);
             list($rut, $dv) = explode('-', $xml->xpath('/TED/DD/RE')[0]);
-            $this->Bot->send(
+            return $this->Bot->send(
                 (new \website\Dte\Admin\Mantenedores\Model_DteTipo($xml->xpath('/TED/DD/TD')[0]))->tipo.
                 ' N° '.$xml->xpath('/TED/DD/F')[0].
                 ' del '.\sowerphp\general\Utility_Date::format($xml->xpath('/TED/DD/FE')[0]).
@@ -165,7 +185,7 @@ class Controller_Bot extends \sowerphp\app\Controller_Bot
     /**
      * Comando que entrega los datos de un contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-07
+     * @version 2016-08-23
      */
     protected function _bot_contribuyente($rut = null)
     {
@@ -174,7 +194,9 @@ class Controller_Bot extends \sowerphp\app\Controller_Bot
             $this->Bot->send('¿Qué RUT te interesa consultar?');
         } else {
             $this->setNextCommand();
-            $this->Bot->send(json_encode((new \sowerphp\core\Network_Http_Rest())->get(
+            $rest = new \sowerphp\core\Network_Http_Rest();
+            $rest->setAuth(\sowerphp\core\Configure::read('api.default.token'));
+            $this->Bot->send(json_encode($rest->get(
                 $this->request->url.'/api/dte/contribuyentes/info/'.$rut
             )['body'], JSON_PRETTY_PRINT));
         }
