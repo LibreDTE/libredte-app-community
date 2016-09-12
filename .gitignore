@@ -4,5 +4,5 @@ data/var
 tmp
 website/Config/core.php
 website/Vendor
-website/View/Pages/inicio.php
+website/View/Pages
 
