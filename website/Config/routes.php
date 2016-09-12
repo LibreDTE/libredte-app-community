@@ -43,3 +43,10 @@
     'action' => 'consultar',
     39,
 ]);
+
+// ruta para utilidades
+\sowerphp\core\Routing_Router::connect('/utilidades', [
+  'module' => 'Utilidades',
+  'controller' => 'module',
+  'action' => 'index'
+]);

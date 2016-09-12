@@ -55,8 +55,8 @@ ini_set('max_execution_time', 600);
 
 // Menú principal del sitio web
 \sowerphp\core\Configure::write('nav.website', [
-    '/dte' => ['name'=>'Módulo facturación', 'desc'=>'Accede al módulo de facturación electrónica', 'icon'=>'fa fa-file-o'],
-    '/certificacion' => ['name'=>'Certificación', 'desc'=>'Proceso de certificación hecho simple', 'icon'=>'fa fa-certificate'],
+    '/dte' => ['name'=>'Facturación', 'desc'=>'Accede al módulo de facturación electrónica', 'icon'=>'fa fa-list-alt'],
+    //'/lce' => ['name'=>'Contabilidad', 'desc'=>'Accede al módulo de contabilidad electrónica', 'icon'=>'fa fa-money'],
     '/utilidades' => ['name'=>'Utilidades', 'desc'=>'Utilidades y herramientas para generar documentos asociados a la facturación electrónica', 'icon'=>'fa fa-wrench'],
     '/soporte' => ['name'=>'Soporte', 'desc'=>'¿Necesitas ayuda o tienes alguna consulta?', 'icon'=>'fa fa-support', 'nav'=>[
         'https://wiki.libredte.cl/doku.php/faq'=>'Preguntas y respuestas frecuentes',
@@ -73,6 +73,7 @@ ini_set('max_execution_time', 600);
     //'/lce' => 'Contabilidad',
     '/certificacion' => 'Certificación',
     '/utilidades' => 'Utilidades',
+    '/certificacion' => 'Certificación',
     '/dte/contribuyentes/seleccionar' => 'Seleccionar empresa',
     '/sistema' => 'Sistema',
 ]);
@@ -108,6 +109,7 @@ ini_set('max_execution_time', 600);
     //'Lce',
     //'Lce.Admin',
     //'Lce.Admin.Mantenedores',
+    'Utilidades',
     'Sistema.General',
     'Sistema.General.DivisionGeopolitica',
 ]);

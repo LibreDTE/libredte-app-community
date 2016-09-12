@@ -100,7 +100,7 @@ class Controller_Certificacion extends \Controller_App
      * Acción que genera el JSON a partir del archivo de pruebas y lo pasa a la
      * utilidad que genera el XML EnvioDTE a partir de dicho JSON
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-10-05
+     * @version 2016-09-12
      */
     public function set_pruebas_dte()
     {
@@ -131,7 +131,7 @@ class Controller_Certificacion extends \Controller_App
         }
         // guardar json para el siguiente paso y redirigir
         \sowerphp\core\Model_Datasource_Session::write('documentos_json', $json);
-        $this->redirect('/utilidades/generar_xml');
+        $this->redirect('/utilidades/documentos/xml');
     }
 
     /**

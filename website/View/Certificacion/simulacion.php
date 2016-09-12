@@ -19,7 +19,7 @@
 </div>
 
 <h2>Ejemplo archivo JSON para generar DTE</h2>
-<p>En la página de <a href="<?=$_base?>/utilidades/generar_xml">generación de XML de EnvioDTE</a> podrás encontrar una plantilla con 21 documentos que incluyen:</p>
+<p>En la página de <a href="<?=$_base?>/utilidades/documentos/xml">generación de XML de EnvioDTE</a> podrás encontrar una plantilla con 21 documentos que incluyen:</p>
 <ul>
     <li>Factura electrónica</li>
     <li>Factura exenta electrónica</li>
@@ -27,4 +27,4 @@
     <li>Nota de débito electrónica</li>
 </ul>
 
-<a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/utilidades/generar_xml" role="button">Generar XML EnvioDTE para simulación</a>
+<a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/utilidades/documentos/xml" role="button">Generar XML EnvioDTE para simulación</a>

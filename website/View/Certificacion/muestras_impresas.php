@@ -20,4 +20,4 @@
     </div>
 </div>
 
-<a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/utilidades/generar_pdf" role="button">Generar muestras impresas a partir de XML EnvioDTE</a>
+<a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/utilidades/documentos/pdf" role="button">Generar muestras impresas a partir de XML EnvioDTE</a>
