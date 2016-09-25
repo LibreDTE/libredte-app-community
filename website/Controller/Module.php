@@ -35,12 +35,14 @@ class Controller_Module extends \sowerphp\general\Controller_Module
      * Método para capturar solicitudes al módulo DTE, si el usuario que lo
      * solicita es plus se le redireccionará al dashboard en vez del menú
      * normal de módulos
-     * @version 2016-02-03
+     * @version 2016-09-25
      */
     public function display()
     {
         if ($this->request->params['module']=='Dte' and $this->Auth->User->inGroup('dte_plus'))
             $this->redirect('/dte/dashboard');
+        else if ($this->request->params['module']=='Lce' and $this->Auth->User->inGroup('lce_plus'))
+            $this->redirect('/lce/dashboard');
         else
             parent::display();
     }
