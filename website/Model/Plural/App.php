@@ -26,22 +26,33 @@ namespace website;
 /**
  * Clase abstracta para todos los modelos  (clase sobreescribible)
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2016-03-04
+ * @version 2016-09-27
  */
 class Model_Plural_App extends \sowerphp\app\Model_Plural
 {
 
-    protected $contribuyente; ///< Contribuyente con el que se realizarán las consultas
+    private $Contribuyente; ///< Contribuyente con el que se realizarán las consultas
 
     /**
      * Método que asigna el contribuyente que se utilizará en las consultas
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-03-04
+     * @version 2016-09-27
      */
-    public function setContribuyente($contribuyente)
+    public function setContribuyente(\website\Dte\Model_Contribuyente $Contribuyente)
     {
-        $this->contribuyente = $contribuyente;
+        $this->Contribuyente = $Contribuyente;
         return $this;
+    }
+
+    /**
+     * Método que entrega el contribuyente previamente seteado en el modelo
+     * @return \website\Dte\Model_Contribuyente
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2016-09-27
+     */
+    public function getContribuyente()
+    {
+        return $this->Contribuyente;
     }
 
 }
