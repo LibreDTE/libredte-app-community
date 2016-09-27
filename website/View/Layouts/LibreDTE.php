@@ -35,6 +35,9 @@
         <link rel="stylesheet" href="<?=$_base?>/js/datepicker/datepicker3.css" />
         <link rel="stylesheet" href="<?=$_base?>/css/font-awesome.min.css" />
         <script type="text/javascript" src="<?=$_base?>/js/app.js"></script>
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 <?=$_header_extra?>
     </head>
     <body>
