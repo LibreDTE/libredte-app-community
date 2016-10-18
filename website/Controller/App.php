@@ -61,7 +61,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
     /**
      * Método que fuerza la selección de un contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-08-28
+     * @version 2016-10-18
      */
     public function beforeFilter()
     {
@@ -69,7 +69,8 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
         // configuración previa para el módulo Dte y sus submódulos
         $dte = (strpos($this->request->params['module'], 'Dte')===0 and $this->request->params['controller']!='contribuyentes' and !$this->Auth->allowedWithoutLogin());
         $lce = (strpos($this->request->params['module'], 'Lce')===0);
-        if ($dte or $lce) {
+        $pos = (strpos($this->request->params['module'], 'Pos')===0);
+        if ($dte or $lce or $pos) {
             // obtener el contribuyente
             if (!$this->getContribuyente()) {
                 \sowerphp\core\Model_Datasource_Session::message('Antes de utilizar el módulo '.$this->request->params['module'].' debe seleccionar un contribuyente con el que operará', 'error');
