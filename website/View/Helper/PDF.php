@@ -38,15 +38,19 @@ class View_Helper_PDF extends \sowerphp\general\View_Helper_PDF
      * Método que sobreescribe la cabecera del PDF para tener una personalizada
      * para los informes del contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-17
+     * @version 2016-10-19
      */
     public function Header()
     {
         // nombre de la empresa
-        $this->SetFont('helvetica', 'B', 10);
-        $this->Texto($this->Contribuyente->razon_social, 15, 14, 'C', '80');
+        $this->SetFont('helvetica', 'B', 9);
+        $this->SetY(10);
+        $this->Texto($this->Contribuyente->razon_social.' / '.$this->Contribuyente->getRUT());
         $this->Ln();
-        $this->Texto($this->Contribuyente->giro, 15, $this->GetY(), 'C', '80');
+        $this->SetFont('helvetica', '', 9);
+        $this->Texto($this->Contribuyente->direccion.', '.$this->Contribuyente->getComuna()->comuna);
+        $this->Ln();
+        $this->Texto($this->Contribuyente->giro);
         $this->Ln();
         // titulo del archivo
         $this->SetFont('helvetica', 'B', 14);
