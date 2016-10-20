@@ -33,19 +33,20 @@ class View_Helper_PDF extends \sowerphp\general\View_Helper_PDF
 
     public $Contribuyente; ///< Empresa que está generando el PDF
     public $titulo; ///< Título del PDF
+    public $subtitulo; ///< Subtítulo del PDF
 
     /**
      * Método que sobreescribe la cabecera del PDF para tener una personalizada
      * para los informes del contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-19
+     * @version 2016-10-20
      */
     public function Header()
     {
         // nombre de la empresa
         $this->SetFont('helvetica', 'B', 9);
         $this->SetY(10);
-        $this->Texto($this->Contribuyente->razon_social.' / '.$this->Contribuyente->getRUT());
+        $this->Texto($this->Contribuyente->razon_social.' / RUT N° '.$this->Contribuyente->getRUT());
         $this->Ln();
         $this->SetFont('helvetica', '', 9);
         $this->Texto($this->Contribuyente->direccion.', '.$this->Contribuyente->getComuna()->comuna);
@@ -54,7 +55,12 @@ class View_Helper_PDF extends \sowerphp\general\View_Helper_PDF
         $this->Ln();
         // titulo del archivo
         $this->SetFont('helvetica', 'B', 14);
-        $this->Texto($this->titulo, null, $this->GetY()+2, 'C');
+        $this->Texto($this->titulo, null, null, 'C');
+        if (isset($this->subtitulo)) {
+            $this->Ln();
+            $this->SetFont('helvetica', 'B', 10);
+            $this->Texto($this->subtitulo, null, null, 'C');
+        }
         // colocar enlace a la página web
         $this->SetFont('helvetica', 'B', 10);
         $link = 'http'.(isset($_SERVER['HTTPS'])?'s':null).'://'.$_SERVER['HTTP_HOST'];
