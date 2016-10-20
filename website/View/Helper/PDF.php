@@ -54,14 +54,11 @@ class View_Helper_PDF extends \sowerphp\general\View_Helper_PDF
         $this->Ln();
         // titulo del archivo
         $this->SetFont('helvetica', 'B', 14);
-        $this->Texto($this->titulo, 15, $this->GetY()+2, 'C', '185');
+        $this->Texto($this->titulo, null, $this->GetY()+2, 'C');
         // colocar enlace a la página web
         $this->SetFont('helvetica', 'B', 10);
         $link = 'http'.(isset($_SERVER['HTTPS'])?'s':null).'://'.$_SERVER['HTTP_HOST'];
-        $this->Texto($link, 15, 20+$this->margin_top, 'R', 185, $link);
-        $this->Ln();
-        // colocar línea
-        $this->Line($this->GetX(), $this->GetY()+2, 201, $this->GetY()+2);
+        $this->Texto($link, null, 20+$this->margin_top, 'R', null, $link);
     }
 
 }
