@@ -45,13 +45,16 @@ class Model_Plural_App extends \sowerphp\app\Model_Plural
     }
 
     /**
-     * Método que entrega el contribuyente previamente seteado en el modelo
+     * Método que entrega el contribuyente previamente seteado en el modelo o bien el
+     * de la sesión si no existe seteado
      * @return \website\Dte\Model_Contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-09-27
+     * @version 2016-10-25
      */
     public function getContribuyente()
     {
+        if (!isset($this->Contribuyente))
+            $this->Contribuyente = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente');
         return $this->Contribuyente;
     }
 
