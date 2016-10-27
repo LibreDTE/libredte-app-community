@@ -68,7 +68,19 @@
 <div class="row">
     <!-- PANEL IZQUIERDA -->
     <div class="col-md-9">
-        <!-- graficos ventas y compras -->
+        <!-- grafico dte emitidos por día -->
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> Documentos emitidos por día
+                </div>
+                <div class="panel-body">
+                    <div id="grafico-documentos_diarios"></div>
+                </div>
+            </div>
+        </div>
+        <!-- fin grafico dte emitidos por día -->
+        <!-- grafico ventas y compras -->
         <div class="row">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -79,7 +91,7 @@
                 </div>
             </div>
         </div>
-        <!-- fin graficos ventas y compras -->
+        <!-- fin grafico ventas y compras -->
     </div>
     <!-- FIN PANEL IZQUIERDA -->
     <!-- PANEL DERECHA -->
@@ -107,6 +119,14 @@
 </div>
 
 <script>
+Morris.Bar({
+    element: 'grafico-documentos_diarios',
+    data: <?=json_encode($documentos_diarios)?>,
+    xkey: 'dia',
+    ykeys: ['total'],
+    labels: ['Emitidos'],
+    resize: true
+});
 Morris.Bar({
     element: 'grafico-usuarios_mensuales',
     data: <?=json_encode($usuarios_mensuales)?>,
