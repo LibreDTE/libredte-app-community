@@ -122,7 +122,7 @@ class Controller_Estadisticas extends \Controller_App
      * @param desde Desde cuando considerar la actividad de los contribuyentes
      * @param hasta Hasta cuando considerar la actividad de los contribuyentes
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-27
+     * @version 2016-11-10
      */
     private function getEstadistica($certificacion, $desde, $hasta)
     {
@@ -138,6 +138,9 @@ class Controller_Estadisticas extends \Controller_App
         $Usuarios->setWhereStatement(['activo = true']);
         try {
             $contribuyentes_activos = $Contribuyentes->getConMovimientos($desde, $hasta, $certificacion, false);
+            foreach($contribuyentes_activos as &$c) {
+                unset($c['ambiente'], $c['email']);
+            }
         } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
             $this->Api->send($e->getMessage(), 500);
         }
