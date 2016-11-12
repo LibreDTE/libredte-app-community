@@ -59,25 +59,28 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
     private $Contribuyente = null; ///< Contribuyente con el que se está trabajando
 
     /**
-     * Método que fuerza la selección de un contribuyente
+     * Método que fuerza la selección de un contribuyente si estamos en alguno
+     * de los módulos que requieren uno para poder funcionar
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-18
+     * @version 2016-11-12
      */
     public function beforeFilter()
     {
         parent::beforeFilter();
-        // configuración previa para el módulo Dte y sus submódulos
         $dte = (strpos($this->request->params['module'], 'Dte')===0 and $this->request->params['controller']!='contribuyentes' and !$this->Auth->allowedWithoutLogin());
-        $lce = (strpos($this->request->params['module'], 'Lce')===0);
-        $pos = (strpos($this->request->params['module'], 'Pos')===0);
-        if ($dte or $lce or $pos) {
-            // obtener el contribuyente
+        $otros = false;
+        foreach ((array)\sowerphp\core\Configure::read('app.modulos_empresa') as $modulo) {
+            if (strpos($this->request->params['module'], $modulo)===0) {
+                $otros = true;
+                break;
+            }
+        }
+        if ($dte or $otros) {
             if (!$this->getContribuyente()) {
                 \sowerphp\core\Model_Datasource_Session::message('Antes de utilizar el módulo '.$this->request->params['module'].' debe seleccionar un contribuyente con el que operará', 'error');
                 \sowerphp\core\Model_Datasource_Session::write('referer', $this->request->request);
                 $this->redirect('/dte/contribuyentes/seleccionar');
             }
-            // se asigna el ambiente que usará el contribuyente
             \sasco\LibreDTE\Sii::setAmbiente((int)$this->Contribuyente->config_ambiente_en_certificacion);
         }
     }

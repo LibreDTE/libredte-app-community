@@ -56,7 +56,6 @@ ini_set('max_execution_time', 600);
 // Menú principal del sitio web
 \sowerphp\core\Configure::write('nav.website', [
     '/dte' => ['name'=>'Facturación', 'desc'=>'Accede al módulo de facturación electrónica', 'icon'=>'fa fa-list-alt'],
-    //'/lce' => ['name'=>'Contabilidad', 'desc'=>'Accede al módulo de contabilidad electrónica', 'icon'=>'fa fa-money'],
     '/utilidades' => ['name'=>'Utilidades', 'desc'=>'Utilidades y herramientas para generar documentos asociados a la facturación electrónica', 'icon'=>'fa fa-wrench'],
     '/soporte' => ['name'=>'Soporte', 'desc'=>'¿Necesitas ayuda o tienes alguna consulta?', 'icon'=>'fa fa-support', 'nav'=>[
         'https://wiki.libredte.cl/doku.php/faq'=>'Preguntas y respuestas frecuentes',
@@ -70,7 +69,6 @@ ini_set('max_execution_time', 600);
 // Menú principal de la aplicación web
 \sowerphp\core\Configure::write('nav.app', [
     '/dte' => 'Facturación',
-    //'/lce' => 'Contabilidad',
     '/certificacion' => 'Certificación',
     '/utilidades' => 'Utilidades',
     '/certificacion' => 'Certificación',
@@ -106,13 +104,13 @@ ini_set('max_execution_time', 600);
     'Dte.Admin',
     'Dte.Admin.Informes',
     'Dte.Admin.Mantenedores',
-    //'Lce',
-    //'Lce.Admin',
-    //'Lce.Admin.Mantenedores',
     'Utilidades',
     'Sistema.General',
     'Sistema.General.DivisionGeopolitica',
 ]);
+
+// módulos principales (extras a Dte) que sólo funcionan con una empresa registrada
+//\sowerphp\core\Configure::write('app.modulos_empresa', []);
 
 // Configuración para autorización secundaria (extensión: sowerphp/app)
 /*\sowerphp\core\Configure::write('auth2', [
