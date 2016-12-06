@@ -22,15 +22,23 @@
  */
 
 // Menú para el módulo
-Configure::write('nav.module', array(
-    '/usuarios' => array(
+$nav = [
+    '/usuarios' => [
         'name' => 'Usuarios',
         'desc' => 'Mantenedor de usuarios y grupos del sistema',
         'icon' => 'fa fa-users',
-    ),
-    '/general' => array(
+    ],
+    '/general' => [
         'name' => 'Configuración general',
         'desc' => 'Módulo de configuraciones generales',
         'icon' => 'fa fa-cogs',
-    ),
-));
+    ],
+];
+if (\sowerphp\core\Module::loaded('Sistema.Libredte')) {
+    $nav['/libredte'] = [
+        'name' => 'Configuración LibreDTE',
+        'desc' => 'Módulo de configuraciones de la aplicación web de LibreDTE',
+        'icon' => 'fa fa-gear',
+    ];
+}
+Configure::write('nav.module', $nav);
