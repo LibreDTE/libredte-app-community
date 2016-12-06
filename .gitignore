@@ -1,3 +1,4 @@
+# contenido propio de la instancia (no público)
 data/firma_electronica
 data/logos
 data/var
@@ -6,3 +7,16 @@ website/Config/core.php
 website/Vendor
 website/View/Pages
 
+# funcionalidades aun no liberadas
+website/Shell
+website/Module/Utilidades
+website/Module/Lce
+website/Module/Pos
+website/View/Layouts/POS.php
+website/Module/Rrhh
+website/Module/Inventario
+website/Controller/Dashboard.php
+website/View/Dashboard
+website/Controller/Contacto.php
+website/View/Contacto
+website/Module/Sistema/Module/Libredte
