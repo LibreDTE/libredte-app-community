@@ -33,6 +33,11 @@ Configure::write('nav.module', array(
         'desc' => 'Listado de actividades económicas del SII',
         'icon' => 'fa fa-dollar',
     ),
+    '/bancos/listar' => array(
+        'name' => 'Bancos',
+        'desc' => 'Listado de bancos de Chile',
+        'icon' => 'fa fa-bank',
+    ),
     '/division_geopolitica' => array(
         'name' => 'División geopolítica',
         'desc' => 'Regiones, provincias y comunas del país',
