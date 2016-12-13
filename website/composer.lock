@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b1c38150a554aec9e636e8df6cdcbbea",
-    "content-hash": "583551d26f269e64d288644850b1b3a7",
+    "hash": "0a34cbd604be2ae37515dc90095200ab",
+    "content-hash": "3e8bede5e2968292e80d034485b0d6b9",
     "packages": [
         {
             "name": "dropbox/dropbox-sdk",
@@ -45,6 +45,56 @@
                 "dropbox"
             ],
             "time": "2016-08-08 23:48:49"
+        },
+        {
+            "name": "khipu/khipu-api-client",
+            "version": "2.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/khipu/khipu-api-php-client.git",
+                "reference": "f1a116ae012be77fdac326c626e5122d65d00088"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/khipu/khipu-api-php-client/zipball/f1a116ae012be77fdac326c626e5122d65d00088",
+                "reference": "f1a116ae012be77fdac326c626e5122d65d00088",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0",
+                "satooshi/php-coveralls": "~0.6.1",
+                "squizlabs/php_codesniffer": "~2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Khipu\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "khipu",
+                    "homepage": "https://github.com/khipu/khipu-api-php-client"
+                }
+            ],
+            "homepage": "https://github.com/khipu/khipu-api-php-client",
+            "keywords": [
+                "api",
+                "khipu",
+                "php",
+                "sdk"
+            ],
+            "time": "2016-06-10 14:50:19"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -144,12 +194,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "3b1faba0da71ebca99ee13f4fd76f59ca9d990f9"
+                "reference": "dc523d1a60be0e60c3a4adb1cd93e1ed681d80d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/3b1faba0da71ebca99ee13f4fd76f59ca9d990f9",
-                "reference": "3b1faba0da71ebca99ee13f4fd76f59ca9d990f9",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/dc523d1a60be0e60c3a4adb1cd93e1ed681d80d9",
+                "reference": "dc523d1a60be0e60c3a4adb1cd93e1ed681d80d9",
                 "shasum": ""
             },
             "require": {
@@ -161,7 +211,7 @@
                 "tecnickcom/tcpdf": "6.2.12"
             },
             "require-dev": {
-                "phpunit/phpunit": "5.6.*"
+                "phpunit/phpunit": "5.7.*"
             },
             "type": "library",
             "autoload": {
@@ -186,7 +236,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2016-10-27 00:17:12"
+            "time": "2016-12-13 03:57:55"
         },
         {
             "name": "tecnickcom/tcpdf",

@@ -4,6 +4,7 @@
     },
     "require": {
          "sasco/libredte": "dev-master",
-         "dropbox/dropbox-sdk": "1.1.*"
+         "dropbox/dropbox-sdk": "1.1.*",
+         "khipu/khipu-api-client": "2.7.0"
     }
 }
