@@ -23,3 +23,8 @@
 
 // incluir autocarga de composer
 require 'Vendor/autoload.php';
+
+// no validar SSL de sitios del SII (sólo en caso de problemas de certificado)
+if (\sowerphp\core\Configure::read('dte.verificar_ssl')===false) {
+    \sasco\LibreDTE\Sii::setVerificarSSL(false);
+}
