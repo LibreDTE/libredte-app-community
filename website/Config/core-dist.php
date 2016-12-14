@@ -162,6 +162,8 @@ ini_set('max_execution_time', 600);
         // =true se asignará texto por defecto. String al lado izquiero o bien arreglo con índices left y right con sus textos
         'footer' => true,
     ],
+    // validar SSL de sitios del SII
+    'verificar_ssl' => true,
 ]);
 
 // configuración para firma electrónica
