@@ -36,8 +36,8 @@ $nav = [
 ];
 if (\sowerphp\core\Module::loaded('Sistema.Libredte')) {
     $nav['/libredte'] = [
-        'name' => 'Configuración LibreDTE',
-        'desc' => 'Módulo de configuraciones de la aplicación web de LibreDTE',
+        'name' => 'LibreDTE',
+        'desc' => 'Módulo de administración de la aplicación web de LibreDTE',
         'icon' => 'fa fa-gear',
     ];
 }
