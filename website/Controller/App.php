@@ -62,7 +62,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
      * Método que fuerza la selección de un contribuyente si estamos en alguno
      * de los módulos que requieren uno para poder funcionar
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-11-12
+     * @version 2016-12-15
      */
     public function beforeFilter()
     {
@@ -76,12 +76,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
             }
         }
         if ($dte or $otros) {
-            if (!$this->getContribuyente()) {
-                \sowerphp\core\Model_Datasource_Session::message('Antes de utilizar el módulo '.$this->request->params['module'].' debe seleccionar un contribuyente con el que operará', 'error');
-                \sowerphp\core\Model_Datasource_Session::write('referer', $this->request->request);
-                $this->redirect('/dte/contribuyentes/seleccionar');
-            }
-            \sasco\LibreDTE\Sii::setAmbiente((int)$this->Contribuyente->config_ambiente_en_certificacion);
+            $this->getContribuyente();
         }
     }
 
@@ -97,14 +92,23 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
 
     /**
      * Método que entrega el objeto del contribuyente que ha sido seleccionado
+     * para ser usado en la sesión. Si no hay uno seleccionado se fuerza a
+     * seleccionar.
      * @return \website\Dte\Model_Contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-01-02
+     * @version 2016-12-15
      */
     protected function getContribuyente()
     {
-        if (!isset($this->Contribuyente))
+        if (!isset($this->Contribuyente)) {
             $this->Contribuyente = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente');
+            if (!$this->Contribuyente) {
+                \sowerphp\core\Model_Datasource_Session::message('Antes de utilizar el módulo '.$this->request->params['module'].' debe seleccionar un contribuyente con el que operará', 'error');
+                \sowerphp\core\Model_Datasource_Session::write('referer', $this->request->request);
+                $this->redirect('/dte/contribuyentes/seleccionar');
+            }
+            \sasco\LibreDTE\Sii::setAmbiente((int)$this->Contribuyente->config_ambiente_en_certificacion);
+        }
         return $this->Contribuyente;
     }
 
