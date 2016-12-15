@@ -56,6 +56,7 @@ echo $f->input([
     'name' => 'accion',
     'label' => 'Acción',
     'help' => '¿Qué hacer con el XML del AEC?',
-    'options' => ['descargar'=>'Descargar', 'enviar'=>'Enviar al SII'],
+    //'options' => ['descargar'=>'Descargar', 'enviar'=>'Enviar al SII'],
+    'options' => ['descargar'=>'Descargar'],
 ]);
 echo $f->end('Generar AEC');
