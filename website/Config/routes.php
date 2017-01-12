@@ -30,6 +30,10 @@
     'module' => 'Dte.Admin',
     'action' => 'api',
 ]);
+\sowerphp\core\Routing_Router::connect('/api/lce/:controller/*', [
+    'module' => 'Lce',
+    'action' => 'api',
+]);
 \sowerphp\core\Routing_Router::connect('/api/pagos/:controller/*', [
     'module' => 'Pagos',
     'action' => 'api',
