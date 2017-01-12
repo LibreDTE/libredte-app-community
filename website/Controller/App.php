@@ -66,8 +66,13 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
      */
     public function beforeFilter()
     {
-        // forzar obtener contribuyente
         parent::beforeFilter();
+        // si la acción solicitada es de la API no se hace nada para forzar
+        // contribuyente, ya que deberá ser validado en cada recurso de la API
+        if ($this->request->params['action']=='api') {
+            return;
+        }
+        // forzar obtener contribuyente
         $dte = (strpos($this->request->params['module'], 'Dte')===0 and $this->request->params['controller']!='contribuyentes' and !$this->Auth->allowedWithoutLogin());
         $otros = false;
         foreach ((array)\sowerphp\core\Configure::read('app.modulos_empresa') as $modulo) {
