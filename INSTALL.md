@@ -12,7 +12,7 @@ de los proyectos asociados a LibreDTE.
 Requisitos
 ----------
 
-- Apache 2.x y PHP 5.5 o superior (no usar PHP 7, problemas con PDF417)
+- Apache 2.x y PHP 5.5 o superior
 - Base de datos PostgreSQL 9.x
 - Memcached con PHP usándolo como backend para las sesiones
 - [Otros requisitos de SowerPHP](https://github.com/SowerPHP/sowerphp/blob/master/INSTALL.md)
