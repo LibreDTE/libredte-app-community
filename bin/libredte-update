@@ -8,15 +8,6 @@
 
 WEBAPP=$(dirname $(cd $(dirname $0) && pwd))
 
-cd $WEBAPP
-for m in $(git config --file .gitmodules --get-regexp path | awk '{ print $2 }'); do
-    if [ "$m" = "website/Module/Lce" ]; then
-        git submodule deinit $m > /dev/null
-        git rm $m > /dev/null
-        rm -rf .git/modules/$m > /dev/null
-    fi
-done
-
 echo "Actualizando aplicación web de LibreDTE"
 cd $WEBAPP
 git pull
@@ -27,4 +18,5 @@ composer install
 
 echo "Actualizar submódulos de git"
 cd $WEBAPP
+rm -rf website/Module/Lce
 git submodule foreach git pull origin master
