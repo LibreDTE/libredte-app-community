@@ -12,7 +12,7 @@ de los proyectos asociados a LibreDTE.
 Requisitos
 ----------
 
-- Apache 2.x y PHP 5.5 o superior (no usar PHP 7, problemas con PDF417)
+- Apache 2.x y PHP 5.5 o superior
 - Base de datos PostgreSQL 9.x
 - Memcached con PHP usándolo como backend para las sesiones
 - [Otros requisitos de SowerPHP](https://github.com/SowerPHP/sowerphp/blob/master/INSTALL.md)
@@ -115,15 +115,10 @@ Instalación aplicación web
 
 11.	Cargar datos del módulo Dte del archivo *libredte/website/Module/Dte/Model/Sql/datos.ods* a través de la página de carga de datos.
 
-12.	Cargar *schema* del módulo Lce:
 
-		$ psql libredte < libredte/website/Module/Lce/Model/Sql/PostgreSQL.sql
+12.	Crear directorio *data/logos* y permitir que el usuario del servidor web pueda escribir en ellos.
 
-13.	Cargar datos del módulo Lce del archivo *libredte/website/Module/Lce/Model/Sql/datos.ods* a través de la página de carga de datos.
-
-14.	Crear directorio *data/logos* y permitir que el usuario del servidor web pueda escribir en ellos.
-
-15.	¡Listo! Ahora puede ingresar a la aplicación web de LibreDTE a través de
+13.	¡Listo! Ahora puede ingresar a la aplicación web de LibreDTE a través de
 	<http://example.com/libredte>.
 
 	El usuario por defecto es *admin* con contraseña *admin*. Se recomienda

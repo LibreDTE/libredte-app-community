@@ -6,8 +6,8 @@ LibreDTE: Aplicación web
 LibreDTE es un proyecto que tiene por objetivo proveer facturación electrónica
 libre para Chile.
 
-Aquí podrás encontrar el código fuente de la aplicación web disponible en
-<http://libredte.cl>
+Aquí encontrarás el código fuente que ha sido liberado de la aplicación web
+oficial disponible sólo en <https://libredte.cl>
 
 Esta aplicación web utiliza la
 [biblioteca PHP LibreDTE](https://github.com/LibreDTE/libredte-lib) y el
@@ -58,7 +58,7 @@ y [PSR-2](http://www.php-fig.org/psr/psr-2).
 Contacto y redes sociales
 -------------------------
 
-- Sitio web: <http://libredte.cl>
+- Sitio web: <https://libredte.cl>
 - Twitter: <https://twitter.com/LibreDTE>
 - Facebook: <https://www.facebook.com/LibreDTE>
 - Google+: <https://plus.google.com/u/0/101078963971350176990/about>

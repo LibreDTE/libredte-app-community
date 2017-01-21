@@ -4,6 +4,3 @@
 [submodule "app/pdf417decode"]
 	path = app/pdf417decode
 	url = https://github.com/estebandelaf/pdf417decode.git
-[submodule "website/Module/Lce"]
-	path = website/Module/Lce
-	url = https://github.com/LibreDTE/lce-sowerphp.git
