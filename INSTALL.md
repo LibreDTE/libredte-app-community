@@ -2,8 +2,12 @@ Instalación aplicación web LibreDTE
 ===================================
 
 La aplicación web está soportada oficialmente en Debian GNU/Linux 8. Es posible
-usarla en otros sistemas GNU/Linux, como Arch Linux o Ubuntu, pero no se
-soportan de manera oficial por el momento.
+usarla en otros sistemas GNU/Linux, como Arch Linux o Ubuntu, pero no se entrega
+soporte para dichas plataformas.
+
+Al instalar este software estás aceptando cumplir con
+[los términos, condiciones y licencia](https://wiki.libredte.cl/doku.php/terminos)
+de los proyectos asociados a LibreDTE.
 
 Requisitos
 ----------
@@ -23,12 +27,9 @@ directorio por defecto */usr/share/sowerphp*:
 
 	$ wget -c https://github.com/SowerPHP/sowerpkg/raw/master/sowerpkg.sh
 	$ chmod +x sowerpkg.sh
-	$ ./sowerpkg.sh install -e "empresa app general" -W
+	$ ./sowerpkg.sh install -e "app general" -W
 
-Esto instalará el framework SowerPHP, y las extensiones obligatorias general y
-app. Adicionalmente se instalará la extensión empresa, esto se realiza porque es
-necesario obtener *schemas* SQL y datos desde ella (pero no se usa la extensión
-en si en la aplicación web).
+Esto instalará el framework SowerPHP, y las extensiones "general" y "app".
 
 SowerPKG requiere que esté instalado curl, git y mercurial (hg).
 
@@ -92,12 +93,12 @@ Instalación aplicación web
 
 		$ psql libredte < /usr/share/sowerphp/extensions/sowerphp/app/Module/Sistema/Module/General/Model/Sql/moneda.sql
 
-8.	Cargar *schema* para actividades económicas del módulo Sistema.General de la extensión empresa:
+8.	Cargar *schema* para actividades económicas del módulo Sistema.General:
 
-		$ psql libredte < /usr/share/sowerphp/extensions/sowerphp/empresa/Module/Sistema/Module/General/Model/Sql/PostgreSQL/actividad_economica.sql
+		$ psql libredte < libredte/website/Module/Sistema/Module/General/Model/Sql/PostgreSQL/actividad_economica.sql
 
 	Cargar datos de actividades económicas: se deberán cargar desde el archivo
-	*/usr/share/sowerphp/extensions/sowerphp/empresa/Module/Sistema/Module/General/Model/Sql/actividad_economica.ods*,
+	*libredte/website/Module/Sistema/Module/General/Model/Sql/actividad_economica.ods*,
 	esto se puede realizar utilizando el módulo Dev y la opción disponible en <http://example.com/libredte/dev/bd/poblar> (se debe habilitar el módulo Dev en Config/core.php).
 
 9.	Cargar *schema* para división geopolítica (regiones, provincias y comunas) del módulo Sistema.General.DivisionGeopolitica de la extensión app:
