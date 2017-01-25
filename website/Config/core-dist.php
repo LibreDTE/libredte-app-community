@@ -69,7 +69,6 @@ ini_set('max_execution_time', 600);
 // Menú principal de la aplicación web
 \sowerphp\core\Configure::write('nav.app', [
     '/dte' => 'Facturación',
-    '/certificacion' => 'Certificación',
     '/utilidades' => 'Utilidades',
     '/certificacion' => 'Certificación',
     '/dte/contribuyentes/seleccionar' => 'Seleccionar empresa',
