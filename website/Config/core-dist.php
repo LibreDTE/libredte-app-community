@@ -97,7 +97,7 @@ ini_set('max_execution_time', 600);
 
 // Módulos que utiliza la aplicación
 \sowerphp\core\Module::uses([
-    //'Dev',
+    'Dev',
     'Dte',
     'Dte.Cobranzas',
     'Dte.Informes',
@@ -128,10 +128,10 @@ ini_set('max_execution_time', 600);
 ]);*/
 
 // Configuración para auto registro de usuarios (extensión: sowerphp/app)
-\sowerphp\core\Configure::write('app.self_register', [
+/*\sowerphp\core\Configure::write('app.self_register', [
     'groups' => ['usuarios', 'dte_basico'],
     'terms' => 'https://wiki.libredte.cl/doku.php/terminos',
-]);
+]);*/
 
 // Configuración para Telegram
 /*\sowerphp\core\Configure::write('telegram', [
