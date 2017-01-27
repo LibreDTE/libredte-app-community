@@ -74,6 +74,14 @@
             </div>
         </div>
         <div class="list-group">
+            <div class="list-group-item list-group-item-info">Firma electrónica</div>
+            <div class="list-group-item">
+                <a href="utilidades/firma_electronica/datos" title="Ver datos de la firma electrónica">
+                    <span class="fa fa-certificate"></span> Datos de la firma
+                </a>
+            </div>
+        </div>
+        <div class="list-group">
             <div class="list-group-item list-group-item-info">Formatos DTE soportados</div>
             <div class="list-group-item">
                 <a href="utilidades/formatos" title="Convertir de un formato soportado a JSON">
