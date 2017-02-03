@@ -26,7 +26,7 @@ namespace website;
 /**
  * Helper para la generación de PDFs personalizados para LibreDTE
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2016-02-17
+ * @version 2017-02-02
  */
 class View_Helper_PDF extends \sowerphp\general\View_Helper_PDF
 {
@@ -39,19 +39,20 @@ class View_Helper_PDF extends \sowerphp\general\View_Helper_PDF
      * Método que sobreescribe la cabecera del PDF para tener una personalizada
      * para los informes del contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-20
+     * @version 2017-02-02
      */
     public function Header()
     {
         // nombre de la empresa
         $this->SetFont('helvetica', 'B', 9);
-        $this->SetY(10);
+        $this->SetY(5);
         $this->Texto($this->Contribuyente->razon_social.' / RUT N° '.$this->Contribuyente->getRUT());
         $this->Ln();
         $this->SetFont('helvetica', '', 9);
         $this->Texto($this->Contribuyente->direccion.', '.$this->Contribuyente->getComuna()->comuna);
         $this->Ln();
         $this->Texto($this->Contribuyente->giro);
+        $this->Ln();
         $this->Ln();
         // titulo del archivo
         $this->SetFont('helvetica', 'B', 14);
@@ -61,10 +62,21 @@ class View_Helper_PDF extends \sowerphp\general\View_Helper_PDF
             $this->SetFont('helvetica', 'B', 10);
             $this->Texto($this->subtitulo, null, null, 'C');
         }
-        // colocar enlace a la página web
-        $this->SetFont('helvetica', 'B', 10);
+    }
+
+    /**
+     * Método que sobreescribe el pie de página del PDF
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]delaf.cl)
+     * @version 2017-02-02
+     */
+    public function Footer()
+    {
+        $this->SetFont('helvetica', '', 8);
+        parent::Footer();
+        $this->SetY($this->GetY());
+        $this->SetFont('helvetica', 'B', 6);
         $link = 'http'.(isset($_SERVER['HTTPS'])?'s':null).'://'.$_SERVER['HTTP_HOST'];
-        $this->Texto($link, null, 20+$this->margin_top, 'R', null, $link);
+        $this->Texto('Documento generado el '. date('d/m/Y').' a las '.date('H:i').' usando LibreDTE ('.$link.')');
     }
 
 }
