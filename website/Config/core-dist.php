@@ -148,9 +148,8 @@ ini_set('max_execution_time', 600);
 \sowerphp\core\Configure::write('dte', [
     // contraseña que se usará para encriptar datos sensibles en la BD
     'pkey' => '', // DEBE ser de 32 chars
-    // directorio para logos de las empresas (debe tener permisos de escritura)
+    // configuración de logos de las empresas
     'logos' => [
-        'dir' => DIR_PROJECT.'/data/logos',
         'width' => 150,
         'height' => 100,
     ],
@@ -186,3 +185,6 @@ ini_set('max_execution_time', 600);
     'key' => '',
     'secret' => '',
 ]);*/
+
+// directorio para datos estáticos (debe tener permisos de escritura)
+define('DIR_STATIC', DIR_PROJECT.'/data/static');

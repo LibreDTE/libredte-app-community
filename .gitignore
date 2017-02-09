@@ -1,6 +1,6 @@
 # contenido propio de la instancia (no público)
 data/firma_electronica
-data/logos
+data/static
 data/var
 tmp
 website/Config/core.php
