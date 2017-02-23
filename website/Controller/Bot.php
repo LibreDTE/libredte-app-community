@@ -91,7 +91,7 @@ class Controller_Bot extends \sowerphp\app\Controller_Bot
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth(\sowerphp\core\Configure::read('api.default.token'));
             $response = $rest->post(
-                $this->request->url.'/api/dte/documentos/verificar_ted',
+                $this->request->url.'/api/utilidades/documentos/verificar_ted',
                 json_encode(base64_encode($timbre_xml))
             );
             if ($response['status']['code']!=200) {
@@ -116,7 +116,7 @@ class Controller_Bot extends \sowerphp\app\Controller_Bot
      * Comando que procesa el envío del timbre como fotografía
      * @param photo ID de la fotografía que envió el usuario
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-10-13
+     * @version 2017-02-23
      */
     protected function _bot_photo($file_id)
     {
@@ -131,7 +131,7 @@ class Controller_Bot extends \sowerphp\app\Controller_Bot
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth(\sowerphp\core\Configure::read('api.default.token'));
         $response = $rest->post(
-            $this->request->url.'/api/dte/documentos/get_ted',
+            $this->request->url.'/api/utilidades/documentos/get_ted',
             base64_encode($file['data'])
         );
         if ($response['status']['code']!=200) {
