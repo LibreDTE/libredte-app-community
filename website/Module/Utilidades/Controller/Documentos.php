@@ -594,7 +594,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Recurso de la API que permite validar el TED (timbre electrónico)
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-08-28
+     * @version 2017-02-23
      */
     public function _api_verificar_ted_POST()
     {
@@ -607,7 +607,7 @@ class Controller_Documentos extends \Controller_App
         $TED = base64_decode($this->Api->data);
         $TED = mb_detect_encoding($TED, ['UTF-8', 'ISO-8859-1']) != 'ISO-8859-1' ? utf8_decode($TED) : $TED;
         if (strpos($TED, '<?xml')!==0) {
-            $TED = '<?xml version="1.0" encoding="ISO-8859-1"?>'."\n".$TED;
+            $TED = '<?xml version="1.0" encoding="ISO-8859-1"?'.'>'."\n".$TED;
         }
         // crear xml con el ted y obtener datos en arreglo
         $xml = new \sasco\LibreDTE\XML();
@@ -695,6 +695,87 @@ class Controller_Documentos extends \Controller_App
             return $this->Api->send(\sasco\LibreDTE\Log::readAll(), 500);
         }
         return (array)$xml->xpath('/SII:RESPUESTA/SII:RESP_HDR')[0];
+    }
+
+    /**
+     * Método que guarda los datos del Emisor
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2016-03-04
+     */
+    private function guardarEmisor($datos)
+    {
+        list($emisor, $dv) = explode('-', $datos['RUTEmisor']);
+        $Emisor = new \website\Dte\Model_Contribuyente($emisor);
+        if ($Emisor->usuario)
+            return null;
+        $Emisor->dv = $dv;
+        $Emisor->razon_social = substr($datos['RznSoc'], 0, 100);
+        if (!empty($datos['GiroEmis']))
+            $Emisor->giro = substr($datos['GiroEmis'], 0, 80);
+        if (!empty($datos['Telefono']))
+            $Emisor->telefono = substr($datos['Telefono'], 0, 20);
+        if (!empty($datos['CorreoEmisor']))
+            $Emisor->email = substr($datos['CorreoEmisor'], 0, 80);
+        $Emisor->actividad_economica = (int)$datos['Acteco'];
+        if (!empty($datos['DirOrigen']))
+            $Emisor->direccion = substr($datos['DirOrigen'], 0, 70);
+        if (is_numeric($datos['CmnaOrigen'])) {
+            $Emisor->comuna = $datos['CmnaOrigen'];
+        } else {
+            $comuna = (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->getComunaByName($datos['CmnaOrigen']);
+            if ($comuna) {
+                $Emisor->comuna = $comuna;
+            }
+        }
+        $Emisor->modificado = date('Y-m-d H:i:s');
+        try {
+            return $Emisor->save();
+        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Método que guarda un Receptor
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2016-12-09
+     */
+    private function guardarReceptor($datos)
+    {
+        $aux = explode('-', $datos['RUTRecep']);
+        if (!isset($aux[1]))
+            return false;
+        list($receptor, $dv) = $aux;
+        $Receptor = new \website\Dte\Model_Contribuyente($receptor);
+        if ($Receptor->usuario)
+            return $Receptor;
+        $Receptor->dv = $dv;
+        if (!empty($datos['RznSocRecep']))
+            $Receptor->razon_social = substr($datos['RznSocRecep'], 0, 100);
+        if (!empty($datos['GiroRecep']))
+            $Receptor->giro = substr($datos['GiroRecep'], 0, 80);
+        if (!empty($datos['Contacto']))
+            $Receptor->telefono = substr($datos['Contacto'], 0, 20);
+        if (!empty($datos['CorreoRecep']))
+            $Receptor->email = substr($datos['CorreoRecep'], 0, 80);
+        if (!empty($datos['DirRecep']))
+            $Receptor->direccion = substr($datos['DirRecep'], 0, 70);
+        if (!empty($datos['CmnaRecep'])) {
+            if (is_numeric($datos['CmnaRecep'])) {
+                $Receptor->comuna = $datos['CmnaRecep'];
+            } else {
+                $comuna = (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->getComunaByName($datos['CmnaRecep']);
+                if ($comuna) {
+                    $Receptor->comuna = $comuna;
+                }
+            }
+        }
+        $Receptor->modificado = date('Y-m-d H:i:s');
+        try {
+            return $Receptor->save() ? $Receptor : false;
+        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+            return false;
+        }
     }
 
 }
