@@ -140,4 +140,24 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
         return $rest->post($this->request->url.$recurso, $datos);
     }
 
+    /**
+     * Método que permite ejecutar un comando en la terminal
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2017-03-15
+     */
+    protected function shell($cmd, &$output = [])
+    {
+        if ($cmd[0]!='/') {
+            $cmd = DIR_PROJECT.'/website/Shell/shell.php '.$cmd;
+            if (defined('ENVIRONMENT_DEV') and ENVIRONMENT_DEV) {
+                $cmd .= ' --dev';
+            }
+        }
+        $rc = 0;
+        $output = [];
+        exec('screen -dm '.$cmd, $output, $rc);
+        $output = implode("\n", $output);
+        return $rc;
+    }
+
 }
