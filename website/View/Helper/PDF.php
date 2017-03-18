@@ -67,12 +67,12 @@ class View_Helper_PDF extends \sowerphp\general\View_Helper_PDF
     /**
      * Método que sobreescribe el pie de página del PDF
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]delaf.cl)
-     * @version 2017-02-02
+     * @version 2017-03-18
      */
     public function Footer()
     {
         $this->SetFont('helvetica', '', 8);
-        parent::Footer();
+        \TCPDF::Footer();
         $this->SetY($this->GetY());
         $this->SetFont('helvetica', 'B', 6);
         $link = 'http'.(isset($_SERVER['HTTPS'])?'s':null).'://'.$_SERVER['HTTP_HOST'];
