@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0a34cbd604be2ae37515dc90095200ab",
-    "content-hash": "3e8bede5e2968292e80d034485b0d6b9",
+    "hash": "0d4e49c7aa32cdf2c4d1c6a135a3058f",
+    "content-hash": "9195a06422ee5f8ce3f742dd5d139fdc",
     "packages": [
         {
             "name": "dropbox/dropbox-sdk",
@@ -45,6 +45,42 @@
                 "dropbox"
             ],
             "time": "2016-08-08 23:48:49"
+        },
+        {
+            "name": "freshwork/transbank",
+            "version": "0.1.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/freshworkstudio/transbank-web-services.git",
+                "reference": "569143ac1c9bac1b77a1d67a1768646f52cabdec"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/freshworkstudio/transbank-web-services/zipball/569143ac1c9bac1b77a1d67a1768646f52cabdec",
+                "reference": "569143ac1c9bac1b77a1d67a1768646f52cabdec",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Freshwork\\Transbank\\": "src/"
+                },
+                "classmap": [
+                    "src/wss"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPLv3"
+            ],
+            "authors": [
+                {
+                    "name": "Gonzalo De Spirito",
+                    "email": "gonzalo@freshworkstudio.com"
+                }
+            ],
+            "description": "SDK para webservices de transbank (Webpay Plus, Webpay OneClick, Webpay PatPass)",
+            "time": "2016-07-20 16:19:18"
         },
         {
             "name": "khipu/khipu-api-client",
@@ -194,12 +230,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "b1298bd29b0e259f82199143f6b616c29e48b747"
+                "reference": "b2c55efc6b5e2440654161ba1223bf349c37492a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/b1298bd29b0e259f82199143f6b616c29e48b747",
-                "reference": "b1298bd29b0e259f82199143f6b616c29e48b747",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/b2c55efc6b5e2440654161ba1223bf349c37492a",
+                "reference": "b2c55efc6b5e2440654161ba1223bf349c37492a",
                 "shasum": ""
             },
             "require": {
@@ -236,7 +272,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2016-12-30 22:13:24"
+            "time": "2017-02-23 22:51:37"
         },
         {
             "name": "tecnickcom/tcpdf",
