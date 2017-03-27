@@ -116,7 +116,7 @@ Instalación aplicación web
 11.	Cargar datos del módulo Dte del archivo *libredte/website/Module/Dte/Model/Sql/datos.ods* a través de la página de carga de datos.
 
 
-12.	Crear directorio *data/logos* y permitir que el usuario del servidor web pueda escribir en ellos.
+12.	Crear directorio *data/static/contribuyentes* y permitir que el usuario del servidor web pueda escribir en el.
 
 13.	¡Listo! Ahora puede ingresar a la aplicación web de LibreDTE a través de
 	<http://example.com/libredte>.
