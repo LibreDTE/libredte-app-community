@@ -106,7 +106,7 @@ foreach ($_nav_website as $link=>$name) {
                                 <li><a href="<?=$_base?>/dte/dte_recibidos/listar"><span class="fa fa-sign-in"></span> Documentos recibidos</a></li>
                                 <li><a href="<?=$_base?>/dte/dte_intercambios/listar"><span class="fa fa-exchange"></span> Bandeja intercambio</a></li>
                                 <li><a href="<?=$_base?>/dte/informes"><span class="fa fa-file"></span> Informes facturación</a></li>
-<?php if ($_Auth->check('/lce')) : ?>
+<?php if (\sowerphp\core\Module::loaded('Lce') and $_Auth->check('/lce')) : ?>
                                 <li class="divider"></li>
                                 <li><a href="<?=$_base?>/lce/lce_asientos/crear?listar=<?=base64_encode('../../listar/1/asiento/D?search=periodo:'.date('Y').',anulado:0')?>"><span class="fa fa-edit"></span> Crear asiento</a></li>
                                 <li><a href="<?=$_base?>/lce/libro_diario"><span class="fa fa-book"></span> Libro diario</a></li>
