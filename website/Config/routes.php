@@ -62,3 +62,10 @@
   'controller' => 'module',
   'action' => 'index'
 ]);
+
+// rutas del sistema
+\sowerphp\core\Routing_Router::connect('/usuarios/activar', [
+  'module' => 'Sistema.Libredte',
+  'controller' => 'usuarios',
+  'action' => 'activar'
+]);
