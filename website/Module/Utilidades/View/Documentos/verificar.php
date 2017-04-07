@@ -29,7 +29,7 @@ if (isset($_POST['submit'])) {
             $EnvioDTE->getCaratula()['RutReceptor'],
             $EnvioDTE->getCaratula()['FchResol'],
             $EnvioDTE->getCaratula()['NroResol'],
-            str_replace('T', '', $EnvioDTE->getCaratula()['TmstFirmaEnv']),
+            str_replace('T', ' ', $EnvioDTE->getCaratula()['TmstFirmaEnv']),
             $EnvioDTE->checkFirma() ? 'Ok' : ':-(',
         ]
     ]);
