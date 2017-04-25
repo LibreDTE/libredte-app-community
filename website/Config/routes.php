@@ -69,3 +69,10 @@
   'controller' => 'usuarios',
   'action' => 'activar'
 ]);
+
+// ruta para tienda
+\sowerphp\core\Routing_Router::connect('/t/*', [
+  'module' => 'Tienda',
+  'controller' => 'sitio',
+  'action' => 'inicio'
+]);
