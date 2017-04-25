@@ -21,3 +21,5 @@ website/View/Contacto
 website/Module/Sistema/Module/Libredte
 website/Module/Pagos
 website/Module/Crm
+website/Module/Tienda
+website/View/Layouts/Tienda.php
