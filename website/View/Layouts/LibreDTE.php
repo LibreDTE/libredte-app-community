@@ -1,4 +1,11 @@
 <?php $Emisor = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente'); ?>
+<!--
+Copyright SASCO SpA (https://sasco.cl)
+Plataforma de facturación electrónica usando LibreDTE (https://libredte.github.io)
+LibreDTE es un proyecto de SASCO SpA que tiene como misión proveer facturación electrónica libre para Chile
+Autor original: Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+Aplicación oficial en https://libredte.cl
+-->
 <!DOCTYPE html>
 <html lang="es">
     <head>
