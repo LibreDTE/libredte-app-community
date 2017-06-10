@@ -778,4 +778,50 @@ class Controller_Documentos extends \Controller_App
         }
     }
 
+    /**
+     * Recurso de la API que permite timbrar y firmar un DTE
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2017-02-24
+     */
+    public function _api_timbrar_POST()
+    {
+        extract($this->Api->getQuery([
+            'RutReceptor' => '60803000-K',
+        ]));
+        // verificar si se pasaron credenciales de un usuario
+        $User = $this->Api->getAuthUser();
+        if (is_string($User)) {
+            $this->Api->send($User, 401);
+        }
+        // recibir XML del DTE
+        $xml_string =  base64_decode($this->Api->data);
+        $Dte = new \sasco\LibreDTE\Sii\Dte($xml_string, false);
+        // verificar permisos
+        $Emisor = new \website\Dte\Model_Contribuyente($Dte->getEmisor());
+        if ($Emisor->usuario != $User->id) {
+            $this->Api->send('No es el administrador de la empresa', 401);
+        }
+        // timbrar y firmar DTE
+        $Caf = $Emisor->getCaf($Dte->getTipo(), $Dte->getFolio());
+        if (!$Dte->timbrar($Caf)) {
+            $this->Api->send('No fue posible timbrar el DTE', 500);
+        }
+        $Firma = $Emisor->getFirma();
+        if (!$Dte->firmar($Firma)) {
+            $this->Api->send('No fue posible firmar el DTE', 500);
+        }
+        // generar sobre con el envío del DTE y descargar
+        $EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
+        $EnvioDte->agregar($Dte);
+        $EnvioDte->setFirma($Firma);
+        $EnvioDte->setCaratula([
+            'RutEnvia' => $Firma->getID(),
+            'RutReceptor' => $RutReceptor ? $RutReceptor : $Dte->getReceptor(),
+            'FchResol' => $Emisor->config_ambiente_en_certificacion ? $Emisor->config_ambiente_certificacion_fecha : $Emisor->config_ambiente_produccion_fecha,
+            'NroResol' => $Emisor->config_ambiente_en_certificacion ? 0 : $Emisor->config_ambiente_produccion_numero,
+        ]);
+        echo $EnvioDte->generar();
+        exit;
+    }
+
 }
