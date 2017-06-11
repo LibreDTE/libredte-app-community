@@ -781,7 +781,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Recurso de la API que permite timbrar y firmar un DTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-02-24
+     * @version 2017-06-10
      */
     public function _api_timbrar_POST()
     {
@@ -798,7 +798,7 @@ class Controller_Documentos extends \Controller_App
         $Dte = new \sasco\LibreDTE\Sii\Dte($xml_string, false);
         // verificar permisos
         $Emisor = new \website\Dte\Model_Contribuyente($Dte->getEmisor());
-        if ($Emisor->usuario != $User->id) {
+        if ($Emisor->usuarioAutorizado($User->id, 'admin')) {
             $this->Api->send('No es el administrador de la empresa', 401);
         }
         // timbrar y firmar DTE

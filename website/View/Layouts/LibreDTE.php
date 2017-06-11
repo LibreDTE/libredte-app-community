@@ -119,7 +119,7 @@ foreach ($_nav_website as $link=>$name) {
                                 <li><a href="<?=$_base?>/lce/libro_diario"><span class="fa fa-book"></span> Libro diario</a></li>
                                 <li><a href="<?=$_base?>/lce/balance_general"><span class="fa fa-balance-scale"></span> Balance general</a></li>
 <?php endif; ?>
-<?php if ($Emisor->usuario == $_Auth->User->id or $_Auth->User->inGroup(['soporte'])) : ?>
+<?php if ($Emisor->usuarioAutorizado($_Auth->User, 'admin')) : ?>
                                 <li class="divider"></li>
                                 <li><a href="<?=$_base?>/dte/contribuyentes/modificar/<?=$Emisor->rut?>"><span class="fa fa-building"></span> Modificar empresa</a></li>
                                 <li><a href="<?=$_base?>/dte/contribuyentes/usuarios/<?=$Emisor->rut?>"><span class="fa fa-users"></span> Autorizar usuarios</a></li>

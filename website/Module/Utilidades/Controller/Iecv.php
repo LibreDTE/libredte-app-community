@@ -209,7 +209,7 @@ class Controller_Iecv extends \Controller_App
     /**
      * Recurso de la API que permite firmar una IECV
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-02-24
+     * @version 2017-06-10
      */
     public function _api_firmar_POST()
     {
@@ -227,7 +227,7 @@ class Controller_Iecv extends \Controller_App
         // verificar permisos
         $emisor = $datos['LibroCompraVenta']['EnvioLibro']['Caratula']['RutEmisorLibro'];
         $Emisor = new \website\Dte\Model_Contribuyente($emisor);
-        if ($Emisor->usuario != $User->id) {
+        if ($Emisor->usuarioAutorizado($User->id, 'admin')) {
             $this->Api->send('No es el administrador de la empresa', 401);
         }
         // firmar
