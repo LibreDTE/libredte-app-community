@@ -144,6 +144,20 @@ ini_set('max_execution_time', 600);
     ],
 ]);*/
 
+// configuración de permisos de la empresa en la aplicación
+\sowerphp\core\Configure::write('empresa.permisos', [
+    'admin' => [
+        'nombre' => 'Administrador',
+        'descripcion' => 'Incluye editar empresa y otros usuarios, respaldos, descargar CAF, corregir Track ID',
+        'grupos' => ['dte_plus'],
+    ],
+    'dte' => [
+        'nombre' => 'Módulo facturación electrónica',
+        'descripcion' => 'Emisión de DTE, recepción, informes y libros de compra/venta',
+        'grupos' => ['dte_plus'],
+    ],
+]);
+
 // configuración general del módulo DTE
 \sowerphp\core\Configure::write('dte', [
     // contraseña que se usará para encriptar datos sensibles en la BD
