@@ -155,7 +155,7 @@ foreach ($_nav_app as $link=>&$info) {
 <?php
 // mensaje si la empresa está en certificación
 if ($Emisor and $Emisor->config_ambiente_en_certificacion) {
-    echo '<div class="bg-warning center lead" style="padding:0.5em"><strong>AMBIENTE DE CERTIFICACIÓN: '.$Emisor->razon_social.'</strong></div>',"\n";
+    echo '<div class="bg-warning center lead" style="padding:0.5em"><strong>AMBIENTE DE CERTIFICACIÓN / PRUEBAS: '.$Emisor->razon_social.'</strong></div>',"\n";
 }
 // menú de módulos si hay sesión iniciada
 if ($_Auth->logged() and $_module_breadcrumb) {
