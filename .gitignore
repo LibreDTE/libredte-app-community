@@ -1,4 +1,5 @@
 # contenido propio de la instancia (no público)
+data/certs
 data/firma_electronica
 data/static
 data/var
