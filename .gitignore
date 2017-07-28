@@ -10,17 +10,15 @@ website/View/Pages
 
 # funcionalidades aun no liberadas
 website/Shell
-website/Module/Lce
-website/Module/Pos
-website/View/Layouts/POS.php
-website/Module/Rrhh
-website/Module/Inventario
 website/Controller/Dashboard.php
 website/View/Dashboard
 website/Controller/Contacto.php
 website/View/Contacto
-website/Module/Sistema/Module/Libredte
+website/Module/Lce
+website/Module/Pos
 website/Module/Pagos
+website/Module/Rrhh
 website/Module/Crm
+website/Module/Inventario
 website/Module/Tienda
-website/View/Layouts/Tienda.php
+website/Module/Sistema/Module/Libredte
