@@ -5,6 +5,7 @@ data/static
 data/var
 tmp
 website/Config/core.php
+website/Config/routes.php
 website/Vendor
 website/View/Pages
 

@@ -30,14 +30,6 @@
     'module' => 'Dte.Admin',
     'action' => 'api',
 ]);
-\sowerphp\core\Routing_Router::connect('/api/lce/:controller/*', [
-    'module' => 'Lce',
-    'action' => 'api',
-]);
-\sowerphp\core\Routing_Router::connect('/api/pagos/:controller/*', [
-    'module' => 'Pagos',
-    'action' => 'api',
-]);
 
 // rutas para consultar DTE
 \sowerphp\core\Routing_Router::connect('/consultar', [
@@ -61,18 +53,4 @@
   'module' => 'Utilidades',
   'controller' => 'module',
   'action' => 'index'
-]);
-
-// rutas del sistema
-\sowerphp\core\Routing_Router::connect('/usuarios/activar', [
-  'module' => 'Sistema.Libredte',
-  'controller' => 'usuarios',
-  'action' => 'activar'
-]);
-
-// ruta para tienda
-\sowerphp\core\Routing_Router::connect('/t/*', [
-  'module' => 'Tienda',
-  'controller' => 'sitio',
-  'action' => 'inicio'
 ]);

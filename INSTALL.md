@@ -58,10 +58,11 @@ Instalación aplicación web
 		$ cd libredte/website
 		$ composer install
 
-3.	Crear archivo de configuración:
+3.	Crear archivo de configuración y rutas de LibreDTE:
 
 		$ cd Config
 		$ cp core-dist.php core.php
+		$ cp routes-dist.php routes.php
 
 4.	Editar configuración de la aplicación en el archivo
 	*website/Config/core.php*, obligatoriamente se deberá configurar:
