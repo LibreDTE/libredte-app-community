@@ -139,10 +139,10 @@ foreach ($_nav_app as $link=>&$info) {
 }
 ?>
                                 <li class="divider"></li>
-                                <li><a href="<?=$_base?>/documentacion"><span class="fa fa-book" aria-hidden="true"></span> Documentación</a></li>
+                                <li><a href="<?=$_base?>/documentacion"><span class="fa fa-book fa-fw" aria-hidden="true"></span> Documentación</a></li>
                                 <li class="divider"></li>
-                                <li><a href="<?=$_base?>/usuarios/perfil"><span class="fa fa-user" aria-hidden="true"></span> Perfil de usuario</a></li>
-                                <li><a href="<?=$_base?>/usuarios/salir"><span class="fa fa-sign-out" aria-hidden="true"></span> Cerrar sesión</a></li>
+                                <li><a href="<?=$_base?>/usuarios/perfil"><span class="fa fa-user fa-fw" aria-hidden="true"></span> Perfil de usuario</a></li>
+                                <li><a href="<?=$_base?>/usuarios/salir"><span class="fa fa-sign-out fa-fw" aria-hidden="true"></span> Cerrar sesión</a></li>
                             </ul>
                         </li>
 <?php endif; ?>
