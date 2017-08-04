@@ -130,14 +130,18 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
     /**
      * Método que permite consumir por post un recurso de la misma aplicación
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-01-29
+     * @version 2017-08-04
      */
-    protected function consume($recurso, $datos, $assoc = true)
+    protected function consume($recurso, $datos = [], $assoc = true)
     {
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($this->Auth->User ? $this->Auth->User->hash : \sowerphp\core\Configure::read('api.default.token'));
         $rest->setAssoc($assoc);
-        return $rest->post($this->request->url.$recurso, $datos);
+        if ($datos) {
+            return $rest->post($this->request->url.$recurso, $datos);
+        } else {
+            return $rest->get($this->request->url.$recurso);
+        }
     }
 
     /**
