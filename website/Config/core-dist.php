@@ -176,6 +176,8 @@ ini_set('max_execution_time', 600);
     ],
     // validar SSL de sitios del SII
     'verificar_ssl' => true,
+    // web verificacion boletas (debe ser la ruta completa, incluyendo /boletas)
+    'web_verificacion' => null,
 ]);
 
 // configuración para firma electrónica
