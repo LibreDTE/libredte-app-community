@@ -202,5 +202,10 @@ ini_set('max_execution_time', 600);
     'secret' => '',
 ]);*/
 
+// configuración autenticación servicios externos
+/*\sowerphp\core\Configure::write('proveedores.api', [
+    'libredte' => '',
+]);*/
+
 // directorio para datos estáticos (debe tener permisos de escritura)
 define('DIR_STATIC', DIR_PROJECT.'/data/static');
