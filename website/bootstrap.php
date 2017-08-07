@@ -42,7 +42,7 @@ function libredte_consume($recurso, $datos = [])
     }
     if (!is_array($config)) {
         $config = [
-            'url' => 'https://sii.libredte.cl/api',
+            'url' => 'https://libredte.cl/api/utilidades',
             'hash' => $config,
         ];
     }
