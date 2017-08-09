@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "db77c7a6d2daab2902bf0c8f287d8c5b",
-    "content-hash": "a2a8f31c8c9ec0492a2d10918ceb5871",
+    "hash": "4a9218b463546a9eeb44f40af3e6d5c0",
+    "content-hash": "999bd5670f84d77b655ad42d23222553",
     "packages": [
         {
             "name": "freshwork/transbank",
@@ -45,16 +45,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.2.3",
+            "version": "6.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "8d6c6cc55186db87b7dc5009827429ba4e9dc006"
+                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/8d6c6cc55186db87b7dc5009827429ba4e9dc006",
-                "reference": "8d6c6cc55186db87b7dc5009827429ba4e9dc006",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f4db5a78a5ea468d4831de7f0bf9d9415e348699",
+                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699",
                 "shasum": ""
             },
             "require": {
@@ -64,8 +64,11 @@
             },
             "require-dev": {
                 "ext-curl": "*",
-                "phpunit/phpunit": "^4.0",
+                "phpunit/phpunit": "^4.0 || ^5.0",
                 "psr/log": "^1.0"
+            },
+            "suggest": {
+                "psr/log": "Required for using the Log middleware"
             },
             "type": "library",
             "extra": {
@@ -103,7 +106,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2017-02-28 22:50:30"
+            "time": "2017-06-22 18:50:49"
         },
         {
             "name": "guzzlehttp/promises",
@@ -223,16 +226,16 @@
         },
         {
             "name": "khipu/khipu-api-client",
-            "version": "2.7.0",
+            "version": "2.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/khipu/khipu-api-php-client.git",
-                "reference": "f1a116ae012be77fdac326c626e5122d65d00088"
+                "reference": "3a914dd36de4a07d1bdf25ff43b9028bbda61122"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/khipu/khipu-api-php-client/zipball/f1a116ae012be77fdac326c626e5122d65d00088",
-                "reference": "f1a116ae012be77fdac326c626e5122d65d00088",
+                "url": "https://api.github.com/repos/khipu/khipu-api-php-client/zipball/3a914dd36de4a07d1bdf25ff43b9028bbda61122",
+                "reference": "3a914dd36de4a07d1bdf25ff43b9028bbda61122",
                 "shasum": ""
             },
             "require": {
@@ -269,7 +272,7 @@
                 "php",
                 "sdk"
             ],
-            "time": "2016-06-10 14:50:19"
+            "time": "2016-07-11 18:53:07"
         },
         {
             "name": "kunalvarma05/dropbox-php-sdk",
@@ -573,16 +576,16 @@
         },
         {
             "name": "tightenco/collect",
-            "version": "v5.4.27",
+            "version": "v5.4.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tightenco/collect.git",
-                "reference": "16a16f2214f2ef251e6cbd3efd47b422bace5f58"
+                "reference": "7c232b5d3c132f8e9c19afa6abab4bca31a6a624"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tightenco/collect/zipball/16a16f2214f2ef251e6cbd3efd47b422bace5f58",
-                "reference": "16a16f2214f2ef251e6cbd3efd47b422bace5f58",
+                "url": "https://api.github.com/repos/tightenco/collect/zipball/7c232b5d3c132f8e9c19afa6abab4bca31a6a624",
+                "reference": "7c232b5d3c132f8e9c19afa6abab4bca31a6a624",
                 "shasum": ""
             },
             "require": {
@@ -616,7 +619,7 @@
                 "collection",
                 "laravel"
             ],
-            "time": "2017-06-15 20:17:56"
+            "time": "2017-08-03 17:36:05"
         }
     ],
     "packages-dev": [],
