@@ -22,5 +22,6 @@ website/Module/Rrhh
 website/Module/Crm
 website/Module/Inventario
 website/Module/Tienda
+website/Module/Webhooks
 website/Module/Sistema/Module/Libredte
 website/Module/Utilidades/Controller/Sii.php
