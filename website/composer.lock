@@ -321,16 +321,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "2.0.4",
+            "version": "2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "ab8028c93c03cc8d9c824efa75dc94f1db2369bf"
+                "reference": "34a7699e6f31b1ef4035ee36444407cecf9f56aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/ab8028c93c03cc8d9c824efa75dc94f1db2369bf",
-                "reference": "ab8028c93c03cc8d9c824efa75dc94f1db2369bf",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/34a7699e6f31b1ef4035ee36444407cecf9f56aa",
+                "reference": "34a7699e6f31b1ef4035ee36444407cecf9f56aa",
                 "shasum": ""
             },
             "require": {
@@ -409,7 +409,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2016-10-04 00:57:04"
+            "time": "2017-06-05 06:31:10"
         },
         {
             "name": "psr/http-message",
@@ -467,12 +467,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "5996f2c8747a0be108a5097550c9b0957fe51987"
+                "reference": "0803f0450b7ca1d0ab1a98d66fdfb0d6cdf3a00d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/5996f2c8747a0be108a5097550c9b0957fe51987",
-                "reference": "5996f2c8747a0be108a5097550c9b0957fe51987",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/0803f0450b7ca1d0ab1a98d66fdfb0d6cdf3a00d",
+                "reference": "0803f0450b7ca1d0ab1a98d66fdfb0d6cdf3a00d",
                 "shasum": ""
             },
             "require": {
@@ -480,11 +480,11 @@
                 "ext-openssl": "*",
                 "ext-soap": "*",
                 "php": ">=5.5",
-                "phpseclib/phpseclib": "2.0.4",
-                "tecnickcom/tcpdf": "6.2.12"
+                "phpseclib/phpseclib": "2.0.6",
+                "tecnickcom/tcpdf": "6.2.13"
             },
             "require-dev": {
-                "phpunit/phpunit": "5.7.*"
+                "phpunit/phpunit": "6.3.*"
             },
             "type": "library",
             "autoload": {
@@ -509,20 +509,20 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2017-06-15 05:08:57"
+            "time": "2017-08-16 22:14:28"
         },
         {
             "name": "tecnickcom/tcpdf",
-            "version": "6.2.12",
+            "version": "6.2.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tecnickcom/TCPDF.git",
-                "reference": "2f732eaa91b5665274689b1d40b285a7bacdc37f"
+                "reference": "95c5938aafe4b20df1454dbddb3e5005c0b26f64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/2f732eaa91b5665274689b1d40b285a7bacdc37f",
-                "reference": "2f732eaa91b5665274689b1d40b285a7bacdc37f",
+                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/95c5938aafe4b20df1454dbddb3e5005c0b26f64",
+                "reference": "95c5938aafe4b20df1454dbddb3e5005c0b26f64",
                 "shasum": ""
             },
             "require": {
@@ -531,7 +531,6 @@
             "type": "library",
             "autoload": {
                 "classmap": [
-                    "fonts",
                     "config",
                     "include",
                     "tcpdf.php",
@@ -572,20 +571,20 @@
                 "pdf417",
                 "qrcode"
             ],
-            "time": "2015-09-12 10:08:34"
+            "time": "2017-04-26 08:14:48"
         },
         {
             "name": "tightenco/collect",
-            "version": "v5.4.32",
+            "version": "v5.4.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tightenco/collect.git",
-                "reference": "7c232b5d3c132f8e9c19afa6abab4bca31a6a624"
+                "reference": "73aa38b20d932f5e8f8ccf721e4c27f4304783d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tightenco/collect/zipball/7c232b5d3c132f8e9c19afa6abab4bca31a6a624",
-                "reference": "7c232b5d3c132f8e9c19afa6abab4bca31a6a624",
+                "url": "https://api.github.com/repos/tightenco/collect/zipball/73aa38b20d932f5e8f8ccf721e4c27f4304783d6",
+                "reference": "73aa38b20d932f5e8f8ccf721e4c27f4304783d6",
                 "shasum": ""
             },
             "require": {
@@ -619,7 +618,7 @@
                 "collection",
                 "laravel"
             ],
-            "time": "2017-08-03 17:36:05"
+            "time": "2017-08-14 20:47:19"
         }
     ],
     "packages-dev": [],
