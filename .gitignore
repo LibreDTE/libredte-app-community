@@ -6,6 +6,7 @@ data/var
 tmp
 website/Config/core.php
 website/Config/routes.php
+website/composer.json
 website/Vendor
 website/View/Pages
 
