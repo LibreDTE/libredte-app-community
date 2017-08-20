@@ -4,6 +4,9 @@
     },
     "require": {
          "sasco/libredte": "dev-master",
-         "kunalvarma05/dropbox-php-sdk": "*"
+         "kunalvarma05/dropbox-php-sdk": "*",
+         "khipu/khipu-api-client": "2.7.1",
+         "freshwork/transbank": "*",
+         "bitpay/php-client": "~2.2"
     }
 }
