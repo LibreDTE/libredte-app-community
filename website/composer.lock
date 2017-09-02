@@ -541,12 +541,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "703d5ceaf517c1d5755927ea385c0bba303fff65"
+                "reference": "f046a8d1c03aedb966ef41067973f24fcebcc8cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/703d5ceaf517c1d5755927ea385c0bba303fff65",
-                "reference": "703d5ceaf517c1d5755927ea385c0bba303fff65",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/f046a8d1c03aedb966ef41067973f24fcebcc8cb",
+                "reference": "f046a8d1c03aedb966ef41067973f24fcebcc8cb",
                 "shasum": ""
             },
             "require": {
@@ -583,11 +583,11 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2017-08-17 05:20:11"
+            "time": "2017-09-02 16:53:17"
         },
         {
             "name": "symfony/config",
-            "version": "v2.8.26",
+            "version": "v2.8.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
@@ -643,16 +643,16 @@
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v2.8.26",
+            "version": "v2.8.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "e70f025ae0b100600de58fadbd97efe3044e6bfb"
+                "reference": "fbeea992f0d30e3c400694c85f60c9bfd10454a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/e70f025ae0b100600de58fadbd97efe3044e6bfb",
-                "reference": "e70f025ae0b100600de58fadbd97efe3044e6bfb",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/fbeea992f0d30e3c400694c85f60c9bfd10454a3",
+                "reference": "fbeea992f0d30e3c400694c85f60c9bfd10454a3",
                 "shasum": ""
             },
             "require": {
@@ -702,7 +702,7 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-28 15:21:22"
+            "time": "2017-08-10 14:42:21"
         },
         {
             "name": "symfony/filesystem",
