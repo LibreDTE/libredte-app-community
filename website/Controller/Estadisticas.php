@@ -122,7 +122,7 @@ class Controller_Estadisticas extends \Controller_App
      * @param desde Desde cuando considerar la actividad de los contribuyentes
      * @param hasta Hasta cuando considerar la actividad de los contribuyentes
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-11-10
+     * @version 2017-09-03
      */
     private function getEstadistica($certificacion, $desde, $hasta)
     {
@@ -152,6 +152,7 @@ class Controller_Estadisticas extends \Controller_App
             'documentos_emitidos' => $DteEmitidos->count(),
             'documentos_diarios' => $DteEmitidos->countDiarios($desde, $hasta, $certificacion),
             'usuarios_mensuales' => (new \sowerphp\app\Sistema\Usuarios\Model_Usuarios())->getStatsLogin(),
+            'contribuyentes_por_comuna' => $Contribuyentes->countByComuna($certificacion),
             'contribuyentes_activos' => $contribuyentes_activos,
         ], 200, JSON_PRETTY_PRINT);
     }

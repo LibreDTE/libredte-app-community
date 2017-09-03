@@ -80,7 +80,7 @@
             </div>
         </div>
         <!-- fin grafico dte emitidos por día -->
-        <!-- grafico ventas y compras -->
+        <!-- grafico usuarios mensuales -->
         <div class="row">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -91,7 +91,19 @@
                 </div>
             </div>
         </div>
-        <!-- fin grafico ventas y compras -->
+        <!-- fin grafico usuarios mensuales -->
+        <!-- inicio grafico empresas por comuna -->
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-map-o fa-fw"></i> Empresas registradas por comuna
+                </div>
+                <div class="panel-body">
+                    <div id="grafico-contribuyentes_por_comuna"></div>
+                </div>
+            </div>
+        </div>
+        <!-- fin grafico empresas por comuna -->
     </div>
     <!-- FIN PANEL IZQUIERDA -->
     <!-- PANEL DERECHA -->
@@ -133,6 +145,14 @@ Morris.Bar({
     xkey: 'mes',
     ykeys: ['usuarios'],
     labels: ['Usuarios'],
+    resize: true
+});
+Morris.Bar({
+    element: 'grafico-contribuyentes_por_comuna',
+    data: <?=json_encode($contribuyentes_por_comuna)?>,
+    xkey: 'comuna',
+    ykeys: ['contribuyentes'],
+    labels: ['Empresas'],
     resize: true
 });
 </script>
