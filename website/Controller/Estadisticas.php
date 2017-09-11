@@ -27,7 +27,7 @@ namespace website;
 /**
  * Controlador para mostrar estadísticas públicas del sitio
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2016-02-07
+ * @version 2017-09-10
  */
 class Controller_Estadisticas extends \Controller_App
 {
@@ -35,11 +35,11 @@ class Controller_Estadisticas extends \Controller_App
     /**
      * Método para permitir acciones sin estar autenticado
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-08-06
+     * @version 2017-09-10
      */
     public function beforeFilter()
     {
-        $this->Auth->allow('index', 'produccion', 'certificacion', '_api_produccion_GET', '_api_certificacion_GET');
+        $this->Auth->allow('index', 'produccion', 'certificacion', '_api_produccion_GET', '_api_certificacion_GET', '_api_version_GET');
         parent::beforeFilter();
     }
 
@@ -138,7 +138,7 @@ class Controller_Estadisticas extends \Controller_App
         $Usuarios->setWhereStatement(['activo = true']);
         try {
             $contribuyentes_activos = $Contribuyentes->getConMovimientos($desde, $hasta, $certificacion, false);
-            $oficial = $this->request->url === 'https://libredte.cl';
+            $oficial = $this->esVersionOficial();
             foreach($contribuyentes_activos as &$c) {
                 if ($oficial) {
                     $c['email'] = null;
@@ -149,6 +149,7 @@ class Controller_Estadisticas extends \Controller_App
             $this->Api->send($e->getMessage(), 500);
         }
         $this->Api->send([
+            'version' => $this->getVersion(),
             'certificacion' => (int)$certificacion,
             'contribuyentes_sii' => $contribuyentes_sii,
             'usuarios_registrados' => $Usuarios->count(),
@@ -159,6 +160,83 @@ class Controller_Estadisticas extends \Controller_App
             'contribuyentes_por_comuna' => $Contribuyentes->countByComuna($certificacion),
             'contribuyentes_activos' => $contribuyentes_activos,
         ], 200, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Acción que entrega la versión de LibreDTE que se está ejecutando
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2017-09-10
+     */
+    public function _api_version_GET()
+    {
+        $this->Api->send($this->getVersion(), 200, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Método que indica si la versión de LibreDTE es o no la oficial
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2017-09-10
+     */
+    private function esVersionOficial()
+    {
+        return in_array($this->request->url, ['https://libredte.cl', 'https://desarrollo.libredte.cl']);
+    }
+
+    /**
+     * Método que determina la versión de LibreDTE que se está ejecutando
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2017-09-10
+     */
+    private function getVersion()
+    {
+        $oficial = $this->esVersionOficial();
+        return [
+            'linux' => (!$oficial and PHP_OS=='Linux') ? $this->getLinuxInfo()['PRETTY_NAME'] : null,
+            'php' => !$oficial ? phpversion() : null,
+            'libredte' => $this->getLastCommit(),
+        ];
+    }
+
+    /**
+     * Método que determina la información sobre la versión de Linux del sistema
+     * @author https://stackoverflow.com/a/26863768
+     * @version 2014-11-11
+     */
+    private function getLinuxInfo()
+    {
+        $vars = [];
+        $files = glob('/etc/*-release');
+        foreach ($files as $file) {
+            $lines = array_filter(array_map(function($line) {
+                $parts = explode('=', $line);
+                if (count($parts) !== 2)
+                    return false;
+                $parts[1] = str_replace(array('"', "'"), '', $parts[1]);
+                return $parts;
+            }, file($file)));
+            foreach ($lines as $line)
+                $vars[$line[0]] = $line[1];
+        }
+        return $vars;
+    }
+
+    /**
+     * Método que determina la versión de LibreDTE a partir del último commit del proyecto
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2017-09-10
+     */
+    private function getLastCommit()
+    {
+        $HEAD = DIR_PROJECT.'/.git/logs/HEAD';
+        if (!file_exists($HEAD) or !is_readable($HEAD)) {
+            return false;
+        }
+        exec('git log --pretty="%H" -n1 HEAD', $id, $id_rc);
+        exec('git log --pretty="%ci" -n1 HEAD', $date, $date_rc);
+        return [
+            'id' => !$id_rc ? $id[0] : null,
+            'date' => !$date_rc ? $date[0] : null,
+        ];
     }
 
 }
