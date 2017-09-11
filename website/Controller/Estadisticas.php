@@ -122,7 +122,7 @@ class Controller_Estadisticas extends \Controller_App
      * @param desde Desde cuando considerar la actividad de los contribuyentes
      * @param hasta Hasta cuando considerar la actividad de los contribuyentes
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-03
+     * @version 2017-09-10
      */
     private function getEstadistica($certificacion, $desde, $hasta)
     {
@@ -138,8 +138,12 @@ class Controller_Estadisticas extends \Controller_App
         $Usuarios->setWhereStatement(['activo = true']);
         try {
             $contribuyentes_activos = $Contribuyentes->getConMovimientos($desde, $hasta, $certificacion, false);
+            $oficial = $this->request->url === 'https://libredte.cl';
             foreach($contribuyentes_activos as &$c) {
-                unset($c['ambiente'], $c['email']);
+                if ($oficial) {
+                    $c['email'] = null;
+                }
+                unset($c['ambiente']);
             }
         } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
             $this->Api->send($e->getMessage(), 500);
