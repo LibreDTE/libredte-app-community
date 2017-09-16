@@ -541,12 +541,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "f356ba57c6024f51159fb108806b88874fb63a50"
+                "reference": "186f4527c8a23fd6d25a101bd68061a22c55b441"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/f356ba57c6024f51159fb108806b88874fb63a50",
-                "reference": "f356ba57c6024f51159fb108806b88874fb63a50",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/186f4527c8a23fd6d25a101bd68061a22c55b441",
+                "reference": "186f4527c8a23fd6d25a101bd68061a22c55b441",
                 "shasum": ""
             },
             "require": {
@@ -583,7 +583,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2017-09-12 00:44:31"
+            "time": "2017-09-14 19:34:53"
         },
         {
             "name": "symfony/config",
