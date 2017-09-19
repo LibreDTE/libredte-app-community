@@ -39,6 +39,24 @@ permiten utilizar el proyecto, son los siguientes:
 Es obligación de quienes quieran usar el proyecto leer y aceptar por completo
 los [términos y condiciones de uso](https://wiki.libredte.cl/doku.php/terminos).
 
+Instalación
+-----------
+
+Revisar el [manual de instalación](https://github.com/LibreDTE/libredte-webapp/blob/master/INSTALL.md)
+para un paso a paso. La instalación sólo se hace una vez, luego basta actualizar la instancia.
+
+Actualización
+-------------
+
+1. Actualizar framework: `sowerpkg update`
+2. Actualizar aplicación web: `bin/libredte-update`
+3. Ejecutar script actualización base de datos (si corresponde)
+
+Si hay algún error después de actualizar verificar lo siguiente:
+
+- Configuraciones nuevas en `Config/core.php` y `Config/routes.php`
+- Script SQL podría haber fallado, sobre todo si hay alguna restricción nueva (resolver a mano).
+
 Contribuir al proyecto
 ----------------------
 
