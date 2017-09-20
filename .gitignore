@@ -1,4 +1,4 @@
-# contenido propio de la instancia (no público)
+# contenido propio de la instancia
 data/certs
 data/firma_electronica
 data/static
@@ -9,6 +9,8 @@ website/Config/routes.php
 website/composer.json
 website/Vendor
 website/View/Pages
+website/webroot/img/favicon.png
+website/webroot/img/logo.png
 
 # funcionalidades aun no liberadas
 website/Shell
