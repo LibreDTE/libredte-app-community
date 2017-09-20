@@ -1,7 +1,7 @@
 Instalación aplicación web LibreDTE
 ===================================
 
-La aplicación web está soportada oficialmente en Debian GNU/Linux 8. Es posible
+La aplicación web está soportada oficialmente en Debian GNU/Linux 9. Es posible
 usarla en otros sistemas GNU/Linux, como Arch Linux o Ubuntu, pero no se entrega
 soporte para dichas plataformas.
 
@@ -12,8 +12,8 @@ de los proyectos asociados a LibreDTE.
 Requisitos
 ----------
 
-- Apache 2.x y PHP 5.5 o superior
-- Base de datos PostgreSQL 9.x
+- Apache 2 y PHP 7.0 o superior
+- Base de datos PostgreSQL 9
 - Memcached con PHP usándolo como backend para las sesiones
 - [Otros requisitos de SowerPHP](https://github.com/SowerPHP/sowerphp/blob/master/INSTALL.md)
 - Tener [SowerPHP](https://github.com/SowerPHP/sowerphp) instalado con las
