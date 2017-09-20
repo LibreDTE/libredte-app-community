@@ -10,6 +10,6 @@
          "kunalvarma05/dropbox-php-sdk": "0.2.0",
          "khipu/khipu-api-client": "2.7.1",
          "freshwork/transbank": "0.1.8",
-         "bitpay/php-client": "2.2.12"
+         "bitpay/php-client": "2.2.13"
     }
 }

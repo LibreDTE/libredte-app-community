@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c74c0a95704388a604648442cb34d516",
-    "content-hash": "1fec5caed9f35231d3e00f03fd11f714",
+    "hash": "76372441054cf4554966108a5a63794e",
+    "content-hash": "f913ca51005f811e19eeb31d51bc5aab",
     "packages": [
         {
             "name": "bitpay/php-client",
-            "version": "v2.2.12",
+            "version": "v2.2.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bitpay/php-bitpay-client.git",
-                "reference": "a304951a02a485a9db20ddc53591717f340f0ae7"
+                "reference": "af71cb81735d39d84cf9c88d97db7ad786e78224"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bitpay/php-bitpay-client/zipball/a304951a02a485a9db20ddc53591717f340f0ae7",
-                "reference": "a304951a02a485a9db20ddc53591717f340f0ae7",
+                "url": "https://api.github.com/repos/bitpay/php-bitpay-client/zipball/af71cb81735d39d84cf9c88d97db7ad786e78224",
+                "reference": "af71cb81735d39d84cf9c88d97db7ad786e78224",
                 "shasum": ""
             },
             "require": {
@@ -76,7 +76,7 @@
                 "bitcoin",
                 "bitpay"
             ],
-            "time": "2017-05-09 14:26:34"
+            "time": "2017-05-12 13:33:27"
         },
         {
             "name": "freshwork/transbank",
