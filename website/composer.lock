@@ -4,35 +4,40 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a00d5b1b2250557edeeab82cd5a85116",
-    "content-hash": "913a93b925a918c5fc8127c3294efbd1",
+    "hash": "c74c0a95704388a604648442cb34d516",
+    "content-hash": "1fec5caed9f35231d3e00f03fd11f714",
     "packages": [
         {
             "name": "bitpay/php-client",
-            "version": "v2.2.0",
+            "version": "v2.2.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bitpay/php-bitpay-client.git",
-                "reference": "b4f1922aa14484a1ba86c81deebd6e85e7df52a4"
+                "reference": "a304951a02a485a9db20ddc53591717f340f0ae7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bitpay/php-bitpay-client/zipball/b4f1922aa14484a1ba86c81deebd6e85e7df52a4",
-                "reference": "b4f1922aa14484a1ba86c81deebd6e85e7df52a4",
+                "url": "https://api.github.com/repos/bitpay/php-bitpay-client/zipball/a304951a02a485a9db20ddc53591717f340f0ae7",
+                "reference": "a304951a02a485a9db20ddc53591717f340f0ae7",
                 "shasum": ""
             },
             "require": {
+                "ext-bcmath": "*",
                 "ext-curl": "*",
                 "ext-json": "*",
                 "ext-mcrypt": "*",
                 "ext-openssl": "*",
                 "php": ">=5.4",
-                "symfony/config": "~2.3",
-                "symfony/dependency-injection": "~2.3"
+                "symfony/config": "^2.3 || ^3.0",
+                "symfony/dependency-injection": "^2.3 || ^3.0"
             },
             "require-dev": {
-                "behat/mink": "1.6.*@stable",
-                "behat/mink-selenium2-driver": "~1.1",
+                "behat/behat": "2.5.*@stable",
+                "behat/mink": "1.6.1",
+                "behat/mink-extension": "1.3.*",
+                "behat/mink-goutte-driver": "1.*",
+                "behat/mink-selenium2-driver": "1.2.0",
+                "fabpot/goutte": "~1.0.4",
                 "fzaninotto/faker": "~1.4.0",
                 "mikey179/vfsstream": "~1.4.0",
                 "phpmd/phpmd": "~2.1.3",
@@ -41,13 +46,12 @@
                 "squizlabs/php_codesniffer": "~1.5.5"
             },
             "suggest": {
-                "ext-bcmath": "PHP math library for doing Elliptic Curve calculations.",
-                "ext-gmp": "Quickest PHP math library for doing Elliptic Curve calculations."
+                "ext-gmp": "Quickest PHP math extension for doing computationally-expensive work."
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev"
+                    "dev-master": "2.2.x-dev"
                 }
             },
             "autoload": {
@@ -61,22 +65,18 @@
             ],
             "authors": [
                 {
-                    "name": "Community Contributors",
-                    "homepage": "https://github.com/bitpay/php-bitpay-client/graphs/contributors"
-                },
-                {
-                    "name": "BitPay Inc Ecommerce Development Team",
-                    "homepage": "https://bitpay.com",
-                    "role": "Software Engineer"
+                    "name": "BitPay Integrations Development Team",
+                    "email": "integrations@bitpay.com",
+                    "homepage": "https://bitpay.com/integrations"
                 }
             ],
-            "description": "PHP Library to work with the new Bitpay API",
+            "description": "PHP Library to work with the new cryptographically secure BitPay API",
             "homepage": "https://github.com/bitpay/php-bitpay-client",
             "keywords": [
                 "bitcoin",
                 "bitpay"
             ],
-            "time": "2014-11-21 19:18:34"
+            "time": "2017-05-09 14:26:34"
         },
         {
             "name": "freshwork/transbank",
@@ -347,24 +347,21 @@
         },
         {
             "name": "kunalvarma05/dropbox-php-sdk",
-            "version": "v0.2.1",
+            "version": "v0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kunalvarma05/dropbox-php-sdk.git",
-                "reference": "27036f20b7eeb59d5e559e03d4280851f6eb789b"
+                "reference": "c818f7612ec057758f4f7f2e64ee5390e21b300e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kunalvarma05/dropbox-php-sdk/zipball/27036f20b7eeb59d5e559e03d4280851f6eb789b",
-                "reference": "27036f20b7eeb59d5e559e03d4280851f6eb789b",
+                "url": "https://api.github.com/repos/kunalvarma05/dropbox-php-sdk/zipball/c818f7612ec057758f4f7f2e64ee5390e21b300e",
+                "reference": "c818f7612ec057758f4f7f2e64ee5390e21b300e",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.0",
                 "tightenco/collect": "^5.2"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^6.0"
             },
             "type": "library",
             "autoload": {
@@ -391,7 +388,7 @@
                 "sdk",
                 "unofficial"
             ],
-            "time": "2017-06-26 09:37:16"
+            "time": "2017-03-09 19:04:37"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -484,6 +481,55 @@
                 "x509"
             ],
             "time": "2017-06-05 06:31:10"
+        },
+        {
+            "name": "psr/container",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/container.git",
+                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
+                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Container\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common Container Interface (PHP FIG PSR-11)",
+            "homepage": "https://github.com/php-fig/container",
+            "keywords": [
+                "PSR-11",
+                "container",
+                "container-interface",
+                "container-interop",
+                "psr"
+            ],
+            "time": "2017-02-14 16:28:37"
         },
         {
             "name": "psr/http-message",
@@ -587,24 +633,30 @@
         },
         {
             "name": "symfony/config",
-            "version": "v2.8.27",
+            "version": "v3.3.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "0b8541d18507d10204a08384640ff6df3c739ebe"
+                "reference": "f9f19a39ee178f61bb2190f51ff7c517c2159315"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/0b8541d18507d10204a08384640ff6df3c739ebe",
-                "reference": "0b8541d18507d10204a08384640ff6df3c739ebe",
+                "url": "https://api.github.com/repos/symfony/config/zipball/f9f19a39ee178f61bb2190f51ff7c517c2159315",
+                "reference": "f9f19a39ee178f61bb2190f51ff7c517c2159315",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9",
-                "symfony/filesystem": "~2.3|~3.0.0"
+                "php": "^5.5.9|>=7.0.8",
+                "symfony/filesystem": "~2.8|~3.0"
+            },
+            "conflict": {
+                "symfony/dependency-injection": "<3.3",
+                "symfony/finder": "<3.3"
             },
             "require-dev": {
-                "symfony/yaml": "~2.7|~3.0.0"
+                "symfony/dependency-injection": "~3.3",
+                "symfony/finder": "~3.3",
+                "symfony/yaml": "~3.0"
             },
             "suggest": {
                 "symfony/yaml": "To use the yaml reference dumper"
@@ -612,7 +664,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.3-dev"
                 }
             },
             "autoload": {
@@ -639,43 +691,50 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-12 14:07:15"
+            "time": "2017-09-04 16:28:07"
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v2.8.27",
+            "version": "v3.3.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "fbeea992f0d30e3c400694c85f60c9bfd10454a3"
+                "reference": "e593f06dd90a81c7b70ac1c49862a061b0ec06d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/fbeea992f0d30e3c400694c85f60c9bfd10454a3",
-                "reference": "fbeea992f0d30e3c400694c85f60c9bfd10454a3",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/e593f06dd90a81c7b70ac1c49862a061b0ec06d2",
+                "reference": "e593f06dd90a81c7b70ac1c49862a061b0ec06d2",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9"
+                "php": "^5.5.9|>=7.0.8",
+                "psr/container": "^1.0"
             },
             "conflict": {
-                "symfony/expression-language": "<2.6"
+                "symfony/config": "<3.3.1",
+                "symfony/finder": "<3.3",
+                "symfony/yaml": "<3.3"
+            },
+            "provide": {
+                "psr/container-implementation": "1.0"
             },
             "require-dev": {
-                "symfony/config": "~2.2|~3.0.0",
-                "symfony/expression-language": "~2.6|~3.0.0",
-                "symfony/yaml": "~2.3.42|~2.7.14|~2.8.7|~3.0.7"
+                "symfony/config": "~3.3",
+                "symfony/expression-language": "~2.8|~3.0",
+                "symfony/yaml": "~3.3"
             },
             "suggest": {
                 "symfony/config": "",
                 "symfony/expression-language": "For using expressions in service container configuration",
+                "symfony/finder": "For using double-star glob patterns or when GLOB_BRACE portability is required",
                 "symfony/proxy-manager-bridge": "Generate service proxies to lazy load them",
                 "symfony/yaml": ""
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.3-dev"
                 }
             },
             "autoload": {
@@ -702,29 +761,29 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "https://symfony.com",
-            "time": "2017-08-10 14:42:21"
+            "time": "2017-09-05 20:39:38"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v3.0.9",
+            "version": "v3.3.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "b2da5009d9bacbd91d83486aa1f44c793a8c380d"
+                "reference": "b32a0e5f928d0fa3d1dd03c78d020777e50c10cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/b2da5009d9bacbd91d83486aa1f44c793a8c380d",
-                "reference": "b2da5009d9bacbd91d83486aa1f44c793a8c380d",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/b32a0e5f928d0fa3d1dd03c78d020777e50c10cb",
+                "reference": "b32a0e5f928d0fa3d1dd03c78d020777e50c10cb",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9"
+                "php": "^5.5.9|>=7.0.8"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0-dev"
+                    "dev-master": "3.3-dev"
                 }
             },
             "autoload": {
@@ -751,7 +810,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-20 05:43:46"
+            "time": "2017-07-29 21:54:42"
         },
         {
             "name": "tecnickcom/tcpdf",
@@ -817,16 +876,16 @@
         },
         {
             "name": "tightenco/collect",
-            "version": "v5.5.3",
+            "version": "v5.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tightenco/collect.git",
-                "reference": "6f72c2fe16ac32153337045eaa60f21e2391b8f1"
+                "reference": "15b6e70c4819e6603a360a4f29c1f02fa69a7239"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tightenco/collect/zipball/6f72c2fe16ac32153337045eaa60f21e2391b8f1",
-                "reference": "6f72c2fe16ac32153337045eaa60f21e2391b8f1",
+                "url": "https://api.github.com/repos/tightenco/collect/zipball/15b6e70c4819e6603a360a4f29c1f02fa69a7239",
+                "reference": "15b6e70c4819e6603a360a4f29c1f02fa69a7239",
                 "shasum": ""
             },
             "require": {
@@ -860,7 +919,7 @@
                 "collection",
                 "laravel"
             ],
-            "time": "2017-09-07 17:07:35"
+            "time": "2017-09-19 21:52:21"
         }
     ],
     "packages-dev": [],
@@ -872,5 +931,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "platform-overrides": {
+        "ext-bcmath": "1.0.0"
+    }
 }
