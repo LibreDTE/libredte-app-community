@@ -36,7 +36,7 @@ if (isset($_POST['submit'])) {
 
     // resultados de los documentos
     echo '<h2>Resultado documentos</h2>',"\n";
-    array_unshift($documentos, ['DTE', 'Firma', 'Estado según datos del timbre']);
+    array_unshift($documentos, ['DTE', 'Folio', 'Fecha', 'Total', 'Firma', 'Resultado verificación']);
     new \sowerphp\general\View_Helper_Table($documentos, 'verificacion_enviodte_'.date('U'), true);
 
     // mostrar errores

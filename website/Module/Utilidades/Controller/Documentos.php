@@ -216,7 +216,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Acción para verificar la firma de un XML EnvioDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-02-23
+     * @version 2017-09-21
      */
     public function verificar()
     {
@@ -226,33 +226,57 @@ class Controller_Documentos extends \Controller_App
             // verificar la firma de cada documento
             $resultado_documentos = [];
             foreach ($EnvioDTE->getDocumentos() as $DTE) {
-                // consultar estado del timbre
-                $rest = new \sowerphp\core\Network_Http_Rest();
-                $rest->setAuth($this->Auth->User->hash);
-                $response = $rest->post(
-                    $this->request->url.'/api/utilidades/documentos/verificar_ted',
-                    json_encode(base64_encode($DTE->getTED()))
-                );
-                if ($response['status']['code']!=200) {
-                    $validacion_ted = $response['body'];
-                } else {
-                    $xml =  new \SimpleXMLElement(utf8_encode($DTE->getTED()), LIBXML_COMPACT);
-                    list($rut, $dv) = explode('-', $xml->xpath('/TED/DD/RE')[0]);
-                    $validacion_ted = (new \website\Dte\Admin\Mantenedores\Model_DteTipo($xml->xpath('/TED/DD/TD')[0]))->tipo.
-                        ' N° '.$xml->xpath('/TED/DD/F')[0].
-                        ' del '.\sowerphp\general\Utility_Date::format($xml->xpath('/TED/DD/FE')[0]).
-                        ' por $'.num($xml->xpath('/TED/DD/MNT')[0]).'.-'.
-                        ' emitida por '.$xml->xpath('/TED/DD/CAF/DA/RS')[0].' ('.num($rut).'-'.$dv.')'.
-                        ' a '.$xml->xpath('/TED/DD/RSR')[0].': '.
-                        $response['body']['ESTADO'].' - '.$response['body']['GLOSA_ESTADO'].
-                        ' ('.$response['body']['GLOSA_ERR'].')'
-                    ;
+                // verificar DTE con funcionalidad avanzada
+                if (\sowerphp\core\Configure::read('proveedores.api.libredte')) {
+                    $r = libredte_consume('/sii/dte_verificar', [
+                        'emisor' => $DTE->getEmisor(),
+                        'receptor' => $DTE->getReceptor(),
+                        'dte' => $DTE->getTipo(),
+                        'folio' => $DTE->getFolio(),
+                        'fecha' => $DTE->getFechaEmision(),
+                        'total' => $DTE->getMontoTotal(),
+                        'firma' => str_replace("\n", '', $DTE->getFirma()['SignatureValue']),
+                    ]);
+                    if ($r['status']['code']!=200) {
+                        $firma = '-';
+                        $verificacion = $r['body'];
+                    } else {
+                        $firma = $r['body']['datos']['firma'] ? 'Ok' : ($r['body']['datos']['firma']===false?':-(':'-');
+                        $verificacion =
+                            '- '.$r['body']['datos']['detalle'].'<br/>'.
+                            '- '.$r['body']['cedible']['glosa']
+                        ;
+                    }
+                }
+                // consultar estado sólo con datos del timbre
+                else {
+                    $rest = new \sowerphp\core\Network_Http_Rest();
+                    $rest->setAuth($this->Auth->User->hash);
+                    $response = $rest->post(
+                        $this->request->url.'/api/utilidades/documentos/verificar_ted',
+                        json_encode(base64_encode($DTE->getTED()))
+                    );
+                    if ($response['status']['code']!=200) {
+                        $firma = '-';
+                        $verificacion = $response['body'];
+                    } else {
+                        $xml =  new \SimpleXMLElement(utf8_encode($DTE->getTED()), LIBXML_COMPACT);
+                        list($rut, $dv) = explode('-', $xml->xpath('/TED/DD/RE')[0]);
+                        $firma = $DTE->checkFirma() ? 'Ok' : ':-(';
+                        $verificacion =
+                            $response['body']['ESTADO'].' - '.$response['body']['GLOSA_ESTADO'].
+                            ' ('.$response['body']['GLOSA_ERR'].')'
+                        ;
+                    }
                 }
                 // armar resultado
                 $resultado_documentos[] = [
-                    $DTE->getID(),
-                    $DTE->checkFirma() ? 'Ok' : ':-(',
-                    $validacion_ted,
+                    $DTE->getTipo(),
+                    $DTE->getFolio(),
+                    \sowerphp\general\Utility_Date::format($DTE->getFechaEmision()),
+                    num($DTE->getMontoTotal()),
+                    $firma,
+                    $verificacion,
                 ];
             }
             // asignar variables para la vista
