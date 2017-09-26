@@ -463,7 +463,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Recurso de la API que genera el PDF de los DTEs contenidos en un EnvioDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-02-09
+     * @version 2017-09-25
      */
     public function _api_generar_pdf_POST()
     {
@@ -526,8 +526,17 @@ class Controller_Documentos extends \Controller_App
             $this->Api->send('No fue posible crear directorio temporal para DTEs', 507);
         // procesar cada DTEs e ir agregándolo al PDF
         foreach ($Documentos as $DTE) {
-            if (!$DTE->getDatos())
+            $datos = $DTE->getDatos();
+            if (!$datos) {
                 $this->Api->send('No se pudieron obtener los datos de un DTE', 500);
+            }
+            // si el Folio es alfanumérico entonces es una cotización
+            if (!is_numeric($datos['Encabezado']['IdDoc']['Folio'])) {
+                $datos['Encabezado']['IdDoc']['TipoDTE'] = 0;
+                $TED = null;
+            } else {
+                $TED = $DTE->getTED();
+            }
             // generar PDF
             $pdf = new \sasco\LibreDTE\Sii\PDF\Dte($papelContinuo);
             $pdf->setFooterText(\sowerphp\core\Configure::read('dte.pdf.footer'));
@@ -549,11 +558,12 @@ class Controller_Documentos extends \Controller_App
             // si no tiene cedible o el cedible va en el mismo archivo
             if ($cedible!=2) {
                 for ($i=0; $i<$copias_tributarias; $i++)
-                    $pdf->agregar($DTE->getDatos(), $DTE->getTED());
+                    $pdf->agregar($datos, $TED);
                 if ($cedible and $DTE->esCedible()) {
                     $pdf->setCedible(true);
-                    for ($i=0; $i<$copias_cedibles; $i++)
-                        $pdf->agregar($DTE->getDatos(), $DTE->getTED());
+                    for ($i=0; $i<$copias_cedibles; $i++) {
+                        $pdf->agregar($datos, $TED);
+                    }
                 }
                 $file = $dir.'/dte_'.$Caratula['RutEmisor'].'_'.$DTE->getID().'.pdf';
                 $pdf->Output($file, 'F');
@@ -561,12 +571,12 @@ class Controller_Documentos extends \Controller_App
             // si el cedible va en un archivo separado
             else {
                 $pdf_cedible = clone $pdf;
-                $pdf->agregar($DTE->getDatos(), $DTE->getTED());
+                $pdf->agregar($datos, $TED);
                 $file = $dir.'/dte_'.$Caratula['RutEmisor'].'_'.$DTE->getID().'.pdf';
                 $pdf->Output($file, 'F');
                 if ($DTE->esCedible()) {
                     $pdf_cedible->setCedible(true);
-                    $pdf_cedible->agregar($DTE->getDatos(), $DTE->getTED());
+                    $pdf_cedible->agregar($datos, $TED);
                     $file = $dir.'/dte_'.$Caratula['RutEmisor'].'_'.$DTE->getID().'_CEDIBLE.pdf';
                     $pdf_cedible->Output($file, 'F');
                 }
