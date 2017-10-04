@@ -23,6 +23,7 @@ website/Module/Pos
 website/Module/Pagos
 website/Module/Rrhh
 website/Module/Crm
+website/Module/Proveedores
 website/Module/Inventario
 website/Module/Tienda
 website/Module/Webhooks
