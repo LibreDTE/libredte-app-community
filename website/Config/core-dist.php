@@ -182,6 +182,15 @@ ini_set('max_execution_time', 600);
     'web_verificacion' => null,
 ]);
 
+// configuración para API de contribuyentes
+\sowerphp\core\Configure::write('api_contribuyentes', [
+    'dte_items' => [
+        'name' => 'Listado de items',
+        'desc' => 'Consultar los items a través de su código',
+        'link' => 'https://wiki.libredte.cl/doku.php/sowerphp/integracion/url_items',
+    ],
+]);
+
 // configuración para firma electrónica
 /*\sowerphp\core\Configure::write('firma_electronica.default', [
     'file' => DIR_PROJECT.'/data/firma_electronica/default.p12',
