@@ -463,7 +463,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Recurso de la API que genera el PDF de los DTEs contenidos en un EnvioDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-25
+     * @version 2017-10-05
      */
     public function _api_generar_pdf_POST()
     {
@@ -555,6 +555,8 @@ class Controller_Documentos extends \Controller_App
                     $pdf->setAnchoColumnasDetalle((array)$Emisor->config_pdf_detalle_ancho);
                 }
             }
+            // asignar la posición del timbre
+            $pdf->setTimbrePie(!$Emisor->config_pdf_timbre_posicion);
             // si no tiene cedible o el cedible va en el mismo archivo
             if ($cedible!=2) {
                 for ($i=0; $i<$copias_tributarias; $i++)
