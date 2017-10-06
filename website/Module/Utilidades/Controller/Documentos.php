@@ -556,7 +556,9 @@ class Controller_Documentos extends \Controller_App
                 }
             }
             // asignar la posición del timbre
-            $pdf->setTimbrePie(!$Emisor->config_pdf_timbre_posicion);
+            if (!$papelContinuo) {
+                $pdf->setTimbrePie(!$Emisor->config_pdf_timbre_posicion);
+            }
             // si no tiene cedible o el cedible va en el mismo archivo
             if ($cedible!=2) {
                 for ($i=0; $i<$copias_tributarias; $i++)
