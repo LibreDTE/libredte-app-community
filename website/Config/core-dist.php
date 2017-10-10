@@ -134,18 +134,6 @@ ini_set('max_execution_time', 600);
     'terms' => 'https://wiki.libredte.cl/doku.php/terminos',
 ]);*/
 
-// Configuración para Telegram
-/*\sowerphp\core\Configure::write('telegram', [
-    'LibreDTE_bot' => [
-        'bot' => 'LibreDTE_bot',
-        'token' => '',
-    ],
-    'LibreDTEbot' => [
-        'bot' => 'LibreDTEbot',
-        'token' => '',
-    ],
-]);*/
-
 // configuración de permisos de la empresa en la aplicación
 \sowerphp\core\Configure::write('empresa.permisos', [
     'admin' => [
