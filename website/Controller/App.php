@@ -26,7 +26,7 @@ namespace website;
 /**
  * Controlador base de la aplicación
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2016-03-20
+ * @version 2017-10-10
  */
 abstract class Controller_App extends \sowerphp\app\Controller_App
 {
@@ -125,43 +125,6 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
             }
         }
         return $this->Contribuyente;
-    }
-
-    /**
-     * Método que permite consumir por post un recurso de la misma aplicación
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-08-04
-     */
-    protected function consume($recurso, $datos = [], $assoc = true)
-    {
-        $rest = new \sowerphp\core\Network_Http_Rest();
-        $rest->setAuth($this->Auth->User ? $this->Auth->User->hash : \sowerphp\core\Configure::read('api.default.token'));
-        $rest->setAssoc($assoc);
-        if ($datos) {
-            return $rest->post($this->request->url.$recurso, $datos);
-        } else {
-            return $rest->get($this->request->url.$recurso);
-        }
-    }
-
-    /**
-     * Método que permite ejecutar un comando en la terminal
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-03-15
-     */
-    protected function shell($cmd, &$output = [])
-    {
-        if ($cmd[0]!='/') {
-            $cmd = DIR_PROJECT.'/website/Shell/shell.php '.$cmd;
-            if (defined('ENVIRONMENT_DEV') and ENVIRONMENT_DEV) {
-                $cmd .= ' --dev';
-            }
-        }
-        $rc = 0;
-        $output = [];
-        exec('screen -dm '.$cmd, $output, $rc);
-        $output = implode("\n", $output);
-        return $rc;
     }
 
 }
