@@ -38,6 +38,8 @@ define ('DIR_PROJECT', dirname(dirname(dirname(__FILE__))));
 // Extensiones que se utilizarán. Deberá ser vendor/extensión dentro de
 // DIR_FRAMEWORK/extensions o bien dentro de DIR_PROJECT/extensions, ejemplo:
 // $_EXTENSIONS = ['sowerphp/app', 'sowerphp/general'];
+// única excepción es usar 'website' que permite definir la capa website en un nivel
+// inferior y que no esté al tope de la aplicación
 $_EXTENSIONS = ['sowerphp/app', 'sowerphp/general'];
 
 // Iniciar bootstrap (proceso que prepara e inicia el proyecto)
