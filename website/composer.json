@@ -1,15 +1,9 @@
 {
     "config": {
-        "vendor-dir": "Vendor",
-        "platform" : {
-            "ext-bcmath" : "1.0.0"
-        }
+        "vendor-dir": "Vendor"
     },
     "require": {
          "sasco/libredte": "dev-master",
-         "kunalvarma05/dropbox-php-sdk": "0.2.1",
-         "khipu/khipu-api-client": "2.7.1",
-         "freshwork/transbank": "0.1.8",
-         "bitpay/php-client": "2.2.13"
+         "kunalvarma05/dropbox-php-sdk": "0.2.1"
     }
 }

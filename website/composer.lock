@@ -4,116 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "49886ddcb38266bd1efcd3462f9aaf30",
-    "content-hash": "d2ec2e97e1bf5a5bc68bbade19085911",
+    "hash": "0abbb6463d8d77723027c06256638535",
+    "content-hash": "07cc3fa287c36405b83e3800bd60786c",
     "packages": [
-        {
-            "name": "bitpay/php-client",
-            "version": "v2.2.13",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/bitpay/php-bitpay-client.git",
-                "reference": "af71cb81735d39d84cf9c88d97db7ad786e78224"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/bitpay/php-bitpay-client/zipball/af71cb81735d39d84cf9c88d97db7ad786e78224",
-                "reference": "af71cb81735d39d84cf9c88d97db7ad786e78224",
-                "shasum": ""
-            },
-            "require": {
-                "ext-bcmath": "*",
-                "ext-curl": "*",
-                "ext-json": "*",
-                "ext-mcrypt": "*",
-                "ext-openssl": "*",
-                "php": ">=5.4",
-                "symfony/config": "^2.3 || ^3.0",
-                "symfony/dependency-injection": "^2.3 || ^3.0"
-            },
-            "require-dev": {
-                "behat/behat": "2.5.*@stable",
-                "behat/mink": "1.6.1",
-                "behat/mink-extension": "1.3.*",
-                "behat/mink-goutte-driver": "1.*",
-                "behat/mink-selenium2-driver": "1.2.0",
-                "fabpot/goutte": "~1.0.4",
-                "fzaninotto/faker": "~1.4.0",
-                "mikey179/vfsstream": "~1.4.0",
-                "phpmd/phpmd": "~2.1.3",
-                "phpunit/phpunit": "~4.3.1",
-                "satooshi/php-coveralls": "~0.6.1",
-                "squizlabs/php_codesniffer": "~1.5.5"
-            },
-            "suggest": {
-                "ext-gmp": "Quickest PHP math extension for doing computationally-expensive work."
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.2.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "BitPay Integrations Development Team",
-                    "email": "integrations@bitpay.com",
-                    "homepage": "https://bitpay.com/integrations"
-                }
-            ],
-            "description": "PHP Library to work with the new cryptographically secure BitPay API",
-            "homepage": "https://github.com/bitpay/php-bitpay-client",
-            "keywords": [
-                "bitcoin",
-                "bitpay"
-            ],
-            "time": "2017-05-12 13:33:27"
-        },
-        {
-            "name": "freshwork/transbank",
-            "version": "0.1.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/freshworkstudio/transbank-web-services.git",
-                "reference": "5a2ae24eac65a695faf046c5eb73ffcc2895623d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/freshworkstudio/transbank-web-services/zipball/5a2ae24eac65a695faf046c5eb73ffcc2895623d",
-                "reference": "5a2ae24eac65a695faf046c5eb73ffcc2895623d",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Freshwork\\Transbank\\": "src/"
-                },
-                "classmap": [
-                    "src/wss"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPLv3"
-            ],
-            "authors": [
-                {
-                    "name": "Gonzalo De Spirito",
-                    "email": "gonzalo@freshworkstudio.com"
-                }
-            ],
-            "description": "SDK para webservices de transbank (Webpay Plus, Webpay OneClick, Webpay PatPass)",
-            "time": "2017-05-20 23:59:25"
-        },
         {
             "name": "guzzlehttp/guzzle",
             "version": "6.3.0",
@@ -296,56 +189,6 @@
             "time": "2017-03-20 17:10:46"
         },
         {
-            "name": "khipu/khipu-api-client",
-            "version": "2.7.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/khipu/khipu-api-php-client.git",
-                "reference": "3a914dd36de4a07d1bdf25ff43b9028bbda61122"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/khipu/khipu-api-php-client/zipball/3a914dd36de4a07d1bdf25ff43b9028bbda61122",
-                "reference": "3a914dd36de4a07d1bdf25ff43b9028bbda61122",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "ext-json": "*",
-                "ext-mbstring": "*",
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0",
-                "satooshi/php-coveralls": "~0.6.1",
-                "squizlabs/php_codesniffer": "~2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Khipu\\": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "khipu",
-                    "homepage": "https://github.com/khipu/khipu-api-php-client"
-                }
-            ],
-            "homepage": "https://github.com/khipu/khipu-api-php-client",
-            "keywords": [
-                "api",
-                "khipu",
-                "php",
-                "sdk"
-            ],
-            "time": "2016-07-11 18:53:07"
-        },
-        {
             "name": "kunalvarma05/dropbox-php-sdk",
             "version": "v0.2.1",
             "source": {
@@ -486,55 +329,6 @@
             "time": "2017-06-05 06:31:10"
         },
         {
-            "name": "psr/container",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/container.git",
-                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/container/zipball/b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
-                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Container\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Common Container Interface (PHP FIG PSR-11)",
-            "homepage": "https://github.com/php-fig/container",
-            "keywords": [
-                "PSR-11",
-                "container",
-                "container-interface",
-                "container-interop",
-                "psr"
-            ],
-            "time": "2017-02-14 16:28:37"
-        },
-        {
             "name": "psr/http-message",
             "version": "1.0.1",
             "source": {
@@ -590,12 +384,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "186f4527c8a23fd6d25a101bd68061a22c55b441"
+                "reference": "910333011b1cb130667cf45b02afb416b8c4b9c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/186f4527c8a23fd6d25a101bd68061a22c55b441",
-                "reference": "186f4527c8a23fd6d25a101bd68061a22c55b441",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/910333011b1cb130667cf45b02afb416b8c4b9c8",
+                "reference": "910333011b1cb130667cf45b02afb416b8c4b9c8",
                 "shasum": ""
             },
             "require": {
@@ -607,7 +401,7 @@
                 "tecnickcom/tcpdf": "6.2.13"
             },
             "require-dev": {
-                "phpunit/phpunit": "6.3.*"
+                "phpunit/phpunit": "6.4.*"
             },
             "type": "library",
             "autoload": {
@@ -632,188 +426,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2017-09-14 19:34:53"
-        },
-        {
-            "name": "symfony/config",
-            "version": "v3.3.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/config.git",
-                "reference": "f9f19a39ee178f61bb2190f51ff7c517c2159315"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/f9f19a39ee178f61bb2190f51ff7c517c2159315",
-                "reference": "f9f19a39ee178f61bb2190f51ff7c517c2159315",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.5.9|>=7.0.8",
-                "symfony/filesystem": "~2.8|~3.0"
-            },
-            "conflict": {
-                "symfony/dependency-injection": "<3.3",
-                "symfony/finder": "<3.3"
-            },
-            "require-dev": {
-                "symfony/dependency-injection": "~3.3",
-                "symfony/finder": "~3.3",
-                "symfony/yaml": "~3.0"
-            },
-            "suggest": {
-                "symfony/yaml": "To use the yaml reference dumper"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.3-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Config\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Config Component",
-            "homepage": "https://symfony.com",
-            "time": "2017-09-04 16:28:07"
-        },
-        {
-            "name": "symfony/dependency-injection",
-            "version": "v3.3.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "e593f06dd90a81c7b70ac1c49862a061b0ec06d2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/e593f06dd90a81c7b70ac1c49862a061b0ec06d2",
-                "reference": "e593f06dd90a81c7b70ac1c49862a061b0ec06d2",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.5.9|>=7.0.8",
-                "psr/container": "^1.0"
-            },
-            "conflict": {
-                "symfony/config": "<3.3.1",
-                "symfony/finder": "<3.3",
-                "symfony/yaml": "<3.3"
-            },
-            "provide": {
-                "psr/container-implementation": "1.0"
-            },
-            "require-dev": {
-                "symfony/config": "~3.3",
-                "symfony/expression-language": "~2.8|~3.0",
-                "symfony/yaml": "~3.3"
-            },
-            "suggest": {
-                "symfony/config": "",
-                "symfony/expression-language": "For using expressions in service container configuration",
-                "symfony/finder": "For using double-star glob patterns or when GLOB_BRACE portability is required",
-                "symfony/proxy-manager-bridge": "Generate service proxies to lazy load them",
-                "symfony/yaml": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.3-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\DependencyInjection\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony DependencyInjection Component",
-            "homepage": "https://symfony.com",
-            "time": "2017-09-05 20:39:38"
-        },
-        {
-            "name": "symfony/filesystem",
-            "version": "v3.3.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/filesystem.git",
-                "reference": "b32a0e5f928d0fa3d1dd03c78d020777e50c10cb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/b32a0e5f928d0fa3d1dd03c78d020777e50c10cb",
-                "reference": "b32a0e5f928d0fa3d1dd03c78d020777e50c10cb",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.5.9|>=7.0.8"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.3-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Filesystem\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Filesystem Component",
-            "homepage": "https://symfony.com",
-            "time": "2017-07-29 21:54:42"
+            "time": "2017-10-11 04:14:02"
         },
         {
             "name": "tecnickcom/tcpdf",
@@ -879,16 +492,16 @@
         },
         {
             "name": "tightenco/collect",
-            "version": "v5.5.7",
+            "version": "v5.5.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tightenco/collect.git",
-                "reference": "15b6e70c4819e6603a360a4f29c1f02fa69a7239"
+                "reference": "428c64c6ab6afa5b5c339164bd2e2f925dd833c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tightenco/collect/zipball/15b6e70c4819e6603a360a4f29c1f02fa69a7239",
-                "reference": "15b6e70c4819e6603a360a4f29c1f02fa69a7239",
+                "url": "https://api.github.com/repos/tightenco/collect/zipball/428c64c6ab6afa5b5c339164bd2e2f925dd833c5",
+                "reference": "428c64c6ab6afa5b5c339164bd2e2f925dd833c5",
                 "shasum": ""
             },
             "require": {
@@ -922,7 +535,7 @@
                 "collection",
                 "laravel"
             ],
-            "time": "2017-09-19 21:52:21"
+            "time": "2017-10-03 17:54:02"
         }
     ],
     "packages-dev": [],
@@ -934,8 +547,5 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": [],
-    "platform-overrides": {
-        "ext-bcmath": "1.0.0"
-    }
+    "platform-dev": []
 }
