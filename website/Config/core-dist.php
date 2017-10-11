@@ -206,5 +206,8 @@ ini_set('max_execution_time', 600);
     'libredte' => '',
 ]);*/
 
+// handler para triggers de la app
+//\sowerphp\core\Configure::write('app.trigger_handler', '');
+
 // directorio para datos estáticos (debe tener permisos de escritura)
 define('DIR_STATIC', DIR_PROJECT.'/data/static');
