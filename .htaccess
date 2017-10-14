@@ -17,5 +17,5 @@ RewriteRule (.*) website/webroot/$1 [L]
 RewriteRule ^$ website/webroot/ [L]
 
 # Evitar que se acceda a los directorios directamente (si no hay index.*)
-#Options -Indexes
+Options -Indexes
 

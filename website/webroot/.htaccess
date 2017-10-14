@@ -13,6 +13,7 @@ RewriteEngine On
 
 # Reglas para redireccionar las solicitudes al archivo index.php que
 # despacha la página
+RewriteCond expr " %{REQUEST_URI} -strmatch '*/img/*' " [OR]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?/$1 [QSA,L]
