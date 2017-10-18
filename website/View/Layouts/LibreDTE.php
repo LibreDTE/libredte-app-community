@@ -12,7 +12,7 @@ Aplicación oficial en https://libredte.cl
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="Facturación electrónica, contabilidad, punto de venta, tienda electrónica, RRHH, inventario ¡y más!">
+        <meta name="description" content="LibreDTE ¡facturación electrónica libre para Chile!">
         <meta name="keywords" content="factura electrónica, facturación electrónica, sii, dte, software libre, open source">
         <meta name="author" content="SASCO SpA">
         <title><?=$_header_title?></title>
@@ -46,12 +46,6 @@ Aplicación oficial en https://libredte.cl
         <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 <?=$_header_extra?>
-<?php if (\sowerphp\core\Configure::read('ads.facebook.pixel') and !(defined('ENVIRONMENT_DEV') and ENVIRONMENT_DEV)) : ?>
-        <script>
-            !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init', '<?=\sowerphp\core\Configure::read('ads.facebook.pixel')?>');fbq('track', 'PageView');
-        </script>
-        <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=<?=\sowerphp\core\Configure::read('ads.facebook.pixel')?>&amp;ev=PageView&amp;noscript=1" alt="Facebook pixel" /></noscript>
-<?php endif; ?>
     </head>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -113,12 +107,6 @@ foreach ($_nav_website as $link=>$name) {
                                 <li><a href="<?=$_base?>/dte/dte_recibidos/listar"><span class="fa fa-sign-in"></span> Documentos recibidos</a></li>
                                 <li><a href="<?=$_base?>/dte/dte_intercambios/listar"><span class="fa fa-exchange"></span> Bandeja intercambio</a></li>
                                 <li><a href="<?=$_base?>/dte/informes"><span class="fa fa-file"></span> Informes facturación</a></li>
-<?php if (\sowerphp\core\Module::loaded('Lce') and $_Auth->check('/lce')) : ?>
-                                <li class="divider"></li>
-                                <li><a href="<?=$_base?>/lce/lce_asientos/crear?listar=<?=base64_encode('../../listar/1/asiento/D?search=periodo:'.date('Y').',anulado:0')?>"><span class="fa fa-edit"></span> Crear asiento</a></li>
-                                <li><a href="<?=$_base?>/lce/libro_diario"><span class="fa fa-book"></span> Libro diario</a></li>
-                                <li><a href="<?=$_base?>/lce/balance_general"><span class="fa fa-balance-scale"></span> Balance general</a></li>
-<?php endif; ?>
 <?php if ($Emisor->usuarioAutorizado($_Auth->User, 'admin')) : ?>
                                 <li class="divider"></li>
                                 <li><a href="<?=$_base?>/dte/contribuyentes/modificar/<?=$Emisor->rut?>"><span class="fa fa-building"></span> Modificar empresa</a></li>
@@ -138,8 +126,6 @@ foreach ($_nav_app as $link=>&$info) {
     }
 }
 ?>
-                                <li class="divider"></li>
-                                <li><a href="<?=$_base?>/documentacion"><span class="fa fa-book fa-fw" aria-hidden="true"></span> Documentación</a></li>
                                 <li class="divider"></li>
                                 <li><a href="<?=$_base?>/usuarios/perfil"><span class="fa fa-user fa-fw" aria-hidden="true"></span> Perfil de usuario</a></li>
                                 <li><a href="<?=$_base?>/usuarios/salir"><span class="fa fa-sign-out fa-fw" aria-hidden="true"></span> Cerrar sesión</a></li>
