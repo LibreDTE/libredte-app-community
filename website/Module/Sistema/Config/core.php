@@ -22,7 +22,7 @@
  */
 
 // Menú para el módulo
-$nav = [
+Configure::write('nav.module', [
     '/usuarios' => [
         'name' => 'Usuarios',
         'desc' => 'Mantenedor de usuarios y grupos del sistema',
@@ -33,12 +33,4 @@ $nav = [
         'desc' => 'Módulo de configuraciones generales',
         'icon' => 'fa fa-cogs',
     ],
-];
-if (\sowerphp\core\Module::loaded('Sistema.Libredte')) {
-    $nav['/libredte'] = [
-        'name' => 'LibreDTE',
-        'desc' => 'Módulo de administración de la aplicación web de LibreDTE',
-        'icon' => 'fa fa-gear',
-    ];
-}
-Configure::write('nav.module', $nav);
+]);
