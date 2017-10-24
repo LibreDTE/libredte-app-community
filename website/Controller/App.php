@@ -56,6 +56,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
         'Notify',
     ]; ///< Componentes usados por el controlador
 
+    protected $Contribuyente_class = '\website\Dte\Model_Contribuyente'; ///< Clase para guardar el contribuyente
     private $Contribuyente = null; ///< Contribuyente con el que se está trabajando
 
     /**
@@ -95,18 +96,20 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
     /**
      * Método que asigna el objeto del contribuyente para ser "recordado"
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-01-02
+     * @version 2017-10-23
      */
-    protected function setContribuyente(\website\Dte\Model_Contribuyente $Contribuyente)
+    protected function setContribuyente($Contribuyente)
     {
-        \sowerphp\core\Model_Datasource_Session::write('dte.Contribuyente', $Contribuyente);
+        if ($Contribuyente instanceof $this->Contribuyente_class) {
+            \sowerphp\core\Model_Datasource_Session::write('dte.Contribuyente', $Contribuyente);
+        }
     }
 
     /**
      * Método que entrega el objeto del contribuyente que ha sido seleccionado
      * para ser usado en la sesión. Si no hay uno seleccionado se fuerza a
      * seleccionar.
-     * @return \website\Dte\Model_Contribuyente
+     * @return Objeto con el contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
      * @version 2016-12-26
      */
