@@ -38,7 +38,7 @@ class Model_Plural_App extends \sowerphp\app\Model_Plural
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
      * @version 2016-09-27
      */
-    public function setContribuyente(\website\Dte\Model_Contribuyente $Contribuyente)
+    public function setContribuyente($Contribuyente)
     {
         $this->Contribuyente = $Contribuyente;
         return $this;
