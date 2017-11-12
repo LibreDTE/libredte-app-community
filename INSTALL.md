@@ -1,9 +1,9 @@
 Instalación aplicación web LibreDTE
 ===================================
 
-La aplicación web está soportada oficialmente en Debian GNU/Linux 9. Es posible
-usarla en otros sistemas GNU/Linux, como Arch Linux o Ubuntu, pero no se entrega
-soporte para dichas plataformas.
+La aplicación web está soportada oficialmente en Debian GNU/Linux 9 de 64 bits.
+Es posible usarla en otros sistemas GNU/Linux, como Arch Linux o Ubuntu, pero
+no se entrega soporte para dichas plataformas.
 
 Al instalar este software estás aceptando cumplir con
 [los términos, condiciones y licencia](https://wiki.libredte.cl/doku.php/terminos)
