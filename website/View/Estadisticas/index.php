@@ -104,6 +104,18 @@
             </div>
         </div>
         <!-- fin grafico empresas por comuna -->
+        <!-- inicio grafico empresas por actividad económica -->
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-map-o fa-fw"></i> Empresas registradas por actividad económica
+                </div>
+                <div class="panel-body">
+                    <div id="grafico-contribuyentes_por_actividad"></div>
+                </div>
+            </div>
+        </div>
+        <!-- fin grafico empresas por actividad económica -->
     </div>
     <!-- FIN PANEL IZQUIERDA -->
     <!-- PANEL DERECHA -->
@@ -151,6 +163,14 @@ Morris.Bar({
     element: 'grafico-contribuyentes_por_comuna',
     data: <?=json_encode($contribuyentes_por_comuna)?>,
     xkey: 'comuna',
+    ykeys: ['contribuyentes'],
+    labels: ['Empresas'],
+    resize: true
+});
+Morris.Bar({
+    element: 'grafico-contribuyentes_por_actividad',
+    data: <?=json_encode($contribuyentes_por_actividad)?>,
+    xkey: 'actividad_economica',
     ykeys: ['contribuyentes'],
     labels: ['Empresas'],
     resize: true
