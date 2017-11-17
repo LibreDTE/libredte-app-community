@@ -11,7 +11,7 @@ oficial disponible sólo en <https://libredte.cl>
 
 Esta aplicación web utiliza la
 [biblioteca PHP LibreDTE](https://github.com/LibreDTE/libredte-lib) y el
-[módulo Dte](https://github.com/LibreDTE/libredte-sowerphp) del framework
+[módulo Dte](https://github.com/LibreDTE/libredte-modulo-Dte) del framework
 [SowerPHP](http://sowerphp.org).
 
 [Realiza una donación al proyecto](https://libredte.github.io/#donar)
