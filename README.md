@@ -14,6 +14,8 @@ Esta aplicación web utiliza la
 [módulo Dte](https://github.com/LibreDTE/libredte-sowerphp) del framework
 [SowerPHP](http://sowerphp.org).
 
+[Realiza una donación al proyecto](https://libredte.github.io/#donar)
+
 Términos y condiciones de uso
 -----------------------------
 
