@@ -384,12 +384,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "910333011b1cb130667cf45b02afb416b8c4b9c8"
+                "reference": "7a0a1e1766dafd6b56de763822d40b715195029a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/910333011b1cb130667cf45b02afb416b8c4b9c8",
-                "reference": "910333011b1cb130667cf45b02afb416b8c4b9c8",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/7a0a1e1766dafd6b56de763822d40b715195029a",
+                "reference": "7a0a1e1766dafd6b56de763822d40b715195029a",
                 "shasum": ""
             },
             "require": {
@@ -426,7 +426,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2017-10-11 04:14:02"
+            "time": "2017-12-14 04:32:00"
         },
         {
             "name": "tecnickcom/tcpdf",
@@ -492,16 +492,16 @@
         },
         {
             "name": "tightenco/collect",
-            "version": "v5.5.14",
+            "version": "v5.5.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tightenco/collect.git",
-                "reference": "428c64c6ab6afa5b5c339164bd2e2f925dd833c5"
+                "reference": "07d58f7f663d5033a08541f9c481d33ad3f514a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tightenco/collect/zipball/428c64c6ab6afa5b5c339164bd2e2f925dd833c5",
-                "reference": "428c64c6ab6afa5b5c339164bd2e2f925dd833c5",
+                "url": "https://api.github.com/repos/tightenco/collect/zipball/07d58f7f663d5033a08541f9c481d33ad3f514a5",
+                "reference": "07d58f7f663d5033a08541f9c481d33ad3f514a5",
                 "shasum": ""
             },
             "require": {
@@ -510,6 +510,9 @@
             "require-dev": {
                 "mockery/mockery": "~1.0",
                 "phpunit/phpunit": "~6.0"
+            },
+            "suggest": {
+                "symfony/var-dumper": "Required to prettify dd() and dump() (~3.3)."
             },
             "type": "library",
             "autoload": {
@@ -535,7 +538,7 @@
                 "collection",
                 "laravel"
             ],
-            "time": "2017-10-03 17:54:02"
+            "time": "2017-12-20 17:38:03"
         }
     ],
     "packages-dev": [],
