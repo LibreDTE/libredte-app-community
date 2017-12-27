@@ -93,7 +93,7 @@ foreach ($_nav_website as $link=>$name) {
 <?php if (\sowerphp\core\Configure::read('app.self_register')) : ?>
                         <li><a href="<?=$_base?>/usuarios/registrar"><span class="text-primary"> ¡Regístrate!</span></a></li>
 <?php endif; ?>
-                        <li><a href="<?=$_base?>/usuarios/ingresar"><span class="fa fa-sign-in" aria-hidden="true"></span> Iniciar sesión</a></li>
+                        <li><a href="<?=$_base?>/usuarios/ingresar"><span class="fas fa-sign-in-alt" aria-hidden="true"></span> Iniciar sesión</a></li>
 <?php else : ?>
 <?php if($Emisor) : ?>
                         <li class="dropdown">
@@ -101,11 +101,11 @@ foreach ($_nav_website as $link=>$name) {
                                 <strong><?=$Emisor->getRUT()?> <span class="caret"></span></strong>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="<?=$_base?>/dte/documentos/emitir"><span class="fa fa-file-text"></span> Emitir documento</a></li>
-                                <li><a href="<?=$_base?>/dte/dte_tmps"><span class="fa fa-file-o"></span> Documentos temporales</a></li>
-                                <li><a href="<?=$_base?>/dte/dte_emitidos/listar"><span class="fa fa-sign-out"></span> Documentos emitidos</a></li>
-                                <li><a href="<?=$_base?>/dte/dte_recibidos/listar"><span class="fa fa-sign-in"></span> Documentos recibidos</a></li>
-                                <li><a href="<?=$_base?>/dte/dte_intercambios/listar"><span class="fa fa-exchange"></span> Bandeja intercambio</a></li>
+                                <li><a href="<?=$_base?>/dte/documentos/emitir"><span class="fas fa-file-alt"></span> Emitir documento</a></li>
+                                <li><a href="<?=$_base?>/dte/dte_tmps"><span class="far fa-file"></span> Documentos temporales</a></li>
+                                <li><a href="<?=$_base?>/dte/dte_emitidos/listar"><span class="fas fa-sign-out-alt"></span> Documentos emitidos</a></li>
+                                <li><a href="<?=$_base?>/dte/dte_recibidos/listar"><span class="fas fa-sign-in-alt"></span> Documentos recibidos</a></li>
+                                <li><a href="<?=$_base?>/dte/dte_intercambios/listar"><span class="fas fa-exchange-alt"></span> Bandeja intercambio</a></li>
                                 <li><a href="<?=$_base?>/dte/informes"><span class="fa fa-file"></span> Informes facturación</a></li>
 <?php if ($Emisor->usuarioAutorizado($_Auth->User, 'admin')) : ?>
                                 <li class="divider"></li>
@@ -128,7 +128,7 @@ foreach ($_nav_app as $link=>&$info) {
 ?>
                                 <li class="divider"></li>
                                 <li><a href="<?=$_base?>/usuarios/perfil"><span class="fa fa-user fa-fw" aria-hidden="true"></span> Perfil de usuario</a></li>
-                                <li><a href="<?=$_base?>/usuarios/salir"><span class="fa fa-sign-out fa-fw" aria-hidden="true"></span> Cerrar sesión</a></li>
+                                <li><a href="<?=$_base?>/usuarios/salir"><span class="fas fa-sign-out-alt fa-fw" aria-hidden="true"></span> Cerrar sesión</a></li>
                             </ul>
                         </li>
 <?php endif; ?>

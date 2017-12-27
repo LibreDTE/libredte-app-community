@@ -23,7 +23,7 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3">
-                        <i class="fa fa-rebel fa-4x"></i>
+                        <i class="fab fa-rebel fa-4x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
                         <div style="font-size:36px"><?=num($usuarios_registrados)?></div>
@@ -72,7 +72,7 @@
         <div class="row">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-bar-chart-o fa-fw"></i> Documentos emitidos por día
+                    <i class="far fa-chart-bar fa-fw"></i> Documentos emitidos por día
                 </div>
                 <div class="panel-body">
                     <div id="grafico-documentos_diarios"></div>
@@ -84,7 +84,7 @@
         <div class="row">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-bar-chart-o fa-fw"></i> Usuarios mensuales que iniciaron sesión por última vez
+                    <i class="far fa-chart-bar fa-fw"></i> Usuarios mensuales que iniciaron sesión por última vez
                 </div>
                 <div class="panel-body">
                     <div id="grafico-usuarios_mensuales"></div>
@@ -96,7 +96,7 @@
         <div class="row">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-map-o fa-fw"></i> Empresas registradas por comuna
+                    <i class="far fa-map fa-fw"></i> Empresas registradas por comuna
                 </div>
                 <div class="panel-body">
                     <div id="grafico-contribuyentes_por_comuna"></div>
@@ -108,7 +108,7 @@
         <div class="row">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-map-o fa-fw"></i> Empresas registradas por actividad económica
+                    <i class="far fa-map fa-fw"></i> Empresas registradas por actividad económica
                 </div>
                 <div class="panel-body">
                     <div id="grafico-contribuyentes_por_actividad"></div>

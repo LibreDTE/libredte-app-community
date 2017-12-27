@@ -5,12 +5,12 @@
             <div class="list-group-item list-group-item-info">Documentos</div>
             <div class="list-group-item">
                 <a href="utilidades/documentos/xml" title="Generar XML de DTE y, opcionalmente, EnvioDTE">
-                    <span class="fa fa-file-code-o"></span> Generar XML DTE y EnvioDTE
+                    <span class="far fa-file-code"></span> Generar XML DTE y EnvioDTE
                 </a>
             </div>
             <div class="list-group-item">
                 <a href="utilidades/documentos/pdf" title="Generar PDF a partir de un archivo XML EnvioDTE o EnvioBOLETA">
-                    <span class="fa fa-file-pdf-o"></span> Generar PDF del EnvioDTE
+                    <span class="far fa-file-pdf"></span> Generar PDF del EnvioDTE
                 </a>
             </div>
             <div class="list-group-item">
@@ -20,7 +20,7 @@
             </div>
             <div class="list-group-item">
                 <a href="utilidades/documentos/xml2json" title="Convertir XML de DTE, EnvioDTE o EnvioBOLETA a JSON">
-                    <span class="fa fa-file-code-o"></span> Convertir XML a JSON
+                    <span class="far fa-file-code"></span> Convertir XML a JSON
                 </a>
             </div>
         </div>
@@ -28,7 +28,7 @@
             <div class="list-group-item list-group-item-info">Cesión electrónica (factoring)</div>
             <div class="list-group-item">
                 <a href="utilidades/factoring/ceder" title="Generar el XML de un archivo electrónico de cesión de un DTE">
-                    <span class="fa fa-file-code-o"></span> Ceder documento electrónico
+                    <span class="far fa-file-code"></span> Ceder documento electrónico
                 </a>
             </div>
         </div>
@@ -43,7 +43,7 @@
             </div>
             <div class="list-group-item">
                 <a href="utilidades/iecv/pdf" title="Generar PDF a partir de un archivo XML de libro de compras y ventas">
-                    <span class="fa fa-file-pdf-o"></span> Generar PDF IECV
+                    <span class="far fa-file-pdf"></span> Generar PDF IECV
                 </a>
             </div>
         </div>
@@ -85,17 +85,17 @@
             <div class="list-group-item list-group-item-info">Formatos DTE soportados</div>
             <div class="list-group-item">
                 <a href="utilidades/formatos" title="Convertir de un formato soportado a JSON">
-                    <span class="fa fa-file-text"></span> Convertir a JSON
+                    <span class="fas fa-file-alt"></span> Convertir a JSON
                 </a>
             </div>
             <div class="list-group-item">
                 <a href="utilidades/formatos/XML" title="Convertir de XML a JSON">
-                    <span class="fa fa-file-text"></span> Formato oficial SII en XML
+                    <span class="fas fa-file-alt"></span> Formato oficial SII en XML
                 </a>
             </div>
             <div class="list-group-item">
                 <a href="utilidades/formatos/YAML" title="Convertir de YAML JSON">
-                    <span class="fa fa-file-text"></span> Formato oficial SII en YAML
+                    <span class="fas fa-file-alt"></span> Formato oficial SII en YAML
                 </a>
             </div>
         </div>

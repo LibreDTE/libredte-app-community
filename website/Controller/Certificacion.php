@@ -36,7 +36,7 @@ class Controller_Certificacion extends \Controller_App
         '/set_pruebas' => [
             'name' => 'Etapa 1: Set de pruebas',
             'desc' => '',
-            'icon' => 'fa fa-files-o',
+            'icon' => 'far fa-copy',
         ],
         '/simulacion' => [
             'name' => 'Etapa 2: Simulación',
@@ -46,12 +46,12 @@ class Controller_Certificacion extends \Controller_App
         '/intercambio' => [
             'name' => 'Etapa 3: Intercambio',
             'desc' => '',
-            'icon' => 'fa fa-exchange',
+            'icon' => 'fas fa-exchange-alt',
         ],
         '/muestras_impresas' => [
             'name' => 'Etapa 4: Muestras impresas',
             'desc' => '',
-            'icon' => 'fa fa-file-pdf-o',
+            'icon' => 'far fa-file-pdf',
         ],
     ]; ///< Menú web del controlador
 

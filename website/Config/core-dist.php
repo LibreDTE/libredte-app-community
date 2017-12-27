@@ -59,7 +59,7 @@ ini_set('max_execution_time', 600);
 \sowerphp\core\Configure::write('nav.website', [
     '/dte' => ['name'=>'Facturación', 'desc'=>'Accede al módulo de facturación electrónica', 'icon'=>'fa fa-list-alt'],
     '/utilidades' => ['name'=>'Utilidades', 'desc'=>'Utilidades y herramientas para generar documentos asociados a la facturación electrónica', 'icon'=>'fa fa-wrench'],
-    '/soporte' => ['name'=>'Soporte', 'desc'=>'¿Necesitas ayuda o tienes alguna consulta?', 'icon'=>'fa fa-support', 'nav'=>[
+    '/soporte' => ['name'=>'Soporte', 'desc'=>'¿Necesitas ayuda o tienes alguna consulta?', 'icon'=>'far fa-life-ring', 'nav'=>[
         'https://wiki.libredte.cl/doku.php/faq'=>'Preguntas y respuestas frecuentes',
         'https://groups.google.com/forum/#!forum/libredte' => 'Lista de correo en Google Groups',
         'https://wiki.libredte.cl'=>'Wiki de documentación',
