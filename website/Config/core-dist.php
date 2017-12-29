@@ -77,6 +77,16 @@ ini_set('max_execution_time', 600);
     '/sistema' => 'Sistema',
 ]);
 
+// Menú por defecto de la empresa si no tiene definido uno personalizado
+\sowerphp\core\Configure::write('nav.contribuyente', [
+    '/dte/documentos/emitir' => '<span class="fas fa-file-alt"></span> Emitir documento',
+    '/dte/dte_tmps' => '<span class="far fa-file"></span> Documentos temporales',
+    '/dte/dte_emitidos/listar' => '<span class="fas fa-sign-out-alt"></span> Documentos emitidos',
+    '/dte/dte_recibidos/listar' => '<span class="fas fa-sign-in-alt"></span> Documentos recibidos',
+    '/dte/dte_intercambios/listar' => '<span class="fas fa-exchange-alt"></span> Bandeja intercambio',
+    '/dte/informes' => '<span class="fa fa-file"></span> Informes facturación',
+]);
+
 // Configuración para la base de datos
 \sowerphp\core\Configure::write('database.default', array(
     'type' => 'PostgreSQL',

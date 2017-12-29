@@ -101,17 +101,13 @@ foreach ($_nav_website as $link=>$name) {
                                 <strong><?=$Emisor->getRUT()?> <span class="caret"></span></strong>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="<?=$_base?>/dte/documentos/emitir"><span class="fas fa-file-alt"></span> Emitir documento</a></li>
-                                <li><a href="<?=$_base?>/dte/dte_tmps"><span class="far fa-file"></span> Documentos temporales</a></li>
-                                <li><a href="<?=$_base?>/dte/dte_emitidos/listar"><span class="fas fa-sign-out-alt"></span> Documentos emitidos</a></li>
-                                <li><a href="<?=$_base?>/dte/dte_recibidos/listar"><span class="fas fa-sign-in-alt"></span> Documentos recibidos</a></li>
-                                <li><a href="<?=$_base?>/dte/dte_intercambios/listar"><span class="fas fa-exchange-alt"></span> Bandeja intercambio</a></li>
-                                <li><a href="<?=$_base?>/dte/informes"><span class="fa fa-file"></span> Informes facturación</a></li>
-<?php if ($Emisor->usuarioAutorizado($_Auth->User, 'admin')) : ?>
+<?php foreach ($Emisor->getLinks() as $link => $name) : ?>
+<?php if ($name == '-') : ?>
                                 <li class="divider"></li>
-                                <li><a href="<?=$_base?>/dte/contribuyentes/modificar/<?=$Emisor->rut?>"><span class="fa fa-building"></span> Modificar empresa</a></li>
-                                <li><a href="<?=$_base?>/dte/contribuyentes/usuarios/<?=$Emisor->rut?>"><span class="fa fa-users"></span> Autorizar usuarios</a></li>
+<?php else : ?>
+                                <li><a href="<?=$_base?><?=$link?>"><?=$name?></a></li>
 <?php endif; ?>
+<?php endforeach; ?>
                             </ul>
                         </li>
 <?php endif; ?>
