@@ -108,6 +108,11 @@ foreach ($_nav_website as $link=>$name) {
                                 <li><a href="<?=$_base?><?=$link?>"><?=$name?></a></li>
 <?php endif; ?>
 <?php endforeach; ?>
+<?php if ($Emisor->usuarioAutorizado($_Auth->User, 'admin')) : ?>
+                                <li class="divider"></li>
+                                <li><a href="<?=$_base?>/dte/contribuyentes/modificar/<?=$Emisor->rut?>"><span class="fa fa-building"></span> Modificar empresa</a></li>
+                                <li><a href="<?=$_base?>/dte/contribuyentes/usuarios/<?=$Emisor->rut?>"><span class="fa fa-users"></span> Autorizar usuarios</a></li>
+<?php endif; ?>
                             </ul>
                         </li>
 <?php endif; ?>
