@@ -187,6 +187,11 @@ ini_set('max_execution_time', 600);
         'desc' => 'Consultar los items a través de su código',
         'link' => 'https://wiki.libredte.cl/doku.php/sowerphp/integracion/url_items',
     ],
+    'dte_pdf' => [
+        'name' => 'PDF de DTE',
+        'desc' => 'Servicio que genera el PDF a partir del XML del DTE',
+        'link' => 'http://blog.libredte.cl/index.php/2017/10/06/personaliza-el-pdf-de-tus-dte-como-quieras'
+    ],
 ]);
 
 // configuración para firma electrónica
