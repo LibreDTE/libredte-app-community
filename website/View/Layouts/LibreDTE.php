@@ -101,13 +101,27 @@ foreach ($_nav_website as $link=>$name) {
                                 <strong><?=$Emisor->getRUT()?> <span class="caret"></span></strong>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-<?php foreach ($Emisor->getLinks() as $link => $name) : ?>
-<?php if ($name == '-') : ?>
-                                <li class="divider"></li>
-<?php else : ?>
-                                <li><a href="<?=$_base?><?=$link?>"><?=$name?></a></li>
-<?php endif; ?>
-<?php endforeach; ?>
+<?php
+$n_links = 0;
+foreach ($Emisor->getLinks() as $link => $name) {
+    if ($name == '-') {
+        if ($n_links) {
+            echo '                                <li class="divider"></li>',"\n";
+        }
+        $n_links = 0;
+    } else {
+        if ($link[0]=='/') {
+            if ($_Auth->check($link)) {
+                $n_links++;
+                echo '                                <li><a href="',$_base,$link,'">',$name,'</a></li>',"\n";
+            }
+        } else {
+            $n_links++;
+            echo '                                <li><a href="',$link,'">',$name,'</a></li>',"\n";
+        }
+    }
+}
+?>
 <?php if ($Emisor->usuarioAutorizado($_Auth->User, 'admin')) : ?>
                                 <li class="divider"></li>
                                 <li><a href="<?=$_base?>/dte/contribuyentes/modificar/<?=$Emisor->rut?>"><span class="fa fa-building"></span> Modificar empresa</a></li>
