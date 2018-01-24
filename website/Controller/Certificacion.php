@@ -430,6 +430,7 @@ class Controller_Certificacion extends \Controller_App
             'RutEmisor' => $CaratulaEnvioBOLETA['RutEmisor'],
             'FchResol' => $CaratulaEnvioBOLETA['FchResol'],
             'NroResol' => $CaratulaEnvioBOLETA['NroResol'],
+            'SecEnvio' => !empty($_POST['SecEnvio']) ? (int)$_POST['SecEnvio'] : 1,
         ]);
         $ConsumoFolio->generar();
         if ($ConsumoFolio->schemaValidate()) {

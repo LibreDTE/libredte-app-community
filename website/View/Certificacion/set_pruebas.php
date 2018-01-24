@@ -234,6 +234,13 @@ echo $f->input([
     'help' => 'Se debe indicar el código del tipo de documento, el folio desde el cual se generarán los documentos y el XML del CAF para cada tipo de documento',
 ]);
 echo $f->input([
+    'name' => 'SecEnvio',
+    'label' => 'N° secuencia',
+    'value' => 1,
+    'check' => 'notempty integer',
+    'help' => 'Número de secuencia para el RCOF',
+]);
+echo $f->input([
     'name' => 'web_verificacion',
     'label' => 'Web verificación',
     'value' => 'libredte.cl/boletas',
