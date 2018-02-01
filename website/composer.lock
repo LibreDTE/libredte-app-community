@@ -384,12 +384,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "7a0a1e1766dafd6b56de763822d40b715195029a"
+                "reference": "5c462d2e6ac505058aae2b8bcc53d07f26868201"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/7a0a1e1766dafd6b56de763822d40b715195029a",
-                "reference": "7a0a1e1766dafd6b56de763822d40b715195029a",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/5c462d2e6ac505058aae2b8bcc53d07f26868201",
+                "reference": "5c462d2e6ac505058aae2b8bcc53d07f26868201",
                 "shasum": ""
             },
             "require": {
@@ -426,7 +426,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2017-12-14 04:32:00"
+            "time": "2018-01-31 13:40:28"
         },
         {
             "name": "tecnickcom/tcpdf",
@@ -492,16 +492,16 @@
         },
         {
             "name": "tightenco/collect",
-            "version": "v5.5.27",
+            "version": "v5.5.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tightenco/collect.git",
-                "reference": "07d58f7f663d5033a08541f9c481d33ad3f514a5"
+                "reference": "0db8c8aa2aae44af756437ba6e98d9b0bd1ecec3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tightenco/collect/zipball/07d58f7f663d5033a08541f9c481d33ad3f514a5",
-                "reference": "07d58f7f663d5033a08541f9c481d33ad3f514a5",
+                "url": "https://api.github.com/repos/tightenco/collect/zipball/0db8c8aa2aae44af756437ba6e98d9b0bd1ecec3",
+                "reference": "0db8c8aa2aae44af756437ba6e98d9b0bd1ecec3",
                 "shasum": ""
             },
             "require": {
@@ -538,7 +538,7 @@
                 "collection",
                 "laravel"
             ],
-            "time": "2017-12-20 17:38:03"
+            "time": "2018-01-25 19:26:27"
         }
     ],
     "packages-dev": [],
