@@ -1,4 +1,4 @@
-<h1>Firmar XML</h1>
+<div class="page-header"><h1>Firmar XML</h1></div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin(['onsubmit'=>'Form.check()']);

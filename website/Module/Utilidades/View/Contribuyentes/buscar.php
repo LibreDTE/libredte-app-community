@@ -1,4 +1,4 @@
-<h1>Buscador datos contribuyente</h1>
+<div class="page-header"><h1>Buscador datos contribuyente</h1></div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin(['focus'=>'rutField', 'onsubmit'=>'Form.check()']);

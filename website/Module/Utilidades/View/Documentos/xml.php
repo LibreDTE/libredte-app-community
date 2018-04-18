@@ -1,4 +1,4 @@
-<h1>Generar XML de DTE</h1>
+<div class="page-header"><h1>Generar XML de DTE</h1></div>
 <script type="text/javascript">
     var plantillas_dte = JSON.parse('<?=json_encode($plantillas_dte)?>');
 </script>

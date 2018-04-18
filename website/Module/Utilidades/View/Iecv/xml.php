@@ -1,4 +1,4 @@
-<h1>Generar XML Libro de Compra o Venta</h1>
+<div class="page-header"><h1>Generar XML Libro de Compra o Venta</h1></div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin(['onsubmit'=>'Form.check()']);

@@ -1,4 +1,4 @@
-<h1>Convertir XML de DTE a JSON</h1>
+<div class="page-header"><h1>Convertir XML de DTE a JSON</h1></div>
 <p>Es posible convertir los TAG: EnvioDTE, EnvioBOLETA y DTE.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();

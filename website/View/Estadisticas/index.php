@@ -1,6 +1,4 @@
-<div class="page-header">
-    <h1>Estadísticas <small>ambiente de <?=$certificacion?'certificación':'producción'?></small></h1>
-</div>
+<div class="page-header"><h1>Estadísticas <small>ambiente de <?=$certificacion?'certificación':'producción'?></small></h1></div>
 
 <div class="row">
     <div class="col-md-3 col-sm-6">
