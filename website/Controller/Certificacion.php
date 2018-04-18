@@ -74,7 +74,7 @@ class Controller_Certificacion extends \Controller_App
     public function index()
     {
         $this->set([
-            'title' => 'Proceso de certificación usando LibreDTE',
+            'title' => 'Certificación DTE usando LibreDTE',
             'nav' => $this->nav,
             'module' => 'certificacion'
         ]);

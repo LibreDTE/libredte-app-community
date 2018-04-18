@@ -1,13 +1,22 @@
-<div class="btn-group" role="group">
+<ul class="nav nav-pills pull-right">
+    <li role="presentation" class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            Etapas <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
 <?php foreach ($nav as $link => $info) : ?>
-  <a href="<?=$_base?>/certificacion<?=$link?>" class="btn btn-default">
-    <span class="<?=$info['icon']?>" />
-    <?=$info['name']?>
-  </a>
+            <li>
+                <a href="<?=$_base?>/certificacion<?=$link?>">
+                    <span class="<?=$info['icon']?>"></span>
+                    <?=$info['name']?>
+                </a>
+            </li>
 <?php endforeach; ?>
-</div>
+        </ul>
+    </li>
+</ul>
 
-<h1>Proceso de certificación &raquo; Etapa 2: simulación</h1>
+<div class="page-header"><h1>Certificación DTE  &raquo; Etapa 2: simulación</h1></div>
 
 <div class="panel panel-default">
     <div class="panel-heading">Instrucciones SII</div>
