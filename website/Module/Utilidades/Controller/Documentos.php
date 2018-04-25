@@ -463,7 +463,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Recurso de la API que genera el PDF de los DTEs contenidos en un EnvioDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-10-05
+     * @version 2018-04-25
      */
     public function _api_generar_pdf_POST()
     {
@@ -519,7 +519,7 @@ class Controller_Documentos extends \Controller_App
             $Emisor = new \website\Dte\Model_Contribuyente($Caratula['RutEmisor']);
         }
         // directorio temporal para guardar los PDF
-        $dir = sys_get_temp_dir().'/dte_'.$Caratula['RutEmisor'].'_'.$Caratula['RutReceptor'].'_'.str_replace(['-', ':', 'T'], '', $Caratula['TmstFirmaEnv']);
+        $dir = sys_get_temp_dir().'/dte_'.$Caratula['RutEmisor'].'_'.$Caratula['RutReceptor'].'_'.str_replace(['-', ':', 'T'], '', $Caratula['TmstFirmaEnv']).'_'.date('U');
         if (is_dir($dir))
             \sasco\LibreDTE\File::rmdir($dir);
         if (!mkdir($dir))
