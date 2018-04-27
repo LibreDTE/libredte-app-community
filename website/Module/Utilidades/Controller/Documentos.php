@@ -463,7 +463,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Recurso de la API que genera el PDF de los DTEs contenidos en un EnvioDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-04-25
+     * @version 2018-04-27
      */
     public function _api_generar_pdf_POST()
     {
@@ -511,13 +511,7 @@ class Controller_Documentos extends \Controller_App
                 $logo = file_get_contents($logo_file);
             }
         }
-        // configuración especifica del formato del PDF si es hoja carta, no se
-        // recibe como parámetro con tal de forzar que los PDF salgan como el
-        // emisor de LibreDTE los tiene configurados (así funciona tanto para
-        // el emisor, como para los receptores u otras generaciones de PDF)
-        if (!$papelContinuo) {
-            $Emisor = new \website\Dte\Model_Contribuyente($Caratula['RutEmisor']);
-        }
+        $Emisor = new \website\Dte\Model_Contribuyente($Caratula['RutEmisor']);
         // directorio temporal para guardar los PDF
         $dir = sys_get_temp_dir().'/dte_'.$Caratula['RutEmisor'].'_'.$Caratula['RutReceptor'].'_'.str_replace(['-', ':', 'T'], '', $Caratula['TmstFirmaEnv']).'_'.date('U');
         if (is_dir($dir))
@@ -540,13 +534,18 @@ class Controller_Documentos extends \Controller_App
             // generar PDF
             $pdf = new \sasco\LibreDTE\Sii\PDF\Dte($papelContinuo);
             $pdf->setFooterText(\sowerphp\core\Configure::read('dte.pdf.footer'));
-            if (isset($logo) and isset($Emisor)) {
-                $pdf->setLogo('@'.$logo, $Emisor->config_pdf_logo_posicion);
-            }
             $pdf->setResolucion(['FchResol'=>$Caratula['FchResol'], 'NroResol'=>$Caratula['NroResol']]);
-            if ($webVerificacion)
+            if ($webVerificacion) {
                 $pdf->setWebVerificacion($webVerificacion);
+            }
+            // configuración especifica del formato del PDF si es hoja carta, no se
+            // recibe como parámetro con tal de forzar que los PDF salgan como el
+            // emisor de LibreDTE los tiene configurados (así funciona tanto para
+            // el emisor, como para los receptores u otras generaciones de PDF)
             if (!$papelContinuo) {
+                if (isset($logo)) {
+                    $pdf->setLogo('@'.$logo, $Emisor->config_pdf_logo_posicion);
+                }
                 $pdf->setPosicionDetalleItem($Emisor->config_pdf_item_detalle_posicion);
                 if ($Emisor->config_pdf_detalle_fuente) {
                     $pdf->setFuenteDetalle($Emisor->config_pdf_detalle_fuente);
@@ -554,9 +553,6 @@ class Controller_Documentos extends \Controller_App
                 if ($Emisor->config_pdf_detalle_ancho) {
                     $pdf->setAnchoColumnasDetalle((array)$Emisor->config_pdf_detalle_ancho);
                 }
-            }
-            // asignar la posición del timbre
-            if (!$papelContinuo) {
                 $pdf->setTimbrePie(!$Emisor->config_pdf_timbre_posicion);
             }
             // si no tiene cedible o el cedible va en el mismo archivo
@@ -588,7 +584,8 @@ class Controller_Documentos extends \Controller_App
         }
         // si solo es un archivo y se pidió no comprimir se entrega directamente
         if (empty($this->Api->data['compress']) and !isset($Documentos[1]) and $cedible!=2) {
-            $this->response->sendFile($file, ['disposition'=>'attachement', 'exit'=>false]);
+            $disposition = !$Emisor->config_pdf_disposition ? 'attachement' : 'inline';
+            $this->response->sendFile($file, ['disposition'=>$disposition, 'exit'=>false]);
             \sowerphp\general\Utility_File::rmdir($dir);
             exit(0);
         }
