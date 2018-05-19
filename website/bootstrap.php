@@ -38,7 +38,7 @@ function libredte_consume($recurso, $datos = [])
 {
     $config = \sowerphp\core\Configure::read('proveedores.api.libredte');
     if (!$config) {
-        throw new \Exception('No tiene acceso a la API de LibreDTE oficial');
+        throw new \Exception('Funcionalidades extras de LibreDTE no disponibles');
     }
     if (!is_array($config)) {
         $config = [

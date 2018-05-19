@@ -216,7 +216,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Acción para verificar la firma de un XML EnvioDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-21
+     * @version 2018-05-18
      */
     public function verificar()
     {
@@ -227,7 +227,7 @@ class Controller_Documentos extends \Controller_App
             $resultado_documentos = [];
             foreach ($EnvioDTE->getDocumentos() as $DTE) {
                 // verificar DTE con funcionalidad avanzada
-                if (\sowerphp\core\Configure::read('proveedores.api.libredte')) {
+                try {
                     $r = libredte_consume('/sii/dte_verificar', [
                         'emisor' => $DTE->getEmisor(),
                         'receptor' => $DTE->getReceptor(),
@@ -249,7 +249,7 @@ class Controller_Documentos extends \Controller_App
                     }
                 }
                 // consultar estado sólo con datos del timbre
-                else {
+                catch (\Exception $e) {
                     $rest = new \sowerphp\core\Network_Http_Rest();
                     $rest->setAuth($this->Auth->User->hash);
                     $response = $rest->post(
