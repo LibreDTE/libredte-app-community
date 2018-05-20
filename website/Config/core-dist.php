@@ -192,6 +192,11 @@ ini_set('max_execution_time', 600);
         'desc' => 'Servicio que genera el PDF a partir del XML del DTE',
         'link' => 'http://blog.libredte.cl/index.php/2017/10/06/personaliza-el-pdf-de-tus-dte-como-quieras'
     ],
+    'dte_intercambio_responder' => [
+        'name' => 'Procesar intercambio',
+        'desc' => 'Servicio que procesa un intercambio de DTE e indica si se debe aceptar o reclamar',
+        'link' => null,
+    ],
 ]);
 
 // configuración para firma electrónica
