@@ -195,7 +195,7 @@ ini_set('max_execution_time', 600);
     'dte_intercambio_responder' => [
         'name' => 'Procesar intercambio',
         'desc' => 'Servicio que procesa un intercambio de DTE e indica si se debe aceptar o reclamar',
-        'link' => null,
+        'link' => 'https://wiki.libredte.cl/doku.php/sowerphp/integracion/procesar_intercambio',
     ],
 ]);
 
