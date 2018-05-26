@@ -201,7 +201,7 @@ class Controller_Estadisticas extends \Controller_App
     /**
      * Método que determina la información sobre la versión de Linux del sistema
      * @author https://stackoverflow.com/a/26863768
-     * @version 2014-11-11
+     * @version 2018-05-22
      */
     private function getLinuxInfo()
     {
@@ -210,13 +210,15 @@ class Controller_Estadisticas extends \Controller_App
         foreach ($files as $file) {
             $lines = array_filter(array_map(function($line) {
                 $parts = explode('=', $line);
-                if (count($parts) !== 2)
+                if (count($parts) !== 2) {
                     return false;
+                }
                 $parts[1] = str_replace(array('"', "'"), '', $parts[1]);
                 return $parts;
             }, file($file)));
-            foreach ($lines as $line)
-                $vars[$line[0]] = $line[1];
+            foreach ($lines as $line) {
+                $vars[trim($line[0])] = trim($line[1]);
+            }
         }
         return $vars;
     }
