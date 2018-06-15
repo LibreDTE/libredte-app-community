@@ -463,7 +463,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Recurso de la API que genera el PDF de los DTEs contenidos en un EnvioDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-04-27
+     * @version 2018-06-15
      */
     public function _api_generar_pdf_POST()
     {
@@ -537,6 +537,9 @@ class Controller_Documentos extends \Controller_App
             $pdf->setResolucion(['FchResol'=>$Caratula['FchResol'], 'NroResol'=>$Caratula['NroResol']]);
             if ($webVerificacion) {
                 $pdf->setWebVerificacion($webVerificacion);
+            }
+            if (!empty($datos['Encabezado']['Emisor']['Sucursal'])) {
+                $pdf->setCasaMatriz($Emisor->direccion.', '.$Emisor->getComuna()->comuna);
             }
             // configuración especifica del formato del PDF si es hoja carta, no se
             // recibe como parámetro con tal de forzar que los PDF salgan como el
