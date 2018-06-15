@@ -538,7 +538,7 @@ class Controller_Documentos extends \Controller_App
             if ($webVerificacion) {
                 $pdf->setWebVerificacion($webVerificacion);
             }
-            if (!empty($datos['Encabezado']['Emisor']['Sucursal'])) {
+            if (!empty($datos['Encabezado']['Emisor']['Sucursal']) or !empty($datos['Encabezado']['Emisor']['CdgSIISucur'])) {
                 $pdf->setCasaMatriz($Emisor->direccion.', '.$Emisor->getComuna()->comuna);
             }
             // configuración especifica del formato del PDF si es hoja carta, no se
