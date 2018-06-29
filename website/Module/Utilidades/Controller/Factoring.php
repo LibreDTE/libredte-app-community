@@ -35,7 +35,7 @@ class Controller_Factoring extends \Controller_App
     /**
      * Acción para crear el AEC
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-12-10
+     * @version 2018-06-29
      */
     public function ceder()
     {
@@ -48,7 +48,12 @@ class Controller_Factoring extends \Controller_App
             // cargar EnvioDTE y extraer DTE a ceder
             $EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
             $EnvioDte->loadXML(file_get_contents($_FILES['xml']['tmp_name']));
-            $Dte = $EnvioDte->getDocumentos()[0];
+            $documentos = $EnvioDte->getDocumentos();
+            if (!$documentos) {
+                \sowerphp\core\Model_Datasource_Session::message('El XML no contiene un DTE', 'error');
+                return;
+            }
+            $Dte = $documentos[0];
             // armar el DTE cedido
             $DteCedido = new \sasco\LibreDTE\Sii\Factoring\DteCedido($Dte);
             $DteCedido->firmar($Firma);
