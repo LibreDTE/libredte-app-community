@@ -26,12 +26,12 @@ namespace website;
 /**
  * Clase abstracta para todos los modelos  (clase sobreescribible)
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2016-09-27
+ * @version 2018-07-04
  */
 class Model_Plural_App extends \sowerphp\app\Model_Plural
 {
 
-    private $Contribuyente; ///< Contribuyente con el que se realizarán las consultas
+    private $Contribuyente = null; ///< Contribuyente con el que se realizarán las consultas
 
     /**
      * Método que asigna el contribuyente que se utilizará en las consultas
@@ -49,12 +49,13 @@ class Model_Plural_App extends \sowerphp\app\Model_Plural
      * de la sesión si no existe seteado
      * @return \website\Dte\Model_Contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-25
+     * @version 2018-07-04
      */
-    public function getContribuyente()
+    public function getContribuyente($readSession = true)
     {
-        if (!isset($this->Contribuyente))
+        if (!isset($this->Contribuyente) and $readSession) {
             $this->Contribuyente = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente');
+        }
         return $this->Contribuyente;
     }
 
