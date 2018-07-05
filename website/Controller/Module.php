@@ -32,19 +32,21 @@ class Controller_Module extends \sowerphp\general\Controller_Module
 {
 
     /**
-     * Método para capturar solicitudes al módulo DTE, si el usuario que lo
-     * solicita es plus se le redireccionará al dashboard en vez del menú
-     * normal de módulos
-     * @version 2017-10-10
+     * Método para capturar solicitudes de módulos, si existe un dashboard
+     * asociado al módulo y el usuario está autorizado para verlo el usuario
+     * será redireccionado automáticamente al dashboard del módulo
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2018-07-04
      */
     public function display()
     {
-        $modulos = (array)\sowerphp\core\Configure::read('app.modulos_empresa');
-        array_unshift($modulos, 'Dte');
-        foreach ($modulos as $modulo) {
-            $nombre = \sowerphp\core\Utility_Inflector::underscore($modulo);
-            if ($this->request->params['module']==$modulo and $this->Auth->User->inGroup($nombre.'_plus') and (class_exists('\\website\\'.$modulo.'\\Controller_Dashboard') or class_exists('\\libredte\\oficial\\'.$modulo.'\\Controller_Dashboard'))) {
-                $this->redirect('/'.$nombre.'/dashboard');
+        $modulo = $this->request->params['module'];
+        $nombre = \sowerphp\core\Utility_Inflector::underscore($modulo);
+        $url = '/'.str_replace('.','/',$nombre).'/dashboard';
+        $class = \sowerphp\core\App::findClass('Controller_Dashboard', $modulo);
+        if ($class != 'Controller_Dashboard') {
+            if ($this->Auth->check($url)) {
+                $this->redirect($url);
             }
         }
         parent::display();
