@@ -223,6 +223,10 @@ class Controller_Documentos extends \Controller_App
         if (isset($_FILES['xml']) and !$_FILES['xml']['error']) {
             $EnvioDTE = new \sasco\LibreDTE\Sii\EnvioDte();
             $EnvioDTE->loadXML(file_get_contents($_FILES['xml']['tmp_name']));
+            if ($EnvioDTE->esBoleta()===null) {
+                \sowerphp\core\Model_Datasource_Session::message('Archivo XML EnvioDTE no válido', 'error');
+                return;
+            }
             // verificar la firma de cada documento
             $resultado_documentos = [];
             foreach ($EnvioDTE->getDocumentos() as $DTE) {

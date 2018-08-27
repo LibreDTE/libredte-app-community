@@ -12,7 +12,7 @@ echo $f->input([
 ]);
 echo $f->end('Realizar verificación');
 
-if (isset($_POST['submit'])) {
+if (!empty($documentos)) {
 
     if (!$EnvioDTE->schemaValidate()) {
         echo '<h2>Validación de esquema</h2>',"\n";
