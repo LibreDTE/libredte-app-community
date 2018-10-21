@@ -56,7 +56,7 @@ echo $f->input([
     'type' => 'file',
     'name' => 'archivo',
     'label' => 'Archivo detalle',
-    'help' => 'Archivo CSV (separado por punto y coma) con el detalle del Libro de Guías de despacho que se desea generar en XML: <a href="https://raw.githubusercontent.com/LibreDTE/libredte-lib/master/examples/libros/libro_guias.csv">ejemplo archivo CSV</a>',
+    'help' => 'Archivo CSV (separado por punto y coma, codificado en UTF-8) con el detalle del Libro de Guías de despacho que se desea generar en XML: <a href="'.$_base.'/dte/archivos/libro_guias.csv" download="libro_guias.csv">ejemplo archivo CSV</a>',
     'check' => 'notempty',
     'attr' => 'accept=".csv"',
 ]);

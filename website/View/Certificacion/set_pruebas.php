@@ -53,7 +53,7 @@ echo $f->input([
     'name' => 'archivo',
     'label' => 'Set pruebas ventas',
     'check' => 'notempty',
-    'help' => 'Archivo del set de pruebas con los casos (de un mismo SET) que se desean generar, debe estar codificado en ISO-8859-1. Puedes ver un ejemplo del archivo que se espera <a href="https://github.com/sascocl/LibreDTE/blob/master/examples/set_pruebas/001-basico.txt" target="_blank">para el set básico</a> o <a href="https://github.com/sascocl/LibreDTE/blob/master/examples/set_pruebas/004-factura_exenta.txt" target="_blank">para el set de factura exenta</a>',
+    'help' => 'Archivo del set de pruebas con los casos (de un mismo SET) que se desean generar, debe estar codificado en ISO-8859-1. Puedes ver un ejemplo del archivo que se espera <a href="'.$_base.'/dte/archivos/set-basico.txt" download="set-basico.txt">para el set básico</a>',
     'attr' => 'accept=".txt"',
 ]);
 echo $f->input([
@@ -129,11 +129,11 @@ echo $f->end('Descargar Libro de Ventas');
 
 <!-- INICIO COMPRAS -->
 <div role="tabpanel" class="tab-pane" id="compras" aria-labelledby="compras-tab">
-    <p>Para generar el libro de compras deberá crear un archivo en formato CSV que contendrá los datos de las compras del set de pruebas entregado por el SII. Luego deberá cargar dicho archivo CSV en el <a href="<?=$_base?>/utilidades/iecv/xml">Generador de XML de Libro de Compra</a> de LibreDTE.</p>
+    <p>Para generar el libro de compras deberá crear un archivo en formato CSV (separado por punto y coma, codificado en UTF-8) que contendrá los datos de las compras del set de pruebas entregado por el SII. Luego deberá cargar dicho archivo CSV en el <a href="<?=$_base?>/utilidades/iecv/xml">Generador de XML de Libro de Compra</a> de LibreDTE.</p>
     <p>Ejemplos archivos:</p>
     <ul>
-        <li><a href="https://github.com/sascocl/LibreDTE/blob/master/examples/set_pruebas/003-compras.txt">Ejemplo set de pruebas de compras entregado por el SII</a></li>
-        <li><a href="https://raw.githubusercontent.com/LibreDTE/libredte-lib/master/examples/libros/libro_compras.csv">Ejemplo archivo CSV generado con los datos del set de pruebas</a></li>
+        <li><a href="<?=$_base?>/dte/archivos/libro_compras.txt" download="libro_compras.txt">Ejemplo set de pruebas de compras entregado por el SII</a></li>
+        <li><a href="<?=$_base?>/dte/archivos/libro_compras.csv" download="libro_compras.csv">Ejemplo archivo CSV generado con los datos del set de pruebas</a></li>
     </ul>
     <a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/utilidades/iecv/xml" role="button">Generar XML de Libro de Compras usando archivo CSV</a>
 </div>
@@ -141,11 +141,11 @@ echo $f->end('Descargar Libro de Ventas');
 
 <!-- INICIO GUÍAS -->
 <div role="tabpanel" class="tab-pane" id="guias" aria-labelledby="guias-tab">
-    <p>Para generar el libro de guías de despacho deberá crear un archivo en formato CSV que contendrá los datos de las guías del set de pruebas entregado por el SII. Luego deberá cargar dicho archivo CSV en el <a href="<?=$_base?>/utilidades/guias/libro">Generador de XML de Libro de Guías de Despacho</a> de LibreDTE.</p>
+    <p>Para generar el libro de guías de despacho deberá crear un archivo en formato CSV (separado por punto y coma, codificado en UTF-8) que contendrá los datos de las guías del set de pruebas entregado por el SII. Luego deberá cargar dicho archivo CSV en el <a href="<?=$_base?>/utilidades/guias/libro">Generador de XML de Libro de Guías de Despacho</a> de LibreDTE.</p>
     <p>Ejemplos archivos:</p>
     <ul>
-        <li><a href="https://github.com/sascocl/LibreDTE/blob/master/examples/set_pruebas/006-libro_guias.txt">Ejemplo set de pruebas de guías entregado por el SII</a></li>
-        <li><a href="https://raw.githubusercontent.com/LibreDTE/libredte-lib/master/examples/libros/libro_guias.csv">Ejemplo archivo CSV generado con los datos del set de pruebas</a></li>
+        <li><a href="<?=$_base?>/dte/archivos/libro_guias.txt" download="libro_guias.txt">Ejemplo set de pruebas de guías entregado por el SII</a></li>
+        <li><a href="<?=$_base?>/dte/archivos/libro_guias.csv" download="libro_guias.csv">Ejemplo archivo CSV generado con los datos del set de pruebas</a></li>
     </ul>
     <a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/utilidades/guias/libro" role="button">Generar XML de Libro de Guías de Despacho usando archivo CSV</a>
 </div>
@@ -223,7 +223,7 @@ echo $f->input([
     'name' => 'archivo',
     'label' => 'Set de pruebas',
     'check' => 'notempty',
-    'help' => 'Archivo CSV (separado por punto y coma) con el set de pruebas de las boletas electrónicas: <a href="https://raw.githubusercontent.com/LibreDTE/libredte-lib/master/examples/set_pruebas/007-boletas.csv">ejemplo archivo CSV</a>',
+    'help' => 'Archivo CSV (separado por punto y coma, codificado en UTF-8) con el set de pruebas de las boletas electrónicas, <a href="'.$_base.'/dte/archivos/boletas.csv" download="boletas.csv">ejemplo archivo CSV</a>',
     'attr' => 'accept=".csv"',
 ]);
 echo $f->input([
