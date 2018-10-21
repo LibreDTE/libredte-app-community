@@ -1,8 +1,8 @@
 <div class="page-header"><h1>Utilidades</h1></div>
 <div class="row">
-    <div class="col-md-4 col-sm-6">
-        <div class="list-group">
-            <div class="list-group-item list-group-item-info">Documentos</div>
+    <div class="col-md-4">
+        <div class="list-group mb-4">
+            <div class="list-group-item list-group-item-primary">Documentos</div>
             <div class="list-group-item">
                 <a href="utilidades/documentos/xml" title="Generar XML de DTE y, opcionalmente, EnvioDTE">
                     <span class="far fa-file-code"></span> Generar XML DTE y EnvioDTE
@@ -24,8 +24,8 @@
                 </a>
             </div>
         </div>
-        <div class="list-group">
-            <div class="list-group-item list-group-item-info">Cesión electrónica (factoring)</div>
+        <div class="list-group mb-4">
+            <div class="list-group-item list-group-item-primary">Cesión electrónica (factoring)</div>
             <div class="list-group-item">
                 <a href="utilidades/factoring/ceder" title="Generar el XML de un archivo electrónico de cesión de un DTE">
                     <span class="far fa-file-code"></span> Ceder documento electrónico
@@ -33,9 +33,9 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4 col-sm-6">
-        <div class="list-group">
-            <div class="list-group-item list-group-item-info">Libro compra y venta</div>
+    <div class="col-md-4">
+        <div class="list-group mb-4">
+            <div class="list-group-item list-group-item-primary">Libro compra y venta</div>
             <div class="list-group-item">
                 <a href="utilidades/iecv/xml" title="Generar XML libro de compras y ventas a partir de un archivo CSV con los datos">
                     <span class="fa fa-book"></span> Generar XML IECV
@@ -47,16 +47,16 @@
                 </a>
             </div>
         </div>
-        <div class="list-group">
-            <div class="list-group-item list-group-item-info">Guías de despacho</div>
+        <div class="list-group mb-4">
+            <div class="list-group-item list-group-item-primary">Guías de despacho</div>
             <div class="list-group-item">
                 <a href="utilidades/guias/libro" title="Generar XML libro de guías de despacho a partir de un archivo CSV con los datos">
                     <span class="fa fa-book"></span> Generar XML libro de guías
                 </a>
             </div>
         </div>
-        <div class="list-group">
-            <div class="list-group-item list-group-item-info">XML</div>
+        <div class="list-group mb-4">
+            <div class="list-group-item list-group-item-primary">XML</div>
             <div class="list-group-item">
                 <a href="utilidades/xml/firmar" title="Generar la firma de un XML e incluira en el mismo archivo">
                     <span class="fa fa-certificate"></span> Firmar XML
@@ -64,25 +64,25 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4 col-sm-6">
-        <div class="list-group">
-            <div class="list-group-item list-group-item-info">Contribuyentes</div>
+    <div class="col-md-4">
+        <div class="list-group mb-4">
+            <div class="list-group-item list-group-item-primary">Contribuyentes</div>
             <div class="list-group-item">
                 <a href="utilidades/contribuyentes/buscar" title="Buscador datos contribuyente">
                     <span class="fa fa-search"></span> Buscar contribuyente
                 </a>
             </div>
         </div>
-        <div class="list-group">
-            <div class="list-group-item list-group-item-info">Firma electrónica</div>
+        <div class="list-group mb-4">
+            <div class="list-group-item list-group-item-primary">Firma electrónica</div>
             <div class="list-group-item">
                 <a href="utilidades/firma_electronica/datos" title="Ver datos de la firma electrónica">
                     <span class="fa fa-certificate"></span> Datos de la firma
                 </a>
             </div>
         </div>
-        <div class="list-group">
-            <div class="list-group-item list-group-item-info">Formatos DTE soportados</div>
+        <div class="list-group mb-4">
+            <div class="list-group-item list-group-item-primary">Formatos DTE soportados</div>
             <div class="list-group-item">
                 <a href="utilidades/formatos" title="Convertir de un formato soportado a JSON">
                     <span class="fas fa-file-alt"></span> Convertir a JSON

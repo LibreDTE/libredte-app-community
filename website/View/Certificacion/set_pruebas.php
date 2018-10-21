@@ -1,26 +1,22 @@
-<ul class="nav nav-pills pull-right">
-    <li role="presentation" class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-            Etapas <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
+<ul class="nav nav-pills float-right">
+    <li class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" id="dropdown_certificacion">Etapas</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown_certificacion">
 <?php foreach ($nav as $link => $info) : ?>
-            <li>
-                <a href="<?=$_base?>/certificacion<?=$link?>">
-                    <span class="<?=$info['icon']?>"></span>
-                    <?=$info['name']?>
-                </a>
-            </li>
+            <a href="<?=$_base?>/certificacion<?=$link?>" class="dropdown-item">
+                <span class="<?=$info['icon']?>"></span>
+                <?=$info['name']?>
+            </a>
 <?php endforeach; ?>
-        </ul>
+        </div>
     </li>
 </ul>
 
 <div class="page-header"><h1>Certificación DTE  &raquo; Etapa 1: set de pruebas</h1></div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">Instrucciones SII</div>
-    <div class="panel-body">
+<div class="card mb-4">
+    <div class="card-header">Instrucciones SII</div>
+    <div class="card-body">
         <p class="lead">Este paso consiste en la recepción en el SII, sin rechazos ni reparos, de un envío de documentos que el postulante construye en base a un <a href="https://maullin.sii.cl/cvc_cgi/dte/pe_generar" title="Generar set de pruebas">archivo con datos de prueba</a> que el SII genera en forma única para cada Postulante, en función de su giro y de los documentos que desea certificar. Además de documentos tributarios electrónicos, en este paso los Postulantes deben enviar también al SII, como parte de las pruebas, la Información Electrónica de Ventas y la Información Electrónica de Compras.</p>
         <p>Se recomienda realizar el Set de Pruebas, una vez que Ud. haya realizado pruebas de envíos exitosos al SII (Aceptados sin Reparos). En cualquier momento, además, tiene la opción de obtener un nuevo Set de Pruebas. Recuerde que los envíos correspondientes al Set de Prueba serán evaluados respecto al último Set de Pruebas que haya bajado.</p>
         <p>Los envíos con los documentos generados a partir de los datos del set de prueba deben ser enviados al SII dentro del plazo de 2 meses contados a partir del momento de obtener el set de prueba. Los envíos que excedan ese plazo serán rechazados y el postulante deberá Generar un Nuevo Set de pruebas para realizar las pruebas. El postulante puede iterar cuanto desee enviando archivos correspondientes al set de prueba. Cuando el resultado de la validación de dichos envíos resulte sin rechazos ni reparos el usuario administrador puede declararlos para la revisión del SII. Esta revisión consistirá en comprobar que el envío haya sido realizado con los datos del set de prueba entregado al postulante. Usando la opción <a href="https://maullin.sii.cl/cvc_cgi/dte/pe_avance1">Declarar Avance de la Postulación</a>, el Postulante puede informar al SII que completó exitosamente el Set de Pruebas, señalando la fecha y número de cada envío para permitir al SII verificar su validez.</p>
@@ -32,23 +28,23 @@
 $(function() {
     var url = document.location.toString();
     if (url.match('#')) {
-        $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+        $('#'+url.split('#')[1]+'-tab').tab('show');
     }
 });
 </script>
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#dte" aria-controls="dte" role="tab" data-toggle="tab">Emisión de DTE</a></li>
-        <li role="presentation"><a href="#ventas" aria-controls="ventas" role="tab" data-toggle="tab">Libro de Ventas</a></li>
-        <li role="presentation"><a href="#compras" aria-controls="compras" role="tab" data-toggle="tab">Libro de Compras</a></li>
-        <li role="presentation"><a href="#guias" aria-controls="guias" role="tab" data-toggle="tab">Libro de Guías de Despacho</a></li>
-        <li role="presentation"><a href="#boletas" aria-controls="boletas" role="tab" data-toggle="tab">Boletas</a></li>
+        <li class="nav-item"><a href="#dte" aria-controls="dte" role="tab" data-toggle="tab" id="dte-tab" class="nav-link active" aria-selected="true">Emisión de DTE</a></li>
+        <li class="nav-item"><a href="#ventas" aria-controls="ventas" role="tab" data-toggle="tab" id="ventas-tab" class="nav-link">Libro de Ventas</a></li>
+        <li class="nav-item"><a href="#compras" aria-controls="compras" role="tab" data-toggle="tab" id="compras-tab" class="nav-link">Libro de Compras</a></li>
+        <li class="nav-item"><a href="#guias" aria-controls="guias" role="tab" data-toggle="tab" id="guias-tab" class="nav-link">Libro de Guías de Despacho</a></li>
+        <li class="nav-item"><a href="#boletas" aria-controls="boletas" role="tab" data-toggle="tab" id="boletas-tab" class="nav-link">Boletas</a></li>
     </ul>
-    <div class="tab-content">
+    <div class="tab-content pt-4">
 
 <!-- INICIO EMISIÓN DTE -->
-<div role="tabpanel" class="tab-pane active" id="dte">
+<div role="tabpanel" class="tab-pane active" id="dte" aria-labelledby="dte-tab">
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin(['action'=>$_base.'/certificacion/set_pruebas_dte', 'id'=>'form_dte', 'onsubmit'=>'Form.check(\'form_dte\')']);
@@ -75,7 +71,7 @@ echo $f->end('Siguiente &raquo;');
 <!-- FIN EMISIÓN DTE -->
 
 <!-- INICIO VENTAS -->
-<div role="tabpanel" class="tab-pane" id="ventas">
+<div role="tabpanel" class="tab-pane" id="ventas" aria-labelledby="ventas-tab">
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin(['action'=>$_base.'/certificacion/set_pruebas_ventas', 'id'=>'form_ventas', 'onsubmit'=>'Form.check(\'form_ventas\')']);
@@ -132,7 +128,7 @@ echo $f->end('Descargar Libro de Ventas');
 <!-- FIN VENTAS -->
 
 <!-- INICIO COMPRAS -->
-<div role="tabpanel" class="tab-pane" id="compras">
+<div role="tabpanel" class="tab-pane" id="compras" aria-labelledby="compras-tab">
     <p>Para generar el libro de compras deberá crear un archivo en formato CSV que contendrá los datos de las compras del set de pruebas entregado por el SII. Luego deberá cargar dicho archivo CSV en el <a href="<?=$_base?>/utilidades/iecv/xml">Generador de XML de Libro de Compra</a> de LibreDTE.</p>
     <p>Ejemplos archivos:</p>
     <ul>
@@ -144,7 +140,7 @@ echo $f->end('Descargar Libro de Ventas');
 <!-- FIN COMPRAS -->
 
 <!-- INICIO GUÍAS -->
-<div role="tabpanel" class="tab-pane" id="guias">
+<div role="tabpanel" class="tab-pane" id="guias" aria-labelledby="guias-tab">
     <p>Para generar el libro de guías de despacho deberá crear un archivo en formato CSV que contendrá los datos de las guías del set de pruebas entregado por el SII. Luego deberá cargar dicho archivo CSV en el <a href="<?=$_base?>/utilidades/guias/libro">Generador de XML de Libro de Guías de Despacho</a> de LibreDTE.</p>
     <p>Ejemplos archivos:</p>
     <ul>
@@ -156,7 +152,7 @@ echo $f->end('Descargar Libro de Ventas');
 <!-- FIN GUÍAS -->
 
 <!-- INICIO BOLETAS -->
-<div role="tabpanel" class="tab-pane" id="boletas">
+<div role="tabpanel" class="tab-pane" id="boletas" aria-labelledby="boletas-tab">
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin(['action'=>$_base.'/certificacion/set_pruebas_boletas', 'id'=>'form_boletas', 'onsubmit'=>'Form.check(\'form_boletas\')']);
@@ -212,6 +208,7 @@ echo $f->input([
 ]);
 echo $f->input([
     'type' => 'date',
+    'id' => 'FchResolBoletas',
     'name' => 'FchResol',
     'label' => 'Fecha resolución',
     'help' => 'Fecha en que fue otorgada la resolución',

@@ -21,32 +21,43 @@ echo $f->end('Ver datos de la firma');
 
 // datos de la firma
 if (!empty($Firma)) : ?>
-<h2>Datos propietario</h2>
-<?php
-$datos = [
+<div class="card mb-4">
+    <div class="card-header">Datos propietario</div>
+    <div class="card-body">
+<?php new \sowerphp\general\View_Helper_Table([
     ['RUN', 'Nombre', 'Email'],
     [$Firma->getID(), $Firma->getName(), $Firma->getEmail()]
-];
-?>
-<?php new \sowerphp\general\View_Helper_Table($datos) ?>
-<h2>Datos emisión</h2>
-<?php
-$datos = [
-    ['Emisor', 'Válida desde', 'Válida hasta'],
-    [$Firma->getIssuer(), $Firma->getFrom(), $Firma->getTo()]
-];
-?>
-<?php new \sowerphp\general\View_Helper_Table($datos) ?>
-<div class="row">
-    <div class="col-md-6">
-        <h2>Clave pública</h2>
-        <pre><?=$Firma->getCertificate()?></pre>
-    </div>
-    <div class="col-md-6">
-        <h2>Clave privada</h2>
-        <pre><?=$Firma->getPrivateKey()?></pre>
+]) ?>
     </div>
 </div>
-<h2>Datos técnicos de la firma</h2>
-<pre><?=print_r($Firma->getData(),true)?></pre>
+<div class="card mb-4">
+    <div class="card-header">Datos emisión</div>
+    <div class="card-body">
+<?php new \sowerphp\general\View_Helper_Table([
+    ['Emisor', 'Válida desde', 'Válida hasta'],
+    [$Firma->getIssuer(), $Firma->getFrom(), $Firma->getTo()]
+]) ?>
+    </div>
+</div>
+<div class="card-deck">
+    <div class="card mb-4">
+        <div class="card-header">Clave pública</div>
+        <div class="card-body">
+            <pre><?=$Firma->getCertificate()?></pre>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-header">Clave privada</div>
+        <div class="card-body">
+            <pre><?=$Firma->getPrivateKey()?></pre>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">Datos técnicos de la firma</div>
+    <div class="card-body">
+        <pre><?=print_r($Firma->getData(),true)?></pre>
+    </div>
+</div>
 <?php endif;

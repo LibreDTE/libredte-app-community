@@ -1,29 +1,25 @@
-<ul class="nav nav-pills pull-right">
-    <li role="presentation" class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-            Etapas <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
+<ul class="nav nav-pills float-right">
+    <li class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" id="dropdown_certificacion">Etapas</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown_certificacion">
 <?php foreach ($nav as $link => $info) : ?>
-            <li>
-                <a href="<?=$_base?>/certificacion<?=$link?>">
-                    <span class="<?=$info['icon']?>"></span>
-                    <?=$info['name']?>
-                </a>
-            </li>
+            <a href="<?=$_base?>/certificacion<?=$link?>" class="dropdown-item">
+                <span class="<?=$info['icon']?>"></span>
+                <?=$info['name']?>
+            </a>
 <?php endforeach; ?>
-        </ul>
+        </div>
     </li>
 </ul>
 
 <div class="page-header"><h1>Certificación DTE  &raquo; Etapa 3: intercambio</h1></div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">Instrucciones SII</div>
-    <div class="panel-body">
+<div class="card mb-4">
+    <div class="card-header">Instrucciones SII</div>
+    <div class="card-body">
         <p class="lead">En esta etapa el SII envía documentos tributarios electrónicos al contribuyente postulante para comprobar que éste entrega un acuse de recibo del envío y la aceptación o rechazo de los documentos enviados, de acuerdo a las definiciones que el SII ha establecido para el intercambio de información entre contribuyentes autorizados.</p>
         <p>La descarga de los documentos tributarios electrónicos y la posterior carga de los archivos con las respuestas se hace a través del <a href="https://www4.sii.cl/pfeInternet">Menú Set de Intercambio</a>.</p>
-        <p>Una vez que el SII haya revisado y verificado la consistencia de las respuestas enviadas, se considera que la empresa ha superado la prueba de Intercambio de Información y la empresa pasará a la siguiente etapa del proceso de certificación, <a href="muestras_impresas">las pruebas de impresión</a>.</p>
+        <p>Una vez que el SII haya revisado y verificado la consistencia de las respuestas enviadas, se considera que la empresa ha superado la prueba de Intercambio de Información y la empresa pasará a la siguiente etapa del proceso de certificación, <a href="muestras_pdf">las pruebas de PDF</a>.</p>
     </div>
 </div>
 

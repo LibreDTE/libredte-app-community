@@ -24,7 +24,7 @@
 // Menú para el módulo
 Configure::write('nav.module', [
     '/usuarios' => [
-        'name' => 'Usuarios',
+        'name' => 'Usuarios del sistema',
         'desc' => 'Mantenedor de usuarios y grupos del sistema',
         'icon' => 'fa fa-users',
     ],

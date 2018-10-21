@@ -27,7 +27,7 @@ namespace website;
 /**
  * Controlador para el proceso de certificación ante el SII
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2016-02-15
+ * @version 2018-10-15
  */
 class Controller_Certificacion extends \Controller_App
 {
@@ -48,8 +48,8 @@ class Controller_Certificacion extends \Controller_App
             'desc' => '',
             'icon' => 'fas fa-exchange-alt',
         ],
-        '/muestras_impresas' => [
-            'name' => 'Etapa 4: Muestras impresas',
+        '/muestras_pdf' => [
+            'name' => 'Etapa 4: Muestras PDF',
             'desc' => '',
             'icon' => 'far fa-file-pdf',
         ],
@@ -764,9 +764,9 @@ class Controller_Certificacion extends \Controller_App
      * Acción para la etapa de certificación de generación de las muestras
      * impresas
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-10
+     * @version 2018-10-15
      */
-    public function muestras_impresas()
+    public function muestras_pdf()
     {
         $this->set([
             'nav' => $this->nav,
