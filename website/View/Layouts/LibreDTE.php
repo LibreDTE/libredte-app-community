@@ -180,8 +180,8 @@ foreach ($_nav_app as $link=>&$info) {
 }
 ?>
                             <div class="dropdown-divider"></div>
-                            <a href="<?=$_base?>/usuarios/perfil" class="dropdown-item"><span class="fa fa-user" aria-hidden="true"></span> Perfil de usuario</a>
-                            <a href="<?=$_base?>/usuarios/salir" class="dropdown-item"><span class="fas fa-sign-out-alt" aria-hidden="true"></span> Cerrar sesión</a>
+                            <a href="<?=$_base?>/usuarios/perfil" class="dropdown-item"><span class="fa fa-user fa-fw" aria-hidden="true"></span> Perfil de usuario</a>
+                            <a href="<?=$_base?>/usuarios/salir" class="dropdown-item"><span class="fas fa-sign-out-alt fa-fw" aria-hidden="true"></span> Cerrar sesión</a>
                         </div>
                     </li>
 <?php endif; ?>
