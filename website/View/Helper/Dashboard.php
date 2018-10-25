@@ -34,16 +34,30 @@ class View_Helper_Dashboard
     /**
      * Método que genera las tarjetas para el dashboard
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-10-16
+     * @version 2018-10-24
      */
-    public static function cards(array $cards, $plantilla = 'default')
+    public static function cards(array $cards, $config = null)
     {
-        $html = file_get_contents(__DIR__.'/Dashboard/'.$plantilla.'_cards.html');
+        if (!$config) {
+            $config = [];
+        }
+        else if (is_string($config)) {
+            $config = ['template' => $config];
+        }
+        $config = array_merge([
+            'template' => 'default',
+            'link-display' => 'none',
+        ], $config);
+        $html = file_get_contents(__DIR__.'/Dashboard/'.$config['template'].'_cards.html');
+        unset($config['template']);
         $vars = [];
         $n_cards = count($cards);
         foreach($cards[0] as $key => $val) {
             for ($i=1; $i<=$n_cards; $i++) {
                 $vars[] = '{card_'.$i.'_'.$key.'}';
+                if ($key=='link') {
+                    $config['link-display'] = 'block';
+                }
             }
         }
         $i = 1;
@@ -59,6 +73,10 @@ class View_Helper_Dashboard
         }
         sort($vars);
         ksort($vals);
+        foreach($config as $key => $val) {
+            $vars[] = '{'.$key.'}';
+            $vals[] = $val;
+        }
         return str_replace($vars, $vals, $html);
     }
 

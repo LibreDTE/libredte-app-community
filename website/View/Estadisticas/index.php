@@ -1,116 +1,70 @@
 <div class="page-header"><h1>Estadísticas <small>ambiente de <?=$certificacion?'certificación':'producción'?></small></h1></div>
 
-<div class="row">
-    <div class="col-md-3 col-sm-6">
-        <div class="panel panel-red">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-users fa-4x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                        <div style="font-size:36px"><?=num($contribuyentes_sii)?></div>
-                        <div>Proveedores y/o clientes</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="panel panel-green">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fab fa-rebel fa-4x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                        <div style="font-size:36px"><?=num($usuarios_registrados)?></div>
-                        <div>Usuarios registrados</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="panel panel-yellow">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-building fa-4x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                        <div style="font-size:36px"><?=num($empresas_registradas)?></div>
-                        <div>Empresas registradas</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-file fa-4x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                        <div style="font-size:36px"><?=num($documentos_emitidos)?></div>
-                        <div>Documentos emitidos</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<?php
+echo View_Helper_Dashboard::cards([
+    [
+        'icon' => 'fa fa-users',
+        'quantity' => $contribuyentes_sii,
+        'title' => 'Contribuyentes',
+    ],
+    [
+        'icon' => 'fab fa-rebel ',
+        'quantity' => $usuarios_registrados,
+        'title' => 'Usuarios registrados',
+    ],
+    [
+        'icon' => 'fas fa-building',
+        'quantity' => $empresas_registradas,
+        'title' => 'Empresas registradas',
+    ],
+    [
+        'icon' => 'fas fa-file',
+        'quantity' => $documentos_emitidos,
+        'title' => 'Documentos emitidos',
+    ],
+]);
+?>
 
 <div class="row">
     <!-- PANEL IZQUIERDA -->
     <div class="col-md-9">
         <!-- grafico dte emitidos por día -->
-        <div class="row">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="far fa-chart-bar fa-fw"></i> Documentos emitidos por día
-                </div>
-                <div class="panel-body">
-                    <div id="grafico-documentos_diarios"></div>
-                </div>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="far fa-chart-bar fa-fw"></i> Documentos emitidos por día
+            </div>
+            <div class="card-body">
+                <div id="grafico-documentos_diarios"></div>
             </div>
         </div>
         <!-- fin grafico dte emitidos por día -->
         <!-- grafico usuarios mensuales -->
-        <div class="row">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="far fa-chart-bar fa-fw"></i> Usuarios mensuales que iniciaron sesión por última vez
-                </div>
-                <div class="panel-body">
-                    <div id="grafico-usuarios_mensuales"></div>
-                </div>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="far fa-chart-bar fa-fw"></i> Usuarios mensuales que iniciaron sesión por última vez
+            </div>
+            <div class="card-body">
+                <div id="grafico-usuarios_mensuales"></div>
             </div>
         </div>
         <!-- fin grafico usuarios mensuales -->
         <!-- inicio grafico empresas por comuna -->
-        <div class="row">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="far fa-map fa-fw"></i> Empresas registradas por comuna
-                </div>
-                <div class="panel-body">
-                    <div id="grafico-contribuyentes_por_comuna"></div>
-                </div>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="far fa-map fa-fw"></i> Empresas registradas por comuna
+            </div>
+            <div class="card-body">
+                <div id="grafico-contribuyentes_por_comuna"></div>
             </div>
         </div>
         <!-- fin grafico empresas por comuna -->
         <!-- inicio grafico empresas por actividad económica -->
-        <div class="row">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="far fa-map fa-fw"></i> Empresas registradas por actividad económica
-                </div>
-                <div class="panel-body">
-                    <div id="grafico-contribuyentes_por_actividad"></div>
-                </div>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="far fa-map fa-fw"></i> Empresas registradas por actividad económica
+            </div>
+            <div class="card-body">
+                <div id="grafico-contribuyentes_por_actividad"></div>
             </div>
         </div>
         <!-- fin grafico empresas por actividad económica -->
@@ -119,12 +73,12 @@
     <!-- PANEL DERECHA -->
     <div class="col-md-3">
         <!-- empresas activas -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="card mb-4">
+            <div class="card-header">
                 <i class="fa fa-building fa-fw"></i>
                 Empresas con movimientos
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <div class="list-group">
 <?php foreach ($contribuyentes_activos as $c): ?>
                     <div class="list-group-item"><?=$c['razon_social']?></div>
