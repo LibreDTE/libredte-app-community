@@ -1,7 +1,7 @@
 <ul class="nav nav-pills float-right">
     <li class="nav-item dropdown">
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" id="dropdown_certificacion">Etapas</a>
-        <div class="dropdown-menu" aria-labelledby="dropdown_certificacion">
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown_certificacion">
 <?php foreach ($nav as $link => $info) : ?>
             <a href="<?=$_base?>/certificacion<?=$link?>" class="dropdown-item">
                 <span class="<?=$info['icon']?>"></span>
