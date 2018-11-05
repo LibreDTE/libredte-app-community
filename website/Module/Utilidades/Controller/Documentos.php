@@ -536,7 +536,7 @@ class Controller_Documentos extends \Controller_App
                 $TED = $DTE->getTED();
             }
             // generar PDF
-            $pdf = new \sasco\LibreDTE\Sii\PDF\Dte($papelContinuo);
+            $pdf = new \sasco\LibreDTE\Sii\Dte\PDF\Dte($papelContinuo);
             $pdf->setFooterText(\sowerphp\core\Configure::read('dte.pdf.footer'));
             $pdf->setResolucion(['FchResol'=>$Caratula['FchResol'], 'NroResol'=>$Caratula['NroResol']]);
             if ($webVerificacion) {
@@ -593,6 +593,132 @@ class Controller_Documentos extends \Controller_App
         if (empty($this->Api->data['compress']) and !isset($Documentos[1]) and $cedible!=2) {
             $disposition = !$Emisor->config_pdf_disposition ? 'attachement' : 'inline';
             $this->response->sendFile($file, ['disposition'=>$disposition, 'exit'=>false]);
+            \sowerphp\general\Utility_File::rmdir($dir);
+            exit(0);
+        }
+        // entregar archivo comprimido que incluirá cada uno de los DTEs
+        else {
+            \sasco\LibreDTE\File::compress($dir, ['format'=>'zip', 'delete'=>true]);
+        }
+    }
+
+    /**
+     * Recurso de la API que genera el código ESCPOS de los DTEs contenidos en un EnvioDTE
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2018-11-04
+     */
+    public function _api_generar_escpos_POST()
+    {
+        // si no hay soporte para usar ESCPOS se indica
+        if (!class_exists('\sasco\LibreDTE\Sii\Dte\ESCPOS\Dte')) {
+            $this->Api->send('Esta versión de LibreDTE no permite generar código ESCPOS', 500);
+        }
+        // verificar si se pasaron credenciales de un usuario
+        $User = $this->Api->getAuthUser();
+        if (is_string($User)) {
+            $this->Api->send($User, 401);
+        }
+        // si hubo problemas al subir el archivo error
+        if (!isset($this->Api->data['xml']) and (!isset($_FILES['xml']) or $_FILES['xml']['error'])) {
+            $this->Api->send('Hubo algún problema al recibir el archivo XML con el EnvioDTE', 400);
+        }
+        // recuperar contenido del archivo xml
+        if (isset($this->Api->data['xml'])) {
+            $xml = base64_decode($this->Api->data['xml']);
+        } else {
+            $xml = file_get_contents($_FILES['xml']['tmp_name']);
+        }
+        // crear flag cedible
+        $cedible = !empty($this->Api->data['cedible']) ? (int)$this->Api->data['cedible'] : 0;
+        // crear opción para web de verificación
+        $webVerificacion = !empty($this->Api->data['webVerificacion']) ? $this->Api->data['webVerificacion'] : false;
+        // copias
+        $copias_tributarias = isset($this->Api->data['copias_tributarias']) ? (int)$this->Api->data['copias_tributarias'] : 1;
+        $copias_cedibles = isset($this->Api->data['copias_cedibles']) ? (int)$this->Api->data['copias_cedibles'] : 1;
+        // sin límite de tiempo para generar documentos
+        set_time_limit(0);
+        // Cargar EnvioDTE y extraer arreglo con datos de carátula y DTEs
+        $EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
+        if (!$EnvioDte->loadXML($xml)) {
+            $this->Api->send('Hubo algún problema al recibir el archivo XML con el EnvioDTE', 400);
+        }
+        $Caratula = $EnvioDte->getCaratula();
+        $Documentos = $EnvioDte->getDocumentos(false); // usar saveXML en vez de C14N
+        // recuperar contenido del logo (si existe)
+        if (isset($this->Api->data['logo'])) {
+            $logo = base64_decode($this->Api->data['logo']);
+        } else if (isset($_FILES['logo']) and !$_FILES['logo']['error']) {
+            $logo = file_get_contents($_FILES['logo']['tmp_name']);
+        } else {
+            $logo_file = DIR_STATIC.'/contribuyentes/'.substr($Caratula['RutEmisor'], 0, -2).'/logo.png';
+            if (is_readable($logo_file)) {
+                $logo = file_get_contents($logo_file);
+            }
+        }
+        $Emisor = new \website\Dte\Model_Contribuyente($Caratula['RutEmisor']);
+        // directorio temporal para guardar los códigos ESCPOS
+        $dir = sys_get_temp_dir().'/dte_'.$Caratula['RutEmisor'].'_'.$Caratula['RutReceptor'].'_'.str_replace(['-', ':', 'T'], '', $Caratula['TmstFirmaEnv']).'_'.date('U');
+        if (is_dir($dir)) {
+            \sasco\LibreDTE\File::rmdir($dir);
+        }
+        if (!mkdir($dir)) {
+            $this->Api->send('No fue posible crear directorio temporal para DTEs', 507);
+        }
+        // procesar cada DTEs e ir agregándolo al código ESCPOS
+        foreach ($Documentos as $DTE) {
+            $datos = $DTE->getDatos();
+            if (!$datos) {
+                $this->Api->send('No se pudieron obtener los datos de un DTE', 500);
+            }
+            // si el Folio es alfanumérico entonces es una cotización
+            if (!is_numeric($datos['Encabezado']['IdDoc']['Folio'])) {
+                $datos['Encabezado']['IdDoc']['TipoDTE'] = 0;
+                $TED = null;
+            } else {
+                $TED = $DTE->getTED();
+            }
+            // generar ESCPOS
+            $escpos = new \sasco\LibreDTE\Sii\Dte\ESCPOS\Dte();
+            $escpos->setResolucion(['FchResol'=>$Caratula['FchResol'], 'NroResol'=>$Caratula['NroResol']]);
+            if ($webVerificacion) {
+                $escpos->setWebVerificacion($webVerificacion);
+            }
+            if (!empty($datos['Encabezado']['Emisor']['Sucursal']) or !empty($datos['Encabezado']['Emisor']['CdgSIISucur'])) {
+                $escpos->setCasaMatriz($Emisor->direccion.', '.$Emisor->getComuna()->comuna);
+            }
+            if (isset($logo)) {
+                $escpos->setLogo('@'.$logo);
+            }
+            // si no tiene cedible o el cedible va en el mismo archivo
+            if ($cedible!=2) {
+                for ($i=0; $i<$copias_tributarias; $i++)
+                    $escpos->agregar($datos, $TED);
+                if ($cedible and $DTE->esCedible()) {
+                    $escpos->setCedible(true);
+                    for ($i=0; $i<$copias_cedibles; $i++) {
+                        $escpos->agregar($datos, $TED);
+                    }
+                }
+                $file = $dir.'/dte_'.$Caratula['RutEmisor'].'_'.$DTE->getID().'.bin';
+                file_put_contents($file, $escpos->dump());
+            }
+            // si el cedible va en un archivo separado
+            else {
+                $escpos_cedible = clone $escpos;
+                $escpos->agregar($datos, $TED);
+                $file = $dir.'/dte_'.$Caratula['RutEmisor'].'_'.$DTE->getID().'.bin';
+                file_put_contents($file, $escpos->dump());
+                if ($DTE->esCedible()) {
+                    $escpos_cedible->setCedible(true);
+                    $escpos_cedible->agregar($datos, $TED);
+                    $file = $dir.'/dte_'.$Caratula['RutEmisor'].'_'.$DTE->getID().'_CEDIBLE.bin';
+                    file_put_contents($file, $escpos_cedible->dump());
+                }
+            }
+        }
+        // si solo es un archivo y se pidió no comprimir se entrega directamente
+        if (empty($this->Api->data['compress']) and !isset($Documentos[1]) and $cedible!=2) {
+            $this->response->sendFile($file, ['disposition'=>'attachement', 'exit'=>false]);
             \sowerphp\general\Utility_File::rmdir($dir);
             exit(0);
         }

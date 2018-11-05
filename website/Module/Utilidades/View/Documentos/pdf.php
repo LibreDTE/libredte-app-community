@@ -28,7 +28,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'papelContinuo',
     'label' => 'Tipo papel',
-    'options' => \sasco\LibreDTE\Sii\PDF\Dte::$papel,
+    'options' => \sasco\LibreDTE\Sii\Dte\PDF\Dte::$papel,
     'value' => isset($_POST['papelContinuo']) ? $_POST['papelContinuo'] : 0,
 ]);
 echo $f->input([

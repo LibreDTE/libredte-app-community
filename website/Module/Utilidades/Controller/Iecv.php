@@ -198,7 +198,7 @@ class Controller_Iecv extends \Controller_App
         if (isset($_POST['submit']) and !empty($_FILES['xml']) and !$_FILES['xml']['error']) {
             $LibroCompraVenta = new \sasco\LibreDTE\Sii\LibroCompraVenta();
             $LibroCompraVenta->loadXML(file_get_contents($_FILES['xml']['tmp_name']));
-            $pdf = new \sasco\LibreDTE\Sii\PDF\LibroCompraVenta();
+            $pdf = new \sasco\LibreDTE\Sii\Dte\PDF\LibroCompraVenta();
             $pdf->setFooterText(\sowerphp\core\Configure::read('dte.pdf.footer'));
             $pdf->agregar($LibroCompraVenta->toArray());
             $pdf->Output($LibroCompraVenta->getID().'.pdf', 'D');
