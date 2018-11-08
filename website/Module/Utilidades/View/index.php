@@ -25,6 +25,14 @@
             </div>
         </div>
         <div class="list-group mb-4">
+            <div class="list-group-item list-group-item-primary">Boletas</div>
+            <div class="list-group-item">
+                <a href="utilidades/boletas/rcof" title="Generar el XML del reporte de consumo de folios (RCOF)">
+                    <span class="far fa-file-code"></span> Generar RCOF
+                </a>
+            </div>
+        </div>
+        <div class="list-group mb-4">
             <div class="list-group-item list-group-item-primary">Cesión electrónica (factoring)</div>
             <div class="list-group-item">
                 <a href="utilidades/factoring/ceder" title="Generar el XML de un archivo electrónico de cesión de un DTE">
