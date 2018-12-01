@@ -64,7 +64,7 @@ class View_Helper_Dashboard
         $vals = [];
         foreach ($cards as $card) {
             foreach($card as $key => $val) {
-                if ($key == 'quantity') {
+                if ($key == 'quantity' and is_numeric($val)) {
                     $val = num($val);
                 }
                 $vals['{card_'.$i.'_'.$key.'}'] = $val;
