@@ -34,7 +34,7 @@ class View_Helper_Dashboard
     /**
      * Método que genera las tarjetas para el dashboard
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-10-24
+     * @version 2018-12-20
      */
     public static function cards(array $cards, $config = null)
     {
@@ -64,8 +64,13 @@ class View_Helper_Dashboard
         $vals = [];
         foreach ($cards as $card) {
             foreach($card as $key => $val) {
-                if ($key == 'quantity' and is_numeric($val)) {
-                    $val = num($val);
+                if ($key == 'quantity') {
+                    if (!$val) {
+                        $val = 0;
+                    }
+                    if (is_numeric($val)) {
+                        $val = num($val);
+                    }
                 }
                 $vals['{card_'.$i.'_'.$key.'}'] = $val;
             }
