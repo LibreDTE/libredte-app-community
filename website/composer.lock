@@ -481,12 +481,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "9b7b51f5a24878f91f75992ad0cb50882d2f45b6"
+                "reference": "be1471e07b64a3b9648b28109ecab8d62da1b447"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/9b7b51f5a24878f91f75992ad0cb50882d2f45b6",
-                "reference": "9b7b51f5a24878f91f75992ad0cb50882d2f45b6",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/be1471e07b64a3b9648b28109ecab8d62da1b447",
+                "reference": "be1471e07b64a3b9648b28109ecab8d62da1b447",
                 "shasum": ""
             },
             "require": {
@@ -524,7 +524,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2018-11-19 22:52:49"
+            "time": "2018-12-21 02:09:16"
         },
         {
             "name": "symfony/polyfill-mbstring",
