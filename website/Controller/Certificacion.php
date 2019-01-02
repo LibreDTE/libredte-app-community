@@ -207,7 +207,7 @@ class Controller_Certificacion extends \Controller_App
      * Acción que genera EnvioBOLETA, consumo de folios, libro de boletas y las
      * muestras impresas a partir de un set de pruebas de boleta electrónica
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-08-24
+     * @version 2018-12-17
      */
     public function set_pruebas_boletas()
     {
@@ -251,11 +251,11 @@ class Controller_Certificacion extends \Controller_App
                 'PrcItem' => $data[$i][5],
             ];
             // recordar folios anulados
-            if ($data[$i][6]) {
+            if (!empty($data[$i][6])) {
                 $folios_anulados[] = $folio_actual;
             }
             // recordar folios rebajados
-            if ($data[$i][7]) {
+            if (!empty($data[$i][7])) {
                 $folios_rebajados[$folio_actual] = $data[$i][7];
             }
         }
@@ -336,94 +336,104 @@ class Controller_Certificacion extends \Controller_App
         }
         // crear set de notas de crédito
         $notas_credito = [];
-        $n_folios_anulados = count($folios_anulados);
-        for ($i=0; $i<$n_folios_anulados; $i++) {
-            $notas_credito[] = \sasco\LibreDTE\Arreglo::mergeRecursiveDistinct($set_pruebas[$folios_anulados[$i]], [
-                'Encabezado' => [
-                    'IdDoc' => [
-                        'TipoDTE' => 61,
-                        'Folio' => $folios[61]+$i,
-                        'MntBruto' => 1,
+        if ($folios_anulados) {
+            $n_folios_anulados = count($folios_anulados);
+            for ($i=0; $i<$n_folios_anulados; $i++) {
+                $notas_credito[] = \sasco\LibreDTE\Arreglo::mergeRecursiveDistinct($set_pruebas[$folios_anulados[$i]], [
+                    'Encabezado' => [
+                        'IdDoc' => [
+                            'TipoDTE' => 61,
+                            'Folio' => $folios[61]+$i,
+                            'MntBruto' => 1,
+                        ],
+                        'Totales' => [
+                            // estos valores serán calculados automáticamente
+                            'MntNeto' => 0,
+                            'TasaIVA' => \sasco\LibreDTE\Sii::getIVA(),
+                            'IVA' => 0,
+                            'MntTotal' => 0,
+                        ],
                     ],
-                    'Totales' => [
-                        // estos valores serán calculados automáticamente
-                        'MntNeto' => 0,
-                        'TasaIVA' => \sasco\LibreDTE\Sii::getIVA(),
-                        'IVA' => 0,
-                        'MntTotal' => 0,
+                    'Referencia' => [
+                        'TpoDocRef' => $set_pruebas[$folios_anulados[$i]]['Encabezado']['IdDoc']['TipoDTE'],
+                        'FolioRef' => $set_pruebas[$folios_anulados[$i]]['Encabezado']['IdDoc']['Folio'],
+                        'CodRef' => 1,
+                        'RazonRef' => 'ANULA BOLETA',
                     ],
-                ],
-                'Referencia' => [
-                    'TpoDocRef' => $set_pruebas[$folios_anulados[$i]]['Encabezado']['IdDoc']['TipoDTE'],
-                    'FolioRef' => $set_pruebas[$folios_anulados[$i]]['Encabezado']['IdDoc']['Folio'],
-                    'CodRef' => 1,
-                    'RazonRef' => 'ANULA BOLETA',
-                ],
-            ]);
-        }
-        $i = 0;
-        foreach ($folios_rebajados as $f => $r) {
-            $Detalle = $set_pruebas[$f]['Detalle'];
-            foreach ($Detalle as &$d) {
-                $d['QtyItem'] = $d['QtyItem']*($r/100);
+                ]);
             }
-            $notas_credito[] = \sasco\LibreDTE\Arreglo::mergeRecursiveDistinct($set_pruebas[$f], [
-                'Encabezado' => [
-                    'IdDoc' => [
-                        'TipoDTE' => 61,
-                        'Folio' => $folios[61]+$i+$n_folios_anulados,
-                        'MntBruto' => 1,
-                    ],
-                    'Totales' => [
-                        // estos valores serán calculados automáticamente
-                        'MntNeto' => 0,
-                        'TasaIVA' => \sasco\LibreDTE\Sii::getIVA(),
-                        'IVA' => 0,
-                        'MntTotal' => 0,
-                    ],
-                ],
-                'Detalle' => $Detalle,
-                'Referencia' => [
-                    'TpoDocRef' => $set_pruebas[$f]['Encabezado']['IdDoc']['TipoDTE'],
-                    'FolioRef' => $set_pruebas[$f]['Encabezado']['IdDoc']['Folio'],
-                    'CodRef' => 3,
-                    'RazonRef' => 'SE REBAJA EN UN '.$r.'%',
-                ],
-            ]);
-            $i++;
         }
-        $EnvioDTE = new \sasco\LibreDTE\Sii\EnvioDte();
-        foreach ($notas_credito as $documento) {
-            $DTE = new \sasco\LibreDTE\Sii\Dte($documento);
-            if (!$DTE->timbrar($Folios[$DTE->getTipo()]))
-                break;
-            if (!$DTE->firmar($Firma))
-                break;
-            $EnvioDTE->agregar($DTE);
+        if ($folios_rebajados) {
+            $i = 0;
+            foreach ($folios_rebajados as $f => $r) {
+                $Detalle = $set_pruebas[$f]['Detalle'];
+                foreach ($Detalle as &$d) {
+                    $d['QtyItem'] = $d['QtyItem']*($r/100);
+                }
+                $notas_credito[] = \sasco\LibreDTE\Arreglo::mergeRecursiveDistinct($set_pruebas[$f], [
+                    'Encabezado' => [
+                        'IdDoc' => [
+                            'TipoDTE' => 61,
+                            'Folio' => $folios[61]+$i+$n_folios_anulados,
+                            'MntBruto' => 1,
+                        ],
+                        'Totales' => [
+                            // estos valores serán calculados automáticamente
+                            'MntNeto' => 0,
+                            'TasaIVA' => \sasco\LibreDTE\Sii::getIVA(),
+                            'IVA' => 0,
+                            'MntTotal' => 0,
+                        ],
+                    ],
+                    'Detalle' => $Detalle,
+                    'Referencia' => [
+                        'TpoDocRef' => $set_pruebas[$f]['Encabezado']['IdDoc']['TipoDTE'],
+                        'FolioRef' => $set_pruebas[$f]['Encabezado']['IdDoc']['Folio'],
+                        'CodRef' => 3,
+                        'RazonRef' => 'SE REBAJA EN UN '.$r.'%',
+                    ],
+                ]);
+                $i++;
+            }
         }
-        $EnvioDTE->setFirma($Firma);
-        $EnvioDTE->setCaratula($caratula);
-        $EnvioDTE->generar();
-        if ($EnvioDTE->schemaValidate()) {
+        if ($notas_credito) {
+            $EnvioDTE = new \sasco\LibreDTE\Sii\EnvioDte();
+            foreach ($notas_credito as $documento) {
+                $DTE = new \sasco\LibreDTE\Sii\Dte($documento);
+                if (!$DTE->timbrar($Folios[$DTE->getTipo()])) {
+                    break;
+                }
+                if (!$DTE->firmar($Firma)) {
+                    break;
+                }
+                $EnvioDTE->agregar($DTE);
+            }
+            $EnvioDTE->setFirma($Firma);
+            $EnvioDTE->setCaratula($caratula);
+            $EnvioDTE->generar();
+            if ($EnvioDTE->schemaValidate()) {
                 file_put_contents($dir.'/xml/NotasCredito.xml', $EnvioDTE->generar());
-        } else {
-            \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible generar NotasCredito.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
-            );
-            $this->redirect('/certificacion/set_pruebas#boletas');
+            } else {
+                \sowerphp\core\Model_Datasource_Session::message(
+                    'No fue posible generar NotasCredito.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+                );
+                $this->redirect('/certificacion/set_pruebas#boletas');
+            }
         }
         // crear consumo de folios
         $EnvioBOLETA = new \sasco\LibreDTE\Sii\EnvioDte();
         $EnvioBOLETA->loadXML(file_get_contents($dir.'/xml/EnvioBOLETA.xml'));
-        $EnvioDTE = new \sasco\LibreDTE\Sii\EnvioDte();
-        $EnvioDTE->loadXML(file_get_contents($dir.'/xml/NotasCredito.xml'));
         $ConsumoFolio = new \sasco\LibreDTE\Sii\ConsumoFolio();
         $ConsumoFolio->setFirma($Firma);
         foreach ($EnvioBOLETA->getDocumentos() as $Dte) {
             $ConsumoFolio->agregar($Dte->getResumen());
         }
-        foreach ($EnvioDTE->getDocumentos() as $Dte) {
-            $ConsumoFolio->agregar($Dte->getResumen());
+        if (is_readable($dir.'/xml/NotasCredito.xml')) {
+            $EnvioDTE = new \sasco\LibreDTE\Sii\EnvioDte();
+            $EnvioDTE->loadXML(file_get_contents($dir.'/xml/NotasCredito.xml'));
+            foreach ($EnvioDTE->getDocumentos() as $Dte) {
+                $ConsumoFolio->agregar($Dte->getResumen());
+            }
         }
         $CaratulaEnvioBOLETA = $EnvioBOLETA->getCaratula();
         $ConsumoFolio->setCaratula([
@@ -482,21 +492,23 @@ class Controller_Certificacion extends \Controller_App
         ];
         $response = $rest->post($this->request->url.'/api/utilidades/documentos/generar_pdf', $data);
         if ($response['status']['code']!=200) {
-            \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
+            \sowerphp\core\Model_Datasource_Session::message('No fue posible crear PDF boletas: '.$response['body'], 'error');
             $this->redirect('/certificacion/set_pruebas#boletas');
         }
         file_put_contents($dir.'/pdf/EnvioBOLETA.zip', $response['body']);
-        $data = [
-            'xml' => base64_encode(file_get_contents($dir.'/xml/NotasCredito.xml')),
-            'cedible' => true,
-            'compress' => true,
-        ];
-        $response = $rest->post($this->request->url.'/api/utilidades/documentos/generar_pdf', $data);
-        if ($response['status']['code']!=200) {
-            \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
-            $this->redirect('/certificacion/set_pruebas#boletas');
+        if (is_readable($dir.'/xml/NotasCredito.xml')) {
+            $data = [
+                'xml' => base64_encode(file_get_contents($dir.'/xml/NotasCredito.xml')),
+                'cedible' => true,
+                'compress' => true,
+            ];
+            $response = $rest->post($this->request->url.'/api/utilidades/documentos/generar_pdf', $data);
+            if ($response['status']['code']!=200) {
+                \sowerphp\core\Model_Datasource_Session::message('No fue posible crear PDF notas de crédito: '.$response['body'], 'error');
+                $this->redirect('/certificacion/set_pruebas#boletas');
+            }
+            file_put_contents($dir.'/pdf/NotasCredito.zip', $response['body']);
         }
-        file_put_contents($dir.'/pdf/NotasCredito.zip', $response['body']);
         // descargar archivo comprimido con los XML
         \sasco\LibreDTE\File::compress($dir, ['format'=>'zip', 'delete'=>true]);
         exit;
