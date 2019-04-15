@@ -9,8 +9,8 @@ echo $f->input([
 ]);
 if (isset($Contribuyente)) {
     $links_sii = [
-        '<a href="https://libredte.cl/dte/sii/contribuyente_autorizado/'.$Contribuyente->getRUT().'" target="_blank">Autorización emisión DTE</a>',
-        '<a href="https://libredte.cl/dte/sii/contribuyente_situacion_tributaria/'.$Contribuyente->getRUT().'" target="_blank">Situación tributaria</a>',
+        '<a href="'.$_base.'/dte/sii/contribuyente_autorizado/'.$Contribuyente->getRUT().'" target="_blank">Autorización emisión DTE</a>',
+        '<a href="'.$_base.'/dte/sii/contribuyente_situacion_tributaria/'.$Contribuyente->getRUT().'" target="_blank">Situación tributaria</a>',
     ];
     echo $f->input(['type'=>'div', 'label'=>'Razón social', 'value'=>$Contribuyente->razon_social]);
     echo $f->input(['type'=>'div', 'label'=>'Giro', 'value'=>$Contribuyente->giro]);
