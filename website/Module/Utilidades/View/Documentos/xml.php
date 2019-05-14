@@ -75,7 +75,7 @@ echo $f->input([
     'label' => 'RUT',
     'placeholder' => 'RUT del receptor: 55666777-8',
     'check' => 'notempty rut',
-    'attr' => 'maxlength="12" onblur="Receptor.setDatos(\'generar_xml\')"',
+    'attr' => 'maxlength="12" onblur="Receptor.setDatos(\'generar_xml\', \'contribuyente\')"',
 ]); echo '<br/>';
 echo $f->input([
     'name' => 'RznSocRecep',
