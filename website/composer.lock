@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0abbb6463d8d77723027c06256638535",
-    "content-hash": "07cc3fa287c36405b83e3800bd60786c",
+    "hash": "d2de5c3c0a13448c23bdd692f9cddcab",
+    "content-hash": "f8074780e6d81e73e6ac8ef6e9f4bf7c",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -294,6 +294,72 @@
             "time": "2018-03-17 04:29:19"
         },
         {
+            "name": "phpmailer/phpmailer",
+            "version": "v6.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPMailer/PHPMailer.git",
+                "reference": "0c41a36d4508d470e376498c1c0c527aa36a2d59"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/0c41a36d4508d470e376498c1c0c527aa36a2d59",
+                "reference": "0c41a36d4508d470e376498c1c0c527aa36a2d59",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "ext-filter": "*",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "doctrine/annotations": "1.2.*",
+                "friendsofphp/php-cs-fixer": "^2.2",
+                "phpdocumentor/phpdocumentor": "2.*",
+                "phpunit/phpunit": "^4.8 || ^5.7",
+                "zendframework/zend-eventmanager": "3.0.*",
+                "zendframework/zend-i18n": "2.7.3",
+                "zendframework/zend-serializer": "2.7.*"
+            },
+            "suggest": {
+                "ext-mbstring": "Needed to send email in multibyte encoding charset",
+                "hayageek/oauth2-yahoo": "Needed for Yahoo XOAUTH2 authentication",
+                "league/oauth2-google": "Needed for Google XOAUTH2 authentication",
+                "psr/log": "For optional PSR-3 debug logging",
+                "stevenmaguire/oauth2-microsoft": "Needed for Microsoft XOAUTH2 authentication",
+                "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PHPMailer\\PHPMailer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Jim Jagielski",
+                    "email": "jimjag@gmail.com"
+                },
+                {
+                    "name": "Marcus Bointon",
+                    "email": "phpmailer@synchromedia.co.uk"
+                },
+                {
+                    "name": "Andy Prevost",
+                    "email": "codeworxtech@users.sourceforge.net"
+                },
+                {
+                    "name": "Brent R. Matzelle"
+                }
+            ],
+            "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
+            "time": "2019-02-01 15:04:28"
+        },
+        {
             "name": "phpseclib/phpseclib",
             "version": "2.0.6",
             "source": {
@@ -481,12 +547,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "49b3eba539ccca366dc495f1af7f6824a487647b"
+                "reference": "167261dd903d389c5f36367e9d1c0839930dbfe0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/49b3eba539ccca366dc495f1af7f6824a487647b",
-                "reference": "49b3eba539ccca366dc495f1af7f6824a487647b",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/167261dd903d389c5f36367e9d1c0839930dbfe0",
+                "reference": "167261dd903d389c5f36367e9d1c0839930dbfe0",
                 "shasum": ""
             },
             "require": {
@@ -496,7 +562,7 @@
                 "mike42/escpos-php": "2.0.1",
                 "php": ">=5.5",
                 "phpseclib/phpseclib": "2.0.6",
-                "tecnickcom/tcpdf": "6.2.13"
+                "tecnickcom/tcpdf": "6.2.26"
             },
             "require-dev": {
                 "phpunit/phpunit": "6.4.*"
@@ -524,20 +590,20 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2018-12-27 03:07:07"
+            "time": "2019-05-12 17:03:19"
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.10.0",
+            "version": "v1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "c79c051f5b3a46be09205c73b80b346e4153e494"
+                "reference": "fe5e94c604826c35a32fa832f35bd036b6799609"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/c79c051f5b3a46be09205c73b80b346e4153e494",
-                "reference": "c79c051f5b3a46be09205c73b80b346e4153e494",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/fe5e94c604826c35a32fa832f35bd036b6799609",
+                "reference": "fe5e94c604826c35a32fa832f35bd036b6799609",
                 "shasum": ""
             },
             "require": {
@@ -549,7 +615,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.9-dev"
+                    "dev-master": "1.11-dev"
                 }
             },
             "autoload": {
@@ -583,20 +649,20 @@
                 "portable",
                 "shim"
             ],
-            "time": "2018-09-21 13:07:52"
+            "time": "2019-02-06 07:57:58"
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v3.4.20",
+            "version": "v3.4.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "6867713afe6c50ade2f34ed6435563b065a52145"
+                "reference": "ca5fef348a0440411bbca0f9ec14e9a11625bd6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/6867713afe6c50ade2f34ed6435563b065a52145",
-                "reference": "6867713afe6c50ade2f34ed6435563b065a52145",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/ca5fef348a0440411bbca0f9ec14e9a11625bd6a",
+                "reference": "ca5fef348a0440411bbca0f9ec14e9a11625bd6a",
                 "shasum": ""
             },
             "require": {
@@ -652,20 +718,20 @@
                 "debug",
                 "dump"
             ],
-            "time": "2018-11-20 16:10:26"
+            "time": "2019-05-01 09:52:10"
         },
         {
             "name": "tecnickcom/tcpdf",
-            "version": "6.2.13",
+            "version": "6.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tecnickcom/TCPDF.git",
-                "reference": "95c5938aafe4b20df1454dbddb3e5005c0b26f64"
+                "reference": "367241059ca166e3a76490f4448c284e0a161f15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/95c5938aafe4b20df1454dbddb3e5005c0b26f64",
-                "reference": "95c5938aafe4b20df1454dbddb3e5005c0b26f64",
+                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/367241059ca166e3a76490f4448c284e0a161f15",
+                "reference": "367241059ca166e3a76490f4448c284e0a161f15",
                 "shasum": ""
             },
             "require": {
@@ -694,13 +760,13 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPLv3"
+                "LGPL-3.0"
             ],
             "authors": [
                 {
                     "name": "Nicola Asuni",
                     "email": "info@tecnick.com",
-                    "homepage": "http://nicolaasuni.tecnick.com"
+                    "role": "lead"
                 }
             ],
             "description": "TCPDF is a PHP class for generating PDF documents and barcodes.",
@@ -714,20 +780,20 @@
                 "pdf417",
                 "qrcode"
             ],
-            "time": "2017-04-26 08:14:48"
+            "time": "2018-10-16 17:24:05"
         },
         {
             "name": "tightenco/collect",
-            "version": "v5.5.33",
+            "version": "v5.5.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tightenco/collect.git",
-                "reference": "a2a3ca1c56aa18948b4e08e90f38fcdee859cc4c"
+                "reference": "68bd29ffb116373254c8349d13384a582d09ac22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tightenco/collect/zipball/a2a3ca1c56aa18948b4e08e90f38fcdee859cc4c",
-                "reference": "a2a3ca1c56aa18948b4e08e90f38fcdee859cc4c",
+                "url": "https://api.github.com/repos/tightenco/collect/zipball/68bd29ffb116373254c8349d13384a582d09ac22",
+                "reference": "68bd29ffb116373254c8349d13384a582d09ac22",
                 "shasum": ""
             },
             "require": {
@@ -736,6 +802,7 @@
             },
             "require-dev": {
                 "mockery/mockery": "~1.0",
+                "nesbot/carbon": "^1.26.3",
                 "phpunit/phpunit": "~6.0"
             },
             "type": "library",
@@ -763,7 +830,7 @@
                 "collection",
                 "laravel"
             ],
-            "time": "2018-02-09 02:05:17"
+            "time": "2019-02-05 01:37:29"
         }
     ],
     "packages-dev": [],
