@@ -211,8 +211,8 @@ if (\sowerphp\core\App::layerExists('sowerphp/app') and $_Auth->logged() and $_m
     echo '</ol>',"\n";
 }
 // mensaje de sesión
-$message = \sowerphp\core\Model_Datasource_Session::message();
-if ($message) {
+$messages = \sowerphp\core\Model_Datasource_Session::message();
+foreach ($messages as $message) {
     $icons = [
         'success' => 'ok',
         'info' => 'info-sign',
