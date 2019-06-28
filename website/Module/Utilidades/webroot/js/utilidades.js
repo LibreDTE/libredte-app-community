@@ -1,16 +1,16 @@
-function dte_generar_xml_validar() {
+function dte_generar_xml_validar(formulario) {
     // validar rut emisor
     if (Form.check_rut(document.getElementById('RUTEmisorField'))!==true) {
-        alert('RUT emisor incorrecto');
+        Form.alert('RUT emisor incorrecto', document.getElementById('RUTEmisorField'));
         return false;
     }
     // validar rut receptor
     if (Form.check_rut(document.getElementById('RUTRecepField'))!==true) {
-        alert('RUT receptor incorrecto');
+        Form.alert('RUT receptor incorrecto', document.getElementById('RUTRecepField'));
         return false;
     }
     // confirmar envío y retornar
-    return Form.checkSend('¿Está seguro de querer generar el DTE?');
+    return Form.confirm(formulario, '¿Está seguro de querer generar el DTE?');
 }
 
 function dte_generar_xml_plantilla(id) {
@@ -20,7 +20,7 @@ function dte_generar_xml_plantilla(id) {
         if (typeof atob == 'function') {
             document.getElementById("documentosField").value = atob(plantillas_dte[id]);
         } else {
-            alert('Lo siento, no tienes soporte en tu navegador web para usar las plantillas');
+            Form.alert('Lo sentimos, no tienes soporte en tu navegador web para usar las plantillas');
         }
     }
 }

@@ -4,7 +4,7 @@
 </script>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['id'=>'generar_xml', 'onsubmit'=>'dte_generar_xml_validar()']);
+echo $f->begin(['id'=>'generar_xml', 'onsubmit'=>'dte_generar_xml_validar(this)']);
 ?>
 <div class="row">
     <div class="col-md-6">
