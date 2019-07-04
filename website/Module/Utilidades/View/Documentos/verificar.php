@@ -1,4 +1,8 @@
 <div class="page-header"><h1>Verificar EnvioDTE</h1></div>
+<div class="row">
+    <div class="col-md-8">
+        <p>Esta funcionalidad permite verificar los datos de un archivo XML con el tag EnvioDTE. Se verificará la firma y que los datos del mismo sean válidos</p>
+        <p>La validación se conecta al SII, por lo cual si son muchos DTE en el EnvioDTE tomará más tiempo en ser procesada la consulta.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin(['onsubmit'=>'Form.check()']);
@@ -11,7 +15,22 @@ echo $f->input([
     'attr' => 'accept=".xml"',
 ]);
 echo $f->end('Realizar verificación');
+?>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header"><i class="fa fa-exclamation-circle text-warning"></i> ¿Cómo se verifica el EnvioDTE?</div>
+            <div class="card-body">
+                <p>Se verifica la firma del EnvioDTE usando el validador interno de LibreDTE.</p>
+                <p>Se verifica la firma de cada DTE usando el validador de firma del SII (servicio web y compara con DTE enviado al SII).</p>
+                <p>Se obtiene el estado actual del DTE en el SII, esto indica si fue anulado o si los datos no coinciden.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
+
+<?php
 if (!empty($documentos)) {
 
     if (!$EnvioDTE->schemaValidate()) {
