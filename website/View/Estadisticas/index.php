@@ -26,8 +26,7 @@ echo View_Helper_Dashboard::cards([
 ?>
 
 <div class="row">
-    <!-- PANEL IZQUIERDA -->
-    <div class="col-md-9">
+    <div class="col-md-12">
         <!-- grafico dte emitidos por día -->
         <div class="card mb-4">
             <div class="card-header">
@@ -69,30 +68,11 @@ echo View_Helper_Dashboard::cards([
         </div>
         <!-- fin grafico empresas por actividad económica -->
     </div>
-    <!-- FIN PANEL IZQUIERDA -->
-    <!-- PANEL DERECHA -->
-    <div class="col-md-3">
-        <!-- empresas activas -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <i class="fa fa-building fa-fw"></i>
-                Empresas con movimientos
-            </div>
-            <div class="card-body">
-                <div class="list-group">
-<?php foreach ($contribuyentes_activos as $c): ?>
-                    <div class="list-group-item"><?=$c['razon_social']?></div>
-<?php endforeach; ?>
-                </div>
-            </div>
-        </div>
-        <!-- empresas activas -->
-        <a class="btn btn-info btn-block" href="<?=$_base?>/estadisticas/<?=$certificacion?'produccion':'certificacion'?>" role="button">
-            Ver datos de <?=$certificacion?'producción':'certificación'?>
-        </a>
-    </div>
-    <!-- FIN PANEL DERECHA -->
 </div>
+
+<a class="btn btn-info btn-block" href="<?=$_base?>/estadisticas/<?=$certificacion?'produccion':'certificacion'?>" role="button">
+    Ver datos de <?=$certificacion?'producción':'certificación'?>
+</a>
 
 <script>
 Morris.Bar({
