@@ -101,13 +101,30 @@ class Controller_Dropbox extends \Controller_App
             throw new \Exception('Dropbox no está habilitado en esta versión de LibreDTE');
         }
         // desconectar LibreDTE de Dropbox
-        $authHelper = $Dropbox->getAuthHelper();
-        $authHelper->revokeAccessToken();
-        $Contribuyente->set(['config_apps_dropbox' => null]);
-        $Contribuyente->save();
-        \sowerphp\core\Model_Datasource_Session::message(
-            'Dropbox se ha desconectado correctamente de LibreDTE', 'ok'
-        );
+        $borrado = false;
+        try {
+            $authHelper = $Dropbox->getAuthHelper();
+            $authHelper->revokeAccessToken();
+            $borrado = true;
+        } catch (\Kunnu\Dropbox\Exceptions\DropboxClientException $e) {
+            $response = json_decode($e->getMessage(),true);
+            if (!empty($response['error']['.tag']) and $response['error']['.tag']=='invalid_access_token') {
+                $borrado = true;
+            } else {
+                $borrado = $e->getMessage();
+            }
+        }
+        if ($borrado === true) {
+            $Contribuyente->set(['config_apps_dropbox' => null]);
+            $Contribuyente->save();
+            \sowerphp\core\Model_Datasource_Session::message(
+                'Dropbox se ha desconectado correctamente de LibreDTE', 'ok'
+            );
+        } else {
+            \sowerphp\core\Model_Datasource_Session::message(
+                'Dropbox no pudo ser desconectado: '.$borrado, 'error'
+            );
+        }
         $this->redirect('/dte/contribuyentes/modificar/'.$Contribuyente->rut.'#apps');
     }
 
