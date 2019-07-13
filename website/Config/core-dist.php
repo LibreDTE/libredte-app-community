@@ -215,15 +215,17 @@ ini_set('max_execution_time', 600);
     'enabled' => false,
 ]);*/
 
-// configuración para API de Dropbox
-/*\sowerphp\core\Configure::write('backup.dropbox', [
-    'key' => '',
-    'secret' => '',
-]);*/
-
 // configuración autenticación servicios externos
 /*\sowerphp\core\Configure::write('proveedores.api', [
     'libredte' => '',
+]);*/
+
+// configuración módulo Apps
+/*\sowerphp\core\Configure::write('module.Apps', [
+    'Dropbox' => [
+        'key' => '',
+        'secret' => '',
+    ],
 ]);*/
 
 // handler para triggers de la app
