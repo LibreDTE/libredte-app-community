@@ -955,7 +955,7 @@ class Controller_Documentos extends \Controller_App
      */
     public function _api_timbrar_POST()
     {
-        extract($this->Api->getQuery([
+        extract($this->getQuery([
             'RutReceptor' => '60803000-K',
         ]));
         // verificar si se pasaron credenciales de un usuario
