@@ -35,7 +35,7 @@ class Controller_Factoring extends \Controller_App
     /**
      * Acción para crear el AEC
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-06-29
+     * @version 2019-07-17
      */
     public function ceder()
     {
@@ -81,12 +81,10 @@ class Controller_Factoring extends \Controller_App
             // entregar XML de la cesión
             if ($_POST['accion']==='descargar') {
                 $xml = $AEC->generar();
-                ob_end_clean();
-                header('Content-Type: application/xml; charset=ISO-8859-1');
-                header('Content-Length: '.strlen($xml));
-                header('Content-Disposition: attachement; filename="aec_'.$Cesion->getCedente()['RUT'].'_'.$Cesion->getCesionario()['RUT'].'_'.date('U').'.xml"');
-                print $xml;
-                exit;
+                $this->response->type('application/xml', 'ISO-8859-1');
+                $this->response->header('Content-Length', strlen($xml));
+                $this->response->header('Content-Disposition', 'attachement; filename="aec_'.$Cesion->getCedente()['RUT'].'_'.$Cesion->getCesionario()['RUT'].'_'.date('U').'.xml"');
+                $this->response->send($xml);
             }
             // enviar el XML de la cesión al SII
             else {

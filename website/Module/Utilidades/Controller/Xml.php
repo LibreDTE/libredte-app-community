@@ -35,7 +35,7 @@ class Controller_Xml extends \Controller_App
     /**
      * Acción para firmar un XML
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-11-09
+     * @version 2019-07-17
      */
     public function firmar()
     {
@@ -58,12 +58,10 @@ class Controller_Xml extends \Controller_App
             ]);
             $xmlSigned = $Firma->signXML($xml, $id, $tag);
             // entregar datos
-            ob_end_clean();
-            header('Content-Type: application/xml; charset='.$XML->encoding);
-            header('Content-Length: '.strlen($xmlSigned));
-            header('Content-Disposition: attachement; filename="'.$id.'_firmado.xml"');
-            print $xmlSigned;
-            exit;
+            $this->response->type('application/xml', $XML->encoding);
+            $this->response->header('Content-Length', strlen($xmlSigned));
+            $this->response->header('Content-Disposition', 'attachement; filename="'.$id.'_firmado.xml"');
+            $this->response->send($xmlSigned);
         }
     }
 

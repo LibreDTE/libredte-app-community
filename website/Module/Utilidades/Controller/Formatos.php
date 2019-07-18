@@ -37,7 +37,7 @@ class Controller_Formatos extends \Controller_App
      * Acción que convierte los datos en un formato de entrada soportado y crea
      * un archivo JSON
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-09-12
+     * @version 2019-07-17
      */
     public function index($formato = null)
     {
@@ -64,11 +64,10 @@ class Controller_Formatos extends \Controller_App
                 $this->redirect($this->request->request);
             }
             // descargar JSON
-            header('Content-Type: application/json; charset=UTF-8');
-            header('Content-Length: '.strlen($json));
-            header('Content-Disposition: attachement; filename="'.$_FILES['archivo']['name'].'.json"');
-            echo $json;
-            exit;
+            $this->response->type('application/json', 'UTF-8');
+            $this->response->header('Content-Length', strlen($json));
+            $this->response->header('Content-Disposition', 'attachement; filename="'.$_FILES['archivo']['name'].'.json"');
+            $this->response->send($json);
         }
     }
 

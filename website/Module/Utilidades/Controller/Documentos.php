@@ -36,7 +36,7 @@ class Controller_Documentos extends \Controller_App
      * Acción que permite la generación del XML del EnvioDTE a partir de los
      * datos en JSON
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-08-24
+     * @version 2019-07-17
      */
     public function xml()
     {
@@ -161,12 +161,13 @@ class Controller_Documentos extends \Controller_App
                 return;
             }
             // si dió código 200 se entrega la respuesta del servicio web
-            foreach (['Content-Disposition', 'Content-Length', 'Content-Type'] as $header) {
-                if (isset($response['header'][$header]))
-                    header($header.': '.$response['header'][$header]);
+            $this->response->type('application/xml');
+            foreach (['Content-Disposition', 'Content-Length'] as $header) {
+                if (isset($response['header'][$header])) {
+                    $this->response->header($header, $response['header'][$header]);
+                }
             }
-            echo $response['body'];
-            exit;
+            $this->response->send($response['body']);
         }
     }
 
@@ -174,7 +175,7 @@ class Controller_Documentos extends \Controller_App
      * Acción que permite la generación del PDF con los DTEs contenidos en un
      * XML de EnvioDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-08-24
+     * @version 2019-07-17
      */
     public function pdf()
     {
@@ -205,11 +206,11 @@ class Controller_Documentos extends \Controller_App
             }
             // si dió código 200 se entrega la respuesta del servicio web
             foreach (['Content-Disposition', 'Content-Length', 'Content-Type'] as $header) {
-                if (isset($response['header'][$header]))
-                    header($header.': '.$response['header'][$header]);
+                if (isset($response['header'][$header])) {
+                    $this->response->header($header, $response['header'][$header]);
+                }
             }
-            echo $response['body'];
-            exit;
+            $this->response->send($response['body']);
         }
     }
 
@@ -596,7 +597,7 @@ class Controller_Documentos extends \Controller_App
             $disposition = !$Emisor->config_pdf_disposition ? 'attachement' : 'inline';
             $this->response->sendFile($file, ['disposition'=>$disposition, 'exit'=>false]);
             \sowerphp\general\Utility_File::rmdir($dir);
-            exit(0);
+            exit; // TODO: enviar usando $this->response->send() / File::rmdir()
         }
         // entregar archivo comprimido que incluirá cada uno de los DTEs
         else {
@@ -722,7 +723,7 @@ class Controller_Documentos extends \Controller_App
         if (empty($this->Api->data['compress']) and !isset($Documentos[1]) and $cedible!=2) {
             $this->response->sendFile($file, ['disposition'=>'attachement', 'exit'=>false]);
             \sowerphp\general\Utility_File::rmdir($dir);
-            exit(0);
+            exit; // TODO: enviar usando $this->response->send() / File::rmdir()
         }
         // entregar archivo comprimido que incluirá cada uno de los DTEs
         else {
@@ -951,7 +952,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Recurso de la API que permite timbrar y firmar un DTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-06-10
+     * @version 2019-07-17
      */
     public function _api_timbrar_POST()
     {
@@ -990,8 +991,8 @@ class Controller_Documentos extends \Controller_App
             'FchResol' => $Emisor->config_ambiente_en_certificacion ? $Emisor->config_ambiente_certificacion_fecha : $Emisor->config_ambiente_produccion_fecha,
             'NroResol' => $Emisor->config_ambiente_en_certificacion ? 0 : $Emisor->config_ambiente_produccion_numero,
         ]);
-        echo $EnvioDte->generar();
-        exit;
+        $this->Api->response()->type('application/xml', 'ISO-8859-1');
+        $this->Api->send($EnvioDte->generar());
     }
 
 }

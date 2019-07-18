@@ -185,7 +185,7 @@ class Controller_Iecv extends \Controller_App
         $file = TMP.'/'.$LibroCompraVenta->getID().'.xml';
         file_put_contents($file, $xml);
         \sasco\LibreDTE\File::compress($file, ['format'=>'zip', 'delete'=>true]);
-        exit;
+        exit; // TODO: enviar usando $this->response->send() / File::compress()
     }
 
     /**
@@ -202,14 +202,14 @@ class Controller_Iecv extends \Controller_App
             $pdf->setFooterText(\sowerphp\core\Configure::read('dte.pdf.footer'));
             $pdf->agregar($LibroCompraVenta->toArray());
             $pdf->Output($LibroCompraVenta->getID().'.pdf', 'D');
-            exit;
+            exit; // TODO: enviar usando $this->response->send() / LibroCompraVenta::Output() / PDF
         }
     }
 
     /**
      * Recurso de la API que permite firmar una IECV
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-06-10
+     * @version 2019-07-17
      */
     public function _api_firmar_POST()
     {
@@ -234,8 +234,8 @@ class Controller_Iecv extends \Controller_App
         $id = $datos['LibroCompraVenta']['EnvioLibro']['@attributes']['ID'];
         $Firma = $Emisor->getFirma();
         $xml_firmado = $Firma->signXML($xml_string, '#'.$id, 'EnvioLibro', true);
-        echo $xml_firmado;
-        exit;
+        $this->Api->response()->type('application/xml', 'ISO-8859-1');
+        $this->Api->send($xml_firmado);
     }
 
 }
