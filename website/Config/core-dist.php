@@ -118,6 +118,7 @@ ini_set('max_execution_time', 600);
     'Utilidades',
     'Sistema.General',
     'Sistema.General.DivisionGeopolitica',
+    'Sistema.Servidor',
 ]);
 
 // módulos principales (extras a Dte) que sólo funcionan con una empresa registrada
