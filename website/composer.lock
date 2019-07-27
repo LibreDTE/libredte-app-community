@@ -550,12 +550,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "aabd006b185400719d841274d865ae3a2b2e49e2"
+                "reference": "3d40d9ad1ff4962c430f9d2811c2c2356d40e633"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/aabd006b185400719d841274d865ae3a2b2e49e2",
-                "reference": "aabd006b185400719d841274d865ae3a2b2e49e2",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/3d40d9ad1ff4962c430f9d2811c2c2356d40e633",
+                "reference": "3d40d9ad1ff4962c430f9d2811c2c2356d40e633",
                 "shasum": ""
             },
             "require": {
@@ -593,7 +593,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2019-07-10T03:09:04+00:00"
+            "time": "2019-07-26T20:49:27+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -849,16 +849,16 @@
         },
         {
             "name": "tightenco/collect",
-            "version": "v5.8.28",
+            "version": "v5.8.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tightenco/collect.git",
-                "reference": "6e19a825908ceacf06e1ce2fc43c7e34427756bf"
+                "reference": "cef25a65cbeeb20057f60449530d2ac8b16164d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tightenco/collect/zipball/6e19a825908ceacf06e1ce2fc43c7e34427756bf",
-                "reference": "6e19a825908ceacf06e1ce2fc43c7e34427756bf",
+                "url": "https://api.github.com/repos/tightenco/collect/zipball/cef25a65cbeeb20057f60449530d2ac8b16164d8",
+                "reference": "cef25a65cbeeb20057f60449530d2ac8b16164d8",
                 "shasum": ""
             },
             "require": {
@@ -895,7 +895,7 @@
                 "collection",
                 "laravel"
             ],
-            "time": "2019-07-10T19:09:53+00:00"
+            "time": "2019-07-19T12:57:39+00:00"
         }
     ],
     "packages-dev": [],
