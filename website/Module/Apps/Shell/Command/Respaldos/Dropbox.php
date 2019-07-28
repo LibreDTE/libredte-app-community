@@ -51,7 +51,7 @@ class Shell_Command_Respaldos_Dropbox extends \Shell_App
             $this->out('<error>No existe la aplicación Dropbox</error>');
             return false;
         }
-        if (!$DropboxApp->getConfig()->disponible or !$DropboxApp->isConnected()) {
+        if (!$DropboxApp->isConnected()) {
             $this->out('<error>La empresa '.$Contribuyente->getNombre().' no está conectada a Dropbox</error>');
             return false;
         }
