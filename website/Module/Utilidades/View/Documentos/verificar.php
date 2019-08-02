@@ -35,7 +35,9 @@ if (!empty($documentos)) {
 
     if (!$EnvioDTE->schemaValidate()) {
         echo '<h2>Validación de esquema</h2>',"\n";
-        debug(implode("\n\n", \sasco\LibreDTE\Log::readAll()));
+        echo '<pre>',"\n";
+        print_r(implode("\n\n", \sasco\LibreDTE\Log::readAll()));
+        echo '</pre>',"\n";
     }
 
     // cabecera del envío
@@ -61,8 +63,12 @@ if (!empty($documentos)) {
     // mostrar errores
     if ($errores) {
         echo '<h2>Errores ocurridos durante las verificaciones</h2>',"\n";
-        foreach ($errores as $e)
-            debug($e);
+        foreach ($errores as $e) {
+            echo '<pre>',"\n";
+            print_r($e);
+            echo '</pre>',"\n";
+
+        }
     }
 
 }
