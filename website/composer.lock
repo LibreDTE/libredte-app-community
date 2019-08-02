@@ -550,12 +550,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "3d40d9ad1ff4962c430f9d2811c2c2356d40e633"
+                "reference": "bed84e0d4c1afc596adf60d28c49a61ec442a31b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/3d40d9ad1ff4962c430f9d2811c2c2356d40e633",
-                "reference": "3d40d9ad1ff4962c430f9d2811c2c2356d40e633",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/bed84e0d4c1afc596adf60d28c49a61ec442a31b",
+                "reference": "bed84e0d4c1afc596adf60d28c49a61ec442a31b",
                 "shasum": ""
             },
             "require": {
@@ -593,7 +593,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2019-07-26T20:49:27+00:00"
+            "time": "2019-07-31T02:35:09+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -711,16 +711,16 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v4.3.2",
+            "version": "v4.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "45d6ef73671995aca565a1aa3d9a432a3ea63f91"
+                "reference": "e4110b992d2cbe198d7d3b244d079c1c58761d07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/45d6ef73671995aca565a1aa3d9a432a3ea63f91",
-                "reference": "45d6ef73671995aca565a1aa3d9a432a3ea63f91",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/e4110b992d2cbe198d7d3b244d079c1c58761d07",
+                "reference": "e4110b992d2cbe198d7d3b244d079c1c58761d07",
                 "shasum": ""
             },
             "require": {
@@ -783,7 +783,7 @@
                 "debug",
                 "dump"
             ],
-            "time": "2019-06-17T17:37:00+00:00"
+            "time": "2019-07-27T06:42:46+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",
@@ -849,16 +849,16 @@
         },
         {
             "name": "tightenco/collect",
-            "version": "v5.8.29",
+            "version": "v5.8.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tightenco/collect.git",
-                "reference": "cef25a65cbeeb20057f60449530d2ac8b16164d8"
+                "reference": "957e430c26c51b65c80acc87896023229dc05a21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tightenco/collect/zipball/cef25a65cbeeb20057f60449530d2ac8b16164d8",
-                "reference": "cef25a65cbeeb20057f60449530d2ac8b16164d8",
+                "url": "https://api.github.com/repos/tightenco/collect/zipball/957e430c26c51b65c80acc87896023229dc05a21",
+                "reference": "957e430c26c51b65c80acc87896023229dc05a21",
                 "shasum": ""
             },
             "require": {
@@ -895,7 +895,7 @@
                 "collection",
                 "laravel"
             ],
-            "time": "2019-07-19T12:57:39+00:00"
+            "time": "2019-07-30T19:16:47+00:00"
         }
     ],
     "packages-dev": [],
