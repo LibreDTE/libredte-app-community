@@ -1,5 +1,15 @@
+<!--
+LibreDTE 2015 - 2019
+Copyright SASCO SpA (https://sasco.cl)
+Plataforma de facturación electrónica usando LibreDTE (https://facturacionlibre.cl)
+LibreDTE es un proyecto de SASCO SpA que tiene como misión proveer facturación electrónica libre para Chile
+Autor original: Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+Aplicación oficial: https://libredte.cl
+Framework: SowerPHP (https://sowerphp.org)
+Layout: harbor (https://hackerthemes.com)
+-->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
