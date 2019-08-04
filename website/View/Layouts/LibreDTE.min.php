@@ -20,11 +20,13 @@
         </script>
         <script src="<?=$_base?>/js/__.js"></script>
         <script src="<?=$_base?>/js/form.js"></script>
-<?php if (\sowerphp\core\App::layerExists('sowerphp/general')) : ?>
         <script src="<?=$_base?>/js/datepicker/bootstrap-datepicker.js"></script>
         <script src="<?=$_base?>/js/datepicker/bootstrap-datepicker.es.js"></script>
         <link rel="stylesheet" href="<?=$_base?>/js/datepicker/datepicker3.css" />
-<?php endif; ?>
+        <script src="https://cdn.jsdelivr.net/npm/bootbox@5.1.3/dist/bootbox.all.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.2.3/dist/select2-bootstrap4.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
     </head>
     <body>
 <?php echo $_content; ?>
