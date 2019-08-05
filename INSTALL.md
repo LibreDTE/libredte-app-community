@@ -125,3 +125,11 @@ Instalación aplicación web
 	El usuario por defecto es *admin* con contraseña *admin*. Se recomienda
 	cambiar el nombre de usuario, contraseña y hash del mismo en
 	<http://example.com/libredte/usuarios/perfil>.
+
+14.	Si se usarán **boletas** hacer el siguiente INSERT en la base de datos:
+
+		INSERT INTO contribuyente VALUES (66666666, '6', 'Sin razón social informada', 'Sin giro informado', NULL, NULL, NULL, 'Sin dirección informada', '13101', NULL, NOW());
+
+	Si se usarán **facturas de exportación** hacer este INSERT:
+
+		INSERT INTO contribuyente VALUES (55555555, '5', 'Extranjero', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NOW());
