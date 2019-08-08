@@ -57,7 +57,7 @@ ini_set('max_execution_time', 600);
 
 // Menú principal del sitio web
 \sowerphp\core\Configure::write('nav.website', [
-    '/dte' => ['name'=>'Facturación', 'desc'=>'Accede al módulo de facturación electrónica', 'icon'=>'fa fa-list-alt'],
+    '/dte' => ['name'=>'Facturación', 'desc'=>'Accede al módulo de facturación electrónica', 'icon'=>'fa fa-file-invoice'],
     '/utilidades' => ['name'=>'Utilidades', 'desc'=>'Utilidades y herramientas para generar documentos asociados a la facturación electrónica', 'icon'=>'fa fa-wrench'],
     '/soporte' => ['name'=>'Soporte', 'desc'=>'¿Necesitas ayuda o tienes alguna consulta?', 'icon'=>'far fa-life-ring', 'nav'=>[
         'https://wiki.libredte.cl/doku.php/faq'=>'Preguntas y respuestas frecuentes',
@@ -70,11 +70,11 @@ ini_set('max_execution_time', 600);
 
 // Menú principal de la aplicación web
 \sowerphp\core\Configure::write('nav.app', [
-    '/dte' => 'Facturación',
-    '/utilidades' => 'Utilidades',
-    '/certificacion' => 'Certificación',
-    '/dte/contribuyentes/seleccionar' => 'Seleccionar empresa',
-    '/sistema' => 'Sistema',
+    '/dte' => '<span class="fa fa-file-invoice fa-fw"></span> Facturación',
+    '/utilidades' => '<span class="fa fa-cog fa-fw"></span> Utilidades',
+    '/certificacion' => '<span class="fa fa-certificate fa-fw"></span> Certificación',
+    '/dte/contribuyentes/seleccionar' => '<span class="fa fa-mouse-pointer fa-fw"></span> Seleccionar empresa',
+    '/sistema' => '<span class="fa fa-cogs fa-fw"></span> Sistema',
 ]);
 
 // Menú por defecto de la empresa si no tiene definido uno personalizado
