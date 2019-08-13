@@ -46,7 +46,7 @@ class Controller_Documentos extends \Controller_App
         foreach ($files as $file) {
             if ($file[0]=='.')
                 continue;
-            $f = substr($file, 0, -5);
+            $f = mb_substr($file, 0, -5);
             $md5 = md5($f);
             $plantillas_dte[$md5] = base64_encode(file_get_contents($dir.'/'.$file));
             $plantillas_dte_options[$md5] = $f;
@@ -511,7 +511,7 @@ class Controller_Documentos extends \Controller_App
         } else if (isset($_FILES['logo']) and !$_FILES['logo']['error']) {
             $logo = file_get_contents($_FILES['logo']['tmp_name']);
         } else {
-            $logo_file = DIR_STATIC.'/contribuyentes/'.substr($Caratula['RutEmisor'], 0, -2).'/logo.png';
+            $logo_file = DIR_STATIC.'/contribuyentes/'.mb_substr($Caratula['RutEmisor'], 0, -2).'/logo.png';
             if (is_readable($logo_file)) {
                 $logo = file_get_contents($logo_file);
             }
@@ -653,7 +653,7 @@ class Controller_Documentos extends \Controller_App
         } else if (isset($_FILES['logo']) and !$_FILES['logo']['error']) {
             $logo = file_get_contents($_FILES['logo']['tmp_name']);
         } else {
-            $logo_file = DIR_STATIC.'/contribuyentes/'.substr($Caratula['RutEmisor'], 0, -2).'/logo.png';
+            $logo_file = DIR_STATIC.'/contribuyentes/'.mb_substr($Caratula['RutEmisor'], 0, -2).'/logo.png';
             if (is_readable($logo_file)) {
                 $logo = file_get_contents($logo_file);
             }
@@ -871,25 +871,30 @@ class Controller_Documentos extends \Controller_App
     /**
      * Método que guarda los datos del Emisor
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-03-04
+     * @version 2019-08-12
      */
     private function guardarEmisor($datos)
     {
         list($emisor, $dv) = explode('-', $datos['RUTEmisor']);
         $Emisor = new \website\Dte\Model_Contribuyente($emisor);
-        if ($Emisor->usuario)
-            return null;
+        if ($Emisor->usuario) {
+            return null; // no se modifican contribuyentes registrados
+        }
         $Emisor->dv = $dv;
-        $Emisor->razon_social = substr($datos['RznSoc'], 0, 100);
-        if (!empty($datos['GiroEmis']))
-            $Emisor->giro = substr($datos['GiroEmis'], 0, 80);
-        if (!empty($datos['Telefono']))
-            $Emisor->telefono = substr($datos['Telefono'], 0, 20);
-        if (!empty($datos['CorreoEmisor']))
-            $Emisor->email = substr($datos['CorreoEmisor'], 0, 80);
+        $Emisor->razon_social = mb_substr(trim($datos['RznSoc']), 0, 100);
+        if (!empty($datos['GiroEmis'])) {
+            $Emisor->giro = mb_substr(trim($datos['GiroEmis']), 0, 80);
+        }
+        if (!empty($datos['Telefono'])) {
+            $Emisor->telefono = mb_substr(trim($datos['Telefono']), 0, 20);
+        }
+        if (!empty($datos['CorreoEmisor']) and strpos($datos['CorreoEmisor'], '@')) {
+            $Emisor->email = mb_substr(trim($datos['CorreoEmisor']), 0, 80);
+        }
         $Emisor->actividad_economica = (int)$datos['Acteco'];
-        if (!empty($datos['DirOrigen']))
-            $Emisor->direccion = substr($datos['DirOrigen'], 0, 70);
+        if (!empty($datos['DirOrigen'])) {
+            $Emisor->direccion = mb_substr(trim($datos['DirOrigen']), 0, 70);
+        }
         if (is_numeric($datos['CmnaOrigen'])) {
             $Emisor->comuna = $datos['CmnaOrigen'];
         } else {
@@ -909,28 +914,39 @@ class Controller_Documentos extends \Controller_App
     /**
      * Método que guarda un Receptor
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-12-09
+     * @version 2019-08-12
      */
     private function guardarReceptor($datos)
     {
         $aux = explode('-', $datos['RUTRecep']);
-        if (!isset($aux[1]))
+        if (!isset($aux[1])) {
             return false;
+        }
         list($receptor, $dv) = $aux;
         $Receptor = new \website\Dte\Model_Contribuyente($receptor);
-        if ($Receptor->usuario)
-            return $Receptor;
+        if ($Receptor->usuario) {
+            return $Receptor; // no se modifican contribuyentes registrados
+        }
         $Receptor->dv = $dv;
-        if (!empty($datos['RznSocRecep']))
-            $Receptor->razon_social = substr($datos['RznSocRecep'], 0, 100);
-        if (!empty($datos['GiroRecep']))
-            $Receptor->giro = substr($datos['GiroRecep'], 0, 80);
-        if (!empty($datos['Contacto']))
-            $Receptor->telefono = substr($datos['Contacto'], 0, 20);
-        if (!empty($datos['CorreoRecep']))
-            $Receptor->email = substr($datos['CorreoRecep'], 0, 80);
-        if (!empty($datos['DirRecep']))
-            $Receptor->direccion = substr($datos['DirRecep'], 0, 70);
+        if (!empty($datos['RznSocRecep'])) {
+            $Receptor->razon_social = mb_substr(trim($datos['RznSocRecep']), 0, 100);
+        }
+        if (!empty($datos['GiroRecep'])) {
+            $Receptor->giro = mb_substr(trim($datos['GiroRecep']), 0, 80);
+        }
+        if (!empty($datos['Contacto'])) {
+            if (strpos($datos['Contacto'], '@')) {
+                $Receptor->email = mb_substr(trim($datos['Contacto']), 0, 80);
+            } else {
+                $Receptor->telefono = mb_substr(trim($datos['Contacto']), 0, 20);
+            }
+        }
+        if (!empty($datos['CorreoRecep']) and strpos($datos['CorreoRecep'], '@')) {
+            $Receptor->email = mb_substr(trim($datos['CorreoRecep']), 0, 80);
+        }
+        if (!empty($datos['DirRecep'])) {
+            $Receptor->direccion = mb_substr(trim($datos['DirRecep']), 0, 70);
+        }
         if (!empty($datos['CmnaRecep'])) {
             if (is_numeric($datos['CmnaRecep'])) {
                 $Receptor->comuna = $datos['CmnaRecep'];
