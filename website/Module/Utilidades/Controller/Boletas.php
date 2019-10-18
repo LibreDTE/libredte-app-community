@@ -35,7 +35,7 @@ class Controller_Boletas extends \Controller_App
     /**
      * Acción que permite la generación del XML del RCOF
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-11-08
+     * @version 2019-10-17
      */
     public function rcof()
     {
@@ -61,7 +61,7 @@ class Controller_Boletas extends \Controller_App
             $dtes = [];
             $dias = [];
             foreach ($datos as $documento) {
-                // contabilidad el tipo de dte
+                // contabilizar el tipo de dte
                 if (!in_array($documento[0], $dtes)) {
                     $dtes[] = $documento[0];
                 }
@@ -78,7 +78,9 @@ class Controller_Boletas extends \Controller_App
                 \sowerphp\core\Model_Datasource_Session::message('No fue posible crear directorio temporal para los consumos de folios', 'error');
                 return;
             }
-            // crear rcof para cada día (si es un sólo día se hará de una)
+            // crear rcof para cada día (si es un sólo día o se pidió el total se hará en una pasada)
+            // $dia contendrá el día que se está creand osi se solicitó generar por día
+            // o si es un sólo día contendrá 'total' y se ejecutará una sola vez el foreach
             $consumos = [];
             foreach ($dias as $dia => $documentos) {
                 // crear objeto del consumo de folios
@@ -86,25 +88,45 @@ class Controller_Boletas extends \Controller_App
                 $ConsumoFolio->setFirma($Firma);
                 $ConsumoFolio->setDocumentos($dtes);
                 // agregar los detalles al consumo de folios para poder generar luego el resumen
+                $detalle_boletas = true;
                 foreach ($documentos as $documento) {
-                    $ConsumoFolio->agregar([
-                        'TpoDoc' => $documento[0],
-                        'NroDoc' => $documento[1],
-                        'TasaImp' => $documento[20],
-                        'FchDoc' => $documento[4],
-                        'MntExe' => $documento[11],
-                        'MntNeto' => $documento[18],
-                        'MntIVA' => $documento[19],
-                        'MntTotal' => $documento[12],
-                    ]);
+                    // si no hay tipo de documento se asume línea vacía
+                    if (empty($documento[0])) {
+                        continue;
+                    }
+                    // si hay folio se agrega un detalle de boleta
+                    if (!empty($documento[1])) {
+                        $ConsumoFolio->agregar([
+                            'TpoDoc' => $documento[0],
+                            'NroDoc' => $documento[1],
+                            'TasaImp' => $documento[20],
+                            'FchDoc' => $documento[4],
+                            'MntExe' => $documento[11],
+                            'MntNeto' => $documento[18],
+                            'MntIVA' => $documento[19],
+                            'MntTotal' => $documento[12],
+                        ]);
+                    }
+                    // si no hay folio (es 0) entonces es un resumen
+                    else {
+                        $detalle_boletas = false;
+                        // si hay monto total es un resumen de los datos del día
+                        if (!empty($documento[12])) {
+                            // TODO crear resumen directamente en el RCOF sin usar el detalle
+                        }
+                    }
                 }
-                // crear carátula de lconsumo de folios
-                $ConsumoFolio->setCaratula([
+                // crear carátula del consumo de folios
+                $caratula = [
                     'RutEmisor' => $RutEmisor,
                     'FchResol' => $_POST['FchResol'],
                     'NroResol' =>  $_POST['NroResol'],
                     'SecEnvio' => $_POST['SecEnvio'],
-                ]);
+                ];
+                if (!$detalle_boletas and $dia != 'total') {
+                    $caratula['FchInicio'] = $caratula['FchFinal'] = $dia;
+                }
+                $ConsumoFolio->setCaratula($caratula);
                 $xml = $ConsumoFolio->generar();
                 if (!$ConsumoFolio->schemaValidate()) {
                     \sowerphp\core\Model_Datasource_Session::message('No fue posible generar el XML del RCOF '.$_POST['salida'].':<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
