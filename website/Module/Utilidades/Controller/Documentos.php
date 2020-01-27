@@ -217,7 +217,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Acción para verificar la firma de un XML EnvioDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-18
+     * @version 2020-01-26
      */
     public function verificar()
     {
@@ -228,20 +228,39 @@ class Controller_Documentos extends \Controller_App
                 \sowerphp\core\Model_Datasource_Session::message('Archivo XML EnvioDTE no válido', 'error');
                 return;
             }
+            $certificacion = (int)(bool)!$EnvioDTE->getCaratula()['NroResol'];
             // verificar la firma de cada documento
+            $Firma = new \sasco\LibreDTE\FirmaElectronica();
+            $cert_data = $Firma->getCertificate();
+            if (!$cert_data) {
+                \sowerphp\core\Model_Datasource_Session::message('No hay firma electrónica por defecto asignada en LibreDTE o no pudo ser cargada', 'error');
+                return;
+            }
+            $pkey_data = $Firma->getPrivateKey();
             $resultado_documentos = [];
             foreach ($EnvioDTE->getDocumentos() as $DTE) {
                 // verificar DTE con funcionalidad avanzada
                 try {
-                    $r = libredte_consume('/sii/dte_verificar', [
-                        'emisor' => $DTE->getEmisor(),
-                        'receptor' => $DTE->getReceptor(),
-                        'dte' => $DTE->getTipo(),
-                        'folio' => $DTE->getFolio(),
-                        'fecha' => $DTE->getFechaEmision(),
-                        'total' => $DTE->getMontoTotal(),
-                        'firma' => str_replace("\n", '', $DTE->getFirma()['SignatureValue']),
-                    ]);
+                    $r = libredte_api_consume(
+                        '/sii/dte/emitidos/verificar?certificacion='.$certificacion,
+                        [
+                            'auth' => [
+                                'cert' => [
+                                    'cert-data' => $cert_data,
+                                    'pkey-data' => $pkey_data,
+                                ],
+                            ],
+                            'dte' => [
+                                'emisor' => $DTE->getEmisor(),
+                                'receptor' => $DTE->getReceptor(),
+                                'dte' => $DTE->getTipo(),
+                                'folio' => $DTE->getFolio(),
+                                'fecha' => $DTE->getFechaEmision(),
+                                'total' => $DTE->getMontoTotal(),
+                                'firma' => str_replace("\n", '', $DTE->getFirma()['SignatureValue']),
+                            ]
+                        ]
+                    );
                     if ($r['status']['code']!=200) {
                         $firma = '-';
                         $verificacion = $r['body'];
@@ -966,52 +985,6 @@ class Controller_Documentos extends \Controller_App
         } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
             return false;
         }
-    }
-
-    /**
-     * Recurso de la API que permite timbrar y firmar un DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
-     */
-    public function _api_timbrar_POST()
-    {
-        extract($this->getQuery([
-            'RutReceptor' => '60803000-K',
-        ]));
-        // verificar si se pasaron credenciales de un usuario
-        $User = $this->Api->getAuthUser();
-        if (is_string($User)) {
-            $this->Api->send($User, 401);
-        }
-        // recibir XML del DTE
-        $xml_string =  base64_decode($this->Api->data);
-        $Dte = new \sasco\LibreDTE\Sii\Dte($xml_string, false);
-        // verificar permisos
-        $Emisor = new \website\Dte\Model_Contribuyente($Dte->getEmisor());
-        if ($Emisor->usuarioAutorizado($User->id, 'admin')) {
-            $this->Api->send('No es el administrador de la empresa', 401);
-        }
-        // timbrar y firmar DTE
-        $Caf = $Emisor->getCaf($Dte->getTipo(), $Dte->getFolio());
-        if (!$Dte->timbrar($Caf)) {
-            $this->Api->send('No fue posible timbrar el DTE', 500);
-        }
-        $Firma = $Emisor->getFirma();
-        if (!$Dte->firmar($Firma)) {
-            $this->Api->send('No fue posible firmar el DTE', 500);
-        }
-        // generar sobre con el envío del DTE y descargar
-        $EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
-        $EnvioDte->agregar($Dte);
-        $EnvioDte->setFirma($Firma);
-        $EnvioDte->setCaratula([
-            'RutEnvia' => $Firma->getID(),
-            'RutReceptor' => $RutReceptor ? $RutReceptor : $Dte->getReceptor(),
-            'FchResol' => $Emisor->config_ambiente_en_certificacion ? $Emisor->config_ambiente_certificacion_fecha : $Emisor->config_ambiente_produccion_fecha,
-            'NroResol' => $Emisor->config_ambiente_en_certificacion ? 0 : $Emisor->config_ambiente_produccion_numero,
-        ]);
-        $this->Api->response()->type('application/xml', 'ISO-8859-1');
-        $this->Api->send($EnvioDte->generar());
     }
 
 }

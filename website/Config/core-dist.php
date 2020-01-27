@@ -218,8 +218,8 @@ ini_set('max_execution_time', 600);
 
 // configuración autenticación servicios externos
 /*\sowerphp\core\Configure::write('proveedores.api', [
-    // Desbloquea las funcionalidades extra de LibreDTE:
-    // https://tienda.sasco.cl/catalogo/i/INT1/sii-ws
+    // Desbloquea las funcionalidades Extra de LibreDTE
+    // Regístrate Gratis en https://api.libredte.cl
     'libredte' => '',
 ]);*/
 

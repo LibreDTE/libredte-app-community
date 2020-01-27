@@ -206,36 +206,4 @@ class Controller_Iecv extends \Controller_App
         }
     }
 
-    /**
-     * Recurso de la API que permite firmar una IECV
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
-     */
-    public function _api_firmar_POST()
-    {
-        // verificar si se pasaron credenciales de un usuario
-        $User = $this->Api->getAuthUser();
-        if (is_string($User)) {
-            $this->Api->send($User, 401);
-        }
-        // recibir XML de IECV
-        $xml_string =  base64_decode($this->Api->data);
-        $xml_string = str_replace('<TmstFirma/>', '<TmstFirma>'.date('Y-m-d\TH:i:s').'</TmstFirma>', $xml_string);
-        $XML = new \sasco\LibreDTE\XML();
-        $XML->loadXML($xml_string);
-        $datos = $XML->toArray();
-        // verificar permisos
-        $emisor = $datos['LibroCompraVenta']['EnvioLibro']['Caratula']['RutEmisorLibro'];
-        $Emisor = new \website\Dte\Model_Contribuyente($emisor);
-        if ($Emisor->usuarioAutorizado($User->id, 'admin')) {
-            $this->Api->send('No es el administrador de la empresa', 401);
-        }
-        // firmar
-        $id = $datos['LibroCompraVenta']['EnvioLibro']['@attributes']['ID'];
-        $Firma = $Emisor->getFirma();
-        $xml_firmado = $Firma->signXML($xml_string, '#'.$id, 'EnvioLibro', true);
-        $this->Api->response()->type('application/xml', 'ISO-8859-1');
-        $this->Api->send($xml_firmado);
-    }
-
 }
