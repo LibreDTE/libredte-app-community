@@ -487,10 +487,12 @@ class Controller_Documentos extends \Controller_App
     /**
      * Recurso de la API que genera el PDF de los DTEs contenidos en un EnvioDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-10-30
+     * @version 2020-02-22
      */
     public function _api_generar_pdf_POST()
     {
+        // sin límite de tiempo para generar documentos
+        set_time_limit(0);
         // verificar si se pasaron credenciales de un usuario
         $User = $this->Api->getAuthUser();
         if (is_string($User)) {
@@ -515,14 +517,15 @@ class Controller_Documentos extends \Controller_App
         // copias
         $copias_tributarias = isset($this->Api->data['copias_tributarias']) ? (int)$this->Api->data['copias_tributarias'] : 1;
         $copias_cedibles = isset($this->Api->data['copias_cedibles']) ? (int)$this->Api->data['copias_cedibles'] : 1;
-        // sin límite de tiempo para generar documentos
-        set_time_limit(0);
         // Cargar EnvioDTE y extraer arreglo con datos de carátula y DTEs
         $EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
         if (!$EnvioDte->loadXML($xml)) {
             $this->Api->send('Hubo algún problema al recibir el archivo XML con el EnvioDTE', 400);
         }
         $Caratula = $EnvioDte->getCaratula();
+        if (!empty($this->Api->data['caratula'])) {
+            $Caratula = array_merge($Caratula, $this->Api->data['caratula']);
+        }
         $Documentos = $EnvioDte->getDocumentos(false); // usar saveXML en vez de C14N
         // recuperar contenido del logo (si existe)
         if (isset($this->Api->data['logo'])) {
@@ -629,8 +632,9 @@ class Controller_Documentos extends \Controller_App
 
     /**
      * Recurso de la API que genera el código ESCPOS de los DTEs contenidos en un EnvioDTE
+     * @deprecated Se deja obsoleto ya que la clase que se requiere no existe en la biblioteca de LibreDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-10-05
+     * @version 2020-02-22
      */
     public function _api_generar_escpos_POST()
     {
@@ -668,6 +672,9 @@ class Controller_Documentos extends \Controller_App
             $this->Api->send('Hubo algún problema al recibir el archivo XML con el EnvioDTE', 400);
         }
         $Caratula = $EnvioDte->getCaratula();
+        if (!empty($this->Api->data['caratula'])) {
+            $Caratula = array_merge($Caratula, $this->Api->data['caratula']);
+        }
         $Documentos = $EnvioDte->getDocumentos(false); // usar saveXML en vez de C14N
         // recuperar contenido del logo (si existe)
         if (isset($this->Api->data['logo'])) {
