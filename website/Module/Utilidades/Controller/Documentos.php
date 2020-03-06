@@ -634,7 +634,7 @@ class Controller_Documentos extends \Controller_App
      * Recurso de la API que genera el código ESCPOS de los DTEs contenidos en un EnvioDTE
      * @deprecated Se deja obsoleto ya que la clase que se requiere no existe en la biblioteca de LibreDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-27
+     * @version 2020-03-05
      */
     public function _api_generar_escpos_POST()
     {
@@ -697,9 +697,11 @@ class Controller_Documentos extends \Controller_App
             $this->Api->send('No fue posible crear directorio temporal para DTEs', 507);
         }
         // procesar cada DTEs e ir agregándolo al código ESCPOS
+        $width = !empty($this->Api->data['papelContinuo']) ? $this->Api->data['papelContinuo'] : 80;
         $printer_config = [
-            'width' => !empty($this->Api->data['papelContinuo']) ? $this->Api->data['papelContinuo'] : 80,
+            'width' => $width,
             'profile' => !empty($this->Api->data['profile']) ? $this->Api->data['profile'] : 'default',
+            'pdf417' => $width == 80 ? 'pdf417' : 'bitmap',
         ];
         foreach ($Documentos as $DTE) {
             $datos = $DTE->getDatos();
