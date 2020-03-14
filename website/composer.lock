@@ -244,72 +244,17 @@
             "time": "2017-06-26T09:37:16+00:00"
         },
         {
-            "name": "mike42/escpos-php",
-            "version": "v2.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mike42/escpos-php.git",
-                "reference": "71e99104e39982cfd76de31256df466bd9156f61"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mike42/escpos-php/zipball/71e99104e39982cfd76de31256df466bd9156f61",
-                "reference": "71e99104e39982cfd76de31256df466bd9156f61",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "guzzlehttp/guzzle": "^5.3",
-                "phpunit/phpunit": "^4.8",
-                "squizlabs/php_codesniffer": "^3.2"
-            },
-            "suggest": {
-                "ext-gd": "Used for image printing if present.",
-                "ext-imagick": "Will be used for image printing if present. Required for PDF printing or use of custom fonts.",
-                "guzzlehttp/guzzle": "Allows the use of the ApiConnector to send print jobs over HTTP."
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Mike42\\": "src/Mike42"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Billington",
-                    "email": "michael.billington@gmail.com"
-                }
-            ],
-            "description": "PHP receipt printer library for use with ESC/POS-compatible thermal and impact printers",
-            "homepage": "https://github.com/mike42/escpos-php",
-            "keywords": [
-                "ESC-POS",
-                "driver",
-                "escpos",
-                "print",
-                "receipt"
-            ],
-            "time": "2018-03-17T04:29:19+00:00"
-        },
-        {
             "name": "phpmailer/phpmailer",
-            "version": "v6.1.4",
+            "version": "v6.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "c5e61d0729507049cec9673aa1a679f9adefd683"
+                "reference": "a8bf068f64a580302026e484ee29511f661b2ad3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/c5e61d0729507049cec9673aa1a679f9adefd683",
-                "reference": "c5e61d0729507049cec9673aa1a679f9adefd683",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/a8bf068f64a580302026e484ee29511f661b2ad3",
+                "reference": "a8bf068f64a580302026e484ee29511f661b2ad3",
                 "shasum": ""
             },
             "require": {
@@ -358,7 +303,7 @@
                 }
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
-            "time": "2019-12-10T11:17:38+00:00"
+            "time": "2020-03-14T14:23:48+00:00"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -548,25 +493,24 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "2f4f066da7bd5a36b3634872df6abff7d38627ac"
+                "reference": "f3e6fd4ea61648cb84778473ccc52729be415c88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/2f4f066da7bd5a36b3634872df6abff7d38627ac",
-                "reference": "2f4f066da7bd5a36b3634872df6abff7d38627ac",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/f3e6fd4ea61648cb84778473ccc52729be415c88",
+                "reference": "f3e6fd4ea61648cb84778473ccc52729be415c88",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-openssl": "*",
                 "ext-soap": "*",
-                "mike42/escpos-php": "2.0.1",
-                "php": ">=5.5",
+                "php": ">=7.3",
                 "phpseclib/phpseclib": "2.0.6",
                 "tecnickcom/tcpdf": "6.2.26"
             },
             "require-dev": {
-                "phpunit/phpunit": "6.4.*"
+                "phpunit/phpunit": "9.0.*"
             },
             "type": "library",
             "autoload": {
@@ -591,7 +535,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2020-03-13T23:42:57+00:00"
+            "time": "2020-03-14T18:14:00+00:00"
         },
         {
             "name": "sasco/libredte-api-client",
