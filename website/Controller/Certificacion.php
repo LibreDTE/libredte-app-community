@@ -207,7 +207,7 @@ class Controller_Certificacion extends \Controller_App
      * Acción que genera EnvioBOLETA, consumo de folios, libro de boletas y las
      * muestras impresas a partir de un set de pruebas de boleta electrónica
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-12-17
+     * @version 2020-03-13
      */
     public function set_pruebas_boletas()
     {
@@ -227,6 +227,7 @@ class Controller_Certificacion extends \Controller_App
         $folio_actual = 0;
         $folios_anulados = [];
         $folios_rebajados = [];
+        $caso = 1;
         for ($i=1; $i<$n_data; $i++) {
             // crear dte
             if ($data[$i][0]) {
@@ -240,6 +241,12 @@ class Controller_Certificacion extends \Controller_App
                         ],
                     ],
                     'Detalle' => [],
+                    'Referencia' => [
+                        [
+                            'CodRef' => 'SET',
+                            'RazonRef' => 'CASO-'.$caso++,
+                        ]
+                    ],
                 ];
             }
             // agregar datos de detalle
