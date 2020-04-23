@@ -520,7 +520,7 @@ class Controller_Documentos extends \Controller_App
         // Cargar EnvioDTE y extraer arreglo con datos de carátula y DTEs
         $EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
         if (!$EnvioDte->loadXML($xml)) {
-            $this->Api->send('Hubo algún problema al recibir el archivo XML con el EnvioDTE', 400);
+            $this->Api->send('Hubo algún problema al cargar el archivo XML con el EnvioDTE', 400);
         }
         $Caratula = $EnvioDte->getCaratula();
         if (!empty($this->Api->data['caratula'])) {
