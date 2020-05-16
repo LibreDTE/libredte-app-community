@@ -207,9 +207,9 @@ ini_set('max_execution_time', 600);
 ]);*/
 
 // configuración para autenticación en API para uso de servicios internos de LibreDTE y usuarios no logueados
-\sowerphp\core\Configure::write('api.default', [
+/*\sowerphp\core\Configure::write('api.default', [
     'token' => '', // ej: hash del usuario admin
-]);
+]);*/
 
 // configuración para preautenticación
 /*\sowerphp\core\Configure::write('preauth', [
