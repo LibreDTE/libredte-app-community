@@ -39,17 +39,20 @@ if (!empty($Firma)) : ?>
 ]) ?>
     </div>
 </div>
+
 <div class="card-deck">
     <div class="card mb-4">
         <div class="card-header">Clave pública</div>
         <div class="card-body">
             <pre><?=$Firma->getCertificate()?></pre>
+            <pre><?=str_replace("\n", '\n', $Firma->getCertificate())?></pre>
         </div>
     </div>
     <div class="card mb-4">
         <div class="card-header">Clave privada</div>
         <div class="card-body">
             <pre><?=$Firma->getPrivateKey()?></pre>
+            <pre><?=str_replace("\n", '\n', $Firma->getPrivateKey())?></pre>
         </div>
     </div>
 </div>
