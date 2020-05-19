@@ -45,14 +45,14 @@ if (!empty($Firma)) : ?>
         <div class="card-header">Clave pública</div>
         <div class="card-body">
             <pre><?=$Firma->getCertificate()?></pre>
-            <pre><?=str_replace("\n", '\n', $Firma->getCertificate())?></pre>
+            <pre><?=str_replace("\n", '\n', trim($Firma->getCertificate()))?></pre>
         </div>
     </div>
     <div class="card mb-4">
         <div class="card-header">Clave privada</div>
         <div class="card-body">
             <pre><?=$Firma->getPrivateKey()?></pre>
-            <pre><?=str_replace("\n", '\n', $Firma->getPrivateKey())?></pre>
+            <pre><?=str_replace("\n", '\n', trim($Firma->getPrivateKey()))?></pre>
         </div>
     </div>
 </div>
