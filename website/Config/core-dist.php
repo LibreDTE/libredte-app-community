@@ -60,7 +60,7 @@ ini_set('max_execution_time', 600);
     '/dte' => ['name'=>'Facturación', 'desc'=>'Accede al módulo de facturación electrónica', 'icon'=>'fa fa-file-invoice'],
     '/utilidades' => ['name'=>'Utilidades', 'desc'=>'Utilidades y herramientas para generar documentos asociados a la facturación electrónica', 'icon'=>'fa fa-wrench'],
     '/soporte' => ['name'=>'Soporte', 'desc'=>'¿Necesitas ayuda o tienes alguna consulta?', 'icon'=>'far fa-life-ring', 'nav'=>[
-        'https://soporte.sasco.cl/kb'=>'Preguntas y Respuestas Frecuentes',
+        'https://soporte.sasco.cl/kb/faq.php?cid=1'=>'Preguntas y Respuestas Frecuentes',
         'https://groups.google.com/forum/#!forum/libredte' => 'Lista de Correo',
         'https://libredte.cl/soporte?tema=42' => 'Abrir Ticket a SASCO SpA por Uso de Plataforma Web',
         'https://libredte.cl/soporte?tema=43' => 'Abrir Ticket a SASCO SpA por Uso de Servicios Web',
