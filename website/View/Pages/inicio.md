@@ -1,5 +1,5 @@
-LibreDTE: Aplicación web
-========================
+LibreDTE: Versión Comunidad
+===========================
 
 LibreDTE es un proyecto que tiene por objetivo proveer facturación electrónica
 libre para Chile.
@@ -7,14 +7,17 @@ libre para Chile.
 Esta aplicación web utiliza la
 [biblioteca PHP LibreDTE](https://github.com/LibreDTE/libredte-lib) y el
 [módulo Dte](https://github.com/LibreDTE/libredte-sowerphp) del framework
-[SowerPHP](http://sowerphp.org).
+[SowerPHP](https://sowerphp.org).
 
-Contacto y redes sociales
--------------------------
+LibreDTE es un proyecto de [SASCO SpA](https://sasco.cl).
 
-- Sitio web: <https://libredte.cl>
-- Twitter: <https://twitter.com/LibreDTE>
+Enlaces de Interés
+------------------
+
+- Versión Oficial: <https://libredte.cl>
+- Términos y Condiciones de Uso: <https://legal.libredte.cl>
+- Preguntas y Respuestas Frecuentes: <https://faq.libredte.cl>
+- Blog: <https://blog.libredte.cl>
 - Facebook: <https://www.facebook.com/LibreDTE>
-- Google+: <https://plus.google.com/u/0/101078963971350176990/about>
-- Linkedin: <https://www.linkedin.com/grp/home?gid=8403251>
-- Youtube: <https://www.youtube.com/channel/UCnh5duQUXmo4l8AD28PakiQ>
+- Twitter: <https://twitter.com/LibreDTE>
+- Youtube: <https://www.youtube.com/libredtecl>
