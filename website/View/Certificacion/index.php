@@ -13,16 +13,8 @@
 </div>
 
 <div class="row">
-    <div class="col-md-6 mb-4">
-        <a class="btn btn-primary btn-lg btn-block" href="http://wiki.libredte.cl/doku.php/faq/libredte/webapp/certificacion" role="button">
-            <span class="fas fa-list"></span>
-            Manual paso a paso
-        </a>
-    </div>
-    <div class="col-md-6 mb-4">
-        <a class="btn btn-primary btn-lg btn-block" href="https://wiki.libredte.cl/doku.php/videos#videos_del_proceso_de_certificacion" role="button">
-            <span class="fas fa-video"></span>
-            Video tutoriales
-        </a>
-    </div>
+    <a class="btn btn-primary btn-lg btn-block" href="https://soporte.sasco.cl/kb/faq.php?id=38" role="button">
+        <span class="fas fa-list"></span>
+        Manual paso a paso y video tutoriales
+    </a>
 </div>

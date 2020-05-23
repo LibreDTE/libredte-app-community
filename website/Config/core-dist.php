@@ -50,8 +50,8 @@ ini_set('max_execution_time', 600);
 \sowerphp\core\Configure::write('page.body.title', 'LibreDTE');
 \sowerphp\core\Configure::write('page.footer', [
     // los créditos de LibreDTE: autor original y enlaces, se deben mantener visibles en el footer de cada página de la aplicación
-    // más información en los términos y condiciones de uso en https://wiki.libredte.cl/doku.php/terminos
-    'left' => '&copy; 2019 '.\sowerphp\core\Configure::read('page.header.title').' - <a href="/consultar" title="Consultar documentos (incluyendo boletas)">Consultar DTE</a><br/><span class="small">Aplicación de facturación basada en <a href="https://libredte.cl">LibreDTE</a>, el cual es un proyecto de <a href="https://sasco.cl">SASCO SpA</a> que tiene como misión proveer facturación electrónica libre para Chile</span>',
+    // más información en los términos y condiciones de uso en https://legal.libredte.cl
+    'left' => '&copy; 2020 '.\sowerphp\core\Configure::read('page.header.title').' - <a href="/consultar" title="Consultar documentos (incluyendo boletas)">Consultar DTE</a><br/><span class="small">Aplicación de facturación basada en <a href="https://libredte.cl">LibreDTE</a>, el cual es un proyecto de <a href="https://sasco.cl">SASCO SpA</a> que tiene como misión proveer facturación electrónica libre para Chile</span>',
     'right' => '',
 ]);
 
@@ -60,11 +60,11 @@ ini_set('max_execution_time', 600);
     '/dte' => ['name'=>'Facturación', 'desc'=>'Accede al módulo de facturación electrónica', 'icon'=>'fa fa-file-invoice'],
     '/utilidades' => ['name'=>'Utilidades', 'desc'=>'Utilidades y herramientas para generar documentos asociados a la facturación electrónica', 'icon'=>'fa fa-wrench'],
     '/soporte' => ['name'=>'Soporte', 'desc'=>'¿Necesitas ayuda o tienes alguna consulta?', 'icon'=>'far fa-life-ring', 'nav'=>[
-        'https://wiki.libredte.cl/doku.php/faq'=>'Preguntas y respuestas frecuentes',
-        'https://groups.google.com/forum/#!forum/libredte' => 'Lista de correo en Google Groups',
-        'https://wiki.libredte.cl'=>'Wiki de documentación',
-        'https://sasco.cl/servicios/facturacion' => 'Soporte y asesoría entregado por SASCO SpA',
-        'https://libredte.cl' => 'Aplicación oficial en libredte.cl',
+        'https://soporte.sasco.cl/kb'=>'Preguntas y Respuestas Frecuentes',
+        'https://groups.google.com/forum/#!forum/libredte' => 'Lista de Correo',
+        'https://libredte.cl/soporte?tema=42' => 'Abrir Ticket a SASCO SpA por Uso de Plataforma Web',
+        'https://libredte.cl/soporte?tema=43' => 'Abrir Ticket a SASCO SpA por Uso de Servicios Web',
+        'https://libredte.cl' => 'Versión Oficial de LibreDTE',
     ]],
 ]);
 
@@ -142,7 +142,7 @@ ini_set('max_execution_time', 600);
 // Configuración para auto registro de usuarios (extensión: sowerphp/app)
 /*\sowerphp\core\Configure::write('app.self_register', [
     'groups' => ['usuarios', 'dte_plus'],
-    'terms' => 'https://wiki.libredte.cl/doku.php/terminos',
+    'terms' => 'https://legal.libredte.cl',
 ]);*/
 
 // configuración de permisos de la empresa en la aplicación
@@ -186,7 +186,7 @@ ini_set('max_execution_time', 600);
     'dte_items' => [
         'name' => 'Listado de items',
         'desc' => 'Consultar los items a través de su código',
-        'link' => 'https://wiki.libredte.cl/doku.php/sowerphp/integracion/url_items',
+        'link' => 'https://soporte.sasco.cl/kb/faq.php?id=26',
     ],
     'dte_pdf' => [
         'name' => 'PDF de DTE',
@@ -196,7 +196,7 @@ ini_set('max_execution_time', 600);
     'dte_intercambio_responder' => [
         'name' => 'Procesar intercambio',
         'desc' => 'Servicio que procesa un intercambio de DTE e indica si se debe aceptar o reclamar',
-        'link' => 'https://wiki.libredte.cl/doku.php/sowerphp/integracion/procesar_intercambio',
+        'link' => 'https://soporte.sasco.cl/kb/faq.php?id=28',
     ],
 ]);
 
