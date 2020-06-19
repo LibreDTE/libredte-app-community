@@ -493,12 +493,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "b1cd0689c45aafba005c0522954600e5362267e3"
+                "reference": "a66de48804421b27ef6439cb4b3ef3bd9f1c5a35"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/b1cd0689c45aafba005c0522954600e5362267e3",
-                "reference": "b1cd0689c45aafba005c0522954600e5362267e3",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/a66de48804421b27ef6439cb4b3ef3bd9f1c5a35",
+                "reference": "a66de48804421b27ef6439cb4b3ef3bd9f1c5a35",
                 "shasum": ""
             },
             "require": {
@@ -535,7 +535,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2020-06-07T15:57:09+00:00"
+            "time": "2020-06-19T18:56:23+00:00"
         },
         {
             "name": "sasco/libredte-api-client",
@@ -759,7 +759,7 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v4.4.9",
+            "version": "v4.4.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
