@@ -596,7 +596,7 @@ class Controller_Certificacion extends \Controller_App
                 'RutResponde' => str_replace('.', '', $_POST['receptor']),
                 'RutRecibe' => $Caratula['RutEmisor'],
                 'IdRespuesta' => 1,
-                'NmbContacto' => $Firma->getName(),
+                'NmbContacto' => mb_substr($Firma->getName(), 0, 30),
                 'MailContacto' => $Firma->getEmail(),
             ],
             $Firma
@@ -613,7 +613,7 @@ class Controller_Certificacion extends \Controller_App
             [ // caratula
                 'RutResponde' => str_replace('.', '', $_POST['receptor']),
                 'RutRecibe' => $Caratula['RutEmisor'],
-                'NmbContacto' => $Firma->getName(),
+                'NmbContacto' => mb_substr($Firma->getName(), 0, 30),
                 'MailContacto' => $Firma->getEmail(),
             ],
             $Firma
@@ -633,7 +633,7 @@ class Controller_Certificacion extends \Controller_App
                 'RutResponde' => str_replace('.', '', $_POST['receptor']),
                 'RutRecibe' => $Caratula['RutEmisor'],
                 'IdRespuesta' => 1,
-                'NmbContacto' => $Firma->getName(),
+                'NmbContacto' => mb_substr($Firma->getName(), 0, 30),
                 'MailContacto' => $Firma->getEmail(),
             ],
             $Firma
