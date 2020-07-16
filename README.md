@@ -4,13 +4,13 @@ LibreDTE: Aplicación web
 LibreDTE es un proyecto que tiene por objetivo proveer Facturación Electrónica
 Libre para Chile.
 
-Aquí encontrarás el código fuente que ha sido liberado de la aplicación web
-oficial disponible sólo en <https://libredte.cl>
+Aquí encontrarás el código fuente de la versión comunidad de LibreDTE, la cual
+es una parte de la versión oficial disponible sólo en <https://libredte.cl>
 
 Esta aplicación web utiliza la
-[biblioteca PHP LibreDTE](https://github.com/LibreDTE/libredte-lib) y el
-[módulo Dte](https://github.com/LibreDTE/libredte-modulo-Dte) del framework
-[SowerPHP](http://sowerphp.org).
+[Biblioteca de LibreDTE en PHP](https://github.com/LibreDTE/libredte-lib) y el
+[Módulo Dte](https://github.com/LibreDTE/libredte-modulo-Dte) del framework
+[SowerPHP](https://sowerphp.org).
 
 [Realiza una donación al proyecto](https://facturacionlibre.cl/#donar)
 
@@ -18,7 +18,7 @@ Términos y condiciones de uso
 -----------------------------
 
 Al utilizar este proyecto, total o parcialmente, automáticamente se acepta
-cumplir con los [términos y condiciones de uso](https://wiki.libredte.cl/doku.php/terminos)
+cumplir con los [términos y condiciones de uso](https://legal.libredte.cl)
 que rigen a LibreDTE. La [Licencia Pública General Affero de GNU (AGPL)](https://raw.githubusercontent.com/LibreDTE/libredte-lib/master/COPYING)
 sólo aplica para quienes respeten los términos y condiciones de uso. No existe
 una licencia comercial de LibreDTE, por lo cual no es posible usar el proyecto
@@ -37,7 +37,7 @@ permiten utilizar el proyecto, son los siguientes:
   cambios al código.
 
 Es obligación de quienes quieran usar el proyecto leer y aceptar por completo
-los [términos y condiciones de uso](https://wiki.libredte.cl/doku.php/terminos).
+los [términos y condiciones de uso](https://legal.libredte.cl).
 
 Instalación
 -----------
@@ -78,6 +78,6 @@ Contacto y redes sociales
 
 - Sitio web: <https://libredte.cl>
 - Facebook: <https://www.facebook.com/LibreDTE>
-- Youtube: <https://www.youtube.com/c/LibredteCl>
+- Youtube: <https://www.youtube.com/libredtecl>
 - Twitter: <https://twitter.com/LibreDTE>
 - Linkedin: <https://www.linkedin.com/groups/8403251>
