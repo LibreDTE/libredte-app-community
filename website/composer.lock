@@ -489,16 +489,16 @@
         },
         {
             "name": "sasco/libredte",
-            "version": "20.7.1",
+            "version": "20.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "215a1baffcadd7a7efadbb038d8837593ed76658"
+                "reference": "6d6e59b99cfe267bdfef16b5b84378ab3d9006ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/215a1baffcadd7a7efadbb038d8837593ed76658",
-                "reference": "215a1baffcadd7a7efadbb038d8837593ed76658",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/6d6e59b99cfe267bdfef16b5b84378ab3d9006ed",
+                "reference": "6d6e59b99cfe267bdfef16b5b84378ab3d9006ed",
                 "shasum": ""
             },
             "require": {
@@ -535,7 +535,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2020-07-22T22:55:11+00:00"
+            "time": "2020-07-27T00:05:40+00:00"
         },
         {
             "name": "sasco/libredte-api-client",
@@ -771,16 +771,16 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v4.4.10",
+            "version": "v4.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "56b3aa5eab0ac6720dcd559fd1d590ce301594ac"
+                "reference": "2125805a1a4e57f2340bc566c3013ca94d2722dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/56b3aa5eab0ac6720dcd559fd1d590ce301594ac",
-                "reference": "56b3aa5eab0ac6720dcd559fd1d590ce301594ac",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/2125805a1a4e57f2340bc566c3013ca94d2722dc",
+                "reference": "2125805a1a4e57f2340bc566c3013ca94d2722dc",
                 "shasum": ""
             },
             "require": {
@@ -844,7 +844,7 @@
                 "debug",
                 "dump"
             ],
-            "time": "2020-05-30T20:06:45+00:00"
+            "time": "2020-06-24T13:34:53+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",
