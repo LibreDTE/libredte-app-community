@@ -487,7 +487,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Recurso de la API que genera el PDF de los DTEs contenidos en un EnvioDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+     * @version 2020-08-01
      */
     public function _api_generar_pdf_POST()
     {
@@ -552,6 +552,9 @@ class Controller_Documentos extends \Controller_App
             $datos = $DTE->getDatos();
             if (!$datos) {
                 $this->Api->send('No se pudieron obtener los datos de un DTE', 500);
+            }
+            if (!empty($this->Api->data['extra']['dte'])) {
+                $datos = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($datos, $this->Api->data['extra']['dte']);
             }
             // si el Folio es alfanumérico entonces es una cotización
             if (!is_numeric($datos['Encabezado']['IdDoc']['Folio'])) {
