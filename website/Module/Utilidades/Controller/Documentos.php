@@ -487,7 +487,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Recurso de la API que genera el PDF de los DTEs contenidos en un EnvioDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-01
+     * @version 2020-08-02
      */
     public function _api_generar_pdf_POST()
     {
@@ -539,6 +539,19 @@ class Controller_Documentos extends \Controller_App
             }
         }
         $Emisor = new \website\Dte\Model_Contribuyente($Caratula['RutEmisor']);
+        // configuración extra del PDF
+        $apps = $Emisor->getApps('dtepdfs');
+        if (!empty($apps['estandar'])) {
+            $extra_emisor = json_decode(json_encode($apps['estandar']->getConfig()), true);
+            unset($extra_emisor['disponible']);
+        } else {
+            $extra_emisor = [];
+        }
+        if (!empty($Emisor->direccion) and !empty($Emisor->comuna)) {
+            $extra_emisor['casa_matriz'] = $Emisor->direccion.', '.$Emisor->getComuna()->comuna;
+        }
+        $extra_api = !empty($this->Api->data['extra']) ? $this->Api->data['extra'] : [];
+        $extra = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($extra_emisor, $extra_api);
         // directorio temporal para guardar los PDF
         $dir = sys_get_temp_dir().'/dte_'.$Caratula['RutEmisor'].'_'.$Caratula['RutReceptor'].'_'.str_replace(['-', ':', 'T'], '', $Caratula['TmstFirmaEnv']).'_'.date('U');
         if (is_dir($dir)) {
@@ -553,8 +566,8 @@ class Controller_Documentos extends \Controller_App
             if (!$datos) {
                 $this->Api->send('No se pudieron obtener los datos de un DTE', 500);
             }
-            if (!empty($this->Api->data['extra']['dte'])) {
-                $datos = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($datos, $this->Api->data['extra']['dte']);
+            if (!empty($extra['dte'])) {
+                $datos = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($datos, $extra['dte']);
             }
             // si el Folio es alfanumérico entonces es una cotización
             if (!is_numeric($datos['Encabezado']['IdDoc']['Folio'])) {
@@ -573,25 +586,31 @@ class Controller_Documentos extends \Controller_App
                 $pdf->setWebVerificacion($webVerificacion);
             }
             if (!empty($datos['Encabezado']['Emisor']['Sucursal']) or !empty($datos['Encabezado']['Emisor']['CdgSIISucur'])) {
-                $pdf->setCasaMatriz($Emisor->direccion.', '.$Emisor->getComuna()->comuna);
+                if (!empty($extra['casa_matriz'])) {
+                    $pdf->setCasaMatriz($extra['casa_matriz']);
+                }
             }
             // logo se agrega siempre que exista, sea hoja carta o esté pedido por el emisor
-            if (isset($logo) and (!$papelContinuo or $Emisor->config_pdf_logo_continuo)) {
-                $pdf->setLogo('@'.$logo, $Emisor->config_pdf_logo_posicion);
+            if (isset($logo) and (!$papelContinuo or !empty($extra['continuo']['logo']['posicion']))) {
+                $pdf->setLogo('@'.$logo, !empty($extra['carta']['logo']['posicion']));
             }
             // configuración especifica del formato del PDF si es hoja carta, no se
             // recibe como parámetro con tal de forzar que los PDF salgan como el
             // emisor de LibreDTE los tiene configurados (así funciona tanto para
             // el emisor, como para los receptores u otras generaciones de PDF)
             if (!$papelContinuo) {
-                $pdf->setPosicionDetalleItem($Emisor->config_pdf_item_detalle_posicion);
-                if ($Emisor->config_pdf_detalle_fuente) {
-                    $pdf->setFuenteDetalle($Emisor->config_pdf_detalle_fuente);
+                if (isset($extra['carta']['detalle']['posicion'])) {
+                    $pdf->setPosicionDetalleItem($extra['carta']['detalle']['posicion']);
                 }
-                if ($Emisor->config_pdf_detalle_ancho) {
-                    $pdf->setAnchoColumnasDetalle((array)$Emisor->config_pdf_detalle_ancho);
+                if (!empty($extra['carta']['detalle']['fuente'])) {
+                    $pdf->setFuenteDetalle($extra['carta']['detalle']['fuente']);
                 }
-                $pdf->setTimbrePie(!$Emisor->config_pdf_timbre_posicion);
+                if (!empty($extra['carta']['detalle']['ancho'])) {
+                    $pdf->setAnchoColumnasDetalle((array)$extra['carta']['detalle']['ancho']);
+                }
+                if (isset($extra['carta']['timbre']['posicion'])) {
+                    $pdf->setTimbrePie(!$extra['carta']['timbre']['posicion']);
+                }
             }
             // si no tiene cedible o el cedible va en el mismo archivo
             if ($cedible!=2) {

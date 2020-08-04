@@ -21,6 +21,8 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
+/** ESTE ARCHIVO SE DEBE COPIAR A routes.php */
+
 // rutas para servicios web de módulos asociados a empresas
 \sowerphp\core\Routing_Router::connect('/api/dte/:controller/*', [
     'module' => 'Dte',

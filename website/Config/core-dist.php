@@ -21,13 +21,16 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-/** ESTE ARCHIVO SE DEBE CONFIGURAR Y RENOMBRAR A core.php */
+/** ESTE ARCHIVO SE DEBE COPIAR A core.php Y LUEGO CONFIGURAR */
 
 /**
  * @file core.php
  * Configuración de la aplicación web de LibreDTE
- * @version 2018-01-08
+ * @version 2020-08-02
  */
+
+// directorio para datos estáticos (debe tener permisos de escritura)
+define('DIR_STATIC', DIR_PROJECT.'/data/static');
 
 // Configuración depuración
 \sowerphp\core\Configure::write('debug', true);
@@ -115,35 +118,12 @@ ini_set('max_execution_time', 600);
     'Dte.Admin',
     'Dte.Admin.Informes',
     'Dte.Admin.Mantenedores',
+    'Dte.Pdf',
     'Utilidades',
     'Sistema.General',
     'Sistema.General.DivisionGeopolitica',
     'Sistema.Servidor',
 ]);
-
-// módulos principales (extras a Dte) que sólo funcionan con una empresa registrada
-//\sowerphp\core\Configure::write('app.modulos_empresa', []);
-
-// Configuración para autorización secundaria (extensión: sowerphp/app)
-/*\sowerphp\core\Configure::write('auth2', [
-    'name' => 'Latch',
-    'url' => 'https://latch.elevenpaths.com',
-    'app_id' => '',
-    'app_key' => '',
-    'default' => false,
-]);*/
-
-// Configuración para reCAPTCHA (extensión: sowerphp/app)
-/*\sowerphp\core\Configure::write('recaptcha', [
-    'public_key' => '',
-    'private_key' => '',
-]);*/
-
-// Configuración para auto registro de usuarios (extensión: sowerphp/app)
-/*\sowerphp\core\Configure::write('app.self_register', [
-    'groups' => ['usuarios', 'dte_plus'],
-    'terms' => 'https://legal.libredte.cl',
-]);*/
 
 // configuración de permisos de la empresa en la aplicación
 \sowerphp\core\Configure::write('empresa.permisos', [
@@ -200,28 +180,13 @@ ini_set('max_execution_time', 600);
     ],
 ]);
 
-// configuración para firma electrónica
-/*\sowerphp\core\Configure::write('firma_electronica.default', [
-    'file' => DIR_PROJECT.'/data/firma_electronica/default.p12',
-    'pass' => '',
-]);*/
-
-// configuración para autenticación en API para uso de servicios internos de LibreDTE y usuarios no logueados
-/*\sowerphp\core\Configure::write('api.default', [
-    'token' => '', // ej: hash del usuario admin
-]);*/
-
-// configuración para preautenticación
-/*\sowerphp\core\Configure::write('preauth', [
-    'enabled' => false,
-]);*/
-
-// configuración autenticación servicios externos
-/*\sowerphp\core\Configure::write('proveedores.api', [
-    // Desbloquea las funcionalidades Extra de LibreDTE
-    // Regístrate Gratis en https://api.libredte.cl
-    'libredte' => '',
-]);*/
+// configuración para las aplicaciones de terceros que se pueden usar en LibreDTE
+\sowerphp\core\Configure::write('apps_3rd_party', [
+    /*'apps' => [
+        'directory' => __DIR__.'/../../website/Module/Apps/Utility/Apps',
+        'namespace' => '\website\Apps',
+    ],*/
+]);
 
 // configuración módulo Apps
 /*\sowerphp\core\Configure::write('module.Apps', [
@@ -231,16 +196,35 @@ ini_set('max_execution_time', 600);
     ],
 ]);*/
 
-// configuración para las aplicaciones de terceros que se pueden usar en LibreDTE
-/*\sowerphp\core\Configure::write('apps_3rd_party', [
-    'apps' => [
-        'directory' => __DIR__.'/../../website/Module/Apps/Utility/Apps',
-        'namespace' => '\website\Apps',
-    ],
+// configuración autenticación servicios externos
+/*\sowerphp\core\Configure::write('proveedores.api', [
+    // Desbloquea las funcionalidades Extra de LibreDTE
+    // Regístrate Gratis en https://api.libredte.cl
+    'libredte' => '',
+]);*/
+
+// configuración para firma electrónica
+/*\sowerphp\core\Configure::write('firma_electronica.default', [
+    'file' => DIR_PROJECT.'/data/firma_electronica/default.p12',
+    'pass' => '',
+]);*/
+
+// Configuración para reCAPTCHA (extensión: sowerphp/app)
+/*\sowerphp\core\Configure::write('recaptcha', [
+    'public_key' => '',
+    'private_key' => '',
+]);*/
+
+// Configuración para auto registro de usuarios (extensión: sowerphp/app)
+/*\sowerphp\core\Configure::write('app.self_register', [
+    'groups' => ['usuarios', 'dte_plus'],
+    'terms' => 'https://legal.libredte.cl',
+]);*/
+
+// configuración para preautenticación
+/*\sowerphp\core\Configure::write('preauth', [
+    'enabled' => false,
 ]);*/
 
 // handler para triggers de la app
 //\sowerphp\core\Configure::write('app.trigger_handler', '');
-
-// directorio para datos estáticos (debe tener permisos de escritura)
-define('DIR_STATIC', DIR_PROJECT.'/data/static');
