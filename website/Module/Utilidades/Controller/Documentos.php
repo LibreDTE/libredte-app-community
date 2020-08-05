@@ -592,7 +592,7 @@ class Controller_Documentos extends \Controller_App
             }
             // logo se agrega siempre que exista, sea hoja carta o esté pedido por el emisor
             if (isset($logo) and (!$papelContinuo or !empty($extra['continuo']['logo']['posicion']))) {
-                $pdf->setLogo('@'.$logo, !empty($extra['carta']['logo']['posicion']));
+                $pdf->setLogo('@'.$logo, !empty($extra['carta']['logo']['posicion']) ? $extra['carta']['logo']['posicion'] : 0);
             }
             // configuración especifica del formato del PDF si es hoja carta, no se
             // recibe como parámetro con tal de forzar que los PDF salgan como el
