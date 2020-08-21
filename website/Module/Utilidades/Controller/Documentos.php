@@ -487,7 +487,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Recurso de la API que genera el PDF de los DTEs contenidos en un EnvioDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-02
+     * @version 2020-08-21
      */
     public function _api_generar_pdf_POST()
     {
@@ -610,6 +610,12 @@ class Controller_Documentos extends \Controller_App
                 }
                 if (isset($extra['carta']['timbre']['posicion'])) {
                     $pdf->setTimbrePie(!$extra['carta']['timbre']['posicion']);
+                }
+            }
+            // configuración si es papel continuo
+            else {
+                if (isset($extra['continuo']['item']['detalle'])) {
+                    $pdf->setPapelContinuoItemDetalle($extra['continuo']['item']['detalle']);
                 }
             }
             // si no tiene cedible o el cedible va en el mismo archivo
