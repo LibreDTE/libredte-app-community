@@ -124,7 +124,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
                     $this->redirect('/dte/contribuyentes/seleccionar');
                 }
             } else {
-                \sasco\LibreDTE\Sii::setAmbiente((int)$this->Contribuyente->config_ambiente_en_certificacion);
+                \sasco\LibreDTE\Sii::setAmbiente($this->Contribuyente->enCertificacion());
             }
         }
         return $this->Contribuyente;
