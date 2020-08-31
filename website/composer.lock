@@ -539,16 +539,16 @@
         },
         {
             "name": "sasco/libredte-api-client",
-            "version": "1.0.6",
+            "version": "1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-api-client-php.git",
-                "reference": "afe371f713fb7dbe4506700a1af77d65a75a6c39"
+                "reference": "e1f7b8f6f22eee3d09a8b927bbac486f6a4687d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-api-client-php/zipball/afe371f713fb7dbe4506700a1af77d65a75a6c39",
-                "reference": "afe371f713fb7dbe4506700a1af77d65a75a6c39",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-api-client-php/zipball/e1f7b8f6f22eee3d09a8b927bbac486f6a4687d2",
+                "reference": "e1f7b8f6f22eee3d09a8b927bbac486f6a4687d2",
                 "shasum": ""
             },
             "require": {
@@ -579,11 +579,11 @@
                 "libredte",
                 "sii"
             ],
-            "time": "2020-01-27T00:25:33+00:00"
+            "time": "2020-08-31T17:10:26+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.18.0",
+            "version": "v1.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
@@ -646,7 +646,7 @@
         },
         {
             "name": "symfony/polyfill-php72",
-            "version": "v1.18.0",
+            "version": "v1.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php72.git",
@@ -705,7 +705,7 @@
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.18.0",
+            "version": "v1.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
@@ -771,16 +771,16 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v4.4.11",
+            "version": "v4.4.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "2125805a1a4e57f2340bc566c3013ca94d2722dc"
+                "reference": "1bef32329f3166486ab7cb88599cae4875632b99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/2125805a1a4e57f2340bc566c3013ca94d2722dc",
-                "reference": "2125805a1a4e57f2340bc566c3013ca94d2722dc",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/1bef32329f3166486ab7cb88599cae4875632b99",
+                "reference": "1bef32329f3166486ab7cb88599cae4875632b99",
                 "shasum": ""
             },
             "require": {
@@ -844,7 +844,7 @@
                 "debug",
                 "dump"
             ],
-            "time": "2020-06-24T13:34:53+00:00"
+            "time": "2020-08-17T07:31:35+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",
