@@ -115,29 +115,21 @@ class Shell_Command_Indicadores_Uf extends \sowerphp\core\Shell_App
      * Método que guarda los valores de la UF en la base de datos
      * @param $valores Arreglo con los valores de la UF de todos los meses de uno o varios años
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-15
+     * @version 2020-09-06
      */
     private function saveValores($valores)
     {
-        $db = &\sowerphp\core\Model_Datasource_Database::get();
         foreach ($valores as $anio => $meses) {
             foreach ($meses as $mes => $dias) {
                 foreach ($dias as $dia => $valor) {
                     $aux[$anio][$dia][$mes] = $valor;
-                    if (!$valor)
+                    if (!$valor) {
                         continue;
-                    $fecha = $anio.'-'.$mes.'-'.$dia;
-                    $existe = (boolean)$db->getValue('
-                        SELECT COUNT(*)
-                        FROM moneda_cambio
-                        WHERE desde = :desde AND a = :a AND fecha = :fecha
-                    ', [':desde'=>'CLF', ':a'=>'CLP', ':fecha'=>$fecha]);
-                    if (!$existe) {
-                        $db->query(
-                            'INSERT INTO moneda_cambio (desde, a, fecha, valor) VALUES (:desde, :a, :fecha, :valor)',
-                            [':desde'=>'CLF', ':a'=>'CLP', ':fecha'=>$fecha, ':valor'=>$valor]
-                        );
                     }
+                    $fecha = $anio.'-'.$mes.'-'.$dia;
+                    $Moneda = new \sowerphp\app\Sistema\General\Model_MonedaCambio('CLF', 'CLP', $fecha);
+                    $Moneda->valor = $valor;
+                    $Moneda->save();
                 }
             }
         }
