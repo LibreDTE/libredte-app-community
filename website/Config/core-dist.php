@@ -188,6 +188,10 @@ ini_set('max_execution_time', 600);
         'directory' => __DIR__.'/../../website/Module/Apps/Utility/Apps',
         'namespace' => '\website\Apps',
     ],*/
+    'dtepdfs' => [
+        'directory' => __DIR__.'/../../website/Module/Dte/Module/Pdf/Utility/Apps',
+        'namespace' => '\website\Dte\Pdf',
+    ],
 ]);
 
 // configuración módulo Apps
