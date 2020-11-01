@@ -159,6 +159,8 @@ ini_set('max_execution_time', 600);
     'verificar_ssl' => true,
     // web verificacion boletas (debe ser la ruta completa, incluyendo /boletas)
     'web_verificacion' => null,
+    // clase para envío de boletas al SII
+    //'clase_boletas' => '\website\Dte\Utility_EnvioBoleta',
 ]);
 
 // configuración para API de contribuyentes
