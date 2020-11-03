@@ -490,16 +490,16 @@
         },
         {
             "name": "sasco/libredte",
-            "version": "20.10.0",
+            "version": "20.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "a359ac42e6d216a096724f57eace3bc997f81c3c"
+                "reference": "08de98871331cc684d78d4a17ac5f1985be3a0a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/a359ac42e6d216a096724f57eace3bc997f81c3c",
-                "reference": "a359ac42e6d216a096724f57eace3bc997f81c3c",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/08de98871331cc684d78d4a17ac5f1985be3a0a2",
+                "reference": "08de98871331cc684d78d4a17ac5f1985be3a0a2",
                 "shasum": ""
             },
             "require": {
@@ -536,7 +536,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2020-10-12T18:28:23+00:00"
+            "time": "2020-11-03T20:30:46+00:00"
         },
         {
             "name": "sasco/libredte-api-client",
