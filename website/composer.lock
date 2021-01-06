@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cfc47bc4a4e240fb69b3b19a0a33b662",
+    "content-hash": "3f355add6b2add69ee4bff758c90070d",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -245,16 +245,16 @@
         },
         {
             "name": "phpmailer/phpmailer",
-            "version": "v6.1.8",
+            "version": "v6.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "917ab212fa00dc6eacbb26e8bc387ebe40993bc1"
+                "reference": "e38888a75c070304ca5514197d4847a59a5c853f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/917ab212fa00dc6eacbb26e8bc387ebe40993bc1",
-                "reference": "917ab212fa00dc6eacbb26e8bc387ebe40993bc1",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/e38888a75c070304ca5514197d4847a59a5c853f",
+                "reference": "e38888a75c070304ca5514197d4847a59a5c853f",
                 "shasum": ""
             },
             "require": {
@@ -264,9 +264,12 @@
                 "php": ">=5.5.0"
             },
             "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
                 "doctrine/annotations": "^1.2",
-                "friendsofphp/php-cs-fixer": "^2.2",
-                "phpunit/phpunit": "^4.8 || ^5.7"
+                "phpcompatibility/php-compatibility": "^9.3.5",
+                "roave/security-advisories": "dev-latest",
+                "squizlabs/php_codesniffer": "^3.5.6",
+                "yoast/phpunit-polyfills": "^0.2.0"
             },
             "suggest": {
                 "ext-mbstring": "Needed to send email in multibyte encoding charset",
@@ -304,7 +307,7 @@
                 }
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
-            "time": "2020-10-09T14:55:58+00:00"
+            "time": "2020-11-25T15:24:57+00:00"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -490,16 +493,16 @@
         },
         {
             "name": "sasco/libredte",
-            "version": "20.10.1",
+            "version": "21.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "08de98871331cc684d78d4a17ac5f1985be3a0a2"
+                "reference": "89e56d2fba007d7eb25bce6ff50a05c212ba1746"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/08de98871331cc684d78d4a17ac5f1985be3a0a2",
-                "reference": "08de98871331cc684d78d4a17ac5f1985be3a0a2",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/89e56d2fba007d7eb25bce6ff50a05c212ba1746",
+                "reference": "89e56d2fba007d7eb25bce6ff50a05c212ba1746",
                 "shasum": ""
             },
             "require": {
@@ -536,7 +539,7 @@
                 "facturación electrónica",
                 "sii"
             ],
-            "time": "2020-11-03T20:30:46+00:00"
+            "time": "2020-12-31T15:11:49+00:00"
         },
         {
             "name": "sasco/libredte-api-client",
@@ -772,16 +775,16 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v4.4.16",
+            "version": "v4.4.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "3718e18b68d955348ad860e505991802c09f5f73"
+                "reference": "4f31364bbc8177f2a6dbc125ac3851634ebe2a03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/3718e18b68d955348ad860e505991802c09f5f73",
-                "reference": "3718e18b68d955348ad860e505991802c09f5f73",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/4f31364bbc8177f2a6dbc125ac3851634ebe2a03",
+                "reference": "4f31364bbc8177f2a6dbc125ac3851634ebe2a03",
                 "shasum": ""
             },
             "require": {
@@ -840,7 +843,7 @@
                 "debug",
                 "dump"
             ],
-            "time": "2020-10-26T20:47:51+00:00"
+            "time": "2020-12-08T16:59:59+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",
