@@ -207,7 +207,7 @@ class Controller_Certificacion extends \Controller_App
      * Acción que genera EnvioBOLETA, consumo de folios, libro de boletas y las
      * muestras impresas a partir de un set de pruebas de boleta electrónica
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-03-13
+     * @version 2021-01-11
      */
     public function set_pruebas_boletas()
     {
@@ -251,11 +251,11 @@ class Controller_Certificacion extends \Controller_App
             }
             // agregar datos de detalle
             $set_pruebas[$folio_actual]['Detalle'][] = [
-                'IndExe' => $data[$i][1] ? $data[$i][1] : false,
-                'NmbItem' => $data[$i][2],
-                'QtyItem' => $data[$i][3],
-                'UnmdItem'  => $data[$i][4] ? $data[$i][4] : false,
-                'PrcItem' => $data[$i][5],
+                'IndExe' => !empty($data[$i][1]) ? $data[$i][1] : false,
+                'NmbItem' => !empty($data[$i][2]) ? $data[$i][2] : false,
+                'QtyItem' => isset($data[$i][3]) ? $data[$i][3] : false,
+                'UnmdItem'  => !empty($data[$i][4]) ? $data[$i][4] : false,
+                'PrcItem' => isset($data[$i][5]) ? $data[$i][5] : false,
             ];
             // recordar folios anulados
             if (!empty($data[$i][6])) {
