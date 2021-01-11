@@ -324,10 +324,18 @@ class Controller_Certificacion extends \Controller_App
             $documento['Encabezado']['Emisor'] = $Emisor;
             $documento['Encabezado']['Receptor'] = $Receptor;
             $DTE = new \sasco\LibreDTE\Sii\Dte($documento);
-            if (!$DTE->timbrar($Folios[$DTE->getTipo()]))
+            if (empty($Folios[$DTE->getTipo()])) {
+                \sowerphp\core\Model_Datasource_Session::message(
+                    'Faltó subir archivo CAF de tipo '.$DTE->getTipo(), 'error'
+                );
+                $this->redirect('/certificacion/set_pruebas#boletas');
+            }
+            if (!$DTE->timbrar($Folios[$DTE->getTipo()])) {
                 break;
-            if (!$DTE->firmar($Firma))
+            }
+            if (!$DTE->firmar($Firma)) {
                 break;
+            }
             $EnvioBOLETA->agregar($DTE);
         }
         $EnvioBOLETA->setFirma($Firma);
