@@ -3,7 +3,7 @@
         "vendor-dir": "Vendor"
     },
     "require": {
-         "sasco/libredte": "21.1.*",
+         "sasco/libredte": "21.04.*",
          "sasco/libredte-api-client": "1.0.*",
          "kunalvarma05/dropbox-php-sdk": "0.2.1",
          "phpmailer/phpmailer": "~6.0"
