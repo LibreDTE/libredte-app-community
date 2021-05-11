@@ -140,10 +140,10 @@ class Controller_Estadisticas extends \Controller_App
         extract($this->getQuery([
             'contribuyentes_activos' => null,
         ]));
-        if ($contribuyentes_activos) {
+        $oficial = $this->esVersionOficial();
+        if (!$oficial and $contribuyentes_activos) {
             try {
                 $contribuyentes_activos = $Contribuyentes->getConMovimientos($desde, $hasta, $certificacion, false);
-                $oficial = $this->esVersionOficial();
                 foreach($contribuyentes_activos as &$c) {
                     if ($oficial) {
                         $c['email'] = null;
