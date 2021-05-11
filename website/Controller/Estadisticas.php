@@ -122,7 +122,7 @@ class Controller_Estadisticas extends \Controller_App
      * @param desde Desde cuando considerar la actividad de los contribuyentes
      * @param hasta Hasta cuando considerar la actividad de los contribuyentes
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-11-14
+     * @version 2021-05-11
      */
     private function getEstadistica($certificacion, $desde, $hasta)
     {
@@ -136,18 +136,25 @@ class Controller_Estadisticas extends \Controller_App
         );
         $Usuarios = new \sowerphp\app\Sistema\Usuarios\Model_Usuarios();
         $Usuarios->setWhereStatement(['activo = true']);
-        try {
-            $contribuyentes_activos = $Contribuyentes->getConMovimientos($desde, $hasta, $certificacion, false);
-            $oficial = $this->esVersionOficial();
-            foreach($contribuyentes_activos as &$c) {
-                if ($oficial) {
-                    $c['email'] = null;
+        // agregar contribuyentes activos sólo si se pide
+        extract($this->getQuery([
+            'contribuyentes_activos' => null,
+        ]));
+        if ($contribuyentes_activos) {
+            try {
+                $contribuyentes_activos = $Contribuyentes->getConMovimientos($desde, $hasta, $certificacion, false);
+                $oficial = $this->esVersionOficial();
+                foreach($contribuyentes_activos as &$c) {
+                    if ($oficial) {
+                        $c['email'] = null;
+                    }
+                    unset($c['ambiente']);
                 }
-                unset($c['ambiente']);
+            } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+                $this->Api->send($e->getMessage(), 500);
             }
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-            $this->Api->send($e->getMessage(), 500);
         }
+        // entregar resultados
         $this->Api->send([
             'version' => $this->getVersion(),
             'certificacion' => (int)$certificacion,
@@ -156,7 +163,7 @@ class Controller_Estadisticas extends \Controller_App
             'empresas_registradas' => $empresas_registradas,
             'documentos_emitidos' => $DteEmitidos->count(),
             'documentos_diarios' => $DteEmitidos->countDiarios($desde, $hasta, $certificacion),
-            'usuarios_mensuales' => (new \sowerphp\app\Sistema\Usuarios\Model_Usuarios())->getStatsLogin(),
+            'usuarios_mensuales' => $Usuarios->getStatsLogin(),
             'contribuyentes_por_comuna' => $Contribuyentes->countByComuna($certificacion),
             'contribuyentes_por_actividad' => $Contribuyentes->countByActividadEconomica($certificacion),
             'contribuyentes_activos' => $contribuyentes_activos,
