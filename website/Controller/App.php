@@ -96,12 +96,13 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
     /**
      * Método que asigna el objeto del contribuyente para ser "recordado"
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-10-23
+     * @version 2021-05-27
      */
     protected function setContribuyente($Contribuyente)
     {
         if ($Contribuyente instanceof $this->Contribuyente_class) {
             \sowerphp\core\Model_Datasource_Session::write('dte.Contribuyente', $Contribuyente);
+            \sowerphp\core\Model_Datasource_Session::delete('dte.certificacion');
         }
     }
 
