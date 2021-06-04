@@ -27,13 +27,14 @@ namespace website\Apps;
  * Comando para respaldar los datos de los contribuyentes en la cuenta asociada
  * a la aplicación de Dropbox
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2019-07-27
+ * @version 2021-06-04
  */
 class Shell_Command_Respaldos_Dropbox extends \Shell_App
 {
 
     public function main($grupo = null, $compress = 'tgz')
     {
+        ini_set('memory_limit', '2048M');
         $contribuyentes = $this->getContribuyentes($grupo);
         foreach ($contribuyentes as $rut) {
             $this->crearRespaldo($rut, $compress);
