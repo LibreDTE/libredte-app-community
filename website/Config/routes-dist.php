@@ -32,6 +32,10 @@
     'module' => 'Dte.Admin',
     'action' => 'api',
 ]);
+\sowerphp\core\Routing_Router::connect('/api/honorarios/:controller/*', [
+    'module' => 'Honorarios',
+    'action' => 'api',
+]);
 
 // rutas para consultar DTE
 \sowerphp\core\Routing_Router::connect('/consultar', [

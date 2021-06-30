@@ -74,6 +74,7 @@ ini_set('max_execution_time', 600);
 // Menú principal de la aplicación web
 \sowerphp\core\Configure::write('nav.app', [
     '/dte' => '<span class="fa fa-file-invoice fa-fw"></span> Facturación',
+    '/honorarios' => '<span class="fas fa-user-friends fa-fw"></span> Honorarios',
     '/utilidades' => '<span class="fa fa-cog fa-fw"></span> Utilidades',
     '/certificacion' => '<span class="fa fa-certificate fa-fw"></span> Certificación',
     '/dte/contribuyentes/seleccionar' => '<span class="fa fa-mouse-pointer fa-fw"></span> Seleccionar empresa',
@@ -119,6 +120,7 @@ ini_set('max_execution_time', 600);
     'Dte.Admin.Informes',
     'Dte.Admin.Mantenedores',
     'Dte.Pdf',
+    'Honorarios',
     'Utilidades',
     'Sistema.General',
     'Sistema.General.DivisionGeopolitica',
