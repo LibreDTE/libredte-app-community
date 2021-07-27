@@ -27,12 +27,12 @@
 // Menú para el módulo
 \sowerphp\core\Configure::write('nav.module', [
     '/boleta_honorarios' => [
-        'name' => 'Boletas de honorarios',
+        'name' => 'Boletas de Honorarios (BHE)',
         'desc' => 'Ver boletas de honorarios recibidas por cada período',
         'icon' => 'fas fa-user-tie',
     ],
     '/boleta_terceros' => [
-        'name' => 'Boletas de terceros',
+        'name' => 'Boletas de Terceros (BTE)',
         'desc' => 'Ver boletas de terceros emitidas por cada período',
         'icon' => 'fas fa-user-secret',
     ],
