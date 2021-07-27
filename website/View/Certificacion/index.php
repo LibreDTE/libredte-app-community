@@ -24,7 +24,7 @@
 <div class="row mb-4">
     <div class="col-md-4 mb-4">
         <a href="https://libredte.cl/ventas/dte-cert" title="Solicitar Servicio de Certificación">
-            <img src="https://libredte.cl/img/precios/certificaciones.jpg" alt="Certificaciones" class="img-fluid img-thumbnail" />
+            <img src="https://libredte.cl/img/precios/libredte-certificacion-dte.jpg" alt="Con nosotros puedes certificar tus documentos ante el SII para ocupar tu propio sistema" class="img-fluid img-thumbnail" />
         </a>
     </div>
     <div class="col-md-8 mb-4">
