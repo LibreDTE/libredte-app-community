@@ -1,7 +1,4 @@
 <div class="page-header"><h1>Generar XML de DTE</h1></div>
-<script type="text/javascript">
-    var plantillas_dte = JSON.parse('<?=json_encode($plantillas_dte)?>');
-</script>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin(['id'=>'generar_xml', 'onsubmit'=>'dte_generar_xml_validar(this)']);
@@ -123,13 +120,6 @@ echo $f->input([
 <h2>Documentos</h2>
 <?php
 echo $f->input([
-    'type' => 'select',
-    'name' => 'plantilla_dte',
-    'label' => 'Plantilla DTE',
-    'options' => [''=>'Usar una plantilla de DTE para generar el documento'] + $plantillas_dte_options,
-    'attr' => 'onchange="dte_generar_xml_plantilla(this.value)"',
-]); echo '<br/>';
-echo $f->input([
     'type' => 'textarea',
     'name' => 'documentos',
     'value' => $documentos_json,
@@ -137,7 +127,10 @@ echo $f->input([
     'placeholder' => 'Arreglo JSON con cada uno de los objetos que representa un documento tributario electrónico (DTE)',
     'check' => 'notempty',
     'rows' => 20,
-]); echo '<br/>';
+]);
+?>
+<p class="text-muted mb-4">En el <a href="https://soporte.sasco.cl/kb/faq.php?id=38" target="_blank">Manual de Certificación de DTE</a> encontrará plantillas con ejemplos de archivos JSON con diferentes tipos de documentos.</p>
+<?php
 $f->setStyle('horizontal');
 echo $f->input([
     'type' => 'checkbox',

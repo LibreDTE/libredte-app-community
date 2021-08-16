@@ -36,21 +36,10 @@ class Controller_Documentos extends \Controller_App
      * Acción que permite la generación del XML del EnvioDTE a partir de los
      * datos en JSON
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+     * @version 2021-08-16
      */
     public function xml()
     {
-        // definir plantillas de dte
-        $dir = DIR_PROJECT.'/data/plantillas_dte';
-        $files = scandir($dir);
-        foreach ($files as $file) {
-            if ($file[0]=='.')
-                continue;
-            $f = mb_substr($file, 0, -5);
-            $md5 = md5($f);
-            $plantillas_dte[$md5] = base64_encode(file_get_contents($dir.'/'.$file));
-            $plantillas_dte_options[$md5] = $f;
-        }
         // variables para el formulario
         $documentos_json = \sowerphp\core\Model_Datasource_Session::read('documentos_json');
         if ($documentos_json)
@@ -59,8 +48,6 @@ class Controller_Documentos extends \Controller_App
             '_header_extra' => ['js'=>['/utilidades/js/utilidades.js', '/dte/js/dte.js']],
             'actividades_economicas' => (new \website\Sistema\General\Model_ActividadEconomicas())->getList(),
             'comunas' => (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->getList(),
-            'plantillas_dte' => $plantillas_dte,
-            'plantillas_dte_options' => $plantillas_dte_options,
             'documentos_json' => $documentos_json,
         ]);
         // generar xml

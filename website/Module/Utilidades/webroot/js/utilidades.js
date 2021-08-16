@@ -13,18 +13,6 @@ function dte_generar_xml_validar(formulario) {
     return Form.confirm(formulario, '¿Está seguro de querer generar el DTE?');
 }
 
-function dte_generar_xml_plantilla(id) {
-    if (plantillas_dte[id]===undefined) {
-        document.getElementById("documentosField").value = "";
-    } else {
-        if (typeof atob == 'function') {
-            document.getElementById("documentosField").value = atob(plantillas_dte[id]);
-        } else {
-            Form.alert('Lo sentimos, no tienes soporte en tu navegador web para usar las plantillas');
-        }
-    }
-}
-
 function libro_generar_tipo(simplificado) {
     if (simplificado==1) {
         document.getElementById('PeriodoTributarioField').value = '2000-01';
