@@ -545,16 +545,16 @@
         },
         {
             "name": "sasco/libredte",
-            "version": "21.4.8",
+            "version": "21.4.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "9823d1367104f8aad9b65a4a463024368a0abdf8"
+                "reference": "53f7a81844619a7a4612142bc35e0e21b56558e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/9823d1367104f8aad9b65a4a463024368a0abdf8",
-                "reference": "9823d1367104f8aad9b65a4a463024368a0abdf8",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/53f7a81844619a7a4612142bc35e0e21b56558e5",
+                "reference": "53f7a81844619a7a4612142bc35e0e21b56558e5",
                 "shasum": ""
             },
             "require": {
@@ -596,7 +596,7 @@
                 "issues": "https://github.com/LibreDTE/libredte-lib/issues",
                 "source": "https://github.com/LibreDTE/libredte-lib"
             },
-            "time": "2021-08-26T22:15:24+00:00"
+            "time": "2021-09-02T16:34:52+00:00"
         },
         {
             "name": "sasco/libredte-api-client",
@@ -888,16 +888,16 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v4.4.27",
+            "version": "v4.4.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "391d6d0e7a06ab54eb7c38fab29b8d174471b3ba"
+                "reference": "7f65c44c2ce80d3a0fcdb6385ee0ad535e45660c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/391d6d0e7a06ab54eb7c38fab29b8d174471b3ba",
-                "reference": "391d6d0e7a06ab54eb7c38fab29b8d174471b3ba",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/7f65c44c2ce80d3a0fcdb6385ee0ad535e45660c",
+                "reference": "7f65c44c2ce80d3a0fcdb6385ee0ad535e45660c",
                 "shasum": ""
             },
             "require": {
@@ -957,7 +957,7 @@
                 "dump"
             ],
             "support": {
-                "source": "https://github.com/symfony/var-dumper/tree/v4.4.27"
+                "source": "https://github.com/symfony/var-dumper/tree/v4.4.30"
             },
             "funding": [
                 {
@@ -973,7 +973,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-23T15:41:52+00:00"
+            "time": "2021-08-04T20:31:23+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",
