@@ -163,6 +163,8 @@ ini_set('max_execution_time', 600);
     'web_verificacion' => null,
     // clase para envío de boletas al SII
     //'clase_boletas' => '\website\Dte\Utility_EnvioBoleta',
+    // permitir que los usuarios puedan transferir empresas
+    //'transferir_contribuyente' => true,
 ]);
 
 // configuración para API de contribuyentes
