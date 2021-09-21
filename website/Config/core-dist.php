@@ -238,3 +238,9 @@ ini_set('max_execution_time', 600);
 
 // handler para triggers de la app
 //\sowerphp\core\Configure::write('app.trigger_handler', '');
+
+// configuración para FAQ (preguntas frecuentes)
+\sowerphp\core\Configure::write('faq', [
+    'url' => 'https://soporte.sasco.cl/kb/faq.php?id=',
+    'text' => 'Revise aquí para más detalles',
+]);

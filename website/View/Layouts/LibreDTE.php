@@ -223,10 +223,11 @@ foreach ($messages as $message) {
         'warning' => 'warning-sign',
         'danger' => 'exclamation-sign',
     ];
+    $message['text'] = message_make_links($message['text']);
     echo '<div class="alert alert-',$message['type'],'" role="alert">',"\n";
+    echo '    <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>',"\n";
     echo '    <span class="glyphicon glyphicon-',$icons[$message['type']],'" aria-hidden="true"></span>',"\n";
     echo '    <span class="sr-only">',$message['type'],': </span>',$message['text'],"\n";
-    echo '    <a href="#" class="close" data-dismiss="alert" aria-label="close" title="Cerrar">&times;</a>',"\n";
     echo '</div>'."\n";
 }
 // contenido de la página
