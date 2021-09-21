@@ -177,7 +177,7 @@ ini_set('max_execution_time', 600);
     'dte_pdf' => [
         'name' => 'PDF de DTE',
         'desc' => 'Servicio que genera el PDF a partir del XML del DTE',
-        'link' => 'http://blog.libredte.cl/index.php/2017/10/06/personaliza-el-pdf-de-tus-dte-como-quieras'
+        'link' => 'https://soporte.sasco.cl/kb/faq.php?id=215'
     ],
     'dte_intercambio_responder' => [
         'name' => 'Procesar intercambio',
