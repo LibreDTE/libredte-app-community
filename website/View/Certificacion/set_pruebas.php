@@ -29,6 +29,7 @@ $(function() {
     var url = document.location.toString();
     if (url.match('#')) {
         $('#'+url.split('#')[1]+'-tab').tab('show');
+        $('html,body').scrollTop(0);
     }
 });
 </script>
