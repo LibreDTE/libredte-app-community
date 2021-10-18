@@ -1,18 +1,15 @@
-LibreDTE: Aplicación web
-========================
+LibreDTE: Aplicación Web Versión Comunidad
+==========================================
 
 LibreDTE es un proyecto que tiene por objetivo proveer Facturación Electrónica
 Libre para Chile.
 
-Aquí encontrarás el código fuente de la versión comunidad de LibreDTE, la cual
-es una parte de la versión oficial disponible sólo en <https://libredte.cl>
+Aquí encontrarás el código fuente de la Versión Comunidad de LibreDTE, la cual
+es la base de la Versión Oficial disponible sólo en <https://libredte.cl>
 
-Esta aplicación web utiliza la
+Esta aplicación web utiliza como núcleo para el sistema de facturación la
 [Biblioteca de LibreDTE en PHP](https://github.com/LibreDTE/libredte-lib) y el
-[Módulo Dte](https://github.com/LibreDTE/libredte-modulo-Dte) del framework
-[SowerPHP](https://sowerphp.org).
-
-[Realiza una donación al proyecto](https://facturacionlibre.cl/#donar)
+[framework SowerPHP](https://sowerphp.org) para la plataforma web.
 
 Términos y condiciones de uso
 -----------------------------
@@ -43,7 +40,8 @@ Instalación
 -----------
 
 Revisar el [manual de instalación](https://github.com/LibreDTE/libredte-webapp/blob/master/INSTALL.md)
-para un paso a paso. La instalación sólo se hace una vez, luego basta actualizar la instancia.
+para un paso a paso. La instalación sólo se hace una vez, luego basta actualizar
+la instancia.
 
 Actualización
 -------------
@@ -77,7 +75,7 @@ Contacto y redes sociales
 -------------------------
 
 - Sitio web: <https://libredte.cl>
-- Facebook: <https://www.facebook.com/LibreDTE>
+- Facebook: <https://www.facebook.com/libredte>
 - Youtube: <https://www.youtube.com/libredtecl>
-- Twitter: <https://twitter.com/LibreDTE>
+- Twitter: <https://twitter.com/libredte>
 - Linkedin: <https://www.linkedin.com/groups/8403251>

@@ -6,7 +6,7 @@ LibreDTE es un proyecto de SASCO SpA que tiene como misión proveer facturación
 Autor original: Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
 Aplicación oficial: https://libredte.cl
 Framework: SowerPHP (https://sowerphp.org)
-Layout: harbor (https://hackerthemes.com)
+Layout: oficial de Bootstrap 4
 -->
 <!DOCTYPE html>
 <html lang="es">
@@ -17,7 +17,7 @@ Layout: harbor (https://hackerthemes.com)
         <link rel="shortcut icon" href="<?=$_base?>/img/favicon.png" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css?family=Oswald|Raleway" rel="stylesheet">
-        <link rel="stylesheet" href="<?=$_base?>/layouts/harbor/bootstrap4-harbor.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="<?=$_base?>/css/style.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

@@ -54,21 +54,14 @@ ini_set('max_execution_time', 600);
 \sowerphp\core\Configure::write('page.footer', [
     // los créditos de LibreDTE: autor original y enlaces, se deben mantener visibles en el footer de cada página de la aplicación
     // más información en los términos y condiciones de uso en https://legal.libredte.cl
-    'left' => '&copy; 2020 '.\sowerphp\core\Configure::read('page.header.title').' - <a href="/consultar" title="Consultar documentos (incluyendo boletas)">Consultar DTE</a><br/><span class="small">Aplicación de facturación basada en <a href="https://libredte.cl">LibreDTE</a>, el cual es un proyecto de <a href="https://sasco.cl">SASCO SpA</a> que tiene como misión proveer facturación electrónica libre para Chile</span>',
+    'left' => '&copy; 2021 '.\sowerphp\core\Configure::read('page.header.title').' - <a href="/consultar" title="Consultar documentos (incluyendo boletas)">Consultar DTE</a><br/><span class="small">Aplicación de facturación basada en <a href="https://libredte.cl">LibreDTE</a>, el cual es un proyecto de <a href="https://sasco.cl">SASCO SpA</a> que tiene como misión proveer facturación electrónica libre para Chile</span>',
     'right' => '',
 ]);
 
 // Menú principal del sitio web
 \sowerphp\core\Configure::write('nav.website', [
     '/dte' => ['name'=>'Facturación', 'desc'=>'Accede al módulo de facturación electrónica', 'icon'=>'fa fa-file-invoice'],
-    '/utilidades' => ['name'=>'Utilidades', 'desc'=>'Utilidades y herramientas para generar documentos asociados a la facturación electrónica', 'icon'=>'fa fa-wrench'],
-    '/soporte' => ['name'=>'Soporte', 'desc'=>'¿Necesitas ayuda o tienes alguna consulta?', 'icon'=>'far fa-life-ring', 'nav'=>[
-        'https://faq.libredte.cl'=>'Preguntas y Respuestas Frecuentes',
-        'https://groups.google.com/forum/#!forum/libredte' => 'Lista de Correo',
-        'https://libredte.cl/soporte?tema=42' => 'Abrir Ticket a SASCO SpA por Uso de Plataforma Web',
-        'https://libredte.cl/soporte?tema=43' => 'Abrir Ticket a SASCO SpA por Uso de Servicios Web',
-        'https://libredte.cl' => 'Versión Oficial de LibreDTE',
-    ]],
+    'https://faq.libredte.cl' => ['name'=>'Soporte', 'desc'=>'Revisa las Preguntas y Respuestas Frecuentes', 'icon'=>'far fa-life-ring'],
 ]);
 
 // Menú principal de la aplicación web
