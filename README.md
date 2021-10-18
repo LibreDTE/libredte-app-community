@@ -49,7 +49,10 @@ la instancia.
 Actualización
 -------------
 
-Primero, actualizar el framework SowerPHP:
+Revisa en [nuestro blog](https://blog.libredte.cl/category/versiones-libredte/)
+donde se publican las versiones y detalles sobre las actualizaciones.
+
+Para actualizar, primero, actualizar el framework SowerPHP:
 
 	$ cd /usr/share/sowerphp
 	$ git pull
