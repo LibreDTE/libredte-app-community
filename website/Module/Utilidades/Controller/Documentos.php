@@ -646,40 +646,6 @@ class Controller_Documentos extends \Controller_App
     }
 
     /**
-     * Recurso de la API que entrega el contenido del TED a partir de un archivo
-     * con el timbre como imagen
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-17
-     */
-    public function _api_get_ted_POST()
-    {
-        // verificar si se pasaron credenciales de un usuario
-        $User = $this->Api->getAuthUser();
-        if (is_string($User)) {
-            $this->Api->send($User, 401);
-        }
-        // obtener TED
-        $data = base64_decode($this->Api->data);
-        if (!$data) {
-            $this->Api->send('No fue posible leer imagen del TED', 400);
-        }
-        $archivo = TMP.'/ted_'.md5($data);
-        $pbm = $archivo.'.pbm';
-        file_put_contents($archivo, $data);
-        exec('convert '.$archivo.' '.$pbm.' 2>&1', $output, $rc);
-        unlink($archivo);
-        if ($rc) {
-            $this->Api->send(implode("\n", $output), 507);
-        }
-        $ted = exec(DIR_PROJECT.'/app/pdf417decode/pdf417decode '.$pbm.' && echo "" 2>&1', $output, $rc);
-        unlink($pbm);
-        if ($rc) {
-            $this->Api->send(implode("\n", $output), 500);
-        }
-        return base64_encode($ted);
-    }
-
-    /**
      * Recurso de la API que permite validar el TED (timbre electrónico)
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
      * @version 2017-02-23
