@@ -12,6 +12,8 @@ Esta aplicación web utiliza como núcleo para el sistema de facturación la
 [Biblioteca de LibreDTE en PHP](https://github.com/LibreDTE/libredte-lib) y el
 [framework SowerPHP](https://sowerphp.org) para la plataforma web.
 
+![Dashboard LibreDTE](https://facturacionlibre.cl/assets/img/inicio/libredte-dashboard.png)
+
 Términos y condiciones de uso
 -----------------------------
 
