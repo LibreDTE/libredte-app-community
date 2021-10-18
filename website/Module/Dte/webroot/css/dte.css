@@ -1,0 +1,17 @@
+#facturaGenerar #cliente {
+	float: left;
+	margin-bottom: 2em;
+}
+
+#facturaGenerar #resumen {
+	float: right;
+}
+
+#facturaGenerar #resumen input {
+	width: 80px;
+	text-align: right;
+}
+
+#facturaGenerar #detalle {
+	clear: both;
+}

@@ -1,0 +1,6 @@
+codigo;clasificacion;superior;activa
+comp;Computadores;;1
+pc;Computadores escritorio;comp;1
+portatil;Portátiles;comp;1
+redes;Redes;;1
+software;Software;;1

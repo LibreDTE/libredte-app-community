@@ -1,0 +1,6 @@
+codigo_tipo;codigo;item;descripcion;clasificacion;unidad;precio;moneda;exento;descuento;descuento_tipo;impuesto_adicional;activo;bruto
+INT1;1234;Laptop con S.O.;;portatil;;250000;CLP;0;0;%;;1;0
+INT1;1235;Laptop sin S.O.;;portatil;;200000;CLP;0;0;%;;1;0
+INT1;pc123;Computador de sobremesa;;pc;;160000;CLP;0;0;%;;1;0
+INT1;yagi15;Antena Yagi 15 dBi;;redes;;14000;CLP;0;0;%;;1;0
+INT1;utp;Cable UTP;;redes;m;400;CLP;0;0;%;;1;0
