@@ -12,30 +12,12 @@ de los proyectos asociados a LibreDTE.
 Requisitos
 ----------
 
-- Apache 2 y PHP 7.0 o superior
-- Base de datos PostgreSQL 9
-- Memcached con PHP usándolo como backend para las sesiones
-- [Otros requisitos de SowerPHP](https://github.com/SowerPHP/sowerphp/blob/master/INSTALL.md)
-- Tener [SowerPHP](https://github.com/SowerPHP/sowerphp) instalado con las
-extensiones [app](https://github.com/SowerPHP/extension-app) y
-[general](https://github.com/SowerPHP/extension-general)
-
-### Instalación del framework
-
-Usando [SowerPKG](https://github.com/SowerPHP/sowerpkg) se instala en el
-directorio por defecto */usr/share/sowerphp*:
-
-	$ wget -c https://github.com/SowerPHP/sowerpkg/raw/master/sowerpkg.sh
-	$ chmod +x sowerpkg.sh
-	$ ./sowerpkg.sh install -e "app general" -W
-
-Esto instalará el framework SowerPHP, y las extensiones "general" y "app".
-
-SowerPKG requiere que esté instalado curl, git y mercurial (hg).
-
-Adicionalmente SowerPKG dejará composer en el directorio ~/bin por lo cual se
-recomienda agregarlo al PATH del usuario para evitar tener que escribir la ruta
-completa al momento de usar composer.
+- Apache 2
+- PHP 7.3
+- PostgreSQL 11
+- Memcached
+- composer, curl, git y mercurial (hg)
+- [SowerPHP](https://github.com/SowerPHP/sowerphp)
 
 Instalación aplicación web
 --------------------------
@@ -43,7 +25,7 @@ Instalación aplicación web
 1.	Clonar código de la aplicación al directorio del servidor web:
 
 		$ cd DIRECTORIO_SERVIDOR_WEB
-		$ git clone --recursive https://github.com/LibreDTE/libredte-webapp.git libredte
+		$ git clone https://github.com/LibreDTE/libredte-webapp.git libredte
 
 	Esto instalará la aplicación web de LibreDTE dentro del directorio
 	libredte en DIRECTORIO_SERVIDOR_WEB y se asume que se accederá vía

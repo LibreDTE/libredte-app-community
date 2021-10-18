@@ -1,11 +1,12 @@
 LibreDTE: Aplicación Web Versión Comunidad
 ==========================================
 
-LibreDTE es un proyecto que tiene por objetivo proveer Facturación Electrónica
-Libre para Chile.
+LibreDTE es un proyecto de [SASCO SpA](https://sasco.cl) que tiene por objetivo
+proveer Facturación Electrónica Libre para Chile.
 
 Aquí encontrarás el código fuente de la Versión Comunidad de LibreDTE, la cual
-es la base de la Versión Oficial disponible sólo en <https://libredte.cl>
+es la base de la Versión Oficial disponible sólo en
+[www.libredte.cl](https://libredte.cl)
 
 Esta aplicación web utiliza como núcleo para el sistema de facturación la
 [Biblioteca de LibreDTE en PHP](https://github.com/LibreDTE/libredte-lib) y el
@@ -46,9 +47,21 @@ la instancia.
 Actualización
 -------------
 
-1. Actualizar framework: `sowerpkg update`
-2. Actualizar aplicación web: `bin/libredte-update`
-3. Ejecutar script actualización base de datos (si corresponde)
+Primero, actualizar el framework SowerPHP:
+
+	$ cd /usr/share/sowerphp
+	$ git pull
+	$ composer install
+
+Segundo, actualizar aplicación web de LibreDTE:
+
+	$ cd $WEBAPP
+	$ git pull
+	$ composer install
+
+Tercero, ejecutar script actualización base de datos (si corresponde).
+
+Estos pasos asumen los directorios por defecto del manual de instalación.
 
 Si hay algún error después de actualizar verificar lo siguiente:
 
