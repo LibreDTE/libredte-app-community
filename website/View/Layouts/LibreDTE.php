@@ -34,15 +34,17 @@ Layout: oficial de Bootstrap 4
         </script>
         <script src="https://cdn.sasco.cl/js/__.min.js"></script>
         <script src="https://cdn.sasco.cl/js/form.min.js"></script>
-        <script src="<?=$_base?>/js/datepicker/bootstrap-datepicker.js"></script>
-        <script src="<?=$_base?>/js/datepicker/bootstrap-datepicker.es.js"></script>
-        <link rel="stylesheet" href="<?=$_base?>/js/datepicker/datepicker3.css" />
+        <script src="https://cdn.sasco.cl/js/datepicker/bootstrap-datepicker.js"></script>
+        <script src="https://cdn.sasco.cl/js/datepicker/bootstrap-datepicker.es.js"></script>
+        <link rel="stylesheet" href="https://cdn.sasco.cl/js/datepicker/datepicker3.css" />
+        <link type="text/css" href="https://cdn.sasco.cl/css/typeahead.css" rel="stylesheet" />
+        <script src="https://cdn.sasco.cl/js/typeahead.bundle.min.js"></script>
         <script src="<?=$_base?>/js/app.js"></script>
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
-        <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" />
-        <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootbox@5.1.3/dist/bootbox.all.min.js"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />

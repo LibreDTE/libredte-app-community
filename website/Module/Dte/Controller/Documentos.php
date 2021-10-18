@@ -457,7 +457,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Acción para mostrar página de emisión de DTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-07-28
+     * @version 2021-10-18
      */
     public function emitir($referencia_dte = null, $referencia_folio = null, $dte_defecto = null, $referencia_codigo = '', $referencia_razon = '')
     {
@@ -539,7 +539,7 @@ class Controller_Documentos extends \Controller_App
         }
         // variables para la vista
         $this->set([
-            '_header_extra' => ['js'=>['/dte/js/dte.js', '/js/typeahead.bundle.min.js', '/js/js.js'], 'css'=>['/dte/css/dte.css', '/css/typeahead.css']],
+            '_header_extra' => ['js'=>['/dte/js/dte.js'], 'css'=>['/dte/css/dte.css']],
             'Emisor' => $Emisor,
             'sucursales_actividades' => $Emisor->getSucursalesActividades(),
             'actividades_economicas' => $Emisor->getListActividades(),
