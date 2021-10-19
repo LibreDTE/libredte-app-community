@@ -24,14 +24,14 @@
 /**
  * Función para consumir Servicios Web de la API de LibreDTE en api.libredte.cl
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2020-07-22
+ * @version 2021-10-19
  */
 function libredte_api_consume($recurso, $datos = [])
 {
     // configuración de la API para funcionalidades extras
     $config = \sowerphp\core\Configure::read('proveedores.api.libredte');
     if (!$config) {
-        throw new \Exception('Funcionalidades extras no disponibles en esta versión de LibreDTE. Desbloquea las funcionalidades, desde costo 0, en api.libredte.cl', 402);
+        throw new \Exception('Funcionalidades extras no disponibles en esta versión de LibreDTE. Desbloquea las funcionalidades, desde costo 0, en api.libredte.cl [faq:265]', 402);
     }
     if (!is_array($config)) {
         $config = [
@@ -41,7 +41,7 @@ function libredte_api_consume($recurso, $datos = [])
     }
     // verificar si se pueden hacer consultas a la API o la cuenta se encuentra
     // en pausa por haber alcanzado el número máximo de consultas
-    $message_429 = 'Las consultas a la API de LibreDTE en api.libredte.cl se encuentran en pausa ya que se alcanzó el límite de la cuota permitida. Se podrán volver a hacer consultas después del %s. Recuperará el acceso a las funcionalidades extras de LibreDTE una vez se restablezca la cuota de consultas.';
+    $message_429 = 'Las consultas a la API de LibreDTE en api.libredte.cl se encuentran en pausa ya que se alcanzó el límite de la cuota permitida. Se podrán volver a hacer consultas después del %s. Recuperará el acceso a las funcionalidades extras de LibreDTE una vez se restablezca la cuota de consultas.  [faq:265]';
     $Cache = new \sowerphp\core\Cache();
     $retry_time = $Cache->get('libredte_api_retry_time');
     if ($retry_time) {

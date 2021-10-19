@@ -94,7 +94,7 @@ ini_set('max_execution_time', 600);
 
 // Configuración para el correo electrónico
 \sowerphp\core\Configure::write('email.default', array(
-    'type' => 'smtp',
+    'type' => 'smtp-phpmailer',
     'host' => 'ssl://smtp.gmail.com',
     'port' => 465,
     'user' => '',
@@ -206,10 +206,24 @@ ini_set('max_execution_time', 600);
     'libredte' => '',
 ]);*/
 
+// configuración de la aplicación LibreDTE
+/*\sowerphp\core\Configure::write('libredte', [
+    'proveedor' => [
+        'rut' => 76192083,
+    ],
+]);*/
+
 // configuración para firma electrónica
 /*\sowerphp\core\Configure::write('firma_electronica.default', [
     'file' => DIR_PROJECT.'/data/firma_electronica/default.p12',
     'pass' => '',
+]);*/
+
+// Configuración para autorización secundaria (extensión: sowerphp/app)
+/*\sowerphp\core\Configure::write('auth2', [
+    '2FA' => [
+        'app_url' => 'www.libredte.cl',
+    ],
 ]);*/
 
 // Configuración para reCAPTCHA (extensión: sowerphp/app)
