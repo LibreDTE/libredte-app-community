@@ -645,18 +645,18 @@ subir los archivos ODS uno a uno.
 
 #### Configuración de Permisos (opcional)
 
-1. Ir a `https://libredte.example.com/sistema/usuarios/grupos` y agregar el
-   grupo soporte.
+1. Ir a `https://libredte.example.com/sistema/usuarios/grupos/listar` y agregar
+   el grupo soporte.
 
-2. Ir a `https://libredte.example.com/sistema/usuarios/usuarios` y editar el
-   usuario administrador y agregarlo al grupo `dte_plus` y `soporte`.
+2. Ir a `https://libredte.example.com/sistema/usuarios/usuarios/listar` y editar
+   el usuario administrador y agregarlo al grupo `dte_plus` y `soporte`.
 
 #### Creación usuario de SASCO para soporte (opcional)
 
 **Nota**: esto es requerido sólo por instancias de LibreDTE que usarán el
 soporte de SASCO SpA ([Servicio Local](https://libredte.cl/precios))
 
-Ir a `https://libredte.example.com/sistema/usuarios/usuarios` y crear el
+Ir a `https://libredte.example.com/sistema/usuarios/usuarios/listar` y crear el
 siguiente usuario:
 
  - Nombre: SASCO SpA
@@ -752,6 +752,5 @@ contraseñas definidas al inicio como variables de entorno). Se debe cerrar
 sesión de SSH y desde la máquina local ejecutar:
 
 ```shell
-ssh libredte.example.com -p 22 -l admin shred -n 10 -u /tmp/sowerpkg*
-ssh libredte.example.com -p 22 -l admin shred -n 10 -u /root/.bash_history
+ssh libredte.example.com -p 22 -l admin sudo shred -n 10 -u /root/.bash_history
 ```
