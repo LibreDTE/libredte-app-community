@@ -43,8 +43,7 @@ Donde `llave_publica.pem` es el certificado público del usuario `admin`.
 
 Una vez dentro del servidor cambiamos al usuario `root` con `sudo su -` o `su -`
 según corresponda. Toda acción de la instalación se realizará con el usuario
-`root`. El símbollo `#` se usará para indicar un comando que se debe ejecutar
-con el usuario `root` de ahora en adelante.
+`root`.
 
 ### Verificar sistema instalado
 
