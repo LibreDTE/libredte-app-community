@@ -1,4 +1,4 @@
-<div class="page-header"><h1>Despachos diarios y mapa de guías</h1></div>
+<div class="page-header"><h1>Despachos diarios</h1></div>
 <p>Se listan los despachos programados para cierto día por el contribuyente <?=$Emisor->razon_social?>.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();

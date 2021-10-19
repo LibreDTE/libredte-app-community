@@ -47,8 +47,8 @@ Configure::write('nav.module', array(
         'icon' => 'fa fa-list',
     ],
     '/despachos' => [
-        'name' => 'Despachos diarios y mapa guías',
-        'desc' => 'Informe diario de guías de despachos a realizar (incluye mapa)',
+        'name' => 'Despachos diarios',
+        'desc' => 'Informe diario de guías de despachos',
         'icon' => 'fa fa-map',
     ],
     '/dte_emitidos/sin_intercambio' => [
