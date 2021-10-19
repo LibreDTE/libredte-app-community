@@ -24,10 +24,10 @@ Se asumirán los siguientes datos para trabajar con el servidor:
 - Usuario: admin
 - Contraseña: pwdadmin
 
-Nos conectamos mediante SSH con:
+Nos conectamos mediante SSH desde nuestra máquina local con:
 
 ```shell
-$ ssh libredte.example.com -p 22 -l admin
+ssh libredte.example.com -p 22 -l admin
 ```
 
 Al presionar *Enter* nos pedirá la contraseña del usuario.
@@ -36,7 +36,7 @@ Si el ingreso es con llave pública, en vez de contraseña de usuario, se debe
 conectar de la siguiente forma:
 
 ```shell
-$ ssh libredte.example.com -p 22 -l admin -i llave_publica.pem
+ssh libredte.example.com -p 22 -l admin -i llave_publica.pem
 ```
 
 Donde `llave_publica.pem` es el certificado público del usuario `admin`.
@@ -54,14 +54,14 @@ verificar que el sistema sea el requerido.
 Validamos versión de Debian:
 
 ```shell
-# lsb_release -d
+lsb_release -d
 Description:    Debian GNU/Linux 10 (buster)
 ```
 
 Validamos arquitectura:
 
 ```shell
-# uname -a
+uname -a
 Linux goku 4.19.0-17-amd64 #1 SMP Debian 4.19.194-3 (2021-07-18) x86_64 GNU/Linux
 ```
 
@@ -94,19 +94,19 @@ como variables de la sesión y se limpiará el historial de la terminal al
 finalizar el proceso de instalación (no deben quedar en el historial).
 
 ```shell
-# export LIBREDTE_PASSWORD_USER=""     # Debe ser de largo 16 caracteres
-# export LIBREDTE_PASSWORD_DB=""       # Debe ser de largo 32 caracteres
+export LIBREDTE_PASSWORD_USER=""     # Debe ser de largo 16 caracteres
+export LIBREDTE_PASSWORD_DB=""       # Debe ser de largo 32 caracteres
 ```
 
 ### Actualizar sistema e instalar software necesario
 
 ```shell
-# apt-get update && apt-get -y dist-upgrade
-# apt-get -y install screen vim mailutils mutt sudo git apache2 openssl php \
+apt-get update && apt-get -y dist-upgrade
+apt-get -y install screen vim mailutils mutt sudo git apache2 openssl php \
     php-pear php-gd mercurial curl php-curl php-imap php-pgsql memcached \
     php-memcached php-mbstring php-soap php-zip zip php-gmp php-bcmath \
     rsync postgresql-client ifstat dnsutils ca-certificates
-# apt-get -y autoremove --purge && apt-get autoclean && apt-get clean
+apt-get -y autoremove --purge && apt-get autoclean && apt-get clean
 ```
 
 ### Configuración de Apache y PHP
@@ -131,22 +131,22 @@ session.save_path = "127.0.0.1:11211"
 ### SSL con Let's Encrypt (opcional)
 
 ```shell
-# apt-get install certbot python-certbot-apache
-# certbot --apache
+apt-get install certbot python-certbot-apache
+certbot --apache
 ```
 
 ### Habilitar los módulos de Apache y probar
 
 ```shell
-# a2enmod rewrite ssl php7.3
-# systemctl restart apache2
+a2enmod rewrite ssl php7.3
+systemctl restart apache2
 ```
 
 Verificar acceso a los puertos 80 y 443 desde nuestra máquina local con `nmap`:
 
 ```shell
-$ nmap libredte.example.com -p 80
-$ nmap libredte.example.com -p 443
+nmap libredte.example.com -p 80
+nmap libredte.example.com -p 443
 ```
 
 Donde la salida para cada caso debe ser similar a:
@@ -162,23 +162,23 @@ mostrará la página por defecto de Apache.
 ### Instalar bibliotecas de PEAR
 
 ```shell
-# pear channel-update pear.php.net
-# pear install Mail Mail_mime Net_SMTP
+pear channel-update pear.php.net
+pear install Mail Mail_mime Net_SMTP
 ```
 ### Instalar Composer
 
 ```shell
-# wget https://getcomposer.org/composer.phar
-# chmod +x ./composer.phar
-# mv ./composer.phar /usr/bin/composer
+wget https://getcomposer.org/composer.phar
+chmod +x ./composer.phar
+mv ./composer.phar /usr/bin/composer
 ```
 
 ### Crear usuario libredte
 
 ```shell
-# useradd -g users -c "LibreDTE" -m -s /bin/bash libredte
-# usermod --password $(echo $LIBREDTE_PASSWORD_USER | openssl passwd -1 -stdin) libredte
-# echo -e "\nlibredte ALL=(ALL:ALL) ALL" >> /etc/sudoers
+useradd -g users -c "LibreDTE" -m -s /bin/bash libredte
+usermod --password $(echo $LIBREDTE_PASSWORD_USER | openssl passwd -1 -stdin) libredte
+echo -e "\nlibredte ALL=(ALL:ALL) ALL" >> /etc/sudoers
 ```
 
 ### Cambiar el directorio raíz de Apache
@@ -186,9 +186,9 @@ mostrará la página por defecto de Apache.
 Se usará el directorio `www/htdocs` dentro del directorio del usuario `libredte`.
 
 ```shell
-# sudo -u libredte mkdir -p /home/libredte/www/htdocs
-# rm -rf /var/www/html
-# ln -s /home/libredte/www/htdocs /var/www/html
+sudo -u libredte mkdir -p /home/libredte/www/htdocs
+rm -rf /var/www/html
+ln -s /home/libredte/www/htdocs /var/www/html
 ```
 
 ### Crear mensaje de entrada
@@ -196,7 +196,7 @@ Se usará el directorio `www/htdocs` dentro del directorio del usuario `libredte
 Este es el mensaje que se mostrará al iniciar sesión mediante SSH en el servidor.
 
 ```shell
-# cat <<EOF > /etc/motd
+cat <<EOF > /etc/motd
 Servidor con Aplicación Web de LibreDTE Versión Comunidad
 En caso de consultas o soporte abrir un ticket en https://libredte.cl/soporte
 LibreDTE ¡facturación electrónica libre para Chile! www.libredte.cl
@@ -211,8 +211,8 @@ LibreDTE.
 Primero, instalamos la base de datos:
 
 ```shell
-# apt-get -y install postgresql && pg_ctlcluster 11 main start
-# apt-get -y autoremove --purge && apt-get autoclean && apt-get clean
+apt-get -y install postgresql && pg_ctlcluster 11 main start
+apt-get -y autoremove --purge && apt-get autoclean && apt-get clean
 ```
 
 Ahora creamos el usuario de la base de datos que se debe llamar igual al usuario
@@ -220,8 +220,8 @@ del servidor `libredte`. Cuando se instala con la base de datos en el mismo
 servidor, esto permite utilizar `psql` de manera más sencilla.
 
 ```shell
-# sudo -u postgres createuser --createdb --no-createrole --no-superuser libredte
-# sudo -u postgres psql template1 <<EOF
+sudo -u postgres createuser --createdb --no-createrole --no-superuser libredte
+sudo -u postgres psql template1 <<EOF
     ALTER USER libredte WITH PASSWORD '$LIBREDTE_PASSWORD_DB';
 EOF
 ```
@@ -229,7 +229,7 @@ EOF
 Finalmente creamos la base de datos que también se llamará libredte:
 
 ```shell
-# sudo -u libredte createdb libredte
+sudo -u libredte createdb libredte
 ```
 
 **Nota**: de ser posible, se recomienda la instalación de la base de datos en un
@@ -238,18 +238,18 @@ servidor separado e idealmente con los datos replicados.
 Si necesitamos conectaros a un servidor de base de datos remoto se debe utilizar:
 
 ```shell
-# psql -U libredte -h HOST -p 5432 -d libredte --set=sslmode=require -W
+psql -U libredte -h HOST -p 5432 -d libredte --set=sslmode=require -W
 ```
 
 Instalar framework SowerPHP
 ---------------------------
 
 ```shell
-# mkdir /usr/share/sowerphp
-# chown libredte: /usr/share/sowerphp
-# sudo -u libredte git clone -b 21.10.0 https://github.com/SowerPHP/sowerphp.git /usr/share/sowerphp
-# cd /usr/share/sowerphp
-# sudo -u libredte composer install
+mkdir /usr/share/sowerphp
+chown libredte: /usr/share/sowerphp
+sudo -u libredte git clone -b 21.10.0 https://github.com/SowerPHP/sowerphp.git /usr/share/sowerphp
+cd /usr/share/sowerphp
+sudo -u libredte composer install
 ```
 
 **Nota**: donde `21.10.0` es la última versión disponible del SowerPHP o bien la
@@ -262,10 +262,10 @@ Instalar Aplicación Web de LibreDTE
 Instalar aplicación de LibreDTE y dependencias:
 
 ```shell
-# cd /home/libredte/www
-# sudo -u libredte git clone -b 21.10.0 https://github.com/LibreDTE/libredte-webapp.git htdocs
-# cd htdocs/website
-# sudo -u libredte composer install
+cd /home/libredte/www
+sudo -u libredte git clone -b 21.10.0 https://github.com/LibreDTE/libredte-webapp.git htdocs
+cd htdocs/website
+sudo -u libredte composer install
 ```
 
 **Nota**: donde `21.10.0` es la última versión disponible de LibreDTE o bien la
@@ -275,20 +275,20 @@ la versión de SowerPHP previamente instalada.
 Copiar archivos para configuraciones:
 
 ```shell
-# cd Config
-# sudo -u libredte cp core-dist.php core.php
-# sudo -u libredte cp routes-dist.php routes.php
+cd Config
+sudo -u libredte cp core-dist.php core.php
+sudo -u libredte cp routes-dist.php routes.php
 ```
 
 Crear carpetas usadas por LibreDTE:
 
 ```shell
-# sudo -u libredte mkdir -p /home/libredte/www/htdocs/data/static/contribuyentes
-# sudo -u libredte chmod 777 /home/libredte/www/htdocs/data/static/contribuyentes
-# sudo -u libredte mkdir /home/libredte/www/htdocs/data/static/emision_masiva_pdf
-# sudo -u libredte chmod 777 /home/libredte/www/htdocs/data/static/emision_masiva_pdf
-# sudo -u libredte mkdir /home/libredte/www/htdocs/tmp
-# sudo -u libredte chmod 777 /home/libredte/www/htdocs/tmp
+sudo -u libredte mkdir -p /home/libredte/www/htdocs/data/static/contribuyentes
+sudo -u libredte chmod 777 /home/libredte/www/htdocs/data/static/contribuyentes
+sudo -u libredte mkdir /home/libredte/www/htdocs/data/static/emision_masiva_pdf
+sudo -u libredte chmod 777 /home/libredte/www/htdocs/data/static/emision_masiva_pdf
+sudo -u libredte mkdir /home/libredte/www/htdocs/tmp
+sudo -u libredte chmod 777 /home/libredte/www/htdocs/tmp
 ```
 
 ### Cargar tablas y datos a la base de datos
@@ -298,12 +298,12 @@ las líneas. Esto debido a que cada *script* tiene una transacción. Esto con el
 fin de ir verificando que todo se ejecute de manera correcta.
 
 ```shell
-# sudo -u libredte psql libredte < /usr/share/sowerphp/extensions/sowerphp/app/Module/Sistema/Module/Usuarios/Model/Sql/PostgreSQL/usuarios.sql
-# sudo -u libredte psql libredte < /home/libredte/www/htdocs/website/Module/Sistema/Module/General/Model/Sql/PostgreSQL/actividad_economica.sql
-# sudo -u libredte psql libredte < /home/libredte/www/htdocs/website/Module/Sistema/Module/General/Model/Sql/PostgreSQL/banco.sql
-# sudo -u libredte psql libredte < /usr/share/sowerphp/extensions/sowerphp/app/Module/Sistema/Module/General/Module/DivisionGeopolitica/Model/Sql/PostgreSQL/division_geopolitica.sql
-# sudo -u libredte psql libredte < /usr/share/sowerphp/extensions/sowerphp/app/Module/Sistema/Module/General/Model/Sql/moneda.sql
-# sudo -u libredte psql libredte < /home/libredte/www/htdocs/website/Module/Dte/Model/Sql/PostgreSQL.sql
+sudo -u libredte psql libredte < /usr/share/sowerphp/extensions/sowerphp/app/Module/Sistema/Module/Usuarios/Model/Sql/PostgreSQL/usuarios.sql
+sudo -u libredte psql libredte < /home/libredte/www/htdocs/website/Module/Sistema/Module/General/Model/Sql/PostgreSQL/actividad_economica.sql
+sudo -u libredte psql libredte < /home/libredte/www/htdocs/website/Module/Sistema/Module/General/Model/Sql/PostgreSQL/banco.sql
+sudo -u libredte psql libredte < /usr/share/sowerphp/extensions/sowerphp/app/Module/Sistema/Module/General/Module/DivisionGeopolitica/Model/Sql/PostgreSQL/division_geopolitica.sql
+sudo -u libredte psql libredte < /usr/share/sowerphp/extensions/sowerphp/app/Module/Sistema/Module/General/Model/Sql/moneda.sql
+sudo -u libredte psql libredte < /home/libredte/www/htdocs/website/Module/Dte/Model/Sql/PostgreSQL.sql
 ```
 
 ### Configuración archivo `website/Config/core.php`
@@ -597,7 +597,7 @@ Pero no es obligatorio que sean exactamente estos permisos. Dependiendo de los
 requerimientos de la instancia los permisos a crear podrían ser otros.
 
 ```shell
-# sudo -u libredte psql libredte <<EOF
+sudo -u libredte psql libredte <<EOF
 BEGIN;
 INSERT INTO grupo (grupo, activo) VALUES ('dte_plus', true);
 INSERT INTO auth (grupo, recurso) VALUES
@@ -670,7 +670,7 @@ siguiente usuario:
 Si se usarán boletas no nominativas hacer el siguiente INSERT:
 
 ```shell
-# sudo -u libredte psql libredte <<EOF
+sudo -u libredte psql libredte <<EOF
 INSERT INTO contribuyente VALUES (66666666, '6', 'Sin razón social informada', 'Sin giro informado', NULL, NULL, NULL, 'Sin dirección informada', '13101', NULL, NOW());
 EOF
 ```
@@ -680,7 +680,7 @@ EOF
 Si se usarán facturas de exportación hacer el siguiente INSERT
 
 ```shell
-# sudo -u libredte psql libredte <<EOF
+sudo -u libredte psql libredte <<EOF
 INSERT INTO contribuyente VALUES (55555555, '5', 'Extranjero', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NOW());
 EOF
 ```
@@ -690,7 +690,7 @@ EOF
 Para agregar las tareas programadas ejecutar:
 
 ```shell
-# sudo -u libredte crontab -e
+sudo -u libredte crontab -e
 ```
 
 Y agregamos:
@@ -741,7 +741,7 @@ resultados de ejecución de las tareas programadas.
 Para configurar `mutt` ejecutar:
 
 ```shell
-# sudo -u libredte cat <<EOF > /home/libredte/.muttrc
+sudo -u libredte cat <<EOF > /home/libredte/.muttrc
 set date_format="%F %R"
 set index_format="%4C %Z %D %-15.15L (%4l) %s"
 EOF
@@ -753,6 +753,6 @@ contraseñas definidas al inicio como variables de entorno). Se debe cerrar
 sesión de SSH y desde la máquina local ejecutar:
 
 ```shell
-$ ssh libredte.example.com -p 22 -l admin shred -n 10 -u /tmp/sowerpkg*
-$ ssh libredte.example.com -p 22 -l admin shred -n 10 -u /root/.bash_history
+ssh libredte.example.com -p 22 -l admin shred -n 10 -u /tmp/sowerpkg*
+ssh libredte.example.com -p 22 -l admin shred -n 10 -u /root/.bash_history
 ```
