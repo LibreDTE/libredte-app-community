@@ -56,17 +56,23 @@ Para actualizar, primero, actualizar el framework SowerPHP:
 
 ```shell
 $ cd /usr/share/sowerphp
-$ git pull
+$ git pull https://github.com/SowerPHP/sowerphp.git 21.10.0
 $ composer install
 ```
+
+Donde `21.10.0` es la última versión disponible o bien a la que se desea actualizar.
 
 Segundo, actualizar aplicación web de LibreDTE:
 
 ```shell
-$ cd $WEBAPP/website
-$ git pull
+$ cd /home/libredte/www/htdocs/website
+$ git pull https://github.com/LibreDTE/libredte-webapp.git 21.10.0
 $ composer install
 ```
+
+Donde `21.10.0` es la última versión disponible de LibreDTE o bien la
+que se desea instalar. Esta versión debe coincidir en sus 2 primeros números con
+la versión de SowerPHP previamente actualizada.
 
 Tercero, ejecutar script actualización base de datos (si corresponde).
 
