@@ -52,7 +52,7 @@ class Model_Contribuyente extends \Model_App
     // Información de las columnas de la tabla en la base de datos
     public static $columnsInfo = array(
         'rut' => array(
-            'name'      => 'Rut',
+            'name'      => 'RUT',
             'comment'   => '',
             'type'      => 'integer',
             'length'    => 32,
@@ -63,7 +63,7 @@ class Model_Contribuyente extends \Model_App
             'fk'        => null
         ),
         'dv' => array(
-            'name'      => 'Dv',
+            'name'      => 'DV',
             'comment'   => '',
             'type'      => 'character',
             'length'    => 1,
@@ -74,7 +74,7 @@ class Model_Contribuyente extends \Model_App
             'fk'        => null
         ),
         'razon_social' => array(
-            'name'      => 'Razon Social',
+            'name'      => 'Razón Social',
             'comment'   => '',
             'type'      => 'character varying',
             'length'    => 100,
@@ -96,7 +96,7 @@ class Model_Contribuyente extends \Model_App
             'fk'        => null
         ),
         'actividad_economica' => array(
-            'name'      => 'Actividad Economica',
+            'name'      => 'Actividad Económica',
             'comment'   => '',
             'type'      => 'integer',
             'length'    => 32,
@@ -107,7 +107,7 @@ class Model_Contribuyente extends \Model_App
             'fk'        => array('table' => 'actividad_economica', 'column' => 'codigo')
         ),
         'telefono' => array(
-            'name'      => 'Telefono',
+            'name'      => 'Teléfono',
             'comment'   => '',
             'type'      => 'character varying',
             'length'    => 20,
@@ -129,7 +129,7 @@ class Model_Contribuyente extends \Model_App
             'fk'        => null
         ),
         'direccion' => array(
-            'name'      => 'Direccion',
+            'name'      => 'Dirección',
             'comment'   => '',
             'type'      => 'character varying',
             'length'    => 70,
