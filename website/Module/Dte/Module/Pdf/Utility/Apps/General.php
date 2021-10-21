@@ -56,6 +56,7 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
             'name' => 'dtepdf_'.$this->getCodigo().'_emisor_razonsocial',
             'label' => 'Razón social',
             'value' => !empty($this->getConfig()->emisor->razonsocial) ? $this->getConfig()->emisor->razonsocial : null,
+            'help' => 'Obligatoria si se usa un logo y en este no está la razón social',
         ]);
         $buffer .= $form->input([
             'name' => 'dtepdf_'.$this->getCodigo().'_emisor_giro',
