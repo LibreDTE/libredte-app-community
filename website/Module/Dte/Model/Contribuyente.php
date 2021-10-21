@@ -493,6 +493,8 @@ class Model_Contribuyente extends \Model_App
             $this->db->query('DELETE FROM registro_compra WHERE receptor = :rut', [':rut'=>$this->rut]);
             $this->db->query('DELETE FROM boleta_honorario WHERE receptor = :rut', [':rut'=>$this->rut]);
             $this->db->query('DELETE FROM boleta_tercero WHERE emisor = :rut', [':rut'=>$this->rut]);
+            // eliminar archivos asociados al contribuyente (carpeta: data/static/contribuyentes/RUT)
+            // TODO
         }
         // aplicar cambios
         return $this->db->commit();
