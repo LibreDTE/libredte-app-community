@@ -117,11 +117,17 @@ echo $f->input([
     'check' => 'integer',
 ]);
 echo $f->input([
+    'type' => 'date',
     'name' => 'periodo',
     'label' => 'Período',
     'value' => isset($DteRecibido) ? $DteRecibido->periodo : '',
     'check' => 'integer',
-    'help' => 'Período en el que registrar el documento, sólo si es diferente al mes de la fecha de emisión. Formato: AAAAMM Ejemplo: '.\sowerphp\general\Utility_Date::previousPeriod(),
+    'help' => 'Período en el que registrar el documento, sólo si es diferente al mes de la fecha de emisión.',
+    'datepicker' => [
+        'format' => 'yyyymm',
+        'viewMode' => 'months',
+        'minViewMode' => 'months',
+    ],
 ]);
 echo '</div>',"\n";
 echo '<div class="col-md-6">',"\n";
