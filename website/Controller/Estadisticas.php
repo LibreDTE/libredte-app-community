@@ -158,10 +158,10 @@ class Controller_Estadisticas extends \Controller_App
         $this->Api->send([
             'version' => $this->getVersion(),
             'certificacion' => (int)$certificacion,
-            'contribuyentes_sii' => $contribuyentes_sii,
-            'usuarios_registrados' => $Usuarios->count(),
-            'empresas_registradas' => $empresas_registradas,
-            'documentos_emitidos' => $DteEmitidos->count(),
+            'contribuyentes_sii' => (int)$contribuyentes_sii,
+            'usuarios_registrados' => (int)$Usuarios->count(),
+            'empresas_registradas' => (int)$empresas_registradas,
+            'documentos_emitidos' => (int)$DteEmitidos->count(),
             'documentos_diarios' => $DteEmitidos->countDiarios($desde, $hasta, $certificacion),
             'usuarios_mensuales' => $Usuarios->getStatsLogin(),
             'contribuyentes_por_comuna' => $Contribuyentes->countByComuna($certificacion),
@@ -193,7 +193,7 @@ class Controller_Estadisticas extends \Controller_App
     /**
      * Método que determina la versión de LibreDTE que se está ejecutando
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-10
+     * @version 2021-10-29
      */
     private function getVersion()
     {
@@ -201,7 +201,7 @@ class Controller_Estadisticas extends \Controller_App
         return [
             'linux' => (!$oficial and PHP_OS=='Linux') ? $this->getLinuxInfo()['PRETTY_NAME'] : null,
             'php' => !$oficial ? phpversion() : null,
-            'libredte' => $this->getLastCommit(),
+            'libredte' => $this->getVersionLibreDTE(),
         ];
     }
 
@@ -233,19 +233,32 @@ class Controller_Estadisticas extends \Controller_App
     /**
      * Método que determina la versión de LibreDTE a partir del último commit del proyecto
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-10
+     * @version 2021-10-29
      */
-    private function getLastCommit()
+    private function getVersionLibreDTE()
     {
         $HEAD = DIR_PROJECT.'/.git/logs/HEAD';
         if (!file_exists($HEAD) or !is_readable($HEAD)) {
-            return false;
+            return null;
         }
-        exec('git log --pretty="%H" -n1 HEAD', $id, $id_rc);
-        exec('git log --pretty="%ci" -n1 HEAD', $date, $date_rc);
+        exec('git log --pretty="%H" -n1 HEAD', $last_commit_id, $last_commit_id_rc);
+        exec('git log --pretty="%ci" -n1 HEAD', $last_commit_date, $last_commit_date_rc);
+        exec('git describe --tags --abbrev=0 --exact-match', $current_tag_id, $current_tag_id_rc);
+        if (!$current_tag_id_rc) {
+            exec('git log -1 --format=%ai "'.str_replace('"', '', $current_tag_id[0]).'"', $current_tag_date, $current_tag_date_rc);
+        } else {
+            $current_tag_date_rc = $current_tag_id_rc;
+            $current_tag_date = null;
+        }
         return [
-            'id' => !$id_rc ? $id[0] : null,
-            'date' => !$date_rc ? $date[0] : null,
+            'last_commit' => [
+                'id' => !$last_commit_id_rc ? $last_commit_id[0] : null,
+                'date' => !$last_commit_date_rc ? $last_commit_date[0] : null,
+            ],
+            'current_tag' => [
+                'id' => !$current_tag_id_rc ? $current_tag_id[0] : null,
+                'date' => !$current_tag_date_rc ? $current_tag_date[0] : null,
+            ],
         ];
     }
 
