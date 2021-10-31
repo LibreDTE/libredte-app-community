@@ -2877,26 +2877,35 @@ class Model_Contribuyente extends \Model_App
      * Método que entrega el objeto de la sucursal del contribuyente a partir
      * del código de la sucursal (por defecto casa matriz)
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-07-18
+     * @version 2021-10-31
      */
     public function getSucursal($codigo = null)
     {
+        $encontrada = false;
         // si se pasó código se busca sucursal
         if ($codigo and $this->config_extra_sucursales) {
-            foreach ($this->config_extra_sucursales as $sucursal) {
-                if ($sucursal->codigo == $codigo) {
-                    return $sucursal;
+            foreach ($this->config_extra_sucursales as $Sucursal) {
+                if ($Sucursal->codigo == $codigo) {
+                    $encontrada = true;
+                    break;
                 }
             }
         }
         // si no se pasó código o no se encontró se entrega sucursal matriz
-        return (object)[
-            'codigo' => 0,
-            'sucursal' => 'Casa matriz',
-            'direccion' => $this->direccion,
-            'comuna' => $this->comuna,
-            'actividad_economica' => $this->actividad_economica,
-        ];
+        if (!$encontrada) {
+            $Sucursal = (object)[
+                'codigo' => 0,
+                'sucursal' => 'Casa matriz',
+                'direccion' => $this->direccion,
+                'comuna' => $this->comuna,
+                'actividad_economica' => $this->actividad_economica,
+            ];
+        }
+        // agregar datos de provincia y región a la sucursal
+        $Sucursal->provincia = substr($Sucursal->comuna, 0, 3);
+        $Sucursal->region = substr($Sucursal->comuna, 0, 2);
+        // entregar objeto de la sucursal
+        return $Sucursal;
     }
 
     /**
