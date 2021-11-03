@@ -42,8 +42,8 @@ ssh libredte.example.com -p 22 -l admin -i llave_publica.pem
 Donde `llave_publica.pem` es el certificado público del usuario `admin`.
 
 Una vez dentro del servidor cambiamos al usuario `root` con `sudo su -` o `su -`
-según corresponda. Toda acción de la instalación se realizará con el usuario
-`root`.
+según corresponda. Toda acción de la instalación de ahora en adelante se
+realizará con el usuario `root`.
 
 ### Verificar sistema instalado
 
@@ -352,7 +352,7 @@ Ahora podemos ver un ejemplo de como se debe configurar.
 
 ```php
 \sowerphp\core\Configure::write('email.default', array(
-    'type' => 'smtp',
+    'type' => 'smtp-phpmailer',
     'host' => 'ssl://smtp.example.com',
     'port' => 465,
     'user' => 'libredte@example.com',
@@ -519,7 +519,7 @@ puedes registrarte y obtener las claves publicas y privada.
 
 #### Configuración Auto Registro de Usuarios (opcional)
 
-De  manera predeterminada solo los administradores podrán registrar un usuario.
+De  manera predeterminada sólo los administradores podrán registrar un usuario.
 En el caso que se desee que el usuario se autoregistre, sólo se debe descomentar
 el siguiente código.
 
