@@ -193,7 +193,7 @@ class Model_DteIntercambios extends \Model_Plural_App
     /**
      * Método que entrega la tabla con los casos de intercambio del contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-15
+     * @version 2021-11-08
      */
     public function getDocumentos(array $filtros = [])
     {
@@ -223,7 +223,7 @@ class Model_DteIntercambios extends \Model_Plural_App
                 LEFT JOIN contribuyente AS e ON i.emisor = e.rut
                 LEFT JOIN usuario AS u ON i.usuario = u.id
             WHERE '.implode(' AND ',$where).'
-            ORDER BY i.fecha_hora_firma DESC
+            ORDER BY i.fecha_hora_email DESC
             '.$limit.'
         ', $vars);
         // corregir datos
