@@ -466,7 +466,10 @@ DTE.check = function (formulario) {
         }
         // si el documento es 34 o 41 forzar que todos los detalles sean exentos
         if (TpoDoc==34 || TpoDoc==41 || TpoDoc==110 || TpoDoc==111 || TpoDoc==112) {
-            $('select[name="IndExe[]"]').get(i).value = 1;
+            // sólo se asigna a monto exento si el item no es un monto no facturable
+            if ($('select[name="IndExe[]"]').get(i).value != 2) {
+                $('select[name="IndExe[]"]').get(i).value = 1;
+            }
         }
         // contabilizar items afectos
         if (!parseInt($('select[name="IndExe[]"]').get(i).value))
