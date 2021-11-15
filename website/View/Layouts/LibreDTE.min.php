@@ -30,9 +30,9 @@ Layout: oficial de Bootstrap 4
         </script>
         <script src="https://cdn.sasco.cl/js/__.min.js"></script>
         <script src="https://cdn.sasco.cl/js/form.min.js"></script>
-        <script src="<?=$_base?>/js/datepicker/bootstrap-datepicker.js"></script>
-        <script src="<?=$_base?>/js/datepicker/bootstrap-datepicker.es.js"></script>
-        <link rel="stylesheet" href="<?=$_base?>/js/datepicker/datepicker3.css" />
+        <script src="https://cdn.sasco.cl/js/datepicker/bootstrap-datepicker.js"></script>
+        <script src="https://cdn.sasco.cl/js/datepicker/bootstrap-datepicker.es.js"></script>
+        <link rel="stylesheet" href="https://cdn.sasco.cl/js/datepicker/datepicker3.css" />
         <script src="https://cdn.jsdelivr.net/npm/bootbox@5.1.3/dist/bootbox.all.min.js"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.2.3/dist/select2-bootstrap4.min.css" rel="stylesheet" />
