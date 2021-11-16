@@ -7,6 +7,9 @@
     </li>
 </ul>
 <div class="page-header"><h1>Emitir boleta de terceros</h1></div>
+<div class="alert alert-warning">
+    El monto de retención y monto líquido mostrados en esta funcionalidad sólo consideran la tasa de retención base del período. No se considera la tasa adicional que pueda tener el receptor. Por ejemplo, por el préstamo del SII (tasa adicional del 3%). En la plataforma <a href="https://contafi.cl" target="_blank" class="alert-link">ContaFi</a> esto está resuelto.
+</div>
 <script>
 var tasas_retencion = <?=json_encode($tasas_retencion)?>;
 function set_receptor(form) {
