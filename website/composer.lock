@@ -609,16 +609,16 @@
         },
         {
             "name": "sasco/libredte",
-            "version": "21.10.1",
+            "version": "21.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/LibreDTE/libredte-lib.git",
-                "reference": "69c076d42672694b42ed81eee354d2cfeb9acdde"
+                "reference": "0694f1787322402b65beafd836dda3eab2d49b3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/69c076d42672694b42ed81eee354d2cfeb9acdde",
-                "reference": "69c076d42672694b42ed81eee354d2cfeb9acdde",
+                "url": "https://api.github.com/repos/LibreDTE/libredte-lib/zipball/0694f1787322402b65beafd836dda3eab2d49b3f",
+                "reference": "0694f1787322402b65beafd836dda3eab2d49b3f",
                 "shasum": ""
             },
             "require": {
@@ -660,7 +660,7 @@
                 "issues": "https://github.com/LibreDTE/libredte-lib/issues",
                 "source": "https://github.com/LibreDTE/libredte-lib"
             },
-            "time": "2021-11-12T22:17:59+00:00"
+            "time": "2021-11-18T21:57:32+00:00"
         },
         {
             "name": "sasco/libredte-api-client",
