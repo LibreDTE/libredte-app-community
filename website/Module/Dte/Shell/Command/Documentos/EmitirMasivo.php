@@ -404,6 +404,12 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
         if (!empty($datos[36])) {
             $documento['LibreDTE']['pdf']['nombre'] = $datos[36];
         }
+        if (!empty($datos[37])) {
+            if (!in_array($datos[37], [1,2,3])) {
+                throw new \Exception('Forma de pago de código '.$datos[37].' es incorrecta, debe ser: 1 (contado), 2 (crédito) o 3 (sin costo).');
+            }
+            $documento['Encabezado']['IdDoc']['FmaPago'] = (int)$datos[37];
+        }
         $this->agregarItem($documento, array_slice($datos, 11, 8));
         $this->agregarTransporte($documento, array_slice($datos, 22, 6));
         $this->agregarReferencia($documento, array_slice($datos, 28, 5));
