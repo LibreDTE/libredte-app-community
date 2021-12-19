@@ -28,7 +28,7 @@ foreach ($periodos as &$p) {
     $acciones .= ' <a href="dte_compras/csv/'.$p['periodo'].'" title="Descargar CSV del libro del período" class="btn btn-primary mb-2'.(!$p['recibidos']?' disabled':'').'"><i class="far fa-file-excel fa-fw"></i></a>';
     $p[] = $acciones;
 }
-array_unshift($periodos, ['Período','Recibidos', 'Envíados', 'Track ID', 'Estado', 'Acciones']);
+array_unshift($periodos, ['Período', 'Recibidos', 'Registrados', 'Track ID', 'Estado', 'Acciones']);
 new \sowerphp\general\View_Helper_Table($periodos);
 ?>
 <a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/dte/dte_compras/sin_movimientos" role="button">Enviar libro de compras sin movimientos</a>
