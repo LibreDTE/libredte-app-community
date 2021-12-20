@@ -14,7 +14,7 @@
 <?php
 // preparar títulos de columnas (con link para ordenar por dicho campo)
 $titles = [];
-$colsWidth = [120, 120, 120, 160];
+$colsWidth = [120, 120, 120, 120, null, 100];
 foreach ($columns as $column => $info) {
     $titles[] = $info['name'].' '.
         '<div class="float-right"><a href="'.$_base.$module_url.$controller.'/listar/'.$page.'/'.$column.'/A'.$searchUrl.'" title="Ordenar ascendentemente por '.$info['name'].'"><i class="fas fa-sort-alpha-down"></i></a>'.
@@ -65,6 +65,38 @@ foreach ($columns as $column => &$info) {
 $row[] = '<button type="submit" class="btn btn-primary" onclick="return Form.check()"><i class="fa fa-search fa-fw"></i></button>';
 $data[] = $row;
 
+// función que procesa el resumen y lo entrega como string para la vista
+function resumen2string($resumen)
+{
+    // preparar datos que se mostrarán
+    $cols = [
+        'TipoDocumento' => 'DTE',
+        'FoliosEmitidos' => 'Docs.',
+        'MntExento' => 'Exento',
+        'MntNeto' => 'Neto',
+        'MntIva' => 'IVA',
+        'MntTotal' => 'Total',
+    ];
+    $aux = [];
+    foreach($resumen as $dte => $data) {
+        foreach($cols as $from => $to) {
+            if (!empty($data[$from])) {
+                $aux[$dte][$to] = $data[$from];
+            }
+        }
+    }
+    // armar el string con los datos preparados
+    $string = [];
+    foreach($aux as $dte => $data) {
+        $values = [];
+        foreach($data as $k => $v) {
+            $values[] = $k.': '.num($v);
+        }
+        $string[] = implode(' / ', $values);
+    }
+    return implode('<br/>', $string);
+}
+
 // crear filas de la tabla
 foreach ($Objs as &$obj) {
     $row = array();
@@ -72,11 +104,16 @@ foreach ($Objs as &$obj) {
         if (in_array($info['type'], ['date', 'timestamp', 'timestamp without time zone'])) {
             $row[] = \sowerphp\general\Utility_Date::format($obj->{$column});
         }
+        // si es la columna de detalle dependerá del estado
+        else if ($column == 'revision_detalle' and $obj->revision_estado == 'CORRECTO') {
+            $row[] = resumen2string($obj->getResumen());
+        }
         // si es cualquier otro tipo de datos
         else {
             $row[] = $obj->{$column};
         }
     }
+    // acciones
     $actions = '<div class="btn-group">';
     $actions .= '<a href="'.$_base.$module_url.$controller.'/actualizar_estado/'.$obj->dia.$listarFilterUrl.'" title="Actualizar estado del envio al SII" class="btn btn-primary" onclick="return Form.loading(\'Actualizando estado del RCOF...\')"><i class="fas fa-sync fa-fw mr-2"></i></a>';
     $actions .= '<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>';

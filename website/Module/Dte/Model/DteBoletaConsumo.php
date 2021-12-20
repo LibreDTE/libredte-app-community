@@ -117,7 +117,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
             'fk'        => null
         ),
         'revision_estado' => array(
-            'name'      => 'Estado revisión',
+            'name'      => 'Estado',
             'comment'   => '',
             'type'      => 'character varying',
             'length'    => 100,
@@ -128,7 +128,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
             'fk'        => null
         ),
         'revision_detalle' => array(
-            'name'      => 'Detalle revisión',
+            'name'      => 'Detalle',
             'comment'   => '',
             'type'      => 'text',
             'length'    => null,
@@ -444,6 +444,32 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
                 }
             }
         }
+    }
+
+    /**
+     * Método que entrega un resumen de los datos del RCOF enviado
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2021-12-20
+     */
+    public function getResumen()
+    {
+        $xml = new \sasco\LibreDTE\XML();
+        $xml->loadXML($this->getXML());
+        $rcof = $xml->toArray();
+        $resumen = [];
+        if (!empty($rcof['ConsumoFolios']['DocumentoConsumoFolios']['Resumen'])) {
+            if (!isset($rcof['ConsumoFolios']['DocumentoConsumoFolios']['Resumen'][0])) {
+                $rcof['ConsumoFolios']['DocumentoConsumoFolios']['Resumen'] = [
+                    $rcof['ConsumoFolios']['DocumentoConsumoFolios']['Resumen']
+                ];
+            }
+            foreach ($rcof['ConsumoFolios']['DocumentoConsumoFolios']['Resumen'] as $r) {
+                if (!empty($r['FoliosEmitidos'])) {
+                    $resumen[$r['TipoDocumento']] = $r;
+                }
+            }
+        }
+        return $resumen;
     }
 
 }
