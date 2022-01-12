@@ -106,10 +106,21 @@ class Model_DteIntercambios extends \Model_Plural_App
             $vars[':firma_hasta'] = $filtros['firma_hasta'].' 23:59:59';
         }
         if (isset($filtros['estado'])) {
+            // sólo pendientes
             if ($filtros['estado'] == 1) {
-                $where[] = 'i.estado IS NULL'; // sólo pendientes
-            } else if ($filtros['estado'] == 2) {
-                $where[] = 'i.estado IS NOT NULL'; // sólo procesados
+                $where[] = 'i.estado IS NULL';
+            }
+            // sólo procesados
+            else if ($filtros['estado'] == 2) {
+                $where[] = 'i.estado IS NOT NULL';
+            }
+            // sólo aceptados
+            else if ($filtros['estado'] == 3) {
+                $where[] = 'i.estado = 0';
+            }
+            // sólo rechazados
+            else if ($filtros['estado'] == 4) {
+                $where[] = 'i.estado != 0';
             }
         } else if ($filtros['soloPendientes']) {
             $where[] = 'i.estado IS NULL';
