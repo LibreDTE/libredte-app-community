@@ -217,7 +217,16 @@ class Controller_Documentos extends \Controller_App
             }
             $certificacion = (int)(bool)!$EnvioDTE->getCaratula()['NroResol'];
             // verificar la firma de cada documento
-            $Firma = new \sasco\LibreDTE\FirmaElectronica();
+            if (!isset($_FILES['firma']) or $_FILES['firma']['error']) {
+                \sowerphp\core\Model_Datasource_Session::message(
+                    'Hubo algún problema al subir la firma electrónica', 'error'
+                );
+                return;
+            }
+            $Firma = new \sasco\LibreDTE\FirmaElectronica([
+                'file' => $_FILES['firma']['tmp_name'],
+                'pass' => $_POST['contrasenia'],
+            ]);
             $cert_data = $Firma->getCertificate();
             if (!$cert_data) {
                 \sowerphp\core\Model_Datasource_Session::message('No hay firma electrónica por defecto asignada en LibreDTE o no pudo ser cargada', 'error');
