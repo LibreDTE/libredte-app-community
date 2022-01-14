@@ -42,19 +42,46 @@ class Model_DteRecibidos extends \Model_Plural_App
      * Método que entrega el listado de documentos que tienen compras de
      * activos fijos
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-31
+     * @version 2022-01-14
      */
     public function getActivosFijos($filtros)
+    {
+        return $this->getByTipoTransaccion(array_merge($filtros, [
+            'tipo_transaccion' => 4,
+        ]));
+    }
+
+    /**
+     * Método que entrega el listado de documentos que tienen compras de
+     * supermercado
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2022-01-14
+     */
+    public function getSupermercado($filtros)
+    {
+        return $this->getByTipoTransaccion(array_merge($filtros, [
+            'tipo_transaccion' => 2,
+        ]));
+    }
+
+    /**
+     * Método que entrega el listado de documentos que tienen compras con
+     * cierto tipo de transacción
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2022-01-14
+     */
+    private function getByTipoTransaccion($filtros)
     {
         if (empty($filtros['desde']) or empty($filtros['hasta'])) {
             return false;
         }
-        $where = ['r.fecha BETWEEN :desde AND :hasta'];
+        $where = ['r.fecha BETWEEN :desde AND :hasta', 'r.tipo_transaccion = :tipo_transaccion'];
         $vars = [
                 ':receptor' => $this->getContribuyente()->rut,
                 ':certificacion' => $this->getContribuyente()->enCertificacion(),
                 ':desde' => $filtros['desde'],
                 ':hasta' => $filtros['hasta'],
+                ':tipo_transaccion' => $filtros['tipo_transaccion'],
         ];
         if (isset($filtros['sucursal'])) {
             if ($filtros['sucursal']) {
@@ -80,9 +107,11 @@ class Model_DteRecibidos extends \Model_Plural_App
                 t.tipo AS documento,
                 r.folio,
                 r.neto,
+                r.iva,
+                r.total,
                 r.monto_activo_fijo,
                 r.monto_iva_activo_fijo,
-                CASE WHEN r.neto = r.monto_activo_fijo THEN \'Total\' ELSE \'Parcial\' END AS montos,
+                CASE WHEN r.neto = r.monto_activo_fijo THEN \'Total\' ELSE \'Parcial\' END AS tipo_montos_activo_fijo,
                 CASE WHEN r.intercambio IS NOT NULL THEN '.$items.' ELSE NULL END AS items,
                 CASE WHEN r.intercambio IS NOT NULL THEN '.$precios.' ELSE NULL END AS precios
             FROM
@@ -94,7 +123,6 @@ class Model_DteRecibidos extends \Model_Plural_App
                 r.receptor = :receptor
                 AND r.certificacion = :certificacion
                 AND '.implode(' AND ', $where).'
-                AND r.monto_activo_fijo IS NOT NULL
             ORDER BY r.fecha, r.sucursal_sii_receptor, r.emisor, r.folio
         ', $vars);
         foreach ($recibidos as &$f) {

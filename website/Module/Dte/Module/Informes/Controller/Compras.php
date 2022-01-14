@@ -33,7 +33,7 @@ class Controller_Compras extends \Controller_App
 {
 
     /**
-     * Acción para listar la compra de activos fijos
+     * Acción para listar las compras de activos fijos
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
      * @version 2017-01-03
      */
@@ -49,6 +49,27 @@ class Controller_Compras extends \Controller_App
         if (!empty($_POST['desde'])) {
             $this->set([
                 'compras' => (new \website\Dte\Model_DteRecibidos())->setContribuyente($Emisor)->getActivosFijos($_POST),
+            ]);
+        }
+    }
+
+    /**
+     * Acción para listar las compra de supermercado
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2022-02-14
+     */
+    public function supermercado()
+    {
+        $Emisor = $this->getContribuyente();
+        $this->set([
+            'Emisor' => $Emisor,
+            'desde' => !empty($_POST['desde']) ? $_POST['desde'] : date('Y-01-01'),
+            'hasta' => !empty($_POST['hasta']) ? $_POST['hasta'] : date('Y-m-d'),
+            'sucursales' => $Emisor->getSucursales(),
+        ]);
+        if (!empty($_POST['desde'])) {
+            $this->set([
+                'compras' => (new \website\Dte\Model_DteRecibidos())->setContribuyente($Emisor)->getSupermercado($_POST),
             ]);
         }
     }

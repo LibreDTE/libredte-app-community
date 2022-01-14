@@ -41,15 +41,20 @@ Configure::write('nav.module', array(
         'desc' => 'Estadística de documentos usados, tanto emitidos como recibidos y el uso de sobre cuota',
         'icon' => 'fa fa-calculator',
     ],
+    '/despachos' => [
+        'name' => 'Despachos diarios',
+        'desc' => 'Informe diario de guías de despachos',
+        'icon' => 'fa fa-map',
+    ],
     '/compras/activos_fijos' => [
         'name' => 'Compras de activos fijos',
         'desc' => 'Informe con listado de documentos de compras de activos fijos según IEC',
         'icon' => 'fa fa-list',
     ],
-    '/despachos' => [
-        'name' => 'Despachos diarios',
-        'desc' => 'Informe diario de guías de despachos',
-        'icon' => 'fa fa-map',
+    '/compras/supermercado' => [
+        'name' => 'Compras de supermercado',
+        'desc' => 'Informe con listado de documentos de supermercado según IEC',
+        'icon' => 'fas fa-shopping-cart',
     ],
     '/dte_emitidos/sin_intercambio' => [
         'name' => 'DTEs sin intercambio',
