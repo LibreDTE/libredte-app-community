@@ -33,6 +33,8 @@ if (isset($compras)) {
         $total_supermercado += $c['total'];
         $c['fecha'] = \sowerphp\general\Utility_Date::format($c['fecha']);
         $c['neto'] = num($c['neto']);
+        $c['iva'] = num($c['iva']);
+        $c['total'] = num($c['total']);
         $c['items'] = implode('<br/>', $c['items']);
         $c['precios'] = implode('<br/>', array_map('num', $c['precios']));
         $acciones = '<a href="'.$_base.'/dte/dte_intercambios/ver/'.$c['intercambio'].'" title="Ver detalles del intercambio" class="btn btn-primary mb-2'.(!$c['intercambio']?' disabled':'').'"><i class="fa fa-search fa-fw"></i></a>';
