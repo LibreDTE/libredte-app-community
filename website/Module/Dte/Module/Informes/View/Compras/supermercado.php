@@ -37,8 +37,8 @@ if (isset($compras)) {
         $c['total'] = num($c['total']);
         $c['items'] = implode('<br/>', $c['items']);
         $c['precios'] = implode('<br/>', array_map('num', $c['precios']));
-        $acciones = '<a href="'.$_base.'/dte/dte_intercambios/ver/'.$c['intercambio'].'" title="Ver detalles del intercambio" class="btn btn-primary mb-2'.(!$c['intercambio']?' disabled':'').'"><i class="fa fa-search fa-fw"></i></a>';
-        $acciones .= ' <a href="'.$_base.'/dte/dte_intercambios/pdf/'.$c['intercambio'].'/0/'.$c['emisor'].'/'.$c['dte'].'/'.$c['folio'].'" title="Descargar PDF del documento" class="btn btn-primary mb-2'.(!$c['intercambio']?' disabled':'').'"><i class="far fa-file-pdf fa-fw"></i></a>';
+        $acciones = '<a href="'.$_base.'/dte/dte_recibidos/ver/'.$c['emisor'].'/'.$c['dte'].'/'.$c['folio'].'" title="Ver documento recibido" class="btn btn-primary mb-2'.(!$c['intercambio']?' disabled':'').'"><i class="fa fa-search fa-fw"></i></a>';
+        $acciones .= ' <a href="'.$_base.'/dte/dte_recibidos/pdf/'.$c['emisor'].'/'.$c['dte'].'/'.$c['folio'].'" title="Descargar PDF del documento" class="btn btn-primary mb-2'.(!$c['intercambio']?' disabled':'').'"><i class="far fa-file-pdf fa-fw"></i></a>';
         $c[] = $acciones;
         unset($c['emisor'], $c['intercambio'], $c['dte'], $c['monto_activo_fijo'], $c['monto_iva_activo_fijo'], $c['tipo_montos_activo_fijo']);
     }
