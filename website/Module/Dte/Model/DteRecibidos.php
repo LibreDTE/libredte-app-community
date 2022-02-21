@@ -68,21 +68,50 @@ class Model_DteRecibidos extends \Model_Plural_App
      * Método que entrega el listado de documentos que tienen compras con
      * cierto tipo de transacción
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-01-14
+     * @version 2022-02-21
      */
     private function getByTipoTransaccion($filtros)
     {
-        if (empty($filtros['desde']) or empty($filtros['hasta'])) {
-            return false;
-        }
-        $where = ['r.fecha BETWEEN :desde AND :hasta', 'r.tipo_transaccion = :tipo_transaccion'];
+        $where = ['r.tipo_transaccion = :tipo_transaccion'];
         $vars = [
-                ':receptor' => $this->getContribuyente()->rut,
-                ':certificacion' => $this->getContribuyente()->enCertificacion(),
-                ':desde' => $filtros['desde'],
-                ':hasta' => $filtros['hasta'],
-                ':tipo_transaccion' => $filtros['tipo_transaccion'],
+            ':receptor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':tipo_transaccion' => $filtros['tipo_transaccion'],
         ];
+        // filtros por "desde y hasta"
+        if (!empty($filtros['desde']) and !empty($filtros['hasta'])) {
+            $where[] = '(
+                (r.periodo IS NULL AND r.fecha BETWEEN :desde AND :hasta)
+                OR (r.periodo IS NOT NULL AND r.periodo >= :periodo_desde AND r.periodo <= :periodo_hasta)
+            )';
+            $vars[':desde'] = $filtros['desde'];
+            $vars[':hasta'] = $filtros['hasta'];
+            $vars[':periodo_desde'] = (int)substr(str_replace('-', '', $filtros['desde']), 0, 6);
+            $vars[':periodo_hasta'] = (int)substr(str_replace('-', '', $filtros['hasta']), 0, 6);
+        }
+        // filtro por "periodo"
+        if (!empty($filtros['periodo'])) {
+            $filtros['periodo'] = (string)$filtros['periodo'];
+            $periodo_len = strlen($filtros['periodo']);
+            if ($periodo_len == 4 or $periodo_len == 6) {
+                $where[] = '(
+                    (r.periodo IS NULL AND r.fecha BETWEEN :desde AND :hasta)
+                    OR (r.periodo IS NOT NULL AND r.periodo >= :periodo_desde AND r.periodo <= :periodo_hasta)
+                )';
+                if ($periodo_len == 4) {
+                    $vars[':desde'] = $filtros['periodo'].'-01-01';
+                    $vars[':hasta'] = $filtros['periodo'].'-12-31';
+                    $vars[':periodo_desde'] = (int)($filtros['periodo'].'01');
+                    $vars[':periodo_hasta'] = (int)($filtros['periodo'].'12');
+                } else {
+                    $vars[':desde'] = \sowerphp\general\Utility_Date::normalize($filtros['periodo'].'01');
+                    $vars[':hasta'] = \sowerphp\general\Utility_Date::lastDayPeriod($filtros['periodo']);
+                    $vars[':periodo_desde'] = (int)$filtros['periodo'];
+                    $vars[':periodo_hasta'] = (int)$filtros['periodo'];
+                }
+            }
+        }
+        // filtor de sucursal
         if (isset($filtros['sucursal'])) {
             if ($filtros['sucursal']) {
                 $where[] = 'r.sucursal_sii_receptor = :sucursal';
@@ -91,6 +120,7 @@ class Model_DteRecibidos extends \Model_Plural_App
                 $where[] = 'r.sucursal_sii_receptor IS NULL';
             }
         }
+        // armar consulta SQL
         list($items, $precios) = $this->db->xml('i.archivo_xml', [
             '/*/SetDTE/DTE/*/Detalle/NmbItem',
             '/*/SetDTE/DTE/*/Detalle/PrcItem',

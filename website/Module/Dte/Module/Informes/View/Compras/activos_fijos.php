@@ -4,18 +4,10 @@
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin(['onsubmit'=>'Form.check()']);
 echo $f->input([
-    'type' => 'date',
-    'name' => 'desde',
-    'label' => 'Desde',
-    'value' => $desde,
-    'check' => 'notempty date',
-]);
-echo $f->input([
-    'type' => 'date',
-    'name' => 'hasta',
-    'label' => 'Hasta',
-    'value' => $hasta,
-    'check' => 'notempty date',
+    'name' => 'periodo',
+    'label' => 'Período',
+    'value' => $periodo,
+    'check' => 'notempty integer',
 ]);
 echo $f->input([
     'type' => 'select',
@@ -44,7 +36,7 @@ if (isset($compras)) {
     }
     array_unshift($compras, ['Fecha', 'Período', 'Sucursal', 'Emisor', 'Documento', 'Folio', 'Neto', 'Monto activo', 'IVA activo', 'Tipo', 'Items', 'Precios', 'Acciones']);
     $t = new \sowerphp\general\View_Helper_Table();
-    $t->setID('activos_fijos_'.$Emisor->rut.'_'.$_POST['desde'].'_'.$_POST['hasta']);
+    $t->setID('activos_fijos_'.$Emisor->rut);
     $t->setExport(true);
     $t->setColsWidth([null, null, null, null, null, null, null, null, null, null, 110]);
     echo '<div class="card"><div class="card-body lead text-center">Monto neto activo fijo del período: $',num($total_activo_fijo),'.-</div></div>',"\n";
