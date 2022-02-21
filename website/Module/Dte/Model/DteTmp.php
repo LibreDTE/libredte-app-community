@@ -618,9 +618,9 @@ class Model_DteTmp extends \Model_App
     /**
      * Método que envía el DTE temporal por correo electrónico
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-06-14
+     * @version 2022-02-21
      */
-    public function email($to = null, $subject = null, $msg = null, $cotizacion = true)
+    public function email($to = null, $subject = null, $msg = null, $cotizacion = true, $use_template = true)
     {
         $Request = new \sowerphp\core\Network_Request();
         // variables por defecto
@@ -637,7 +637,10 @@ class Model_DteTmp extends \Model_App
             $subject = 'Documento N° '.$this->getFolio().' de '.$this->getEmisor()->getNombre().' ('.$this->getEmisor()->getRUT().')';
         }
         // armar cuerpo del correo
-        $msg_html = $this->getEmisor()->getEmailFromTemplate('dte', $this, $msg);
+        $msg_html = $use_template ? $this->getEmisor()->getEmailFromTemplate('dte', $this, $msg) : false;
+        if (!$use_template and $msg) {
+            $msg = ['html' => $msg];
+        }
         if (!$msg) {
             $msg .= 'Se adjunta documento N° '.$this->getFolio().' del día '.\sowerphp\general\Utility_Date::format($this->fecha).' por un monto total de $'.num($this->total).'.-'."\n\n";
             $links = $this->getLinks();

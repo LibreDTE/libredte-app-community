@@ -1482,9 +1482,9 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que envía el DTE por correo electrónico
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-02
+     * @version 2022-04-21
      */
-    public function email($to = null, $subject = null, $msg = null, $pdf = false, $cedible = false, $papelContinuo = null)
+    public function email($to = null, $subject = null, $msg = null, $pdf = false, $cedible = false, $papelContinuo = null, $use_template = true)
     {
         // variables por defecto
         if (!$to) {
@@ -1503,7 +1503,10 @@ class Model_DteEmitido extends Model_Base_Envio
             $subject = $this->getTipo()->tipo.' N° '.$this->folio.' de '.$this->getEmisor()->getNombre().' ('.$this->getEmisor()->getRUT().')';
         }
         // armar cuerpo del correo
-        $msg_html = $this->getEmisor()->getEmailFromTemplate('dte', $this, $msg);
+        $msg_html = $use_template ? $this->getEmisor()->getEmailFromTemplate('dte', $this, $msg) : false;
+        if (!$use_template and $msg) {
+            $msg = ['html' => $msg];
+        }
         if (!$msg) {
             $msg = 'Se adjunta '.$this->getTipo()->tipo.' N° '.$this->folio.' del día '.\sowerphp\general\Utility_Date::format($this->fecha).' por un monto total de $'.num($this->total).'.-'."\n\n";
             $links = $this->getLinks();
