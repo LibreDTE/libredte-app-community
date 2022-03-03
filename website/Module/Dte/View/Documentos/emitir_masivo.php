@@ -1,12 +1,4 @@
 <ul class="nav nav-pills float-right">
-<?php if (class_exists('\libredte\oficial\Dte\Utility_DocumentosMasivos')) : ?>
-    <li class="nav-item">
-        <a href="<?=$_base?>/dte/documentos_masivos" title="Crear archivo para emisión masiva" class="nav-link">
-            <i class="fa fa-upload"></i>
-            Crear archivo
-        </a>
-    </li>
-<?php endif; ?>
     <li class="nav-item">
         <a href="<?=$_base?>/dte/documentos/buscar_masivo" title="Buscar documentos masivamente" class="nav-link">
             <i class="fa fa-search"></i>
