@@ -228,7 +228,18 @@ class Controller_Documentos extends \Controller_App
         else {
             $default = [];
         }
+        // unir los datos con los que se hayan pasado
         $dte = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($default, $this->Api->data);
+        // fecha de emisión no mayor a 90 días
+        // nota: técnicamente depende del timbre la validación en el SII, no de la fecha de emisión
+        // y es máximo al período subsiguiente (no 90 días). pero tiene sentido al considerar el f29
+        if (!$Emisor->config_emision_mas_90_dias) {
+            $datediff = time() - strtotime($dte['Encabezado']['IdDoc']['FchEmis']);
+            $daysdiff = round($datediff / (60 * 60 * 24));
+            if ($daysdiff > 90) {
+                $this->Api->send('Su configuración no permite emitir con una fecha más antigua que 90 días. Si desea emitir con más de 90 días, debe activar la opción en su configuración.', 400);
+            }
+        }
         // corregir dirección sucursal si se indicó y se debe normalizar
         if ($normalizar) {
             if (!empty($dte['Encabezado']['Emisor']['CdgSIISucur'])) {

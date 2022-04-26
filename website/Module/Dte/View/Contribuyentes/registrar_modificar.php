@@ -530,6 +530,14 @@ echo $f->input([
     'value' => isset($Contribuyente) ? $Contribuyente->config_temporales_eliminar : 0,
     'help' => '¿Administradores pueden eliminar masivamente los documentos temporales?',
 ]);
+echo $f->input([
+    'type' => 'select',
+    'name' => 'config_emision_mas_90_dias',
+    'label' => 'Emisión más de 90 días',
+    'options' => ['No', 'Si'],
+    'value' => isset($Contribuyente) ? $Contribuyente->config_emision_mas_90_dias : 0,
+    'help' => '¿Se permite emitir documentos con una fecha de más de 90 días hacia atrás?',
+]);
 ?>
                 </div>
                 <div class="col-md-6">
