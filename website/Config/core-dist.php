@@ -202,8 +202,8 @@ ini_set('max_execution_time', 600);
 // configuración autenticación servicios externos
 /*\sowerphp\core\Configure::write('proveedores.api', [
     // Desbloquea las funcionalidades Extra de LibreDTE
-    // Regístrate Gratis en https://api.libredte.cl
-    'libredte' => '',
+    // Regístrate Gratis en https://apisii.cl
+    'apisii' => '',
 ]);*/
 
 // configuración de la aplicación LibreDTE
