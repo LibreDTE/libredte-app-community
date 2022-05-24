@@ -400,7 +400,7 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que realiza verificaciones a campos antes de guardar
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-01
+     * @version 2022-05-24
      */
     public function save()
     {
@@ -414,7 +414,29 @@ class Model_DteEmitido extends Model_Base_Envio
         if ($this->xml) {
             if ($this->mipyme) {
                 $this->xml = null;
-            } else if (substr($this->xml,0,5) == '<?xml') {
+            }
+            // si es un XML, hay que corroborar el XML (firma) y además codificar  en base64
+            else if (substr($this->xml,0,5) == '<?xml') {
+                $datos = $this->getDatos();
+                // si el XML viene sin TED se rechaza el guardado
+                if (empty($datos['TED'])) {
+                    throw \Exception('El DTE no está timbrado (nodo TED).');
+                }
+                // corroborar si el XML viene con firma
+                $Dte = $this->getDte();
+                $FirmaDte = $Dte->getFirma();
+                if (empty($FirmaDte)) {
+                    // si no hay firma error
+                    $Firma = $this->getEmisor()->getFirma();
+                    if (!$Firma) {
+                        throw new \Exception('No hay firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe agregar su firma antes de guardar un XML de un DTE sin firma para que pueda ser firmado al ser guardado. [faq:174]');
+                    }
+                    // si hay firma se firma el DTE y se guarda el DTE (independientemente que se haya pasado un EnvioDTE)
+                    $Dte->firmar($Firma);
+                    $this->xml = $Dte->saveXML();
+                    $datos = $this->getDatos(true);
+                }
+                // codificar en base64
                 $this->xml = base64_encode($this->xml);
             }
         }
@@ -560,14 +582,14 @@ class Model_DteEmitido extends Model_Base_Envio
      * Método que entrega el arreglo con los datos que se usaron para generar el
      * XML del DTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-02
+     * @version 2022-04-24
      */
-    public function getDatos()
+    public function getDatos($force_reload = false)
     {
-        if (!isset($this->datos)) {
+        if (!isset($this->datos) or $force_reload) {
             // xml local
             if ($this->hasLocalXML()) {
-                $this->datos = $this->getDte()->getDatos();
+                $this->datos = $this->getDte()->getDatos($force_reload);
                 $extra = (array)$this->getExtra();
                 if (!empty($extra['dte'])) {
                     $this->datos = \sowerphp\core\Utility_Array::mergeRecursiveDistinct(

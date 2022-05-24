@@ -1066,12 +1066,15 @@ class Controller_DteEmitidos extends \Controller_App
     /**
      * Acción que permite actualizar el track_id del DteEmitido
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-18
+     * @version 2022-05-24
      */
     public function avanzado_track_id($dte, $folio)
     {
         $Emisor = $this->getContribuyente();
-        $r = $this->consume('/api/dte/dte_emitidos/avanzado_track_id/'.$dte.'/'.$folio.'/'.$Emisor->rut, $_POST);
+        $r = $this->consume(
+            '/api/dte/dte_emitidos/avanzado_track_id/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?certificacion='.(int)$Emisor->enCertificacion(),
+            $_POST
+        );
         if ($r['status']['code']!=200) {
             \sowerphp\core\Model_Datasource_Session::message(
                 str_replace("\n", '<br/>', $r['body']), 'error'
@@ -1089,7 +1092,7 @@ class Controller_DteEmitidos extends \Controller_App
     /**
      * Recurso que permite actualizar el track_id del DteEmitido
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-18
+     * @version 2022-05-24
      */
     public function _api_avanzado_track_id_POST($dte, $folio, $emisor)
     {
@@ -1100,7 +1103,10 @@ class Controller_DteEmitidos extends \Controller_App
         }
         // obtener DTE
         $Emisor = new Model_Contribuyente($emisor);
-        $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
+        extract($this->getQuery([
+            'certificacion' => $Emisor->enCertificacion(),
+        ]));
+        $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, (int)$certificacion);
         if (!$DteEmitido->exists()) {
             $this->Api->send('No existe el DTE solicitado', 404);
         }
@@ -1160,17 +1166,18 @@ class Controller_DteEmitidos extends \Controller_App
      * Acción que permite usar la verificación avanzada de datos del DTE
      * Permite validar firma con la enviada al SII
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-05-16
+     * @version 2022-05-24
      */
     public function verificar_datos_avanzado($dte, $folio)
     {
         $Emisor = $this->getContribuyente();
         // obtener DTE emitido
-        $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
+        $certificacion = (int)$Emisor->enCertificacion();
+        $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $certificacion);
         if (!$DteEmitido->exists()) {
-            die('No existe el DTE solicitado');
+            die('No existe el documento solicitado.');
         }
-        $r = $this->consume('/api/dte/dte_emitidos/estado/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?avanzado=1');
+        $r = $this->consume('/api/dte/dte_emitidos/estado/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?avanzado=1&certificacion='.$certificacion);
         if ($r['status']['code']!=200) {
             die('Error al obtener el estado: '.$r['body']);
         }
@@ -1523,11 +1530,10 @@ class Controller_DteEmitidos extends \Controller_App
     /**
      * Acción de la API que permite consultar el estado del envío del DTE al SII
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-18
+     * @version 2022-05-24
      */
     public function _api_estado_GET($dte, $folio, $emisor)
     {
-        extract($this->getQuery(['avanzado'=>false]));
         $User = $this->Api->getAuthUser();
         if (is_string($User)) {
             $this->Api->send($User, 401);
@@ -1543,7 +1549,11 @@ class Controller_DteEmitidos extends \Controller_App
         if (!$Firma) {
             $this->Api->send('No existe firma asociada', 506);
         }
-        $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
+        extract($this->getQuery([
+            'avanzado' => false,
+            'certificacion' => (int)$Emisor->enCertificacion(),
+        ]));
+        $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $certificacion);
         if (!$DteEmitido->exists()) {
             $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio, 404);
         }
@@ -1551,7 +1561,7 @@ class Controller_DteEmitidos extends \Controller_App
             $this->Api->send('El documento T'.$dte.'F'.$folio.' no tiene XML en LibreDTE', 400);
         }
         if (!in_array($dte, [39, 41])) {
-            \sasco\LibreDTE\Sii::setAmbiente($Emisor->enCertificacion());
+            \sasco\LibreDTE\Sii::setAmbiente($certificacion);
             return $avanzado ? $DteEmitido->getDte()->getEstadoAvanzado($Firma) : $DteEmitido->getDte()->getEstado($Firma);
         } else {
             if ($avanzado) {
@@ -1798,7 +1808,7 @@ class Controller_DteEmitidos extends \Controller_App
      * Acción de la API que permite cargar el XML de un DTE como documento
      * emitido
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-12-30
+     * @version 2022-05-24
      */
     public function _api_cargar_xml_POST()
     {
@@ -1898,11 +1908,25 @@ class Controller_DteEmitidos extends \Controller_App
         if (!$DteEmitido->track_id) {
             $DteEmitido->track_id = null;
         }
-        $DteEmitido->save();
+        try {
+            $DteEmitido->save();
+        } catch (\Exception $e) {
+            $this->Api->send('No fue posible guardar el DTE: '.$e->getMessage(), 507);
+        }
+        // actualizar estado
         if ($DteEmitido->track_id and $DteEmitido->track_id!=-1) {
             $DteEmitido->actualizarEstado();
         }
-        $DteEmitido->xml = false; // olvidar XML que se subió
+        // si no viene con estado para actualizar se podría requerir el envío al SII
+        if (empty($DteEmitido->track_id)) {
+            $enviar_sii = isset($_GET['enviar_sii']) ? (int)$_GET['enviar_sii'] : 0;
+            if ($enviar_sii) {
+                $DteEmitido->enviar();
+            }
+        }
+        // olvidar XML que se subió para no entregarlo en la respuesta
+        $DteEmitido->xml = false;
+        // entregar objeto del DTE emitido via la API
         $this->Api->send($DteEmitido, 200, JSON_PRETTY_PRINT);
     }
 
