@@ -63,7 +63,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
      * Método que fuerza la selección de un contribuyente si estamos en alguno
      * de los módulos que requieren uno para poder funcionar
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-01-06
+     * @version 2022-05-04
      */
     public function beforeFilter()
     {
@@ -87,7 +87,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
         }
         // redireccionar al dashboard general de la aplicación
         if (class_exists('Controller_Dashboard') and $this->Auth->logged()) {
-            if (in_array($this->request->request, ['', '/inicio', '/dte/contribuyentes/seleccionar'])) {
+            if (in_array($this->request->request, ['/dte/contribuyentes/seleccionar'])) {
                 $this->redirect('/dashboard');
             }
         }
