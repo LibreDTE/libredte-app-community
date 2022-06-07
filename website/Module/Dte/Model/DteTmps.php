@@ -41,15 +41,15 @@ class Model_DteTmps extends \Model_Plural_App
     /**
      * Método que elimina todos los documentos temporales del contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+     * @version 2022-06-07
      */
     public function eliminar()
     {
-        return $this->db->query('
-            DELETE
-            FROM dte_tmp
-            WHERE emisor = :emisor
-        ', [':emisor'=>$this->getContribuyente()->rut]);
+        $this->setWhereStatement(['emisor = :emisor'], [':emisor'=>$this->getContribuyente()->rut]);
+        $borradores = $this->getObjects();
+        foreach ($borradores as $borrador) {
+            $borrador->delete();
+        }
     }
 
 }
