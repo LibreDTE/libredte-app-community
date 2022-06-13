@@ -1814,7 +1814,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el total de ventas de un período
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-17
+     * @version 2022-06-13
      */
     public function countVentas($periodo)
     {
@@ -1829,7 +1829,7 @@ class Model_Contribuyente extends \Model_App
                     FROM
                         dte_emitido AS e
                         JOIN dte_referencia AS r ON r.emisor = e.emisor AND r.dte = e.dte AND r.folio = e.folio AND r.certificacion = e.certificacion
-                        WHERE '.$periodo_col.' = :periodo AND r.referencia_dte = 46
+                        WHERE e.emisor = :rut AND '.$periodo_col.' = :periodo AND r.referencia_dte = 46
                 )
         ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':periodo'=>$periodo]);
     }
@@ -1838,7 +1838,7 @@ class Model_Contribuyente extends \Model_App
      * Método que entrega las ventas de un período
      * @todo Corregir ID en Extranjero y asignar los NULL por los valores que corresponden (quizás haya que modificar tabla dte_emitido)
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-09-29
+     * @version 2022-06-13
      */
     public function getVentas($periodo)
     {
@@ -1924,7 +1924,7 @@ class Model_Contribuyente extends \Model_App
                     FROM
                         dte_emitido AS e
                         JOIN dte_referencia AS r ON r.emisor = e.emisor AND r.dte = e.dte AND r.folio = e.folio AND r.certificacion = e.certificacion
-                        WHERE '.$periodo_col.' = :periodo AND r.referencia_dte = 46
+                        WHERE e.emisor = :rut AND '.$periodo_col.' = :periodo AND r.referencia_dte = 46
                 )
             ORDER BY e.fecha, e.dte, e.folio
         ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':periodo'=>$periodo]);
