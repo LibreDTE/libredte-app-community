@@ -27,12 +27,6 @@
     </li>
 <?php endif; ?>
     <li class="nav-item">
-        <a href="<?=$_base?>/dte/dte_intercambios/pendientes" title="Descargar los documentos pendientes de procesar" class="nav-link">
-            <i class="fa fa-download"></i>
-            Descargar
-        </a>
-    </li>
-    <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_intercambios/buscar" title="Búsqueda avanzada de los documentos de intercambio" class="nav-link">
             <i class="fa fa-search"></i>
             Buscar

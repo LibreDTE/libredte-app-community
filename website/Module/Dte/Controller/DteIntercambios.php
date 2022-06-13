@@ -88,32 +88,6 @@ class Controller_DteIntercambios extends \Controller_App
     }
 
     /**
-     * Acción para descargar los intercambios pendientes de procesar
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-18
-     */
-    public function pendientes()
-    {
-        $Emisor = $this->getContribuyente();
-        $pendientes = $Emisor->getIntercambios();
-        if (!$pendientes) {
-            \sowerphp\core\Model_Datasource_Session::message('No hay intercambios pendientes.', 'warning');
-            $this->redirect('/dte/dte_intercambios/listar');
-        }
-        foreach ($pendientes as &$i) {
-            if (is_array($i['documentos'])) {
-                $i['documentos'] = implode("\n", $i['documentos']);
-            }
-            if (is_array($i['totales'])) {
-                $i['totales'] = implode("\n", $i['totales']);
-            }
-        }
-        array_unshift($pendientes, array_keys($pendientes[0]));
-        $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($pendientes);
-        $this->response->sendContent($csv, $Emisor->rut.'_intercambios_pendientes_'.date('Ymd').'.csv');
-    }
-
-    /**
      * Acción que muestra la página de un intercambio
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
      * @version 2021-10-12
