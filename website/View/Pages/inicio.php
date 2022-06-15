@@ -64,6 +64,11 @@
     </div>
     <div class="card mb-4">
         <div class="card-body">
+            <i class="fab fa-instagram fa-fw"></i> <a href="https://instagram.com/libredte">Instagram</a>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
             <i class="fab fa-facebook fa-fw"></i> <a href="https://www.facebook.com/LibreDTE">Facebook</a>
         </div>
     </div>
@@ -75,11 +80,6 @@
     <div class="card mb-4">
         <div class="card-body">
             <i class="fab fa-youtube fa-fw"></i> <a href="https://twitter.com/libredte">Twitter</a>
-        </div>
-    </div>
-    <div class="card mb-4">
-        <div class="card-body">
-            <i class="fab fa-youtube fa-fw"></i> <a href="https://www.linkedin.com/groups/8403251">LinkedIn</a>
         </div>
     </div>
 </div>
