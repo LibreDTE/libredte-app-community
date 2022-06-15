@@ -875,6 +875,9 @@ class Controller_Documentos extends \Controller_App
         if (!empty($_POST['ValorDR_global']) and !empty($_POST['TpoValor_global'])) {
             $TpoValor_global = $_POST['TpoValor_global'];
             $ValorDR_global = $_POST['ValorDR_global'];
+            if ($TpoValor_global=='%') {
+                $ValorDR_global = round($ValorDR_global, 2);
+            }
             if ($dte['Encabezado']['IdDoc']['TipoDTE']==39 and $TpoValor_global=='$') {
                 $ValorDR_global = round($ValorDR_global * (1+\sasco\LibreDTE\Sii::getIVA()/100));
             }
