@@ -828,7 +828,7 @@ class Controller_Documentos extends \Controller_App
             // descuento
             if (!empty($_POST['ValorDR'][$i]) and !empty($_POST['TpoValor'][$i])) {
                 if ($_POST['TpoValor'][$i]=='%') {
-                    $detalle['DescuentoPct'] = $_POST['ValorDR'][$i];
+                    $detalle['DescuentoPct'] = round($_POST['ValorDR'][$i], 2);
                 } else {
                     $detalle['DescuentoMonto'] = $_POST['ValorDR'][$i];
                     // si es boleta y el item no es exento se le agrega el IVA al descuento
