@@ -181,7 +181,7 @@ class Model_DteTmp extends \Model_App
      * Método que genera el XML de EnvioDTE a partir de los datos ya
      * normalizados de un DTE temporal
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-11-06
+     * @version 2022-06-20
      */
     public function getEnvioDte($folio = 0, \sasco\LibreDTE\Sii\Folios $Folios = null, \sasco\LibreDTE\FirmaElectronica $Firma = null, $RutReceptor = null, $fecha_emision = null)
     {
@@ -192,6 +192,60 @@ class Model_DteTmp extends \Model_App
         $dte['Encabezado']['IdDoc']['Folio'] = $folio;
         if ($fecha_emision) {
             $dte['Encabezado']['IdDoc']['FchEmis'] = $fecha_emision;
+            // si el documento es de exportación se deberá recalcular el total del documento en pesos
+            if (in_array($this->dte, [110, 111, 112])) {
+                if (!empty($dte['Encabezado']['Totales']['TpoMoneda'])) {
+                    // actualizar total en los datos del DTE
+                    $fecha = $dte['Encabezado']['IdDoc']['FchEmis'];
+                    $moneda = $dte['Encabezado']['Totales']['TpoMoneda'];
+                    if ($moneda == 'PESO CL') {
+                        $cambio = 1;
+                    } else {
+                        $cambio = (new \sowerphp\app\Sistema\General\Model_MonedaCambio($moneda, 'CLP', $fecha))->valor;
+                    }
+                    $dte['Encabezado']['OtraMoneda'] = [[
+                        'TpoMoneda' => 'PESO CL',
+                        'TpoCambio' => $cambio,
+                    ]];
+                    $dte['Encabezado']['Totales'] = [
+                        'TpoMoneda' => isset($dte['Encabezado']['Totales']['TpoMoneda']) ? $dte['Encabezado']['Totales']['TpoMoneda'] : false,
+                    ];
+                    $dte = (new \sasco\LibreDTE\Sii\Dte($dte))->getDatos();
+                    // actualizar total en el temporal y en el cobro
+                    $total = 0;
+                    if ($dte['Encabezado']['Totales']['MntTotal']) {
+                        if (!empty($dte['Encabezado']['OtraMoneda'])) {
+                            if (!isset($dte['Encabezado']['OtraMoneda'][0])) {
+                                $dte['Encabezado']['OtraMoneda'] = [$dte['Encabezado']['OtraMoneda']];
+                            }
+                            foreach ($dte['Encabezado']['OtraMoneda'] as $OtraMoneda) {
+                                if ($OtraMoneda['TpoMoneda'] == 'PESO CL' and !empty($OtraMoneda['MntTotOtrMnda'])) {
+                                    $total = $OtraMoneda['MntTotOtrMnda'];
+                                    break;
+                                }
+                            }
+                        }
+                        if (!$total) {
+                            $this->Api->send('No fue posible determinar el valor total en pesos del DTE. [faq:12]', 400);
+                        }
+                    }
+                    $this->db->beginTransaction();
+                    try {
+                        // actualizar total del dte temporal
+                        $this->total = round($total);
+                        $this->save();
+                        // actualizar total del cobro
+                        $Cobro = $this->getCobro(false);
+                        if ($Cobro->exists()) {
+                            $Cobro->total = $this->total;
+                            $Cobro->save();
+                        }
+                    } catch (\Exception $e) {
+                        $this->db->rollback();
+                    }
+                    $this->db->commit();
+                }
+            }
         }
         $Dte = new \sasco\LibreDTE\Sii\Dte($dte, false); // se crea el documento sin normalizar (ya está normalizado en el borrador)
         if ($Folios and !$Dte->timbrar($Folios)) {
