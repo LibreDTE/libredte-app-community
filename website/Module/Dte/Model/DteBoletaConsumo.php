@@ -166,10 +166,14 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     /**
      * Método que indica si el RCOF se debe enviar o no al SII
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-10
+     * @version 2022-06-20
      */
     public function seEnvia(): bool
     {
+        // desde el 1ero de agosto de 2022 no se envían según Res Ex 53 del 2022
+        if ($this->dia >= '2022-08-01') {
+            return false;
+        }
         // casos donde no se puede enviar
         if ($this->dia >= date('Y-m-d')) {
             return false;
