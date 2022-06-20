@@ -118,7 +118,7 @@ class Model_DteVentas extends \Model_Plural_App
      * Método que entrega el resumen de los documentos de ventas
      * totalizado según ciertos filtros y por tipo de documento.
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-04
+     * @version 2022-06-16
      */
     public function getResumen(array $filtros = [])
     {
@@ -150,7 +150,6 @@ class Model_DteVentas extends \Model_Plural_App
                 }
             }
         } else {
-            $where[] = 't.codigo != 46';
             $where[] = 't.venta = true';
         }
         // otros filtros
@@ -190,9 +189,18 @@ class Model_DteVentas extends \Model_Plural_App
                 dte_emitido AS d
                 JOIN usuario AS u ON u.id = d.usuario
                 JOIN dte_tipo AS t ON t.codigo = d.dte
-            WHERE '.implode(' AND ', $where).'
+            WHERE
+                '.implode(' AND ', $where).'
+                AND t.codigo != 46
+                AND (d.emisor, d.dte, d.folio, d.certificacion) NOT IN (
+                    SELECT e.emisor, e.dte, e.folio, e.certificacion
+                    FROM
+                        dte_emitido AS e
+                        JOIN dte_referencia AS r ON r.emisor = e.emisor AND r.dte = e.dte AND r.folio = e.folio AND r.certificacion = e.certificacion
+                        WHERE e.emisor = :emisor AND r.referencia_dte = 46
+                )
             GROUP BY t.codigo, t.tipo, t.operacion
-            ORDER BY t.operacion DESC, t.tipo ASC
+            ORDER BY t.codigo ASC
         ', $vars);
     }
 

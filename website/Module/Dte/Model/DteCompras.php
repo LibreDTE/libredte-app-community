@@ -119,7 +119,7 @@ class Model_DteCompras extends \Model_Plural_App
      * totalizado según ciertos filtros y por tipo de documento.
      * @todo Agregar las facturas de compras al resumen (tipo 46)
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-04
+     * @version 2022-06-16
      */
     public function getResumen(array $filtros = [])
     {
@@ -180,49 +180,52 @@ class Model_DteCompras extends \Model_Plural_App
         }
         // generar consulta
         return $this->db->getTable('
-            (
-                SELECT
-                    t.codigo,
-                    t.tipo,
-                    t.operacion,
-                    COUNT(d.dte)::INT AS documentos,
-                    SUM(d.exento)::INT AS exento,
-                    SUM(d.neto)::INT AS neto,
-                    SUM(d.iva)::INT AS iva,
-                    SUM(d.total)::INT AS total
-                FROM
-                    dte_recibido AS d
-                    JOIN usuario AS u ON u.id = d.usuario
-                    JOIN dte_tipo AS t ON t.codigo = d.dte
-                WHERE
-                    '.$where_rut_recibidos.'
-                    AND '.implode(' AND ', $where).'
-                    AND '.$where_periodo_recibidos.'
-                    AND d.dte != 46
-                GROUP BY t.codigo, t.tipo, t.operacion
-                ORDER BY t.operacion DESC, t.tipo ASC
-            ) UNION (
-                SELECT
-                    t.codigo,
-                    t.tipo,
-                    \'S\' AS operacion,
-                    COUNT(d.dte)::INT AS documentos,
-                    SUM(d.exento)::INT AS exento,
-                    SUM(d.neto)::INT AS neto,
-                    SUM(d.iva)::INT AS iva,
-                    SUM(d.total)::INT AS total
-                FROM
-                    dte_emitido AS d
-                    JOIN usuario AS u ON u.id = d.usuario
-                    JOIN dte_tipo AS t ON t.codigo = d.dte
-                WHERE
-                    '.$where_rut_emitidos.'
-                    AND '.implode(' AND ', $where).'
-                    AND '.$where_periodo_emitidos.'
-                    AND d.dte = 46
-                GROUP BY t.codigo, t.tipo, t.operacion
-                ORDER BY t.operacion DESC, t.tipo ASC
-            )
+            SELECT t.*
+            FROM
+                (
+                    (
+                        SELECT
+                            t.codigo,
+                            t.tipo,
+                            t.operacion,
+                            COUNT(d.dte)::INT AS documentos,
+                            SUM(d.exento)::INT AS exento,
+                            SUM(d.neto)::INT AS neto,
+                            SUM(d.iva)::INT AS iva,
+                            SUM(d.total)::INT AS total
+                        FROM
+                            dte_recibido AS d
+                            JOIN usuario AS u ON u.id = d.usuario
+                            JOIN dte_tipo AS t ON t.codigo = d.dte
+                        WHERE
+                            '.$where_rut_recibidos.'
+                            AND '.implode(' AND ', $where).'
+                            AND '.$where_periodo_recibidos.'
+                            AND d.dte != 46
+                        GROUP BY t.codigo, t.tipo, t.operacion
+                    ) UNION (
+                        SELECT
+                            t.codigo,
+                            t.tipo,
+                            \'S\' AS operacion,
+                            COUNT(d.dte)::INT AS documentos,
+                            SUM(d.exento)::INT AS exento,
+                            SUM(d.neto)::INT AS neto,
+                            SUM(d.iva)::INT AS iva,
+                            SUM(d.total)::INT AS total
+                        FROM
+                            dte_emitido AS d
+                            JOIN usuario AS u ON u.id = d.usuario
+                            JOIN dte_tipo AS t ON t.codigo = d.dte
+                        WHERE
+                            '.$where_rut_emitidos.'
+                            AND '.implode(' AND ', $where).'
+                            AND '.$where_periodo_emitidos.'
+                            AND d.dte = 46
+                        GROUP BY t.codigo, t.tipo, t.operacion
+                    )
+                ) AS t
+            ORDER BY t.codigo
         ', $vars);
     }
 

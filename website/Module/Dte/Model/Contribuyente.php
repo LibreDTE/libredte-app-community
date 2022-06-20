@@ -2432,7 +2432,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el total de las compras de un período
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-21
+     * @version 2022-06-20
      */
     public function countCompras($periodo)
     {
@@ -2447,6 +2447,13 @@ class Model_Contribuyente extends \Model_App
                     AND r.receptor = :rut
                     AND r.certificacion = :certificacion
                     AND r.dte != 46 -- se quitan FC para evitar duplicidad con las que están en dte_emitidos
+                    AND (r.receptor, r.dte, r.folio, r.certificacion) NOT IN (
+                        SELECT r.emisor, r.dte, r.folio, r.certificacion
+                        FROM
+                            dte_emitido AS r
+                            JOIN dte_referencia AS re ON re.emisor = r.emisor AND re.dte = r.dte AND re.folio = r.folio AND re.certificacion = r.certificacion
+                            WHERE '.$periodo_col_46.' = :periodo AND re.referencia_dte = 46
+                    )
                     AND ((r.periodo IS NULL AND '.$periodo_col.' = :periodo) OR (r.periodo IS NOT NULL AND r.periodo = :periodo))
             ) UNION (
                 SELECT COUNT(*)
@@ -2473,7 +2480,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el resumen de las compras de un período
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-21
+     * @version 2022-06-20
      */
     public function getCompras($periodo, $tipo_dte = null)
     {
@@ -2540,6 +2547,13 @@ class Model_Contribuyente extends \Model_App
                     AND r.certificacion = :certificacion
                     AND t.compra = true
                     AND r.dte != 46 -- se quitan FC para evitar duplicidad con las que están en dte_emitidos
+                    AND (r.receptor, r.dte, r.folio, r.certificacion) NOT IN (
+                        SELECT r.emisor, r.dte, r.folio, r.certificacion
+                        FROM
+                            dte_emitido AS r
+                            JOIN dte_referencia AS re ON re.emisor = r.emisor AND re.dte = r.dte AND re.folio = r.folio AND re.certificacion = r.certificacion
+                            WHERE '.$periodo_col_46.' = :periodo AND re.referencia_dte = 46
+                    )
                     AND ((r.periodo IS NULL AND '.$periodo_col.' = :periodo) OR (r.periodo IS NOT NULL AND r.periodo = :periodo))
             ) UNION (
                 SELECT
