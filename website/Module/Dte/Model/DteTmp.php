@@ -193,7 +193,7 @@ class Model_DteTmp extends \Model_App
         if ($fecha_emision) {
             $dte['Encabezado']['IdDoc']['FchEmis'] = $fecha_emision;
         }
-        $Dte = new \sasco\LibreDTE\Sii\Dte($dte, false);
+        $Dte = new \sasco\LibreDTE\Sii\Dte($dte, false); // se crea el documento sin normalizar (ya está normalizado en el borrador)
         if ($Folios and !$Dte->timbrar($Folios)) {
             return false;
         }

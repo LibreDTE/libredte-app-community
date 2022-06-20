@@ -707,7 +707,7 @@ class Controller_DteTmps extends \Controller_App
     /**
      * Recurso para actualizar el documento temporal
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-24
+     * @version 2022-06-20
      */
     public function _api_actualizar_POST($receptor, $dte, $codigo, $emisor)
     {
@@ -745,6 +745,7 @@ class Controller_DteTmps extends \Controller_App
             }
         }
         // actualizar precios de items (siempre que esten codificados)
+        $precios_actualizados = false;
         if (!empty($this->Api->data['actualizar_precios'])) {
             // actualizar precios de items si es que corresponde: existe código
             // del item, existe el item, existe un precio y es diferente al que
@@ -752,7 +753,6 @@ class Controller_DteTmps extends \Controller_App
             $fecha_calculo = !empty($datos['Encabezado']['IdDoc']['FchVenc'])
                                 ? $datos['Encabezado']['IdDoc']['FchVenc']
                                 : $datos['Encabezado']['IdDoc']['FchEmis'];
-            $precios_actualizados = false;
             foreach ($datos['Detalle'] as &$d) {
                 if (empty($d['CdgItem']['VlrCodigo'])) {
                     continue;
@@ -777,15 +777,69 @@ class Controller_DteTmps extends \Controller_App
                     }
                 }
             }
-            // si se actualizó algún precio se deben recalcular los totales
-            if ($precios_actualizados) {
-                $datos['Encabezado']['Totales'] = [];
-                $datos = (new \sasco\LibreDTE\Sii\Dte($datos))->getDatos();
+        }
+        // si el documento es de exportación y la fecha es diferente se debe recalcular el total en otra moneda
+        if (in_array($DteTmp->dte, [110, 111, 112])) {
+            if (!empty($datos['Encabezado']['Totales']['TpoMoneda'])) {
+                $fecha = $datos['Encabezado']['IdDoc']['FchEmis'];
+                $moneda = $datos['Encabezado']['Totales']['TpoMoneda'];
+                if ($moneda == 'PESO CL') {
+                    $cambio = 1;
+                } else {
+                    $cambio = (new \sowerphp\app\Sistema\General\Model_MonedaCambio($moneda, 'CLP', $fecha))->valor;
+                }
+                $datos['Encabezado']['OtraMoneda'] = [[
+                    'TpoMoneda' => 'PESO CL',
+                    'TpoCambio' => $cambio,
+                ]];
+                $precios_actualizados = true;
+            }
+        }
+        // si se actualizó algún precio o se cambió el tipo de cambio se deben recalcular los totales
+        if ($precios_actualizados) {
+            $datos['Encabezado']['Totales'] = [
+                'TpoMoneda' => isset($datos['Encabezado']['Totales']['TpoMoneda']) ? $datos['Encabezado']['Totales']['TpoMoneda'] : false,
+            ];
+            $datos = (new \sasco\LibreDTE\Sii\Dte($datos))->getDatos();
+        }
+        // si no es DTE exportación, se saca el total en pesos del MntTotal
+        if (!in_array($DteTmp->dte, [110, 111, 112])) {
+            $DteTmp->total = $datos['Encabezado']['Totales']['MntTotal'];
+        }
+        // si es DTE de exportación, se saca el total del MntTotOtrMnda en PESOS CL
+        else {
+            // calcular el total del documento de exportación
+            $total = 0;
+            if ($datos['Encabezado']['Totales']['MntTotal']) {
+                if (!empty($datos['Encabezado']['OtraMoneda'])) {
+                    if (!isset($datos['Encabezado']['OtraMoneda'][0])) {
+                        $datos['Encabezado']['OtraMoneda'] = [$dte['Encabezado']['OtraMoneda']];
+                    }
+                    foreach ($datos['Encabezado']['OtraMoneda'] as $OtraMoneda) {
+                        if ($OtraMoneda['TpoMoneda'] == 'PESO CL' and !empty($OtraMoneda['MntTotOtrMnda'])) {
+                            $total = $OtraMoneda['MntTotOtrMnda'];
+                            break;
+                        }
+                    }
+                }
+                if (!$total) {
+                    $this->Api->send('No fue posible determinar el valor total en pesos del DTE. [faq:12]', 400);
+                }
+            }
+            $DteTmp->total = round($total);
+            // actualizar total del cobro
+            $Cobro = $DteTmp->getCobro(false);
+            if ($Cobro->exists()) {
+                $Cobro->total = $DteTmp->total;
+                try {
+                    $Cobro->save();
+                } catch (\Exception $e) {
+                    // no debería fallar, si falla, podría quedar el cobro con un monto diferente al temporal
+                }
             }
         }
         // guardar nuevo dte temporal
         $DteTmp->fecha = $datos['Encabezado']['IdDoc']['FchEmis'];
-        $DteTmp->total = $datos['Encabezado']['Totales']['MntTotal'];
         $DteTmp->datos = json_encode($datos);
         try {
             $DteTmp->save();
