@@ -387,24 +387,24 @@ Aquí es obligatorio configurar los siguientes parámetros.
 #### Configuración Funcionalidades Extras (opcional)
 
 Esta configuración te permite desbloquear [funcionalidades extras de
-LibreDTE](https://api.libredte.cl/#extras). Estas permitirán automatizar tareas
+LibreDTE](https://apisii.cl/#extras). Estas permitirán automatizar tareas
 y entregar un mejor servicio de facturación a las empresas.
 
 Para acceder a los servicios es necesario tener una cuenta en
-[api.libredte.cl](https://api.libredte.cl/#extras) y
-[generar un token](https://api.libredte.cl/home#api-auth). Este token se agrega
+[apisii.cl](https://apisii.cl/#extras) y
+[generar un token](https://apisii.cl/home#api-auth). Este token se agrega
 a la configuración:
 
 ```php
 \sowerphp\core\Configure::write('proveedores.api', [
     // Desbloquea las funcionalidades Extra de LibreDTE
-    // Regístrate Gratis en https://api.libredte.cl
+    // Regístrate Gratis en https://apisii.cl
     'libredte' => 'AGREGAR TOKEN AQUI',
 ]);
 ```
 
 **¿Qué precio tiene usar estas funcionalidades?** Desde $0.-
-[Tenemos planes](https://api.libredte.cl/#precios) según la cantidad de
+[Tenemos planes](https://apisii.cl/#precios) según la cantidad de
 consultas que estimes hacer cada 24 horas.
 
 #### Configuración Aplicaciones de Terceros (opcional)
