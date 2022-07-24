@@ -1,10 +1,6 @@
 # contenido propio de la instancia
-data/certs
-data/firma_electronica
-data/static
-data/var
+data
 extensions
 tmp
 website/Config/core.php
-website/Config/routes.php
 website/Vendor

@@ -21,8 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-/** ESTE ARCHIVO SE DEBE COPIAR A routes.php */
-
 // rutas para servicios web de módulos asociados a empresas
 \sowerphp\core\Routing_Router::connect('/api/dte/:controller/*', [
     'module' => 'Dte',
@@ -50,7 +48,7 @@
     39,
 ]);
 
-// rutas para utilidades (no asociados a empresas)
+// rutas para utilidades (no asociadas a empresas)
 \sowerphp\core\Routing_Router::connect('/api/utilidades/:controller/*', [
     'module' => 'Utilidades',
     'action' => 'api',

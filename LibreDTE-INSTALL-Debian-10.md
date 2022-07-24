@@ -271,12 +271,10 @@ sudo -u libredte composer install
 que se desea instalar. Esta versión debe coincidir en sus 2 primeros números con
 la versión de SowerPHP previamente instalada.
 
-Copiar archivos para configuraciones:
+Copiar archivo de configuración:
 
 ```shell
-cd Config
-sudo -u libredte cp core-dist.php core.php
-sudo -u libredte cp routes-dist.php routes.php
+sudo -u libredte cp Config/core-dist.php Config/core.php
 ```
 
 Crear carpetas usadas por LibreDTE:
