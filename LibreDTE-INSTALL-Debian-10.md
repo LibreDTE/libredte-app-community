@@ -589,7 +589,7 @@ siguientes acciones:
 2. Cambiar la contraseña del usuario `admin`. Aquí se usará la contraseña creada
    al inicio.
 
-#### Creación Grupo `dte_plus` y sus permisos
+#### Creación Grupos `dte_plus`, `soporte` y sus permisos
 
 Esta es una propuesta de permisos, es obligatorio crear el grupo y los permisos.
 Pero no es obligatorio que sean exactamente estos permisos. Dependiendo de los
@@ -625,6 +625,11 @@ INSERT INTO auth (grupo, recurso) VALUES
     ((SELECT id FROM grupo WHERE grupo = 'dte_plus'), '/dte/cesiones/*'),
     ((SELECT id FROM grupo WHERE grupo = 'dte_plus'), '/dte/registro_compras*')
 ;
+INSERT INTO grupo (grupo, activo) VALUES ('soporte', true);
+INSERT INTO usuario_grupo (usuario, grupo) VALUES
+    ((SELECT id FROM usuario WHERE usuario = 'admin'), (SELECT id FROM grupo WHERE grupo = 'dte_plus')),
+    ((SELECT id FROM usuario WHERE usuario = 'admin'), (SELECT id FROM grupo WHERE grupo = 'soporte'))
+;
 COMMIT;
 EOF
 ```
@@ -642,14 +647,6 @@ Los datos a cargar son:
 
 Para cargar los datos acceder a `https://libredte.example.com/dev/bd/poblar` y
 subir los archivos ODS uno a uno.
-
-#### Configuración de Permisos (opcional)
-
-1. Ir a `https://libredte.example.com/sistema/usuarios/grupos/listar` y agregar
-   el grupo soporte.
-
-2. Ir a `https://libredte.example.com/sistema/usuarios/usuarios/listar` y editar
-   el usuario administrador y agregarlo al grupo `dte_plus` y `soporte`.
 
 #### Creación usuario de SASCO para soporte (opcional)
 
