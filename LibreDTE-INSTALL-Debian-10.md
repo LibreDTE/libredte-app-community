@@ -301,6 +301,7 @@ sudo -u libredte psql libredte < /home/libredte/www/htdocs/website/Module/Sistem
 sudo -u libredte psql libredte < /usr/share/sowerphp/extensions/sowerphp/app/Module/Sistema/Module/General/Module/DivisionGeopolitica/Model/Sql/PostgreSQL/division_geopolitica.sql
 sudo -u libredte psql libredte < /usr/share/sowerphp/extensions/sowerphp/app/Module/Sistema/Module/General/Model/Sql/moneda.sql
 sudo -u libredte psql libredte < /home/libredte/www/htdocs/website/Module/Dte/Model/Sql/PostgreSQL.sql
+sudo -u libredte psql libredte < /home/libredte/www/htdocs/website/Module/Honorarios/Model/Sql/PostgreSQL.sql
 ```
 
 ### Configuración archivo `website/Config/core.php`
