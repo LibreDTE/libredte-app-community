@@ -627,8 +627,8 @@ INSERT INTO auth (grupo, recurso) VALUES
 ;
 INSERT INTO grupo (grupo, activo) VALUES ('soporte', true);
 INSERT INTO usuario_grupo (usuario, grupo) VALUES
-    ((SELECT id FROM usuario WHERE usuario = 'admin'), (SELECT id FROM grupo WHERE grupo = 'dte_plus')),
-    ((SELECT id FROM usuario WHERE usuario = 'admin'), (SELECT id FROM grupo WHERE grupo = 'soporte'))
+    (1000, (SELECT id FROM grupo WHERE grupo = 'dte_plus')),
+    (1000, (SELECT id FROM grupo WHERE grupo = 'soporte'))
 ;
 COMMIT;
 EOF
