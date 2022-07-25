@@ -21,41 +21,41 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-/** ESTE ARCHIVO SE DEBE COPIAR A core.php Y LUEGO CONFIGURAR */
-
 /**
  * @file core.php
  * Configuración de la aplicación web de LibreDTE
- * @version 2020-08-02
+ * @version 2022-07-25
  */
 
 // directorio para datos estáticos (debe tener permisos de escritura)
-define('DIR_STATIC', DIR_PROJECT.'/data/static');
+define('DIR_STATIC', DIR_PROJECT . '/data/static');
 
 // Configuración depuración
-\sowerphp\core\Configure::write('debug', true);
-\sowerphp\core\Configure::write('error.level', E_ALL);
+if (env('LIBREDTE_APP_DEBUG', true)) {
+    \sowerphp\core\Configure::write('debug', true);
+    \sowerphp\core\Configure::write('error.level', E_ALL);
+}
 
-// Tiempo máximo de ejecución del script a 10 minutos
-ini_set('max_execution_time', 600);
+// Tiempo máximo de ejecución del script PHP
+ini_set('max_execution_time', env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
 
 // Tiempo de duración de la sesión en minutos
-\sowerphp\core\Configure::write('session.expires', 600);
+\sowerphp\core\Configure::write('session.expires', env('LIBREDTE_APP_SESSION_EXPIRES', 600));
 
 // Delimitador en archivos CSV
-\sowerphp\core\Configure::write('spreadsheet.csv.delimiter', ';');
+\sowerphp\core\Configure::write('spreadsheet.csv.delimiter', env('LIBREDTE_APP_SPREADSHEET_CSV_DELIMITER', ';'));
 
 // Tema de la página (diseño)
-\sowerphp\core\Configure::write('page.layout', 'LibreDTE');
+\sowerphp\core\Configure::write('page.layout', env('LIBREDTE_APP_PAGE_LAYOUT', 'LibreDTE'));
 
 // Textos de la página
-\sowerphp\core\Configure::write('page.header.title', 'LibreDTE');
-\sowerphp\core\Configure::write('page.body.title', 'LibreDTE');
+\sowerphp\core\Configure::write('page.header.title', env('LIBREDTE_APP_PAGE_HEADER_TITLE', 'LibreDTE'));
+\sowerphp\core\Configure::write('page.body.title', env('LIBREDTE_APP_PAGE_BODY_TITLE', 'LibreDTE'));
 \sowerphp\core\Configure::write('page.footer', [
     // los créditos de LibreDTE: autor original y enlaces, se deben mantener visibles en el footer de cada página de la aplicación
     // más información en los términos y condiciones de uso en https://legal.libredte.cl
-    'left' => '&copy; 2021 '.\sowerphp\core\Configure::read('page.header.title').' - <a href="/consultar" title="Consultar documentos (incluyendo boletas)">Consultar DTE</a><br/><span class="small">Aplicación de facturación basada en <a href="https://libredte.cl">LibreDTE</a>, el cual es un proyecto de <a href="https://sasco.cl">SASCO SpA</a> que tiene como misión proveer facturación electrónica libre para Chile</span>',
-    'right' => '',
+    'left' => '&copy; 2022 '.\sowerphp\core\Configure::read('page.header.title').' - <a href="/consultar" title="Consultar documentos (incluyendo boletas)">Consultar DTE</a><br/><span class="small">Aplicación de facturación basada en <a href="https://libredte.cl">LibreDTE</a>, el cual es un proyecto de <a href="https://sasco.cl">SASCO SpA</a> que tiene como misión proveer facturación electrónica libre para Chile</span>',
+    'right' => env('LIBREDTE_APP_PAGE_FOOTER_RIGHT', ''),
 ]);
 
 // Menú principal del sitio web
@@ -86,21 +86,26 @@ ini_set('max_execution_time', 600);
 
 // Configuración para la base de datos
 \sowerphp\core\Configure::write('database.default', array(
-    'type' => 'PostgreSQL',
-    'user' => 'libredte',
-    'pass' => '',
-    'name' => 'libredte',
+    'type' => 'PostgreSQL', // sólo se soporta la base de datos PostgreSQL
+    'host' => env('LIBREDTE_APP_DATABASE_DEFAULT_HOST', 'localhost'),
+    'port' => env('LIBREDTE_APP_DATABASE_DEFAULT_PORT', 5432),
+    'user' => env('LIBREDTE_APP_DATABASE_DEFAULT_USER', 'libredte'),
+    'pass' => env('LIBREDTE_APP_DATABASE_DEFAULT_PASS', ''),
+    'name' => env('LIBREDTE_APP_DATABASE_DEFAULT_NAME', 'libredte'),
 ));
 
 // Configuración para el correo electrónico
 \sowerphp\core\Configure::write('email.default', array(
     'type' => 'smtp-phpmailer',
-    'host' => 'ssl://smtp.gmail.com',
-    'port' => 465,
-    'user' => '',
-    'pass' => '',
-    'from' => array('email'=>'', 'name'=>'LibreDTE'),
-    'to' => '',
+    'host' => env('LIBREDTE_APP_EMAIL_DEFAULT_HOST', 'ssl://smtp.gmail.com'),
+    'port' => env('LIBREDTE_APP_EMAIL_DEFAULT_PORT', 465),
+    'user' => env('LIBREDTE_APP_EMAIL_DEFAULT_USER', ''),
+    'pass' => env('LIBREDTE_APP_EMAIL_DEFAULT_PASS', ''),
+    'from' => array(
+        'email' => env('LIBREDTE_APP_EMAIL_DEFAULT_FROM_EMAIL', ''),
+        'name' => env('LIBREDTE_APP_EMAIL_DEFAULT_FROM_NAME', 'LibreDTE')
+    ),
+    'to' => env('LIBREDTE_APP_EMAIL_DEFAULT_TO', ''),
 ));
 
 // Módulos que utiliza la aplicación
@@ -134,30 +139,32 @@ ini_set('max_execution_time', 600);
     ],
 ]);
 
+env('LIBREDTE_APP_', '');
+
 // configuración general del módulo DTE
 \sowerphp\core\Configure::write('dte', [
     // contraseña que se usará para encriptar datos sensibles en la BD
-    'pkey' => '', // DEBE ser de 32 chars
+    'pkey' => env('LIBREDTE_APP_DTE_PKEY', ''), // DEBE ser de 32 chars
     // configuración de logos de las empresas
     'logos' => [
-        'width' => 150,
-        'height' => 100,
+        'width' => env('LIBREDTE_APP_DTE_LOGOS_WIDTH', 150),
+        'height' => env('LIBREDTE_APP_DTE_LOGOS_HEIGHT', 100),
     ],
     // DTEs autorizados por defecto para ser usados por las nuevas empresas
-    'dtes' => [33, 56, 61],
+    'dtes' => array_map('trim', explode(',', env('LIBREDTE_APP_DTE_DTES', '33,56,61'))),
     // opciones para los PDF
     'pdf' => [
-        // =true se asignará texto por defecto. String al lado izquiero o bien arreglo con índices left y right con sus textos
-        'footer' => true,
+        // =true se asignará texto por defecto. String al lado izquierdo o bien arreglo con índices left y right con sus textos
+        'footer' => env('LIBREDTE_APP_DTE_PDF_FOOTER', true),
     ],
     // validar SSL de sitios del SII
-    'verificar_ssl' => true,
+    'verificar_ssl' => env('LIBREDTE_APP_DTE_VERIFICAR_SSL', true),
     // web verificacion boletas (debe ser la ruta completa, incluyendo /boletas)
-    'web_verificacion' => null,
+    'web_verificacion' => env('LIBREDTE_APP_DTE_WEB_VERIFICACION'),
     // clase para envío de boletas al SII
-    //'clase_boletas' => '\website\Dte\Utility_EnvioBoleta',
+    'clase_boletas' => env('LIBREDTE_APP_DTE_CLASE_BOLETAS', '\website\Dte\Utility_EnvioBoleta'),
     // permitir que los usuarios puedan transferir empresas
-    //'transferir_contribuyente' => true,
+    'transferir_contribuyente' => env('LIBREDTE_APP_DTE_TRANSFERIR_CONTRIBUYENTE', false),
 ]);
 
 // configuración para API de contribuyentes
@@ -181,70 +188,25 @@ ini_set('max_execution_time', 600);
 
 // configuración para las aplicaciones de terceros que se pueden usar en LibreDTE
 \sowerphp\core\Configure::write('apps_3rd_party', [
-    /*'apps' => [
-        'directory' => __DIR__.'/../../website/Module/Apps/Utility/Apps',
-        'namespace' => '\website\Apps',
-    ],*/
     'dtepdfs' => [
         'directory' => __DIR__.'/../../website/Module/Dte/Module/Pdf/Utility/Apps',
         'namespace' => '\website\Dte\Pdf',
     ],
 ]);
 
-// configuración módulo Apps
-/*\sowerphp\core\Configure::write('module.Apps', [
-    'Dropbox' => [
-        'key' => '',
-        'secret' => '',
-    ],
-]);*/
-
 // configuración autenticación servicios externos
-/*\sowerphp\core\Configure::write('proveedores.api', [
+\sowerphp\core\Configure::write('proveedores.api', [
     // Desbloquea las funcionalidades Extra de LibreDTE
     // Regístrate Gratis en https://apisii.cl
-    'apisii' => '',
-]);*/
+    'apisii' => env('LIBREDTE_APP_PROVEEDORES_API_APISII'),
+]);
 
 // configuración de la aplicación LibreDTE
-/*\sowerphp\core\Configure::write('libredte', [
+\sowerphp\core\Configure::write('libredte', [
     'proveedor' => [
-        'rut' => 76192083,
+        'rut' => env('LIBREDTE_APP_LIBREDTE_PROVEEDOR_RUT'),
     ],
-]);*/
-
-// configuración para firma electrónica
-/*\sowerphp\core\Configure::write('firma_electronica.default', [
-    'file' => DIR_PROJECT.'/data/firma_electronica/default.p12',
-    'pass' => '',
-]);*/
-
-// Configuración para autorización secundaria (extensión: sowerphp/app)
-/*\sowerphp\core\Configure::write('auth2', [
-    '2FA' => [
-        'app_url' => 'www.libredte.cl',
-    ],
-]);*/
-
-// Configuración para reCAPTCHA (extensión: sowerphp/app)
-/*\sowerphp\core\Configure::write('recaptcha', [
-    'public_key' => '',
-    'private_key' => '',
-]);*/
-
-// Configuración para auto registro de usuarios (extensión: sowerphp/app)
-/*\sowerphp\core\Configure::write('app.self_register', [
-    'groups' => ['usuarios', 'dte_plus'],
-    'terms' => 'https://legal.libredte.cl',
-]);*/
-
-// configuración para preautenticación
-/*\sowerphp\core\Configure::write('preauth', [
-    'enabled' => false,
-]);*/
-
-// handler para triggers de la app
-//\sowerphp\core\Configure::write('app.trigger_handler', '');
+]);
 
 // configuración para FAQ (preguntas frecuentes)
 \sowerphp\core\Configure::write('faq', [
