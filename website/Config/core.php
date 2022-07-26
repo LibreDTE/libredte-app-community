@@ -37,10 +37,10 @@ if (env('LIBREDTE_APP_DEBUG', true)) {
 }
 
 // Tiempo máximo de ejecución del script PHP
-ini_set('max_execution_time', env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
+ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
 
 // Tiempo de duración de la sesión en minutos
-\sowerphp\core\Configure::write('session.expires', env('LIBREDTE_APP_SESSION_EXPIRES', 600));
+\sowerphp\core\Configure::write('session.expires', (int)env('LIBREDTE_APP_SESSION_EXPIRES', 600));
 
 // Delimitador en archivos CSV
 \sowerphp\core\Configure::write('spreadsheet.csv.delimiter', env('LIBREDTE_APP_SPREADSHEET_CSV_DELIMITER', ';'));
@@ -88,7 +88,7 @@ ini_set('max_execution_time', env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
 \sowerphp\core\Configure::write('database.default', array(
     'type' => 'PostgreSQL', // sólo se soporta la base de datos PostgreSQL
     'host' => env('LIBREDTE_APP_DATABASE_DEFAULT_HOST', 'localhost'),
-    'port' => env('LIBREDTE_APP_DATABASE_DEFAULT_PORT', 5432),
+    'port' => (int)env('LIBREDTE_APP_DATABASE_DEFAULT_PORT', 5432),
     'user' => env('LIBREDTE_APP_DATABASE_DEFAULT_USER', 'libredte'),
     'pass' => env('LIBREDTE_APP_DATABASE_DEFAULT_PASS', ''),
     'name' => env('LIBREDTE_APP_DATABASE_DEFAULT_NAME', 'libredte'),
@@ -98,7 +98,7 @@ ini_set('max_execution_time', env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
 \sowerphp\core\Configure::write('email.default', array(
     'type' => 'smtp-phpmailer',
     'host' => env('LIBREDTE_APP_EMAIL_DEFAULT_HOST', 'ssl://smtp.gmail.com'),
-    'port' => env('LIBREDTE_APP_EMAIL_DEFAULT_PORT', 465),
+    'port' => (int)env('LIBREDTE_APP_EMAIL_DEFAULT_PORT', 465),
     'user' => env('LIBREDTE_APP_EMAIL_DEFAULT_USER', ''),
     'pass' => env('LIBREDTE_APP_EMAIL_DEFAULT_PASS', ''),
     'from' => array(
@@ -139,16 +139,14 @@ ini_set('max_execution_time', env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
     ],
 ]);
 
-env('LIBREDTE_APP_', '');
-
 // configuración general del módulo DTE
 \sowerphp\core\Configure::write('dte', [
     // contraseña que se usará para encriptar datos sensibles en la BD
     'pkey' => env('LIBREDTE_APP_DTE_PKEY', ''), // DEBE ser de 32 chars
     // configuración de logos de las empresas
     'logos' => [
-        'width' => env('LIBREDTE_APP_DTE_LOGOS_WIDTH', 150),
-        'height' => env('LIBREDTE_APP_DTE_LOGOS_HEIGHT', 100),
+        'width' => (int)env('LIBREDTE_APP_DTE_LOGOS_WIDTH', 150),
+        'height' => (int)env('LIBREDTE_APP_DTE_LOGOS_HEIGHT', 100),
     ],
     // DTEs autorizados por defecto para ser usados por las nuevas empresas
     'dtes' => array_map('trim', explode(',', env('LIBREDTE_APP_DTE_DTES', '33,56,61'))),
@@ -158,13 +156,13 @@ env('LIBREDTE_APP_', '');
         'footer' => env('LIBREDTE_APP_DTE_PDF_FOOTER', true),
     ],
     // validar SSL de sitios del SII
-    'verificar_ssl' => env('LIBREDTE_APP_DTE_VERIFICAR_SSL', true),
+    'verificar_ssl' => (bool)env('LIBREDTE_APP_DTE_VERIFICAR_SSL', true),
     // web verificacion boletas (debe ser la ruta completa, incluyendo /boletas)
     'web_verificacion' => env('LIBREDTE_APP_DTE_WEB_VERIFICACION'),
     // clase para envío de boletas al SII
     'clase_boletas' => env('LIBREDTE_APP_DTE_CLASE_BOLETAS', '\website\Dte\Utility_EnvioBoleta'),
     // permitir que los usuarios puedan transferir empresas
-    'transferir_contribuyente' => env('LIBREDTE_APP_DTE_TRANSFERIR_CONTRIBUYENTE', false),
+    'transferir_contribuyente' => (bool)env('LIBREDTE_APP_DTE_TRANSFERIR_CONTRIBUYENTE', false),
 ]);
 
 // configuración para API de contribuyentes
@@ -204,7 +202,7 @@ env('LIBREDTE_APP_', '');
 // configuración de la aplicación LibreDTE
 \sowerphp\core\Configure::write('libredte', [
     'proveedor' => [
-        'rut' => env('LIBREDTE_APP_LIBREDTE_PROVEEDOR_RUT'),
+        'rut' => (int)env('LIBREDTE_APP_LIBREDTE_PROVEEDOR_RUT'),
     ],
 ]);
 

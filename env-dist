@@ -1,0 +1,53 @@
+#
+# Variables de entorno Aplicación Web de LibreDTE
+#
+# Para obtener listado de variables de entorno usar:
+#   grep "LIBREDTE_APP_" website/Config/core.php | awk -F "env\\\\('" '{print $2}' | awk -F "'" '{print $1"=\"\""}'
+#
+
+# configuración general
+#LIBREDTE_APP_DEBUG=1
+#LIBREDTE_APP_EXECUTION_TIMEOUT=600
+#LIBREDTE_APP_SESSION_EXPIRES=600
+
+# configuración de archivos CSV
+#LIBREDTE_APP_SPREADSHEET_CSV_DELIMITER=";"
+
+# configuración de la página
+#LIBREDTE_APP_PAGE_LAYOUT="LibreDTE"
+#LIBREDTE_APP_PAGE_HEADER_TITLE="LibreDTE"
+#LIBREDTE_APP_PAGE_BODY_TITLE="LibreDTE"
+#LIBREDTE_APP_PAGE_FOOTER_RIGHT=""
+
+# configuración de la base de datos
+#LIBREDTE_APP_DATABASE_DEFAULT_HOST="localhost"
+#LIBREDTE_APP_DATABASE_DEFAULT_PORT=5432
+#LIBREDTE_APP_DATABASE_DEFAULT_USER="libredte"
+LIBREDTE_APP_DATABASE_DEFAULT_PASS=""
+#LIBREDTE_APP_DATABASE_DEFAULT_NAME="libredte"
+
+# configuración del correo electrónico
+#LIBREDTE_APP_EMAIL_DEFAULT_HOST="ssl://smtp.gmail.com"
+#LIBREDTE_APP_EMAIL_DEFAULT_PORT=465
+#LIBREDTE_APP_EMAIL_DEFAULT_USER=""
+#LIBREDTE_APP_EMAIL_DEFAULT_PASS=""
+#LIBREDTE_APP_EMAIL_DEFAULT_FROM_EMAIL=""
+#LIBREDTE_APP_EMAIL_DEFAULT_FROM_NAME="LibreDTE"
+#LIBREDTE_APP_EMAIL_DEFAULT_TO=""
+
+# configuración del módulo de facturación electrónica
+LIBREDTE_APP_DTE_PKEY=""
+#LIBREDTE_APP_DTE_LOGOS_WIDTH=150
+#LIBREDTE_APP_DTE_LOGOS_HEIGHT=100
+#LIBREDTE_APP_DTE_DTES="33,56,61"
+#LIBREDTE_APP_DTE_PDF_FOOTER=1
+#LIBREDTE_APP_DTE_VERIFICAR_SSL=1
+#LIBREDTE_APP_DTE_WEB_VERIFICACION=""
+#LIBREDTE_APP_DTE_CLASE_BOLETAS="\\website\\Dte\\Utility_EnvioBoleta"
+#LIBREDTE_APP_DTE_TRANSFERIR_CONTRIBUYENTE=0
+
+# configuración del token para desbloquear funcionalidades extras
+#LIBREDTE_APP_PROVEEDORES_API_APISII=""
+
+# configuración del contribuyente proveedor de esta instancia de LibreDTE
+#LIBREDTE_APP_LIBREDTE_PROVEEDOR_RUT=

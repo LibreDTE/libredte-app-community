@@ -28,7 +28,14 @@ sudo -u libredte cp website/Config/core-dist.php website/Config/core.php
 Variables de entorno
 --------------------
 
+La primera parte de la configuración se realiza mediante variables de entorno.
+Para esto debe existir el archivo `env` en la raíz del proyecto:
 
+```shell
+sudo -u libredte cp env-dist env
+```
+
+Luego se debe configurar el archivo `env` según corresponda.
 
 Configuración en extensión
 --------------------------
