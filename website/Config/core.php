@@ -211,3 +211,6 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
     'url' => 'https://soporte.sasco.cl/kb/faq.php?id=',
     'text' => 'Revise aquí para más detalles',
 ]);
+
+// método de encriptación por defecto
+\sowerphp\core\Configure::write('data.crypt.method', env('LIBREDTE_APP_DATA_CRYPT_METHOD', 'sodium'));

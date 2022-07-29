@@ -51,3 +51,6 @@ LIBREDTE_APP_DTE_PKEY=""
 
 # configuración del contribuyente proveedor de esta instancia de LibreDTE
 #LIBREDTE_APP_LIBREDTE_PROVEEDOR_RUT=
+
+# método de encriptación por defecto
+#LIBREDTE_APP_DATA_CRYPT_METHOD="sodium"
