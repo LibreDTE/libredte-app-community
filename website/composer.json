@@ -7,6 +7,12 @@
         "sasco/libredte": "21.10.*",
         "sasco/libredte-api-client": "1.0.*",
         "kunalvarma05/dropbox-php-sdk": "0.2.1",
-        "phpmailer/phpmailer": "~6.5"
+        "phpmailer/phpmailer": "~6.5",
+        "lapinator.net/ods-php-generator": "dev-master",
+        "phpoffice/phpexcel": "1.8.2",
+        "google/recaptcha": "1.2.3",
+        "robthree/twofactorauth": "1.6.1",
+        "guzzlehttp/guzzle": "^6.5",
+        "vlucas/phpdotenv": "^5.4"
     }
 }

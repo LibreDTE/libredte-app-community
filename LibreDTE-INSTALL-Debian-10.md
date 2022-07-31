@@ -255,6 +255,9 @@ sudo -u libredte composer install
 que se desea instalar. Esta versión debe coincidir en sus 2 primeros números con
 la versión de LibreDTE que instalaremos.
 
+**Importante**: desde la versión `22.12.0` ya no se debe ejecutar `composer install`
+en el directorio del framework. Actualmente esta versión es la que está en desarrollo.
+
 Instalar Aplicación Web de LibreDTE
 -----------------------------------
 
