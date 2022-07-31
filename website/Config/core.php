@@ -187,7 +187,7 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
 // configuración para las aplicaciones de terceros que se pueden usar en LibreDTE
 \sowerphp\core\Configure::write('apps_3rd_party', [
     'dtepdfs' => [
-        'directory' => __DIR__.'/../../website/Module/Dte/Module/Pdf/Utility/Apps',
+        'directory' => DIR_PROJECT.'/website/Module/Dte/Module/Pdf/Utility/Apps',
         'namespace' => '\website\Dte\Pdf',
     ],
 ]);
