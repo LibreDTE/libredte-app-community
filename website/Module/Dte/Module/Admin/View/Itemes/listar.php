@@ -101,7 +101,7 @@ foreach ($Objs as &$obj) {
             $row[] = $obj->{$column}=='t' || $obj->{$column}=='1' ? 'Si' : 'No';
         }
         // si es llave foránea
-        else if ($info['fk']['table']) {
+        else if ($info['fk']) {
             // si no es vacía la columna
             if (!empty($obj->{$column})) {
                 $method = 'get'.\sowerphp\core\Utility_Inflector::camelize($info['fk']['table']);

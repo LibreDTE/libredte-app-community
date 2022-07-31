@@ -862,7 +862,7 @@ class Controller_Contribuyentes extends \Controller_App
     /**
      * Acción que permite probar la configuración de los correos electrónicos
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-06
+     * @version 2022-07-31
      */
     public function config_email_test($rut, $email, $protocol = 'smtp')
     {
@@ -887,7 +887,11 @@ class Controller_Contribuyentes extends \Controller_App
         ]));
         // hacer test SMTP
         if ($protocol == 'smtp') {
-            $Email = $Contribuyente->getEmailSender($email, $debug);
+            try {
+                $Email = $Contribuyente->getEmailSender($email, $debug);
+            } catch (\Exception $e) {
+                $this->response->send($e->getMessage());
+            }
             if ($Contribuyente->{'config_email_'.$email.'_replyto'}) {
                 $Email->replyTo($Contribuyente->{'config_email_'.$email.'_replyto'});
             }

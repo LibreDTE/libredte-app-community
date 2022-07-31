@@ -185,12 +185,12 @@ class Model_DteIntercambios extends \Model_Plural_App
     /**
      * Método que cuenta los casos de intercambio del contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+     * @version 2022-07-31
      */
     public function countDocumentos(array $filtros = [])
     {
         list($where, $vars) = $this->crearFiltrosDocumentos($filtros);
-        return $this->db->getValue('
+        return (int)$this->db->getValue('
             SELECT
                 COUNT(*)
             FROM
