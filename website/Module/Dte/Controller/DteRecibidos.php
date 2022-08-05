@@ -121,7 +121,7 @@ class Controller_DteRecibidos extends \Controller_App
     {
         $Receptor = $this->getContribuyente();
         // obtener dte recibido
-        $DteRecibido = new Model_DteRecibido($emisor, $dte, $folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
         if (!$DteRecibido->exists() or $DteRecibido->receptor!=$Receptor->rut) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'DTE recibido solicitado no existe', 'error'
@@ -159,7 +159,7 @@ class Controller_DteRecibidos extends \Controller_App
     {
         $Receptor = $this->getContribuyente();
         // obtener dte recibido
-        $DteRecibido = new Model_DteRecibido($emisor, $dte, $folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
         if (!$DteRecibido->exists() or $DteRecibido->receptor!=$Receptor->rut) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'DTE recibido solicitado no existe', 'error'
@@ -303,7 +303,7 @@ class Controller_DteRecibidos extends \Controller_App
     public function eliminar($emisor, $dte, $folio)
     {
         $Receptor = $this->getContribuyente();
-        $DteRecibido = new Model_DteRecibido($emisor, $dte, $folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
         if (!$DteRecibido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'No fue posible eliminar, el DTE recibido solicitado no existe', 'warning'
@@ -326,7 +326,7 @@ class Controller_DteRecibidos extends \Controller_App
     {
         $Receptor = $this->getContribuyente();
         // obtener DTE recibido
-        $DteRecibido = new Model_DteRecibido($emisor, $dte, $folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
         if (!$DteRecibido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'No existe el DTE recibido solicitado', 'error'
@@ -358,7 +358,7 @@ class Controller_DteRecibidos extends \Controller_App
     {
         $Receptor = $this->getContribuyente();
         // obtener DTE recibido
-        $DteRecibido = new Model_DteRecibido($emisor, $dte, $folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
         if (!$DteRecibido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'No existe el DTE recibido solicitado', 'error'
@@ -392,7 +392,7 @@ class Controller_DteRecibidos extends \Controller_App
     {
         $Receptor = $this->getContribuyente();
         // obtener DTE recibido
-        $DteRecibido = new Model_DteRecibido($emisor, $dte, $folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
         if (!$DteRecibido->exists() or (!$DteRecibido->intercambio and !$DteRecibido->mipyme)) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'No fue posible obtener el PDF, el DTE recibido solicitado no existe o bien no tiene intercambio asociado', 'error'
@@ -437,7 +437,7 @@ class Controller_DteRecibidos extends \Controller_App
     {
         $Receptor = $this->getContribuyente();
         // obtener DTE recibido
-        $DteRecibido = new Model_DteRecibido($emisor, $dte, $folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
         if (!$DteRecibido->exists() or (!$DteRecibido->intercambio and !$DteRecibido->mipyme)) {
             die('No fue posible obtener el PDF, el DTE recibido solicitado no existe o bien no tiene intercambio asociado');
         }
@@ -473,7 +473,7 @@ class Controller_DteRecibidos extends \Controller_App
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/pdf')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
         }
-        $DteRecibido = new Model_DteRecibido($emisor, $dte, $folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
         if (!$DteRecibido->exists() or (!$DteRecibido->intercambio and !$DteRecibido->mipyme)) {
             $this->Api->send('No existe el documento recibido solicitado T'.$dte.'F'.$folio.' del emisor '.$emisor.' o no tiene XML asociado', 404);
         }
@@ -527,7 +527,7 @@ class Controller_DteRecibidos extends \Controller_App
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/escpos')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
         }
-        $DteRecibido = new Model_DteRecibido($emisor, $dte, $folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
         if (!$DteRecibido->exists() or (!$DteRecibido->intercambio and !$DteRecibido->mipyme)) {
             $this->Api->send('No existe el documento recibido solicitado T'.$dte.'F'.$folio.' del emisor '.$emisor, 404);
         }
@@ -579,7 +579,7 @@ class Controller_DteRecibidos extends \Controller_App
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/xml')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
         }
-        $DteRecibido = new Model_DteRecibido($emisor, $dte, $folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
         if (!$DteRecibido->exists() or (!$DteRecibido->intercambio and !$DteRecibido->mipyme)) {
             $this->Api->send('No existe el documento recibido solicitado T'.$dte.'F'.$folio.' del emisor '.$emisor.' o no tiene XML asociado', 404);
         }
@@ -609,7 +609,7 @@ class Controller_DteRecibidos extends \Controller_App
         if (!$Firma) {
             $this->Api->send('No existe firma asociada', 506);
         }
-        $DteRecibido = new Model_DteRecibido($emisor, $dte, $folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
         if (!$DteRecibido->exists() or (!$DteRecibido->intercambio and !$DteRecibido->mipyme)) {
             $this->Api->send('No existe el documento recibido solicitado T'.$dte.'F'.$folio.' del emisor '.$emisor, 404);
         }

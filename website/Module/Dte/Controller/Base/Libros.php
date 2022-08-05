@@ -56,7 +56,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $Emisor = $this->getContribuyente();
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
-        $n_detalles = $Emisor->{'count'.$this->config['model']['plural']}($periodo);
+        $n_detalles = $Emisor->{'count'.$this->config['model']['plural']}((int)$periodo);
         if (!$n_detalles and !$Libro->exists()) {
             \sowerphp\core\Model_Datasource_Session::message('No hay documentos ni libro del período '.$periodo.'.', 'error');
             $this->redirect('/dte/'.$this->request->params['controller']);
@@ -93,7 +93,7 @@ abstract class Controller_Base_Libros extends \Controller_App
     public function csv($periodo)
     {
         $Emisor = $this->getContribuyente();
-        $detalle = $Emisor->{'get'.$this->config['model']['plural']}($periodo);
+        $detalle = $Emisor->{'get'.$this->config['model']['plural']}((int)$periodo);
         if (!$detalle) {
             \sowerphp\core\Model_Datasource_Session::message('No hay documentos en el período '.$periodo.'.', 'error');
             $this->redirect('/dte/'.$this->request->params['controller']);

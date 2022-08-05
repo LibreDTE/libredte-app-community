@@ -145,7 +145,7 @@ class Controller_DteFolios extends \Controller_App
     public function ver($dte)
     {
         $Emisor = $this->getContribuyente();
-        $DteFolio = new Model_DteFolio($Emisor->rut, $dte, $Emisor->enCertificacion());
+        $DteFolio = new Model_DteFolio($Emisor->rut, (int)$dte, $Emisor->enCertificacion());
         if (!$DteFolio->exists()) {
             \sowerphp\core\Model_Datasource_Session::message('No existe el mantenedor de folios solicitado.', 'error');
             $this->redirect('/dte/admin/dte_folios');
@@ -166,7 +166,7 @@ class Controller_DteFolios extends \Controller_App
     public function modificar($dte)
     {
         $Emisor = $this->getContribuyente();
-        $DteFolio = new Model_DteFolio($Emisor->rut, $dte, $Emisor->enCertificacion());
+        $DteFolio = new Model_DteFolio($Emisor->rut, (int)$dte, $Emisor->enCertificacion());
         if (!$DteFolio->exists()) {
             \sowerphp\core\Model_Datasource_Session::message('No existe el mantenedor de folios solicitado.', 'error');
             $this->redirect('/dte/admin/dte_folios');
@@ -228,7 +228,7 @@ class Controller_DteFolios extends \Controller_App
             \sowerphp\core\Model_Datasource_Session::message('Sólo un administrador de la empresa puede eliminar un mantenedor de folios.', 'error');
             $this->redirect('/dte/admin/dte_folios');
         }
-        $DteFolio = new Model_DteFolio($Emisor->rut, $dte, $Emisor->enCertificacion());
+        $DteFolio = new Model_DteFolio($Emisor->rut, (int)$dte, $Emisor->enCertificacion());
         if (!$DteFolio->exists()) {
             \sowerphp\core\Model_Datasource_Session::message('No existe el mantenedor de folios solicitado', 'error');
             $this->redirect('/dte/admin/dte_folios');
@@ -281,7 +281,7 @@ class Controller_DteFolios extends \Controller_App
             \sowerphp\core\Model_Datasource_Session::message('Sólo un administrador de la empresa puede eliminar los archivos CAF.', 'error');
             $this->redirect('/dte/admin/dte_folios');
         }
-        $DteFolio = new Model_DteFolio($Emisor->rut, $dte, $Emisor->enCertificacion());
+        $DteFolio = new Model_DteFolio($Emisor->rut, (int)$dte, $Emisor->enCertificacion());
         if (!$DteFolio->exists()) {
             \sowerphp\core\Model_Datasource_Session::message('No existe el mantenedor de folios solicitado.', 'error');
             $this->redirect('/dte/admin/dte_folios');
@@ -382,7 +382,7 @@ class Controller_DteFolios extends \Controller_App
     {
         $Emisor = $this->getContribuyente();
         // buscar el mantenedor de folios del CAF
-        $DteFolio = new Model_DteFolio($Emisor->rut, $dte, $Emisor->enCertificacion());
+        $DteFolio = new Model_DteFolio($Emisor->rut, (int)$dte, $Emisor->enCertificacion());
         if (!$DteFolio->exists()) {
             \sowerphp\core\Model_Datasource_Session::message('Primero debe crear el mantenedor de los folios de tipo '.$dte.'.', 'error');
             $this->redirect('/dte/admin/dte_folios');
@@ -597,7 +597,7 @@ class Controller_DteFolios extends \Controller_App
         if (!$Emisor->usuarioAutorizado($User, '/dte/admin/dte_folios/ver')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
-        $DteFolio = new Model_DteFolio($Emisor->rut, $dte, $Emisor->enCertificacion());
+        $DteFolio = new Model_DteFolio($Emisor->rut, (int)$dte, $Emisor->enCertificacion());
         if (!$DteFolio->exists()) {
             $this->Api->send('No existe el mantenedor de folios para el tipo de DTE '.$dte.'.', 404);
         }
@@ -627,7 +627,7 @@ class Controller_DteFolios extends \Controller_App
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/ver')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
-        $DteFolio = new Model_DteFolio($Emisor->rut, $dte, $Emisor->enCertificacion());
+        $DteFolio = new Model_DteFolio($Emisor->rut, (int)$dte, $Emisor->enCertificacion());
         if (!$DteFolio->exists()) {
             $this->Api->send('No existe el mantenedor de folios para el tipo de DTE '.$dte.'.', 404);
         }
@@ -681,7 +681,7 @@ class Controller_DteFolios extends \Controller_App
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // verificar que exista un mantenedor de folios
-        $DteFolio = new Model_DteFolio($Emisor->rut, $dte, $Emisor->enCertificacion());
+        $DteFolio = new Model_DteFolio($Emisor->rut, (int)$dte, $Emisor->enCertificacion());
         if (!$DteFolio->exists()) {
             $this->Api->send('Primero debe crear el mantenedor de los folios de tipo '.$dte.'.', 500);
         }
