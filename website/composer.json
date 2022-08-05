@@ -5,15 +5,15 @@
     "require": {
         "php": "7.3.* || 7.4.*",
         "sasco/libredte": "21.10.*",
-        "sasco/libredte-api-client": "1.0.*",
-        "kunalvarma05/dropbox-php-sdk": "0.2.1",
+        "sasco/libredte-api-client": "1.*",
+        "kunalvarma05/dropbox-php-sdk": "0.4.1",
         "phpmailer/phpmailer": "~6.5",
         "libchart/libchart": "1.5.0",
         "lapinator.net/ods-php-generator": "dev-master",
         "phpoffice/phpexcel": "1.8.2",
         "google/recaptcha": "1.2.3",
         "robthree/twofactorauth": "1.6.1",
-        "guzzlehttp/guzzle": "^6.5",
+        "guzzlehttp/guzzle": "^7",
         "vlucas/phpdotenv": "^5.4"
     }
 }
