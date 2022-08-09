@@ -356,11 +356,22 @@ class Model_DteEmitidos extends \Model_Plural_App
 
     /**
      * Método que entrega el listado de documentos rechazados
+     * Puede ser el de un emisor en específico o bien de todos los emisores
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-02-07
+     * @version 2022-08-09
      */
     public function getRechazados($desde, $hasta, $certificacion = false)
     {
+        // obtener emisor si existe (si no existe es consulta global)
+        $Emisor = $this->getContribuyente(false);
+        $where = ['e.fecha BETWEEN :desde AND :hasta', 'e.certificacion = :certificacion'];
+        $vars = [':desde'=>$desde, ':hasta'=>$hasta, ':certificacion'=>(int)$certificacion];
+        if ($Emisor) {
+            $vars[':certificacion'] = $Emisor->enCertificacion();
+            $where[] = 'e.emisor = :emisor';
+            $vars[':emisor'] = $Emisor->rut;
+        }
+        // realizar consulta
         return $this->db->getTable('
             SELECT c.rut, c.razon_social, e.fecha, e.dte, t.tipo AS documento, e.folio, e.revision_estado, e.revision_detalle
             FROM
@@ -368,11 +379,10 @@ class Model_DteEmitidos extends \Model_Plural_App
                 JOIN contribuyente AS c ON e.emisor = c.rut
                 JOIN dte_tipo AS t ON e.dte = t.codigo
             WHERE
-                e.fecha BETWEEN :desde AND :hasta
-                AND e.certificacion = :certificacion
+                '.implode(' AND ', $where).'
                 AND SUBSTRING(e.revision_estado FROM 1 FOR 3) IN (\''.implode('\', \'', self::$revision_estados['rechazados']).'\')
             ORDER BY c.razon_social, e.fecha, e.dte, e.folio
-        ', [':desde'=>$desde, ':hasta'=>$hasta, ':certificacion'=>(int)$certificacion]);
+        ', $vars);
     }
 
     /**

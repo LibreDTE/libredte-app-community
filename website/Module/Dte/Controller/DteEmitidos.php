@@ -1651,6 +1651,29 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
+     * Acción de la API para obtener los documentos rechazados en un rango de fechas
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2022-08-09
+     */
+    public function _api_rechazados_GET($desde, $hasta, $emisor)
+    {
+        // verificar permisos y crear DteEmitido
+        $User = $this->Api->getAuthUser();
+        if (is_string($User)) {
+            $this->Api->send($User, 401);
+        }
+        $Emisor = new Model_Contribuyente($emisor);
+        if (!$Emisor->exists()) {
+            $this->Api->send('Emisor no existe', 404);
+        }
+        if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos')) {
+            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+        }
+        // entregar documentos rechazados
+        return (new Model_DteEmitidos())->setContribuyente($Emisor)->getRechazados($desde, $hasta);
+    }
+
+    /**
      * Acción de la API que permite enviar el DTE emitido por correo electrónico
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
      * @version 2022-02-21
