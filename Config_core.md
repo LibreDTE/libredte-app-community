@@ -241,12 +241,15 @@ Si se configura, se usará en:
 - Inicio de sesión al existir un intento previo fallido.
 - Consulta pública de DTE.
 
-Se utiliza reCAPTCHA versión 2.
+Se utiliza reCAPTCHA versión 3.
 Desde [www.google.com/recaptcha/admin?hl=es](https://www.google.com/recaptcha/admin?hl=es)
 puedes registrarte y obtener las claves publicas y privada.
 
+**Importante**: la versión 3 de reCAPTCHA es para la versión 20.12 de LibreDTE.
+Las versiones anteriores de LibreDTE usan la versión 2 de reCAPTCHA.
+
 ```php
-// Configuración para reCAPTCHA (extensión: sowerphp/app)
+// Configuración para reCAPTCHA (extensión: sowerphp/general)
 \sowerphp\core\Configure::write('recaptcha', [
     'public_key' => '',
     'private_key' => '',

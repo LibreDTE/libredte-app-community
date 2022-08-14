@@ -26,7 +26,7 @@ $f = new \sowerphp\general\View_Helper_Form(false);
             <div class="card mb-4">
                 <div class="card-body">
                     <h1 class="text-center mb-4">Consultar DTE</h1>
-                    <form action="<?=$_base.$_request?>" method="post" onsubmit="return Form.check()" class="mb-4">
+                    <form action="<?=$_base.$_request?>" method="post" onsubmit="return Form.check()" class="mb-4" id="consultarForm">
                         <div class="form-group">
                             <label for="emisor" class="sr-only">RUT emisor</label>
                             <input type="text" name="emisor" id="emisor" class="form-control check rut" required="required" placeholder="RUT emisor">
@@ -49,10 +49,7 @@ $f = new \sowerphp\general\View_Helper_Form(false);
                             <label for="total" class="sr-only">Monto total</label>
                             <input type="number" name="total" id="total" class="form-control" required="required" placeholder="Monto total">
                         </div>
-<?php if (!empty($public_key)) : ?>
-                        <div class="g-recaptcha mb-3" data-sitekey="<?=$public_key?>" style="width:304px;margin:0 auto"></div>
-                        <script type="text/javascript" src="https://www.google.com/recaptcha/api.js?hl=<?=$language?>"></script>
-<?php endif; ?>
+                        <?=\sowerphp\general\Utility_Google_Recaptcha::form('consultarForm')?>
                         <button type="submit" class="btn btn-primary btn-block btn-lg">Buscar documento</button>
                     </form>
                     <script> $(function() { $("#emisor").focus(); }); </script>

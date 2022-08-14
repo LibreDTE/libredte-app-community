@@ -1985,7 +1985,7 @@ class Controller_DteEmitidos extends \Controller_App
     /**
      * Acción que permite buscar y consultar un DTE emitido
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-02-07
+     * @version 2022-08-14
      */
     public function consultar($dte = null)
     {
@@ -1994,28 +1994,18 @@ class Controller_DteEmitidos extends \Controller_App
             'dtes' => (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->getList(),
             'dte' => isset($_POST['dte']) ? $_POST['dte'] : $dte,
             'language' => \sowerphp\core\Configure::read('language'),
-            'public_key' => \sowerphp\core\Configure::read('recaptcha.public_key'),
         ]);
         $this->layout .= '.min';
         // si se solicitó un documento se busca
         if (isset($_POST['emisor'])) {
-            // verificar captcha
-            $private_key = \sowerphp\core\Configure::read('recaptcha.private_key');
-            if ($private_key) {
-                if (empty($_POST['g-recaptcha-response'])) {
-                    \sowerphp\core\Model_Datasource_Session::message(
-                        'Se requiere captcha para consultar un DTE', 'warning'
-                    );
-                    return;
-                }
-                $recaptcha = new \ReCaptcha\ReCaptcha($private_key);
-                $resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
-                if (!$resp->isSuccess()) {
-                    \sowerphp\core\Model_Datasource_Session::message(
-                        'Se requiere captcha válido para consultar un DTE', 'error'
-                    );
-                    return;
-                }
+            // validar captcha
+            try {
+                \sowerphp\general\Utility_Google_Recaptcha::check();
+            } catch (\Exception $e) {
+                \sowerphp\core\Model_Datasource_Session::message(
+                    __('Falló validación captcha: '.$e->getMessage()), 'error'
+                );
+                return;
             }
             // buscar datos del DTE
             $r = $this->consume('/api/dte/dte_emitidos/consultar?getXML=1', $_POST);
