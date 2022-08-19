@@ -22,26 +22,26 @@
  */
 
 /**
- * Función para consumir Servicios Web de la API de LibreDTE en apisii.cl
+ * Función para consumir Servicios Web de API Gateway en apigateway.cl
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2021-10-19
  */
 function libredte_api_consume($recurso, $datos = [])
 {
     // configuración de la API para funcionalidades extras
-    $config = \sowerphp\core\Configure::read('proveedores.api.apisii');
+    $config = \sowerphp\core\Configure::read('proveedores.api.apigateway');
     if (!$config) {
-        throw new \Exception('Funcionalidades extras no disponibles en esta versión de LibreDTE. Desbloquea las funcionalidades, desde costo 0, en apisii.cl [faq:265]', 402);
+        throw new \Exception('Funcionalidades extras no disponibles en esta versión de LibreDTE. Desbloquea las funcionalidades, desde costo 0, en www.apigateway.cl [faq:265]', 402);
     }
     if (!is_array($config)) {
         $config = [
-            'url' => 'https://apisii.cl',
+            'url' => 'https://apigateway.cl',
             'token' => $config,
         ];
     }
     // verificar si se pueden hacer consultas a la API o la cuenta se encuentra
     // en pausa por haber alcanzado el número máximo de consultas
-    $message_429 = 'Las consultas a la API de LibreDTE en apisii.cl se encuentran en pausa ya que se alcanzó el límite de la cuota permitida. Se podrán volver a hacer consultas después del %s. Recuperará el acceso a las funcionalidades extras de LibreDTE una vez se restablezca la cuota de consultas.  [faq:265]';
+    $message_429 = 'Las consultas a API Gateway en apigateway.cl se encuentran en pausa ya que se alcanzó el límite de la cuota permitida. Se podrán volver a hacer consultas después del %s. Recuperará el acceso a las funcionalidades extras de LibreDTE una vez se restablezca la cuota de consultas.  [faq:265]';
     $Cache = new \sowerphp\core\Cache();
     $retry_time = $Cache->get('libredte_api_retry_time');
     if ($retry_time) {

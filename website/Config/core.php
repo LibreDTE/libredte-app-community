@@ -195,8 +195,8 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
 // configuración autenticación servicios externos
 \sowerphp\core\Configure::write('proveedores.api', [
     // Desbloquea las funcionalidades Extra de LibreDTE
-    // Regístrate Gratis en https://apisii.cl
-    'apisii' => env('LIBREDTE_APP_PROVEEDORES_API_APISII'),
+    // Regístrate Gratis en https://apigateway.cl
+    'apigateway' => env('LIBREDTE_APP_PROVEEDORES_API_APIGATEWAY_TOKEN'),
 ]);
 
 // configuración de la aplicación LibreDTE
