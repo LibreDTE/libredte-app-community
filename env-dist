@@ -47,7 +47,7 @@ LIBREDTE_APP_DTE_PKEY=""
 #LIBREDTE_APP_DTE_TRANSFERIR_CONTRIBUYENTE=0
 
 # configuración del token para desbloquear funcionalidades extras
-#LIBREDTE_APP_PROVEEDORES_API_APISII=""
+#LIBREDTE_APP_PROVEEDORES_API_APIGATEWAY_TOKEN=""
 
 # configuración del contribuyente proveedor de esta instancia de LibreDTE
 #LIBREDTE_APP_LIBREDTE_PROVEEDOR_RUT=
