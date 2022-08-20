@@ -15,7 +15,7 @@
 <div class="row mb-4">
     <div class="col-md-4 mb-4">
         <a href="https://contafi.cl" title="Ir a www.contafi.cl">
-            <img src="https://libredte.cl/img/contafi-honorarios-bhe-bte.jpg" alt="Con nosotros puedes certificar tus documentos ante el SII para ocupar tu propio sistema" class="img-fluid img-thumbnail" />
+            <img src="https://contafi.cl/static/img/banners/contafi_banner_500x500.png" alt="Boletas de Terceros en ContaFi" class="img-fluid img-thumbnail" />
         </a>
     </div>
     <div class="col-md-8 mb-4">
@@ -44,7 +44,7 @@
     </div>
     <div class="card-body text-center">
         <a href="https://bhexpress.cl">
-            <img src="https://archivos.libredte.cl/marketing/bhexpress/bhexpress.png" alt="BHExpress" class="img-fluid" />
+            <img src="https://bhexpress.cl/static/img/banners/bhexpress_banner_750x110.png" alt="BHExpress" class="img-fluid" />
         </a>
     </div>
 </div>
