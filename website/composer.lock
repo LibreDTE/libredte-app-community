@@ -1496,16 +1496,16 @@
         },
         {
             "name": "sasco/libredte-api-client",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/LibreDTE/apisii-client-php.git",
-                "reference": "0c8c872a32bc6b84317c8ca650fef9e8234d04ca"
+                "url": "https://github.com/LibreDTE/apigateway-client-php.git",
+                "reference": "933a922f51b63ccc1f731c4c87c9a790a0aa3cb5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LibreDTE/apisii-client-php/zipball/0c8c872a32bc6b84317c8ca650fef9e8234d04ca",
-                "reference": "0c8c872a32bc6b84317c8ca650fef9e8234d04ca",
+                "url": "https://api.github.com/repos/LibreDTE/apigateway-client-php/zipball/933a922f51b63ccc1f731c4c87c9a790a0aa3cb5",
+                "reference": "933a922f51b63ccc1f731c4c87c9a790a0aa3cb5",
                 "shasum": ""
             },
             "require": {
@@ -1528,19 +1528,19 @@
                     "homepage": "https://sasco.cl"
                 }
             ],
-            "description": "Cliente para realizar la integración con los servicios web de API SII",
-            "homepage": "https://apisii.cl",
+            "description": "Cliente para realizar la integración con los servicios web de API Gateway",
+            "homepage": "https://apigateway.cl",
             "keywords": [
+                "api",
                 "dte",
                 "facturación electrónica",
-                "libredte",
                 "sii"
             ],
             "support": {
-                "issues": "https://github.com/LibreDTE/apisii-client-php/issues",
-                "source": "https://github.com/LibreDTE/apisii-client-php"
+                "issues": "https://github.com/LibreDTE/apigateway-client-php/issues",
+                "source": "https://github.com/LibreDTE/apigateway-client-php"
             },
-            "time": "2022-08-05T17:13:24+00:00"
+            "time": "2022-08-18T14:07:06+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
