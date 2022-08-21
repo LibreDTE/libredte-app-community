@@ -21,7 +21,7 @@
             </div>
             <h2 class="text-center mb-4">Aspectos Legales</h2>
             <hr/>
-            <p class="text-center text-dark">Revisa los <a href="https://legal.libredte.cl" target="_blank">Términos y Condiciones</a> de uso que te permiten usar LibreDTE.</p>
+            <p class="text-center text-dark">Revisa los <a href="https://libredte.cl/legal" target="_blank">Términos y Condiciones</a> de uso que te permiten usar LibreDTE.</p>
         </div>
     </div>
     <div class="card mb-4">
@@ -31,7 +31,7 @@
             </div>
             <h2 class="text-center mb-4">Funcionalidades Extras</h2>
             <hr/>
-            <p class="text-center text-dark">Desbloquea las <a href="https://api.libredte.cl/#extras" target="_blank">Funcionalidades Extras</a> de LibreDTE y obtén más características.</p>
+            <p class="text-center text-dark">Desbloquea las <a href="https://apigateway.cl/#extras" target="_blank">Funcionalidades Extras</a> de LibreDTE y obtén más características.</p>
         </div>
     </div>
     <div class="card mb-4">
