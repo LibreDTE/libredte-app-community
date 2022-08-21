@@ -41,7 +41,7 @@
             </div>
             <h2 class="text-center mb-4">Soporte</h2>
             <hr/>
-            <p class="text-center text-dark">Revisa las <a href="https://faq.libredte.cl" target="_blank">Preguntas y Respuestas Frecuentes</a> con las consultas más comunes.</p>
+            <p class="text-center text-dark">Revisa las <a href="https://libredte.cl/faq" target="_blank">Preguntas y Respuestas Frecuentes</a> con las consultas más comunes.</p>
         </div>
     </div>
 </div>

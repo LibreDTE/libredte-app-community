@@ -61,7 +61,7 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
 // Menú principal del sitio web
 \sowerphp\core\Configure::write('nav.website', [
     '/dte' => ['name'=>'Facturación', 'desc'=>'Accede al módulo de facturación electrónica', 'icon'=>'fa fa-file-invoice'],
-    'https://faq.libredte.cl' => ['name'=>'Soporte', 'desc'=>'Revisa las Preguntas y Respuestas Frecuentes', 'icon'=>'far fa-life-ring'],
+    'https://libredte.cl/faq' => ['name'=>'Soporte', 'desc'=>'Revisa las Preguntas y Respuestas Frecuentes', 'icon'=>'far fa-life-ring'],
 ]);
 
 // Menú principal de la aplicación web
