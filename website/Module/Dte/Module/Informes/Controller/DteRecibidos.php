@@ -61,7 +61,7 @@ class Controller_DteRecibidos extends \Controller_App
     /**
      * Acción que entrega el informe de compras en CSV
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-17
+     * @version 2022-08-22
      */
     public function csv($desde, $hasta)
     {
@@ -109,7 +109,7 @@ class Controller_DteRecibidos extends \Controller_App
             $recibidos = [];
             foreach($aux as $r) {
                 foreach ($r['items'] as $item) {
-                    if ($item[0]==1) {
+                    if ($item[0]==1 or $detalle == 2) {
                         $recibido = array_slice($r, 0, 15);
                     } else {
                         $recibido = array_fill(0, 15, '');

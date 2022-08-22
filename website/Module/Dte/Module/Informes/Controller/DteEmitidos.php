@@ -68,7 +68,7 @@ class Controller_DteEmitidos extends \Controller_App
     /**
      * Acción que entrega el informe de ventas en CSV
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-09-22
+     * @version 2022-08-22
      */
     public function csv($desde, $hasta)
     {
@@ -126,7 +126,7 @@ class Controller_DteEmitidos extends \Controller_App
             $emitidos = [];
             foreach($aux as $e) {
                 foreach ($e['items'] as $item) {
-                    if ($item[0]==1) {
+                    if ($item[0]==1 or $detalle == 2) {
                         $emitido = array_slice($e, 0, $n_cols_no_item);
                     } else {
                         $emitido = array_fill(0, $n_cols_no_item, '');
