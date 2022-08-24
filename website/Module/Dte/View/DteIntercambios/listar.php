@@ -1,8 +1,8 @@
 <ul class="nav nav-pills float-right">
     <li class="nav-item">
-        <a href="<?=$_base?>/dte/dte_intercambios/cargar_xml" title="Cargar manualmente un XML a la bandeja de intercambio" class="nav-link">
+        <a href="<?=$_base?>/dte/dte_intercambios/probar_xml" title="Probar manualmente si un XML podría ingresar por email a la bandeja de intercambio" class="nav-link">
             <i class="fa fa-upload"></i>
-            Cargar
+            Probar XML
         </a>
     </li>
     <li class="nav-item">

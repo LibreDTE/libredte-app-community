@@ -6,7 +6,7 @@
         </a>
     </li>
 </ul>
-<div class="page-header"><h1>Cargar XML</h1></div>
+<div class="page-header"><h1>Probar XML</h1></div>
 <p>Aquí podrá subir un XML enviado por un proveedor (siendo usted el receptor) o un cliente (siendo usted el emisor que recibe la respuesta). Esta funcionalidad es especialmente útil para ayudar a determinar por qué un XML no fue procesado de manera automática al actualizar la bandeja de intercambio.</p>
 <div class="row">
     <div class="col-sm-8">
@@ -31,7 +31,7 @@ if (!empty($archivos)) {
         <div class="card mb-4">
             <div class="card-header"><i class="fa fa-exclamation-circle text-warning"></i> ¿Puedo cargar un EnvioDTE?</div>
             <div class="card-body">
-                <p>Puede subir un XML de EnvioDTE con esta utilidad, pero no será guardado en la base de datos.</p>
+                <p>Puede subir para probar un XML de EnvioDTE con esta utilidad, pero <strong>no será guardado</strong>.</p>
                 <p>LibreDTE requiere que todo XML de EnvioDTE provenga de un correo electrónico. Si tiene un XML de un EnvioDTE, lo puede enviar al correo <span class="text-monospace"><?=$Emisor->config_email_intercambio_user?></span> y será guardado en la bandeja de intercambio.</p>
             </div>
         </div>

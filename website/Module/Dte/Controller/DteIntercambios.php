@@ -628,9 +628,9 @@ class Controller_DteIntercambios extends \Controller_App
      * que no ha sido procesada de manera automática por la actualización
      * de la bandeja de intercambio
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-03
+     * @version 2022-08-24
      */
-    public function cargar_xml()
+    public function probar_xml()
     {
         $Emisor = $this->getContribuyente();
         $this->set('Emisor', $Emisor);
