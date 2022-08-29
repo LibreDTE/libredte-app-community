@@ -579,6 +579,17 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
+     * Método que entrega el vendedor asociado al DTE emitido
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2022-08-29
+     */
+    public function getVendedor()
+    {
+        $datos = $this->getDatos();
+        return !empty($datos['Encabezado']['Emisor']['CdgVendedor']) ? $datos['Encabezado']['Emisor']['CdgVendedor'] : null;
+    }
+
+    /**
      * Método que entrega el arreglo con los datos que se usaron para generar el
      * XML del DTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
