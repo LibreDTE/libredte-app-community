@@ -476,7 +476,7 @@ class Model_DteEmitido extends Model_Base_Envio
      * Método que entrega el objeto del Dte
      * @return \sasco\LibreDTE\Sii\Dte
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-21
+     * @version 2022-08-30
      */
     public function getDte()
     {
@@ -486,7 +486,7 @@ class Model_DteEmitido extends Model_Base_Envio
                 $EnvioDte->loadXML($this->getXML());
                 $Documentos = $EnvioDte->getDocumentos();
                 if (!isset($Documentos[0])) {
-                    throw new \Exception('No se encontró DTE asociado al documento emitido');
+                    throw new \Exception('No se encontró un DTE válido en el XML asociado al documento emitido.');
                 }
                 $this->Dte = $Documentos[0];
             } else {
@@ -1828,7 +1828,7 @@ class Model_DteEmitido extends Model_Base_Envio
      * Entrega el XML que existe en LibreDTE o bien generado con el Portal
      * MIPYME del SII.
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-03-02
+     * @version 2022-08-30
      */
     public function getXML()
     {
@@ -1844,7 +1844,7 @@ class Model_DteEmitido extends Model_Base_Envio
             // WARNING 2: quizás se deba mantener siempre la codificación en
             // base64 (?) (base de datos está en UTF8)
             if ($this->xml !== false) {
-                if (substr($this->xml,0,5) != '<?xml') {
+                if (substr($this->xml,0,5) != '<?xml' and substr($this->xml,0,4) != '<DTE') {
                     $this->xml = base64_decode($this->xml);
                 }
             }
