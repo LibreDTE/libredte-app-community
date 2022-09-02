@@ -10,7 +10,7 @@
 <p>Aquí podrá buscar entre sus documentos emitidos.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form(false);
-echo $f->begin(['onsubmit'=>'Form.check()']);
+echo $f->begin(['onsubmit'=>'Form.check() && Form.loading(\'Buscando documentos...\')']);
 ?>
 <div class="row">
     <div class="form-group col-md-6"><?=$f->input(['type'=>'select', 'name'=>'dte', 'options'=>[''=>'Todos los tipos de documentos'] + $tipos_dte])?></div>
