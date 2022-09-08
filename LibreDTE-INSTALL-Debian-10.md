@@ -433,7 +433,8 @@ Y agregamos:
 0 1 * * * /home/libredte/www/htdocs/website/Shell/shell.php Dte.DteIntercambios_Actualizar dte_plus -v
 
 # Enviar el resumen de ventas diarias (ex RCOF) al SII
-0 2 * * * /home/libredte/www/htdocs/website/Shell/shell.php Dte.Boletas_EnviarRCOF dte_plus -v
+# Los RCOF no se envían al SII desde el 1ero de agosto de 2022
+#0 2 * * * /home/libredte/www/htdocs/website/Shell/shell.php Dte.Boletas_EnviarRCOF dte_plus -v
 
 # Envía por correo los XML de DTE emitidos al correo de intercambio del receptor
 0 3 * * * /home/libredte/www/htdocs/website/Shell/shell.php Dte.DteEmitidos_Intercambio
