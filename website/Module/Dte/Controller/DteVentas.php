@@ -157,34 +157,36 @@ class Controller_DteVentas extends Controller_Base_Libros
         }
         // no se envía el libro al SII (se trata de enviar resumen boletas si existe)
         else {
-            // se envía resumen de boletas si corresponde
-            $resumenes = $Libro->getResumenBoletas();
-            $resumenes_errores = [];
-            foreach ($resumenes as $resumen) {
-                try {
-                    $r = libredte_api_consume('/sii/rcv/ventas/set_resumen/'.$Emisor->rut.'-'.$Emisor->dv.'/'.$periodo.'?certificacion='.$Emisor->enCertificacion(), [
-                        'auth' => [
-                            'cert' => [
-                                'cert-data' => $Firma->getCertificate(),
-                                'pkey-data' => $Firma->getPrivateKey(),
+            // se envía resumen de boletas si corresponde (hasta julio 2022)
+            if ($periodo <= 202207) {
+                $resumenes = $Libro->getResumenBoletas();
+                $resumenes_errores = [];
+                foreach ($resumenes as $resumen) {
+                    try {
+                        $r = libredte_api_consume('/sii/rcv/ventas/set_resumen/'.$Emisor->rut.'-'.$Emisor->dv.'/'.$periodo.'?certificacion='.$Emisor->enCertificacion(), [
+                            'auth' => [
+                                'cert' => [
+                                    'cert-data' => $Firma->getCertificate(),
+                                    'pkey-data' => $Firma->getPrivateKey(),
+                                ],
                             ],
-                        ],
-                        'documentos' => [
-                            [
-                                'det_tipo_doc' => $resumen['TpoDoc'],
-                                'det_nro_doc' => $resumen['TotDoc'],
-                                'det_mnt_neto' => $resumen['TotMntNeto'],
-                                'det_mnt_iva' => $resumen['TotMntIVA'],
-                                'det_mnt_total' => $resumen['TotMntTotal'],
-                                'det_mnt_exe' => $resumen['TotMntExe'],
+                            'documentos' => [
+                                [
+                                    'det_tipo_doc' => $resumen['TpoDoc'],
+                                    'det_nro_doc' => $resumen['TotDoc'],
+                                    'det_mnt_neto' => $resumen['TotMntNeto'],
+                                    'det_mnt_iva' => $resumen['TotMntIVA'],
+                                    'det_mnt_total' => $resumen['TotMntTotal'],
+                                    'det_mnt_exe' => $resumen['TotMntExe'],
+                                ],
                             ],
-                        ],
-                    ]);
-                    if ($r['status']['code']!=200) {
-                        $resumenes_errores[] = $r['body'];
+                        ]);
+                        if ($r['status']['code']!=200) {
+                            $resumenes_errores[] = $r['body'];
+                        }
+                    } catch (\Exception $e) {
+                        $resumenes_errores[] = 'Esta versión de LibreDTE no puede enviar los resúmenes al SII de manera automática, debe copiarlos manualmente en el registro de ventas';
                     }
-                } catch (\Exception $e) {
-                    $resumenes_errores[] = 'Esta versión de LibreDTE no puede enviar los resúmenes al SII de manera automática, debe copiarlos manualmente en el registro de ventas';
                 }
             }
             // libro generado
