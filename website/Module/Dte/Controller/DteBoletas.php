@@ -53,14 +53,21 @@ class Controller_DteBoletas extends \Controller_App
     /**
      * Acción para descargar libro de boletas en XML
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+     * @version 2022-09-10
      */
     public function xml($periodo, $FolioNotificacion = 1)
     {
         $Emisor = $this->getContribuyente();
         $boletas = $Emisor->getBoletas($periodo);
         $Libro = new \sasco\LibreDTE\Sii\LibroBoleta();
-        $Libro->setFirma($Emisor->getFirma());
+        $Firma = $Emisor->getFirma();
+        if (!$Firma) {
+            \sowerphp\core\Model_Datasource_Session::message(
+                'No hay firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe agregar su firma antes de generar el XML. [faq:174]', 'error'
+            );
+            $this->redirect('/dte/dte_boletas');
+        }
+        $Libro->setFirma($Firma);
         foreach ($boletas as $boleta) {
             $Libro->agregar([
                 'TpoDoc' => $boleta['dte'],
@@ -96,14 +103,13 @@ class Controller_DteBoletas extends \Controller_App
     /**
      * Acción para descargar libro de boletas en CSV
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-18
+     * @version 2022-09-10
      */
     public function csv($periodo)
     {
         $Emisor = $this->getContribuyente();
         $boletas = $Emisor->getBoletas($periodo);
         $Libro = new \sasco\LibreDTE\Sii\LibroBoleta();
-        $Libro->setFirma($Emisor->getFirma());
         foreach ($boletas as $boleta) {
             $Libro->agregar([
                 'TpoDoc' => $boleta['dte'],
