@@ -7,7 +7,7 @@ echo $f->input([
     'name' => 'periodo',
     'label' => 'Período',
     'check' => 'notempty integer',
-    'value' => date('Ym'),
+    'value' => !empty($_POST['periodo']) ? $_POST['periodo'] : date('Ym'),
     'datepicker' => [
         'format' => 'yyyymm',
         'viewMode' => 'months',
