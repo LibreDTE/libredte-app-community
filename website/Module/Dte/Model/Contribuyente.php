@@ -3202,7 +3202,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el resumen diario de los documentos emitidos
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-09-14
+     * @version 2022-09-15
      */
     public function getDocumentosEmitidosResumenDiario(array $filtros)
     {
@@ -3229,7 +3229,9 @@ class Model_Contribuyente extends \Model_App
                 SUM(iva) AS iva,
                 SUM(total) AS total
             FROM dte_emitido
-            WHERE '.implode(' AND ', $where).'
+            WHERE
+                '.implode(' AND ', $where).'
+                AND dte != 46
             GROUP BY fecha
             ORDER BY fecha
         ', $vars);

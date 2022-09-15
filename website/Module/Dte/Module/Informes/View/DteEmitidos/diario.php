@@ -54,4 +54,5 @@ if (isset($dias)) {
     array_unshift($dias, ['Día', 'Emitidos', 'Desde', 'Hasta', 'Exento', 'Neto', 'IVA', 'Total']);
     $t = new \sowerphp\general\View_Helper_Table();
     echo $t->generate($dias);
+    echo '<div class="alert alert-warning"><i class="fas fa-exclamation-circle fa-fw"></i> Si existen notas de crédito serán sumadas en los totales. Para obtener valores sin notas de crédito debe seleccionar individualmente los documentos.</div>';
 }
