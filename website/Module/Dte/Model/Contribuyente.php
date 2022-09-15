@@ -3200,6 +3200,42 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
+     * Método que entrega el resumen diario de los documentos emitidos
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2022-09-14
+     */
+    public function getDocumentosEmitidosResumenDiario(array $filtros)
+    {
+        if (empty($filtros['periodo'])) {
+            $filtros['periodo'] = date('Ym');
+        }
+        $periodo_col = $this->db->date('Ym', 'fecha');
+        $where = ['emisor = :rut', 'certificacion = :certificacion', $periodo_col . ' = :periodo'];
+        $vars = [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $filtros['periodo']];
+        if (!empty($filtros['dtes'])) {
+            if (!is_array($filtros['dtes'])) {
+                [$filtros['dtes']] = [$filtros['dtes']];
+            }
+            $where[] = 'dte IN ('.implode(', ', array_map('intval', $filtros['dtes'])).')';
+        }
+        return $this->db->getTable('
+            SELECT
+                fecha,
+                COUNT(folio) AS emitidos,
+                MIN(folio) AS desde,
+                MAX(folio) AS hasta,
+                SUM(exento) AS exento,
+                SUM(neto) AS neto,
+                SUM(iva) AS iva,
+                SUM(total) AS total
+            FROM dte_emitido
+            WHERE '.implode(' AND ', $where).'
+            GROUP BY fecha
+            ORDER BY fecha
+        ', $vars);
+    }
+
+    /**
      * Método que entrega el detalle de los documentos emitidos con cierto
      * estado en un rango de tiempo
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)

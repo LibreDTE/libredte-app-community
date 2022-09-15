@@ -41,6 +41,11 @@ Configure::write('nav.module', array(
         'desc' => 'Estadística de documentos usados, tanto emitidos como recibidos y el uso de sobre cuota',
         'icon' => 'fa fa-calculator',
     ],
+    '/dte_emitidos/diario' => [
+        'name' => 'Resumen diario emitidos',
+        'desc' => 'Documentos emitidos por día',
+        'icon' => 'fa fa-list-alt',
+    ],
     '/despachos' => [
         'name' => 'Despachos diarios',
         'desc' => 'Informe diario de guías de despachos',

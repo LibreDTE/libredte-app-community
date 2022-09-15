@@ -329,4 +329,26 @@ class Controller_DteEmitidos extends \Controller_App
         ]);
     }
 
+    /**
+     * Acción que permite obtener un resumen mensual diario
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2022-09-14
+     */
+    public function diario($periodo = null)
+    {
+        $Emisor = $this->getContribuyente();
+        $this->set([
+            'Emisor' => $Emisor,
+            'tipos_dte' => $Emisor->getDocumentosAutorizados(),
+        ]);
+        if (isset($_POST['submit'])) {
+            $this->set([
+                'dias' => $Emisor->getDocumentosEmitidosResumenDiario([
+                    'periodo' => $_POST['periodo'],
+                    'dtes' => !empty($_POST['dtes']) ? $_POST['dtes'] : [],
+                ]),
+            ]);
+        }
+    }
+
 }
