@@ -44,6 +44,7 @@ class Model_DteTipos extends \Model_Plural_App
         'EM' => 'Entrada de mercadería (EM)',
         'RDM' => 'Recepción de material/mercadería (RDM)',
         'MLE' => 'Modalidad libre elección (MLE)',
+        'RC' => 'Recepción Conforme (RC)',
     ]; ///< Tipos de documentos internos de LibreDTE (sin código oficial del SII)
 
     /**
