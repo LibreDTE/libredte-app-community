@@ -69,7 +69,7 @@ class Shell_Command_DteIntercambios_Actualizar extends \Shell_App
                     $subject = 'Nuevos documentos de proveedores recibidos';
                     $msg .= 'Tiene '.num($resultado['n_EnvioDTE']).' documentos nuevos en su bandeja de intercambio.'."\n\n";
                 }
-                $msg .= 'Revisar pendientes en '.(new \sowerphp\core\Network_Request())->url.'/dte/contribuyentes/seleccionar/'.$Contribuyente->rut.'/'.base64_encode('/dte/dte_intercambios/listar');
+                $msg .= 'Puede buscar documentos pendientes de procesar en '.(new \sowerphp\core\Network_Request())->url.'/dte/contribuyentes/seleccionar/'.$Contribuyente->rut.'/'.base64_encode('/dte/dte_intercambios/listar/0/1');
                 $Contribuyente->notificar($subject, $msg);
             }
         } catch (\Exception $e) {
