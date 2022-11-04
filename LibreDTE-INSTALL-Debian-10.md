@@ -343,7 +343,7 @@ INSERT INTO auth (grupo, recurso) VALUES
     ((SELECT id FROM grupo WHERE grupo = 'dte_plus'), '/dte/dte_recibidos*'),
     ((SELECT id FROM grupo WHERE grupo = 'dte_plus'), '/dte/dte_compras*'),
     ((SELECT id FROM grupo WHERE grupo = 'dte_plus'), '/dte/dte_ventas*'),
-    ((SELECT id FROM grupo WHERE grupo = 'dte_plus'), '/dte/dte_intercambios*'),
+    ((SELECT id FROM grupo WHERE grupo = 'dte_plus'), '/dte/dte_intercambio*'),
     ((SELECT id FROM grupo WHERE grupo = 'dte_plus'), '/dte/sii*'),
     ((SELECT id FROM grupo WHERE grupo = 'dte_plus'), '/dte/dte_guias*'),
     ((SELECT id FROM grupo WHERE grupo = 'dte_plus'), '/dte/admin/respaldos*'),
