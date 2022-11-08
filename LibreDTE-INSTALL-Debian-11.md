@@ -11,7 +11,7 @@ Servidor
    - Mínimo 2 GB de RAM.
    - Mínimo 50 GB disco.
 
-2. Sistema operativo Debian GNU/Linux versión 10 de 64 bits con acceso SSH.
+2. Sistema operativo Debian GNU/Linux versión 11 de 64 bits con acceso SSH.
 
 3. Dominio libredte.example.com (o similar) configurado en el DNS (opcional).
 
