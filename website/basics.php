@@ -30,10 +30,10 @@ function libredte_api_consume($recurso, $datos = [])
 {
     // configuración de la API para funcionalidades extras
     $config = \sowerphp\core\Configure::read('proveedores.api.apigateway');
-    if (!$config) {
+    if (!$config or (is_array($config) and empty($config['token']))) {
         throw new \Exception('Funcionalidades extras no disponibles en esta versión de LibreDTE. Desbloquea las funcionalidades, desde costo 0, en www.apigateway.cl [faq:265]', 402);
     }
-    if (!is_array($config) or empty($config['token'])) {
+    if (!is_array($config)) {
         $config = [
             'url' => 'https://apigateway.cl',
             'token' => $config,
