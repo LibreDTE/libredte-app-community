@@ -1,4 +1,4 @@
-﻿Instalación de LibreDTE en Debian GNU/Linux 10
+﻿Instalación de LibreDTE en Debian GNU/Linux 11
 ==============================================
 
 Servidor
@@ -11,7 +11,7 @@ Servidor
    - Mínimo 2 GB de RAM.
    - Mínimo 50 GB disco.
 
-2. Sistema operativo Debian GNU/Linux versión 10 de 64 bits con acceso SSH.
+2. Sistema operativo Debian GNU/Linux versión 11 de 64 bits con acceso SSH.
 
 3. Dominio libredte.example.com (o similar) configurado en el DNS (opcional).
 
@@ -54,14 +54,14 @@ Validamos versión de Debian:
 
 ```shell
 lsb_release -d
-Description:    Debian GNU/Linux 10 (buster)
+Description:    Debian GNU/Linux 11 (bullseye)
 ```
 
 Validamos arquitectura:
 
 ```shell
 uname -a
-Linux goku 4.19.0-17-amd64 #1 SMP Debian 4.19.194-3 (2021-07-18) x86_64 GNU/Linux
+Linux libredte 5.10.0-19-amd64 #1 SMP Debian 5.10.149-2 (2022-10-21) x86_64 GNU/Linux
 ```
 
 La parte relevante es la que dice `x86_64` e indica que es un sistema de 64 bits.
@@ -120,7 +120,7 @@ Habilitar `AllowOverride All` para `/var/www` en `/etc/apache2/apache2.conf`:
 </Directory>
 ```
 
-En `/etc/php/7.3/apache2/php.ini` modificar las sesiones para usar Memcache:
+En `/etc/php/7.4/apache2/php.ini` modificar las sesiones para usar Memcache:
 
 ```
 session.save_handler = memcached
@@ -130,14 +130,14 @@ session.save_path = "127.0.0.1:11211"
 ### SSL con Let's Encrypt (opcional)
 
 ```shell
-apt-get install certbot python-certbot-apache
+apt-get install certbot python3-certbot-apache
 certbot --apache
 ```
 
 ### Habilitar los módulos de Apache y probar
 
 ```shell
-a2enmod rewrite ssl php7.3
+a2enmod rewrite ssl php7.4
 systemctl restart apache2
 ```
 
@@ -210,7 +210,8 @@ LibreDTE.
 Primero, instalamos la base de datos:
 
 ```shell
-apt-get -y install postgresql && pg_ctlcluster 11 main start
+apt-get -y install postgresql 
+pg_ctlcluster 13 main start
 apt-get -y autoremove --purge && apt-get autoclean && apt-get clean
 ```
 
@@ -239,6 +240,7 @@ Si necesitamos conectaros a un servidor de base de datos remoto se debe utilizar
 ```shell
 psql -U libredte -h HOST -p 5432 -d libredte --set=sslmode=require -W
 ```
+**Nota**: Desde aquí se debe retomar la documentación de la versión oficial como usuario libredte
 
 Instalar framework SowerPHP
 ---------------------------
@@ -343,7 +345,7 @@ INSERT INTO auth (grupo, recurso) VALUES
     ((SELECT id FROM grupo WHERE grupo = 'dte_plus'), '/dte/dte_recibidos*'),
     ((SELECT id FROM grupo WHERE grupo = 'dte_plus'), '/dte/dte_compras*'),
     ((SELECT id FROM grupo WHERE grupo = 'dte_plus'), '/dte/dte_ventas*'),
-    ((SELECT id FROM grupo WHERE grupo = 'dte_plus'), '/dte/dte_intercambios*'),
+    ((SELECT id FROM grupo WHERE grupo = 'dte_plus'), '/dte/dte_intercambio*'),
     ((SELECT id FROM grupo WHERE grupo = 'dte_plus'), '/dte/sii*'),
     ((SELECT id FROM grupo WHERE grupo = 'dte_plus'), '/dte/dte_guias*'),
     ((SELECT id FROM grupo WHERE grupo = 'dte_plus'), '/dte/admin/respaldos*'),

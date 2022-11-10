@@ -24,13 +24,13 @@
 /**
  * Función para consumir Servicios Web de API Gateway en apigateway.cl
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2021-10-19
+ * @version 2022-11-09
  */
 function libredte_api_consume($recurso, $datos = [])
 {
     // configuración de la API para funcionalidades extras
     $config = \sowerphp\core\Configure::read('proveedores.api.apigateway');
-    if (!$config) {
+    if (!$config or (is_array($config) and empty($config['token']))) {
         throw new \Exception('Funcionalidades extras no disponibles en esta versión de LibreDTE. Desbloquea las funcionalidades, desde costo 0, en www.apigateway.cl [faq:265]', 402);
     }
     if (!is_array($config)) {
