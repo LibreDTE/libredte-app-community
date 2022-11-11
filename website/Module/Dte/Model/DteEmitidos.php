@@ -49,7 +49,7 @@ class Model_DteEmitidos extends \Model_Plural_App
     /**
      * Método que entrega el detalle de las ventas en un rango de tiempo
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-09-22
+     * @version 2022-11-11
      */
     public function getDetalle($desde, $hasta, $detalle)
     {
@@ -68,7 +68,8 @@ class Model_DteEmitidos extends \Model_Plural_App
             $referencia_folio,
             $referencia_codigo,
             $referencia_razon,
-            $observacion
+            $observacion,
+            $vencimiento
         ) = $this->db->xml('e.xml',
             [
                 '/EnvioDTE/SetDTE/DTE/*/Encabezado/Emisor/CdgVendedor',
@@ -85,6 +86,7 @@ class Model_DteEmitidos extends \Model_Plural_App
                 '/*/SetDTE/DTE/*/Referencia/CodRef',
                 '/*/SetDTE/DTE/*/Referencia/RazonRef',
                 '/EnvioDTE/SetDTE/DTE/*/Encabezado/IdDoc/TermPagoGlosa',
+                '/EnvioDTE/SetDTE/DTE/*/Encabezado/IdDoc/FchVenc',
             ],
             'http://www.sii.cl/SiiDte'
         );
@@ -125,6 +127,7 @@ class Model_DteEmitidos extends \Model_Plural_App
                 '.$referencia_codigo.' AS referencia_codigo,
                 '.$referencia_razon.' AS referencia_razon,
                 '.$observacion.' AS observacion,
+                '.$vencimiento.' AS vencimiento,
                 extra
                 '.$detalle_items.'
             FROM

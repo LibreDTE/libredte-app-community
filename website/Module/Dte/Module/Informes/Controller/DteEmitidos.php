@@ -105,6 +105,7 @@ class Controller_DteEmitidos extends \Controller_App
             'Ref. Código',
             'Ref. Razón',
             'Observación',
+            'Vencimiento',
         ];
         $n_cols_no_item = count($cols);
         if ($detalle) {
