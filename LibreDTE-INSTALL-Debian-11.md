@@ -240,7 +240,6 @@ Si necesitamos conectaros a un servidor de base de datos remoto se debe utilizar
 ```shell
 psql -U libredte -h HOST -p 5432 -d libredte --set=sslmode=require -W
 ```
-**Nota**: Desde aquí se debe retomar la documentación de la versión oficial como usuario libredte
 
 Instalar framework SowerPHP
 ---------------------------
