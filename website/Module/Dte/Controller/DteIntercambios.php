@@ -55,8 +55,6 @@ class Controller_DteIntercambios extends \Controller_App
         }
         $searchUrl = isset($_GET['search'])?('?search='.$_GET['search']):'';
         $paginas = 1;
-
-
         try {
             $documentos_total = $Emisor->countDocumentosIntercambios($filtros);
             if (!empty($pagina)) {
@@ -84,13 +82,14 @@ class Controller_DteIntercambios extends \Controller_App
             'search' => $filtros,
             'soloPendientes' => $soloPendientes,
             'searchUrl' => $searchUrl,
+            'ultimo_codigo' => (new Model_DteIntercambios())->setContribuyente($Emisor)->getUltimoCodigo(),
         ]);
     }
 
     /**
      * Acción que muestra la página de un intercambio
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-07-31
+     * @version 2022-11-16
      */
     public function ver($codigo)
     {
@@ -119,6 +118,7 @@ class Controller_DteIntercambios extends \Controller_App
             'EnvioDte' => $DteIntercambio->getEnvioDte(),
             'Documentos' => $DteIntercambio->getDocumentos(),
             'Firma' => $Firma,
+            'test_xml' => $DteIntercambio->testXML(),
         ]);
     }
 

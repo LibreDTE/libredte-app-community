@@ -1184,4 +1184,32 @@ class Model_DteIntercambio extends \Model_App
         return $response['body'];
     }
 
+    /**
+     * Método que prueba el XML para corroborar eventual problema por archivo
+     * con codificación errónea
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2022-11-16
+     */
+    public function testXML()
+    {
+        $filtros = ['codigo' => $this->codigo, 'soloPendientes'=>false];
+        try {
+            $docs = (new Model_DteIntercambios())->setContribuyente($this->getReceptor())->getDocumentos($filtros);
+            return true;
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * Método que indica si el intercambio es el último (según código)
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2022-11-16
+     */
+    public function esUltimoIntercambio()
+    {
+        $ultimo_codigo = (new Model_DteIntercambios())->setContribuyente($this->getReceptor())->getUltimoCodigo();
+        return $ultimo_codigo == $this->codigo;
+    }
+
 }

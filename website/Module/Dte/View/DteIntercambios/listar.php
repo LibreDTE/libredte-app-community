@@ -47,7 +47,12 @@
 </ul>
 
 <div class="page-header"><h1>Bandeja de intercambio</h1></div>
-<p>Aquí podrá revisar los documentos que ha recibido en su correo de intercambio <span class="lead text-center text-monospace"><?=$Emisor->config_email_intercambio_user?></span>, tanto los procesados como los pendientes. Para estos últimos podrá aceptar o reclamar según corresponda.</p>
+<p>
+    Aquí podrá revisar los documentos que ha recibido en su correo de intercambio <span class="lead text-center text-monospace"><?=$Emisor->config_email_intercambio_user?></span>, tanto los procesados como los pendientes. Para estos últimos podrá aceptar o reclamar según corresponda.
+    <?php if ($ultimo_codigo) : ?>
+    El último intercambio recibido es el <a href="<?=$_base?>/dte/dte_intercambios/ver/<?=$ultimo_codigo?>">N° <?=$ultimo_codigo?></a>.
+    <?php endif; ?>
+</p>
 
 <?php
 foreach ($documentos as &$i) {
