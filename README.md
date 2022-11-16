@@ -42,7 +42,7 @@ los [términos y condiciones de uso](https://legal.libredte.cl).
 Instalación
 -----------
 
-Revisar el [manual de instalación](https://github.com/LibreDTE/libredte-webapp/blob/master/LibreDTE-INSTALL-Debian-10.md)
+Revisar el [manual de instalación](https://github.com/LibreDTE/libredte-webapp/blob/master/LibreDTE-INSTALL-Debian-11.md)
 para un paso a paso. La instalación sólo se hace una vez, luego basta actualizar
 la instancia.
 
