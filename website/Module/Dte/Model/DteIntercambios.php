@@ -55,7 +55,7 @@ class Model_DteIntercambios extends \Model_Plural_App
     /**
      * Método que crea los filtros para ser usados en las consultas de documentos recibidos
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+     * @version 2022-11-16
      */
     private function crearFiltrosDocumentos($filtros)
     {
@@ -69,6 +69,10 @@ class Model_DteIntercambios extends \Model_Plural_App
         ], $filtros);
         $where = ['i.receptor = :receptor', 'i.certificacion = :certificacion'];
         $vars = [':receptor'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion()];
+        if (!empty($filtros['codigo'])) {
+            $where[] = 'i.codigo = :codigo';
+            $vars[':codigo'] = $filtros['codigo'];
+        }
         if (!empty($filtros['recibido_desde'])) {
             $where[] = 'i.fecha_hora_email >= :recibido_desde';
             $vars[':recibido_desde'] = $filtros['recibido_desde'];
@@ -442,14 +446,14 @@ class Model_DteIntercambios extends \Model_Plural_App
             return null; // no es un EnvioDTE, no se procesa
         }
         if ($EnvioDte->esBoleta()) {
-            throw new \Exception('El XML es de boleta, no se procesa');
+            throw new \Exception('El XML es de boleta, no se procesa.');
         }
         $caratula = $EnvioDte->getCaratula();
         if (((int)(bool)!$caratula['NroResol']) != $this->getContribuyente()->enCertificacion()) {
             return null; // se deja sin procesar ya que no es del ambiente correcto
         }
         if (substr($caratula['RutReceptor'], 0, -2) != $this->getContribuyente()->rut) {
-            throw new \Exception('El RUT del receptor no es válido');
+            throw new \Exception('El RUT del receptor no es válido.');
         }
         if (!isset($caratula['SubTotDTE'][0])) {
             $caratula['SubTotDTE'] = [$caratula['SubTotDTE']];
@@ -459,7 +463,7 @@ class Model_DteIntercambios extends \Model_Plural_App
             $documentos += $SubTotDTE['NroDTE'];
         }
         if (!$documentos) {
-            throw new \Exception('El intercambio no tiene DTE');
+            throw new \Exception('El intercambio no tiene DTE.');
         }
         // si no hay datos de correo no se debe guardar y sólo se está probando el XML
         if (empty($datos_email)) {
@@ -484,11 +488,11 @@ class Model_DteIntercambios extends \Model_Plural_App
         $DteIntercambio->receptor = $this->getContribuyente()->rut;
         // si el documento ya existe en la bandeja de intercambio se omite
         if ($DteIntercambio->recibidoPreviamente()) {
-            throw new \Exception('El intercambio ya había sido recibido previamente');
+            throw new \Exception('El intercambio ya había sido recibido previamente.');
         }
         // guardar envío de intercambio
         if (!$DteIntercambio->save()) {
-            throw new \Exception('No fue posible guardar el intercambio');
+            throw new \Exception('No fue posible guardar el intercambio.');
         }
         // si no se procesó el intercambio de manera automática se marca como DTE agregado (=true) para ser reportado
         return !$DteIntercambio->procesarRespuestaAutomatica() ? true : false;
@@ -553,6 +557,22 @@ class Model_DteIntercambios extends \Model_Plural_App
             }
         }
         return $intercambios_reales;
+    }
+
+    /**
+     * Método que entrega el último código de intercambio usado por un receptor de DTE
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2022-11-16
+     */
+    public function getUltimoCodigo()
+    {
+        $where = ['i.receptor = :receptor', 'i.certificacion = :certificacion'];
+        $vars = [':receptor'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion()];
+        return (int)$this->db->getValue('
+            SELECT MAX(codigo)
+            FROM dte_intercambio AS i
+            WHERE '.implode(' AND ', $where).'
+        ', $vars);
     }
 
 }

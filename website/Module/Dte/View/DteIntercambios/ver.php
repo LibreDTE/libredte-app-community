@@ -1,14 +1,12 @@
 <ul class="nav nav-pills float-right">
-<?php if ($DteIntercambio->codigo!=1): ?>
     <li class="nav-item">
-        <a href="<?=$_base?>/dte/dte_intercambios/ver/<?=($DteIntercambio->codigo-1)?>" title="Ver intercambio N° <?=($DteIntercambio->codigo-1)?>" class="nav-link">
+        <a href="<?=$_base?>/dte/dte_intercambios/ver/<?=($DteIntercambio->codigo-1)?>" title="Ver intercambio N° <?=($DteIntercambio->codigo-1)?>" class="nav-link <?=$DteIntercambio->codigo==1?'disabled':''?>">
             <i class="fa fa-arrow-left"></i>
             Anterior
         </a>
     </li>
-<?php endif; ?>
     <li class="nav-item">
-        <a href="<?=$_base?>/dte/dte_intercambios/ver/<?=($DteIntercambio->codigo+1)?>" title="Ver intercambio N° <?=($DteIntercambio->codigo+1)?>" class="nav-link">
+        <a href="<?=$_base?>/dte/dte_intercambios/ver/<?=($DteIntercambio->codigo+1)?>" title="Ver intercambio N° <?=($DteIntercambio->codigo+1)?>" class="nav-link <?=$DteIntercambio->esUltimoIntercambio()?'disabled':''?>">
             <i class="fa fa-arrow-right"></i>
             Siguiente
         </a>
@@ -21,7 +19,14 @@
     </li>
 </ul>
 
-<div class="page-header"><h1>Intercambio N° <?=$DteIntercambio->codigo?></h1></div>
+<div class="page-header">
+    <h1>
+        Intercambio N° <?=$DteIntercambio->codigo?>
+        <?php if ($test_xml !== true) : ?>
+        <i class="fa fa-exclamation-circle text-danger"></i>
+        <?php endif; ?>
+    </h1>
+</div>
 <p>Esta es la página del intercambio N° <?=$DteIntercambio->codigo?> de la empresa <?=$Emisor->razon_social?>.</p>
 
 <script type="text/javascript">
@@ -312,6 +317,14 @@ echo $f->end(false);
 ?>
     </div>
 </div>
+<?php if ($test_xml !== true) : ?>
+<div class="card mb-4">
+    <div class="card-header"><i class="fa fa-exclamation-circle text-danger"></i> XML del intercambio con problema</div>
+    <div class="card-body">
+        <pre><?=$test_xml?></pre>
+    </div>
+</div>
+<?php endif; ?>
 <a class="btn btn-danger btn-lg btn-block" href="<?=$_base?>/dte/dte_intercambios/eliminar/<?=$DteIntercambio->codigo?>" role="button" title="Eliminar intercambio" onclick="return Form.confirm(this, '¿Confirmar la eliminación del intercambio?<br/><br/><span class=\'small\'>Podrá recuperar el XML desde su correo de intercambio si existe ahí.</span>')">
     Eliminar archivo EnvioDTE de intercambio
 </a>
