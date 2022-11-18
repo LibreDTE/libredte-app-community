@@ -32,7 +32,7 @@ $y=1; // fila
 $x=0; // columna
 foreach ($documentos_rc as $fila) {
     foreach ($fila as $celda) {
-        $p->getActiveSheet()->setCellValue(\PHPExcel_Cell::stringFromColumnIndex($x++).$y, $celda);
+        $p->getActiveSheet()->setCellValue(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($x++).$y, $celda);
     }
     $x=0;
     ++$y;
@@ -46,7 +46,7 @@ $y=1; // fila
 $x=0; // columna
 foreach ($documentos_libredte as $fila) {
     foreach ($fila as $celda) {
-        $p->getActiveSheet()->setCellValue(\PHPExcel_Cell::stringFromColumnIndex($x++).$y, $celda);
+        $p->getActiveSheet()->setCellValue(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($x++).$y, $celda);
     }
     $x=0;
     ++$y;

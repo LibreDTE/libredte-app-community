@@ -41,7 +41,7 @@ class View_Helper_DteFolios_Estados extends \sowerphp\general\View_Helper_Spread
             }
             $this->setActiveSheetIndex($sheet);
             $this->getActiveSheet()->setTitle('T'.$dte);
-            $this->getActiveSheet()->getPageSetup()->setOrientation(\PHPExcel_Worksheet_PageSetup::ORIENTATION_PORTRAIT);
+            $this->getActiveSheet()->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::ORIENTATION_PORTRAIT);
             $this->getActiveSheet()->getPageSetup()->setFitToPage(true);
             $this->getActiveSheet()->getPageSetup()->setFitToWidth(1);
             $this->setMargins(0.8);

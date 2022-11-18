@@ -10,7 +10,7 @@
         "phpmailer/phpmailer": "~6.5",
         "libchart/libchart": "1.5.0",
         "lapinator.net/ods-php-generator": "dev-master",
-        "phpoffice/phpexcel": "1.8.2",
+        "phpoffice/phpspreadsheet": "^1.23",
         "google/recaptcha": "1.2.4",
         "robthree/twofactorauth": "1.6.1",
         "guzzlehttp/guzzle": "^7",

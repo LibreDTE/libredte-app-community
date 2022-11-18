@@ -212,7 +212,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
         // crear hoja
         $this->setActiveSheetIndex(0);
         $this->getActiveSheet()->setTitle('Compras');
-        $this->getActiveSheet()->getPageSetup()->setOrientation(\PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+        $this->getActiveSheet()->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
         $this->getActiveSheet()->getPageSetup()->setFitToPage(true);
         $this->getActiveSheet()->getPageSetup()->setFitToWidth(1);
         $this->setMargins(0.8);
@@ -330,7 +330,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
         $this->createSheet(1);
         $this->setActiveSheetIndex(1);
         $this->getActiveSheet()->setTitle('Ventas');
-        $this->getActiveSheet()->getPageSetup()->setOrientation(\PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+        $this->getActiveSheet()->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
         $this->getActiveSheet()->getPageSetup()->setFitToPage(true);
         $this->getActiveSheet()->getPageSetup()->setFitToWidth(1);
         $this->setMargins(0.8);
@@ -464,7 +464,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
     {
         for ($i=$this->y; $i<($this->y+$cantidad); $i++) {
             $this->getActiveSheet()->getStyle('B'.$i)->applyFromArray(
-                ['alignment'=>['horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER]]
+                ['alignment'=>['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]]
             );
             $this->getActiveSheet()->setCellValue('B'.$i, $this->linea++);
         }
@@ -480,11 +480,11 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
         $valor_col = 'P';
         $this->y = 1;
         $this->getActiveSheet()->mergeCells($titulo_start.$this->y.':'.$titulo_end.($this->y+2));
-        $this->getActiveSheet()->getStyle($titulo_start.$this->y)->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        $this->getActiveSheet()->getStyle($titulo_start.$this->y)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
         $this->getActiveSheet()->getStyle($titulo_start.$this->y)->getFont()->setSize(16);
         $this->getActiveSheet()->setCellValue($titulo_start.$this->y, 'Propuesta formulario 29'."\n".'(no enviar sin antes verificar contenido)');
         $this->getActiveSheet()->getStyle($info_start.$this->y.':'.$valor_col.($this->y+2))->applyFromArray(
-            ['alignment'=>['horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER]]
+            ['alignment'=>['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]]
         );
         $this->setFormatBorder($titulo_start.$this->y.':'.$valor_col.($this->y+2));
         $this->setFormatCenterBold($titulo_start.$this->y.':'.$info_end.($this->y+2));
