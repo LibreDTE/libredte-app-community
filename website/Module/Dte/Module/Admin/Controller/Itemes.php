@@ -202,7 +202,7 @@ class Controller_Itemes extends \Controller_Maintainer
     /**
      * Acción que permite importar los items desde un archivo CSV
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-17
+     * @version 2022-11-22
      */
     public function importar()
     {
@@ -210,13 +210,18 @@ class Controller_Itemes extends \Controller_Maintainer
             // verificar que se haya podido subir el archivo con el libro
             if (!isset($_FILES['archivo']) or $_FILES['archivo']['error']) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Ocurrió un error al subir el archivo con los items', 'error'
+                    'Ocurrió un error al subir el archivo con los items.', 'error'
                 );
                 return;
             }
             // procesar cada item
             $Contribuyente = $this->getContribuyente();
-            $items = \sowerphp\general\Utility_Spreadsheet::read($_FILES['archivo']);
+            try {
+                $items = \sowerphp\general\Utility_Spreadsheet::read($_FILES['archivo']);
+            } catch (\Exception $e) {
+                \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
+                return;
+            }
             array_shift($items);
             $resumen = ['nuevos'=>0, 'editados'=>0, 'error'=>0];
             $cols = ['codigo_tipo', 'codigo', 'item', 'descripcion', 'clasificacion', 'unidad', 'precio', 'moneda', 'exento', 'descuento', 'descuento_tipo', 'impuesto_adicional', 'activo', 'bruto'];
