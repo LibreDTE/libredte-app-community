@@ -558,7 +558,14 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
         $msg .= '- Enviar DTE por correo: '.($email?'Si':'No')."\n";
         $msg .= '- Descarga de PDF: '.($pdf?(is_string($pdf)?$pdf:'Si'):'No')."\n";
         $msg .= '- Tiempo ejecución: '.num($tiempo).' segundos'."\n";
-        $Emisor->notificar($titulo, $msg, $Usuario->email, null, $file);
+        // mensaje por consola con el resultado (mismo que se envía por email)
+        $this->out("\n".$msg."\n");
+        if ($Emisor->notificar($titulo, $msg, $Usuario->email, null, $file)) {
+            $this->out('Correo enviado al emisor con el resultado.'."\n");
+        } else {
+            $this->out('No fue posible enviar el correo al emisor con el resultado.'."\n");
+        }
+        // borrar archivo si existe
         if ($file) {
             unlink($file['tmp_name']);
         }
