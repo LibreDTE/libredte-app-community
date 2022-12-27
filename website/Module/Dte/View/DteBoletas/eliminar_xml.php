@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_boletas" title="Ir al Libro de Boletas" class="nav-link">
             <i class="fa fa-book"></i>

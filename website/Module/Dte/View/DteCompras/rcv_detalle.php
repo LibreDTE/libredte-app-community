@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
 <?php if ($estado=='REGISTRO') : ?>
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_compras/rcv_diferencias/<?=$periodo?>/<?=$DteTipo->codigo?>" title="Descargar diferencias del período <?=$periodo?> entre el RC del SII y el IEC de LibreDTE" class="nav-link">
@@ -7,7 +7,7 @@
     </li>
 <?php endif; ?>
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
             <span class="fas fa-university"></span> Ver resumen RC
         </a>
         <div class="dropdown-menu">

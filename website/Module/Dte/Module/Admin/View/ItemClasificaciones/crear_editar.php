@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/admin/item_clasificaciones/listar" title="Ir al mantenedor de clasificaciones de items" class="nav-link">
             <i class="fa fa-list-alt"></i> Clasificaciones
@@ -41,4 +41,4 @@ echo $f->input([
 ]);
 echo $f->end('Guardar');
 ?>
-<div style="float:left;color:red">* campo es obligatorio</div>
+<div style="float:start;color:red">* campo es obligatorio</div>

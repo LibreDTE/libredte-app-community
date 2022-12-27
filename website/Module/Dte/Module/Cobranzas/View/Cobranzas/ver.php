@@ -111,25 +111,25 @@ new \sowerphp\general\View_Helper_Table($otros);
         </div>
         <div class="row">
             <div class="col-md-3">
-                <a class="btn btn-primary btn-block" href="<?=$_base?>/dte/dte_emitidos/ver/<?=$Pago->dte?>/<?=$Pago->folio?>" role="button">
+                <a class="btn btn-primary col-12" href="<?=$_base?>/dte/dte_emitidos/ver/<?=$Pago->dte?>/<?=$Pago->folio?>" role="button">
                     <span class="fa fa-search"></span>
                     Ver DTE
                 </a>
             </div>
             <div class="col-md-3">
-                <a class="btn btn-primary btn-block<?=(!$Pago->getDocumento()->hasXML()?' disabled':'') ?>" href="<?=$_base?>/dte/dte_emitidos/pdf/<?=$Pago->dte?>/<?=$Pago->folio?>/<?=$Emisor->config_pdf_dte_cedible?>" role="button">
+                <a class="btn btn-primary col-12<?=(!$Pago->getDocumento()->hasXML()?' disabled':'') ?>" href="<?=$_base?>/dte/dte_emitidos/pdf/<?=$Pago->dte?>/<?=$Pago->folio?>/<?=$Emisor->config_pdf_dte_cedible?>" role="button">
                     <span class="far fa-file-pdf"></span>
                     Ver PDF
                 </a>
             </div>
             <div class="col-md-3">
-                <a class="btn btn-primary btn-block<?=(!$Pago->getDocumento()->hasXML()?' disabled':'') ?>" href="<?=$_base?>/dte/dte_emitidos/xml/<?=$Pago->dte?>/<?=$Pago->folio?>" role="button">
+                <a class="btn btn-primary col-12<?=(!$Pago->getDocumento()->hasXML()?' disabled':'') ?>" href="<?=$_base?>/dte/dte_emitidos/xml/<?=$Pago->dte?>/<?=$Pago->folio?>" role="button">
                     <span class="far fa-file-code"></span>
                     Ver XML
                 </a>
             </div>
             <div class="col-md-3">
-                <a class="btn btn-danger btn-block" href="<?=$_base?>/dte/cobranzas/cobranzas/eliminar/<?=$Pago->dte?>/<?=$Pago->folio?>/<?=$Pago->fecha?>" role="button" onclick="return Form.confirm(this, '¿Desea eliminar el pago programado?')">
+                <a class="btn btn-danger col-12" href="<?=$_base?>/dte/cobranzas/cobranzas/eliminar/<?=$Pago->dte?>/<?=$Pago->folio?>/<?=$Pago->fecha?>" role="button" onclick="return Form.confirm(this, '¿Desea eliminar el pago programado?')">
                     <span class="fas fa-times"></span>
                     Eliminar
                 </a>

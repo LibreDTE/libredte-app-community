@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/honorarios/boleta_honorarios" title="Ver boletas de honorarios recibidas por cada período" class="nav-link">
             <i class="fas fa-user-tie"></i>

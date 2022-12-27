@@ -16,8 +16,8 @@ foreach ($messages as $message) {
     ];
     echo '<div class="alert alert-',$message['type'],'" role="alert">',"\n";
     echo '    <span class="glyphicon glyphicon-',$icons[$message['type']],'" aria-hidden="true"></span>',"\n";
-    echo '    <span class="sr-only">',$message['type'],': </span>',$message['text'],"\n";
-    echo '    <a href="#" class="close" data-dismiss="alert" aria-label="close" title="Cerrar">&times;</a>',"\n";
+    echo '    <span class="visually-hidden">',$message['type'],': </span>',$message['text'],"\n";
+    echo '    <a href="#" class="btn-close" data-bs-dismiss="alert" aria-label="close" title="Cerrar">&times;</a>',"\n";
     echo '</div>'."\n";
 }
 $f = new \sowerphp\general\View_Helper_Form(false);
@@ -28,16 +28,16 @@ $f = new \sowerphp\general\View_Helper_Form(false);
                     <h1 class="text-center mb-4">Consultar DTE</h1>
                     <form action="<?=$_base.$_request?>" method="post" onsubmit="return Form.check()" class="mb-4" id="consultarForm">
                         <div class="form-group">
-                            <label for="emisor" class="sr-only">RUT emisor</label>
+                            <label for="emisor" class="visually-hidden">RUT emisor</label>
                             <input type="text" name="emisor" id="emisor" class="form-control check rut" required="required" placeholder="RUT emisor">
                         </div>
                         <div class="form-group"><?=$f->input(['type'=>'select', 'name' => 'dte', 'label'=>'Tipo DTE', 'options'=>$dtes, 'value'=>$dte])?></div>
                         <div class="form-group">
-                            <label for="folio" class="sr-only">Folio del DTE</label>
+                            <label for="folio" class="visually-hidden">Folio del DTE</label>
                             <input type="number" name="folio" id="folio" class="form-control" required="required" placeholder="Folio del DTE">
                         </div>
                         <div class="form-group">
-                            <label for="fecha" class="sr-only">Fecha de emisión</label>
+                            <label for="fecha" class="visually-hidden">Fecha de emisión</label>
                             <input type="text" name="fecha" id="fecha" class="form-control" required="required" placeholder="Fecha de emisión">
                             <script>
                                 $(function() {
@@ -46,11 +46,11 @@ $f = new \sowerphp\general\View_Helper_Form(false);
                             </script>
                         </div>
                         <div class="form-group">
-                            <label for="total" class="sr-only">Monto total</label>
+                            <label for="total" class="visually-hidden">Monto total</label>
                             <input type="number" name="total" id="total" class="form-control" required="required" placeholder="Monto total">
                         </div>
                         <?=\sowerphp\general\Utility_Google_Recaptcha::form('consultarForm')?>
-                        <button type="submit" class="btn btn-primary btn-block btn-lg">Buscar documento</button>
+                        <button type="submit" class="btn btn-primary col-12 btn-lg">Buscar documento</button>
                     </form>
                     <script> $(function() { $("#emisor").focus(); }); </script>
                 </div>
@@ -79,13 +79,13 @@ $f = new \sowerphp\general\View_Helper_Form(false);
 <?php endif; ?>
                     <div class="row mb-4">
                         <div class="col-md-6">
-                            <a class="btn btn-primary btn-lg btn-block<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$links['pdf']?>" role="button">
+                            <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$links['pdf']?>" role="button">
                                 <span class="far fa-file-pdf"></span>
                                 Descargar PDF
                             </a>
                         </div>
                         <div class="col-md-6">
-                            <a class="btn btn-primary btn-lg btn-block<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$links['xml']?>" role="button">
+                            <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$links['xml']?>" role="button">
                                 <span class="far fa-file-code"></span>
                                 Descargar XML
                             </a>
@@ -103,7 +103,7 @@ $f = new \sowerphp\general\View_Helper_Form(false);
 <?php if (!empty($links['pagar'])) : ?>
                     <div class="row">
                         <div class="col-sm-12">
-                            <a class="btn btn-success btn-lg btn-block" href="<?=$links['pagar']?>" role="button">
+                            <a class="btn btn-success btn-lg col-12" href="<?=$links['pagar']?>" role="button">
                                 Ir a la página de pago del documento
                             </a>
                         </div>

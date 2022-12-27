@@ -1,4 +1,4 @@
-<div class="page-header"><h1>Planes plus <small>usuarios en grupo <span class="text-monospace">dte_plus</span></small></h1></div>
+<div class="page-header"><h1>Planes plus <small>usuarios en grupo <span class="font-monospace">dte_plus</span></small></h1></div>
 <p>Aquí podrá buscar los usuarios pertenecientes al grupo <em>dte_plus</em> y los contribuyentes que tengan registrados.</pi>
 <?php
 foreach ($plus as &$p) {

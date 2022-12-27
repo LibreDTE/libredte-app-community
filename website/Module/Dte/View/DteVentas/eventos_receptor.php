@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_ventas/ver/<?=$periodo?>" title="Ir al libro de ventas (IEV) del período <?=$periodo?>" class="nav-link">
             <i class="fa fa-book"></i>

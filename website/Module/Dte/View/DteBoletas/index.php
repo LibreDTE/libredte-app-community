@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
 <?php if ($custodia_boletas_limitada and $custodia_xml) : ?>
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_boletas/eliminar_xml" title="Eliminar por período el XML de las boletas electrónicas" class="nav-link">

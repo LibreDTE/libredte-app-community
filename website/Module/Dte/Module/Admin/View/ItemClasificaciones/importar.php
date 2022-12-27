@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/admin/item_clasificaciones/listar" title="Ir al mantenedor de clasificaciones de items" class="nav-link">
             <i class="fa fa-list-alt"></i> Clasificaciones

@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
 <?php if (empty($cafs)) : ?>
     <li class="nav-item">
         <a href="<?=$_base?>/dte/admin/dte_folios/eliminar/<?=$DteFolio->dte?>" title="Eliminar el mantenedor de folios" class="nav-link" onclick="return Form.confirm(this, '¿Desea eliminar el mantenedor de folios?')">
@@ -29,24 +29,29 @@
 </ul>
 
 <div class="page-header"><h1>Folios de <?=$DteFolio->getTipo()->tipo?></h1></div>
-
-<div class="card-deck">
-    <div class="card mb-4">
-        <div class="card-body text-center">
-            <p class="small">siguiente folio disponible</p>
-            <p class="text-info lead"><?=num($DteFolio->siguiente)?></p>
+<div class="row text-center mt-3 mb-3">
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-body">
+                <p class="small">siguiente folio disponible</p>
+                <p class="text-info lead"><?=num($DteFolio->siguiente)?></p>
+            </div>
         </div>
     </div>
-    <div class="card mb-4">
-        <div class="card-body text-center">
-            <p class="small">total folios disponibles</p>
-            <p class="text-info lead"><?=num($DteFolio->disponibles)?></p>
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-body">
+                <p class="small">total folios disponibles</p>
+                <p class="text-info lead"><?=num($DteFolio->disponibles)?></p>
+            </div>
         </div>
     </div>
-    <div class="card mb-4">
-        <div class="card-body text-center">
-            <p class="small"><?=$Emisor->config_sii_timbraje_automatico?'timbrar':'alertar'?> si se llega a esta cantidad</p>
-            <p class="text-info lead"><?=num($DteFolio->alerta)?></p>
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-body">
+                <p class="small"><?=$Emisor->config_sii_timbraje_automatico?'timbrar':'alertar'?> si se llega a esta cantidad</p>
+                <p class="text-info lead"><?=num($DteFolio->alerta)?></p>
+            </div>
         </div>
     </div>
 </div>
@@ -63,9 +68,9 @@ $(function() {
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a href="#caf" aria-controls="caf" role="tab" data-toggle="tab" id="caf-tab" class="nav-link active" aria-selected="true">Archivos CAF</a></li>
-        <li class="nav-item"><a href="#uso_mensual" aria-controls="caf" role="tab" data-toggle="tab" id="uso_mensual-tab" class="nav-link">Folios usados mensualmente</a></li>
-        <li class="nav-item"><a href="#sin_uso" aria-controls="caf" role="tab" data-toggle="tab" id="sin_uso-tab" class="nav-link">Folios sin uso</a></li>
+        <li class="nav-item"><a href="#caf" aria-controls="caf" role="tab" data-bs-toggle="tab" id="caf-tab" class="nav-link active" aria-selected="true">Archivos CAF</a></li>
+        <li class="nav-item"><a href="#uso_mensual" aria-controls="caf" role="tab" data-bs-toggle="tab" id="uso_mensual-tab" class="nav-link">Folios usados mensualmente</a></li>
+        <li class="nav-item"><a href="#sin_uso" aria-controls="caf" role="tab" data-bs-toggle="tab" id="sin_uso-tab" class="nav-link">Folios sin uso</a></li>
     </ul>
     <div class="tab-content pt-4">
 
@@ -79,8 +84,8 @@ foreach ($cafs as &$caf) {
     // definir acciones
     $actions = '<div class="btn-group">';
     $actions .= '<a href="../xml/'.$DteFolio->dte.'/'.$caf['desde'].'" title="Descargar archivo XML del CAF que inicia en '.$caf['desde'].'" class="btn btn-primary"><i class="fas fa-code fa-fw"></i></a>';
-    $actions .= '<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>';
-    $actions .= '<div class="dropdown-menu dropdown-menu-right">';
+    $actions .= '<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="visually-hidden">Toggle Dropdown</span></button>';
+    $actions .= '<div class="dropdown-menu dropdown-menu-end">';
     if (!in_array($DteFolio->dte, [39, 41])) {
         $actions .= '<a href="../descargar/'.$DteFolio->dte.'/'.$caf['desde'].'/recibidos" title="Descargar folios recibidos en SII del CAF que inicia en '.$caf['desde'].'" class="dropdown-item"><i class="far fa-check-circle fa-fw"></i> Descargar Recibidos</a> ';
         $actions .= '<a href="../descargar/'.$DteFolio->dte.'/'.$caf['desde'].'/anulados" title="Descargar folios anulados en SII del CAF que inicia en '.$caf['desde'].'" class="dropdown-item"><i class="fas fa-ban fa-fw"></i> Descargar Anulados</a> ';
@@ -105,7 +110,7 @@ $t = new \sowerphp\general\View_Helper_Table();
 $t->setColsWidth([null, null, null, null, null, null, null, 90]);
 echo $t->generate($cafs);
 ?>
-<div class="card-deck mt-4">
+<div class="mt-4">
     <div class="card">
         <div class="card-body text-center">
             <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
@@ -156,29 +161,35 @@ if ($foliosSinUso) :
 <p>Los folios a continuación, que están entre el N° <?=$DteFolio->getPrimerFolio()?> (primer folio emitido en LibreDTE) y el N° <?=$DteFolio->siguiente?> (folio siguiente), se encuentran sin uso en el sistema:</p>
 <p><?=implode(', ', $foliosSinUso)?></p>
 <p>Si estos folios no existen en otro sistema de facturación y no los recuperará, debe anularlos.
-<div class="card-deck mt-4">
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=103">¿Por qué se saltan folios?</a>
-            </h5>
+<div class="row row-cols-3 g-3 mt-4">
+    <div class="col">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=103">¿Por qué se saltan folios?</a>
+                </h5>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=122">¿Cómo anulo folios en LibreDTE?</a>
-            </h5>
+    <div class="col">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=122">¿Cómo anulo folios en LibreDTE?</a>
+                </h5>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=179">¿Cómo anulo folios masivamente?</a>
-            </h5>
+    <div class="col">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=179">¿Cómo anulo folios masivamente?</a>
+                </h5>
+            </div>
         </div>
     </div>
 </div>

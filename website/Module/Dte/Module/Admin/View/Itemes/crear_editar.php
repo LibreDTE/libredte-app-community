@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
 <?php if (isset($Obj)) : ?>
 <?php if (\sowerphp\core\Module::loaded('Inventario')) : ?>
     <li class="nav-item">
@@ -34,8 +34,8 @@ $(function() {
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-toggle="tab" id="datos-tab" class="nav-link active" aria-selected="true">Datos básicos</a></li>
-        <!--<li class="nav-item"><a href="#precios" aria-controls="precios" role="tab" data-toggle="tab" id="precios-tab" class="nav-link">Lista de precios</a></li>-->
+        <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-bs-toggle="tab" id="datos-tab" class="nav-link active" aria-selected="true">Datos básicos</a></li>
+        <!--<li class="nav-item"><a href="#precios" aria-controls="precios" role="tab" data-bs-toggle="tab" id="precios-tab" class="nav-link">Lista de precios</a></li>-->
     </ul>
     <div class="tab-content pt-4">
 
@@ -163,4 +163,4 @@ echo $f->input([
 
 <?=$f->end('Guardar')?>
 
-<div style="float:left;color:red">* campo es obligatorio</div>
+<div style="float:start;color:red">* campo es obligatorio</div>

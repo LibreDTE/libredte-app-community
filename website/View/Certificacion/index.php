@@ -1,20 +1,24 @@
 <div class="page-header"><h1><?=$title?></h1></div>
-<div class="card-deck">
-<?php foreach ($nav as $link=>&$info): ?>
-    <div class="card mb-4 text-center">
-        <div class="card-body">
-            <a href="<?=$_base,'/',$module,$link?>" title="<?=$info['desc']?>" class="nav-link p-0">
-                <i class="<?=$info['icon']?> fa-3x" aria-hidden="true"></i>
-                <p class="card-text small"><?=$info['name']?></p>
-            </a>
-        </div>
+<div>
+    <div class="row row-cols">
+        <?php foreach ($nav as $link=>&$info): ?>
+            <div class="col">
+                <div class="card mb-4 text-center">
+                    <div class="card-body">
+                        <a href="<?=$_base,'/',$module,$link?>" title="<?=$info['desc']?>">
+                            <i class="<?=$info['icon']?> fa-3x" aria-hidden="true"></i>
+                            <p class="card-text small mt-2"><?=$info['name']?></p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
     </div>
-<?php endforeach; ?>
 </div>
 
 <div class="row mb-4">
-    <div class="col-12">
-        <a class="btn btn-primary btn-lg btn-block" href="https://soporte.sasco.cl/kb/faq.php?id=38" role="button">
+    <div>
+        <a class="btn btn-primary btn-lg col-12" href="https://soporte.sasco.cl/kb/faq.php?id=38" role="button">
             <span class="fas fa-list"></span>
             Manual paso a paso y video tutoriales
         </a>
@@ -28,13 +32,13 @@
         </a>
     </div>
     <div class="col-md-8 mb-4">
-        <div class="jumbotron pb-4">
+        <div class="pb-4">
             <h1 class="display-4">¿Complicada la Certificación?</h1>
             <p class="lead">Déjanos este tedioso proceso a nosotros. Somos expertos en hacerla.</p>
             <hr class="my-4">
             <p>Si ya tienes un software de mercado para emitir documentos tributarios electrónicos, pero falta que tu empresa tenga la autorización del SII, con este servicio quedará habilitada. Desde 30.000 pesos según los documentos que requieras certificar.</p>
             <p>
-                <a class="btn btn-primary btn-block btn-lg" href="https://libredte.cl/ventas/dte-cert" role="button">
+                <a class="btn btn-primary col-12 btn-lg" href="https://libredte.cl/ventas/dte-cert" role="button">
                     Solicitar Certificación de DTE a SASCO SpA
                 </a>
             </p>

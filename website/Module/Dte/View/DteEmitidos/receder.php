@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_emitidos/ver/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>#cesion" title="Volver al DTE emitido" class="nav-link">
             Volver al DTE T<?=$DteEmitido->dte?>F<?=$DteEmitido->folio?>

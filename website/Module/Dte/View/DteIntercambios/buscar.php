@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_intercambios/listar" title="Ir a la bandeja de intercambio entre contribuyentes" class="nav-link">
             <i class="fa fa-exchange-alt"></i>

@@ -1,12 +1,12 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
             <span class="fa fa-search"></span> Filtrar
         </a>
-        <div class="dropdown-menu dropdown-menu-right">
-            <a href="<?=$_base?>/dte/cobranzas/cobranzas/buscar?vencidos" class="dropdown-item">Vencidos <span class="badge badge-pill border"><?=num($cobranza_resumen['vencidos'])?></span></a>
-            <a href="<?=$_base?>/dte/cobranzas/cobranzas/buscar?vencen_hoy" class="dropdown-item">Vencen hoy <span class="badge badge-pill border"><?=num($cobranza_resumen['vencen_hoy'])?></span></a>
-            <a href="<?=$_base?>/dte/cobranzas/cobranzas/buscar?vigentes" class="dropdown-item">Vigentes <span class="badge badge-pill border"><?=num($cobranza_resumen['vigentes'])?></span></a>
+        <div class="dropdown-menu dropdown-menu-end">
+            <a href="<?=$_base?>/dte/cobranzas/cobranzas/buscar?vencidos" class="dropdown-item">Vencidos <span class="badge bg-danger border"><?=num($cobranza_resumen['vencidos'])?></span></a>
+            <a href="<?=$_base?>/dte/cobranzas/cobranzas/buscar?vencen_hoy" class="dropdown-item">Vencen hoy <span class="badge bg-warning border"><?=num($cobranza_resumen['vencen_hoy'])?></span></a>
+            <a href="<?=$_base?>/dte/cobranzas/cobranzas/buscar?vigentes" class="dropdown-item">Vigentes <span class="badge bg-success border"><?=num($cobranza_resumen['vigentes'])?></span></a>
             <div class="dropdown-divider"></div>
             <a href="<?=$_base?>/dte/cobranzas/cobranzas/buscar" class="dropdown-item">Limpiar búsqueda</a>
         </div>

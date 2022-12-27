@@ -6,7 +6,7 @@ if ($Contribuyente->enCertificacion() == $Contribuyente->config_ambiente_en_cert
     $ambiente_onclick = '';
 }
 ?>
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/contribuyentes/ambiente/<?=$Contribuyente->rut?>/<?=$Contribuyente->enCertificacion()?'produccion':'certificacion'?>" title="Cambiar el Ambiente de Facturación durante la sesión del usuario" class="nav-link" <?=$ambiente_onclick?>>
             <i class="fa fa-exchange-alt"></i>
@@ -49,13 +49,13 @@ $(function() {
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-toggle="tab" id="datos-tab" class="nav-link active" aria-selected="true">Empresa</a></li>
-        <li class="nav-item"><a href="#ambientes" aria-controls="ambientes" role="tab" data-toggle="tab" id="ambientes-tab" class="nav-link">Ambientes</a></li>
-        <li class="nav-item"><a href="#correos" aria-controls="correos" role="tab" data-toggle="tab" id="correos-tab" class="nav-link">Correos</a></li>
-        <li class="nav-item"><a href="#facturacion" aria-controls="facturacion" role="tab" data-toggle="tab" id="facturacion-tab" class="nav-link">Facturación</a></li>
+        <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-bs-toggle="tab" id="datos-tab" class="nav-link active" aria-selected="true">Empresa</a></li>
+        <li class="nav-item"><a href="#ambientes" aria-controls="ambientes" role="tab" data-bs-toggle="tab" id="ambientes-tab" class="nav-link">Ambientes</a></li>
+        <li class="nav-item"><a href="#correos" aria-controls="correos" role="tab" data-bs-toggle="tab" id="correos-tab" class="nav-link">Correos</a></li>
+        <li class="nav-item"><a href="#facturacion" aria-controls="facturacion" role="tab" data-bs-toggle="tab" id="facturacion-tab" class="nav-link">Facturación</a></li>
 <?php if (isset($Contribuyente)) : ?>
-        <li class="nav-item"><a href="#apps" aria-controls="apps" role="tab" data-toggle="tab" id="apps-tab" class="nav-link">Apps</a></li>
-        <li class="nav-item"><a href="#general" aria-controls="general" role="tab" data-toggle="tab" id="general-tab" class="nav-link">General</a></li>
+        <li class="nav-item"><a href="#apps" aria-controls="apps" role="tab" data-bs-toggle="tab" id="apps-tab" class="nav-link">Apps</a></li>
+        <li class="nav-item"><a href="#general" aria-controls="general" role="tab" data-bs-toggle="tab" id="general-tab" class="nav-link">General</a></li>
 <?php endif; ?>
     </ul>
     <div class="tab-content pt-4">

@@ -16,31 +16,31 @@ new \sowerphp\general\View_Helper_Table([
 ?>
 <div class="row">
     <div class="col-md-3">
-        <a class="btn btn-primary btn-lg btn-block<?=!$DteTmp->getTipo()->permiteCotizacion()?' disabled':''?>" href="../dte_tmps/cotizacion/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
+        <a class="btn btn-primary btn-lg col-12<?=!$DteTmp->getTipo()->permiteCotizacion()?' disabled':''?>" href="../dte_tmps/cotizacion/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
             <i class="far fa-file"></i>
             Descargar cotización
         </a>
     </div>
     <div class="col-md-3">
-        <a class="btn btn-primary btn-lg btn-block" href="../dte_tmps/pdf/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
+        <a class="btn btn-primary btn-lg col-12" href="../dte_tmps/pdf/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
             <i class="far fa-file-pdf"></i>
             Previsualizar PDF
         </a>
     </div>
     <div class="col-md-3">
-        <a class="btn btn-primary btn-lg btn-block<?=!$DteTmp->getTipo()->permiteCobro()?' disabled':''?>" href="../dte_tmps/pagar/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
+        <a class="btn btn-primary btn-lg col-12<?=!$DteTmp->getTipo()->permiteCobro()?' disabled':''?>" href="../dte_tmps/pagar/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
             <i class="fas fa-dollar-sign"></i>
             Registrar pago
         </a>
     </div>
     <div class="col-md-3">
-        <a class="btn btn-primary btn-lg btn-block" href="generar/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button" onclick="return Form.confirm(this, '¿Está seguro de querer generar el DTE?', 'Generando el DTE...')">
+        <a class="btn btn-primary btn-lg col-12" href="generar/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button" onclick="return Form.confirm(this, '¿Está seguro de querer generar el DTE?', 'Generando el DTE...')">
             <i class="far fa-paper-plane"></i>
             Generar DTE
         </a>
     </div>
 </div>
-<div style="float:right;margin-bottom:1em;margin-top:2em;font-size:0.8em">
+<div style="float:end;margin-bottom:1em;margin-top:2em;font-size:0.8em">
 <?php $links = $DteTmp->getLinks(); if (!empty($links['pagar'])) : ?>
     <a href="<?=$links['pagar']?>">Enlace público para pago</a> /
 <?php endif; ?>

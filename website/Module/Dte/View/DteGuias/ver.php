@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_guias" title="Ir al libro de guías de despacho" class="nav-link">
             <i class="fa fa-book"></i>
@@ -22,12 +22,12 @@ $(function() {
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-toggle="tab" id="datos-tab" class="nav-link active" aria-selected="true">Datos básicos</a></li>
+        <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-bs-toggle="tab" id="datos-tab" class="nav-link active" aria-selected="true">Datos básicos</a></li>
 <?php if ($n_detalles) : ?>
 <?php if (isset($detalle)) : ?>
-        <li class="nav-item"><a href="#detalle" aria-controls="detalle" role="tab" data-toggle="tab" id="detalle-tab" class="nav-link">Detalle</a></li>
+        <li class="nav-item"><a href="#detalle" aria-controls="detalle" role="tab" data-bs-toggle="tab" id="detalle-tab" class="nav-link">Detalle</a></li>
 <?php endif; ?>
-        <li class="nav-item"><a href="#estadisticas" aria-controls="estadisticas" role="tab" data-toggle="tab" id="estadisticas-tab" class="nav-link">Estadísticas</a></li>
+        <li class="nav-item"><a href="#estadisticas" aria-controls="estadisticas" role="tab" data-bs-toggle="tab" id="estadisticas-tab" class="nav-link">Estadísticas</a></li>
 <?php endif; ?>
     </ul>
     <div class="tab-content pt-4">
@@ -44,13 +44,13 @@ new \sowerphp\general\View_Helper_Table([
 ?>
             <div class="row">
                 <div class="col-md-6">
-                    <a class="btn btn-primary btn-lg btn-block<?=!$n_detalles?' disabled':''?>" href="<?=$_base?>/dte/dte_guias/csv/<?=$Libro->periodo?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=!$n_detalles?' disabled':''?>" href="<?=$_base?>/dte/dte_guias/csv/<?=$Libro->periodo?>" role="button">
                         <i class="far fa-file-excel"></i>
                         Descargar detalle en archivo CSV
                     </a>
                 </div>
                 <div class="col-md-6">
-                    <a class="btn btn-primary btn-lg btn-block<?=!$Libro->xml?' disabled':''?>" href="<?=$_base?>/dte/dte_guias/xml/<?=$Libro->periodo?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=!$Libro->xml?' disabled':''?>" href="<?=$_base?>/dte/dte_guias/xml/<?=$Libro->periodo?>" role="button">
                         <i class="far fa-file-code"></i>
                         Descargar libro de guías en XML
                     </a>
@@ -85,7 +85,7 @@ new \sowerphp\general\View_Helper_Table([
                 <p>Si bien existe la posibilidad de enviar al SII el libro de guías. Sólo debe hacerlo si el SII lo solicita para alguna fiscalización.</p>
                 <p>En una situación normal, este libro no se envía al SII.</p>
             </div>
-            <div class="card-footer small text-right">Fuente: <a href="http://www.sii.cl/preguntas_frecuentes/catastro/001_012_3770.htm">SII</a></div>
+            <div class="card-footer small text-end">Fuente: <a href="http://www.sii.cl/preguntas_frecuentes/catastro/001_012_3770.htm">SII</a></div>
         </div>
 </div>
 <!-- FIN DATOS BÁSICOS -->
@@ -131,7 +131,7 @@ var documentos_por_dia = Morris.Line({
     resize: true,
     parseTime: false
 });
-$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+$('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
     var target = $(e.target).attr("href");
     if (target=='#estadisticas') {
         documentos_por_dia.redraw();

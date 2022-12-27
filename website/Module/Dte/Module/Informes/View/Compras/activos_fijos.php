@@ -39,6 +39,6 @@ if (isset($compras)) {
     $t->setID('activos_fijos_'.$Emisor->rut);
     $t->setExport(true);
     $t->setColsWidth([null, null, null, null, null, null, null, null, null, null, 110]);
-    echo '<div class="card"><div class="card-body lead text-center">Monto neto activo fijo del período: $',num($total_activo_fijo),'.-</div></div>',"\n";
+    echo '<div class="card mb-3"><div class="card-body lead text-center">Monto neto activo fijo del período: $',num($total_activo_fijo),'.-</div></div>',"\n";
     echo $t->generate($compras);
 }

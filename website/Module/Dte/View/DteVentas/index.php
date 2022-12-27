@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_ventas/registro_ventas" title="Explorar el registro de ventas del SII" class="nav-link">
             <i class="fas fa-university"></i>
@@ -31,4 +31,4 @@ foreach ($periodos as &$p) {
 array_unshift($periodos, ['Período', 'Emitidos', 'Registrados', 'Track ID', 'Estado', 'Acciones']);
 new \sowerphp\general\View_Helper_Table($periodos);
 ?>
-<a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/dte/dte_ventas/sin_movimientos" role="button">Enviar libro de ventas sin movimientos</a>
+<a class="btn btn-primary btn-lg col-12" href="<?=$_base?>/dte/dte_ventas/sin_movimientos" role="button">Enviar libro de ventas sin movimientos</a>

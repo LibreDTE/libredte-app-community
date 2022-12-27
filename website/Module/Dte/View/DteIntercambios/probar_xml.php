@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_intercambios/listar" title="Ir a la bandeja de intercambio entre contribuyentes" class="nav-link">
             <i class="fa fa-exchange-alt"></i>
@@ -32,7 +32,7 @@ if (!empty($archivos)) {
             <div class="card-header"><i class="fa fa-exclamation-circle text-warning"></i> ¿Puedo cargar un EnvioDTE?</div>
             <div class="card-body">
                 <p>Puede subir para probar un XML de EnvioDTE con esta utilidad, pero <strong>no será guardado</strong>.</p>
-                <p>LibreDTE requiere que todo XML de EnvioDTE provenga de un correo electrónico. Si tiene un XML de un EnvioDTE, lo puede enviar al correo <span class="text-monospace"><?=$Emisor->config_email_intercambio_user?></span> y será guardado en la bandeja de intercambio.</p>
+                <p>LibreDTE requiere que todo XML de EnvioDTE provenga de un correo electrónico. Si tiene un XML de un EnvioDTE, lo puede enviar al correo <span class="font-monospace"><?=$Emisor->config_email_intercambio_user?></span> y será guardado en la bandeja de intercambio.</p>
             </div>
         </div>
     </div>

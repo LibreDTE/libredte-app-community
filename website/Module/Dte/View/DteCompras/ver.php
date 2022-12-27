@@ -1,6 +1,6 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="fas fa-exchange-alt"></i> Tipo transacciones
         </a>
         <div class="dropdown-menu">
@@ -13,7 +13,7 @@
         </div>
     </li>
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="fas fa-university"></i> Ver resumen RC
         </a>
         <div class="dropdown-menu">
@@ -32,7 +32,7 @@
         </div>
     </li>
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-download"></i> Descargar
         </a>
         <div class="dropdown-menu">
@@ -70,13 +70,13 @@ $(function() {
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-toggle="tab" id="datos-tab" class="nav-link active" aria-selected="true">Datos básicos</a></li>
+        <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-bs-toggle="tab" id="datos-tab" class="nav-link active" aria-selected="true">Datos básicos</a></li>
 <?php if ($n_detalles) : ?>
-        <li class="nav-item"><a href="#resumen" aria-controls="resumen" role="tab" data-toggle="tab" id="resumen-tab" class="nav-link">Resumen</a></li>
+        <li class="nav-item"><a href="#resumen" aria-controls="resumen" role="tab" data-bs-toggle="tab" id="resumen-tab" class="nav-link">Resumen</a></li>
 <?php if (isset($detalle)) : ?>
-        <li class="nav-item"><a href="#detalle" aria-controls="detalle" role="tab" data-toggle="tab" id="detalle-tab" class="nav-link">Detalle</a></li>
+        <li class="nav-item"><a href="#detalle" aria-controls="detalle" role="tab" data-bs-toggle="tab" id="detalle-tab" class="nav-link">Detalle</a></li>
 <?php endif; ?>
-        <li class="nav-item"><a href="#estadisticas" aria-controls="estadisticas" role="tab" data-toggle="tab" id="estadisticas-tab" class="nav-link">Estadísticas</a></li>
+        <li class="nav-item"><a href="#estadisticas" aria-controls="estadisticas" role="tab" data-bs-toggle="tab" id="estadisticas-tab" class="nav-link">Estadísticas</a></li>
 <?php endif; ?>
     </ul>
     <div class="tab-content pt-4">
@@ -93,19 +93,19 @@ new \sowerphp\general\View_Helper_Table([
 ?>
             <div class="row">
                 <div class="col-md-4">
-                    <a class="btn btn-primary btn-lg btn-block<?=!$n_detalles?' disabled':''?>" href="<?=$_base?>/dte/dte_compras/csv/<?=$Libro->periodo?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=!$n_detalles?' disabled':''?>" href="<?=$_base?>/dte/dte_compras/csv/<?=$Libro->periodo?>" role="button">
                         <i class="far fa-file-excel"></i>
                         Descargar CSV
                     </a>
                 </div>
                 <div class="col-md-4">
-                    <a class="btn btn-primary btn-lg btn-block<?=!$Libro->xml?' disabled':''?>" href="<?=$_base?>/dte/dte_compras/pdf/<?=$Libro->periodo?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=!$Libro->xml?' disabled':''?>" href="<?=$_base?>/dte/dte_compras/pdf/<?=$Libro->periodo?>" role="button">
                         <i class="far fa-file-pdf"></i>
                         Descargar PDF
                     </a>
                 </div>
                 <div class="col-md-4">
-                    <a class="btn btn-primary btn-lg btn-block<?=!$Libro->xml?' disabled':''?>" href="<?=$_base?>/dte/dte_compras/xml/<?=$Libro->periodo?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=!$Libro->xml?' disabled':''?>" href="<?=$_base?>/dte/dte_compras/xml/<?=$Libro->periodo?>" role="button">
                         <i class="far fa-file-code"></i>
                         Descargar XML
                     </a>
@@ -196,17 +196,21 @@ foreach ($resumen as &$r) {
     }
 }
 ?>
-    <div class="card-deck">
-        <div class="card mb-4">
-            <div class="card-body text-center">
-                <small>n° documentos con montos exentos</small><br/>
-                <span class="text-info lead"><?=num((int)$Libro->countDocumentosConMontosExentos())?></span>
+    <div class="row row-cols-2 g-3">
+        <div class="col">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <small>n° documentos con montos exentos</small><br/>
+                    <span class="text-info lead"><?=num((int)$Libro->countDocumentosConMontosExentos())?></span>
+                </div>
             </div>
         </div>
-        <div class="card mb-4">
-            <div class="card-body text-center">
-                <small>total</small><br/>
-                <span class="text-info lead"><?=num((int)$total['TotMntTotal'])?></span>
+        <div class="col">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <small>total</small><br/>
+                    <span class="text-info lead"><?=num((int)$total['TotMntTotal'])?></span>
+                </div>
             </div>
         </div>
     </div>
@@ -280,7 +284,7 @@ var documentos_por_tipo = Morris.Bar({
     labels: ['Documentos'],
     resize: true
 });
-$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+$('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
     var target = $(e.target).attr("href");
     if (target=='#estadisticas') {
         documentos_por_dia.redraw();

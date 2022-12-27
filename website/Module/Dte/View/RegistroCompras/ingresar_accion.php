@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/registro_compras/pendientes" title="Ver listado de documentos pendientes" class="nav-link">
             <i class="fas fa-paperclip"></i>

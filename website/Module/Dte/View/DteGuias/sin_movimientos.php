@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_guias" title="Ir al libro de guías de despacho" class="nav-link">
             <i class="fa fa-book"></i>
@@ -34,7 +34,7 @@ echo $f->end('Enviar libro sin movimientos');
                 <p>Si bien existe la posibilidad de enviar al SII el libro de guías sin movimiento. Sólo debe hacerlo si el SII lo solicita para alguna fiscalización.</p>
                 <p>Normalmente, este libro no se envía al SII.</p>
             </div>
-            <div class="card-footer small text-right">Fuente: <a href="http://www.sii.cl/preguntas_frecuentes/catastro/001_012_3770.htm">SII</a></div>
+            <div class="card-footer small text-end">Fuente: <a href="http://www.sii.cl/preguntas_frecuentes/catastro/001_012_3770.htm">SII</a></div>
         </div>
     </div>
 </div>

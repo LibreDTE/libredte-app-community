@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="#" onclick="__.popup('<?=$_base?>/dte/sii/contribuyente_usuarios/<?=$Contribuyente->rut?>-<?=$Contribuyente->dv?>', 850, 700); return false" title="Ver usuarios del contribuyente en el SII" class="nav-link">
             <i class="fa fa-users"></i>
@@ -33,11 +33,11 @@ $(function() {
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a href="#usuarios" aria-controls="usuarios" role="tab" data-toggle="tab" id="usuarios-tab" class="nav-link active" aria-selected="true">Usuarios autorizados</a></li>
-        <li class="nav-item"><a href="#dtes" aria-controls="dtes" role="tab" data-toggle="tab" id="dtes-tab" class="nav-link">Documentos por usuario</a></li>
-        <li class="nav-item"><a href="#sucursales" aria-controls="sucursales" role="tab" data-toggle="tab" id="sucursales-tab" class="nav-link">Sucursales por defecto</a></li>
-        <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-toggle="tab" id="datos-tab" class="nav-link">Datos usuarios</a></li>
-        <li class="nav-item"><a href="#general" aria-controls="general" role="tab" data-toggle="tab" id="general-tab" class="nav-link">General</a></li>
+        <li class="nav-item"><a href="#usuarios" aria-controls="usuarios" role="tab" data-bs-toggle="tab" id="usuarios-tab" class="nav-link active" aria-selected="true">Usuarios autorizados</a></li>
+        <li class="nav-item"><a href="#dtes" aria-controls="dtes" role="tab" data-bs-toggle="tab" id="dtes-tab" class="nav-link">Documentos por usuario</a></li>
+        <li class="nav-item"><a href="#sucursales" aria-controls="sucursales" role="tab" data-bs-toggle="tab" id="sucursales-tab" class="nav-link">Sucursales por defecto</a></li>
+        <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-bs-toggle="tab" id="datos-tab" class="nav-link">Datos usuarios</a></li>
+        <li class="nav-item"><a href="#general" aria-controls="general" role="tab" data-bs-toggle="tab" id="general-tab" class="nav-link">General</a></li>
     </ul>
     <div class="tab-content pt-4">
 

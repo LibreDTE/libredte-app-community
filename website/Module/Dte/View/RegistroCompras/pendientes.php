@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_compras/registro_compras" title="Explorar el registro de compras del SII" class="nav-link">
             <i class="fas fa-university"></i>
@@ -41,4 +41,4 @@ foreach ($documentos as &$d) {
 array_unshift($documentos, ['Proveedor','Documento', 'Fecha', 'Recepción SII', 'Exento', 'Neto', 'IVA', 'Total', 'Acciones']);
 new \sowerphp\general\View_Helper_Table($documentos);
 ?>
-<a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/dte/registro_compras/csv?<?=http_build_query($filtros)?>" role="button">Descargar detalle de documentos</a>
+<a class="btn btn-primary btn-lg col-12" href="<?=$_base?>/dte/registro_compras/csv?<?=http_build_query($filtros)?>" role="button">Descargar detalle de documentos</a>

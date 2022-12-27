@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_tmps/listar" title="Ir a los documentos temporales" class="nav-link">
             <i class="far fa-file"></i>

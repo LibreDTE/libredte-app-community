@@ -1,8 +1,8 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
 <?php if ($Emisor->config_pdf_imprimir) : ?>
 <?php if ($Emisor->config_pdf_imprimir == 'pdf_escpos') : ?>
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-print"></i>
             Imprimir
         </a>
@@ -57,22 +57,22 @@ $(function() {
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-toggle="tab" id="datos-tab" class="nav-link active" aria-selected="true">Datos básicos</a></li>
+        <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-bs-toggle="tab" id="datos-tab" class="nav-link active" aria-selected="true">Datos básicos</a></li>
 <?php if ($DteEmitido->hasXML()) : ?>
-        <li class="nav-item"><a href="#pdf" aria-controls="pdf" role="tab" data-toggle="tab" id="pdf-tab" class="nav-link">PDF</a></li>
-        <li class="nav-item"><a href="#email" aria-controls="email" role="tab" data-toggle="tab" id="email-tab" class="nav-link">Enviar por email</a></li>
+        <li class="nav-item"><a href="#pdf" aria-controls="pdf" role="tab" data-bs-toggle="tab" id="pdf-tab" class="nav-link">PDF</a></li>
+        <li class="nav-item"><a href="#email" aria-controls="email" role="tab" data-bs-toggle="tab" id="email-tab" class="nav-link">Enviar por email</a></li>
 <?php endif; ?>
 <?php if ($DteEmitido->getTipo()->permiteIntercambio()): ?>
-        <li class="nav-item"><a href="#intercambio" aria-controls="intercambio" role="tab" data-toggle="tab" id="intercambio-tab" class="nav-link">Proceso intercambio</a></li>
+        <li class="nav-item"><a href="#intercambio" aria-controls="intercambio" role="tab" data-bs-toggle="tab" id="intercambio-tab" class="nav-link">Proceso intercambio</a></li>
 <?php endif; ?>
 <?php if ($DteEmitido->getTipo()->operacion=='S'): ?>
-        <li class="nav-item"><a href="#pagos" aria-controls="pagos" role="tab" data-toggle="tab" id="pagos-tab" class="nav-link">Pagos</a></li>
+        <li class="nav-item"><a href="#pagos" aria-controls="pagos" role="tab" data-bs-toggle="tab" id="pagos-tab" class="nav-link">Pagos</a></li>
 <?php endif; ?>
-        <li class="nav-item"><a href="#referencias" aria-controls="referencias" role="tab" data-toggle="tab" id="referencias-tab" class="nav-link">Referencias</a></li>
+        <li class="nav-item"><a href="#referencias" aria-controls="referencias" role="tab" data-bs-toggle="tab" id="referencias-tab" class="nav-link">Referencias</a></li>
 <?php if ($cedible) : ?>
-        <li class="nav-item"><a href="#cesion" aria-controls="cesion" role="tab" data-toggle="tab" id="cesion-tab" class="nav-link">Cesión</a></li>
+        <li class="nav-item"><a href="#cesion" aria-controls="cesion" role="tab" data-bs-toggle="tab" id="cesion-tab" class="nav-link">Cesión</a></li>
 <?php endif; ?>
-        <li class="nav-item"><a href="#avanzado" aria-controls="avanzado" role="tab" data-toggle="tab" id="avanzado-tab" class="nav-link">Avanzado</a></li>
+        <li class="nav-item"><a href="#avanzado" aria-controls="avanzado" role="tab" data-bs-toggle="tab" id="avanzado-tab" class="nav-link">Avanzado</a></li>
     </ul>
     <div class="tab-content pt-4">
 
@@ -100,19 +100,19 @@ echo $t->generate([
 ?>
             <div class="row mt-2 mb-3">
                 <div class="col-md-4 mb-2">
-                    <a class="btn btn-primary btn-lg btn-block<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_emitidos/pdf/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>/<?=$Emisor->config_pdf_dte_cedible?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_emitidos/pdf/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>/<?=$Emisor->config_pdf_dte_cedible?>" role="button">
                         <span class="far fa-file-pdf"></span>
                         Descargar PDF
                     </a>
                 </div>
                 <div class="col-md-4 mb-2">
-                    <a class="btn btn-primary btn-lg btn-block<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_emitidos/xml/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_emitidos/xml/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
                         <span class="far fa-file-code"></span>
                         Descargar XML
                     </a>
                 </div>
                 <div class="col-md-4 mb-2">
-                    <a class="btn btn-primary btn-lg btn-block<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_emitidos/json/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_emitidos/json/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
                         <span class="far fa-file-code"></span>
                         Descargar JSON
                     </a>
@@ -203,7 +203,7 @@ echo $t->generate([
 <?php endif; ?>
     </div>
 <?php if ($DteEmitido->getEstado()=='R') : ?>
-<div class="card-deck mt-4">
+<div class="mt-4">
     <div class="card">
         <div class="card-body text-center">
             <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
@@ -272,39 +272,43 @@ echo $f->end('Descargar PDF');
 $share_telephone = $DteEmitido->getCelular();
 $share_message = '¡Hola! Soy de '.$Emisor->getNombre().'. Te adjunto el enlace al PDF de la '.$DteEmitido->getTipo()->tipo.' N° '.$DteEmitido->folio.': '.$pdf_publico;
 ?>
-    <div class="row">
+    <div class="row col-12 text-center mt-4 mb-4">
         <div class="col-md-6 mb-2">
-            <div class="btn-group w-100" role="group">
-                <a class="btn btn-info btn-lg btn-block" href="<?=$pdf_publico?>" role="button">
+            <div class="btn-group col-12" role="group">
+                <a class="btn btn-info btn-lg col-12" href="<?=$pdf_publico?>" role="button">
                     Enlace público al PDF
                 </a>
                 <button type="button" class="btn btn-info" onclick="__.copy('<?=$pdf_publico?>')" title="Copiar enlace"><i class="fa fa-copy"></i></button>
             </div>
         </div>
         <div class="col-md-6 mb-2">
-            <a class="btn btn-success btn-lg btn-block" href="#" onclick="__.share('<?=$share_telephone?>', '<?=$share_message?>'); return false" role="button">
+            <a class="btn btn-success btn-lg col-12" href="#" onclick="__.share('<?=$share_telephone?>', '<?=$share_message?>'); return false" role="button">
                 Enviar PDF por WhatsApp
             </a>
         </div>
     </div>
-<div class="card-deck mt-4">
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=132">¿Cómo personalizo el PDF?</a>
-            </h5>
+    <div class="row text-center">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                    <h5 class="card-title">
+                        <a href="https://soporte.sasco.cl/kb/faq.php?id=132">¿Cómo personalizo el PDF?</a>
+                    </h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                    <h5 class="card-title">
+                        <a href="https://soporte.sasco.cl/kb/faq.php?id=220">¿Puedo imprimir sin abrir el PDF?</a>
+                    </h5>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=220">¿Puedo imprimir sin abrir el PDF?</a>
-            </h5>
-        </div>
-    </div>
-</div>
 </div>
 <!-- FIN PDF -->
 
@@ -394,24 +398,28 @@ if ($email_enviados) {
     new \sowerphp\general\View_Helper_Table($email_enviados);
 }
 ?>
-<div class="card-deck mt-4">
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=133">¿Cómo personalizo el email?</a>
-            </h5>
+    <div class="row text-center mt-4">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                    <h5 class="card-title">
+                        <a href="https://soporte.sasco.cl/kb/faq.php?id=133">¿Cómo personalizo el email?</a>
+                    </h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                    <h5 class="card-title">
+                        <a href="https://soporte.sasco.cl/kb/faq.php?id=16">¿Por qué se demora el envío?</a>
+                    </h5>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=16">¿Por qué se demora el envío?</a>
-            </h5>
-        </div>
-    </div>
-</div>
 </div>
 <!-- FIN ENVIAR POR EMAIL -->
 
@@ -428,7 +436,7 @@ $color = [
     'R' => 'danger',
 ][$DteEmitido->receptor_evento];
 ?>
-<a href="#" onclick="__.popup('<?=$_base?>/dte/sii/dte_rcv/<?=$Emisor->rut?>-<?=$Emisor->dv?>/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>', 750, 550); return false" title="Ver datos del registro de compra/venta en el SII" class="btn btn-<?=$color?> btn-lg btn-block">
+<a href="#" onclick="__.popup('<?=$_base?>/dte/sii/dte_rcv/<?=$Emisor->rut?>-<?=$Emisor->dv?>/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>', 750, 550); return false" title="Ver datos del registro de compra/venta en el SII" class="btn btn-<?=$color?> btn-lg col-12">
     <?=($DteEmitido->receptor_evento?\sasco\LibreDTE\Sii\RegistroCompraVenta::$eventos[$DteEmitido->receptor_evento]:'Sin evento registrado')?><br/>
     <small>(ver datos en el Registro de Ventas del SII)</small>
 </a>
@@ -540,7 +548,7 @@ if ($Resultado) {
         <div class="row">
             <div class="col-sm-6 mb-2">
                 <div class="btn-group w-100" role="group">
-                    <a class="btn btn-info btn-lg btn-block<?=!empty($enlace_pagar_dte)?'':' disabled'?>" href="<?=$enlace_pagar_dte?>" role="button">
+                    <a class="btn btn-info btn-lg col-12<?=!empty($enlace_pagar_dte)?'':' disabled'?>" href="<?=$enlace_pagar_dte?>" role="button">
                         Enlace público para pagar
                     </a>
 <?php if (!empty($enlace_pagar_dte)) : ?>
@@ -549,7 +557,7 @@ if ($Resultado) {
                 </div>
             </div>
             <div class="col-sm-6 mb-2">
-                <a class="btn btn-success btn-lg btn-block" href="<?=$_base?>/dte/dte_emitidos/pagar/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
+                <a class="btn btn-success btn-lg col-12" href="<?=$_base?>/dte/dte_emitidos/pagar/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
                     Registrar pago
                 </a>
             </div>
@@ -570,7 +578,7 @@ if ($Cobro->datos) {
 ?>
         <?php if (!empty($Emisor->config_api_servicios->pagos_notificar->url)) : ?>
         <hr/>
-        <a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/pagos/cobros/notificar_pago/<?=$Cobro->codigo?>" role="button" title="Notificar pago a <?=$Emisor->config_api_servicios->pagos_notificar->url?>">
+        <a class="btn btn-primary btn-lg col-12" href="<?=$_base?>/pagos/cobros/notificar_pago/<?=$Cobro->codigo?>" role="button" title="Notificar pago a <?=$Emisor->config_api_servicios->pagos_notificar->url?>">
             Notificar pago a servicio web del emisor
         </a>
 <?php endif; ?>
@@ -671,38 +679,42 @@ if ($referencias) {
 ?>
         </div>
     </div>
-<div class="row">
-<?php if (!empty($referencia)) : ?>
-    <div class="col-md-<?=(!empty($referencia)?6:12)?> mb-2">
-        <a class="btn btn-<?=$referencia['color']?> btn-lg btn-block<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/documentos/emitir/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>/<?=$referencia['dte']?>/<?=$referencia['codigo']?>/<?=urlencode($referencia['razon'])?>" role="button">
-            <?=$referencia['titulo']?>
-        </a>
-    </div>
-<?php endif; ?>
-    <div class="col-md-<?=(!empty($referencia)?6:12)?> mb-2">
-        <a class="btn btn-primary btn-lg btn-block<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/documentos/emitir/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
-            Crear referencia
-        </a>
-    </div>
-</div>
-<div class="card-deck mt-4">
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=55">¿Cómo anulo un documento?</a>
-            </h5>
+    <div class="row text-center">
+        <?php if (!empty($referencia)) : ?>
+            <div class="col-md-<?=(!empty($referencia)?6:12)?> mb-2">
+                <a class="btn btn-<?=$referencia['color']?> btn-lg col-12<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/documentos/emitir/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>/<?=$referencia['dte']?>/<?=$referencia['codigo']?>/<?=urlencode($referencia['razon'])?>" role="button">
+                    <?=$referencia['titulo']?>
+                </a>
+            </div>
+        <?php endif; ?>
+        <div class="col-md-<?=(!empty($referencia)?6:12)?> mb-2">
+            <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/documentos/emitir/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
+                Crear referencia
+            </a>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=106">¿Cómo realizo una devolución?</a>
-            </h5>
+    <div class="row text-center mt-4">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                    <h5 class="card-title">
+                        <a href="https://soporte.sasco.cl/kb/faq.php?id=55">¿Cómo anulo un documento?</a>
+                    </h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                    <h5 class="card-title">
+                        <a href="https://soporte.sasco.cl/kb/faq.php?id=106">¿Cómo realizo una devolución?</a>
+                    </h5>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 </div>
 <!-- FIN REFERENCIAS -->
 
@@ -729,7 +741,7 @@ $Cesionario = (new \website\Dte\Model_Contribuyentes())->get($DteEmitido->getDat
         <div class="card mb-4">
             <div class="card-body"><?=$DteEmitido->getDatosCesion()['Cedente']['DeclaracionJurada']?></div>
         </div>
-        <a class="btn btn-primary btn-lg btn-block mb-4" href="<?=$_base?>/dte/dte_emitidos/cesion_xml/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
+        <a class="btn btn-primary btn-lg col-12 mb-4" href="<?=$_base?>/dte/dte_emitidos/cesion_xml/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
             <span class="far fa-file-code"></span>
             Descargar Archivo Electrónico de Cesión (AEC)
         </a>
@@ -768,11 +780,11 @@ $f->setStyle('horizontal');
                 <a href="http://www.sii.cl/preguntas_frecuentes/catastro/001_012_6407.htm" target="_blank">¿Cómo puedo anular una cesión?</a>
             </div>
         </div>
-        <!--<a class="btn btn-primary btn-sm btn-block mb-4" href="<?=$_base?>/dte/dte_emitidos/receder/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
+        <!--<a class="btn btn-primary btn-sm col-12 mb-4" href="<?=$_base?>/dte/dte_emitidos/receder/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
             Receder DTE
         </a>-->
 <?php if ($Emisor->usuarioAutorizado($_Auth->User, 'admin')) : ?>
-        <a class="btn btn-danger btn-sm btn-block" href="<?=$_base?>/dte/dte_emitidos/cesion_eliminar/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button" onclick="return Form.confirm(this, '¿Está seguro de eliminar la cesión de LibreDTE?\nSi continúa ¡perderá el archivo AEC!')">
+        <a class="btn btn-danger btn-sm col-12" href="<?=$_base?>/dte/dte_emitidos/cesion_eliminar/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button" onclick="return Form.confirm(this, '¿Está seguro de eliminar la cesión de LibreDTE?\nSi continúa ¡perderá el archivo AEC!')">
             Eliminar cesión
         </a>
 <?php endif; ?>
@@ -852,25 +864,29 @@ echo $f->input([
 </div>
 <?php endif; ?>
 <?php if (!$DteEmitido->cesion_track_id) : ?>
-    <!--<a class="btn btn-primary btn-sm btn-block mt-4" href="<?=$_base?>/dte/dte_emitidos/receder/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
+    <!--<a class="btn btn-primary btn-sm col-12 mt-4" href="<?=$_base?>/dte/dte_emitidos/receder/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
         ¿Desea receder este DTE?
     </a>-->
 <?php endif; ?>
-<div class="card-deck mt-4">
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=178">¿Cómo cedo un documento?</a>
-            </h5>
+<div class="row text-center mt-4">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=178">¿Cómo cedo un documento?</a>
+                </h5>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=245">¿Puedo revisar mis cesiones?</a>
-            </h5>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=245">¿Puedo revisar mis cesiones?</a>
+                </h5>
+            </div>
         </div>
     </div>
 </div>
@@ -1048,15 +1064,15 @@ echo $f->end('Modificar sucursal');
             </tbody>
         </table>
 <?php if (!empty($DteEmitido->extra)): ?>
-        <pre class="text-monospace mt-4 ml-2 mr-2 bg-light border border-secondary rounded p-4"><?=json_encode($DteEmitido->getExtra(), JSON_PRETTY_PRINT)?></pre>
+        <pre class="font-monospace mt-4 ms-2 me-2 bg-light border border-secondary rounded p-4"><?=json_encode($DteEmitido->getExtra(), JSON_PRETTY_PRINT)?></pre>
 <?php endif; ?>
     </div>
 </div>
 <?php if ($DteEmitido->eliminable()) : ?>
-    <a class="btn btn-danger btn-block mb-4" href="<?=$_base?>/dte/dte_emitidos/eliminar/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" title="Eliminar documento" onclick="return Form.confirm(this, '¿Confirmar la eliminación del DTE?')">Eliminar documento</a>
+    <a class="btn btn-danger col-12 mb-4" href="<?=$_base?>/dte/dte_emitidos/eliminar/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" title="Eliminar documento" onclick="return Form.confirm(this, '¿Confirmar la eliminación del DTE?')">Eliminar documento</a>
 <?php endif; ?>
 <?php if ($DteEmitido->eliminableXML()) : ?>
-    <a class="btn btn-danger btn-block mb-4" href="<?=$_base?>/dte/dte_emitidos/eliminar_xml/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" title="Eliminar XML del documento" onclick="return Form.confirm(this, '¿Confirmar la eliminación del XML del DTE?')">Eliminar XML del documento</a>
+    <a class="btn btn-danger col-12 mb-4" href="<?=$_base?>/dte/dte_emitidos/eliminar_xml/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" title="Eliminar XML del documento" onclick="return Form.confirm(this, '¿Confirmar la eliminación del XML del DTE?')">Eliminar XML del documento</a>
 <?php endif; ?>
 </div>
 <!-- FIN AVANZADO -->

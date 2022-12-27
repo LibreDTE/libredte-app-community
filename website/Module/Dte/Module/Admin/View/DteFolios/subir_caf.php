@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="https://<?=$servidor_sii?>.sii.cl/cvc_cgi/dte/of_solicita_folios" title="Solicitar un nuevo archivo CAF en el SII" class="nav-link" target="_blank">
             <i class="fas fa-university"></i> Nuevo timbraje en SII
@@ -45,21 +45,25 @@ echo $f->end('Subir archivo CAF');
 <?php if (!$Emisor->config_sii_timbraje_automatico) : ?>
         <div class="alert alert-warning text-center">¿Has considerado activar el timbraje automático? ¡Revisa la configuración de la empresa!</div>
 <?php endif; ?>
-<div class="card-deck mt-4">
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=10">¿Cómo solicito folios?</a>
-            </h5>
+<div class="row text-center mt-4">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=10">¿Cómo solicito folios?</a>
+                </h5>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=83">¿Cómo reobtener folios?</a>
-            </h5>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=83">¿Cómo reobtener folios?</a>
+                </h5>
+            </div>
         </div>
     </div>
 </div>

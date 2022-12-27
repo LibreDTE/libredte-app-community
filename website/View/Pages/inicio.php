@@ -13,40 +13,46 @@
     <img src="https://facturacionlibre.cl/assets/img/inicio/libredte-dashboard.png" alt="Dashboard de LibreDTE" class="img-fluid" style="max-height:300px" />
 </div>
 
-<div class="card-deck">
-    <div class="card mb-4">
-        <div class="card-body">
-            <div class="text-center mb-4">
-                <i class="fas fa-balance-scale fa-fw fa-5x text-warning"></i>
+<div class="row row-cols-3 g-3">
+    <div class="col">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <i class="fas fa-balance-scale fa-fw fa-5x text-warning"></i>
+                </div>
+                <h2 class="text-center mb-4">Aspectos Legales</h2>
+                <hr/>
+                <p class="text-center text-dark">Revisa los <a href="https://libredte.cl/legal" target="_blank">Términos y Condiciones</a> de uso que te permiten usar LibreDTE.</p>
             </div>
-            <h2 class="text-center mb-4">Aspectos Legales</h2>
-            <hr/>
-            <p class="text-center text-dark">Revisa los <a href="https://libredte.cl/legal" target="_blank">Términos y Condiciones</a> de uso que te permiten usar LibreDTE.</p>
         </div>
     </div>
-    <div class="card mb-4">
-        <div class="card-body">
-            <div class="text-center mb-4">
-                <i class="fas fa-unlock fa-fw fa-5x text-warning"></i>
+    <div class="col">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <i class="fas fa-unlock fa-fw fa-5x text-warning"></i>
+                </div>
+                <h2 class="text-center mb-4">Funcionalidades Extras</h2>
+                <hr/>
+                <p class="text-center text-dark">Desbloquea las <a href="https://apigateway.cl/#extras" target="_blank">Funcionalidades Extras</a> de LibreDTE y obtén más características.</p>
             </div>
-            <h2 class="text-center mb-4">Funcionalidades Extras</h2>
-            <hr/>
-            <p class="text-center text-dark">Desbloquea las <a href="https://apigateway.cl/#extras" target="_blank">Funcionalidades Extras</a> de LibreDTE y obtén más características.</p>
         </div>
     </div>
-    <div class="card mb-4">
-        <div class="card-body">
-            <div class="text-center mb-4">
-                <i class="fas fa-question-circle fa-fw fa-5x text-warning"></i>
+    <div class="col">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <i class="fas fa-question-circle fa-fw fa-5x text-warning"></i>
+                </div>
+                <h2 class="text-center mb-4">Soporte</h2>
+                <hr/>
+                <p class="text-center text-dark">Revisa las <a href="https://libredte.cl/faq" target="_blank">Preguntas y Respuestas Frecuentes</a> con las consultas más comunes.</p>
             </div>
-            <h2 class="text-center mb-4">Soporte</h2>
-            <hr/>
-            <p class="text-center text-dark">Revisa las <a href="https://libredte.cl/faq" target="_blank">Preguntas y Respuestas Frecuentes</a> con las consultas más comunes.</p>
         </div>
     </div>
 </div>
 
-<div class="jumbotron mb-4 lead text-center">
+<div class="mb-4 lead text-center">
     <p>Esta aplicación web usa la <a href="https://github.com/LibreDTE/libredte-webapp" target="_blank">Versión Comunidad de LibreDTE</a> sobre el framework <a href="https://sowerphp.org" target="_blank">SowerPHP</a>.</p>
 </div>
 
@@ -56,30 +62,40 @@
 
 <div class="text-center display-4 mb-4">Sígue a LibreDTE en sus redes sociales</div>
 
-<div class="card-deck lead text-center text-primary">
-    <div class="card mb-4">
-        <div class="card-body">
-            <i class="fab fa-wordpress fa-fw"></i> <a href="https://blog.libredte.cl">Blog</a>
+<div class="row row-cols-5 g-3 lead text-center text-primary">
+    <div class="col">
+        <div class="card mb-4">
+            <div class="card-body">
+                <i class="fab fa-wordpress fa-fw"></i> <a href="https://blog.libredte.cl">Blog</a>
+            </div>
         </div>
     </div>
-    <div class="card mb-4">
-        <div class="card-body">
-            <i class="fab fa-instagram fa-fw"></i> <a href="https://instagram.com/libredte">Instagram</a>
+    <div class="col">
+        <div class="card mb-4">
+            <div class="card-body">
+                <i class="fab fa-instagram fa-fw"></i> <a href="https://instagram.com/libredte">Instagram</a>
+            </div>
         </div>
     </div>
-    <div class="card mb-4">
-        <div class="card-body">
-            <i class="fab fa-facebook fa-fw"></i> <a href="https://www.facebook.com/LibreDTE">Facebook</a>
+    <div class="col">
+        <div class="card mb-4">
+            <div class="card-body">
+                <i class="fab fa-facebook fa-fw"></i> <a href="https://www.facebook.com/LibreDTE">Facebook</a>
+            </div>
         </div>
     </div>
-    <div class="card mb-4">
-        <div class="card-body">
-            <i class="fab fa-youtube fa-fw"></i> <a href="https://www.youtube.com/libredtecl">YouTube</a>
+    <div class="col">
+        <div class="card mb-4">
+            <div class="card-body">
+                <i class="fab fa-youtube fa-fw"></i> <a href="https://www.youtube.com/libredtecl">YouTube</a>
+            </div>
         </div>
     </div>
-    <div class="card mb-4">
-        <div class="card-body">
-            <i class="fab fa-youtube fa-fw"></i> <a href="https://twitter.com/libredte">Twitter</a>
+    <div class="col">
+        <div class="card mb-4">
+            <div class="card-body">
+                <i class="fab fa-youtube fa-fw"></i> <a href="https://twitter.com/libredte">Twitter</a>
+            </div>
         </div>
     </div>
 </div>

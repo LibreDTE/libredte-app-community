@@ -1,9 +1,9 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-search"></i> Buscar cesiones
         </a>
-        <div class="dropdown-menu dropdown-menu-right">
+        <div class="dropdown-menu dropdown-menu-end">
             <a href="<?=$_base?>/dte/cesiones/buscar/deudor" class="dropdown-item">Documentos adeudados</a>
             <a href="<?=$_base?>/dte/cesiones/buscar/cedente" class="dropdown-item">Documentos cedidos</a>
             <a href="<?=$_base?>/dte/cesiones/buscar/cesionario" class="dropdown-item">Documentos adquiridos</a>

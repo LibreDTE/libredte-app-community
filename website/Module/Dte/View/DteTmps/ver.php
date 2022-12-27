@@ -1,7 +1,7 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
 <?php if ($Emisor->config_pdf_imprimir and $DteTmp->getTipo()->permiteCotizacion()) : ?>
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-print"></i>
             Imprimir
         </a>
@@ -69,15 +69,15 @@ $(function() {
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-toggle="tab" id="datos-tab" class="nav-link active" aria-selected="true">Datos básicos</a></li>
-        <li class="nav-item"><a href="#pdf" aria-controls="pdf" role="tab" data-toggle="tab" id="pdf-tab" class="nav-link">PDF</a></li>
-        <li class="nav-item"><a href="#email" aria-controls="email" role="tab" data-toggle="tab" id="email-tab" class="nav-link">Enviar por email</a></li>
+        <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-bs-toggle="tab" id="datos-tab" class="nav-link active" aria-selected="true">Datos básicos</a></li>
+        <li class="nav-item"><a href="#pdf" aria-controls="pdf" role="tab" data-bs-toggle="tab" id="pdf-tab" class="nav-link">PDF</a></li>
+        <li class="nav-item"><a href="#email" aria-controls="email" role="tab" data-bs-toggle="tab" id="email-tab" class="nav-link">Enviar por email</a></li>
 <?php if ($DteTmp->getTipo()->permiteCobro()): ?>
-        <li class="nav-item"><a href="#pagos" aria-controls="pagos" role="tab" data-toggle="tab" id="pagos-tab" class="nav-link">Pagos</a></li>
+        <li class="nav-item"><a href="#pagos" aria-controls="pagos" role="tab" data-bs-toggle="tab" id="pagos-tab" class="nav-link">Pagos</a></li>
 <?php endif; ?>
-        <li class="nav-item"><a href="#actualizar_fecha" aria-controls="actualizar_fecha" role="tab" data-toggle="tab" id="actualizar_fecha-tab" class="nav-link">Actualizar fecha</a></li>
+        <li class="nav-item"><a href="#actualizar_fecha" aria-controls="actualizar_fecha" role="tab" data-bs-toggle="tab" id="actualizar_fecha-tab" class="nav-link">Actualizar fecha</a></li>
 <?php if ($Emisor->usuarioAutorizado($_Auth->User, 'admin')): ?>
-        <li class="nav-item"><a href="#avanzado" aria-controls="avanzado" role="tab" data-toggle="tab" id="avanzado-tab" class="nav-link">Avanzado</a ></li>
+        <li class="nav-item"><a href="#avanzado" aria-controls="avanzado" role="tab" data-bs-toggle="tab" id="avanzado-tab" class="nav-link">Avanzado</a ></li>
 <?php endif; ?>
     </ul>
     <div class="tab-content pt-4">
@@ -101,25 +101,25 @@ echo $t->generate([
 ?>
     <div class="row">
         <div class="col-md-3 mb-2">
-            <a class="btn btn-primary btn-lg btn-block<?=!$DteTmp->getTipo()->permiteCotizacion()?' disabled':''?>" href="<?=$_base?>/dte/dte_tmps/cotizacion/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
+            <a class="btn btn-primary btn-lg col-12<?=!$DteTmp->getTipo()->permiteCotizacion()?' disabled':''?>" href="<?=$_base?>/dte/dte_tmps/cotizacion/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
                 <i class="far fa-file"></i>
                 Cotización
             </a>
         </div>
         <div class="col-md-3 mb-2">
-            <a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/dte/dte_tmps/pdf/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
+            <a class="btn btn-primary btn-lg col-12" href="<?=$_base?>/dte/dte_tmps/pdf/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
                 <i class="far fa-file-pdf"></i>
                 Previsualización
             </a>
         </div>
         <div class="col-md-3 mb-2">
-            <a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/dte/dte_tmps/xml/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
+            <a class="btn btn-primary btn-lg col-12" href="<?=$_base?>/dte/dte_tmps/xml/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
                 <i class="far fa-file-code"></i>
                 XML sin firmar
             </a>
         </div>
         <div class="col-md-3 mb-2">
-            <a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/dte/dte_tmps/json/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
+            <a class="btn btn-primary btn-lg col-12" href="<?=$_base?>/dte/dte_tmps/json/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
                 <i class="far fa-file-code"></i>
                 Archivo JSON
             </a>
@@ -128,10 +128,10 @@ echo $t->generate([
     <br/>
     <div class="row">
         <div class="col-md-6 mb-2">
-            <a class="btn btn-danger btn-lg btn-block" href="<?=$_base?>/dte/dte_tmps/eliminar/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" title="Eliminar documento" onclick="return Form.confirm(this, 'Confirmar la eliminación del documento temporal')">Eliminar documento</a>
+            <a class="btn btn-danger btn-lg col-12" href="<?=$_base?>/dte/dte_tmps/eliminar/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" title="Eliminar documento" onclick="return Form.confirm(this, 'Confirmar la eliminación del documento temporal')">Eliminar documento</a>
         </div>
         <div class="col-md-6 mb-2">
-            <a class="btn btn-success btn-lg btn-block" href="<?=$_base?>/dte/documentos/generar/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button" onclick="return Form.confirm(this, 'Confirmar la generación del DTE real', 'Generando el DTE...')">Generar DTE</a>
+            <a class="btn btn-success btn-lg col-12" href="<?=$_base?>/dte/documentos/generar/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button" onclick="return Form.confirm(this, 'Confirmar la generación del DTE real', 'Generando el DTE...')">Generar DTE</a>
         </div>
     </div>
 </div>
@@ -191,34 +191,38 @@ $share_message = '¡Hola! Soy de '.$Emisor->getNombre().'. Te adjunto el enlace 
     <div class="row">
         <div class="col-md-6 mb-2">
             <div class="btn-group w-100" role="group">
-                <a class="btn btn-info btn-lg btn-block" href="<?=$links['pdf']?>" role="button">
+                <a class="btn btn-info btn-lg col-12" href="<?=$links['pdf']?>" role="button">
                     Enlace público a la cotización
                 </a>
                 <button type="button" class="btn btn-info" onclick="__.copy('<?=$links['pdf']?>')" title="Copiar enlace"><i class="fa fa-copy"></i></button>
             </div>
         </div>
         <div class="col-md-6 mb-2">
-            <a class="btn btn-success btn-lg btn-block" href="#" onclick="__.share('<?=$share_telephone?>', '<?=$share_message?>'); return false" role="button">
+            <a class="btn btn-success btn-lg col-12" href="#" onclick="__.share('<?=$share_telephone?>', '<?=$share_message?>'); return false" role="button">
                 Enviar PDF por WhatsApp
             </a>
         </div>
     </div>
 <?php endif; ?>
-<div class="card-deck mt-4">
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=132">¿Cómo personalizo el PDF?</a>
-            </h5>
+<div class="row row-cols-2 g-3 mt-4">
+    <div class="col">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=132">¿Cómo personalizo el PDF?</a>
+                </h5>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=220">¿Puedo imprimir sin abrir el PDF?</a>
-            </h5>
+    <div class="col">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=220">¿Puedo imprimir sin abrir el PDF?</a>
+                </h5>
+            </div>
         </div>
     </div>
 </div>
@@ -310,7 +314,7 @@ if ($email_enviados) {
     new \sowerphp\general\View_Helper_Table($email_enviados);
 }
 ?>
-<div class="card-deck mt-4">
+<div class="mt-4">
     <div class="card">
         <div class="card-body text-center">
             <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
@@ -335,7 +339,7 @@ if ($email_enviados) {
         <div class="row">
             <div class="col-sm-6 mb-2">
                 <div class="btn-group w-100" role="group">
-                    <a class="btn btn-info btn-lg btn-block<?=!empty($links['pagar'])?'':' disabled'?>" href="<?=!empty($links['pagar'])?$links['pagar']:''?>" role="button">
+                    <a class="btn btn-info btn-lg col-12<?=!empty($links['pagar'])?'':' disabled'?>" href="<?=!empty($links['pagar'])?$links['pagar']:''?>" role="button">
                         Enlace público para pagar
                     </a>
 <?php if (!empty($links['pagar'])) : ?>
@@ -344,7 +348,7 @@ if ($email_enviados) {
                 </div>
             </div>
             <div class="col-sm-6 mb-2">
-                <a class="btn btn-success btn-lg btn-block" href="<?=$_base?>/dte/dte_tmps/pagar/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
+                <a class="btn btn-success btn-lg col-12" href="<?=$_base?>/dte/dte_tmps/pagar/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
                     Registrar pago
                 </a>
             </div>
@@ -419,7 +423,7 @@ echo $f->input([
     'value' => $DteTmp->extra ? json_encode($DteTmp->getExtra(), JSON_PRETTY_PRINT) : null,
     'rows' => 10,
 ]);
-echo '<button type="submit" class="btn btn-primary btn-block mt-4">Guardar JSON</button>';
+echo '<button type="submit" class="btn btn-primary col-12 mt-4">Guardar JSON</button>';
 echo $f->end(false);
 ?>
     </div>

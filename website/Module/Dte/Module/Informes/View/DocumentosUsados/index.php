@@ -14,38 +14,48 @@ foreach ($documentos as &$d) {
         }
     }
 }
-$popover_emitidos = '<i class="fa fa-question-circle fa-fw text-muted" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="Todos los documentos emitidos, menos las boletas." onmouseover="$(this).popover(\'show\')" onmouseout="$(this).popover(\'hide\')"></i>';
-$popover_intercambios = '<i class="fa fa-question-circle fa-fw text-muted" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="No se incluyen los intercambios." onmouseover="$(this).popover(\'show\')" onmouseout="$(this).popover(\'hide\')"></i>';
+$popover_emitidos = '<i class="fa fa-question-circle fa-fw text-muted" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="Todos los documentos emitidos, menos las boletas." onmouseover="$(this).popover(\'show\')" onmouseout="$(this).popover(\'hide\')"></i>';
+$popover_intercambios = '<i class="fa fa-question-circle fa-fw text-muted" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="No se incluyen los intercambios." onmouseover="$(this).popover(\'show\')" onmouseout="$(this).popover(\'hide\')"></i>';
 ?>
-<div class="card-deck">
-    <div class="card mb-4">
-        <div class="card-body text-center">
-            <span class="text-info lead"><?=num($emitidos)?></span><br/>
-            <small>emitidos <?=$popover_emitidos?></small>
+<div class="row row-cols-5 g-3 text-center mb-4 mt-2">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <span class="text-info lead"><?=num($emitidos)?></span><br/>
+                    <small>emitidos <?=$popover_emitidos?></small>
+            </div>
         </div>
     </div>
-    <div class="card mb-4">
-        <div class="card-body text-center">
-            <span class="text-info lead"><?=num($boletas)?></span><br/>
-            <small>boletas</small>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <span class="text-info lead"><?=num($boletas)?></span><br/>
+                <small>boletas</small>
+            </div>
         </div>
     </div>
-    <div class="card mb-4">
-        <div class="card-body text-center">
-            <span class="text-info lead"><?=num($recibidos)?></span><br/>
-            <small>recibidos</small>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <span class="text-info lead"><?=num($recibidos)?></span><br/>
+                <small>recibidos</small>
+            </div>
         </div>
     </div>
-    <div class="card mb-4">
-        <div class="card-body text-center">
-            <span class="text-info lead"><?=num($intercambios)?></span><br/>
-            <small>intercambios</small>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <span class="text-info lead"><?=num($intercambios)?></span><br/>
+                <small>intercambios</small>
+            </div>
         </div>
     </div>
-    <div class="card mb-4">
-        <div class="card-body text-center">
-            <span class="text-info lead"><?=num($total)?></span><br/>
-            <small>total</small>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <span class="text-info lead"><?=num($total)?></span><br/>
+                <small>total</small>
+            </div>
         </div>
     </div>
 </div>

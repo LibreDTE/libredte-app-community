@@ -24,10 +24,10 @@ echo $f->end('Generar informe de documentos recibidos');
     <div class="col-sm-6">
         <div class="card mb-4">
             <div class="card-header">
-                <i class="far fa-chart-bar fa-fw"></i> Recibidos por día
+                <i class="far fa-chart-bar fa-fw"></i> Recibidos por día asdasd
             </div>
             <div class="card-body">
-                <div id="grafico-por_dia"></div>
+                <canvas id="por_dia_grafico"></canvas>
             </div>
         </div>
     </div>
@@ -37,7 +37,7 @@ echo $f->end('Generar informe de documentos recibidos');
                 <i class="far fa-chart-bar fa-fw"></i> Recibidos por sucursal
             </div>
             <div class="card-body">
-                <div id="grafico-por_sucursal"></div>
+                <canvas id="por_sucursal_grafico"></canvas>
             </div>
         </div>
     </div>
@@ -47,7 +47,7 @@ echo $f->end('Generar informe de documentos recibidos');
                 <i class="far fa-chart-bar fa-fw"></i> Recibidos por usuario
             </div>
             <div class="card-body">
-                <div id="grafico-por_usuario"></div>
+                <canvas id="por_usuario_grafico"></canvas>
             </div>
         </div>
     </div>
@@ -57,46 +57,135 @@ echo $f->end('Generar informe de documentos recibidos');
                 <i class="far fa-chart-bar fa-fw"></i> Recibidos por tipo de documento
             </div>
             <div class="card-body">
-                <div id="grafico-por_tipo"></div>
+                <canvas id="por_tipo_grafico"></canvas>
             </div>
         </div>
     </div>
 </div>
-<a class="btn btn-primary btn-lg btn-block" href="dte_recibidos/csv/<?=$desde?>/<?=$hasta?>" role="button">Descargar detalle de documentos recibidos en CSV</a>
+<a class="btn btn-primary btn-lg col-12" href="dte_recibidos/csv/<?=$desde?>/<?=$hasta?>" role="button">Descargar detalle de documentos recibidos en CSV</a>
 <script>
-Morris.Line({
-    element: 'grafico-por_dia',
-    data: <?=json_encode($por_dia)?>,
-    xkey: 'dia',
-    ykeys: ['total'],
-    labels: ['Documentos'],
-    xLabels: 'day',
-    resize: true,
-    xLabelAngle: 45
-});
-Morris.Bar({
-    element: 'grafico-por_sucursal',
-    data: <?=json_encode($por_sucursal)?>,
-    xkey: 'sucursal',
-    ykeys: ['total'],
-    labels: ['Documentos'],
-    resize: true
-});
-Morris.Bar({
-    element: 'grafico-por_usuario',
-    data: <?=json_encode($por_usuario)?>,
-    xkey: 'usuario',
-    ykeys: ['total'],
-    labels: ['Documentos'],
-    resize: true
-});
-Morris.Bar({
-    element: 'grafico-por_tipo',
-    data: <?=json_encode($por_tipo)?>,
-    xkey: 'tipo',
-    ykeys: ['total'],
-    labels: ['Documentos'],
-    resize: true
-});
+const getDataColors = opacity => {
+    const colors = ['#1984c5', '#22a7f0', '#63bff0', '#a7d5ed', '#bcbcbc', '#e1a692', '#de6e56', '#e14b31', '#c23728']
+    return colors.map(color => opacity ? `${color + opacity}` : color)
+}
+
+const printCharts = () => {
+    recibidoDiaChart(<?=json_encode($por_dia)?>)
+    recibidosSucursalChart(<?=json_encode($por_sucursal)?>)
+    recibidosUsuarioChart(<?=json_encode($por_usuario)?>)
+    recibidosTipoDocumentoChart(<?=json_encode($por_tipo)?>)
+}
+
+const recibidoDiaChart = recibidos_dias => {
+
+    const data = {
+
+        labels: recibidos_dias.map(recibido_dias => recibido_dias.dia),
+        datasets: [
+            {
+                label: 'Documentos',
+                data: recibidos_dias.map(recibido_dias => recibido_dias.total),
+                tension: .5,
+                borderColor: getDataColors()[1],
+                backgroundColor: getDataColors(20)[1],
+                fill: true,
+                pointBorderWidth: 5
+            }
+        ]
+    }
+
+    const options = {
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
+        plugins: {
+        legend: { display: false }
+        }
+
+    }
+    new Chart('por_dia_grafico', { type: 'line', data, options})
+}
+
+const recibidosSucursalChart = recibidos_sucursal => {
+
+    const data = {
+        labels: recibidos_sucursal.map(recibido_sucursal => recibido_sucursal.sucursal),
+        datasets: [{
+            label: 'Documentos',
+            data: recibidos_sucursal.map(recibido_sucursal => recibido_sucursal.total),
+            borderColor: getDataColors()[3],
+            backgroundColor: getDataColors(70)[3],
+        }]
+    }
+
+    const options = {
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+        }
+    }
+
+    new Chart('por_sucursal_grafico', { type: 'bar', data, options})
+}
+
+const recibidosUsuarioChart = recibidos_usuario => {
+
+    const data = {
+        labels: recibidos_usuario.map(recibido_usuario => recibido_usuario.usuario),
+        datasets: [{
+            label: 'Documentos',
+            data: recibidos_usuario.map(recibido_usuario => recibido_usuario.total),
+            borderColor: getDataColors()[4],
+            backgroundColor: getDataColors(70)[4],
+        }]
+    }
+
+    const options = {
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+        }
+    }
+
+    new Chart('por_usuario_grafico', { type: 'bar', data, options})
+}
+
+const recibidosTipoDocumentoChart = tipos_documento => {
+
+    const data = {
+        labels: tipos_documento.map(tipo_documento => tipo_documento.tipo),
+        datasets: [{
+            label: 'Documentos',
+            data: tipos_documento.map(tipo_documento => tipo_documento.total),
+            borderColor: getDataColors()[5],
+            backgroundColor: getDataColors(70)[5],
+        }]
+    }
+
+    const options = {
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+        }
+    }
+
+    new Chart('por_tipo_grafico', { type: 'bar', data, options})
+}
+
+printCharts()
+
 </script>
 <?php endif; ?>

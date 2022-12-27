@@ -9,7 +9,7 @@ foreach ($empresas as &$e) {
         $acciones .= ' <a href="usuarios/'.$e['rut'].'" title="Mantenedor usuarios autorizados a operar con la empresa '.$e['razon_social'].'" class="btn btn-primary"><i class="fa fa-users fa-fw"></i></a> ';
     }
     $acciones .= '<a href="seleccionar/'.$e['rut'].'" title="Operar con la empresa '.$e['razon_social'].'" class="btn btn-primary"><i class="fa fa-check fa-fw"></i></a>';
-    $e[] = '<div class="text-right">'.$acciones.'</div>';
+    $e[] = '<div class="text-end">'.$acciones.'</div>';
     // modificar columnas
     $e['rut'] = num($e['rut']).'-'.$e['dv'];
     $e['certificacion'] = $e['certificacion'] ? 'Certificación' : 'Producción';
@@ -22,7 +22,7 @@ $t->setColsWidth([null, null, null, null, null, 190]);
 echo $t->generate($empresas);
 if ($registrar_empresa) :
 ?>
-<a class="btn btn-primary btn-lg btn-block" href="registrar" role="button">Registrar una nueva empresa y ser el administrador de la misma</a>
+<a class="btn btn-primary btn-lg col-12" href="registrar" role="button">Registrar una nueva empresa y ser el administrador de la misma</a>
 <?php
 endif;
 if ($soporte) :

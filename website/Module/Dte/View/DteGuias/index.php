@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_guias/facturar" title="Facturar masivamente guías de despacho" class="nav-link">
             <i class="fa fa-hand-holding-usd"></i>
@@ -16,4 +16,4 @@ foreach ($periodos as &$p) {
 array_unshift($periodos, ['Período', 'Emitidas', 'Registradas', 'Track ID', 'Estado', 'Acciones']);
 new \sowerphp\general\View_Helper_Table($periodos);
 ?>
-<a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/dte/dte_guias/sin_movimientos" role="button">Enviar libro de guías sin movimientos</a>
+<a class="btn btn-primary btn-lg col-12" href="<?=$_base?>/dte/dte_guias/sin_movimientos" role="button">Enviar libro de guías sin movimientos</a>

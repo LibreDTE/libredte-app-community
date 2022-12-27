@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="dte_folios/agregar" class="nav-link">
             <i class="fa fa-edit"></i> Crear
@@ -43,29 +43,35 @@ foreach ($folios as &$f) {
 array_unshift($folios, ['Código', 'Documento', 'Siguiente folio', 'Total disponibles', 'Alerta', 'Vencimiento', 'Acciones']);
 new \sowerphp\general\View_Helper_Table($folios);
 ?>
-<div class="card-deck mt-4">
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=10">¿Cómo solicito folios?</a>
-            </h5>
+<div class="row text-center mt-4">
+    <div class="col-4">
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=10">¿Cómo solicito folios?</a>
+                </h5>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=3">¿Qué es CAF vencido?</a>
-            </h5>
+    <div class="col-4">
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=3">¿Qué es CAF vencido?</a>
+                </h5>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=179">¿Cómo anulo folios?</a>
-            </h5>
+    <div class="col-4">
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=179">¿Cómo anulo folios?</a>
+                </h5>
+            </div>
         </div>
     </div>
 </div>

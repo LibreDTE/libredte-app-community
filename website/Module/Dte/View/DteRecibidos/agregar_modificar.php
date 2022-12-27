@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
 <?php if (isset($DteRecibido)) : ?>
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_recibidos/ver/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" title="Volver al documento recibido" class="nav-link">

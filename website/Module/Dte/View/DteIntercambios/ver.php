@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_intercambios/ver/<?=($DteIntercambio->codigo-1)?>" title="Ver intercambio N° <?=($DteIntercambio->codigo-1)?>" class="nav-link <?=$DteIntercambio->codigo==1?'disabled':''?>">
             <i class="fa fa-arrow-left"></i>
@@ -55,9 +55,9 @@ function intercambio_reclamar() {
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a href="#email" aria-controls="email" role="tab" data-toggle="tab" id="email-tab" class="nav-link active" aria-selected="true">Email recibido y PDF</a></li>
-        <li class="nav-item"><a href="#documentos" aria-controls="documentos" role="tab" data-toggle="tab" id="documentos-tab" class="nav-link">Recepción y acuse de recibo</a></li>
-        <li class="nav-item"><a href="#avanzado" aria-controls="avanzado" role="tab" data-toggle="tab" id="avanzado-tab" class="nav-link">Avanzado</a></li>
+        <li class="nav-item"><a href="#email" aria-controls="email" role="tab" data-bs-toggle="tab" id="email-tab" class="nav-link active" aria-selected="true">Email recibido y PDF</a></li>
+        <li class="nav-item"><a href="#documentos" aria-controls="documentos" role="tab" data-bs-toggle="tab" id="documentos-tab" class="nav-link">Recepción y acuse de recibo</a></li>
+        <li class="nav-item"><a href="#avanzado" aria-controls="avanzado" role="tab" data-bs-toggle="tab" id="avanzado-tab" class="nav-link">Avanzado</a></li>
     </ul>
     <div class="tab-content pt-4">
 
@@ -88,7 +88,7 @@ new \sowerphp\general\View_Helper_Table([
 </div>
 
 <?php if ($email_html) : ?>
-        <a class="btn btn-primary btn-lg btn-block mb-4" href="javascript:__.popup('<?=$_base?>/dte/dte_intercambios/html/<?=$DteIntercambio->codigo?>', 800, 600)" role="button">
+        <a class="btn btn-primary btn-lg col-12 mb-4" href="javascript:__.popup('<?=$_base?>/dte/dte_intercambios/html/<?=$DteIntercambio->codigo?>', 800, 600)" role="button">
             <i class="fab fa-html5"></i>
             Ver mensaje del correo electrónico enviado por el emisor
         </a>
@@ -96,13 +96,13 @@ new \sowerphp\general\View_Helper_Table([
 
 <div class="row">
     <div class="col-md-4 mb-2">
-        <div class="btn-group btn-block">
-            <a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/dte/dte_intercambios/pdf/<?=$DteIntercambio->codigo?>" role="button">
+        <div class="btn-group col-12">
+            <a class="btn btn-primary btn-lg col-12" href="<?=$_base?>/dte/dte_intercambios/pdf/<?=$DteIntercambio->codigo?>" role="button">
                 <i class="far fa-file-pdf"></i>
                 Descargar PDF
             </a>
-            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
-            <div class="dropdown-menu dropdown-menu-right">
+            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="visually-hidden">Toggle Dropdown</span></button>
+            <div class="dropdown-menu dropdown-menu-end">
 <?php foreach(\sasco\LibreDTE\Sii\Dte\PDF\Dte::$papel as $codigo => $glosa): if ($codigo): ?>
                 <a href="<?=$_base?>/dte/dte_intercambios/pdf/<?=$DteIntercambio->codigo?>?papelContinuo=<?=$codigo?>" class="dropdown-item">Descargar PDF en <?=$glosa?></a>
 <?php endif; endforeach; ?>
@@ -110,13 +110,13 @@ new \sowerphp\general\View_Helper_Table([
         </div>
     </div>
     <div class="col-md-4 mb-2">
-        <a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/dte/dte_intercambios/xml/<?=$DteIntercambio->codigo?>" role="button">
+        <a class="btn btn-primary btn-lg col-12" href="<?=$_base?>/dte/dte_intercambios/xml/<?=$DteIntercambio->codigo?>" role="button">
             <i class="far fa-file-code"></i>
             Descargar XML
         </a>
     </div>
     <div class="col-md-4 mb-2">
-        <a class="btn btn-primary btn-lg btn-block<?=!$DteIntercambio->usuario?' disabled':''?>" href="<?=$_base?>/dte/dte_intercambios/resultados_xml/<?=$DteIntercambio->codigo?>" role="button">
+        <a class="btn btn-primary btn-lg col-12<?=!$DteIntercambio->usuario?' disabled':''?>" href="<?=$_base?>/dte/dte_intercambios/resultados_xml/<?=$DteIntercambio->codigo?>" role="button">
             <i class="far fa-file-code"></i>
             Descargar XML de resultados
         </a>
@@ -131,7 +131,7 @@ new \sowerphp\general\View_Helper_Table([
     <div class="col-md-7">
         <p>Aquí podrá generar y enviar la respuesta para los documentos que <?=$DteIntercambio->getEmisor()->razon_social?> envió a <?=$Emisor->razon_social?>.</p>
     </div>
-    <div class="col-md-5 text-right">
+    <div class="col-md-5 text-end">
         <a class="btn btn-danger btn-lg" href="#" onclick="intercambio_reclamar(); return false" role="button" title="Rechazar los documentos">
             Reclamar
         </a>
@@ -214,8 +214,8 @@ foreach ($Documentos as $Dte) {
     $acciones .= ' <a href="#" onclick="__.popup(\''.$_base.'/dte/sii/dte_rcv/'.$Dte->getEmisor().'/'.$Dte->getTipo().'/'.$Dte->getFolio().'\', 750, 550); return false" title="Ver datos del registro de compra/venta en el SII" class="btn btn-primary mb-2"><i class="fa fa-book fa-fw"></i></a>';
     $acciones .= ' <div class="btn-group mb-2">';
     $acciones .= '<a href="'.$_base.'/dte/dte_intercambios/pdf/'.$DteIntercambio->codigo.'/0/'.$Dte->getEmisor().'/'.$Dte->getTipo().'/'.$Dte->getFolio().'" title="Ver PDF del documento" class="btn btn-primary" role="button"><i class="far fa-file-pdf fa-fw"></i></a>';
-    $acciones .= '<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>';
-    $acciones .= '<div class="dropdown-menu dropdown-menu-right">';
+    $acciones .= '<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="visually-hidden">Toggle Dropdown</span></button>';
+    $acciones .= '<div class="dropdown-menu dropdown-menu-end">';
     foreach(\sasco\LibreDTE\Sii\Dte\PDF\Dte::$papel as $codigo => $glosa) {
         if ($codigo) {
             $acciones .= '<a href="'.$_base.'/dte/dte_intercambios/pdf/'.$DteIntercambio->codigo.'/0/'.$Dte->getEmisor().'/'.$Dte->getTipo().'/'.$Dte->getFolio().'?papelContinuo='.$codigo.'" class="dropdown-item">Descargar PDF en '.$glosa.'</a>';
@@ -325,7 +325,7 @@ echo $f->end(false);
     </div>
 </div>
 <?php endif; ?>
-<a class="btn btn-danger btn-lg btn-block" href="<?=$_base?>/dte/dte_intercambios/eliminar/<?=$DteIntercambio->codigo?>" role="button" title="Eliminar intercambio" onclick="return Form.confirm(this, '¿Confirmar la eliminación del intercambio?<br/><br/><span class=\'small\'>Podrá recuperar el XML desde su correo de intercambio si existe ahí.</span>')">
+<a class="btn btn-danger btn-lg col-12" href="<?=$_base?>/dte/dte_intercambios/eliminar/<?=$DteIntercambio->codigo?>" role="button" title="Eliminar intercambio" onclick="return Form.confirm(this, '¿Confirmar la eliminación del intercambio?<br/><br/><span class=\'small\'>Podrá recuperar el XML desde su correo de intercambio si existe ahí.</span>')">
     Eliminar archivo EnvioDTE de intercambio
 </a>
 </div>

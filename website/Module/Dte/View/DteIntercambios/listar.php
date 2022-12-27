@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_intercambios/probar_xml" title="Probar manualmente si un XML podría ingresar por email a la bandeja de intercambio" class="nav-link">
             <i class="fa fa-upload"></i>
@@ -33,10 +33,10 @@
         </a>
     </li>
     <li class="nav-item" class="dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="fas fa-sync"></i> Actualizar
         </a>
-        <div class="dropdown-menu dropdown-menu-right">
+        <div class="dropdown-menu dropdown-menu-end">
             <a href="<?=$_base?>/dte/dte_intercambios/actualizar/3" class="dropdown-item" onclick="return Form.loading('Actualizando últimos 3 días...')">Últimos 3 días</a>
             <a href="<?=$_base?>/dte/dte_intercambios/actualizar/7" class="dropdown-item" onclick="return Form.loading('Actualizando última semana...')">Última semana</a>
             <a href="<?=$_base?>/dte/dte_intercambios/actualizar/14" class="dropdown-item" onclick="return Form.loading('Actualizando últimas 2 semanas...')">Últimas 2 semanas</a>
@@ -48,7 +48,7 @@
 
 <div class="page-header"><h1>Bandeja de intercambio</h1></div>
 <p>
-    Aquí podrá revisar los documentos que ha recibido en su correo de intercambio <span class="lead text-center text-monospace"><?=$Emisor->config_email_intercambio_user?></span>, tanto los procesados como los pendientes. Para estos últimos podrá aceptar o reclamar según corresponda.
+    Aquí podrá revisar los documentos que ha recibido en su correo de intercambio <span class="lead text-center font-monospace"><?=$Emisor->config_email_intercambio_user?></span>, tanto los procesados como los pendientes. Para estos últimos podrá aceptar o reclamar según corresponda.
     <?php if ($ultimo_codigo) : ?>
     El último intercambio recibido es el <a href="<?=$_base?>/dte/dte_intercambios/ver/<?=$ultimo_codigo?>">N° <?=$ultimo_codigo?></a>.
     <?php endif; ?>
@@ -92,29 +92,35 @@ $paginator->setColsWidth([null, null, null, null, null, null, 110]);
 echo $paginator->generate($documentos, $paginas, $pagina);
 ?>
 
-<div class="card-deck mt-4">
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=196">¿Cómo procesar los documentos?</a>
-            </h5>
+<div class="row row-cols-3 g-3 mt-4">
+    <div class="col">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=196">¿Cómo procesar los documentos?</a>
+                </h5>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=31">¿Por qué faltan documentos?</a>
-            </h5>
+    <div class="col">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=31">¿Por qué faltan documentos?</a>
+                </h5>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=40">¿Puedo sincronizar con SII?</a>
-            </h5>
+    <div class="col">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=40">¿Puedo sincronizar con SII?</a>
+                </h5>
+            </div>
         </div>
     </div>
 </div>

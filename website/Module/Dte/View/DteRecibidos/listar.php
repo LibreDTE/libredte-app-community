@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_compras/registro_compras" title="Ir al registro de compra del SII" class="nav-link">
             <i class="fas fa-university"></i> Registro compras SII
@@ -54,21 +54,25 @@ $maintainer->setId('dte_recibidos_'.$Receptor->rut);
 $maintainer->setColsWidth([null, null, null, null, null, null, 110]);
 echo $maintainer->listar ($documentos, $paginas, $pagina, false);
 ?>
-<div class="card-deck mt-4">
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=36">¿Por qué no veo el PDF?</a>
-            </h5>
+<div class="row text-center mt-3">
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=36">¿Por qué no veo el PDF?</a>
+                </h5>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=40">¿Puedo sincronizar con SII?</a>
-            </h5>
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=40">¿Puedo sincronizar con SII?</a>
+                </h5>
+            </div>
         </div>
     </div>
 </div>

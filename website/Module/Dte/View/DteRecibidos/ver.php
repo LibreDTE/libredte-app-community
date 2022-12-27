@@ -1,8 +1,8 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
 <?php if ($Receptor->config_pdf_imprimir) : ?>
 <?php if ($Receptor->config_pdf_imprimir == 'pdf_escpos') : ?>
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-print"></i>
             Imprimir
         </a>
@@ -43,17 +43,17 @@ $(function() {
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-toggle="tab" id="datos-tab" class="nav-link active" aria-selected="true">Datos básicos</a></li>
+        <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-bs-toggle="tab" id="datos-tab" class="nav-link active" aria-selected="true">Datos básicos</a></li>
 <?php if ($DteRecibido->hasXML()) : ?>
-        <li class="nav-item"><a href="#pdf" aria-controls="pdf" role="tab" data-toggle="tab" id="pdf-tab" class="nav-link">PDF</a></li>
+        <li class="nav-item"><a href="#pdf" aria-controls="pdf" role="tab" data-bs-toggle="tab" id="pdf-tab" class="nav-link">PDF</a></li>
 <?php endif; ?>
 <?php if ($DteRecibido->getTipo()->permiteIntercambio()): ?>
-        <li class="nav-item"><a href="#intercambio" aria-controls="intercambio" role="tab" data-toggle="tab" id="intercambio-tab" class="nav-link">Proceso intercambio</a></li>
+        <li class="nav-item"><a href="#intercambio" aria-controls="intercambio" role="tab" data-bs-toggle="tab" id="intercambio-tab" class="nav-link">Proceso intercambio</a></li>
 <?php endif; ?>
 <?php if ($DteRecibido->hasXML()) : ?>
-        <li class="nav-item"><a href="#referencias" aria-controls="referencias" role="tab" data-toggle="tab" id="referencias-tab" class="nav-link">Referencias</a></li>
+        <li class="nav-item"><a href="#referencias" aria-controls="referencias" role="tab" data-bs-toggle="tab" id="referencias-tab" class="nav-link">Referencias</a></li>
 <?php endif; ?>
-        <li class="nav-item"><a href="#avanzado" aria-controls="avanzado" role="tab" data-toggle="tab" id="avanzado-tab" class="nav-link">Avanzado</a></li>
+        <li class="nav-item"><a href="#avanzado" aria-controls="avanzado" role="tab" data-bs-toggle="tab" id="avanzado-tab" class="nav-link">Avanzado</a></li>
     </ul>
     <div class="tab-content pt-4">
 
@@ -81,19 +81,19 @@ echo $t->generate([
 ?>
             <div class="row mt-2">
                 <div class="col-md-4 mb-2">
-                    <a class="btn btn-primary btn-lg btn-block<?=(!$DteRecibido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_recibidos/pdf/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=(!$DteRecibido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_recibidos/pdf/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button">
                         <span class="far fa-file-pdf"></span>
                         Descargar PDF
                     </a>
                 </div>
                 <div class="col-md-4 mb-2">
-                    <a class="btn btn-primary btn-lg btn-block<?=(!$DteRecibido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_recibidos/xml/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=(!$DteRecibido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_recibidos/xml/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button">
                         <span class="far fa-file-code"></span>
                         Descargar XML
                     </a>
                 </div>
                 <div class="col-md-4 mb-2">
-                    <a class="btn btn-primary btn-lg btn-block<?=(!$DteRecibido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_recibidos/json/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=(!$DteRecibido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_recibidos/json/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button">
                         <span class="far fa-file-code"></span>
                         Descargar JSON
                     </a>
@@ -179,13 +179,13 @@ echo $f->end('Descargar PDF');
 <?php if (in_array($DteRecibido->dte, array_keys(\sasco\LibreDTE\Sii\RegistroCompraVenta::$dtes))) : ?>
     <div class="row mb-4">
         <div class="col-sm-6">
-            <a href="#" onclick="__.popup('<?=$_base?>/dte/sii/dte_rcv/<?=$Emisor->rut?>-<?=$Emisor->dv?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>', 750, 550); return false" title="Ver datos del registro de compra/venta en el SII" class="btn btn-primary btn-lg btn-block">
+            <a href="#" onclick="__.popup('<?=$_base?>/dte/sii/dte_rcv/<?=$Emisor->rut?>-<?=$Emisor->dv?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>', 750, 550); return false" title="Ver datos del registro de compra/venta en el SII" class="btn btn-primary btn-lg col-12">
                 <i class="fa fa-search fa-fw"></i>
                 Ver datos en el Registro de Compras del SII
             </a>
         </div>
         <div class="col-sm-6">
-            <a href="<?=$_base?>/dte/registro_compras/ingresar_accion/<?=$Emisor->rut?>-<?=$Emisor->dv?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" title="Ingresar acción del registro de compra/venta en el SII" class="btn btn-primary btn-lg btn-block" onclick="return Form.loading('Conectando al SII para responder...')">
+            <a href="<?=$_base?>/dte/registro_compras/ingresar_accion/<?=$Emisor->rut?>-<?=$Emisor->dv?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" title="Ingresar acción del registro de compra/venta en el SII" class="btn btn-primary btn-lg col-12" onclick="return Form.loading('Conectando al SII para responder...')">
                 <i class="fa fa-edit fa-fw"></i>
                 Recibir / Reclamar
             </a>
@@ -213,7 +213,7 @@ new \sowerphp\general\View_Helper_Table([
 ?>
         </div>
     </div>
-    <a href="<?=$_base?>/dte/dte_intercambios/ver/<?=$DteIntercambio->codigo?>" class="btn btn-primary btn-lg btn-block">
+    <a href="<?=$_base?>/dte/dte_intercambios/ver/<?=$DteIntercambio->codigo?>" class="btn btn-primary btn-lg col-12">
         <i class="fa fa-exchange-alt fa-fw"></i>
         Ir a la página de intercambio del DTE
     </a>
@@ -254,12 +254,12 @@ if ($referenciados) {
 <div role="tabpanel" class="tab-pane" id="avanzado" aria-labelledby="avanzado-tab">
 <div class="row mb-4">
     <div class="col-md-6">
-        <a class="btn btn-danger btn-lg btn-block" href="<?=$_base?>/dte/dte_recibidos/eliminar/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button" onclick="return Form.confirm(this, '¿Confirmar la eliminación del documento?')">
+        <a class="btn btn-danger btn-lg col-12" href="<?=$_base?>/dte/dte_recibidos/eliminar/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button" onclick="return Form.confirm(this, '¿Confirmar la eliminación del documento?')">
             Eliminar documento
         </a>
     </div>
     <div class="col-md-6">
-        <a class="btn btn-success btn-lg btn-block" href="<?=$_base?>/dte/dte_recibidos/modificar/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button" >
+        <a class="btn btn-success btn-lg col-12" href="<?=$_base?>/dte/dte_recibidos/modificar/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button" >
             Modificar documento
         </a>
     </div>

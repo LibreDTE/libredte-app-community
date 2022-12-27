@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_ventas/registro_ventas" title="Ir al registro de venta del SII" class="nav-link">
             <i class="fas fa-university"></i> Registro ventas SII

@@ -70,7 +70,7 @@ echo View_Helper_Dashboard::cards([
     </div>
 </div>
 
-<a class="btn btn-info btn-block" href="<?=$_base?>/estadisticas/<?=$certificacion?'produccion':'certificacion'?>" role="button">
+<a class="btn btn-info col-12" href="<?=$_base?>/estadisticas/<?=$certificacion?'produccion':'certificacion'?>" role="button">
     Ver datos de <?=$certificacion?'producción':'certificación'?>
 </a>
 

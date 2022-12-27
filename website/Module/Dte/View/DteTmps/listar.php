@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
 <?php if (!empty($documentos)) : ?>
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_tmps/eliminar_masivo" title="Eliminar todos las documentos temporales" class="nav-link" onclick="return Form.confirm(this, '¿Desea eliminar todos los documentos temporales?<br/><br/><strong>¡Se perderán todos los datos!</strong>', 'Eliminando documentos temporales...')">

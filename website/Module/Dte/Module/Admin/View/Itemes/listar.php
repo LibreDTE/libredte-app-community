@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/admin/item_clasificaciones/listar?search=activa:1" title="Mantenedor de clasificaciones de items" class="nav-link">
             <i class="fa fa-list-alt"></i> Clasificaciones
@@ -26,7 +26,7 @@ $titles = [];
 $colsWidth = [];
 foreach ($columns as $column => $info) {
     $titles[] = $info['name'].' '.
-        '<div class="float-right"><a href="'.$_base.$module_url.$controller.'/listar/'.$page.'/'.$column.'/A'.$searchUrl.'" title="Ordenar ascendentemente por '.$info['name'].'"><i class="fas fa-sort-alpha-down"></i></a>'.
+        '<div class="float-end"><a href="'.$_base.$module_url.$controller.'/listar/'.$page.'/'.$column.'/A'.$searchUrl.'" title="Ordenar ascendentemente por '.$info['name'].'"><i class="fas fa-sort-alpha-down"></i></a>'.
         ' <a href="'.$_base.$module_url.$controller.'/listar/'.$page.'/'.$column.'/D'.$searchUrl.'" title="Ordenar descendentemente por '.$info['name'].'"><i class="fas fa-sort-alpha-up"></i></a></div>'
     ;
     $colsWidth[] = null;
@@ -141,7 +141,7 @@ $maintainer->setId($models);
 $maintainer->setColsWidth($colsWidth);
 echo $maintainer->listar ($data, $pages, $page);
 ?>
-<div class="card-deck mt-4">
+<div class="mt-4">
     <div class="card">
         <div class="card-body text-center">
             <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>

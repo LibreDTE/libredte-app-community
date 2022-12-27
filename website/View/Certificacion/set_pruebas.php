@@ -1,16 +1,17 @@
-<ul class="nav nav-pills float-right">
-    <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" id="dropdown_certificacion">Etapas</a>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown_certificacion">
-<?php foreach ($nav as $link => $info) : ?>
-            <a href="<?=$_base?>/certificacion<?=$link?>" class="dropdown-item">
+<div class="dropdown mt-4">
+    <nav class="dropdown-toggle" type="button" id="dropdown_certificacion" data-bs-toggle="dropdown" aria-expanded="false">
+        Etapas
+    </nav>
+    <ul class="dropdown-menu" aria-labelledby="dropdown_certificacion">
+        <?php foreach ($nav as $link => $info) : ?>
+            <li><a href="<?=$_base?>/certificacion<?=$link?>" class="dropdown-item">
                 <span class="<?=$info['icon']?>"></span>
                 <?=$info['name']?>
-            </a>
-<?php endforeach; ?>
-        </div>
-    </li>
-</ul>
+            </a></li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+
 
 <div class="page-header"><h1>Certificación DTE  &raquo; Etapa 1: set de pruebas</h1></div>
 
@@ -36,11 +37,11 @@ $(function() {
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a href="#dte" aria-controls="dte" role="tab" data-toggle="tab" id="dte-tab" class="nav-link active" aria-selected="true">Emisión de DTE</a></li>
-        <li class="nav-item"><a href="#ventas" aria-controls="ventas" role="tab" data-toggle="tab" id="ventas-tab" class="nav-link">Libro de Ventas</a></li>
-        <li class="nav-item"><a href="#compras" aria-controls="compras" role="tab" data-toggle="tab" id="compras-tab" class="nav-link">Libro de Compras</a></li>
-        <li class="nav-item"><a href="#guias" aria-controls="guias" role="tab" data-toggle="tab" id="guias-tab" class="nav-link">Libro de Guías de Despacho</a></li>
-        <li class="nav-item"><a href="#boletas" aria-controls="boletas" role="tab" data-toggle="tab" id="boletas-tab" class="nav-link">Boletas</a></li>
+        <li class="nav-item"><a href="#dte" aria-controls="dte" role="tab" data-bs-toggle="tab" id="dte-tab" class="nav-link active" aria-selected="true">Emisión de DTE</a></li>
+        <li class="nav-item"><a href="#ventas" aria-controls="ventas" role="tab" data-bs-toggle="tab" id="ventas-tab" class="nav-link">Libro de Ventas</a></li>
+        <li class="nav-item"><a href="#compras" aria-controls="compras" role="tab" data-bs-toggle="tab" id="compras-tab" class="nav-link">Libro de Compras</a></li>
+        <li class="nav-item"><a href="#guias" aria-controls="guias" role="tab" data-bs-toggle="tab" id="guias-tab" class="nav-link">Libro de Guías de Despacho</a></li>
+        <li class="nav-item"><a href="#boletas" aria-controls="boletas" role="tab" data-bs-toggle="tab" id="boletas-tab" class="nav-link">Boletas</a></li>
     </ul>
     <div class="tab-content pt-4">
 
@@ -136,7 +137,7 @@ echo $f->end('Descargar Libro de Ventas');
         <li><a href="<?=$_base?>/dte/archivos/libro_compras.txt" download="libro_compras.txt">Ejemplo set de pruebas de compras entregado por el SII</a></li>
         <li><a href="<?=$_base?>/dte/archivos/libro_compras.csv" download="libro_compras.csv">Ejemplo archivo CSV generado con los datos del set de pruebas</a></li>
     </ul>
-    <a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/utilidades/iecv/xml" role="button">Generar XML de Libro de Compras usando archivo CSV</a>
+    <a class="btn btn-primary btn-lg col-12" href="<?=$_base?>/utilidades/iecv/xml" role="button">Generar XML de Libro de Compras usando archivo CSV</a>
 </div>
 <!-- FIN COMPRAS -->
 
@@ -148,7 +149,7 @@ echo $f->end('Descargar Libro de Ventas');
         <li><a href="<?=$_base?>/dte/archivos/libro_guias.txt" download="libro_guias.txt">Ejemplo set de pruebas de guías entregado por el SII</a></li>
         <li><a href="<?=$_base?>/dte/archivos/libro_guias.csv" download="libro_guias.csv">Ejemplo archivo CSV generado con los datos del set de pruebas</a></li>
     </ul>
-    <a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/utilidades/guias/libro" role="button">Generar XML de Libro de Guías de Despacho usando archivo CSV</a>
+    <a class="btn btn-primary btn-lg col-12" href="<?=$_base?>/utilidades/guias/libro" role="button">Generar XML de Libro de Guías de Despacho usando archivo CSV</a>
 </div>
 <!-- FIN GUÍAS -->
 

@@ -1,16 +1,17 @@
-<ul class="nav nav-pills float-right">
-    <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" id="dropdown_certificacion">Etapas</a>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown_certificacion">
-<?php foreach ($nav as $link => $info) : ?>
+<div class="dropdown mt-4">
+    <nav class="dropdown-toggle" type="button" id="dropdown_certificacion" data-bs-toggle="dropdown" aria-expanded="false">
+        Etapas
+    </nav>
+    <ul class="dropdown-menu" aria-labelledby="dropdown_certificacion">
+        <?php foreach ($nav as $link => $info) : ?>
             <a href="<?=$_base?>/certificacion<?=$link?>" class="dropdown-item">
                 <span class="<?=$info['icon']?>"></span>
                 <?=$info['name']?>
             </a>
-<?php endforeach; ?>
-        </div>
-    </li>
-</ul>
+        <?php endforeach; ?>
+    </ul>
+</div>
+
 
 <div class="page-header"><h1>Certificación DTE &raquo; Etapa 4: muestras PDF</h1></div>
 
@@ -25,4 +26,4 @@
     </div>
 </div>
 
-<a class="btn btn-primary btn-lg btn-block" href="<?=$_base?>/utilidades/documentos/pdf" role="button">Generar muestras impresas a partir de XML EnvioDTE</a>
+<a class="btn btn-primary btn-lg col-12" href="<?=$_base?>/utilidades/documentos/pdf" role="button">Generar muestras impresas a partir de XML EnvioDTE</a>
