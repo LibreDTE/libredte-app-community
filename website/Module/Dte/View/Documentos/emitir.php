@@ -535,5 +535,9 @@ try {
     var TpoCtaPago = "";
     var NumCtaPago = "";
 <?php endif; ?>
+$( '#TpoDocField' ).select2( {
+    theme: "bootstrap-5",
+    placeholder: $( this ).data( 'placeholder' ),
+} );
 </script>
 <!-- fin datos para medio de pago con transferencia -->

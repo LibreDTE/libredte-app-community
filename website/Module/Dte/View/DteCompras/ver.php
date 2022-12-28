@@ -255,7 +255,7 @@ new \sowerphp\general\View_Helper_Table($detalle);
         <i class="far fa-chart-bar fa-fw"></i> Documentos por día recibidos con fecha en el período <?=$Libro->periodo?>
     </div>
     <div class="card-body">
-        <div id="grafico-documentos_por_dia"></div>
+        <canvas id="documentos_por_dia_grafico"></canvas>
     </div>
 </div>
 <div class="card mt-4">
@@ -263,35 +263,78 @@ new \sowerphp\general\View_Helper_Table($detalle);
         <i class="far fa-chart-bar fa-fw"></i> Documentos por tipo recibidos con fecha en el período <?=$Libro->periodo?>
     </div>
     <div class="card-body">
-        <div id="grafico-documentos_por_tipo"></div>
+        <canvas id="documentos_por_tipo_grafico"></canvas>
     </div>
 </div>
 <script>
-var documentos_por_dia = Morris.Line({
-    element: 'grafico-documentos_por_dia',
-    data: <?=json_encode($Libro->getDocumentosPorDia())?>,
-    xkey: 'dia',
-    ykeys: ['documentos'],
-    labels: ['Documentos'],
-    resize: true,
-    parseTime: false
-});
-var documentos_por_tipo = Morris.Bar({
-    element: 'grafico-documentos_por_tipo',
-    data: <?=json_encode($Libro->getDocumentosPorTipo())?>,
-    xkey: 'tipo',
-    ykeys: ['documentos'],
-    labels: ['Documentos'],
-    resize: true
-});
-$('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
-    var target = $(e.target).attr("href");
-    if (target=='#estadisticas') {
-        documentos_por_dia.redraw();
-        documentos_por_tipo.redraw();
-        $(window).trigger('resize');
+
+
+const getDataColors = opacity => {
+    const colors = ['#2061A4', '#9CC9FF', '#105A9C', '#001348', '#BCE8FF']
+    return colors.map(color => opacity ? `${color + opacity}` : color)
+}
+
+const printCharts = () => {
+    documentosDiaChart(<?=json_encode($Libro->getDocumentosPorDia())?>)
+    documentosTipoChart(<?=json_encode($Libro->getDocumentosPorTipo())?>)
+}
+
+const documentosDiaChart = documentos => {
+        const data = {
+            labels: documentos.map(documento => documento.dia),
+            datasets: [
+                {
+                    data: documentos.map(documento => documento.documentos),
+                    label: 'Documentos',
+                    tension: .5,
+                    borderColor: getDataColors()[2],
+                    backgroundColor: getDataColors(20)[2],
+                    fill: true,
+                    pointBorderWidth: 5
+                }
+            ]
+        }
+
+        const options = {
+            interaction: {
+                intersect: false,
+                mode: 'index',
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+        new Chart('documentos_por_dia_grafico', { type: 'line', data, options})
     }
-});
+
+    const documentosTipoChart = documentos => {
+
+        const data = {
+            labels: documentos.map(documento => documento.tipo),
+            datasets: [{
+                label: 'Documentos',
+                data: documentos.map(documento => documento.documentos),
+                borderColor: getDataColors(),
+                backgroundColor: getDataColors(50),
+            }]
+        }
+
+        const options = {
+            interaction: {
+                intersect: false,
+                mode: 'index',
+            },
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+            }
+        }
+
+        new Chart('documentos_por_tipo_grafico', { type: 'bar', data, options})
+    }
+
+printCharts()
+
 </script>
 </div>
 <!-- FIN ESTADÍSTICAS -->

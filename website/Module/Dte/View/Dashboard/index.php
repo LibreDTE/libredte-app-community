@@ -428,7 +428,7 @@ echo View_Helper_Dashboard::cards([
 
 <script>
 const getDataColors = opacity => {
-    const colors = ['#1984c5', '#22a7f0', '#63bff0', '#a7d5ed', '#bcbcbc', '#e1a692', '#de6e56', '#e14b31', '#c23728']
+    const colors = ['#2061A4', '#9CC9FF', '#105A9C', '#001348', '#BCE8FF']
     return colors.map(color => opacity ? `${color + opacity}` : color)
 }
 
@@ -531,8 +531,8 @@ const dteEmitidosEstadosChart = estados => {
         datasets: [{
             label: 'DTEs',
             data: estados.map(estado => estado.total),
-            borderColor: getDataColors(),
-            backgroundColor: getDataColors(50),
+            borderColor: getDataColors()[0],
+            backgroundColor: getDataColors(50)[0],
         }]
     }
 
@@ -557,8 +557,8 @@ const dteEmitidosEventosChart = eventos => {
         datasets: [{
             label: 'DTEs',
             data: eventos.map(evento => evento.total),
-            borderColor: getDataColors(),
-            backgroundColor: getDataColors(50),
+            borderColor: getDataColors()[0],
+            backgroundColor: getDataColors(50)[0],
         }]
     }
 
@@ -583,8 +583,8 @@ const rcofEstadosChart = estados => {
         datasets: [{
             label: 'RCOFs',
             data: estados.map(estado => estado.total),
-            borderColor: getDataColors(),
-            backgroundColor: getDataColors(50),
+            borderColor: getDataColors()[0],
+            backgroundColor: getDataColors(50)[0],
         }]
     }
 
