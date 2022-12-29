@@ -17,7 +17,7 @@ foreach ($documentos as &$d) {
 $popover_emitidos = '<i class="fa fa-question-circle fa-fw text-muted" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="Todos los documentos emitidos, menos las boletas." onmouseover="$(this).popover(\'show\')" onmouseout="$(this).popover(\'hide\')"></i>';
 $popover_intercambios = '<i class="fa fa-question-circle fa-fw text-muted" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="No se incluyen los intercambios." onmouseover="$(this).popover(\'show\')" onmouseout="$(this).popover(\'hide\')"></i>';
 ?>
-<div class="row row-cols-5 g-3 text-center mb-4 mt-2">
+<div class="row row-cols-5 g-4 text-center mb-4 mt-2">
     <div class="col">
         <div class="card">
             <div class="card-body">
