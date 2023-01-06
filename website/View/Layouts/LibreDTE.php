@@ -241,7 +241,7 @@ echo $_content;
                     <?=(is_array($_footer)?$_footer['right']:$_footer)."\n"?>
                 </div>
                 <div class="float-end text-end">
-<?=!empty($_footer['right'])?'                    '.$_footer['left'].'<br/>'."\n":''?>
+<?=!empty($_footer['right'])?$_footer['left'].'<br/>'."\n":''?>
 <?php
 if (isset($_Auth) and $_Auth->logged()) {
     echo '<span class="small">';
