@@ -1,7 +1,7 @@
 <ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_tmps/listar" title="Ir a los documentos temporales" class="nav-link">
-            <i class="far fa-file"></i>
+            <i class="me-1 far fa-file"></i>
             Documentos temporales
         </a>
     </li>
@@ -12,7 +12,7 @@
 $f = new \sowerphp\general\View_Helper_Form(false);
 echo $f->begin(['onsubmit'=>'Form.check()']);
 ?>
-<div class="row">
+<div class="row mb-3">
     <div class="form-group col-md-6"><?=$f->input(['type'=>'select', 'name'=>'dte', 'options'=>[''=>'Buscar en todos los tipos de documentos'] + $tipos_dte])?></div>
     <div class="form-group col-md-6"><?=$f->input(['name'=>'receptor', 'placeholder'=>'Receptor: RUT o razón social'])?></div>
 </div>
@@ -22,7 +22,7 @@ echo $f->begin(['onsubmit'=>'Form.check()']);
     <div class="form-group col-md-3"><?=$f->input(['name'=>'total_desde', 'placeholder'=>'Total desde', 'check'=>'integer', 'attr'=>'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"'])?></div>
     <div class="form-group col-md-3"><?=$f->input(['name'=>'total_hasta', 'placeholder'=>'Total hasta', 'check'=>'integer', 'attr'=>'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"'])?></div>
 </div>
-<div class="text-center"><?=$f->input(['type'=>'submit', 'name'=>'submit', 'value'=>'Buscar documentos'])?></div>
+<div class="text-center mt-3"><?=$f->input(['type'=>'submit', 'name'=>'submit', 'value'=>'Buscar documentos'])?></div>
 <?php
 echo $f->end(false);
 // mostrar documentos

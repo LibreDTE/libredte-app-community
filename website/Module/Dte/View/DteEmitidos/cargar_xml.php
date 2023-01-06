@@ -1,7 +1,7 @@
 <ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_emitidos/listar" title="Ir a los documentos emitidos" class="nav-link">
-            <i class="fa fa-sign-out-alt"></i>
+            <i class="me-1 fa fa-sign-out-alt"></i>
             Documentos emitidos
         </a>
     </li>

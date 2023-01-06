@@ -1,22 +1,22 @@
 <ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_compras/registro_compras" title="Ir al registro de compra del SII" class="nav-link">
-            <i class="fas fa-university"></i> Registro compras SII
+            <i class="me-1 fas fa-university"></i> Registro compras SII
         </a>
     </li>
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_compras/importar" title="Importar libro IEC desde archivo CSV" class="nav-link">
-            <i class="fa fa-upload"></i> Importar CSV
+            <i class="me-1 fa fa-upload"></i> Importar CSV
         </a>
     </li>
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_recibidos/agregar" class="nav-link">
-            <i class="fa fa-plus"></i> Agregar documento
+            <i class="me-1 fa fa-plus"></i> Agregar documento
         </a>
     </li>
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_recibidos/buscar" title="Búsqueda avanzada de documentos recibidos" class="nav-link">
-            <i class="fa fa-search"></i> Buscar
+            <i class="me-1 fa fa-search"></i> Buscar
         </a>
     </li>
 </ul>

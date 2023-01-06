@@ -14,12 +14,12 @@ echo $f->begin(['onsubmit'=>'Form.check()']);
 ?>
 <div class="card mb-4">
     <div class="card-body">
-        <div class="row">
+        <div class="row mb-3">
             <div class="form-group col-md-6"><?=$f->input(['name'=>'emisor', 'placeholder'=>'Emisor: RUT o razón social'])?></div>
             <div class="form-group col-md-3"><?=$f->input(['type'=>'select', 'name'=>'estado', 'options'=>['Pendientes y procesados', 'Sólo pendientes', 'Sólo procesados', 'Sólo aceptados', 'Sólo rechazados']])?></div>
             <div class="form-group col-md-3"><?=$f->input(['type'=>'select', 'name'=>'usuario', 'options'=>[''=>'Todos los usuarios']+$usuarios])?></div>
         </div>
-        <div class="row">
+        <div class="row mb-3">
             <div class="form-group col-md-3"><?=$f->input(['type'=>'date', 'name'=>'recibido_desde', 'placeholder'=>'Fecha recepción desde', 'check'=>'date'])?></div>
             <div class="form-group col-md-3"><?=$f->input(['type'=>'date', 'name'=>'recibido_hasta', 'placeholder'=>'Fecha recepción hasta', 'check'=>'date'])?></div>
             <div class="form-group col-md-3"><?=$f->input(['type'=>'date', 'name'=>'firma_desde', 'placeholder'=>'Fecha firma desde', 'check'=>'date'])?></div>
@@ -34,13 +34,13 @@ echo $f->begin(['onsubmit'=>'Form.check()']);
 </div>
 <div class="card mb-4">
     <div class="card-body">
-        <div class="row">
+        <div class="row mb-3">
             <div class="form-group col-md-3"><?=$f->input(['type'=>'date', 'name'=>'fecha_emision_desde', 'placeholder'=>'Fecha emisión desde', 'check'=>'date'])?></div>
             <div class="form-group col-md-3"><?=$f->input(['type'=>'date', 'name'=>'fecha_emision_hasta', 'placeholder'=>'Fecha emisión hasta', 'check'=>'date'])?></div>
             <div class="form-group col-md-3"><?=$f->input(['name'=>'total_desde', 'placeholder'=>'Total desde', 'check'=>'integer'])?></div>
             <div class="form-group col-md-3"><?=$f->input(['name'=>'total_hasta', 'placeholder'=>'Total hasta', 'check'=>'integer'])?></div>
         </div>
-        <div class="row">
+        <div class="row mb-3">
             <div class="form-group col-md-3"><?=$f->input(['type'=>'select', 'name'=>'dte', 'options'=>[''=>'Todos los tipos de documentos'] + $tipos_dte])?></div>
             <div class="form-group col-md-3"><?=$f->input(['name'=>'folio', 'placeholder'=>'Folio del DTE', 'check'=>'folio'])?></div>
             <div class="form-group col-md-6"><?=$f->input(['name'=>'item', 'placeholder'=>'Item (producto o servicio) que se compró'])?></div>

@@ -1,12 +1,13 @@
 <ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/documentos/emitir_masivo" title="Emitir DTE de manera masiva" class="nav-link">
-            <i class="fa fa-upload"></i>
+            <i class="me-1 fa fa-upload"></i>
             Emitir documentos masivos
         </a>
     </li>
 </ul>
 <div class="page-header"><h1>Emitir documento</h1></div>
+<div class="">
 <script>
 $(function() {
 <?php if (isset($datos)) : ?>
@@ -541,3 +542,4 @@ $( '#TpoDocField' ).select2( {
 } );
 </script>
 <!-- fin datos para medio de pago con transferencia -->
+</div>

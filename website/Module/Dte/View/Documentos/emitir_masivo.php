@@ -1,19 +1,20 @@
 <ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/documentos/buscar_masivo" title="Buscar documentos masivamente" class="nav-link">
-            <i class="fa fa-search"></i>
+            <i class="me-1 fa fa-search"></i>
             Buscar documentos masivos
         </a>
     </li>
     <li class="nav-item">
         <a href="<?=$_base?>/dte/documentos/emitir" title="Emitir documentos de manera individual" class="nav-link">
-            <i class="fa fa-file-invoice"></i>
+            <i class="me-1 fa fa-file-invoice"></i>
             Emitir documento individual
         </a>
     </li>
 </ul>
 <div class="page-header"><h1>Emitir documentos masivos</h1></div>
 <p>Aquí podrá solicitar la emisión masiva de DTE a partir de un archivo CSV (separado por punto y coma, codificado en UTF-8). El archivo debe tener el <a href="<?=$_base?>/dte/archivos/emision_masiva.csv" download="emision_masiva.csv">siguiente formato</a>:</p>
+<div class="">
 <?php
 $col = 1;
 new \sowerphp\general\View_Helper_Table([
@@ -58,7 +59,7 @@ new \sowerphp\general\View_Helper_Table([
     [$col++, 'AL', 'FmaPago', 'Forma de Pago', 'Códigos: 1 para contado, 2 para crédito y 3 para sin costo (entrega gratuita)', '1', 'Opcional'],
 ]);
 ?>
-<p>Si el documento tiene más de un item o referencia, se agrega una nueva fila donde sólo van las columnas correspondientes al item o la referencia, y las demás vacías.</p>
+<p class="mt-3">Si el documento tiene más de un item o referencia, se agrega una nueva fila donde sólo van las columnas correspondientes al item o la referencia, y las demás vacías.</p>
 <p>El archivo subido se procesará de manera asíncrona y se notificará vía correo electrónico a <?=$_Auth->User->email?> cuando el proceso esté completo. El correo incluirá el mismo archivo CSV que se subió a la plataforma con 2 columnas nuevas que incluirán el código del resultado de la operación para ese documento y la glosa asociada a dicho estado. El significado macro de cada código de estado es:</p>
 <?php
 new \sowerphp\general\View_Helper_Table([
@@ -104,3 +105,5 @@ echo $f->input([
     'options' => ['No generar PDF', 'Si, generar todos los PDF y enviar enlace para descarga en correo de resultado'],
 ]);
 echo $f->end('Emitir DTE masivamente');
+?>
+</div>

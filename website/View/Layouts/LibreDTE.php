@@ -223,7 +223,7 @@ foreach ($messages as $message) {
     ];
     $message['text'] = message_make_links($message['text']);
     echo '<div class="alert alert-',$message['type'],'" role="alert">',"\n";
-    echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>',"\n";
+    echo '<div class="float-end"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button></div>',"\n";
     echo '<span class="glyphicon glyphicon-',$icons[$message['type']],'" aria-hidden="true"></span>',"\n";
     echo '<span class="visually-hidden">',$message['type'],': </span>',$message['text'],"\n";
     echo '</div>'."\n";
@@ -238,10 +238,10 @@ echo $_content;
         <footer class="footer d-print-none">
             <div class="container">
                 <div class="float-start">
-                    <?=(is_array($_footer)?$_footer['right']:$_footer)."\n"?>
+                    <?=(is_array($_footer)?$_footer['left']:$_footer)."\n"?>
                 </div>
                 <div class="float-end text-end">
-<?=!empty($_footer['right'])?$_footer['left'].'<br/>'."\n":''?>
+<?=!empty($_footer['right'])?$_footer['right'].'<br/>'."\n":''?>
 <?php
 if (isset($_Auth) and $_Auth->logged()) {
     echo '<span class="small">';

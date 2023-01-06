@@ -9,11 +9,13 @@
     <form name="periodo_form" id="periodo_form" onsubmit="periodo_seleccionar(this.periodo.value); return false">
         <div class="form-group">
             <label class="control-label visually-hidden" for="periodoField">Período del dashboard</label>
-            <div class="input-group flex-nowrap float-end" style="width:200px;">
-                <a href="<?=$_base?>/dte/dashboard?periodo=<?=$periodo_anterior?>" class="btn btn-primary" ><i class="fas fa-arrow-left mt-1"></i></a>
-                <a href="<?=$_base?>/dte/dashboard?periodo=<?=$periodo_siguiente?>" class="btn btn-primary" ><i class="fas fa-arrow-right mt-1"></i></a>
-                <input type="text" name="periodo" value="<?=$periodo?>" class="form-control check integer text-center" id="periodoField" placeholder="<?=$periodo_actual?>" onclick="this.select()" />
-                <a class="btn btn-primary" type="button" onclick="periodo_seleccionar(document.periodo_form.periodo.value); return false"><i class="fa fa-search mt-1"></i></a>
+            <div class="input-group flex-nowrap float-end">
+                <a href="<?=$_base?>/dte/dashboard?periodo=<?=$periodo_anterior?>" class="btn btn-primary"><i class="fas fa-arrow-left mt-1"></i></a>
+                <a href="<?=$_base?>/dte/dashboard?periodo=<?=$periodo_siguiente?>" class="btn btn-primary"><i class="fas fa-arrow-right mt-1"></i></a>
+                <input type="text" name="periodo" value="<?=$periodo?>" class="form-control check integer text-center" id="periodoField" placeholder="<?=$periodo_actual?>" size="7" onclick="this.select()" />
+                <button class="btn btn-primary" type="button" onclick="periodo_seleccionar(document.periodo_form.periodo.value); return false">
+                    <span class="fa fa-search"></span>
+                </button>
             </div>
         </div>
     </form>
@@ -61,7 +63,7 @@ echo View_Helper_Dashboard::cards([
             Emitir documento
         </a>
         <!-- menú módulo -->
-        <div class="list-group mb-4">
+        <div class="list-group mb-4 bg-white">
             <?php foreach ($nav as $link=>&$info): ?>
                 <a href="<?=$_base.'/dte'.$link?>" title="<?=$info['desc']?>" class="list-group-item">
                     <i class="<?=$info['icon']?> fa-fw"></i> <?=$info['name']?>
@@ -283,7 +285,9 @@ echo View_Helper_Dashboard::cards([
                 <label class="control-label visually-hidden" for="qField">Buscar por código documento</label>
                 <div class="input-group input-group-lg">
                     <input type="text" name="q" class="form-control" id="qField" placeholder="Buscar DTE..." />
-                    <a class="btn btn-primary" type="button" onclick="buscar(document.buscador.q.value); return false"><i class="fa fa-search"></i></a>
+                    <button class="btn btn-primary" type="button" onclick="buscar(document.buscador.q.value); return false">
+                    <span class="fa fa-search"></span>
+                </button>
                 </div>
             </div>
         </form>
