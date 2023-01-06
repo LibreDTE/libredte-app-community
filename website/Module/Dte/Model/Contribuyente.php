@@ -262,7 +262,7 @@ class Model_Contribuyente extends \Model_App
      * Método que entrega las configuraciones y parámetros extras para el
      * contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-03-27
+     * @version 2023-01-05
      */
     public function getConfig()
     {
@@ -279,13 +279,18 @@ class Model_Contribuyente extends \Model_App
                 return null;
             }
             foreach ($config as $configuracion => $datos) {
-                if (!isset($datos[0]))
+                if (!isset($datos[0])) {
                     $datos = [$datos];
+                }
                 $this->config[$configuracion] = [];
                 foreach ($datos as $dato) {
                     $class = get_called_class();
                     if (in_array($configuracion.'_'.$dato['variable'], $class::$encriptar)) {
-                        $dato['valor'] = Utility_Data::decrypt($dato['valor']);
+                        try {
+                            $dato['valor'] = Utility_Data::decrypt($dato['valor']);
+                        } catch (\Exception $e) {
+                            $dato['valor'] = null;
+                        }
                     }
                     $this->config[$configuracion][$dato['variable']] =
                         $dato['json'] ? json_decode($dato['valor']) : $dato['valor']
@@ -995,7 +1000,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el listado de folios que el Contribuyente dispone
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-26
+     * @version 2023-01-05
      */
     public function getFolios()
     {
@@ -1019,7 +1024,11 @@ class Model_Contribuyente extends \Model_App
         foreach ($folios as &$f) {
             $f['fecha_vencimiento'] = $f['meses_autorizacion'] = $f['vigente'] = null;
             if ($f['xml']) {
-                $caf = Utility_Data::decrypt($f['xml']);
+                try {
+                    $caf = Utility_Data::decrypt($f['xml']);
+                } catch (\Exception $e) {
+                    $caf = null;
+                }
                 if ($caf) {
                     $Caf = new \sasco\LibreDTE\Sii\Folios($caf);
                     $f['fecha_vencimiento'] = $Caf->getFechaVencimiento();
@@ -1120,7 +1129,7 @@ class Model_Contribuyente extends \Model_App
      * @param user ID del usuario que desea obtener la firma
      * @return \sasco\LibreDTE\FirmaElectronica
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-16
+     * @version 2023-01-05
      */
     public function getFirma($user_id = null)
     {
@@ -1143,7 +1152,11 @@ class Model_Contribuyente extends \Model_App
                 return false;
             }
             // si se obtuvo una firma se trata de usar
-            $pass = Utility_Data::decrypt($datos['contrasenia']);
+            try {
+                $pass = Utility_Data::decrypt($datos['contrasenia']);
+            } catch (\Exception $e) {
+                $pass = null;
+            }
             if (!$pass) {
                 return false;
             }
@@ -1334,7 +1347,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que crea los filtros para ser usados en las consultas de documentos emitidos
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+     * @version 2023-01-05
      */
     private function crearFiltrosDocumentosEmitidos($filtros)
     {
@@ -1367,13 +1380,16 @@ class Model_Contribuyente extends \Model_App
                 }
                 $where[] = 'd.dte IN ('.implode(', ', $where_dte).')';
             }
-            else if ($filtros['dte'][0]=='!') {
-                $where[] = 'd.dte != :dte';
-                $vars[':dte'] = substr($filtros['dte'],1);
-            }
             else {
-                $where[] = 'd.dte = :dte';
-                $vars[':dte'] = $filtros['dte'];
+                $filtros['dte'] = (string)$filtros['dte'];
+                if ($filtros['dte'][0]=='!') {
+                    $where[] = 'd.dte != :dte';
+                    $vars[':dte'] = substr($filtros['dte'],1);
+                }
+                else {
+                    $where[] = 'd.dte = :dte';
+                    $vars[':dte'] = $filtros['dte'];
+                }
             }
         }
         // receptor
@@ -1394,6 +1410,7 @@ class Model_Contribuyente extends \Model_App
             }
             // armar consulta dependiendo si se desea incluir o excluir al receptor
             if (!empty($filtros['receptor'])) {
+                $filtros['receptor'] = (string)$filtros['receptor'];
                 if ($filtros['receptor'][0]=='!') {
                     $where[] = 'd.receptor != :receptor';
                     $vars[':receptor'] = substr($filtros['receptor'],1);
