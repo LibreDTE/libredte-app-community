@@ -1,13 +1,11 @@
 <?php $Emisor = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente'); ?>
 <!--
-LibreDTE 2015 - 2021
+LibreDTE 2015 - 2023
 Copyright SASCO SpA (https://sasco.cl)
 Plataforma de facturación electrónica usando LibreDTE (https://facturacionlibre.cl)
 LibreDTE es un proyecto de SASCO SpA que tiene como misión proveer facturación electrónica libre para Chile
 Autor original: Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-Aplicación oficial: https://libredte.cl
-Framework: SowerPHP (https://sowerphp.org)
-Layout: oficial de Bootstrap 4
+Versión Oficial de LibreDTE, con soporte de SASCO SpA, en: https://libredte.cl
 -->
 <!DOCTYPE html>
 <html lang="es">
@@ -48,13 +46,8 @@ Layout: oficial de Bootstrap 4
         <script src="https://cdn.jsdelivr.net/npm/bootbox@5.1.3/dist/bootbox.all.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
-        <!-- Scripts -->
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<?php if (\sowerphp\core\Module::loaded('Sistema.Notificaciones')) : ?>
-        <link rel="stylesheet" href="<?=$_base?>/sistema/notificaciones/css/style.css">
-        <script src="<?=$_base?>/sistema/notificaciones/js/js.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-<?php endif; ?>
 <?=$_header_extra?>
     </head>
     <body>
@@ -75,22 +68,22 @@ Layout: oficial de Bootstrap 4
                                 $dropdown_id = 'dropdown_'.$dropdown_id_count++;
                                 $title = isset($name['desc']) ? $name['desc'] : (isset($name['title']) ? $name['title'] : '');
                                 $icon = isset($name['icon']) ? '<span class="'.$name['icon'].'"></span> ' : '';
-                                echo '                        <li class="nav-item dropdown',$active,'">',"\n";
-                                echo '                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" id="',$dropdown_id,'" title="',$title,'">',$icon,$name['name'],'</a>',"\n";
-                                echo '                            <div class="dropdown-menu" aria-labelledby="',$dropdown_id,'">',"\n";
+                                echo '<li class="nav-item dropdown',$active,'">',"\n";
+                                echo '<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" id="',$dropdown_id,'" title="',$title,'">',$icon,$name['name'],'</a>',"\n";
+                                echo '<div class="dropdown-menu" aria-labelledby="',$dropdown_id,'">',"\n";
                                 foreach($name['nav'] as $l=>$n) {
                                     if ($l[0]=='/') $l = $link.$l;
-                                    echo '                                <a href="',$l,'" class="dropdown-item">',$n,'</a>',"\n";
+                                    echo '<a href="',$l,'" class="dropdown-item">',$n,'</a>',"\n";
                                 }
-                                echo '                            </div>',"\n";
-                                echo '                        </li>',"\n";
+                                echo '</div>',"\n";
+                                echo '</li>',"\n";
                             } else {
                                 if (is_array($name)) {
                                     $title = isset($name['desc']) ? $name['desc'] : (isset($name['title']) ? $name['title'] : '');
                                     $icon = isset($name['icon']) ? '<span class="'.$name['icon'].'"></span> ' : '';
                                     $name = $name['name'];
                                 } else $title = $icon = '';
-                                echo '                        <li class="nav-item'.$active.'"><a href="',$link,'" title="',$title,'" class="nav-link">',$icon,$name,'</a></li>',"\n";
+                                echo '<li class="nav-item'.$active.'"><a href="',$link,'" title="',$title,'" class="nav-link">',$icon,$name,'</a></li>',"\n";
                             }
                         }
                     ?>
@@ -138,7 +131,7 @@ Layout: oficial de Bootstrap 4
                     $Account = $_Auth->User->getEmailAccount();
                     if ($Account) {
                         $emails = $Account->countUnreadMessages();
-                        echo '                    <li class="nav-item"><a href="'.$Account->getUserUrl().'" class="nav-link"><i class="far fa-envelope"></i> '.($emails?' <span class="badge bg-primary">'.num($emails).'</span>':'').'</a></li>',"\n";
+                        echo '<li class="nav-item"><a href="'.$Account->getUserUrl().'" class="nav-link"><i class="far fa-envelope"></i> '.($emails?' <span class="badge bg-primary">'.num($emails).'</span>':'').'</a></li>',"\n";
                     }
                     ?>
                         <?php if($Emisor) : ?>
@@ -152,18 +145,18 @@ Layout: oficial de Bootstrap 4
                                         foreach ($Emisor->getLinks() as $link => $name) {
                                             if ($name == '-') {
                                                 if ($n_links) {
-                                                    echo '                            <div class="dropdown-divider"></div>',"\n";
+                                                    echo '<div class="dropdown-divider"></div>',"\n";
                                                 }
                                                 $n_links = 0;
                                             } else {
                                                 if ($link[0]=='/') {
                                                     if ($_Auth->check($link)) {
                                                         $n_links++;
-                                                        echo '                            <a href="',$_base,$link,'" class="dropdown-item">',$name,'</a>',"\n";
+                                                        echo '<a href="',$_base,$link,'" class="dropdown-item">',$name,'</a>',"\n";
                                                     }
                                                 } else {
                                                     $n_links++;
-                                                    echo '                            <a href="',$link,'" class="dropdown-item">',$name,'</a>',"\n";
+                                                    echo '<a href="',$link,'" class="dropdown-item">',$name,'</a>',"\n";
                                                 }
                                             }
                                         }
@@ -183,7 +176,7 @@ Layout: oficial de Bootstrap 4
                                 foreach ($_nav_app as $link=>&$info) {
                                     if ($_Auth->check($link)) {
                                         if(!is_array($info)) $info = ['name'=>$info];
-                                        echo '                            <a href="',$_base,$link,'" class="dropdown-item">',$info['name'],'</a>',"\n";
+                                        echo '<a href="',$_base,$link,'" class="dropdown-item">',$info['name'],'</a>',"\n";
                                     }
                                 }
                             ?>
@@ -211,10 +204,10 @@ if (\sowerphp\core\App::layerExists('sowerphp/app') and $_Auth->logged() and $_m
     $url = '/';
     foreach ($_module_breadcrumb as $link => &$name) {
         if (is_string($link)) {
-            echo '    <li class="breadcrumb-item"><a href="',$_base,$url,$link,'">',$name,'</a></li>',"\n";
+            echo '<li class="breadcrumb-item"><a href="',$_base,$url,$link,'">',$name,'</a></li>',"\n";
             $url .= $link.'/';
         } else {
-            echo '    <li class="breadcrumb-item active">',$name,'</li>';
+            echo '<li class="breadcrumb-item active">',$name,'</li>';
         }
     }
     echo '</ol>',"\n";
@@ -230,9 +223,9 @@ foreach ($messages as $message) {
     ];
     $message['text'] = message_make_links($message['text']);
     echo '<div class="alert alert-',$message['type'],'" role="alert">',"\n";
-    echo '    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>',"\n";
-    echo '    <span class="glyphicon glyphicon-',$icons[$message['type']],'" aria-hidden="true"></span>',"\n";
-    echo '    <span class="visually-hidden">',$message['type'],': </span>',$message['text'],"\n";
+    echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>',"\n";
+    echo '<span class="glyphicon glyphicon-',$icons[$message['type']],'" aria-hidden="true"></span>',"\n";
+    echo '<span class="visually-hidden">',$message['type'],': </span>',$message['text'],"\n";
     echo '</div>'."\n";
 }
 // contenido de la página
@@ -251,7 +244,7 @@ echo $_content;
 <?=!empty($_footer['right'])?'                    '.$_footer['left'].'<br/>'."\n":''?>
 <?php
 if (isset($_Auth) and $_Auth->logged()) {
-    echo '                    <span class="small">';
+    echo '<span class="small">';
     echo 'time: ',round(microtime(true)-TIME_START, 2),' [s] - ';
     echo 'memory: ',round(memory_get_usage()/1024/1024,2),' [MiB] - ';
     echo 'querys: ',\sowerphp\core\Model_Datasource_Database_Manager::$querysCount,' - ';
