@@ -40,7 +40,7 @@ new \sowerphp\general\View_Helper_Table([
         </a>
     </div>
 </div>
-<div style="float:end;margin-bottom:1em;margin-top:2em;font-size:0.8em">
+<div class="float-end" style="float:end;margin-bottom:1em;margin-top:2em;font-size:0.8em">
 <?php $links = $DteTmp->getLinks(); if (!empty($links['pagar'])) : ?>
     <a href="<?=$links['pagar']?>">Enlace público para pago</a> /
 <?php endif; ?>
