@@ -10,8 +10,8 @@
         <div class="form-group">
             <label class="control-label visually-hidden" for="periodoField">Período del dashboard</label>
             <div class="input-group flex-nowrap float-end">
-                <a href="<?=$_base?>/dte/dashboard?periodo=<?=$periodo_anterior?>" class="btn btn-primary"><i class="fas fa-arrow-left mt-1"></i></a>
-                <a href="<?=$_base?>/dte/dashboard?periodo=<?=$periodo_siguiente?>" class="btn btn-primary"><i class="fas fa-arrow-right mt-1"></i></a>
+                <a href="<?=$_base?>/dte/dashboard?periodo=<?=$periodo_anterior?>" class="btn btn-primary"><i class="fas fa-arrow-left"></i></a>
+                <a href="<?=$_base?>/dte/dashboard?periodo=<?=$periodo_siguiente?>" class="btn btn-primary"><i class="fas fa-arrow-right"></i></a>
                 <input type="text" name="periodo" value="<?=$periodo?>" class="form-control check integer text-center" id="periodoField" placeholder="<?=$periodo_actual?>" size="7" onclick="this.select()" />
                 <button class="btn btn-primary" type="button" onclick="periodo_seleccionar(document.periodo_form.periodo.value); return false">
                     <span class="fa fa-search"></span>
@@ -63,7 +63,7 @@ echo View_Helper_Dashboard::cards([
             Emitir documento
         </a>
         <!-- menú módulo -->
-        <div class="list-group mb-4 bg-white">
+        <div class="list-group mb-4 card">
             <?php foreach ($nav as $link=>&$info): ?>
                 <a href="<?=$_base.'/dte'.$link?>" title="<?=$info['desc']?>" class="list-group-item">
                     <i class="<?=$info['icon']?> fa-fw"></i> <?=$info['name']?>
@@ -423,8 +423,8 @@ echo View_Helper_Dashboard::cards([
             </div>
         </div>
         <!-- firma electrónica -->
-        <a class="btn btn-success btn-lg col-12 col-12" href="admin/respaldos/exportar/all" role="button">
-            <span class="fa fa-download"> Generar respaldo
+        <a class="btn btn-success btn-lg col-12" href="admin/respaldos/exportar/all" role="button">
+            <i class="fa fa-download me-2"></i> Generar respaldo
         </a>
     </div>
     <!-- FIN PANEL DERECHA -->
