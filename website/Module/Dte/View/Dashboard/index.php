@@ -280,7 +280,7 @@ echo View_Helper_Dashboard::cards([
                 window.location = _url+'/dte/documentos/buscar?q='+encodeURI(q);
             }
         </script>
-        <form name="buscador" onsubmit="buscar(this.q.value); return false">
+        <form name="buscador" onsubmit="buscar(this.q.value); return false" class="mb-4">
             <div class="form-group">
                 <label class="control-label visually-hidden" for="qField">Buscar por código documento</label>
                 <div class="input-group input-group-lg">
