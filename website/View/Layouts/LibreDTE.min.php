@@ -13,7 +13,7 @@ Versión Oficial de LibreDTE, con soporte de SASCO SpA, en: https://libredte.cl
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title><?=$_header_title?></title>
         <link rel="shortcut icon" href="<?=$_base?>/img/favicon.png" />
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.2.0/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.2.0/css/all.css">
         <link href="https://fonts.googleapis.com/css?family=Oswald|Raleway" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
         <link rel="stylesheet" href="<?=$_base?>/css/style.css">
