@@ -93,40 +93,6 @@ Versión Oficial de LibreDTE, con soporte de SASCO SpA, en: https://libredte.cl
                     <?php if (!$_Auth->logged()) : ?>
                         <li class="nav-item"><a href="<?=$_base?>/usuarios/ingresar" class="nav-link"><span class="fas fa-sign-in-alt" aria-hidden="true"></span> Iniciar sesión</a></li>
                     <?php else : ?>
-                    <?php if (\sowerphp\core\Module::loaded('Sistema.Notificaciones')) : ?>
-                        <?php
-                            $Notficaciones = new \sowerphp\app\Sistema\Notificaciones\Model_Notificaciones();
-                            $notificaciones = $Notficaciones->getUnreadByUser($_Auth->User->id);
-                            $n_notificaciones = $Notficaciones->getCountUnreadByUser($_Auth->User->id);;
-                        ?>
-                        <li class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" id="dropdown_notifications">
-                                <i class="far fa-bell"></i><?=($n_notificaciones?' <span class="badge bg-info" id="n_notifications">'.num($n_notificaciones).'</span>':'')?>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end widget-notifications no-padding" aria-labelledby="dropdown_notifications" style="width: 300px">
-                                <div class="notifications-list" id="main-navbar-notifications">
-                                    <?php foreach ($notificaciones as $n) : ?>
-                                        <div class="notification" id="notification_<?=$n['id']?>">
-                                            <div class="notification-title">
-                                                <a href="#" onclick="notificacion_leida(<?=$n['id']?>); return false" title="Marcar como leída"><i class="fas fa-check-circle"></i></a>
-                                                <?=$n['usuario']?>
-                                            </div>
-                                            <div class="notification-description">
-                                                <?=$n['descripcion']?>
-                                                <?php if ($n['enlace']) : ?>
-                                                    <br />
-                                                    <a href="#" onclick="notificacion_abrir(<?=$n['id']?>); return false" title="Se abrirá y marcará como leída la notificación">Abrir enlace de la notificación</a>
-                                                <?php endif; ?>
-                                            </div>
-                                            <div class="notification-ago"><?=\sowerphp\general\Utility_Date::ago($n['fechahora'])?></div>
-                                            <div class="notification-icon <?=$n['icono']?> bg-<?=$n['tipo']?> text-white rounded"></div>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                                <a href="<?=$_base?>/sistema/notificaciones/notificaciones" class="notifications-link">Ver todas las notificaciones</a>
-                            </div>
-                        </li>
-                    <?php endif; ?>
                     <?php
                     $Account = $_Auth->User->getEmailAccount();
                     if ($Account) {
