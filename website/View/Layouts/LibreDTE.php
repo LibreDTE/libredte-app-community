@@ -1,4 +1,4 @@
-<?php $Emisor = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente'); ?>
+<?php $Contribuyente = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente'); ?>
 <!--
 LibreDTE 2015 - 2023
 Copyright SASCO SpA (https://sasco.cl)
@@ -88,7 +88,6 @@ Versión Oficial de LibreDTE, con soporte de SASCO SpA, en: https://libredte.cl
                         }
                     ?>
                 </ul>
-                <?php if (\sowerphp\core\App::layerExists('sowerphp/app')) : ?>
                 <ul class="nav navbar-nav ms-auto">
                     <?php if (!$_Auth->logged()) : ?>
                         <li class="nav-item"><a href="<?=$_base?>/usuarios/ingresar" class="nav-link"><span class="fas fa-sign-in-alt" aria-hidden="true"></span> Iniciar sesión</a></li>
@@ -100,15 +99,15 @@ Versión Oficial de LibreDTE, con soporte de SASCO SpA, en: https://libredte.cl
                         echo '<li class="nav-item"><a href="'.$Account->getUserUrl().'" class="nav-link"><i class="far fa-envelope"></i> '.($emails?' <span class="badge bg-primary">'.num($emails).'</span>':'').'</a></li>',"\n";
                     }
                     ?>
-                        <?php if($Emisor) : ?>
+                        <?php if ($Contribuyente) : ?>
                             <li class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" id="dropdown_contribuyente">
-                                    <strong><?=$Emisor->getRUT()?></strong>
+                                    <strong><?=$Contribuyente->getRUT()?></strong>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown_contribuyente">
                                     <?php
                                         $n_links = 0;
-                                        foreach ($Emisor->getLinks() as $link => $name) {
+                                        foreach ($Contribuyente->getLinks() as $link => $name) {
                                             if ($name == '-') {
                                                 if ($n_links) {
                                                     echo '<div class="dropdown-divider"></div>',"\n";
@@ -127,10 +126,10 @@ Versión Oficial de LibreDTE, con soporte de SASCO SpA, en: https://libredte.cl
                                             }
                                         }
                                     ?>
-                                    <?php if ($Emisor->usuarioAutorizado($_Auth->User, 'admin')) : ?>
+                                    <?php if ($Contribuyente->usuarioAutorizado($_Auth->User, 'admin')) : ?>
                                         <div class="dropdown-divider"></div>
-                                        <a href="<?=$_base?>/dte/contribuyentes/modificar/<?=$Emisor->rut?>" class="dropdown-item"><i class="fas fa-building"></i> Modificar empresa</a>
-                                        <a href="<?=$_base?>/dte/contribuyentes/usuarios/<?=$Emisor->rut?>" class="dropdown-item"><i class="fas fa-users"></i> Autorizar usuarios</a>
+                                        <a href="<?=$_base?>/dte/contribuyentes/modificar/<?=$Contribuyente->rut?>" class="dropdown-item"><i class="fas fa-building"></i> Modificar empresa</a>
+                                        <a href="<?=$_base?>/dte/contribuyentes/usuarios/<?=$Contribuyente->rut?>" class="dropdown-item"><i class="fas fa-users"></i> Autorizar usuarios</a>
                                     <?php endif; ?>
                                 </div>
                             </li>
@@ -153,7 +152,6 @@ Versión Oficial de LibreDTE, con soporte de SASCO SpA, en: https://libredte.cl
                     </li>
                     <?php endif; ?>
                 </ul>
-                <?php endif; ?>
             </div>
         </div>
         </nav>
@@ -161,11 +159,11 @@ Versión Oficial de LibreDTE, con soporte de SASCO SpA, en: https://libredte.cl
 <!-- BEGIN MAIN CONTENT -->
 <?php
 // mensaje si la empresa está en certificación
-if ($Emisor and $Emisor->enCertificacion()) {
-    echo '<div class="bg-info text-white text-center lead mt-2 mb-2" style="padding:0.5em"><strong>AMBIENTE DE CERTIFICACIÓN / PRUEBAS: '.$Emisor->razon_social.'</strong></div>',"\n";
+if ($Contribuyente and $Contribuyente->enCertificacion()) {
+    echo '<div class="bg-info text-white text-center lead mt-2 mb-2" style="padding:0.5em"><strong>AMBIENTE DE CERTIFICACIÓN / PRUEBAS: '.$Contribuyente->razon_social.'</strong></div>',"\n";
 }
 // menú de módulos si hay sesión iniciada
-if (\sowerphp\core\App::layerExists('sowerphp/app') and $_Auth->logged() and $_module_breadcrumb) {
+if ($_Auth->logged() and $_module_breadcrumb) {
     echo '<ol class="breadcrumb d-print-none">',"\n";
     $url = '/';
     foreach ($_module_breadcrumb as $link => &$name) {
