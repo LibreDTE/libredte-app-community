@@ -32,16 +32,20 @@
         </a>
     </div>
     <div class="col-md-8 mb-4">
-        <div class="pb-4">
-            <h1 class="display-4">¿Complicada la Certificación?</h1>
-            <p class="lead">Déjanos este tedioso proceso a nosotros. Somos expertos en hacerla.</p>
-            <hr class="my-4">
-            <p>Si ya tienes un software de mercado para emitir documentos tributarios electrónicos, pero falta que tu empresa tenga la autorización del SII, con este servicio quedará habilitada. Desde 30.000 pesos según los documentos que requieras certificar.</p>
-            <p>
-                <a class="btn btn-primary col-12 btn-lg" href="https://libredte.cl/ventas/dte-cert" role="button">
-                    Solicitar Certificación de DTE a SASCO SpA
-                </a>
-            </p>
+        <div class="card">
+            <div class="card-body p-4">
+                <div class="pb-4">
+                    <h1 class="display-4">¿Complicada la Certificación?</h1>
+                    <p class="lead">Déjanos este tedioso proceso a nosotros. Somos expertos en hacerla.</p>
+                    <hr class="my-4">
+                    <p>Si ya tienes un software de mercado para emitir documentos tributarios electrónicos, pero falta que tu empresa tenga la autorización del SII, con este servicio quedará habilitada. Desde 30.000 pesos según los documentos que requieras certificar.</p>
+                    <p>
+                        <a class="btn btn-primary col-12 btn-lg" href="https://libredte.cl/ventas/dte-cert" role="button">
+                            Solicitar Certificación de DTE a SASCO SpA
+                        </a>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
