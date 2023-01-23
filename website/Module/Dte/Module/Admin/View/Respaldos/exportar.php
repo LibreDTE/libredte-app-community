@@ -12,3 +12,17 @@ echo $f->input([
     'mastercheck' => true,
 ]);
 echo $f->end('Generar respaldo');
+?>
+
+<div class="row text-center mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=259">¿Cómo generar un respaldo de los datos de mi cuenta en LibreDTE?</a>
+                </h5>
+            </div>
+        </div>
+    </div>
+</div>
