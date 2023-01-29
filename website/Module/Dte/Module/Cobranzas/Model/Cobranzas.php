@@ -142,7 +142,7 @@ class Model_Cobranzas extends \Model_Plural_App
     /**
      * Método que entrega un resumen con el estado de los pagos programados por ventas a crédito
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-10-20
+     * @version 2023-01-29
      */
     public function getResumen($dia = null)
     {
@@ -153,17 +153,17 @@ class Model_Cobranzas extends \Model_Plural_App
             (
                 SELECT \'vencidos\' AS glosa, COUNT(*) AS cantidad
                 FROM cobranza
-                WHERE emisor = :emisor AND (pagado IS NULL OR pagado < monto) AND fecha < :dia
+                WHERE emisor = :emisor AND certificacion = :certificacion AND (pagado IS NULL OR pagado < monto) AND fecha < :dia
             ) UNION (
                 SELECT \'vencen_hoy\' AS glosa, COUNT(*) AS cantidad
                 FROM cobranza
-                WHERE emisor = :emisor AND (pagado IS NULL OR pagado < monto) AND fecha = :dia
+                WHERE emisor = :emisor AND certificacion = :certificacion AND (pagado IS NULL OR pagado < monto) AND fecha = :dia
             ) UNION (
                 SELECT \'vigentes\' AS glosa, COUNT(*) AS cantidad
                 FROM cobranza
-                WHERE emisor = :emisor AND (pagado IS NULL OR pagado < monto) AND fecha > :dia
+                WHERE emisor = :emisor AND certificacion = :certificacion AND (pagado IS NULL OR pagado < monto) AND fecha > :dia
             )
-        ', [':emisor' => $this->getContribuyente()->rut, ':dia'=>$dia]);
+        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion(), ':dia'=>$dia]);
     }
 
 }

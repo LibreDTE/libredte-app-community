@@ -32,14 +32,15 @@ namespace website;
 class Controller_Estadisticas extends \Controller_App
 {
 
+    protected $allowedActions = ['index', 'produccion', 'certificacion', '_api_produccion_GET', '_api_certificacion_GET', '_api_version_GET'];
+
     /**
      * Método para permitir acciones sin estar autenticado
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-10
+     * @version 2023-01-29
      */
     public function beforeFilter()
     {
-        $this->Auth->allow('index', 'produccion', 'certificacion', '_api_produccion_GET', '_api_certificacion_GET', '_api_version_GET');
         parent::beforeFilter();
     }
 
@@ -49,14 +50,14 @@ class Controller_Estadisticas extends \Controller_App
      * @param desde Desde cuando considerar la actividad de los contribuyentes
      * @param hasta Hasta cuando considerar la actividad de los contribuyentes
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-12
+     * @version 2023-01-29
      */
     public function index($certificacion = false, $desde = 1, $hasta = 0)
     {
-        $rest = new \sowerphp\core\Network_Http_Rest();
-        $response = $rest->get($this->request->url.'/api/estadisticas/'.($certificacion?'certificacion':'produccion'));
+        $response = $this->consume('/api/estadisticas/'.($certificacion?'certificacion':'produccion'));
         if ($response['status']['code']!=200) {
-            throw new \Exception($response['body']);
+            \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
+            $this->redirect('/');
         }
         $this->set($response['body']);
         $this->autoRender = false;
@@ -124,7 +125,7 @@ class Controller_Estadisticas extends \Controller_App
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
      * @version 2021-05-11
      */
-    private function getEstadistica($certificacion, $desde, $hasta)
+    protected function getEstadistica($certificacion, $desde, $hasta)
     {
         $Contribuyentes = new \website\Dte\Model_Contribuyentes();
         $contribuyentes_sii = $Contribuyentes->count();
@@ -185,7 +186,7 @@ class Controller_Estadisticas extends \Controller_App
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
      * @version 2017-09-10
      */
-    private function esVersionOficial()
+    protected function esVersionOficial()
     {
         return in_array($this->request->url, ['https://libredte.cl', 'https://desarrollo.libredte.cl']);
     }
@@ -195,7 +196,7 @@ class Controller_Estadisticas extends \Controller_App
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
      * @version 2021-10-29
      */
-    private function getVersion()
+    protected function getVersion()
     {
         $oficial = $this->esVersionOficial();
         return [
@@ -210,7 +211,7 @@ class Controller_Estadisticas extends \Controller_App
      * @author https://stackoverflow.com/a/26863768
      * @version 2018-05-22
      */
-    private function getLinuxInfo()
+    protected function getLinuxInfo()
     {
         $vars = [];
         $files = glob('/etc/*-release');
@@ -235,7 +236,7 @@ class Controller_Estadisticas extends \Controller_App
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
      * @version 2021-10-29
      */
-    private function getVersionLibreDTE()
+    protected function getVersionLibreDTE()
     {
         $HEAD = DIR_PROJECT.'/.git/logs/HEAD';
         if (!file_exists($HEAD) or !is_readable($HEAD)) {

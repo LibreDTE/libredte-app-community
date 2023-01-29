@@ -295,9 +295,9 @@ CREATE TABLE dte_emitido (
 		REFERENCES usuario (id) MATCH FULL
 		ON UPDATE CASCADE ON DELETE RESTRICT
 );
-CREATE INDEX dte_emitido_fecha_emisor_idx ON dte_emitido (fecha, emisor);
-CREATE INDEX dte_emitido_receptor_emisor_idx ON dte_emitido (receptor, emisor);
-CREATE INDEX dte_emitido_usuario_emisor_idx ON dte_emitido (usuario, emisor);
+CREATE INDEX dte_emitido_emisor_certificacion_fecha_idx ON dte_emitido (emisor, certificacion, fecha);
+CREATE INDEX dte_emitido_emisor_certificacion_receptor_idx ON dte_emitido (emisor, certificacion, receptor);
+CREATE INDEX dte_emitido_emisor_certificacion_usuario_idx ON dte_emitido (emisor, certificacion, usuario);
 CREATE INDEX dte_emitido_track_id_idx ON dte_emitido (track_id);
 CREATE INDEX dte_emitido_cesion_track_id_idx ON dte_emitido (cesion_track_id);
 
@@ -451,8 +451,8 @@ CREATE TABLE dte_recibido (
 		REFERENCES dte_intercambio (receptor, codigo, certificacion)
 		ON UPDATE CASCADE ON DELETE CASCADE
 );
-CREATE INDEX dte_recibido_fecha_emisor_idx ON dte_recibido (fecha, emisor);
-CREATE INDEX dte_recibido_receptor_emisor_idx ON dte_recibido (receptor, emisor);
+CREATE INDEX dte_recibido_receptor_certificacion_fecha_idx ON dte_recibido (receptor, certificacion, fecha);
+CREATE INDEX dte_recibido_receptor_certificacion_emisor_idx ON dte_recibido (receptor, certificacion, emisor);
 
 -- tabla para libro de compras envíados al sii
 DROP TABLE IF EXISTS dte_compra CASCADE;
