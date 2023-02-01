@@ -1073,14 +1073,14 @@ class Controller_Documentos extends \Controller_App
     /**
      * Método que guarda un Receptor
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-15
+     * @version 2023-02-01
      */
     private function guardarReceptor($datos)
     {
         if (empty($datos['RUTRecep'])) {
             throw new \Exception('No se ha indicado el RUT del receptor.');
         }
-        $aux = explode('-', $datos['RUTRecep']);
+        $aux = explode('-', str_replace('.', '', $datos['RUTRecep']));
         if (!isset($aux[1])) {
             throw new \Exception('RUT del receptor inválido.');
         }
