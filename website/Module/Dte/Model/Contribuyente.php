@@ -2209,7 +2209,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que crea los filtros para ser usados en las consultas de documentos recibidos
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+     * @version 2023-02-03
      */
     private function crearFiltrosDocumentosRecibidos($filtros)
     {
@@ -2265,8 +2265,12 @@ class Model_Contribuyente extends \Model_App
         }
         // filtrar por fechas
         if (!empty($filtros['periodo'])) {
-            $where[] = $this->db->date('Ym', 'd.fecha').' = :periodo';
+            $fecha_desde = \sowerphp\general\Utility_Date::normalize($filtros['periodo'].'01');
+            $fecha_hasta = \sowerphp\general\Utility_Date::lastDayPeriod($filtros['periodo']);
+            $where[] = '((d.periodo IS NULL AND d.fecha BETWEEN :fecha_desde AND :fecha_hasta) OR (d.periodo IS NOT NULL AND d.periodo = :periodo))';
             $vars[':periodo'] = $filtros['periodo'];
+            $vars[':fecha_desde'] = $fecha_desde;
+            $vars[':fecha_hasta'] = $fecha_hasta;
         }
         if (!empty($filtros['fecha_desde'])) {
             $where[] = 'd.fecha >= :fecha_desde';
