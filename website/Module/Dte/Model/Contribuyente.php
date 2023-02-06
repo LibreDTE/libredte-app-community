@@ -1831,24 +1831,37 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el total de ventas de un período
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-06-13
+     * @version 2023-02-06
      */
     public function countVentas($periodo)
     {
-        $periodo_col = $this->db->date('Ym', 'e.fecha');
+        $fecha_desde = \sowerphp\general\Utility_Date::normalize($periodo.'01');
+        $fecha_hasta = \sowerphp\general\Utility_Date::lastDayPeriod($periodo);
         return (integer)$this->db->getValue('
             SELECT COUNT(*)
             FROM dte_emitido AS e JOIN dte_tipo AS t ON e.dte = t.codigo
             WHERE
-                e.emisor = :rut AND e.certificacion = :certificacion AND '.$periodo_col.' = :periodo AND e.dte != 46 AND t.venta = true
+                e.emisor = :rut
+                AND e.certificacion = :certificacion
+                AND e.fecha BETWEEN :fecha_desde AND :fecha_hasta
+                AND e.dte != 46
+                AND t.venta = true
                 AND (e.emisor, e.dte, e.folio, e.certificacion) NOT IN (
                     SELECT e.emisor, e.dte, e.folio, e.certificacion
                     FROM
                         dte_emitido AS e
                         JOIN dte_referencia AS r ON r.emisor = e.emisor AND r.dte = e.dte AND r.folio = e.folio AND r.certificacion = e.certificacion
-                        WHERE e.emisor = :rut AND '.$periodo_col.' = :periodo AND r.referencia_dte = 46
+                    WHERE
+                        e.emisor = :rut
+                        AND e.fecha BETWEEN :fecha_desde AND :fecha_hasta
+                        AND r.referencia_dte = 46
                 )
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':periodo'=>$periodo]);
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':fecha_desde' => $fecha_desde,
+            ':fecha_hasta' => $fecha_hasta,
+        ]);
     }
 
     /**
@@ -2453,12 +2466,13 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el total de las compras de un período
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-06-20
+     * @version 2023-02-06
      */
     public function countCompras($periodo)
     {
-        $periodo_col = $this->db->date('Ym', 'r.fecha', 'INTEGER');
-        $periodo_col_46 = $this->db->date('Ym', 'r.fecha_hora_creacion', 'INTEGER'); ///< se asume como período el de la creación de la FC
+        $fecha_desde = \sowerphp\general\Utility_Date::normalize($periodo.'01');
+        $fecha_hasta = \sowerphp\general\Utility_Date::lastDayPeriod($periodo);
+        $fechahora_hasta = \sowerphp\general\Utility_Date::lastDayPeriod($periodo).' 23:59:59'; // se asume como período el de la creación de la FC porque la FC se podría generar en un período diferente y quedará en ese período diferente (cuando se creó)
         $compras = $this->db->getCol('
             (
                 SELECT COUNT(*)
@@ -2473,16 +2487,22 @@ class Model_Contribuyente extends \Model_App
                         FROM
                             dte_emitido AS r
                             JOIN dte_referencia AS re ON re.emisor = r.emisor AND re.dte = r.dte AND re.folio = r.folio AND re.certificacion = r.certificacion
-                            WHERE '.$periodo_col_46.' = :periodo AND re.referencia_dte = 46
+                            WHERE re.referencia_dte = 46
                     )
-                    AND ((r.periodo IS NULL AND '.$periodo_col.' = :periodo) OR (r.periodo IS NOT NULL AND r.periodo = :periodo))
+                    AND (
+                        (
+                            r.periodo IS NULL AND r.fecha BETWEEN :fecha_desde AND :fecha_hasta
+                        ) OR (
+                            r.periodo IS NOT NULL AND r.periodo = :periodo
+                        )
+                    )
             ) UNION (
                 SELECT COUNT(*)
                 FROM dte_tipo AS t JOIN dte_emitido AS r ON t.codigo = r.dte
                 WHERE
                     r.emisor = :rut
                     AND r.certificacion = :certificacion
-                    AND '.$periodo_col_46.' = :periodo
+                    AND r.fecha_hora_creacion BETWEEN :fecha_desde AND :fechahora_hasta
                     AND (
                         r.dte = 46
                         OR (r.emisor, r.dte, r.folio, r.certificacion) IN (
@@ -2490,11 +2510,18 @@ class Model_Contribuyente extends \Model_App
                             FROM
                                 dte_emitido AS r
                                 JOIN dte_referencia AS re ON re.emisor = r.emisor AND re.dte = r.dte AND re.folio = r.folio AND re.certificacion = r.certificacion
-                                WHERE '.$periodo_col_46.' = :periodo AND re.referencia_dte = 46
+                                WHERE re.referencia_dte = 46
                         )
                     )
             )
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':periodo'=>$periodo]);
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':periodo' => $periodo,
+            ':fecha_desde' => $fecha_desde,
+            ':fecha_hasta' => $fecha_hasta,
+            ':fechahora_hasta' => $fechahora_hasta,
+        ]);
         return array_sum($compras);
     }
 
