@@ -2472,7 +2472,7 @@ class Model_Contribuyente extends \Model_App
     {
         $fecha_desde = \sowerphp\general\Utility_Date::normalize($periodo.'01');
         $fecha_hasta = \sowerphp\general\Utility_Date::lastDayPeriod($periodo);
-        $fechahora_hasta = \sowerphp\general\Utility_Date::lastDayPeriod($periodo).' 23:59:59'; // se asume como período el de la creación de la FC porque la FC se podría generar en un período diferente y quedará en ese período diferente (cuando se creó)
+        $fechahora_hasta = $fecha_hasta.' 23:59:59'; // se asume como período el de la creación de la FC porque la FC se podría generar en un período diferente y quedará en ese período diferente (cuando se creó)
         $compras = $this->db->getCol('
             (
                 SELECT COUNT(*)
