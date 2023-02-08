@@ -66,22 +66,122 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
 
 // Menú principal de la aplicación web
 \sowerphp\core\Configure::write('nav.app', [
-    '/dte' => '<span class="fa fa-file-invoice fa-fw"></span> Facturación',
-    '/honorarios' => '<span class="fas fa-user-friends fa-fw"></span> Honorarios',
-    '/utilidades' => '<span class="fa fa-cog fa-fw"></span> Utilidades',
-    '/certificacion' => '<span class="fa fa-certificate fa-fw"></span> Certificación',
-    '/dte/contribuyentes/seleccionar' => '<span class="fa fa-mouse-pointer fa-fw"></span> Seleccionar empresa',
-    '/sistema' => '<span class="fa fa-cogs fa-fw"></span> Sistema',
+    'dte' => [
+        'link' => '/dte',
+        'name' => 'Facturación',
+        'icon' => 'fa fa-file-invoice',
+        'menu' => [
+            '/dashboard' => [
+                'name' => 'Dashboard DTE',
+                'icon' => 'fas fa-tachometer-alt',
+            ],
+            '/documentos/emitir' => [
+                'name' => 'Emitir documento',
+                'desc' => 'Emitir documento tributario electrónico (DTE)',
+                'icon' => 'fas fa-file-alt',
+            ],
+            '/dte_tmps/listar' => [
+                'name' => 'Documentos temporales',
+                'desc' => 'Revisar documentos temporales (borradores o cotizaciones)',
+                'icon' => 'far fa-file',
+            ],
+            '/dte_emitidos/listar' => [
+                'name' => 'Documentos emitidos',
+                'desc' => 'Revisar documentos emitidos',
+                'icon' => 'fas fa-sign-out-alt',
+            ],
+            '/dte_recibidos/listar' => [
+                'name' => 'Documentos recibidos',
+                'desc' => 'Revisar documentos recibidos',
+                'icon' => 'fas fa-sign-in-alt',
+            ],
+            '/dte_intercambios/listar' => [
+                'name' => 'Bandeja de intercambio',
+                'desc' => 'Menú de intercambio de DTE entre contribuyentes',
+                'icon' => 'fas fa-exchange-alt',
+            ],
+            '/registro_compras/pendientes' => [
+                'name' => 'Recibidos pendientes',
+                'desc' => 'Ver listado de documentos recibidos pendientes de procesar en SII',
+                'icon' => 'fas fa-paperclip',
+            ],
+            '/dte_ventas' => [
+                'name' => 'Libro de ventas',
+                'desc' => 'Acceder al Libro de Ventas',
+                'icon' => 'fa fa-book',
+            ],
+            '/dte_compras' => [
+                'name' => 'Libro de compras',
+                'desc' => 'Acceder al Libro de Compras',
+                'icon' => 'fa fa-book',
+            ],
+            '/dte_guias' => [
+                'name' => 'Libro de guías',
+                'desc' => 'Acceder al Libro de Guías de despacho',
+                'icon' => 'fa fa-book',
+            ],
+            '/dte_boletas' => [
+                'name' => 'Libro de boletas',
+                'desc' => 'Acceder al Libro de Boletas',
+                'icon' => 'fa fa-book',
+            ],
+            '/dte_boleta_consumos/listar/1/dia/D' => [
+                'name' => 'Consumo de folios',
+                'desc' => 'Resumen de Ventas Diarias (RDV) o Ex Reporte de Consumo de Folios (RCOF)',
+                'icon' => 'fa fa-archive',
+            ],
+            '/cesiones/listar' => [
+                'name' => 'Cesiones',
+                'desc' => 'Cesiones de documentos tributarios electrónicos',
+                'icon' => 'fas fa-external-link-square-alt',
+            ],
+            '/cobranzas/cobranzas/buscar' => [
+                'name' => 'Pagos programados',
+                'desc' => 'Buscar pagos programados ventas a crédito',
+                'icon' => 'fas fa-calendar-alt',
+            ],
+            '/informes' => [
+                'name' => 'Informes',
+                'desc' => 'Informes y reportes de la operación mensual',
+                'icon' => 'fa fa-file',
+            ],
+            '/admin' => [
+                'name' => 'Administración',
+                'desc' => 'Administración del módulo DTE',
+                'icon' => 'fa fa-cogs',
+            ],
+        ]
+    ],
+    'honorarios' => [
+        'link' => '/honorarios',
+        'name' => 'Honorarios',
+        'icon' => 'fas fa-user-friends',
+    ],
+    'utilidades' => [
+        'link' => '/utilidades',
+        'name' => 'Utilidades',
+        'icon' => 'fa fa-cog',
+    ],
+    'certificacion' => [
+        'link' => '/certificacion',
+        'name' => 'Certificación',
+        'icon' => 'fa fa-certificate',
+    ],
+    'seleccionar_empresa' => [
+        'link' => '/dte/contribuyentes/seleccionar',
+        'name' => 'Seleccionar empresa',
+        'icon' => 'fa fa-mouse-pointer',
+    ],
 ]);
 
 // Menú por defecto de la empresa si no tiene definido uno personalizado
 \sowerphp\core\Configure::write('nav.contribuyente', [
-    '/dte/documentos/emitir' => '<span class="fas fa-file-invoice"></span> Emitir documento',
-    '/dte/dte_tmps/listar' => '<span class="far fa-file"></span> Documentos temporales',
-    '/dte/dte_emitidos/listar' => '<span class="fas fa-sign-out-alt"></span> Documentos emitidos',
-    '/dte/dte_recibidos/listar' => '<span class="fas fa-sign-in-alt"></span> Documentos recibidos',
-    '/dte/dte_intercambios/listar' => '<span class="fas fa-exchange-alt"></span> Bandeja intercambio',
-    '/dte/informes' => '<span class="fa fa-file"></span> Informes facturación',
+    (object)['enlace' => '/dte/documentos/emitir', 'icono' => 'fas fa-file-invoice', 'nombre' => 'Emitir documento'],
+    (object)['enlace' => '/dte/dte_tmps/listar', 'icono' => 'far fa-file', 'nombre' => 'Documentos temporales'],
+    (object)['enlace' => '/dte/dte_emitidos/listar', 'icono' => 'fas fa-sign-out-alt', 'nombre' => 'Documentos emitidos'],
+    (object)['enlace' => '/dte/dte_recibidos/listar', 'icono' => 'fas fa-sign-in-alt', 'nombre' => 'Documentos recibidos'],
+    (object)['enlace' => '/dte/dte_intercambios/listar', 'icono' => 'fas fa-exchange-alt', 'nombre' => 'Bandeja de intercambio'],
+    (object)['enlace' => '/dte/informes', 'icono' => 'fa fa-file', 'nombre' => 'Informes de facturación'],
 ]);
 
 // Configuración para la base de datos

@@ -3693,25 +3693,14 @@ class Model_Contribuyente extends \Model_App
      * Método que entrega los enlaces normalizados para ser usados en el layout
      * de la aplicación
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-12-29
+     * @version 2023-02-08
      */
     public function getLinks()
     {
-        // entregar el menú de contribuyente por defecto (genérico de la aplicación)
-        if (!$this->config_extra_links) {
-            return (array)\sowerphp\core\Configure::read('nav.contribuyente');
-        }
-        // entregar menu personalizado de la empresa
-        $links = [];
-        foreach ($this->config_extra_links as $l) {
-            if ($l->nombre == '-') {
-                $links[] = '-';
-            } else {
-                if (!empty($l->icono)) {
-                    $links[$l->enlace] = '<span class="'.$l->icono.'"></span> '.$l->nombre;
-                } else {
-                    $links[$l->enlace] = $l->nombre;
-                }
+        $links = $this->config_extra_links ? $this->config_extra_links : (array)\sowerphp\core\Configure::read('nav.contribuyente');
+        foreach ($links as &$l) {
+            if (empty($l->icono)) {
+                $l->icono = 'fa-solid fa-link';
             }
         }
         return $links;

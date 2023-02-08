@@ -107,49 +107,81 @@ Versión Oficial de LibreDTE, con soporte de SASCO SpA, en: https://libredte.cl
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown_contribuyente">
                                     <?php
                                         $n_links = 0;
-                                        foreach ($Contribuyente->getLinks() as $link => $name) {
-                                            if ($name == '-') {
+                                        foreach ($Contribuyente->getLinks() as $l) {
+                                            if ($l->nombre == '-') {
                                                 if ($n_links) {
                                                     echo '<div class="dropdown-divider"></div>',"\n";
                                                 }
                                                 $n_links = 0;
                                             } else {
-                                                if ($link[0]=='/') {
-                                                    if ($_Auth->check($link)) {
+                                                if ($l->enlace=='/') {
+                                                    if ($_Auth->check($l->enlace)) {
                                                         $n_links++;
-                                                        echo '<a href="',$_base,$link,'" class="dropdown-item">',$name,'</a>',"\n";
+                                                        echo '<a href="',$_base,$l->enlace,'" class="dropdown-item"><i class="'.$l->icono.' fa-fw"></i> '.$l->nombre.'</a>',"\n";
                                                     }
                                                 } else {
                                                     $n_links++;
-                                                    echo '<a href="',$link,'" class="dropdown-item">',$name,'</a>',"\n";
+                                                    echo '<a href="',$l->enlace,'" class="dropdown-item"><i class="'.$l->icono.' fa-fw"></i> ',$l->nombre,'</a>',"\n";
                                                 }
                                             }
                                         }
                                     ?>
                                     <?php if ($Contribuyente->usuarioAutorizado($_Auth->User, 'admin')) : ?>
                                         <div class="dropdown-divider"></div>
-                                        <a href="<?=$_base?>/dte/contribuyentes/modificar/<?=$Contribuyente->rut?>" class="dropdown-item"><i class="fas fa-building"></i> Modificar empresa</a>
-                                        <a href="<?=$_base?>/dte/contribuyentes/usuarios/<?=$Contribuyente->rut?>" class="dropdown-item"><i class="fas fa-users"></i> Autorizar usuarios</a>
+                                        <a href="<?=$_base?>/dte/contribuyentes/modificar/<?=$Contribuyente->rut?>" class="dropdown-item">
+                                            <i class="fas fa-edit fa-fw"></i> Configuración de la empresa
+                                        </a>
+                                        <a href="<?=$_base?>/dte/contribuyentes/usuarios/<?=$Contribuyente->rut?>" class="dropdown-item">
+                                            <i class="fas fa-users fa-fw"></i> Mantenedor de usuarios
+                                        </a>
                                     <?php endif; ?>
                                 </div>
                             </li>
                         <?php endif; ?>
-                    <li class="dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" id="dropdown_menu"><strong>Menú</strong></a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown_menu">
-                            <?php
-                                foreach ($_nav_app as $link=>&$info) {
-                                    if ($_Auth->check($link)) {
-                                        if(!is_array($info)) $info = ['name'=>$info];
-                                        echo '<a href="',$_base,$link,'" class="dropdown-item">',$info['name'],'</a>',"\n";
-                                    }
-                                }
-                            ?>
-                            <div class="dropdown-divider"></div>
-                            <a href="<?=$_base?>/usuarios/perfil" class="dropdown-item"><span class="fa fa-user fa-fw" aria-hidden="true"></span> Perfil de usuario</a>
-                            <a href="<?=$_base?>/usuarios/salir" class="dropdown-item"><span class="fas fa-sign-out-alt fa-fw" aria-hidden="true"></span> Cerrar sesión</a>
-                        </div>
-                    </li>
+                        <li class="dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside" aria-expanded="false" id="dropdown_menu"><strong>Menú</strong></a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                                <?php $anio = date('Y'); $dia = date('Y-m-d'); ?>
+                                <?php foreach ($_nav_app as $module => $nav) : ?>
+                                <?php if ($_Auth->check($nav['link'])) : ?>
+                                    <?php if (isset($nav['menu'])) : ?>
+                                        <li class="dropstart">
+                                        <a type="button" class="dropdown-item" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span class="<?=$nav['icon']?> fa-fw"></span> <?=$nav['name']?>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-submenu dropdown-submenu-left">
+                                            <?php foreach ($nav['menu'] as $link => $menu) : ?>
+                                                <?php $link = str_replace(['{anio}', '{dia}'], [$anio, $dia], $link); ?>
+                                                <?php if ($_Auth->check($nav['link'].$link)) : ?>
+                                                <li>
+                                                    <a href="<?=$nav['link'].$link?>" class="dropdown-item" title="<?=!empty($menu['desc'])?$menu['desc']:''?>">
+                                                        <i class="<?=$menu['icon']?> fa-fw"></i>
+                                                        <?=$menu['name']?>
+                                                    </a>
+                                                </li>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                        </li>
+                                    <?php else: ?>
+                                        <li><a href="<?= $nav['link'] ?>" class="dropdown-item"><span class="<?=$nav['icon']?>"></span> <?=$nav['name']?></a></li>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                                <?php endforeach; ?>
+                                <div class="dropdown-divider"></div>
+                                <?php if ($_Auth->User->inGroup('soporte')) : ?>
+                                    <li><a class="dropdown-item" href="<?=$_base?>/sistema"><span class="fa fa-cogs fa-fw" aria-hidden="true"></span> Sistema</a></li>
+                                <?php endif; ?>
+                                <li><a href="<?=$_base?>/usuarios/perfil" class="dropdown-item">
+                                    <span class="fa fa-user fa-fw" aria-hidden="true"></span>
+                                    Perfil de usuario
+                                </a></li>
+                                <li><a href="<?=$_base?>/usuarios/salir" class="dropdown-item">
+                                    <span class="fas fa-sign-out-alt fa-fw" aria-hidden="true"></span>
+                                    Cerrar sesión
+                                </a></li>
+                            </ul>
+                        </li>
                     <?php endif; ?>
                 </ul>
             </div>
