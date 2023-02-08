@@ -33,7 +33,7 @@ echo View_Helper_Dashboard::cards([
                 <i class="far fa-chart-bar fa-fw"></i> Documentos emitidos por día
             </div>
             <div class="card-body">
-                <div id="grafico-documentos_diarios"></div>
+                <canvas id="grafico_documentos_diarios"></canvas>
             </div>
         </div>
         <!-- fin grafico dte emitidos por día -->
@@ -43,7 +43,7 @@ echo View_Helper_Dashboard::cards([
                 <i class="far fa-chart-bar fa-fw"></i> Usuarios mensuales que iniciaron sesión por última vez
             </div>
             <div class="card-body">
-                <div id="grafico-usuarios_mensuales"></div>
+                <canvas id="grafico_usuarios_mensuales"></canvas>
             </div>
         </div>
         <!-- fin grafico usuarios mensuales -->
@@ -53,7 +53,7 @@ echo View_Helper_Dashboard::cards([
                 <i class="far fa-map fa-fw"></i> Empresas registradas por comuna
             </div>
             <div class="card-body">
-                <div id="grafico-contribuyentes_por_comuna"></div>
+                <canvas id="grafico_contribuyentes_por_comuna"></canvas>
             </div>
         </div>
         <!-- fin grafico empresas por comuna -->
@@ -63,7 +63,7 @@ echo View_Helper_Dashboard::cards([
                 <i class="far fa-map fa-fw"></i> Empresas registradas por actividad económica
             </div>
             <div class="card-body">
-                <div id="grafico-contribuyentes_por_actividad"></div>
+                <canvas id="grafico_contribuyentes_por_actividad"></canvas>
             </div>
         </div>
         <!-- fin grafico empresas por actividad económica -->
@@ -75,36 +75,121 @@ echo View_Helper_Dashboard::cards([
 </a>
 
 <script>
-Morris.Bar({
-    element: 'grafico-documentos_diarios',
-    data: <?=json_encode($documentos_diarios)?>,
-    xkey: 'dia',
-    ykeys: ['total'],
-    labels: ['Emitidos'],
-    resize: true
-});
-Morris.Bar({
-    element: 'grafico-usuarios_mensuales',
-    data: <?=json_encode($usuarios_mensuales)?>,
-    xkey: 'mes',
-    ykeys: ['usuarios'],
-    labels: ['Usuarios'],
-    resize: true
-});
-Morris.Bar({
-    element: 'grafico-contribuyentes_por_comuna',
-    data: <?=json_encode($contribuyentes_por_comuna)?>,
-    xkey: 'comuna',
-    ykeys: ['contribuyentes'],
-    labels: ['Empresas'],
-    resize: true
-});
-Morris.Bar({
-    element: 'grafico-contribuyentes_por_actividad',
-    data: <?=json_encode($contribuyentes_por_actividad)?>,
-    xkey: 'actividad_economica',
-    ykeys: ['contribuyentes'],
-    labels: ['Empresas'],
-    resize: true
-});
+const getDataColors = opacity => {
+    const colors = ['#2061A4', '#9CC9FF', '#105A9C', '#001348', '#BCE8FF']
+    return colors.map(color => opacity ? `${color + opacity}` : color)
+}
+
+const printCharts = () => {
+    documentosDiariosChart(<?=json_encode($documentos_diarios)?>)
+    usuariosMensualesChart(<?=json_encode($usuarios_mensuales)?>)
+    contribuyentesComunaChart(<?=json_encode($contribuyentes_por_comuna)?>)
+    contribuyentesActividadChart(<?=json_encode($contribuyentes_por_comuna)?>)
+}
+
+const documentosDiariosChart = documentos => {
+
+    const data = {
+        labels: documentos.map(documento => documento.dia),
+        datasets: [{
+            label: 'Emitidos',
+            data: documentos.map(documento => documento.total),
+            borderColor: getDataColors(),
+            backgroundColor: getDataColors(50),
+        }]
+    }
+
+    const options = {
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+        }
+    }
+
+    new Chart('grafico_documentos_diarios', { type: 'bar', data, options})
+}
+
+const usuariosMensualesChart = usuarios => {
+
+    const data = {
+        labels: usuarios.map(usuario => usuario.mes),
+        datasets: [{
+            label: 'Usuarios',
+            data: usuarios.map(usuario => usuario.usuarios),
+            borderColor: getDataColors(),
+            backgroundColor: getDataColors(50),
+        }]
+    }
+
+    const options = {
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+        }
+    }
+
+    new Chart('grafico_usuarios_mensuales', { type: 'bar', data, options})
+}
+
+const contribuyentesComunaChart = contribuyentes => {
+
+    const data = {
+        labels: contribuyentes.map(contribuyente => contribuyente.comuna),
+        datasets: [{
+            label: 'Empresas',
+            data: contribuyentes.map(contribuyente => contribuyente.contribuyentes),
+            borderColor: getDataColors(),
+            backgroundColor: getDataColors(50),
+        }]
+    }
+
+    const options = {
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+        }
+    }
+
+    new Chart('grafico_contribuyentes_por_comuna', { type: 'bar', data, options})
+}
+
+const contribuyentesActividadChart = contribuyentes => {
+
+    const data = {
+        labels: contribuyentes.map(contribuyente => contribuyente.actividad_economica),
+        datasets: [{
+            label: 'Empresas',
+            data: contribuyentes.map(contribuyente => contribuyente.contribuyentes),
+            borderColor: getDataColors(),
+            backgroundColor: getDataColors(50),
+        }]
+    }
+
+    const options = {
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+        }
+    }
+
+    new Chart('grafico_contribuyentes_por_actividad', { type: 'bar', data, options})
+}
+
+printCharts()
 </script>
