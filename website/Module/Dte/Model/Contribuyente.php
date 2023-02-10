@@ -1347,7 +1347,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que crea los filtros para ser usados en las consultas de documentos emitidos
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-01-05
+     * @version 2023-02-10
      */
     private function crearFiltrosDocumentosEmitidos($filtros)
     {
@@ -1426,6 +1426,10 @@ class Model_Contribuyente extends \Model_App
             $vars[':razon_social'] = '%'.$filtros['razon_social'].'%';
         }
         // otros filtros
+        if (!empty($filtros['periodo'])) {
+            $filtros['fecha_desde'] = \sowerphp\general\Utility_Date::normalize($filtros['periodo'].'01');
+            $filtros['fecha_hasta'] = \sowerphp\general\Utility_Date::lastDayPeriod($filtros['periodo']);
+        }
         if (!empty($filtros['fecha_desde'])) {
             $where[] = 'd.fecha >= :fecha_desde';
             $vars[':fecha_desde'] = $filtros['fecha_desde'];
@@ -1450,10 +1454,6 @@ class Model_Contribuyente extends \Model_App
                 $where[] = 'd.sucursal_sii IS NULL';
             }
         }
-        if (!empty($filtros['periodo'])) {
-            $where[] = $this->db->date('Ym', 'd.fecha').' = :periodo';
-            $vars[':periodo'] = $filtros['periodo'];
-        }
         if (isset($filtros['receptor_evento'])) {
             if ($filtros['receptor_evento']) {
                 $where[] = 'd.receptor_evento = :receptor_evento';
@@ -1464,6 +1464,12 @@ class Model_Contribuyente extends \Model_App
         }
         if (!empty($filtros['cedido'])) {
             $where[] = 'd.cesion_track_id IS NOT NULL';
+        }
+        // vendedor
+        if (!empty($filtros['vendedor'])) {
+            $vendedor_col = $this->db->xml('d.xml', '/EnvioDTE/SetDTE/DTE/*/Encabezado/Emisor/CdgVendedor', 'http://www.sii.cl/SiiDte');
+            $where[] = $vendedor_col.' = :vendedor';
+            $vars[':vendedor'] = $filtros['vendedor'];
         }
         // si se debe hacer búsqueda dentro de los XML
         if (!empty($filtros['xml'])) {
@@ -2222,7 +2228,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que crea los filtros para ser usados en las consultas de documentos recibidos
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-02-03
+     * @version 2023-02-10
      */
     private function crearFiltrosDocumentosRecibidos($filtros)
     {
