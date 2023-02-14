@@ -246,7 +246,7 @@ echo $f->input([
 ?>
 <?php if (isset($Contribuyente)) : ?>
 <div class="text-center">
-    <img src="../logo/<?=$Contribuyente->rut?>.png" alt="Logo <?=$Contribuyente->razon_social?>" class="img-fluid img-thumbnail" />
+    <img src="../logo/<?=$Contribuyente->rut?>.png" alt="Logo <?=$Contribuyente->razon_social?>" class="img-fluid" />
     <br/><br/>
 </div>
 <?php endif; ?>
