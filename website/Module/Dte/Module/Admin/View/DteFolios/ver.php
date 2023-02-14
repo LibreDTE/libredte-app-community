@@ -110,29 +110,35 @@ $t = new \sowerphp\general\View_Helper_Table();
 $t->setColsWidth([null, null, null, null, null, null, null, 90]);
 echo $t->generate($cafs);
 ?>
-<div class="mt-4">
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=10">¿Cómo solicito folios?</a>
-            </h5>
+<div class="mb-4 row row-cols-3">
+    <div class="col">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=10">¿Cómo solicito folios?</a>
+                </h5>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=83">¿Cómo reobtener folios?</a>
-            </h5>
+    <div class="col">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=83">¿Cómo reobtener folios?</a>
+                </h5>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=93">¿Cómo cambio el folio siguiente?</a>
-            </h5>
+    <div class="col">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=93">¿Cómo cambio el folio siguiente?</a>
+                </h5>
+            </div>
         </div>
     </div>
 </div>
