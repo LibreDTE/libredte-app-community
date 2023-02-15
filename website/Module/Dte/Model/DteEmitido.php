@@ -1515,7 +1515,7 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que envía el DTE por correo electrónico
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-04-21
+     * @version 2023-02-15
      */
     public function email($to = null, $subject = null, $msg = null, $pdf = false, $cedible = false, $papelContinuo = null, $use_template = true)
     {
@@ -1610,7 +1610,7 @@ class Model_DteEmitido extends Model_Base_Envio
                 }
             }
             // todo ok
-            return true;
+            return $to;
         } else {
             throw new \Exception(
                 'No fue posible enviar el email: '.$status['message']

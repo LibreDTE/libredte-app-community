@@ -282,7 +282,7 @@ class Controller_DteTmps extends \Controller_App
     /**
      * Acción de la API que permite enviar el documento temporal por correo electrónico
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-02-21
+     * @version 2023-02-15
      */
     public function _api_enviar_email_POST($receptor, $dte, $codigo, $emisor)
     {
@@ -315,8 +315,8 @@ class Controller_DteTmps extends \Controller_App
         ], (array)$this->Api->data);
         // enviar por correo
         try {
-            $DteTmp->email($data['emails'], $data['asunto'], $data['mensaje'], $data['cotizacion'], $data['plantilla']);
-            return true;
+            $emails = $DteTmp->email($data['emails'], $data['asunto'], $data['mensaje'], $data['cotizacion'], $data['plantilla']);
+            return $emails;
         } catch (\Exception $e) {
             $this->Api->send($e->getMessage(), 500);
         }

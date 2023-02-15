@@ -672,7 +672,7 @@ class Model_DteTmp extends \Model_App
     /**
      * Método que envía el DTE temporal por correo electrónico
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-02-21
+     * @version 2023-02-15
      */
     public function email($to = null, $subject = null, $msg = null, $cotizacion = true, $use_template = true)
     {
@@ -757,7 +757,7 @@ class Model_DteTmp extends \Model_App
                 }
             }
             // todo ok
-            return true;
+            return $to;
         } else {
             throw new \Exception('No fue posible enviar el email: '.$status['message']);
         }

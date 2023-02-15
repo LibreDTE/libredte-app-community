@@ -1676,7 +1676,7 @@ class Controller_DteEmitidos extends \Controller_App
     /**
      * Acción de la API que permite enviar el DTE emitido por correo electrónico
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-02-21
+     * @version 2023-02-15
      */
     public function _api_enviar_email_POST($dte, $folio, $emisor)
     {
@@ -1718,8 +1718,8 @@ class Controller_DteEmitidos extends \Controller_App
         ], $this->Api->data);
         // enviar por correo
         try {
-            $DteEmitido->email($data['emails'], $data['asunto'], $data['mensaje'], $data['pdf'], $data['cedible'], $data['papelContinuo'], $data['plantilla']);
-            return 'Correo envíado';
+            $emails = $DteEmitido->email($data['emails'], $data['asunto'], $data['mensaje'], $data['pdf'], $data['cedible'], $data['papelContinuo'], $data['plantilla']);
+            return $emails;
         } catch (\Exception $e) {
             $this->Api->send($e->getMessage(), 500);
         }
