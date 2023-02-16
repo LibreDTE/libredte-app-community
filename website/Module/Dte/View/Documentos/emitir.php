@@ -293,7 +293,7 @@ echo $f->input([
     <div class="row mb-2">
         <div class=" col-md-12">
 <?php
-if (isset($datos) and isset($datos['DscRcgGlobal'])) {
+if (isset($datos) and !empty($datos['DscRcgGlobal'])) {
     if (!isset($datos['DscRcgGlobal'][0])) {
         $datos['DscRcgGlobal'] = [$datos['DscRcgGlobal']];
     }
