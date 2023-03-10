@@ -188,8 +188,8 @@ if ($DteTmp->getTipo()->permiteCobro()) :
 $share_telephone = $DteTmp->getCelular();
 $share_message = '¡Hola! Soy de '.$Emisor->getNombre().'. Te adjunto el enlace al PDF de la cotización N° '.$DteTmp->getFolio().': '.$links['pdf'];
 ?>
-    <div class="row">
-        <div class="col-md-6 mb-2">
+    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2">
+        <div class="col mb-4">
             <div class="btn-group w-100" role="group">
                 <a class="btn btn-info btn-lg col-12" href="<?=$links['pdf']?>" role="button">
                     Enlace público a la cotización
@@ -197,15 +197,15 @@ $share_message = '¡Hola! Soy de '.$Emisor->getNombre().'. Te adjunto el enlace 
                 <button type="button" class="btn btn-info" onclick="__.copy('<?=$links['pdf']?>')" title="Copiar enlace"><i class="fa fa-copy"></i></button>
             </div>
         </div>
-        <div class="col-md-6 mb-2">
+        <div class="col mb-4">
             <a class="btn btn-success btn-lg col-12" href="#" onclick="__.share('<?=$share_telephone?>', '<?=$share_message?>'); return false" role="button">
                 Enviar PDF por WhatsApp
             </a>
         </div>
     </div>
 <?php endif; ?>
-<div class="row row-cols-2 g-3 mt-4">
-    <div class="col">
+<div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2">
+    <div class="col mb-4">
         <div class="card">
             <div class="card-body text-center">
                 <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>

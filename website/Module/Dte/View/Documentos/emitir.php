@@ -53,32 +53,32 @@ if (!empty($reemplazar_receptor) and !empty($reemplazar_dte) and !empty($reempla
     </div>
 <?php endif; ?>
     <?=$f->input(['type'=>'hidden', 'name'=>'lista_precios', 'value'=>0])?>
-    <div class="row mb-4">
-        <div class="col-md-3"><?=$f->input(['name'=>'TpoDoc', 'type'=>'select', 'options'=> $tipos_dte_autorizados, 'value'=>$dte_defecto, 'onblur'=>'DTE.setTipo(this.value)'])?></div>
-        <div class="col-md-3"><?=$f->input(['type' => 'date', 'name' => 'FchEmis', 'placeholder'=>'Fecha emisión DTE', 'popover'=>'Día en que se emite el documento', 'value'=>$hoy, 'check' => 'notempty date'])?></div>
-        <div class="col-md-3"><?=$f->input(['name'=>'FmaPago', 'type'=>'select', 'options'=>[''=>'Sin forma de pago', 1=>'Contado', 2=>'Crédito', 3=>'Sin costo (entrega gratuita)'], 'value'=>!empty($datos['Encabezado']['IdDoc']['FmaPago'])?$datos['Encabezado']['IdDoc']['FmaPago']:$Emisor->config_emision_forma_pago, 'onblur'=>'DTE.setFormaPago(this.value)'])?></div>
-        <div class="col-md-3"><?=$f->input(['type' => 'date', 'name' => 'FchVenc', 'placeholder'=>'Vencimiento o pago anticipado', 'popover'=>'Día máximo a pagar (fecha mayor a emisión) o día en que se pagó el documento (fecha menor a emisión)', 'value'=>$hoy, 'check' => 'notempty date'])?></div>
+    <div class="row">
+        <div class="col-md-3 mb-4"><?=$f->input(['name'=>'TpoDoc', 'type'=>'select', 'options'=> $tipos_dte_autorizados, 'value'=>$dte_defecto, 'onblur'=>'DTE.setTipo(this.value)'])?></div>
+        <div class="col-md-3 mb-4"><?=$f->input(['type' => 'date', 'name' => 'FchEmis', 'placeholder'=>'Fecha emisión DTE', 'popover'=>'Día en que se emite el documento', 'value'=>$hoy, 'check' => 'notempty date'])?></div>
+        <div class="col-md-3 mb-4"><?=$f->input(['name'=>'FmaPago', 'type'=>'select', 'options'=>[''=>'Sin forma de pago', 1=>'Contado', 2=>'Crédito', 3=>'Sin costo (entrega gratuita)'], 'value'=>!empty($datos['Encabezado']['IdDoc']['FmaPago'])?$datos['Encabezado']['IdDoc']['FmaPago']:$Emisor->config_emision_forma_pago, 'onblur'=>'DTE.setFormaPago(this.value)'])?></div>
+        <div class="col-md-3 mb-4"><?=$f->input(['type' => 'date', 'name' => 'FchVenc', 'placeholder'=>'Vencimiento o pago anticipado', 'popover'=>'Día máximo a pagar (fecha mayor a emisión) o día en que se pagó el documento (fecha menor a emisión)', 'value'=>$hoy, 'check' => 'notempty date'])?></div>
     </div>
 <?php if ($Emisor->config_extra_indicador_servicio) : ?>
     <!-- INDICADOR DE SERVICIO -->
-    <div class="row mb-4">
-        <div class=" col-md-6"><?=$f->input(['type'=>'select', 'name'=>'IndServicio', 'options'=>[''=>'Sin indicador de servicios'] + $IndServicio, 'value'=>!empty($datos['Encabezado']['IdDoc']['IndServicio'])?$datos['Encabezado']['IdDoc']['IndServicio']:($Emisor->config_extra_indicador_servicio>0?$Emisor->config_extra_indicador_servicio:null)])?></div>
-        <div class=" col-md-3"><?=$f->input(['type' => 'date', 'name' => 'PeriodoDesde', 'placeholder'=>'Período facturación desde', 'popover'=>'Fecha inicial del período de facturación', 'check' => 'date', 'value'=>!empty($datos['Encabezado']['IdDoc']['PeriodoDesde'])?$datos['Encabezado']['IdDoc']['PeriodoDesde']:null])?></div>
-        <div class=" col-md-3"><?=$f->input(['type' => 'date', 'name' => 'PeriodoHasta', 'placeholder'=>'Período facturación hasta', 'popover'=>'Fecha final del período de facturación', 'check' => 'date', 'value'=>!empty($datos['Encabezado']['IdDoc']['PeriodoHasta'])?$datos['Encabezado']['IdDoc']['PeriodoHasta']:null])?></div>
+    <div class="row">
+        <div class="col-md-6 mb-4"><?=$f->input(['type'=>'select', 'name'=>'IndServicio', 'options'=>[''=>'Sin indicador de servicios'] + $IndServicio, 'value'=>!empty($datos['Encabezado']['IdDoc']['IndServicio'])?$datos['Encabezado']['IdDoc']['IndServicio']:($Emisor->config_extra_indicador_servicio>0?$Emisor->config_extra_indicador_servicio:null)])?></div>
+        <div class="col-md-3 mb-4"><?=$f->input(['type' => 'date', 'name' => 'PeriodoDesde', 'placeholder'=>'Período facturación desde', 'popover'=>'Fecha inicial del período de facturación', 'check' => 'date', 'value'=>!empty($datos['Encabezado']['IdDoc']['PeriodoDesde'])?$datos['Encabezado']['IdDoc']['PeriodoDesde']:null])?></div>
+        <div class="col-md-3 mb-4"><?=$f->input(['type' => 'date', 'name' => 'PeriodoHasta', 'placeholder'=>'Período facturación hasta', 'popover'=>'Fecha final del período de facturación', 'check' => 'date', 'value'=>!empty($datos['Encabezado']['IdDoc']['PeriodoHasta'])?$datos['Encabezado']['IdDoc']['PeriodoHasta']:null])?></div>
     </div>
 <?php endif; ?>
     <!-- DATOS DEL EMISOR -->
-    <div class="row mb-2">
+    <div class="row">
         <input type="hidden" name="RUTEmisor" id="RUTEmisorField" value="<?=$Emisor->rut?>" />
-        <div class=" col-md-2"><?=$f->input(['name'=>'CdgVendedor', 'placeholder' => 'Código vendedor', 'popover' => 'Código del vendedor asociado al DTE', 'value'=>$_Auth->User->usuario, 'check' => 'notempty', 'attr' => 'maxlength="60"'])?></div>
-        <div class=" col-md-4"><?=$f->input(['type' => 'select', 'name' => 'CdgSIISucur', 'value' => (!empty($datos['Encabezado']['Emisor']['CdgSIISucur'])?$datos['Encabezado']['Emisor']['CdgSIISucur']:$sucursal), 'options' => $sucursales, 'attr'=>'onchange="emisor_set_actividad()"'])?></div>
-        <div class=" col-md-3"><?=$f->input(['type' => 'select', 'name' => 'Acteco', 'options' => $actividades_economicas, 'value'=>!empty($datos['Encabezado']['Emisor']['Acteco'])?$datos['Encabezado']['Emisor']['Acteco']:$Emisor->actividad_economica, 'check' => 'notempty', 'attr'=>'onchange="emisor_set_giro()"'])?></div>
-        <div class=" col-md-3"><?=$f->input(['name'=>'GiroEmis', 'placeholder' => 'Giro del emisor', 'popover' => 'Giro del emisor del DTE', 'value'=>isset($datos)?(!empty($datos['Encabezado']['Emisor']['GiroEmis'])?$datos['Encabezado']['Emisor']['GiroEmis']:$datos['Encabezado']['Emisor']['GiroEmisor']):$Emisor->giro, 'check' => 'notempty', 'attr' => 'maxlength="80"'])?></div>
+        <div class="col-md-2 mb-4"><?=$f->input(['name'=>'CdgVendedor', 'placeholder' => 'Código vendedor', 'popover' => 'Código del vendedor asociado al DTE', 'value'=>$_Auth->User->usuario, 'check' => 'notempty', 'attr' => 'maxlength="60"'])?></div>
+        <div class="col-md-4 mb-4"><?=$f->input(['type' => 'select', 'name' => 'CdgSIISucur', 'value' => (!empty($datos['Encabezado']['Emisor']['CdgSIISucur'])?$datos['Encabezado']['Emisor']['CdgSIISucur']:$sucursal), 'options' => $sucursales, 'attr'=>'onchange="emisor_set_actividad()"'])?></div>
+        <div class="col-md-3 mb-4"><?=$f->input(['type' => 'select', 'name' => 'Acteco', 'options' => $actividades_economicas, 'value'=>!empty($datos['Encabezado']['Emisor']['Acteco'])?$datos['Encabezado']['Emisor']['Acteco']:$Emisor->actividad_economica, 'check' => 'notempty', 'attr'=>'onchange="emisor_set_giro()"'])?></div>
+        <div class="col-md-3 mb-4"><?=$f->input(['name'=>'GiroEmis', 'placeholder' => 'Giro del emisor', 'popover' => 'Giro del emisor del DTE', 'value'=>isset($datos)?(!empty($datos['Encabezado']['Emisor']['GiroEmis'])?$datos['Encabezado']['Emisor']['GiroEmis']:$datos['Encabezado']['Emisor']['GiroEmisor']):$Emisor->giro, 'check' => 'notempty', 'attr' => 'maxlength="80"'])?></div>
     </div>
-    <p>(*) modificar el giro y/o actividad económica del emisor sólo afectará a la emisión de este documento, no se guardarán estos cambios.</p>
+    <p class="mb-4">(*) modificar el giro y/o actividad económica del emisor sólo afectará a la emisión de este documento, no se guardarán estos cambios.</p>
     <!-- DATOS DEL RECEPTOR -->
-    <div class="row mb-4 mt-4">
-        <div class=" col-md-3">
+    <div class="row">
+        <div class="col-md-3 mb-4">
             <?php if (!isset($datos) or $datos['Encabezado']['Receptor']['RUTRecep']=='66666666-6' or $referencia == 'copia') : ?>
                 <div class="input-group">
                     <a href="#" class="btn btn-primary" type="button" title="Buscar RUT del receptor [B]" data-bs-toggle="modal" data-bs-target=".modal-buscar-receptor" accesskey="B" id="modalBuscar"><i class="fas fa-search"></i></a>
@@ -94,18 +94,18 @@ if (!empty($reemplazar_receptor) and !empty($reemplazar_dte) and !empty($reempla
                     <script>$(function(){$('#RznSocRecepField').focus()});</script>
             <?php endif; ?>
         </div>
-        <div class=" col-md-9"><?=$f->input(['name' => 'RznSocRecep', 'placeholder' => 'Razón social del receptor', 'check' => 'notempty', 'attr' => 'maxlength="100"', 'value'=>!empty($datos['Encabezado']['Receptor']['RznSocRecep'])?$datos['Encabezado']['Receptor']['RznSocRecep']:''])?></div>
+        <div class=" col-md-9 mb-4"><?=$f->input(['name' => 'RznSocRecep', 'placeholder' => 'Razón social del receptor', 'check' => 'notempty', 'attr' => 'maxlength="100"', 'value'=>!empty($datos['Encabezado']['Receptor']['RznSocRecep'])?$datos['Encabezado']['Receptor']['RznSocRecep']:''])?></div>
     </div>
-    <div class="row mb-4">
-        <div class=" col-md-6"><?=$f->input(['name' => 'GiroRecep', 'placeholder' => 'Giro del receptor', 'check' => 'notempty', 'attr' => 'maxlength="40"', 'value'=>!empty($datos['Encabezado']['Receptor']['GiroRecep'])?mb_substr($datos['Encabezado']['Receptor']['GiroRecep'],0,40):''])?></div>
-        <div class=" col-md-3"><?=$f->input([ 'name' => 'DirRecep', 'placeholder' => 'Dirección del receptor', 'check' => 'notempty', 'attr' => 'maxlength="70"', 'value'=>!empty($datos['Encabezado']['Receptor']['DirRecep'])?$datos['Encabezado']['Receptor']['DirRecep']:''])?></div>
-        <div class=" col-md-3"><?=$f->input(['type' => 'select', 'name' => 'CmnaRecep', 'options' => [''=>'Comuna del receptor'] + $comunas, 'check' => 'notempty', 'value'=>!empty($datos['Encabezado']['Receptor']['CmnaRecep'])?$datos['Encabezado']['Receptor']['CmnaRecep']:''])?></div>
+    <div class="row">
+        <div class="col-md-6 mb-4"><?=$f->input(['name' => 'GiroRecep', 'placeholder' => 'Giro del receptor', 'check' => 'notempty', 'attr' => 'maxlength="40"', 'value'=>!empty($datos['Encabezado']['Receptor']['GiroRecep'])?mb_substr($datos['Encabezado']['Receptor']['GiroRecep'],0,40):''])?></div>
+        <div class="col-md-3 mb-4"><?=$f->input([ 'name' => 'DirRecep', 'placeholder' => 'Dirección del receptor', 'check' => 'notempty', 'attr' => 'maxlength="70"', 'value'=>!empty($datos['Encabezado']['Receptor']['DirRecep'])?$datos['Encabezado']['Receptor']['DirRecep']:''])?></div>
+        <div class="col-md-3 mb-4"><?=$f->input(['type' => 'select', 'name' => 'CmnaRecep', 'options' => [''=>'Comuna del receptor'] + $comunas, 'check' => 'notempty', 'value'=>!empty($datos['Encabezado']['Receptor']['CmnaRecep'])?$datos['Encabezado']['Receptor']['CmnaRecep']:''])?></div>
     </div>
-    <div class="row mb-4">
-        <div class=" col-md-3"><?=$f->input(['name' => 'CorreoRecep', 'placeholder' => 'Email del receptor (opcional)', 'check'=>'email', 'attr' => 'maxlength="80"', 'value'=>!empty($datos['Encabezado']['Receptor']['CorreoRecep'])?$datos['Encabezado']['Receptor']['CorreoRecep']:''])?></div>
-        <div class=" col-md-3"><?=$f->input(['name' => 'Contacto', 'placeholder' => 'Teléfono del receptor (opcional)', 'check'=>'telephone', 'attr' => 'maxlength="20"', 'value'=>!empty($datos['Encabezado']['Receptor']['Contacto'])?$datos['Encabezado']['Receptor']['Contacto']:''])?></div>
-        <div class=" col-md-3"><?=$f->input(['name' => 'CdgIntRecep', 'placeholder' => 'Código receptor (opcional)', 'attr' => 'maxlength="20"', 'value'=>!empty($datos['Encabezado']['Receptor']['CdgIntRecep'])?$datos['Encabezado']['Receptor']['CdgIntRecep']:''])?></div>
-        <div class=" col-md-3"><?=$f->input(['name' => 'RUTSolicita', 'placeholder' => 'RUT que solicita el DTE (opcional)', 'check'=>'rut', 'attr' => 'maxlength="10"', 'value'=>!empty($datos['Encabezado']['RUTSolicita'])?$datos['Encabezado']['RUTSolicita']:''])?></div>
+    <div class="row">
+        <div class="col-md-3 mb-4"><?=$f->input(['name' => 'CorreoRecep', 'placeholder' => 'Email del receptor (opcional)', 'check'=>'email', 'attr' => 'maxlength="80"', 'value'=>!empty($datos['Encabezado']['Receptor']['CorreoRecep'])?$datos['Encabezado']['Receptor']['CorreoRecep']:''])?></div>
+        <div class="col-md-3 mb-4"><?=$f->input(['name' => 'Contacto', 'placeholder' => 'Teléfono del receptor (opcional)', 'check'=>'telephone', 'attr' => 'maxlength="20"', 'value'=>!empty($datos['Encabezado']['Receptor']['Contacto'])?$datos['Encabezado']['Receptor']['Contacto']:''])?></div>
+        <div class="col-md-3 mb-4"><?=$f->input(['name' => 'CdgIntRecep', 'placeholder' => 'Código receptor (opcional)', 'attr' => 'maxlength="20"', 'value'=>!empty($datos['Encabezado']['Receptor']['CdgIntRecep'])?$datos['Encabezado']['Receptor']['CdgIntRecep']:''])?></div>
+        <div class="col-md-3 mb-4"><?=$f->input(['name' => 'RUTSolicita', 'placeholder' => 'RUT que solicita el DTE (opcional)', 'check'=>'rut', 'attr' => 'maxlength="10"', 'value'=>!empty($datos['Encabezado']['RUTSolicita'])?$datos['Encabezado']['RUTSolicita']:''])?></div>
     </div>
     <!-- DATOS DE TRANSPORTE EN CASO QUE SEA GUÍA DE DESPACHO -->
     <div class="row" id="datosTransporte" style="display:none">
@@ -127,6 +127,7 @@ if (!empty($reemplazar_receptor) and !empty($reemplazar_dte) and !empty($reempla
     <!-- DATOS DE EXPORTACIÖN -->
     <div class="row mb-4" id="datosExportacion" style="display:none">
         <div class="col-md-12">
+            <div class="table-responsive">
             <?php new \sowerphp\general\View_Helper_Table([
                 ['Moneda', 'Nacionalidad', 'ID cliente', 'Tipo de cambio'],
                 [
@@ -136,11 +137,13 @@ if (!empty($reemplazar_receptor) and !empty($reemplazar_dte) and !empty($reempla
                     $f->input(['name'=>'TpoCambio', 'label'=>'Tipo de cambio', 'placeholder'=>'Tipo de cambio', 'popover'=>'Dejar vacío para determinar automáticamente', 'check'=>'real']),
                 ]
             ]); ?>
+            </div>
         </div>
     </div>
     <!-- DETALLE DEL DOCUMENTO -->
     <div class="row mb-4">
         <div class=" col-md-12">
+            <div class="table-responsive">
 <?php
 $popover_growup = ' <i class="fa fa-question-circle fa-fw text-muted" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="Haz doble clic en el campo para ampliarlo" onmouseover="$(this).popover(\'show\')" onmouseout="$(this).popover(\'hide\')"></i>';
 $titles = [
@@ -213,6 +216,7 @@ if (isset($datos)) {
 echo $f->input($input_detalle);
 ?>
         </div>
+        </div>
     </div>
 <?php if ($Emisor->config_extra_impuestos_adicionales) : ?>
     <!-- IMPUESTOS ADICIONALES -->
@@ -236,6 +240,7 @@ new \sowerphp\general\View_Helper_Table($impuestos);
     <!-- REFERENCIAS DEL DOCUMENTO -->
     <div class="mb-4 row">
         <div class="col-md-12">
+        <div class="table-responsive">
 <?php
 $referencias_values = [];
 if (isset($datos)) {
@@ -288,6 +293,7 @@ echo $f->input([
 ]);
 ?>
         </div>
+        </div>
     </div>
     <!-- RESUMEN DE LOS MONTOS DEL DOCUMENTO -->
     <div class="row mb-2">
@@ -333,17 +339,17 @@ new \sowerphp\general\View_Helper_Table([$titles, $totales]);
         </div>
     </div>
     <!-- MEDIO DE PAGO -->
-    <div class="row mb-4" id="medioPago">
-        <div class=" col-md-3">
+    <div class="row" id="medioPago">
+        <div class="col-md-3 mb-4">
             <?=$f->input(['name'=>'MedioPago', 'type'=>'select', 'options'=>[''=>'Cualquier medio de pago']+$MedioPago, 'value'=>!empty($datos['Encabezado']['IdDoc']['MedioPago'])?$datos['Encabezado']['IdDoc']['MedioPago']:'', 'onblur'=>'DTE.setMedioPago(this.value)'])?>
         </div>
-        <div class=" col-md-3">
+        <div class="col-md-3 mb-4">
             <?=$f->input(['name'=>'BcoPago', 'placeholder'=>'Banco', 'value'=>!empty($datos['Encabezado']['IdDoc']['BcoPago'])?$datos['Encabezado']['IdDoc']['BcoPago']:'', 'attr'=>'maxlength="40"'])?>
         </div>
-        <div class=" col-md-3">
+        <div class="col-md-3 mb-4">
             <?=$f->input(['name'=>'TpoCtaPago', 'type'=>'select', 'options'=>[''=>'Sin cuenta bancaria', 'CORRIENTE'=>'Cuenta corriente', 'VISTA'=>'Cuenta vista', 'AHORRO'=>'Cuenta de ahorro'], 'value'=>!empty($datos['Encabezado']['IdDoc']['TpoCtaPago'])?$datos['Encabezado']['IdDoc']['TpoCtaPago']:''])?>
         </div>
-        <div class=" col-md-3">
+        <div class="col-md-3 mb-4">
             <?=$f->input(['name'=>'NumCtaPago', 'placeholder'=>'Número cuenta bancaria', 'value'=>!empty($datos['Encabezado']['IdDoc']['NumCtaPago'])?$datos['Encabezado']['IdDoc']['NumCtaPago']:'', 'attr'=>'maxlength="20"'])?>
         </div>
     </div>
@@ -367,10 +373,10 @@ new \sowerphp\general\View_Helper_Table([$titles, $totales]);
     </div>
     <!-- TIPOS DE TRANSACCIONES -->
     <div class="row" id="tiposTransacciones">
-        <div class=" col-md-6">
+        <div class="col-md-6 mb-4">
             <?=$f->input(['type'=>'select', 'name'=>'TpoTranVenta', 'options'=>[''=>'¿Tipo de transacción para el vendedor?']+$TpoTranVenta, 'value'=>!empty($datos['Encabezado']['IdDoc']['TpoTranVenta'])?$datos['Encabezado']['IdDoc']['TpoTranVenta']:''])?>
         </div>
-        <div class=" col-md-6">
+        <div class="col-md-6 mb-4">
             <?=$f->input(['type'=>'select', 'name'=>'TpoTranCompra', 'options'=>[''=>'¿Tipo de transacción para el receptor?']+$TpoTranCompra, 'value'=>!empty($datos['Encabezado']['IdDoc']['TpoTranCompra'])?$datos['Encabezado']['IdDoc']['TpoTranCompra']:''])?>
         </div>
     </div>
@@ -386,7 +392,7 @@ new \sowerphp\general\View_Helper_Table([$titles, $totales]);
     </div>
     <!-- BOTÓN PARA GENERAR DOCUMENTO -->
     <div class="row">
-        <div class=" col-md-12 mt-4">
+        <div class=" col-md-12">
             <button type="submit" name="submit" class="btn btn-primary btn-lg col-12" style="width:100%">
 <?php if ($Emisor->config_sii_envio_automatico) : ?>
                 Generar documento real (DTE)

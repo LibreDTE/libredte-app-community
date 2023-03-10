@@ -93,13 +93,13 @@ echo $f->end('Generar informe de documentos emitidos');
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4 mb-4">
         <a class="btn btn-primary btn-lg col-12" href="dte_emitidos/csv/<?=$desde?>/<?=$hasta?>" role="button">
             Descargar documentos en CSV<br/>
             <span class="small">sin detalle de productos y/o servicios</span>
         </a>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 mb-4">
         <a class="btn btn-primary btn-lg col-12" href="dte_emitidos/csv/<?=$desde?>/<?=$hasta?>?detalle=1" role="button">
             Descargar documentos en CSV<br/>
             <span class="small">con detalle, sin repetir encabezado</span>

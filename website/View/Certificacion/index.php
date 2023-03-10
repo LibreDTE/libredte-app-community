@@ -1,6 +1,6 @@
 <div class="page-header"><h1><?=$title?></h1></div>
 <div>
-    <div class="row row-cols">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4">
         <?php foreach ($nav as $link=>&$info): ?>
             <div class="col">
                 <div class="card mb-4 text-center">

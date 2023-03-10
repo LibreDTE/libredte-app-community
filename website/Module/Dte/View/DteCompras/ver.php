@@ -91,20 +91,20 @@ new \sowerphp\general\View_Helper_Table([
     [$Libro->periodo, num($n_detalles), num($Libro->documentos)],
 ]);
 ?>
-            <div class="row">
-                <div class="col-md-4">
+            <div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 row-cols-lg-3">
+                <div class="col mb-4">
                     <a class="btn btn-primary btn-lg col-12<?=!$n_detalles?' disabled':''?>" href="<?=$_base?>/dte/dte_compras/csv/<?=$Libro->periodo?>" role="button">
                         <i class="far fa-file-excel"></i>
                         Descargar CSV
                     </a>
                 </div>
-                <div class="col-md-4">
+                <div class="col mb-4">
                     <a class="btn btn-primary btn-lg col-12<?=!$Libro->xml?' disabled':''?>" href="<?=$_base?>/dte/dte_compras/pdf/<?=$Libro->periodo?>" role="button">
                         <i class="far fa-file-pdf"></i>
                         Descargar PDF
                     </a>
                 </div>
-                <div class="col-md-4">
+                <div class="col mb-4">
                     <a class="btn btn-primary btn-lg col-12<?=!$Libro->xml?' disabled':''?>" href="<?=$_base?>/dte/dte_compras/xml/<?=$Libro->periodo?>" role="button">
                         <i class="far fa-file-code"></i>
                         Descargar XML
@@ -196,7 +196,7 @@ foreach ($resumen as &$r) {
     }
 }
 ?>
-    <div class="row row-cols-2 g-3">
+    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2">
         <div class="col">
             <div class="card mb-4">
                 <div class="card-body text-center">

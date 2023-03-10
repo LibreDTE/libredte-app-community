@@ -237,6 +237,10 @@ foreach ($Documentos as $Dte) {
     ];
 }
 $f->setStyle(false);
+
+?>
+<div class="table-responsive">
+<?php
 echo $f->input([
     'type' => 'table',
     'id' => 'documentos',
@@ -257,6 +261,7 @@ echo $f->input([
     'values' => $RecepcionDTE,
 ]);
 ?>
+</div>
 <div class="card mb-4">
     <div class="card-header"><i class="fas fa-exclamation-circle text-warning"></i> ¿Recibir, aceptar o reclamar un DTE?</div>
     <div class="card-body">

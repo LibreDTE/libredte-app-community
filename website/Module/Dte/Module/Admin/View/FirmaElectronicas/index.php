@@ -27,8 +27,8 @@ foreach ($firmas as &$f) {
 array_unshift($firmas, ['RUN', 'Nombre', 'Email', 'Válida desde', 'Válida hasta', 'Emisor', 'Usuario', 'Administrador']);
 new \sowerphp\general\View_Helper_Table($firmas);
 ?>
-<div class="row text-center mt-4">
-    <div class="col-6">
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-2 text-center">
+    <div class="col mb-4">
         <div class="card">
             <div class="card-body">
                 <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
@@ -38,7 +38,7 @@ new \sowerphp\general\View_Helper_Table($firmas);
             </div>
         </div>
     </div>
-    <div class="col-6">
+    <div class="col">
         <div class="card">
             <div class="card-body">
                 <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>

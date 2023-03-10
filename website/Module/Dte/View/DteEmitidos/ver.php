@@ -203,29 +203,35 @@ echo $t->generate([
 <?php endif; ?>
     </div>
 <?php if ($DteEmitido->getEstado()=='R') : ?>
-<div class="mt-4">
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=48">¿Documento rechazado?</a>
-            </h5>
+<div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 row-cols-lg-3">
+    <div class="col mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=48">¿Documento rechazado?</a>
+                </h5>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=49">¿Rechazos más comunes?</a>
-            </h5>
+    <div class="col mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=49">¿Rechazos más comunes?</a>
+                </h5>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=193">¿Error: "invalid character"?</a>
-            </h5>
+    <div class="col mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
+                <h5 class="card-title">
+                    <a href="https://soporte.sasco.cl/kb/faq.php?id=193">¿Error: "invalid character"?</a>
+                </h5>
+            </div>
         </div>
     </div>
 </div>
@@ -287,8 +293,8 @@ $share_message = '¡Hola! Soy de '.$Emisor->getNombre().'. Te adjunto el enlace 
             </a>
         </div>
     </div>
-    <div class="row text-center">
-        <div class="col-6">
+    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 text-center">
+        <div class="col mb-4">
             <div class="card">
                 <div class="card-body">
                     <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
@@ -298,7 +304,7 @@ $share_message = '¡Hola! Soy de '.$Emisor->getNombre().'. Te adjunto el enlace 
                 </div>
             </div>
         </div>
-        <div class="col-6">
+        <div class="col">
             <div class="card">
                 <div class="card-body">
                     <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
@@ -398,8 +404,8 @@ if ($email_enviados) {
     new \sowerphp\general\View_Helper_Table($email_enviados);
 }
 ?>
-    <div class="row text-center mt-4">
-        <div class="col-6">
+    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 text-center mt-4">
+        <div class="col mb-4">
             <div class="card">
                 <div class="card-body">
                     <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
@@ -409,7 +415,7 @@ if ($email_enviados) {
                 </div>
             </div>
         </div>
-        <div class="col-6">
+        <div class="col">
             <div class="card">
                 <div class="card-body">
                     <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
@@ -693,8 +699,8 @@ if ($referencias) {
             </a>
         </div>
     </div>
-    <div class="row text-center mt-4">
-        <div class="col-6">
+    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 text-center mt-4">
+        <div class="col mb-4">
             <div class="card">
                 <div class="card-body">
                     <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
@@ -704,7 +710,7 @@ if ($referencias) {
                 </div>
             </div>
         </div>
-        <div class="col-6">
+        <div class="col">
             <div class="card">
                 <div class="card-body">
                     <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
@@ -868,8 +874,8 @@ echo $f->input([
         ¿Desea receder este DTE?
     </a>-->
 <?php endif; ?>
-<div class="row text-center mt-4">
-    <div class="col-6">
+<div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 text-center mt-4">
+    <div class="col mb-4">
         <div class="card">
             <div class="card-body">
                 <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
@@ -879,7 +885,7 @@ echo $f->input([
             </div>
         </div>
     </div>
-    <div class="col-6">
+    <div class="col mb-4">
         <div class="card">
             <div class="card-body">
                 <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>

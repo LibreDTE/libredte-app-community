@@ -43,13 +43,13 @@ new \sowerphp\general\View_Helper_Table([
 ]);
 ?>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 mb-4">
                     <a class="btn btn-primary btn-lg col-12<?=!$n_detalles?' disabled':''?>" href="<?=$_base?>/dte/dte_guias/csv/<?=$Libro->periodo?>" role="button">
                         <i class="far fa-file-excel"></i>
                         Descargar detalle en archivo CSV
                     </a>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-4">
                     <a class="btn btn-primary btn-lg col-12<?=!$Libro->xml?' disabled':''?>" href="<?=$_base?>/dte/dte_guias/xml/<?=$Libro->periodo?>" role="button">
                         <i class="far fa-file-code"></i>
                         Descargar libro de guías en XML

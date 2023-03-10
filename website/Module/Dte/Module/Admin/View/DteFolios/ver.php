@@ -29,8 +29,8 @@
 </ul>
 
 <div class="page-header"><h1>Folios de <?=$DteFolio->getTipo()->tipo?></h1></div>
-<div class="row text-center mt-3 mb-3">
-    <div class="col-sm-4">
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 text-center mt-3">
+    <div class="col mb-4">
         <div class="card">
             <div class="card-body">
                 <p class="small">siguiente folio disponible</p>
@@ -38,7 +38,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-4">
+    <div class="col mb-4">
         <div class="card">
             <div class="card-body">
                 <p class="small">total folios disponibles</p>
@@ -46,7 +46,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-4">
+    <div class="col mb-4">
         <div class="card">
             <div class="card-body">
                 <p class="small"><?=$Emisor->config_sii_timbraje_automatico?'timbrar':'alertar'?> si se llega a esta cantidad</p>
@@ -110,8 +110,8 @@ $t = new \sowerphp\general\View_Helper_Table();
 $t->setColsWidth([null, null, null, null, null, null, null, 90]);
 echo $t->generate($cafs);
 ?>
-<div class="mb-4 row row-cols-3">
-    <div class="col">
+<div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 row-cols-lg-3">
+    <div class="col mb-4">
         <div class="card">
             <div class="card-body text-center">
                 <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
@@ -121,7 +121,7 @@ echo $t->generate($cafs);
             </div>
         </div>
     </div>
-    <div class="col">
+    <div class="col mb-4">
         <div class="card">
             <div class="card-body text-center">
                 <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
@@ -131,7 +131,7 @@ echo $t->generate($cafs);
             </div>
         </div>
     </div>
-    <div class="col">
+    <div class="col mb-4">
         <div class="card">
             <div class="card-body text-center">
                 <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>

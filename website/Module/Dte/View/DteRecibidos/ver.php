@@ -177,14 +177,14 @@ echo $f->end('Descargar PDF');
 <!-- INICIO INTERCAMBIO -->
 <div role="tabpanel" class="tab-pane" id="intercambio" aria-labelledby="intercambio-tab">
 <?php if (in_array($DteRecibido->dte, array_keys(\sasco\LibreDTE\Sii\RegistroCompraVenta::$dtes))) : ?>
-    <div class="row mb-4">
-        <div class="col-sm-6">
+    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2">
+        <div class="col mb-4">
             <a href="#" onclick="__.popup('<?=$_base?>/dte/sii/dte_rcv/<?=$Emisor->rut?>-<?=$Emisor->dv?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>', 750, 550); return false" title="Ver datos del registro de compra/venta en el SII" class="btn btn-primary btn-lg col-12">
                 <i class="fa fa-search fa-fw"></i>
                 Ver datos en el Registro de Compras del SII
             </a>
         </div>
-        <div class="col-sm-6">
+        <div class="col mb-4">
             <a href="<?=$_base?>/dte/registro_compras/ingresar_accion/<?=$Emisor->rut?>-<?=$Emisor->dv?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" title="Ingresar acción del registro de compra/venta en el SII" class="btn btn-primary btn-lg col-12" onclick="return Form.loading('Conectando al SII para responder...')">
                 <i class="fa fa-edit fa-fw"></i>
                 Recibir / Reclamar
@@ -252,13 +252,13 @@ if ($referenciados) {
 
 <!-- INICIO AVANZADO -->
 <div role="tabpanel" class="tab-pane" id="avanzado" aria-labelledby="avanzado-tab">
-<div class="row mb-4">
-    <div class="col-md-6">
+<div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2">
+    <div class="col mb-4">
         <a class="btn btn-danger btn-lg col-12" href="<?=$_base?>/dte/dte_recibidos/eliminar/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button" onclick="return Form.confirm(this, '¿Confirmar la eliminación del documento?')">
             Eliminar documento
         </a>
     </div>
-    <div class="col-md-6">
+    <div class="col mb-4">
         <a class="btn btn-success btn-lg col-12" href="<?=$_base?>/dte/dte_recibidos/modificar/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button" >
             Modificar documento
         </a>

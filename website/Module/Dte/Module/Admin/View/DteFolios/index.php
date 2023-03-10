@@ -43,8 +43,8 @@ foreach ($folios as &$f) {
 array_unshift($folios, ['Código', 'Documento', 'Siguiente folio', 'Total disponibles', 'Alerta', 'Vencimiento', 'Acciones']);
 new \sowerphp\general\View_Helper_Table($folios);
 ?>
-<div class="row text-center mt-4">
-    <div class="col-4">
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 text-center">
+    <div class="col mb-4">
         <div class="card">
             <div class="card-body">
                 <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
@@ -54,7 +54,7 @@ new \sowerphp\general\View_Helper_Table($folios);
             </div>
         </div>
     </div>
-    <div class="col-4">
+    <div class="col mb-4">
         <div class="card">
             <div class="card-body">
                 <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
@@ -64,7 +64,7 @@ new \sowerphp\general\View_Helper_Table($folios);
             </div>
         </div>
     </div>
-    <div class="col-4">
+    <div class="col">
         <div class="card">
             <div class="card-body">
                 <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>

@@ -67,19 +67,19 @@ new \sowerphp\general\View_Helper_Table([
 ]);
 ?>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-4 mb-4">
                     <a class="btn btn-primary btn-lg col-12<?=!$n_detalles?' disabled':''?>" href="<?=$_base?>/dte/dte_ventas/csv/<?=$Libro->periodo?>" role="button">
                         <span class="far fa-file-excel"></span>
                         Descargar CSV
                     </a>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 mb-4">
                     <a class="btn btn-primary btn-lg col-12<?=!$Libro->xml?' disabled':''?>" href="<?=$_base?>/dte/dte_ventas/pdf/<?=$Libro->periodo?>" role="button">
                         <span class="far fa-file-pdf"></span>
                         Descargar PDF
                     </a>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 mb-4">
                     <a class="btn btn-primary btn-lg col-12<?=!$Libro->xml?' disabled':''?>" href="<?=$_base?>/dte/dte_ventas/xml/<?=$Libro->periodo?>" role="button">
                         <span class="far fa-file-code"></span>
                         Descargar XML
@@ -176,8 +176,8 @@ foreach ($resumen as &$r) {
     }
 }
 ?>  
-    <div class="row text-center mb-4">
-        <div class="col-4">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 text-center">
+        <div class="col mb-4">
             <div class="card">
                 <div class="card-body">
                     <small>ventas (exento + neto)</small><br/>
@@ -185,7 +185,7 @@ foreach ($resumen as &$r) {
                 </div>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col mb-4">
             <div class="card">
                 <div class="card-body">
                     <small>base imponible</small><br/>
@@ -193,7 +193,7 @@ foreach ($resumen as &$r) {
                 </div>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col mb-4">
             <div class="card">
                 <div class="card-body">
                     <small>total</small><br/>
@@ -237,6 +237,7 @@ if (!empty($alerta_iva_boleta)) :
             Enviar libro agregando resúmenes manuales
         </div>
         <div class="card-body">
+            <div class="table-responsive">
 <?php
 $f = new \sowerphp\general\View_Helper_Form(false);
 echo $f->begin([
@@ -265,6 +266,9 @@ echo $f->input([
     ],
 ]);
 $f->setStyle('horizontal');
+?>
+</div>
+<?php
 echo $f->input([
     'name' => 'CodAutRec',
     'label'=>'Autorización rectificación',
