@@ -192,6 +192,7 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
     'user' => env('LIBREDTE_APP_DATABASE_DEFAULT_USER', 'libredte'),
     'pass' => env('LIBREDTE_APP_DATABASE_DEFAULT_PASS', ''),
     'name' => env('LIBREDTE_APP_DATABASE_DEFAULT_NAME', 'libredte'),
+    'pers' => (bool)env('LIBREDTE_APP_DATABASE_DEFAULT_PERS', false),
 ));
 
 // Configuración para el correo electrónico
