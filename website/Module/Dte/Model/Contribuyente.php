@@ -1471,6 +1471,43 @@ class Model_Contribuyente extends \Model_App
             $where[] = $vendedor_col.' = :vendedor';
             $vars[':vendedor'] = $filtros['vendedor'];
         }
+        // filtrar por estado del DTE
+        if (!empty($filtros['estado_sii'])) {
+            // sólo documentos sin estado (falta actualizar)
+            if ($filtros['estado_sii'] == 'null') {
+                $where[] = 'd.revision_estado IS NULL';
+            }
+            // sólo documentos sin estado final (falta actualizar)
+            else if ($filtros['estado_sii'] == 'no_final') {
+                $where[] = '(
+                    d.revision_estado IS NOT NULL
+                    AND (
+                        (
+                            STRPOS(d.revision_estado, \' \') = 0
+                            AND d.revision_estado IN (\'' . implode('\', \'', Model_DteEmitidos::$revision_estados['no_final']) . '\')
+                        ) OR (
+                            STRPOS(d.revision_estado, \' \') != 0
+                            AND SUBSTR(d.revision_estado, 0, STRPOS(d.revision_estado, \' \')) IN (\'' . implode('\', \'', Model_DteEmitidos::$revision_estados['no_final']) . '\')
+                        )
+                    )
+                )';
+            }
+            // sólo documentos con estado rechazado (eliminar y, quizás, volver a emitir)
+            else if ($filtros['estado_sii'] == 'rechazados') {
+                $where[] = '(
+                    d.revision_estado IS NOT NULL
+                    AND (
+                        (
+                            STRPOS(d.revision_estado, \' \') = 0
+                            AND d.revision_estado IN (\'' . implode('\', \'', Model_DteEmitidos::$revision_estados['rechazados']) . '\')
+                        ) OR (
+                            STRPOS(d.revision_estado, \' \') != 0
+                            AND SUBSTR(d.revision_estado, 0, STRPOS(d.revision_estado, \' \')) IN (\'' . implode('\', \'', Model_DteEmitidos::$revision_estados['rechazados']) . '\')
+                        )
+                    )
+                )';
+            }
+        }
         // si se debe hacer búsqueda dentro de los XML
         if (!empty($filtros['xml'])) {
             $i = 1;
