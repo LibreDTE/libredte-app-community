@@ -1473,21 +1473,27 @@ class Model_Contribuyente extends \Model_App
         }
         // filtrar por estado del DTE
         if (!empty($filtros['estado_sii'])) {
+            // sólo documentos sin track id (falta enviar al sii)
+            if ($filtros['estado_sii'] == 'sin_track_id') {
+                $where[] = 'd.track_id IS NULL';
+            }
             // sólo documentos sin estado (falta actualizar)
-            if ($filtros['estado_sii'] == 'null') {
-                $where[] = 'd.revision_estado IS NULL';
+            else if ($filtros['estado_sii'] == 'null') {
+                $where[] = '(d.track_id IS NOT NULL AND d.revision_estado IS NULL)';
             }
             // sólo documentos sin estado final (falta actualizar)
             else if ($filtros['estado_sii'] == 'no_final') {
                 $where[] = '(
-                    d.revision_estado IS NOT NULL
-                    AND (
-                        (
-                            STRPOS(d.revision_estado, \' \') = 0
-                            AND d.revision_estado IN (\'' . implode('\', \'', Model_DteEmitidos::$revision_estados['no_final']) . '\')
-                        ) OR (
-                            STRPOS(d.revision_estado, \' \') != 0
-                            AND SUBSTR(d.revision_estado, 0, STRPOS(d.revision_estado, \' \')) IN (\'' . implode('\', \'', Model_DteEmitidos::$revision_estados['no_final']) . '\')
+                    (
+                        d.revision_estado IS NOT NULL
+                        AND (
+                            (
+                                STRPOS(d.revision_estado, \' \') = 0
+                                AND d.revision_estado IN (\'' . implode('\', \'', Model_DteEmitidos::$revision_estados['no_final']) . '\')
+                            ) OR (
+                                STRPOS(d.revision_estado, \' \') != 0
+                                AND SUBSTR(d.revision_estado, 0, STRPOS(d.revision_estado, \' \')) IN (\'' . implode('\', \'', Model_DteEmitidos::$revision_estados['no_final']) . '\')
+                            )
                         )
                     )
                 )';
@@ -1548,32 +1554,16 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el listado de documentos emitidos por el contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+     * @version 2023-04-01
      */
     public function getDocumentosEmitidos($filtros = [])
     {
         list($where, $vars) = $this->crearFiltrosDocumentosEmitidos($filtros);
         // armar consulta interna (no obtiene razón social verdadera en DTE exportación por que requiere acceder al XML)
         $query = '
-            SELECT
-                d.emisor,
-                d.receptor,
-                d.dte,
-                d.folio,
-                d.certificacion,
-                t.tipo,
-                r.razon_social,
-                i.glosa AS intercambio,
-                u.usuario,
-                CASE WHEN d.xml IS NOT NULL OR d.mipyme IS NOT NULL THEN true ELSE false END AS has_xml
-            FROM
-                dte_emitido AS d
-                JOIN dte_tipo AS t ON d.dte = t.codigo
-                JOIN contribuyente AS r ON d.receptor = r.rut
-                JOIN usuario AS u ON d.usuario = u.id
-                LEFT JOIN dte_intercambio_resultado_dte AS i ON i.emisor = d.emisor AND i.dte = d.dte AND i.folio = d.folio AND i.certificacion = d.certificacion
+            SELECT d.emisor, d.dte, d.folio, d.certificacion
+            FROM dte_emitido AS d
             WHERE '.implode(' AND ', $where).'
-            ORDER BY d.fecha DESC, t.tipo, d.folio DESC
         ';
         // armar límite consulta
         if (isset($filtros['limit'])) {
@@ -1584,21 +1574,26 @@ class Model_Contribuyente extends \Model_App
         return $this->db->getTable('
             SELECT
                 e.dte,
-                e.tipo,
+                t.tipo,
                 e.folio,
                 d.receptor,
-                CASE WHEN e.receptor NOT IN (55555555, 66666666) THEN e.razon_social ELSE '.$razon_social_xpath.' END AS razon_social,
+                CASE WHEN d.receptor NOT IN (55555555, 66666666) THEN r.razon_social ELSE '.$razon_social_xpath.' END AS razon_social,
                 d.fecha,
                 d.total,
                 d.revision_estado AS estado,
-                e.intercambio,
+                i.glosa AS intercambio,
                 d.sucursal_sii,
-                e.usuario,
-                CASE WHEN d.xml IS NOT NULL OR d.mipyme IS NOT NULL THEN true ELSE false END AS has_xml
+                u.usuario,
+                CASE WHEN d.xml IS NOT NULL OR d.mipyme IS NOT NULL THEN true ELSE false END AS has_xml,
+                d.track_id
             FROM
                 dte_emitido AS d
                 JOIN ('.$query.') AS e ON d.emisor = e.emisor AND e.dte = d.dte AND e.folio = d.folio AND e.certificacion = d.certificacion
-            ORDER BY d.fecha DESC, e.tipo, e.folio DESC
+                JOIN dte_tipo AS t ON d.dte = t.codigo
+                JOIN contribuyente AS r ON d.receptor = r.rut
+                JOIN usuario AS u ON d.usuario = u.id
+                LEFT JOIN dte_intercambio_resultado_dte AS i ON i.emisor = d.emisor AND i.dte = d.dte AND i.folio = d.folio AND i.certificacion = d.certificacion
+            ORDER BY d.fecha DESC, t.tipo, d.folio DESC
         ', $vars);
     }
 

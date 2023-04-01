@@ -30,7 +30,7 @@ foreach ($documentos as &$d) {
     $d['fecha'] = \sowerphp\general\Utility_Date::format($d['fecha']);
     $d['total'] = num($d['total']);
     $d['sucursal_sii'] = $Emisor->getSucursal($d['sucursal_sii'])->sucursal;
-    unset($d['receptor'], $d['dte'], $d['intercambio'], $d['has_xml']);
+    unset($d['receptor'], $d['dte'], $d['intercambio'], $d['has_xml'], $d['track_id']);
 }
 $f = new \sowerphp\general\View_Helper_Form(false);
 array_unshift($documentos, [
