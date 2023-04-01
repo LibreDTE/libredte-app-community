@@ -1,4 +1,4 @@
-<ul class="nav nav-pills float-end" id="nav_top_right">
+<ul class="nav nav-pills float-end">
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_intercambios/probar_xml" title="Probar manualmente si un XML podría ingresar por email a la bandeja de intercambio" class="nav-link">
             <i class="fa fa-upload"></i>
