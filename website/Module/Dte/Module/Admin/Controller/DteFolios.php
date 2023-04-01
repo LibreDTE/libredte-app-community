@@ -159,6 +159,26 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
+     * Acción que permite ver los folios sin uso de un tipo de DTE
+     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+     * @version 2023-04-01
+     */
+    public function sin_uso($dte)
+    {
+        $Emisor = $this->getContribuyente();
+        $DteFolio = new Model_DteFolio($Emisor->rut, (int)$dte, $Emisor->enCertificacion());
+        if (!$DteFolio->exists()) {
+            \sowerphp\core\Model_Datasource_Session::message('No existe el mantenedor de folios solicitado.', 'error');
+            $this->redirect('/dte/admin/dte_folios');
+        }
+        $this->set([
+            'Emisor' => $Emisor,
+            'DteFolio' => $DteFolio,
+            'folios_sin_uso' => $DteFolio->getSinUso(),
+        ]);
+    }
+
+    /**
      * Acción que permite modificar un mantenedor de folios
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
      * @version 2021-08-16

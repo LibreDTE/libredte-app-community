@@ -157,52 +157,7 @@ new \sowerphp\general\View_Helper_Table($foliosMensuales, 'uso_mensual_folios_'.
 
 <!-- INICIO FOLIOS SIN USO -->
 <div role="tabpanel" class="tab-pane" id="sin_uso" aria-labelledby="sin_uso-tab">
-<?php
-$foliosSinUso = $DteFolio->getSinUso();
-if ($foliosSinUso) :
-    foreach ($foliosSinUso as &$folioSinUso) {
-        $folioSinUso = '<a href="#" onclick="__.popup(\''.$_base.'/dte/admin/dte_folios/estado/'.$DteFolio->dte.'/'.$folioSinUso.'\', 750, 550); return false" title="Ver el estado del folio '.$folioSinUso.' en el SII">'.$folioSinUso.'</a>';
-    }
-?>
-<p>Los folios a continuación, que están entre el N° <?=$DteFolio->getPrimerFolio()?> (primer folio emitido en LibreDTE) y el N° <?=$DteFolio->siguiente?> (folio siguiente), se encuentran sin uso en el sistema:</p>
-<p><?=implode(', ', $foliosSinUso)?></p>
-<p>Si estos folios no existen en otro sistema de facturación y no los recuperará, debe anularlos.
-<div class="row row-cols-3 g-3 mt-4">
-    <div class="col">
-        <div class="card">
-            <div class="card-body text-center">
-                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                <h5 class="card-title">
-                    <a href="https://soporte.sasco.cl/kb/faq.php?id=103">¿Por qué se saltan folios?</a>
-                </h5>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body text-center">
-                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                <h5 class="card-title">
-                    <a href="https://soporte.sasco.cl/kb/faq.php?id=122">¿Cómo anulo folios en LibreDTE?</a>
-                </h5>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body text-center">
-                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                <h5 class="card-title">
-                    <a href="https://soporte.sasco.cl/kb/faq.php?id=179">¿Cómo anulo folios masivamente?</a>
-                </h5>
-            </div>
-        </div>
-    </div>
-</div>
-
-<?php else : ?>
-<p>No hay CAF con folios sin uso menores al folio siguiente <?=$DteFolio->siguiente?>.</p>
-<?php endif; ?>
+<p>En el <a href="<?=$_base?>/dte/admin/dte_folios/sin_uso/<?=$DteFolio->dte?>" onclick="Form.loading('Buscando folios sin uso...')">siguiente enlace</a> podrá buscar si existen folios sin uso en LibreDTE para el tipo de documento <?=$DteFolio->getTipo()->tipo?>.</p>
 </div>
 <!-- FIN FOLIOS SIN USO -->
 
