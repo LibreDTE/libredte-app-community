@@ -1347,7 +1347,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que crea los filtros para ser usados en las consultas de documentos emitidos
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-02-10
+     * @version 2023-04-01
      */
     private function crearFiltrosDocumentosEmitidos($filtros)
     {
@@ -1554,7 +1554,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el listado de documentos emitidos por el contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-04-01
+     * @version 2023-04-03
      */
     public function getDocumentosEmitidos($filtros = [])
     {
@@ -1562,8 +1562,12 @@ class Model_Contribuyente extends \Model_App
         // armar consulta interna (no obtiene razón social verdadera en DTE exportación por que requiere acceder al XML)
         $query = '
             SELECT d.emisor, d.dte, d.folio, d.certificacion
-            FROM dte_emitido AS d
+            FROM
+                dte_emitido AS d
+                JOIN contribuyente AS r ON d.receptor = r.rut
+                JOIN usuario AS u ON d.usuario = u.id
             WHERE '.implode(' AND ', $where).'
+            ORDER BY d.fecha DESC, d.fecha_hora_creacion DESC
         ';
         // armar límite consulta
         if (isset($filtros['limit'])) {
@@ -1573,9 +1577,9 @@ class Model_Contribuyente extends \Model_App
         $razon_social_xpath = $this->db->xml('d.xml', '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep', 'http://www.sii.cl/SiiDte');
         return $this->db->getTable('
             SELECT
-                e.dte,
+                d.dte,
                 t.tipo,
-                e.folio,
+                d.folio,
                 d.receptor,
                 CASE WHEN d.receptor NOT IN (55555555, 66666666) THEN r.razon_social ELSE '.$razon_social_xpath.' END AS razon_social,
                 d.fecha,
@@ -1593,7 +1597,7 @@ class Model_Contribuyente extends \Model_App
                 JOIN contribuyente AS r ON d.receptor = r.rut
                 JOIN usuario AS u ON d.usuario = u.id
                 LEFT JOIN dte_intercambio_resultado_dte AS i ON i.emisor = d.emisor AND i.dte = d.dte AND i.folio = d.folio AND i.certificacion = d.certificacion
-            ORDER BY d.fecha DESC, t.tipo, d.folio DESC
+            ORDER BY d.fecha DESC, d.fecha_hora_creacion DESC
         ', $vars);
     }
 
