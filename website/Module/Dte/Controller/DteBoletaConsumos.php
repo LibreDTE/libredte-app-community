@@ -204,7 +204,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
                 'Se solicitó revisión del consumo de folios', 'ok'
             );
         } catch (\Exception $e) {
-            \sowerphp\core\Model_Datasource_Session::message($e->getMessage, 'error');
+            \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
         }
         // redireccionar
         $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
@@ -221,7 +221,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
         $Emisor = $this->getContribuyente();
         // sólo administrador pueden borrar el rcof
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Sólo el administrador de la empresa puede eliminar el RCOF', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('Sólo el administrador de la empresa puede eliminar el RCOF.', 'error');
             $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
         }
         // obtener reporte enviado
@@ -238,7 +238,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
                 'Se eliminó el RCOF del día '.\sowerphp\general\Utility_Date::format($dia), 'ok'
             );
         } catch (\Exception $e) {
-            \sowerphp\core\Model_Datasource_Session::message($e->getMessage, 'error');
+            \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
         }
         // redireccionar
         $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
@@ -246,7 +246,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
 
     /**
      * Acción que entrega un listado con todos los reportes de consumos de
-     * folios pendientes enviar al SII
+     * folios pendientes de enviar al SII
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
      * @version 2018-11-11
      */
@@ -255,7 +255,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
         $Emisor = $this->getContribuyente();
         $pendientes = (new Model_DteBoletaConsumos())->setContribuyente($Emisor)->getPendientes();
         if (!$pendientes) {
-            \sowerphp\core\Model_Datasource_Session::message('No existen días pendientes por enviar entre el primer día enviado y ayer', 'ok');
+            \sowerphp\core\Model_Datasource_Session::message('No existen días pendientes por enviar entre el primer día enviado y ayer.', 'ok');
             $this->redirect('/dte/dte_boleta_consumos/listar/1/dia/D');
         }
         $this->set([
