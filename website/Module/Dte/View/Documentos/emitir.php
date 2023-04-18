@@ -546,6 +546,23 @@ $( '#TpoDocField' ).select2( {
     theme: "bootstrap-5",
     placeholder: $( this ).data( 'placeholder' ),
 } );
+var observer = new MutationObserver(function(mutations) {
+    var eliminarButton = document.querySelector('#eliminar');
+    if (eliminarButton) {
+        eliminarButton.setAttribute('onClick','Form.delJS(this); DTE.calcular(); return false;');
+    }
+    mutations.forEach(function(mutation) {
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+            mutation.addedNodes.forEach(function(addedNode) {
+                if (addedNode.nodeName === 'TR' && addedNode.querySelector('#eliminar')) {
+                    var eliminarButton = addedNode.querySelector('#eliminar');
+                    eliminarButton.setAttribute('onClick','Form.delJS(this); DTE.calcular(); return false;');
+                }
+            });
+        }
+    });
+});
+observer.observe(document.body, { childList: true, subtree: true });
 </script>
 <!-- fin datos para medio de pago con transferencia -->
 </div>
