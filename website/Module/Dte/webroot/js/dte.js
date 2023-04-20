@@ -202,14 +202,32 @@ DTE.setTipo = function (tipo) {
         $('#RUTRecepField').removeAttr('onblur');
         $('#RUTRecepField').attr('readonly', 'readonly');
         $('#GiroRecepField').attr('disabled', 'disabled');
-        $('#CmnaRecepField').attr('disabled', 'disabled');
         $('#RUTSolicitaField').attr('disabled', 'disabled');
         $('#TpoMonedaField').removeAttr('disabled');
         $('#NacionalidadField').removeAttr('disabled');
         document.getElementById('RUTRecepField').value = '55.555.555-5';
         document.getElementById('RznSocRecepField').focus();
         document.getElementById('GiroRecepField').value = '';
-        document.getElementById('CmnaRecepField').value = '';
+        // inicio cambio de select a input text. Se esconde y se le cambia el id al select
+        if (!document.getElementById('nuevo_div_comuna_receptor')){
+            $('#CmnaRecepField').attr('disabled', 'disabled');
+            document.getElementById('CmnaRecepField').value = '';
+            let div_comuna_receptor = document.getElementById('div_comuna_receptor');
+            let nuevo_div_comuna_receptor = document.createElement('div');
+            let input_comuna_receptor = document.createElement('input');
+            div_comuna_receptor.parentNode.insertBefore(nuevo_div_comuna_receptor, div_comuna_receptor.nextSibling);
+            nuevo_div_comuna_receptor.appendChild(input_comuna_receptor);
+            nuevo_div_comuna_receptor.setAttribute('id', 'nuevo_div_comuna_receptor');
+            nuevo_div_comuna_receptor.setAttribute('class', 'col-md-3 mb-4');
+            div_comuna_receptor.style.display = 'none';
+            document.getElementById('CmnaRecepField').name = 'CmnaRecep_aux';
+            document.getElementById('CmnaRecepField').id = 'CmnaRecepField_aux';
+            input_comuna_receptor.setAttribute('id','CmnaRecepField');
+            input_comuna_receptor.setAttribute('name','CmnaRecep');
+            input_comuna_receptor.setAttribute('class','form-control');
+            input_comuna_receptor.setAttribute('placeholder','Comuna del receptor');
+        }
+        // fin cambio select
         $('#datosExportacion').show();
         if (config_extra_indicador_servicio) {
             document.getElementById('IndServicioField').value = config_extra_indicador_servicio;
@@ -221,11 +239,23 @@ DTE.setTipo = function (tipo) {
             $('#RUTRecepField').removeAttr('readonly');
         }
         $('#GiroRecepField').removeAttr('disabled');
-        $('#CmnaRecepField').removeAttr('disabled');
         $('#RUTSolicitaField').removeAttr('disabled');
         $('#TpoMonedaField').attr('disabled', 'disabled');
         $('#NacionalidadField').attr('disabled', 'disabled');
         $('#datosExportacion').hide();
+        // inicio remover el input y mostrar el select
+        let nuevo_div_comuna_receptor = document.getElementById('nuevo_div_comuna_receptor');
+        let CmnaRecepField_aux = document.getElementById('CmnaRecepField_aux');
+        if (nuevo_div_comuna_receptor){
+            nuevo_div_comuna_receptor.remove();
+        }
+        if (CmnaRecepField_aux){
+            CmnaRecepField_aux.id = 'CmnaRecepField';
+            CmnaRecepField_aux.name = 'CmnaRecep';
+            $('#CmnaRecepField').removeAttr('disabled');
+            document.getElementById('div_comuna_receptor').style.display = '';
+        }
+        // fin remover el input y mostrar el select
         if (document.getElementById('IndServicioField').value==4 || document.getElementById('IndServicioField').value==5) {
             document.getElementById('IndServicioField').value = '';
         }
