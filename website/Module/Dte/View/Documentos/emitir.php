@@ -99,7 +99,7 @@ if (!empty($reemplazar_receptor) and !empty($reemplazar_dte) and !empty($reempla
     <div class="row">
         <div class="col-md-6 mb-4"><?=$f->input(['name' => 'GiroRecep', 'placeholder' => 'Giro del receptor', 'check' => 'notempty', 'attr' => 'maxlength="40"', 'value'=>!empty($datos['Encabezado']['Receptor']['GiroRecep'])?mb_substr($datos['Encabezado']['Receptor']['GiroRecep'],0,40):''])?></div>
         <div class="col-md-3 mb-4"><?=$f->input([ 'name' => 'DirRecep', 'placeholder' => 'Dirección del receptor', 'check' => 'notempty', 'attr' => 'maxlength="70"', 'value'=>!empty($datos['Encabezado']['Receptor']['DirRecep'])?$datos['Encabezado']['Receptor']['DirRecep']:''])?></div>
-        <div class="col-md-3 mb-4"><?=$f->input(['type' => 'select', 'name' => 'CmnaRecep', 'options' => [''=>'Comuna del receptor'] + $comunas, 'check' => 'notempty', 'value'=>!empty($datos['Encabezado']['Receptor']['CmnaRecep'])?$datos['Encabezado']['Receptor']['CmnaRecep']:''])?></div>
+        <div id="div_comuna_receptor" class="col-md-3 mb-4"><?=$f->input(['type' => 'select', 'name' => 'CmnaRecep', 'options' => [''=>'Comuna del receptor'] + $comunas, 'check' => 'notempty', 'value'=>!empty($datos['Encabezado']['Receptor']['CmnaRecep'])?$datos['Encabezado']['Receptor']['CmnaRecep']:''])?></div>
     </div>
     <div class="row">
         <div class="col-md-3 mb-4"><?=$f->input(['name' => 'CorreoRecep', 'placeholder' => 'Email del receptor (opcional)', 'check'=>'email', 'attr' => 'maxlength="80"', 'value'=>!empty($datos['Encabezado']['Receptor']['CorreoRecep'])?$datos['Encabezado']['Receptor']['CorreoRecep']:''])?></div>
@@ -546,16 +546,18 @@ $( '#TpoDocField' ).select2( {
     theme: "bootstrap-5",
     placeholder: $( this ).data( 'placeholder' ),
 } );
-var observer = new MutationObserver(function(mutations) {
-    var eliminarButton = document.querySelector('#eliminar');
-    if (eliminarButton) {
-        eliminarButton.setAttribute('onClick','Form.delJS(this); DTE.calcular(); return false;');
+window.addEventListener('load', function() {
+    var eliminarButton = document.querySelectorAll('.detalle_eliminar');
+    for (var i = 0; i < eliminarButton.length; i++) {
+        eliminarButton[i].setAttribute('onClick','Form.delJS(this); DTE.calcular(); return false;');
     }
+});
+var observer = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
         if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
             mutation.addedNodes.forEach(function(addedNode) {
-                if (addedNode.nodeName === 'TR' && addedNode.querySelector('#eliminar')) {
-                    var eliminarButton = addedNode.querySelector('#eliminar');
+                if (addedNode.nodeName === 'TR' && addedNode.querySelector('.detalle_eliminar')) {
+                    var eliminarButton = addedNode.querySelector('.detalle_eliminar');
                     eliminarButton.setAttribute('onClick','Form.delJS(this); DTE.calcular(); return false;');
                 }
             });
