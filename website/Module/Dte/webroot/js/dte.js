@@ -220,10 +220,8 @@ DTE.setTipo = function (tipo) {
             nuevo_div_comuna_receptor.setAttribute('id', 'nuevo_div_comuna_receptor');
             nuevo_div_comuna_receptor.setAttribute('class', 'col-md-3 mb-4');
             div_comuna_receptor.style.display = 'none';
-            document.getElementById('CmnaRecepField').name = 'CmnaRecep_aux';
-            document.getElementById('CmnaRecepField').id = 'CmnaRecepField_aux';
-            input_comuna_receptor.setAttribute('id','CmnaRecepField');
-            input_comuna_receptor.setAttribute('name','CmnaRecep');
+            input_comuna_receptor.setAttribute('id','CiudadRecepField');
+            input_comuna_receptor.setAttribute('name','CiudadRecep');
             input_comuna_receptor.setAttribute('class','form-control');
             input_comuna_receptor.setAttribute('placeholder','Comuna del receptor');
         }
