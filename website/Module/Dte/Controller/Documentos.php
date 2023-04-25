@@ -581,7 +581,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Acción para generar y mostrar previsualización de emisión de DTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-05-10
+     * @version 2023-04-25
      */
     public function previsualizacion()
     {
@@ -685,6 +685,7 @@ class Controller_Documentos extends \Controller_App
                     'CorreoRecep' => $Receptor->email ? $Receptor->email : false,
                     'DirRecep' => $Receptor->direccion,
                     'CmnaRecep' => !empty($_POST['CmnaRecep']) ? $Receptor->getComuna()->comuna : false,
+                    'CiudadRecep' => !empty($_POST['CiudadRecep']) ? $_POST['CiudadRecep'] : false,
                 ],
                 'RUTSolicita' => !empty($_POST['RUTSolicita']) ? str_replace('.', '', $_POST['RUTSolicita']) : false,
             ],
