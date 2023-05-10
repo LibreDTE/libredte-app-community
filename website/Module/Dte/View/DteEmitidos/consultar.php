@@ -27,16 +27,16 @@ $f = new \sowerphp\general\View_Helper_Form(false);
                 <div class="card-body">
                     <h1 class="text-center mb-4">Consultar DTE</h1>
                     <form action="<?=$_base.$_request?>" method="post" onsubmit="return Form.check()" class="mb-4" id="consultarForm">
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label for="emisor" class="visually-hidden">RUT emisor</label>
                             <input type="text" name="emisor" id="emisor" class="form-control check rut" required="required" placeholder="RUT emisor">
                         </div>
-                        <div class="form-group"><?=$f->input(['type'=>'select', 'name' => 'dte', 'label'=>'Tipo DTE', 'options'=>$dtes, 'value'=>$dte])?></div>
-                        <div class="form-group">
+                        <div class="form-group mb-3"><?=$f->input(['type'=>'select', 'name' => 'dte', 'label'=>'Tipo DTE', 'options'=>$dtes, 'value'=>$dte])?></div>
+                        <div class="form-group mb-3">
                             <label for="folio" class="visually-hidden">Folio del DTE</label>
                             <input type="number" name="folio" id="folio" class="form-control" required="required" placeholder="Folio del DTE">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label for="fecha" class="visually-hidden">Fecha de emisión</label>
                             <input type="text" name="fecha" id="fecha" class="form-control" required="required" placeholder="Fecha de emisión">
                             <script>
@@ -45,7 +45,7 @@ $f = new \sowerphp\general\View_Helper_Form(false);
                                 });
                             </script>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label for="total" class="visually-hidden">Monto total</label>
                             <input type="number" name="total" id="total" class="form-control" required="required" placeholder="Monto total">
                         </div>
