@@ -83,6 +83,14 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
             'label' => 'Email',
             'value' => !empty($this->getConfig()->emisor->email) ? $this->getConfig()->emisor->email : null,
         ]);
+        $buffer .= $form->input([
+            'type' => 'select',
+            'name' => 'dtepdf_'.$this->getCodigo().'_emisor_empresaMenorTamanio',
+            'label' => 'Empresa menor tamaño',
+            'options' => ['No', 'Si'],
+            'value' => !empty($this->getConfig()->emisor->empresaMenorTamanio) ? $this->getConfig()->emisor->empresaMenorTamanio : 0,
+            'help' => '¿Emisor está clasificado como empresa de menor tamaño por SII?',
+        ]);
         $buffer .= '<div class="page-header">&raquo; Imágenes</div>';
         $buffer .= $form->input([
             'name' => 'dtepdf_'.$this->getCodigo().'_img_logo',
