@@ -38,7 +38,8 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
     protected $logo = 'https://i.imgur.com/J8tVevj.png';
 
     protected $config_flags = [
-        'historial_mostrar_valor' => 'Mostrar valor en el gráfico del historial (sólo cuando se pasan datos en vez de URL)',
+        'historial_mostrar_valor' => 'Mostrar valor en el gráfico del historial (sólo cuando se pasan datos en vez de URL).',
+        'empresa_menor_tamanio' => 'Emisor clasificado por SII como empresa de menor tamaño.',
     ];
 
     /**
@@ -82,14 +83,6 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
             'name' => 'dtepdf_'.$this->getCodigo().'_emisor_email',
             'label' => 'Email',
             'value' => !empty($this->getConfig()->emisor->email) ? $this->getConfig()->emisor->email : null,
-        ]);
-        $buffer .= $form->input([
-            'type' => 'select',
-            'name' => 'dtepdf_'.$this->getCodigo().'_emisor_empresaMenorTamanio',
-            'label' => 'Empresa menor tamaño',
-            'options' => ['No', 'Si'],
-            'value' => !empty($this->getConfig()->emisor->empresaMenorTamanio) ? $this->getConfig()->emisor->empresaMenorTamanio : 0,
-            'help' => '¿Emisor está clasificado como empresa de menor tamaño por SII?',
         ]);
         $buffer .= '<div class="page-header">&raquo; Imágenes</div>';
         $buffer .= $form->input([
