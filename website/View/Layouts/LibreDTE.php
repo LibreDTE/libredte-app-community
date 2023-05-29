@@ -114,7 +114,7 @@ Versión Oficial de LibreDTE, con soporte de SASCO SpA, en: https://libredte.cl
                                                 }
                                                 $n_links = 0;
                                             } else {
-                                                if ($l->enlace=='/') {
+                                                if ($l->enlace[0]=='/') {
                                                     if ($_Auth->check($l->enlace)) {
                                                         $n_links++;
                                                         echo '<a href="',$_base,$l->enlace,'" class="dropdown-item"><i class="'.$l->icono.' fa-fw"></i> '.$l->nombre.'</a>',"\n";
@@ -154,7 +154,7 @@ Versión Oficial de LibreDTE, con soporte de SASCO SpA, en: https://libredte.cl
                                                 <?php $link = str_replace(['{anio}', '{dia}'], [$anio, $dia], $link); ?>
                                                 <?php if ($_Auth->check($nav['link'].$link)) : ?>
                                                 <li>
-                                                    <a href="<?=$nav['link'].$link?>" class="dropdown-item" title="<?=!empty($menu['desc'])?$menu['desc']:''?>">
+                                                    <a href="<?=$_base.$nav['link'].$link?>" class="dropdown-item" title="<?=!empty($menu['desc'])?$menu['desc']:''?>">
                                                         <i class="<?=$menu['icon']?> fa-fw"></i>
                                                         <?=$menu['name']?>
                                                     </a>
@@ -164,7 +164,7 @@ Versión Oficial de LibreDTE, con soporte de SASCO SpA, en: https://libredte.cl
                                         </ul>
                                         </li>
                                     <?php else: ?>
-                                        <li><a href="<?= $nav['link'] ?>" class="dropdown-item"><span class="<?=$nav['icon']?>"></span> <?=$nav['name']?></a></li>
+                                        <li><a href="<?=$_base.$nav['link']?>" class="dropdown-item"><span class="<?=$nav['icon']?>"></span> <?=$nav['name']?></a></li>
                                     <?php endif; ?>
                                 <?php endif; ?>
                                 <?php endforeach; ?>
