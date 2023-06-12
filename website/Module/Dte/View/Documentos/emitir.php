@@ -315,7 +315,7 @@ if (isset($datos) and !empty($datos['DscRcgGlobal'])) {
 $titles = ['Neto', 'Exento', 'Tasa IVA', 'IVA', 'Total'];
 if (!$Emisor->config_extra_impuestos_adicionales) {
     array_unshift($titles, '% / $');
-    array_unshift($titles, 'Desc. glogal');
+    array_unshift($titles, 'Desc. global');
 }
 $totales = [
     $f->input(['name'=>'neto', 'value'=>0, 'attr'=>'readonly="readonly"']),

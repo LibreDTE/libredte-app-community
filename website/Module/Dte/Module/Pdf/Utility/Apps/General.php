@@ -38,7 +38,8 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
     protected $logo = 'https://i.imgur.com/J8tVevj.png';
 
     protected $config_flags = [
-        'historial_mostrar_valor' => 'Mostrar valor en el gráfico del historial (sólo cuando se pasan datos en vez de URL)',
+        'historial_mostrar_valor' => 'Mostrar valor en el gráfico del historial (sólo cuando se pasan datos en vez de URL).',
+        'empresa_menor_tamanio' => 'Emisor clasificado por SII como empresa de menor tamaño.',
     ];
 
     /**
