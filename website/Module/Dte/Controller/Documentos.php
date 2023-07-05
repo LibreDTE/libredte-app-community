@@ -915,18 +915,19 @@ class Controller_Documentos extends \Controller_App
             }
         }
         // consumir servicio web para crear documento temporal
-        $response = $this->consume('/api/dte/documentos/emitir', $dte);
+        try {
+            $response = $this->consume('/api/dte/documentos/emitir', $dte);
+        } catch (\Exception $e) {
+            \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
+            $this->redirect('/dte/documentos/emitir');
+        }
         if ($response['status']['code']!=200) {
-            \sowerphp\core\Model_Datasource_Session::message(
-                $response['body'], 'error'
-            );
+            \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             $this->redirect('/dte/documentos/emitir');
         }
         if (empty($response['body']['emisor']) or empty($response['body']['receptor']) or empty($response['body']['dte']) or empty($response['body']['codigo'])) {
             $msg = is_string($response['body']) ? $response['body'] : json_encode($response['body']);
-            \sowerphp\core\Model_Datasource_Session::message(
-                'Hubo problemas al generar el documento temporal: '.$msg, 'error'
-            );
+            \sowerphp\core\Model_Datasource_Session::message('Hubo problemas al generar el documento temporal: '.$msg, 'error');
             $this->redirect('/dte/documentos/emitir');
         }
         // enviar DTE automáticaente sin previsualizar
