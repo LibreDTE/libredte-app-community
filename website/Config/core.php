@@ -312,7 +312,7 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
 
 // configuración para FAQ (preguntas frecuentes)
 \sowerphp\core\Configure::write('faq', [
-    'url' => 'https://soporte.sasco.cl/kb/faq.php?id=',
+    'url' => 'https://libredte.cl/faq/',
     'text' => 'Revise aquí para más detalles',
 ]);
 
