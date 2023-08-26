@@ -203,7 +203,7 @@ class Model_DteFolio extends \Model_App
      * Método que entrega el listado de archivos CAF que existen cargados para
      * el tipo de DTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-26
+     * @version 2023-08-25
      */
     public function getCafs($order = 'ASC')
     {
@@ -214,15 +214,19 @@ class Model_DteFolio extends \Model_App
             ORDER BY desde '.($order=='ASC'?'ASC':'DESC').'
         ', [':rut'=>$this->emisor, ':dte'=>$this->dte, ':certificacion'=>$this->certificacion]);
         foreach ($cafs as &$caf) {
-            $xml = \website\Dte\Utility_Data::decrypt($caf['xml']);
-            if (!$xml) {
-                return false;
+            try {
+                $xml = \website\Dte\Utility_Data::decrypt($caf['xml']);
+                $Caf = new \sasco\LibreDTE\Sii\Folios($xml);
+                $caf['fecha_autorizacion'] = $Caf->getFechaAutorizacion();
+                $caf['fecha_vencimiento'] = $Caf->getFechaVencimiento();
+                $caf['meses_autorizacion'] = $Caf->getMesesAutorizacion();
+                $caf['vigente'] = $Caf->vigente();
+            } catch (\Exception $e) {
+                $caf['fecha_autorizacion'] = null;
+                $caf['fecha_vencimiento'] = null;
+                $caf['meses_autorizacion'] = null;
+                $caf['vigente'] = null;
             }
-            $Caf = new \sasco\LibreDTE\Sii\Folios($xml);
-            $caf['fecha_autorizacion'] = $Caf->getFechaAutorizacion();
-            $caf['fecha_vencimiento'] = $Caf->getFechaVencimiento();
-            $caf['meses_autorizacion'] = $Caf->getMesesAutorizacion();
-            $caf['vigente'] = $Caf->vigente();
             unset($caf['xml']);
         }
         return $cafs;
