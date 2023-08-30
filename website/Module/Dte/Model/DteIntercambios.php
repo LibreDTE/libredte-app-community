@@ -90,7 +90,7 @@ class Model_DteIntercambios extends \Model_Plural_App
             $vars[':de'] = '%'.strtolower($filtros['de']).'%';
         }
         if (!empty($filtros['emisor'])) {
-            if (strpos($filtros['emisor'], '-') or is_numeric($filtros['emisor'])) {
+            if (is_numeric($filtros['emisor'])) {
                 if (strpos($filtros['emisor'], '-')) {
                     $filtros['emisor'] = explode('-', str_replace('.', '', $filtros['emisor']))[0];
                 }
