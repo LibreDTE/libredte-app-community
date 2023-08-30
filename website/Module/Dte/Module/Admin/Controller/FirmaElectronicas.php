@@ -53,7 +53,7 @@ class Controller_FirmaElectronicas extends \Controller_App
     /**
      * Acción que permite al usuario agregar una nueva firma electrónica
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-16
+     * @version 2023-08-25
      */
     public function agregar()
     {
@@ -72,21 +72,10 @@ class Controller_FirmaElectronicas extends \Controller_App
                     'data' => $data,
                     'pass' => $_POST['contrasenia'],
                 ]);
-                if (!$Firma->isActive()) {
-                    throw new \sowerphp\core\Exception(
-                        'Firma vencida, por favor, seleccione una firma vigente. Si no posee una, debe adquirirla con un proveedor autorizado.'
-                    );
-                }
-            } catch (\sowerphp\core\Exception $e) {
+                $Firma->check();
+            } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
                     $e->getMessage(), 'error'
-                );
-                return;
-            }
-            // validar que vengan los datos de la firma
-            if (!trim($Firma->getID())) {
-                \sowerphp\core\Model_Datasource_Session::message(
-                    'No fue posible obtener el RUN de la firma electrónica (verificar contraseña)', 'error'
                 );
                 return;
             }

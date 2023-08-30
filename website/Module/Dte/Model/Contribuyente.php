@@ -1129,7 +1129,7 @@ class Model_Contribuyente extends \Model_App
      * @param user ID del usuario que desea obtener la firma
      * @return \sasco\LibreDTE\FirmaElectronica
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-01-05
+     * @version 2023-08-25
      */
     public function getFirma($user_id = null)
     {
@@ -1151,7 +1151,7 @@ class Model_Contribuyente extends \Model_App
             if (empty($datos)) {
                 return false;
             }
-            // si se obtuvo una firma se trata de usar
+            // obtener contraseña de la firma (que está encriptada)
             try {
                 $pass = Utility_Data::decrypt($datos['contrasenia']);
             } catch (\Exception $e) {
@@ -1160,15 +1160,14 @@ class Model_Contribuyente extends \Model_App
             if (!$pass) {
                 return false;
             }
+            // cargar firma
             try {
                 $this->firmas[(int)$user_id] = new \sasco\LibreDTE\FirmaElectronica([
                     'data' => base64_decode($datos['archivo']),
                     'pass' => $pass,
                 ]);
-                if (!$this->firmas[(int)$user_id]->isActive()) {
-                    throw new \sowerphp\core\Exception('Firma vencida');
-                }
-            } catch (\sowerphp\core\Exception $e) {
+                $this->firmas[(int)$user_id]->check();
+            } catch (\Exception $e) {
                 $this->firmas[(int)$user_id] = false;
             }
         }

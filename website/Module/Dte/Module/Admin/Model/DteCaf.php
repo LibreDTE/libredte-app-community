@@ -139,15 +139,21 @@ class Model_DteCaf extends \Model_App
     /**
      * Método que entrega el objeto del CAF
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-08-24
+     * @version 2023-08-25
      */
     public function getCAF()
     {
-        if (!$this->xml)
+        if (!$this->xml) {
             return false;
-        $caf = \website\Dte\Utility_Data::decrypt($this->xml);
-        if (!$caf)
+        }
+        try {
+            $caf = \website\Dte\Utility_Data::decrypt($this->xml);
+        } catch (\Exception $e) {
+            $caf = null;
+        }
+        if (!$caf) {
             return false;
+        }
         $Caf = new \sasco\LibreDTE\Sii\Folios($caf);
         return $Caf->getTipo() ? $Caf : false;
     }
