@@ -90,12 +90,19 @@ class Model_DteIntercambios extends \Model_Plural_App
             $vars[':de'] = '%'.strtolower($filtros['de']).'%';
         }
         if (!empty($filtros['emisor'])) {
-            if (strpos($filtros['emisor'], '-') or is_numeric($filtros['emisor'])) {
-                if (strpos($filtros['emisor'], '-')) {
-                    $filtros['emisor'] = explode('-', str_replace('.', '', $filtros['emisor']))[0];
-                }
+            if (is_numeric($filtros['emisor'])) {
                 $where[] = 'i.emisor = :emisor';
                 $vars['emisor'] = $filtros['emisor'];
+            }
+            else if (strpos($filtros['emisor'], '-')) {
+                $part0 = explode('-', str_replace('.', '', $filtros['emisor']))[0];
+                if (is_numeric($part0)) {
+                    $where[] = 'i.emisor = :emisor';
+                    $vars['emisor'] = $part0;
+                } else {
+                    $where[] = 'LOWER(e.razon_social) LIKE :emisor';
+                    $vars['emisor'] = '%'.strtolower($filtros['emisor']).'%';
+                }
             } else {
                 $where[] = 'LOWER(e.razon_social) LIKE :emisor';
                 $vars['emisor'] = '%'.strtolower($filtros['emisor']).'%';
