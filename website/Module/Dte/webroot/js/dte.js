@@ -243,19 +243,16 @@ DTE.setTipo = function (tipo) {
         $('#datosExportacion').hide();
         // inicio remover el input y mostrar el select
         let nuevo_div_comuna_receptor = document.getElementById('nuevo_div_comuna_receptor');
-        let CmnaRecepField_aux = document.getElementById('CmnaRecepField_aux');
         if (nuevo_div_comuna_receptor){
             nuevo_div_comuna_receptor.remove();
-        }
-        if (CmnaRecepField_aux){
-            CmnaRecepField_aux.id = 'CmnaRecepField';
-            CmnaRecepField_aux.name = 'CmnaRecep';
             $('#CmnaRecepField').removeAttr('disabled');
-            document.getElementById('div_comuna_receptor').style.display = '';
+            document.getElementById('div_comuna_receptor').style.display = 'block';
         }
         // fin remover el input y mostrar el select
-        if (document.getElementById('IndServicioField').value==4 || document.getElementById('IndServicioField').value==5) {
-            document.getElementById('IndServicioField').value = '';
+        if (document.getElementById('IndServicioField')){
+            if (document.getElementById('IndServicioField').value==4 || document.getElementById('IndServicioField').value==5) {
+                document.getElementById('IndServicioField').value = '';
+            }
         }
     }
     // agregar observación si existe una predeterminada
