@@ -44,9 +44,9 @@ if (!empty($reemplazar_receptor) and !empty($reemplazar_dte) and !empty($reempla
     <!-- DATOS DEL DOCUMENTO -->
 <?php if ($Emisor->puedeAsignarFolio($_Auth->User)) : ?>
     <div class="row">
-        <div class="offset-md-9 col-md-3">
+        <div class="offset-md-9 col-md-3 mb-4">
             <div class="input-group">
-                <div><span class="input-group-text">Folio</span></div>
+                <span class="input-group-text">Folio</span>
                 <input type="text" name="Folio" value="" id="FolioField" class="check integer form-control" placeholder="0" data-bs-toggle="popover" data-bs-trigger="focus" title="Folio" data-bs-placement="top" data-bs-content="Puede asignar manualmente un folio para el DTE. Si lo deja en 0 se usará el siguiente disponible en el sistema." onmouseover="$(this).popover('show')" onmouseout="$(this).popover('hide')" />
             </div>
         </div>
