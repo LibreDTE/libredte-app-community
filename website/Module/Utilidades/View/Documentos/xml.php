@@ -128,9 +128,6 @@ echo $f->input([
     'check' => 'notempty',
     'rows' => 20,
 ]);
-?>
-<p class="text-muted mb-4">En el <a href="https://soporte.sasco.cl/kb/faq.php?id=38" target="_blank">Manual de Certificación de DTE</a> encontrará plantillas con ejemplos de archivos JSON con diferentes tipos de documentos.</p>
-<?php
 $f->setStyle('horizontal');
 echo $f->input([
     'type' => 'checkbox',

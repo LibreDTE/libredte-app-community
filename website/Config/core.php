@@ -164,7 +164,7 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
     ],
     'certificacion' => [
         'link' => '/certificacion',
-        'name' => 'Certificación',
+        'name' => 'Certificación DTE',
         'icon' => 'fa fa-certificate',
     ],
     'seleccionar_empresa' => [
