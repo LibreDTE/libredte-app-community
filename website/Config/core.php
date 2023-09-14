@@ -223,7 +223,6 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
     'Utilidades',
     'Sistema.General',
     'Sistema.General.DivisionGeopolitica',
-    'Sistema.Servidor',
 ]);
 
 // configuración de permisos de la empresa en la aplicación

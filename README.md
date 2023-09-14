@@ -1,25 +1,28 @@
-LibreDTE: Aplicación Web Versión Comunidad
+LibreDTE: Aplicación Web Edición Comunidad
 ==========================================
 
-LibreDTE es un proyecto de [SASCO SpA](https://sasco.cl) que tiene por objetivo
+LibreDTE es un proyecto de [SASCO SpA](https://www.sasco.cl) que tiene por objetivo
 proveer Facturación Electrónica Libre para Chile.
 
-Aquí encontrarás el código fuente de la Versión Comunidad de LibreDTE, la cual
-es la base de la Versión Oficial disponible sólo en
-[www.libredte.cl](https://libredte.cl)
+Aquí encontrarás el código fuente de la Edición Comunidad de LibreDTE, la cual
+es la base de la Edición Enterprise disponible sólo a través de
+[www.libredte.cl](https://www.libredte.cl).
 
 Esta aplicación web utiliza como núcleo para el sistema de facturación la
 [Biblioteca de LibreDTE en PHP](https://github.com/LibreDTE/libredte-lib) y el
-[framework SowerPHP](https://sowerphp.org) para la plataforma web.
+[framework SowerPHP](https://github.com/SowerPHP/sowerphp) para la plataforma web.
 
-![Dashboard LibreDTE](https://facturacionlibre.cl/assets/img/inicio/libredte-dashboard.png)
+Instalación
+-----------
+
+**Nota**: pendiente instalación con Docker.
 
 Términos y condiciones de uso
 -----------------------------
 
 Al utilizar este proyecto, total o parcialmente, automáticamente se acepta
-cumplir con los [términos y condiciones de uso](https://legal.libredte.cl)
-que rigen a LibreDTE. La [Licencia Pública General Affero de GNU (AGPL)](https://raw.githubusercontent.com/LibreDTE/libredte-lib/master/COPYING)
+cumplir con los [términos y condiciones de uso](https://www.libredte.cl/legal)
+que rigen a LibreDTE. La [Licencia Pública General Affero de GNU (AGPL)](https://raw.githubusercontent.com/LibreDTE/libredte-webapp/master/COPYING)
 sólo aplica para quienes respeten los términos y condiciones de uso. No existe
 una licencia comercial de LibreDTE, por lo cual no es posible usar el proyecto
 si no aceptas cumplir dichos términos y condiciones.
@@ -37,51 +40,7 @@ permiten utilizar el proyecto, son los siguientes:
   cambios al código.
 
 Es obligación de quienes quieran usar el proyecto leer y aceptar por completo
-los [términos y condiciones de uso](https://legal.libredte.cl).
-
-Instalación
------------
-
-Revisar el [manual de instalación](https://github.com/LibreDTE/libredte-webapp/blob/master/LibreDTE-INSTALL-Debian-11.md)
-para un paso a paso. La instalación sólo se hace una vez, luego basta actualizar
-la instancia.
-
-Actualización
--------------
-
-Revisa en [nuestro blog](https://blog.libredte.cl/category/versiones-libredte/)
-donde se publican las versiones y detalles sobre las actualizaciones.
-
-Para actualizar, primero, actualizar el framework SowerPHP:
-
-```shell
-$ cd /usr/share/sowerphp
-$ git pull https://github.com/SowerPHP/sowerphp.git 21.10.0
-$ composer install
-```
-
-Donde `21.10.0` es la última versión disponible o bien a la que se desea actualizar.
-
-Segundo, actualizar aplicación web de LibreDTE:
-
-```shell
-$ cd /home/libredte/www/htdocs/website
-$ git pull https://github.com/LibreDTE/libredte-webapp.git 21.10.0
-$ composer install
-```
-
-Donde `21.10.0` es la última versión disponible de LibreDTE o bien la
-que se desea instalar. Esta versión debe coincidir en sus 2 primeros números con
-la versión de SowerPHP previamente actualizada.
-
-Tercero, ejecutar script actualización base de datos (si corresponde).
-
-Estos pasos asumen los directorios por defecto del manual de instalación.
-
-Si hay algún error después de actualizar verificar lo siguiente:
-
-- Configuraciones nuevas en `Config/core.php` y `Config/routes.php`
-- Script SQL podría haber fallado, sobre todo si hay alguna restricción nueva (resolver a mano).
+los [términos y condiciones de uso](https://www.libredte.cl/legal).
 
 Contribuir al proyecto
 ----------------------
@@ -98,13 +57,3 @@ Si deseas contribuir con el proyecto, especialmente resolviendo alguna de las
 **IMPORTANTE**: antes de hacer un *pull request* verificar que el código
 cumpla con los estándares [PSR-1](http://www.php-fig.org/psr/psr-1)
 y [PSR-2](http://www.php-fig.org/psr/psr-2).
-
-Contacto y redes sociales
--------------------------
-
-- Sitio web: <https://libredte.cl>
-- Youtube: <https://www.youtube.com/libredtecl>
-- Facebook: <https://www.facebook.com/libredte>
-- Instagram: <https://www.instagram.com/libredte>
-- Twitter: <https://twitter.com/libredte>
-

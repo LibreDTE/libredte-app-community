@@ -25,31 +25,18 @@ namespace website\Dte;
 
 /**
  * Comando para actualizar los contribuyentes desde el SII
- * Usa por defecto los servicios web de la versión oficial de LibreDTE o bien
- * se puede usar el archivo CSV descargado directamente desde el SII
+ * Usa por defecto los servicios web de API Gateway o bien
+ * se puede usar el archivo CSV descargado desde el SII
  *
  * Ejemplos ejecución:
- *  1) Actualizar usando LibreDTE API (es la opción por defecto)
+ *  1) Actualizar usando API Gateway (es la opción por defecto)
  *     $ ./shell.php Dte.Contribuyentes_Actualizar
- *     $ ./shell.php Dte.Contribuyentes_Actualizar libredte
+ *     $ ./shell.php Dte.Contribuyentes_Actualizar apigateway
  *  2) Actualizar cargando un archivo CSV descargado desde SII
  *     $ ./shell.php Dte.Contribuyentes_Actualizar csv archivo.csv
- *  3) Corregir los datos de contribuyentes con LibreDTE API
- *     Esta opción es "peligrosa" si se deja programada, ya que puede tomar
- *     varios días en actualizar toda la base de datos cuando nunca se ha
- *     realizado. Se recomienda ejecutar este proceso manualmente o bien hacerlo
- *     programado pero una vez a la semana o una vez al mes. Al menos hasta
- *     corroborar que el proceso se demore poco (porque ya tenga casi todo
- *     actualizado).
- *     $ ./shell.php Dte.Contribuyentes_Actualizar corregir
- *  4) Actualizar y cargar datos de nuevos contribuyentes usando LibreDTE API
- *     Esta opción es igual de peligrosa que la 3) porque por cada contribuyente
- *     nuevo se hará una consulta a LibreDTE API y eso tendrá los mismos problemas
- *     Sin embargo, es la mejor opción para tener los datos lo más completos posible
- *     $ ./shell.php Dte.Contribuyentes_Actualizar libredte 0 0 1
  *
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2020-07-23
+ * @version 2023-09-13
  */
 class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
 {
@@ -59,29 +46,19 @@ class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
      * @version 2020-07-23
      */
-    public function main($opcion = 'all', $ambiente = \sasco\LibreDTE\Sii::PRODUCCION, $dia = null, $autocompletar = false)
+    public function main($opcion = 'apigateway', $ambiente = \sasco\LibreDTE\Sii::PRODUCCION, $dia = null, $autocompletar = false)
     {
         ini_set('memory_limit', '2048M');
         if (!$autocompletar) {
             Model_Contribuyente::noAutocompletarNuevosContribuyentes();
         }
-        if ($opcion != 'all') {
-            if (method_exists($this, $opcion)) {
-                $this->$opcion($ambiente, $dia);
-            } else {
-                $this->out(
-                    '<error>Opción '.$opcion.' del comando no fue encontrada.</error>'
-                );
-                return 1;
-            }
+        if (method_exists($this, $opcion)) {
+            $this->$opcion($ambiente, $dia);
         } else {
-            try {
-                $this->libredte($ambiente, $dia);
-            } catch (\Exception $e) {
-                $this->out(
-                    '<error>'.$e->getMessage().'</error>'
-                );
-            }
+            $this->out(
+                '<error>Opción '.$opcion.' del comando no fue encontrada.</error>'
+            );
+            return 1;
         }
         $this->showStats();
         return 0;
@@ -112,11 +89,11 @@ class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
     }
 
     /**
-     * Método que descarga el listado de contribuyentes desde el servicio web de LibreDTE (versión oficial)
+     * Método que descarga el listado de contribuyentes desde el servicio web de API Gateway
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
      * @version 2021-08-16
      */
-    private function libredte($ambiente, $dia)
+    private function apigateway($ambiente, $dia)
     {
         if (!$dia) {
             $dia = date('Y-m-d');
@@ -133,11 +110,11 @@ class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
         }
         $cert_data = $Firma->getCertificate();
         if (!$cert_data) {
-            $this->out('<error>No hay firma electrónica por defecto asignada en LibreDTE o no pudo ser cargada</error>');
+            $this->out('<error>No hay firma electrónica por defecto asignada en LibreDTE o no pudo ser cargada.</error>');
             return;
         }
         $pkey_data = $Firma->getPrivateKey();
-        // obtener contribuyentes desde el servicio web de LibreDTE
+        // obtener contribuyentes desde el servicio web de API Gateway
         $response = libredte_api_consume(
             '/sii/dte/contribuyentes/autorizados?dia='.$dia.'&certificacion='.$ambiente.'&formato=csv_sii',
             [
@@ -235,165 +212,12 @@ class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
                     $Contribuyente->save();
                 } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
                     if ($this->verbose) {
-                        $this->out('<error>Contribuyente '.$c[1].' no pudo ser guardado en la base de datos</error>');
+                        $this->out('<error>Contribuyente '.$c[1].' no pudo ser guardado en la base de datos.</error>');
                     }
                 }
             }
             unset($Contribuyente);
         }
-    }
-
-    /**
-     * Método que corrige los datos de los contribuyentes existentes, cargando:
-     *  - razon social
-     *  - giro
-     *  - actividad económica
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
-     */
-    private function corregir()
-    {
-        $db = &\sowerphp\core\Model_Datasource_Database::get();
-        $contribuyentes = $db->getCol('
-            SELECT rut
-            FROM contribuyente
-            WHERE
-                usuario IS NULL
-                AND (
-                    giro IS NULL
-                    OR actividad_economica IS NULL
-                    OR REPLACE(razon_social, \'.\', \'\') = '.$db->concat('rut', '-', 'dv').'
-                )
-        ');
-        $registros = num(count($contribuyentes));
-        $procesados = 0;
-        $actualizados = 0;
-        foreach ($contribuyentes as $rut) {
-            $Contribuyente = new Model_Contribuyente($rut);
-            $response = libredte_api_consume('/sii/contribuyentes/situacion_tributaria/tercero/'.$Contribuyente->getRUT());
-            if ($response['status']['code']==200) {
-                $info = $response['body'];
-                $procesados++;
-                if ($this->verbose) {
-                    $this->out('Procesando '.num($procesados).'/'.$registros.': contribuyente '.$Contribuyente->rut.'-'.$Contribuyente->dv);
-                }
-                $cambios = false;
-                if ($Contribuyente->razon_social==\sowerphp\app\Utility_Rut::addDV($Contribuyente->rut) and !empty($info['razon_social'])) {
-                    $Contribuyente->razon_social = mb_substr($info['razon_social'], 0, 100);
-                    $cambios = true;
-                }
-                if (!$Contribuyente->actividad_economica and !empty($info['actividades'][0]['codigo'])) {
-                    $Contribuyente->actividad_economica = $info['actividades'][0]['codigo'];
-                    $cambios = true;
-                }
-                if (!$Contribuyente->giro and !empty($info['actividades'][0]['glosa'])) {
-                    $Contribuyente->giro = mb_substr($info['actividades'][0]['glosa'], 0, 80);
-                    $cambios = true;
-                }
-                if ($cambios) {
-                    try {
-                        if ($Contribuyente->save()) {
-                            $actualizados++;
-                        }
-                    } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-                    }
-                }
-            }
-        }
-        $this->out('Se actualizaron '.num($actualizados).' contribuyentes de un total de '.$registros);
-    }
-
-    /**
-     * Método que corrige los datos de los contribuyentes existentes usando el Portal MIPYME del SII, cargando:
-     *  - razon social
-     *  - giro
-     *  - actividad económica
-     *  - dirección
-     *  - comuna
-     *  - telefono
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-23
-     */
-    private function mipyme()
-    {
-        $db = &\sowerphp\core\Model_Datasource_Database::get();
-        $contribuyentes = $db->getCol('
-            SELECT rut
-            FROM contribuyente
-            WHERE
-                usuario IS NULL
-                AND (
-                    giro IS NULL
-                    OR actividad_economica IS NULL
-                    OR REPLACE(razon_social, \'.\', \'\') = '.$db->concat('rut', '-', 'dv').'
-                    OR direccion IS NULL
-                    OR telefono IS NULL
-                )
-        ');
-        $registros = num(count($contribuyentes));
-        $procesados = 0;
-        $actualizados = 0;
-        $mipyme = \sowerphp\core\Configure::read('proveedores.api.libredte.mipyme');
-        if (empty($mipyme['rut']) or empty($mipyme['clave']) or empty($mipyme['contribuyente']) or empty($mipyme['dte'])) {
-            $this->out('Configuración de MIPYME para acceder a datos de contribuyentes está incompleta');
-            return;
-        }
-        foreach ($contribuyentes as $rut) {
-            $Contribuyente = new Model_Contribuyente($rut);
-            $response = libredte_api_consume('/sii/mipyme/contribuyentes/info/'.$Contribuyente->getRUT().'/'.$mipyme['contribuyente'].'/'.$mipyme['dte'], [
-                'auth' => [
-                    'pass' => [
-                        'rut' => $mipyme['rut'],
-                        'clave' => $mipyme['clave'],
-                    ],
-                ],
-            ]);
-            if ($response['status']['code']==200) {
-                $info = $response['body'];
-                $procesados++;
-                if ($this->verbose) {
-                    $this->out('Procesando '.num($procesados).'/'.$registros.': contribuyente '.$Contribuyente->rut.'-'.$Contribuyente->dv);
-                }
-                $cambios = false;
-                if ($Contribuyente->razon_social==\sowerphp\app\Utility_Rut::addDV($Contribuyente->rut) and !empty($info['razon_social'])) {
-                    $Contribuyente->razon_social = mb_substr($info['razon_social'], 0, 100);
-                    $cambios = true;
-                }
-                if (!$Contribuyente->actividad_economica and !empty($info['actividades'][0]['codigo'])) {
-                    $Contribuyente->actividad_economica = $info['actividades'][0]['codigo'];
-                    $cambios = true;
-                }
-                if (!$Contribuyente->giro and !empty($info['actividades'][0]['glosa'])) {
-                    $Contribuyente->giro = mb_substr($info['actividades'][0]['glosa'], 0, 80);
-                    $cambios = true;
-                }
-                if (!$Contribuyente->direccion and !empty($info['direcciones'][0]['direccion'])) {
-                    $Contribuyente->direccion = mb_substr($info['direcciones'][0]['direccion'], 0, 70);
-                    if (!empty($info['direcciones'][0]['comuna'])) {
-                        $comuna = (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->getComunaByName(
-                            $info['direcciones'][0]['comuna']
-                        );
-                        if ($comuna) {
-                            $Contribuyente->comuna = $comuna;
-                        }
-                    }
-                    $cambios = true;
-                }
-                if (!$Contribuyente->telefono and !empty($info['direcciones'][0]['telefono'])) {
-                    $Contribuyente->telefono = mb_substr($info['direcciones'][0]['telefono'], 0, 20);
-                    $cambios = true;
-                }
-                if ($cambios) {
-                    try {
-                        if ($Contribuyente->save()) {
-                            $actualizados++;
-                        }
-                    } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-                    }
-                }
-            }
-        }
-        $this->out('Se actualizaron '.num($actualizados).' contribuyentes de un total de '.$registros.' usando el Portal MIPYME');
     }
 
 }
