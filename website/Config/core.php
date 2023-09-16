@@ -317,3 +317,9 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
 
 // método de encriptación por defecto
 \sowerphp\core\Configure::write('data.crypt.method', env('LIBREDTE_APP_DATA_CRYPT_METHOD', 'sodium'));
+
+// configuración de caché por defecto
+\sowerphp\core\Configure::write('cache.default', [
+    'host' => env('LIBREDTE_APP_CACHE_DEFAULT_HOST', '127.0.0.1'),
+    'port' => env('LIBREDTE_APP_CACHE_DEFAULT_PORT', 11211),
+]);

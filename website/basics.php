@@ -95,3 +95,23 @@ function libredte_api_consume($recurso, $datos = [])
     // entregar resultado normalizado como arreglo (cabecera y cuerpo)
     return $LibreDTE->toArray();
 }
+
+// función para la creación de enlaces a FAQ en las alertas entregadas por la aplicación
+function message_make_links($string, $html = true) {
+    // preguntas frecuentes de la aplicación
+    if (strpos($string, '[faq:') !== false) {
+        $faq = (array)\sowerphp\core\Configure::read('faq');
+        if (!empty($faq['url']) and !empty($faq['text'])) {
+            $replace = $html
+                        ? '<a href="'.$faq['url'].'$2" target="_blank" class="alert-link">'.$faq['text'].'</a>'
+                        : $faq['text'].': '.$faq['url'].'$2';
+            $string = preg_replace(
+                '/\[(faq):([\w\d]+)\]/i',
+                $replace,
+                $string,
+            );
+        }
+    }
+    // entregar string modificado con los enlaces correspondientes
+    return $string;
+}
