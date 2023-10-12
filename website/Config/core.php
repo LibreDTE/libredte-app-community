@@ -53,15 +53,16 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
 \sowerphp\core\Configure::write('page.body.title', env('LIBREDTE_APP_PAGE_BODY_TITLE', 'LibreDTE'));
 \sowerphp\core\Configure::write('page.footer', [
     // los créditos de LibreDTE: autor original y enlaces, se deben mantener visibles en el footer de cada página de la aplicación
-    // más información en los términos y condiciones de uso en https://libredte.cl/legal
+    // más información en los términos y condiciones de uso en https://www.libredte.cl/legal
     'left' => '&copy; 2023 '.\sowerphp\core\Configure::read('page.header.title').' - <a href="/consultar" title="Consultar documentos (incluyendo boletas)">Consultar DTE</a><br/><span class="small">Aplicación de facturación basada en <a href="https://libredte.cl">LibreDTE</a>, el cual es un proyecto de <a href="https://sasco.cl">SASCO SpA</a> que tiene como misión proveer facturación electrónica libre para Chile</span>',
     'right' => env('LIBREDTE_APP_PAGE_FOOTER_RIGHT', ''),
 ]);
 
 // Menú principal del sitio web
 \sowerphp\core\Configure::write('nav.website', [
-    '/dte' => ['name'=>'Facturación', 'desc'=>'Accede al módulo de facturación electrónica', 'icon'=>'fa fa-file-invoice'],
-    'https://libredte.cl/faq' => ['name'=>'Soporte', 'desc'=>'Revisa las Preguntas y Respuestas Frecuentes', 'icon'=>'far fa-life-ring'],
+    '/dte' => ['name'=>'Módulo de Facturación', 'desc'=>'Accede al módulo de facturación electrónica', 'icon'=>'fa fa-file-invoice'],
+    'https://www.sasco.cl/help' => ['name'=>'Centro de Ayuda', 'desc'=>'Centro de ayuda de SASCO SpA', 'icon'=>'far fa-question-circle'],
+    'https://www.libredte.cl/shop/category/libredte-servicio-local-4' => ['name'=>'Servicio Local', 'desc'=>'Revisa los servicios que tenemos asociados al Servicio Local de LibreDTE en SASCO SpA', 'icon'=>'fas fa-shopping-cart'],
 ]);
 
 // Menú principal de la aplicación web
@@ -268,19 +269,13 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
 // configuración para API de contribuyentes
 \sowerphp\core\Configure::write('api_contribuyentes', [
     'dte_items' => [
-        'name' => 'Listado de items',
-        'desc' => 'Consultar los items a través de su código',
-        'link' => 'https://soporte.sasco.cl/kb/faq.php?id=26',
+        'name' => 'Obtener productos o servicios desde API',
     ],
     'dte_pdf' => [
-        'name' => 'PDF de DTE',
-        'desc' => 'Servicio que genera el PDF a partir del XML del DTE',
-        'link' => 'https://soporte.sasco.cl/kb/faq.php?id=215'
+        'name' => 'Generar PDF de DTE personalizado',
     ],
     'dte_intercambio_responder' => [
-        'name' => 'Procesar intercambio',
-        'desc' => 'Servicio que procesa un intercambio de DTE e indica si se debe aceptar o reclamar',
-        'link' => 'https://soporte.sasco.cl/kb/faq.php?id=28',
+        'name' => 'Procesar los XML de intercambios de DTE',
     ],
 ]);
 

@@ -1,20 +1,18 @@
 <?php $Contribuyente = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente'); ?>
 <!--
-LibreDTE 2015 - 2023
-Copyright SASCO SpA (https://sasco.cl)
-Plataforma de facturación electrónica usando LibreDTE (https://facturacionlibre.cl)
-LibreDTE es un proyecto de SASCO SpA que tiene como misión proveer facturación electrónica libre para Chile
-Autor original: Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-Versión Oficial de LibreDTE, con soporte de SASCO SpA, en: https://libredte.cl
+LibreDTE Edición Comunidad (2015 - 2023)
+Copyright SASCO SpA (https://www.sasco.cl)
+Edición Enterprise de LibreDTE, con soporte de SASCO SpA, disponible en https://www.libredte.cl
+¿Te gusta ver código? ¿Necesitas una integración? Revisa https://www.billmysales.com
 -->
 <!DOCTYPE html>
 <html lang="es">
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="LibreDTE ¡facturación electrónica libre para Chile!" />
-        <meta name="keywords" content="factura electrónica, facturación electrónica, sii, dte, software libre, open source" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
         <meta name="author" content="SASCO SpA" />
+        <meta name="description" content="LibreDTE Edición Comunidad." />
+        <meta name="keywords" content="facturas, boletas, sii, dte" />
         <title><?=$_header_title?></title>
         <link rel="shortcut icon" href="<?=$_base?>/img/favicon.png" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.2.0/css/all.css">
@@ -128,11 +126,11 @@ Versión Oficial de LibreDTE, con soporte de SASCO SpA, en: https://libredte.cl
                                     ?>
                                     <?php if ($Contribuyente->usuarioAutorizado($_Auth->User, 'admin')) : ?>
                                         <div class="dropdown-divider"></div>
-                                        <a href="<?=$_base?>/dte/contribuyentes/modificar/<?=$Contribuyente->rut?>" class="dropdown-item">
+                                        <a href="<?=$_base?>/dte/contribuyentes/modificar" class="dropdown-item">
                                             <i class="fas fa-edit fa-fw"></i> Configuración de la empresa
                                         </a>
-                                        <a href="<?=$_base?>/dte/contribuyentes/usuarios/<?=$Contribuyente->rut?>" class="dropdown-item">
-                                            <i class="fas fa-users fa-fw"></i> Mantenedor de usuarios
+                                        <a href="<?=$_base?>/dte/contribuyentes/usuarios" class="dropdown-item">
+                                            <i class="fas fa-users fa-fw"></i> Usuarios de la empresa
                                         </a>
                                     <?php endif; ?>
                                 </div>
@@ -193,20 +191,6 @@ Versión Oficial de LibreDTE, con soporte de SASCO SpA, en: https://libredte.cl
 // mensaje si la empresa está en certificación
 if ($Contribuyente and $Contribuyente->enCertificacion()) {
     echo '<div class="bg-info text-white text-center lead mt-2 mb-2" style="padding:0.5em"><strong>AMBIENTE DE CERTIFICACIÓN / PRUEBAS: '.$Contribuyente->razon_social.'</strong></div>',"\n";
-}
-// menú de módulos si hay sesión iniciada
-if ($_Auth->logged() and $_module_breadcrumb) {
-    echo '<ol class="breadcrumb d-print-none">',"\n";
-    $url = '/';
-    foreach ($_module_breadcrumb as $link => &$name) {
-        if (is_string($link)) {
-            echo '<li class="breadcrumb-item"><a href="',$_base,$url,$link,'">',$name,'</a></li>',"\n";
-            $url .= $link.'/';
-        } else {
-            echo '<li class="breadcrumb-item active">',$name,'</li>';
-        }
-    }
-    echo '</ol>',"\n";
 }
 // mensaje de sesión
 $messages = \sowerphp\core\Model_Datasource_Session::message();

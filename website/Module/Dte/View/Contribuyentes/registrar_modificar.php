@@ -8,21 +8,15 @@ if ($Contribuyente->enCertificacion() == $Contribuyente->config_ambiente_en_cert
 ?>
 <ul class="nav nav-pills float-end">
     <li class="nav-item">
-        <a href="<?=$_base?>/dte/contribuyentes/ambiente/<?=$Contribuyente->rut?>/<?=$Contribuyente->enCertificacion()?'produccion':'certificacion'?>" title="Cambiar el Ambiente de Facturación durante la sesión del usuario" class="nav-link" <?=$ambiente_onclick?>>
+        <a href="<?=$_base?>/dte/contribuyentes/ambiente/<?=$Contribuyente->enCertificacion()?'produccion':'certificacion'?>" title="Cambiar el Ambiente de Facturación durante la sesión del usuario" class="nav-link" <?=$ambiente_onclick?>>
             <i class="fa fa-exchange-alt"></i>
             Cambiar Ambiente
         </a>
     </li>
     <li class="nav-item">
-        <a href="<?=$_base?>/dte/contribuyentes/usuarios/<?=$Contribuyente->rut?>" title="Usuarios autorizados" class="nav-link">
+        <a href="<?=$_base?>/dte/contribuyentes/usuarios" title="Usuarios autorizados" class="nav-link">
             <i class="fa fa-users"></i>
             Usuarios
-        </a>
-    </li>
-    <li class="nav-item">
-        <a href="<?=$_base?>/dte/contribuyentes/seleccionar/<?=$Contribuyente->rut?>" title="Seleccionar empresa" class="nav-link">
-            <i class="fa fa-check"></i>
-            Seleccionar
         </a>
     </li>
 </ul>
@@ -49,13 +43,13 @@ $(function() {
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-bs-toggle="tab" id="datos-tab" class="nav-link active" aria-selected="true">Empresa</a></li>
-        <li class="nav-item"><a href="#ambientes" aria-controls="ambientes" role="tab" data-bs-toggle="tab" id="ambientes-tab" class="nav-link">Ambientes</a></li>
-        <li class="nav-item"><a href="#correos" aria-controls="correos" role="tab" data-bs-toggle="tab" id="correos-tab" class="nav-link">Correos</a></li>
-        <li class="nav-item"><a href="#facturacion" aria-controls="facturacion" role="tab" data-bs-toggle="tab" id="facturacion-tab" class="nav-link">Facturación</a></li>
+        <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-bs-toggle="tab" id="datos-tab" class="nav-link active" aria-selected="true">Datos Empresa</a></li>
+        <li class="nav-item"><a href="#ambientes" aria-controls="ambientes" role="tab" data-bs-toggle="tab" id="ambientes-tab" class="nav-link">Ambiente SII</a></li>
+        <li class="nav-item"><a href="#correos" aria-controls="correos" role="tab" data-bs-toggle="tab" id="correos-tab" class="nav-link">Correos electrónicos</a></li>
+        <li class="nav-item"><a href="#facturacion" aria-controls="facturacion" role="tab" data-bs-toggle="tab" id="facturacion-tab" class="nav-link">Módulo Facturación</a></li>
 <?php if (isset($Contribuyente)) : ?>
-        <li class="nav-item"><a href="#apps" aria-controls="apps" role="tab" data-bs-toggle="tab" id="apps-tab" class="nav-link">Apps</a></li>
-        <li class="nav-item"><a href="#general" aria-controls="general" role="tab" data-bs-toggle="tab" id="general-tab" class="nav-link">General</a></li>
+        <li class="nav-item"><a href="#apps" aria-controls="apps" role="tab" data-bs-toggle="tab" id="apps-tab" class="nav-link">Aplicaciones e Integraciones</a></li>
+        <li class="nav-item"><a href="#general" aria-controls="general" role="tab" data-bs-toggle="tab" id="general-tab" class="nav-link">Configuración Adicional</a></li>
 <?php endif; ?>
     </ul>
     <div class="tab-content pt-4">
@@ -129,12 +123,6 @@ echo $f->input([
         </div>
         <div class="card-body">
 <?php
-echo $f->input([
-    'name' => 'config_extra_nombre_fantasia',
-    'label' => 'Nombre fantasía',
-    'value' => isset($Contribuyente) ? $Contribuyente->config_extra_nombre_fantasia : null,
-    'attr' => 'maxlength="100"',
-]);
 $config_extra_otras_actividades = [];
 if (isset($Contribuyente) and $Contribuyente->config_extra_otras_actividades) {
     foreach ($Contribuyente->config_extra_otras_actividades as $a) {
@@ -246,31 +234,10 @@ echo $f->input([
 ?>
 <?php if (isset($Contribuyente)) : ?>
 <div class="text-center">
-    <img src="../logo/<?=$Contribuyente->rut?>.png" alt="Logo <?=$Contribuyente->razon_social?>" class="img-fluid" />
+    <img src="<?=$_base?>/dte/contribuyentes/logo/<?=$Contribuyente->rut?>.png" alt="Logo <?=$Contribuyente->razon_social?>" class="img-fluid" />
     <br/><br/>
 </div>
 <?php endif; ?>
-        </div>
-    </div>
-    <div class="card mb-4">
-        <div class="card-header">
-            <i class="fas fa-info"></i>
-            Datos representante legal
-        </div>
-        <div class="card-body">
-<?php
-echo $f->input([
-    'name' => 'config_extra_representante_run',
-    'label' => 'RUN',
-    'value' => isset($Contribuyente) ? $Contribuyente->config_extra_representante_run : null,
-    'check' => 'rut',
-]);
-echo $f->input([
-    'name' => 'config_extra_representante_nombre',
-    'label' => 'Nombre',
-    'value' => isset($Contribuyente) ? $Contribuyente->config_extra_representante_nombre : null,
-]);
-?>
         </div>
     </div>
     <div class="card mb-4">
@@ -283,9 +250,9 @@ echo $f->input([
 echo $f->input([
     'type' => 'textpass',
     'name' => 'config_sii_pass',
-    'label' => 'Contraseña SII',
+    'label' => 'Clave tributaria empresa',
     'value' => isset($Contribuyente) ? $Contribuyente->config_sii_pass : null,
-    'help' => 'Permite acceder a ciertas funcionalidades que se conectan al SII',
+    'help' => 'Asignar la contraseña del SII de la empresa permite acceder a las <a href="https://www.libredte.cl//editions#edicion-comunidad-funcionalidades-extras" target="_blank">funcionalidades extras</a> de LibreDTE.',
 ]);
 ?>
         </div>
@@ -346,54 +313,11 @@ echo $f->input([
 
 <!-- INICIO EMAILS -->
 <div role="tabpanel" class="tab-pane" id="correos" aria-labelledby="correos-tab">
-    <p>Aquí debe configurar las dos casillas de correo para operar con facturación electrónica. Puede revisar la <a href="https://soporte.sasco.cl/kb/faq.php?id=45">documentación de las casillas de correo</a> para obtener detalles de qué opciones debe usar.</p>
-<?php if (isset($Contribuyente) and $Contribuyente->getFirma()) : ?>
-    <p>Los correos deben coincidir con los registrados en el SII, los debe verificar en <a href="#" onclick="__.popup('<?=$_base?>/dte/sii/contribuyente_datos/<?=$Contribuyente->rut?>-<?=$Contribuyente->dv?>', 750, 550); return false" title="Ver datos del contribuyente en el SII">el sitio del web de impuestos internos</a>.</p>
-<?php endif; ?>
+    <p>Aquí debe configurar las dos casillas de correo para operar con facturación electrónica.</p>
+    <?php if (isset($Contribuyente) and $Contribuyente->getFirma()) : ?>
+        <p>Los correos deben coincidir con los registrados en el SII, los debe verificar en <a href="#" onclick="__.popup('<?=$_base?>/dte/sii/contribuyente_datos/<?=$Contribuyente->rut?>-<?=$Contribuyente->dv?>', 750, 550); return false" title="Ver datos del contribuyente en el SII">el sitio del web de impuestos internos</a>.</p>
+    <?php endif; ?>
     <div class="row">
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <i class="fa fa-envelope"></i>
-                    Correo contacto SII
-                </div>
-                <div class="card-body">
-<?php
-$f->setColsLabel(3);
-echo $f->input([
-    'name' => 'config_email_sii_user',
-    'label' => 'Correo',
-    'value' => isset($Contribuyente) ? $Contribuyente->config_email_sii_user : null,
-    'attr' => 'maxlength="50" onblur="config_email_set(this, \'config_email_sii\')"',
-    'check' => 'notempty email',
-]);
-echo $f->input([
-    'type' => 'textpass',
-    'name' => 'config_email_sii_pass',
-    'value' => isset($Contribuyente) ? $Contribuyente->config_email_sii_pass : null,
-    'label' => 'Contraseña',
-    'check' => 'notempty',
-]);
-echo $f->input([
-    'name' => 'config_email_sii_smtp',
-    'label' => 'Servidor SMTP',
-    'value' => isset($Contribuyente) ? $Contribuyente->config_email_sii_smtp : null,
-    'help' => 'Ejemplo: ssl://smtp.gmail.com:465'.(isset($Contribuyente)?('<br/><a href="#" onclick="__.popup(\''.$_base.'/dte/contribuyentes/config_email_test/'.$Contribuyente->rut.'/sii/smtp\', 750, 550); return false" class="small">[probar correo]</a>'):''),
-    'attr' => 'maxlength="50"',
-    'check' => 'notempty',
-]);
-echo $f->input([
-    'name' => 'config_email_sii_imap',
-    'label' => 'Mailbox IMAP',
-    'value' => isset($Contribuyente) ? $Contribuyente->config_email_sii_imap : null,
-    'help' => 'Ejemplo: {imap.gmail.com:993/imap/ssl}INBOX'.(isset($Contribuyente)?('<br/><a href="#" onclick="__.popup(\''.$_base.'/dte/contribuyentes/config_email_test/'.$Contribuyente->rut.'/sii/imap\', 750, 550); return false" class="small">[probar correo]</a>'):''),
-    'attr' => 'maxlength="100"',
-    'check' => 'notempty',
-]);
-?>
-                </div>
-            </div>
-        </div>
         <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header">
@@ -402,6 +326,7 @@ echo $f->input([
                 </div>
                 <div class="card-body">
 <?php
+$f->setColsLabel(3);
 echo $f->input([
     'name' => 'config_email_intercambio_user',
     'label' => 'Correo',
@@ -420,7 +345,7 @@ echo $f->input([
     'name' => 'config_email_intercambio_smtp',
     'label' => 'Servidor SMTP',
     'value' => isset($Contribuyente) ? $Contribuyente->config_email_intercambio_smtp : null,
-    'help' => 'Ejemplo: ssl://smtp.gmail.com:465'.(isset($Contribuyente)?('<br/><a href="#" onclick="__.popup(\''.$_base.'/dte/contribuyentes/config_email_test/'.$Contribuyente->rut.'/intercambio/smtp\', 750, 550); return false" class="small">[probar correo]</a>'):''),
+    'help' => 'Ejemplo: ssl://smtp.gmail.com:465'.(isset($Contribuyente)?('<br/><a href="#" onclick="__.popup(\''.$_base.'/dte/contribuyentes/config_email_test/intercambio/smtp\', 750, 550); return false" class="small">[probar correo]</a>'):''),
     'attr' => 'maxlength="50"',
     'check' => 'notempty',
 ]);
@@ -428,11 +353,53 @@ echo $f->input([
     'name' => 'config_email_intercambio_imap',
     'label' => 'Mailbox IMAP',
     'value' => isset($Contribuyente) ? $Contribuyente->config_email_intercambio_imap : null,
-    'help' => 'Ejemplo: {imap.gmail.com:993/imap/ssl}INBOX'.(isset($Contribuyente)?('<br/><a href="#" onclick="__.popup(\''.$_base.'/dte/contribuyentes/config_email_test/'.$Contribuyente->rut.'/intercambio/imap\', 750, 550); return false" class="small">[probar correo]</a>'):''),
+    'help' => 'Ejemplo: {imap.gmail.com:993/imap/ssl}INBOX'.(isset($Contribuyente)?('<br/><a href="#" onclick="__.popup(\''.$_base.'/dte/contribuyentes/config_email_test/intercambio/imap\', 750, 550); return false" class="small">[probar correo]</a>'):''),
     'attr' => 'maxlength="100"',
     'check' => 'notempty',
 ]);
 $f->setColsLabel();
+?>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="far fa-envelope"></i>
+                    Correo contacto SII
+                </div>
+                <div class="card-body">
+<?php
+echo $f->input([
+    'name' => 'config_email_sii_user',
+    'label' => 'Correo',
+    'value' => isset($Contribuyente) ? $Contribuyente->config_email_sii_user : null,
+    'attr' => 'maxlength="50" onblur="config_email_set(this, \'config_email_sii\')"',
+    'check' => 'notempty email',
+]);
+echo $f->input([
+    'type' => 'textpass',
+    'name' => 'config_email_sii_pass',
+    'value' => isset($Contribuyente) ? $Contribuyente->config_email_sii_pass : null,
+    'label' => 'Contraseña',
+    'check' => 'notempty',
+]);
+echo $f->input([
+    'name' => 'config_email_sii_smtp',
+    'label' => 'Servidor SMTP',
+    'value' => isset($Contribuyente) ? $Contribuyente->config_email_sii_smtp : null,
+    'help' => 'Ejemplo: ssl://smtp.gmail.com:465'.(isset($Contribuyente)?('<br/><a href="#" onclick="__.popup(\''.$_base.'/dte/contribuyentes/config_email_test/sii/smtp\', 750, 550); return false" class="small">[probar correo]</a>'):''),
+    'attr' => 'maxlength="50"',
+    'check' => 'notempty',
+]);
+echo $f->input([
+    'name' => 'config_email_sii_imap',
+    'label' => 'Mailbox IMAP',
+    'value' => isset($Contribuyente) ? $Contribuyente->config_email_sii_imap : null,
+    'help' => 'Ejemplo: {imap.gmail.com:993/imap/ssl}INBOX'.(isset($Contribuyente)?('<br/><a href="#" onclick="__.popup(\''.$_base.'/dte/contribuyentes/config_email_test/sii/imap\', 750, 550); return false" class="small">[probar correo]</a>'):''),
+    'attr' => 'maxlength="100"',
+    'check' => 'notempty',
+]);
 ?>
                 </div>
             </div>
@@ -457,7 +424,7 @@ if (!empty($tipos_dte)) {
     echo $f->input([
         'type' => 'select',
         'name' => 'config_emision_dte_defecto',
-        'label' => 'DTE defecto',
+        'label' => 'DTE por defecto',
         'options' => $tipos_dte,
         'value' => isset($Contribuyente) ? $Contribuyente->config_emision_dte_defecto : 33,
         'help' => '¿Qué documento debe estar seleccionado por defecto al emitir?',
@@ -778,14 +745,14 @@ echo $f->input([
 echo $f->input([
     'type' => 'date',
     'name' => 'config_sii_envio_rcof_desde',
-    'label' => 'Enviar RCOF Desde',
+    'label' => 'Enviar RCOF desde',
     'value' => isset($Contribuyente) ? $Contribuyente->config_sii_envio_rcof_desde : null,
     'help' => '¿Desde cuándo se debe enviar el RCOF al SII?',
 ]);
 echo $f->input([
     'type' => 'date',
     'name' => 'config_sii_envio_rcof_hasta',
-    'label' => 'Enviar RCOF Hasta',
+    'label' => 'Enviar RCOF hasta',
     'value' => isset($Contribuyente) ? $Contribuyente->config_sii_envio_rcof_hasta : null,
     'help' => '¿Hasta cuándo se debe enviar el RCOF al SII?',
 ]);
@@ -873,10 +840,9 @@ echo $f->input([
     'name' => 'config_pdf_imprimir',
     'label' => 'Impresión directa',
     'options' => [
-        '' => 'No, se imprimirá bajando el archivo',
-        'pdf'=>'Imprimir usando el PDF',
+        'pdf_escpos' => 'Elegir cómo imprimir (usando PDF o ESCPOS)',
+        'pdf' => 'Imprimir usando el PDF',
         'escpos' => 'Imprimir en impresora térmica (usando ESCPOS)',
-        'pdf_escpos' => 'Elegir imprimir usando PDF o ESCPOS',
     ],
     'value' => isset($Contribuyente) ? $Contribuyente->config_pdf_imprimir : '',
     'help' => '¿Se debe enviar a imprimir directamente a la impresora seleccionada?',
@@ -927,11 +893,11 @@ if ($formatos_pdf) {
         'type' => 'js',
         'id' => 'config_pdf_mapeo',
         'label' => 'Mapeo PDF',
-        'titles' => ['Documento', 'Actividad Económica', 'Sucursal', 'Formato', 'Papel'],
+        'titles' => ['Documento', 'Actividad Económica', 'Sucursal', 'Formato por defecto', 'Papel por defecto'],
         'inputs' => [
-            ['type'=>'select', 'name' => 'config_pdf_mapeo_documento', 'options' => ['*'=>'*'] + $tipos_dte],
-            ['type'=>'select', 'name' => 'config_pdf_mapeo_actividad', 'options' => ['*'=>'*'] + (array)$Contribuyente->getListActividades(), 'attr'=>'style="width:12em"'],
-            ['type'=>'select', 'name' => 'config_pdf_mapeo_sucursal', 'options' => ['*'=>'*'] + (array)$Contribuyente->getSucursales()],
+            ['type'=>'select', 'name' => 'config_pdf_mapeo_documento', 'options' => ['*'=>'Todos'] + $tipos_dte],
+            ['type'=>'select', 'name' => 'config_pdf_mapeo_actividad', 'options' => ['*'=>'Todas'] + (array)$Contribuyente->getListActividades(), 'attr'=>'style="width:12em"'],
+            ['type'=>'select', 'name' => 'config_pdf_mapeo_sucursal', 'options' => ['*'=>'Todas'] + (array)$Contribuyente->getSucursales()],
             ['type'=>'select', 'name' => 'config_pdf_mapeo_formato', 'options' => $formatos_pdf],
             ['type'=>'select', 'name' => 'config_pdf_mapeo_papel', 'options' => \sasco\LibreDTE\Sii\Dte\PDF\Dte::$papel],
         ],
@@ -973,10 +939,10 @@ foreach($dtepdfs as $App) {
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-exchange-alt"></i>
-            Servicios web del contribuyente
+            Servicios web del contribuyente (webhooks)
         </div>
         <div class="card-body">
-            <p>LibreDTE puede comunicarse con la aplicación de su empresa u otros sitios a través de servicios web. A continuación puede ingresar las URL para consultas que se podrían hacer a su aplicación. Puede revisar la <a href="https://soporte.sasco.cl/kb/faq.php?cid=7">documentación de la integración</a> para obtener detalles de las entradas y salidas esperadas para cada consulta.</p>
+            <p>LibreDTE puede comunicarse con la aplicación de su empresa u otros sitios a través de notificaciones a servicios web.</p>
 <?php
 $api_servicios_disponibles = (array)\sowerphp\core\Configure::read('api_contribuyentes');
 $api = [];
@@ -986,7 +952,7 @@ foreach ($api_servicios_disponibles as $api_codigo => $api_servicio) {
     }
     $api[] = [
         'config_api_codigo' => $api_codigo,
-        'config_api_servicio' => $api_servicio['name'].'<br/><span class="small">'.$api_servicio['desc'].(!empty($api_servicio['link'])?(' (<a href="'.$api_servicio['link'].'">más info</a>)'):'').'</span>',
+        'config_api_servicio' => $api_servicio['name'],
         'config_api_url' => isset($Contribuyente->config_api_servicios->$api_codigo->url) ? $Contribuyente->config_api_servicios->$api_codigo->url : null,
         'config_api_auth' => isset($Contribuyente->config_api_servicios->$api_codigo->auth) ? $Contribuyente->config_api_servicios->$api_codigo->auth : null,
         'config_api_credenciales' => isset($Contribuyente->config_api_servicios->$api_codigo->credenciales) ? $Contribuyente->config_api_servicios->$api_codigo->credenciales : null,
@@ -997,16 +963,15 @@ echo $f->input([
     'type' => 'table',
     'id' => 'config_api',
     'label' => 'API',
-    'titles' => ['Servicio', 'URL', 'Auth', 'Credenciales'],
+    'titles' => ['Servicio', 'URL del webhook', 'Tipo de autenticación', 'Credenciales'],
     'inputs' => [
         ['name' => 'config_api_codigo', 'type'=>'hidden'],
         ['name' => 'config_api_servicio', 'type'=>'div', 'attr'=>'style="max-width:10em"'],
-        ['name' => 'config_api_url', 'placeholder'=>'https://example.com/api/recurso'],
+        ['name' => 'config_api_url', 'placeholder'=>'https://example.com/api/webhook'],
         ['name' => 'config_api_auth', 'type'=>'select', 'options'=>['http_auth_basic'=>'HTTP Auth Basic']],
-        ['name' => 'config_api_credenciales', 'placeholder'=>'usuario:contraseña', 'attr' => 'maxlength="255" onmouseover="this.type=\'text\'" onmouseout="this.type=\'password\'"'],
+        ['type'=>'textpass', 'name'=>'config_api_credenciales', 'placeholder'=>'Ejemplo: usuario:contraseña', 'attr' => 'maxlength="255" onmouseover="this.type=\'text\'" onmouseout="this.type=\'password\'"'],
     ],
     'values' => $api,
-    'help' => 'Datos para contacto comercial (ej: envío de cobros del servicio)',
 ]);
 $f->setStyle('horizontal');
 ?>
@@ -1016,10 +981,10 @@ $f->setStyle('horizontal');
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-exchange-alt"></i>
-            Aplicaciones de terceros
+            Aplicaciones externas
         </div>
         <div class="card-body">
-            <p>LibreDTE puede utilizar aplicaciones de terceros para entregar mayores funcionalidades y características.</p>
+            <p>LibreDTE puede utilizar aplicaciones externas para entregar más funcionalidades y características.</p>
 <?php
 $AppsConfigHelper = new \sowerphp\app\View_Helper_AppsConfig('apps', $f);
 foreach($apps as $App) {
@@ -1032,42 +997,26 @@ foreach($apps as $App) {
         </div>
     </div>
     <!-- FIN APPS -->
+    <!-- INICIO BILLMYSALES -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-robot"></i>
+            ¿Necesitas automatizar la facturación de tu tienda electrónica? ¡Hazlo con BillMySales!
+        </div>
+        <div class="card-body">
+            <div class="text-center mt-4 mb-4">
+                <a href="https://www.billmysales.com" target="_blank">
+                    <img src="https://billmysales.com/static/img/banners/billmysales_banner_750x110.png" alt="Banner BillMySales">
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- INICIO BILLMYSALES -->
 </div>
 <!-- FIN APPS -->
 
 <!-- INICIO CONFIGURACIÓN GENERAL -->
 <div role="tabpanel" class="tab-pane" id="general" aria-labelledby="general-tab">
-    <div class="card mb-4">
-        <div class="card-header">
-            <i class="far fa-envelope"></i>
-            Datos de contacto
-        </div>
-        <div class="card-body">
-<?php
-$config_app_contacto_comercial = [];
-foreach ((array)$Contribuyente->config_app_contacto_comercial as $c) {
-    $config_app_contacto_comercial[] = [
-        'config_app_contacto_comercial_nombre' => $c->nombre,
-        'config_app_contacto_comercial_email' => $c->email,
-        'config_app_contacto_comercial_telefono' => $c->telefono,
-    ];
-}
-echo $f->input([
-    'type' => 'js',
-    'id' => 'config_app_contacto_comercial',
-    'label' => 'Comercial',
-    'titles' => ['Nombre', 'Email', 'Teléfono'],
-    'inputs' => [
-        ['name' => 'config_app_contacto_comercial_nombre'],
-        ['name' => 'config_app_contacto_comercial_email', 'check' => 'notempty email'],
-        ['name' => 'config_app_contacto_comercial_telefono', 'check' => 'telephone'],
-    ],
-    'values' => $config_app_contacto_comercial,
-    'help' => 'Datos para contacto comercial (ej: envío de cobros del servicio)',
-]);
-?>
-        </div>
-    </div>
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-link"></i>

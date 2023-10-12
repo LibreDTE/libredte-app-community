@@ -90,7 +90,7 @@ class Controller_Cesiones extends \Controller_App
     /**
      * Acción que permite buscar en las cesiones de documentos
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+     * @version 2023-10-06
      */
     public function buscar($consulta = null)
     {
@@ -100,6 +100,7 @@ class Controller_Cesiones extends \Controller_App
         }
         $Contribuyente = $this->getContribuyente();
         $this->set([
+            'Contribuyente' => $Contribuyente,
             'consulta' => $consulta,
             'desde' => date('Y-m-01'),
             'hasta' => date('Y-m-d'),

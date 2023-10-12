@@ -1,12 +1,12 @@
 <ul class="nav nav-pills float-end">
-<?php if ($Emisor->config_pdf_imprimir and $DteTmp->getTipo()->permiteCotizacion()) : ?>
+<?php if ($DteTmp->getTipo()->permiteCotizacion()) : ?>
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-print"></i>
             Imprimir
         </a>
         <div class="dropdown-menu">
-<?php if ($Emisor->config_pdf_imprimir == 'pdf_escpos') : ?>
+<?php if (!$Emisor->config_pdf_imprimir or $Emisor->config_pdf_imprimir == 'pdf_escpos') : ?>
             <a href="#" onclick="dte_imprimir('pdf', 'cotizacion', {emisor: <?=$DteTmp->emisor?>, dte: <?=$DteTmp->dte?>, codigo: '<?=$DteTmp->codigo?>', receptor: <?=$DteTmp->receptor?>}); return false" class="dropdown-item">PDF Cotización</a>
             <a href="#" onclick="dte_imprimir('escpos', 'cotizacion', {emisor: <?=$DteTmp->emisor?>, dte: <?=$DteTmp->dte?>, codigo: '<?=$DteTmp->codigo?>', receptor: <?=$DteTmp->receptor?>}); return false" accesskey="P" class="dropdown-item">ESCPOS Cotización</a>
             <div class="dropdown-divider"></div>
@@ -243,11 +243,7 @@ if (!$email_html) {
     }
     $mensaje .= 'Saluda atentamente,'."\n\n";
     $mensaje .= '-- '."\n";
-    if ($Emisor->config_extra_nombre_fantasia) {
-        $mensaje .= $Emisor->config_extra_nombre_fantasia.' ('.$Emisor->razon_social.')'."\n";
-    } else {
-        $mensaje .= $Emisor->razon_social."\n";
-    }
+    $mensaje .= $Emisor->getNombre()."\n";
     $mensaje .= $Emisor->giro."\n";
     $contacto = [];
     if (!empty($Emisor->telefono)) {
@@ -354,7 +350,7 @@ if ($email_enviados) {
             </div>
 </div>
 <?php else : ?>
-        <p>No tiene los pagos en línea habilitados, debe al menos <a href="<?=$_base?>/dte/contribuyentes/modificar/<?=$Emisor->rut?>#pagos">configurar un medio de pago</a> primero.</p>
+        <p>No tiene los pagos en línea habilitados, debe al menos <a href="<?=$_base?>/dte/contribuyentes/modificar#pagos">configurar un medio de pago</a> primero.</p>
 <?php endif; ?>
     </div>
 </div>

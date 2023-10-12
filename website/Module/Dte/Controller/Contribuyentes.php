@@ -28,33 +28,10 @@ namespace website\Dte;
  * Clase para el controlador asociado a la tabla contribuyente de la base de
  * datos
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2017-10-19
+ * @version 2023-10-08
  */
 class Controller_Contribuyentes extends \Controller_App
 {
-
-    /**
-     * Método que permite entrar a las opciones de cualquier empresa para dar
-     * soporte, se debe estar en el grupo soporte para que la acción funcione
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-03-12
-     */
-    public function soporte()
-    {
-        // si el usuario no está en el grupo soporte error
-        if (!$this->Auth->User->inGroup(['soporte'])) {
-            \sowerphp\core\Model_Datasource_Session::message('No está autorizado a prestar soporte a otros contribuyentes', 'error');
-            $this->redirect('/dte/contribuyentes/seleccionar');
-        }
-        // verificar datos de formulario
-        if (empty($_POST['rut']) or empty($_POST['accion'])) {
-            \sowerphp\core\Model_Datasource_Session::message('Debe indicar RUT de empresa y acción a realizar', 'error');
-            $this->redirect('/dte/contribuyentes/seleccionar');
-        }
-        // rederigir
-        $rut = \sowerphp\app\Utility_Rut::normalizar($_POST['rut']);
-        $this->redirect('/dte/contribuyentes/'.$_POST['accion'].'/'.$rut);
-    }
 
     /**
      * Método que selecciona la empresa con la que se trabajará en el módulo DTE
@@ -69,15 +46,14 @@ class Controller_Contribuyentes extends \Controller_App
         // si se está pidiendo una empresa en particular se tratará de usar
         if ($rut) {
             // se crea el emisor y se busca si está registrado (con usuario asociado)
-            $class = $this->Contribuyente_class;
-            $Emisor = new $class($rut);
+            $Emisor = new $this->Contribuyente_class($rut);
             if (!$Emisor->usuario) {
-                \sowerphp\core\Model_Datasource_Session::message('Empresa solicitada no está registrada', 'error');
+                \sowerphp\core\Model_Datasource_Session::message('Empresa solicitada no está registrada.', 'error');
                 $this->redirect('/dte/contribuyentes/seleccionar');
             }
             // verificar que el usuario tenga acceso al emisor solicitado
             if (!$Emisor->usuarioAutorizado($this->Auth->User)) {
-                \sowerphp\core\Model_Datasource_Session::message('No está autorizado a operar con la empresa solicitada', 'error');
+                \sowerphp\core\Model_Datasource_Session::message('No está autorizado a operar con la empresa solicitada.', 'error');
                 $this->redirect('/dte/contribuyentes/seleccionar');
             }
             // verificar si se requiere auth2 en el usuario para poder usar la empresa
@@ -89,7 +65,7 @@ class Controller_Contribuyentes extends \Controller_App
                         || $Emisor->config_usuarios_auth2 == 2 // todos obligados a usar auth2
                     );
                     if ($auth2_required) {
-                        \sowerphp\core\Model_Datasource_Session::message('Debe habilitar algún mecanismo de autenticación secundaria antes de poder operar con esta empresa', 'error');
+                        \sowerphp\core\Model_Datasource_Session::message('Debe habilitar algún mecanismo de autenticación secundaria antes de poder operar con esta empresa.', 'error');
                         $this->redirect('/dte/contribuyentes/seleccionar');
                     }
                 }
@@ -100,7 +76,7 @@ class Controller_Contribuyentes extends \Controller_App
             $this->Auth->saveCache();
             // determinar página de redirección y mensaje si corresponde
             if (!$url) {
-                \sowerphp\core\Model_Datasource_Session::message('Desde ahora estará operando con '.$Emisor->razon_social);
+                \sowerphp\core\Model_Datasource_Session::message('Desde ahora estará operando con '.$Emisor->razon_social.'.');
             }
             if ($redirect) {
                 \sowerphp\core\Model_Datasource_Session::delete('referer');
@@ -220,21 +196,14 @@ class Controller_Contribuyentes extends \Controller_App
     /**
      * Método que permite modificar contribuyente previamente registrado
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-02
+     * @version 2023-10-08
      */
-    public function modificar($rut)
+    public function modificar()
     {
-        // crear objeto del contribuyente
-        try {
-            $class = $this->Contribuyente_class;
-            $Contribuyente = new $class($rut);
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-            \sowerphp\core\Model_Datasource_Session::message('No se encontró la empresa solicitada', 'error');
-            $this->redirect('/dte/contribuyentes/seleccionar');
-        }
+        $Contribuyente = $this->getContribuyente();
         // verificar que el usuario sea el administrador o de soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada.', 'error');
             $this->redirect('/dte/contribuyentes/seleccionar');
         }
         // asignar variables para editar
@@ -264,13 +233,13 @@ class Controller_Contribuyentes extends \Controller_App
                 $this->prepararDatosContribuyente($Contribuyente);
             } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
-                $this->redirect('/dte/contribuyentes/modificar/'.$rut);
+                $this->redirect('/dte/contribuyentes/modificar');
             }
             $Contribuyente->set($_POST);
             $Contribuyente->modificado = date('Y-m-d H:i:s');
             try {
                 $Contribuyente->save(true);
-                \sowerphp\core\Model_Datasource_Session::message('Empresa '.$Contribuyente->razon_social.' ha sido modificada', 'ok');
+                \sowerphp\core\Model_Datasource_Session::message('Empresa '.$Contribuyente->razon_social.' ha sido modificada.', 'ok');
                 $ContribuyenteSeleccionado = $this->getContribuyente(false);
                 if ($ContribuyenteSeleccionado and $ContribuyenteSeleccionado->rut == $Contribuyente->rut) {
                     $this->redirect('/dte/contribuyentes/seleccionar/'.$Contribuyente->rut);
@@ -425,24 +394,6 @@ class Controller_Contribuyentes extends \Controller_App
                 unlink($dir.'/dte.html');
             }
         }
-        // crear arreglo con datos de contacto comercial
-        if (!empty($_POST['config_app_contacto_comercial_email'])) {
-            $n_emails = count($_POST['config_app_contacto_comercial_email']);
-            for ($i=0; $i<$n_emails; $i++) {
-                if (!empty($_POST['config_app_contacto_comercial_email'][$i])) {
-                    $_POST['config_app_contacto_comercial'][] = [
-                        'nombre' => !empty($_POST['config_app_contacto_comercial_nombre'][$i]) ? $_POST['config_app_contacto_comercial_nombre'][$i] : null,
-                        'email' => $_POST['config_app_contacto_comercial_email'][$i],
-                        'telefono' => !empty($_POST['config_app_contacto_comercial_telefono'][$i]) ? $_POST['config_app_contacto_comercial_telefono'][$i] : null,
-                    ];
-                }
-            }
-            unset($_POST['config_app_contacto_comercial_nombre']);
-            unset($_POST['config_app_contacto_comercial_email']);
-            unset($_POST['config_app_contacto_comercial_telefono']);
-        } else {
-            $_POST['config_app_contacto_comercial'] = null;
-        }
         // guardar datos de la API
         if (!empty($_POST['config_api_codigo'])) {
             $config_api_servicios = [];
@@ -513,20 +464,14 @@ class Controller_Contribuyentes extends \Controller_App
     /**
      * Método que permite cambiar el ambiente durante la sesión del usuario
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-27
+     * @version 2023-10-08
      */
-    public function ambiente($rut, $ambiente)
+    public function ambiente($ambiente)
     {
-        // crear objeto del contribuyente
-        try {
-            $Contribuyente = new Model_Contribuyente($rut);
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-            \sowerphp\core\Model_Datasource_Session::message('No se encontró la empresa solicitada', 'error');
-            $this->redirect('/dte/contribuyentes/seleccionar');
-        }
+        $Contribuyente = $this->getContribuyente();
         // verificar que el usuario sea el administrador o sea soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada.', 'error');
             $this->redirect('/dte/contribuyentes/seleccionar');
         }
         // verificar ambiente solicitado
@@ -541,32 +486,26 @@ class Controller_Contribuyentes extends \Controller_App
             ],
         ];
         if (!isset($ambientes[$ambiente])) {
-            \sowerphp\core\Model_Datasource_Session::message('Ambiente solicitado no es válido', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('Ambiente solicitado no es válido.', 'error');
             $this->redirect('/dte/contribuyentes/seleccionar');
         }
         // asignar ambiente
         \sowerphp\core\Model_Datasource_Session::write('dte.certificacion', (bool)$ambientes[$ambiente]['codigo']);
-        \sowerphp\core\Model_Datasource_Session::message('Se cambió el ambiente de la sesión a '.$ambientes[$ambiente]['glosa'], 'ok');
+        \sowerphp\core\Model_Datasource_Session::message('Se cambió el ambiente de la sesión a '.$ambientes[$ambiente]['glosa'].'.', 'ok');
         $this->redirect('/dte');
     }
 
     /**
      * Método que permite editar los usuarios autorizados de un contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-14
+     * @version 2023-10-08
      */
-    public function usuarios($rut)
+    public function usuarios()
     {
-        // crear objeto del contribuyente
-        try {
-            $Contribuyente = new Model_Contribuyente($rut);
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-            \sowerphp\core\Model_Datasource_Session::message('No se encontró la empresa solicitada', 'error');
-            $this->redirect('/dte/contribuyentes/seleccionar');
-        }
+        $Contribuyente = $this->getContribuyente();
         // verificar que el usuario sea el administrador o sea soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada.', 'error');
             $this->redirect('/dte/contribuyentes/seleccionar');
         }
         // asignar variables para editar
@@ -598,7 +537,7 @@ class Controller_Contribuyentes extends \Controller_App
                 }
                 if (!$usuarios) {
                     \sowerphp\core\Model_Datasource_Session::message(
-                        'No indicaron permisos para ningún usuario', 'warning'
+                        'No indicaron permisos para ningún usuario.', 'warning'
                     );
                     return;
                 }
@@ -606,7 +545,7 @@ class Controller_Contribuyentes extends \Controller_App
             try {
                 $Contribuyente->setUsuarios($usuarios);
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Se editaron los usuarios autorizados de la empresa', 'ok'
+                    'Se editaron los usuarios autorizados de la empresa.', 'ok'
                 );
             } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
@@ -617,27 +556,21 @@ class Controller_Contribuyentes extends \Controller_App
                     $e->getMessage(), 'error'
                 );
             }
-            $this->redirect(str_replace('/usuarios_dtes/', '/usuarios/', $this->request->request));
+            $this->redirect('/dte/contribuyentes/usuarios');
         }
     }
 
     /**
      * Método que permite editar los documentos autorizados por usuario
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-14
+     * @version 2023-10-08
      */
-    public function usuarios_dtes($rut)
+    public function usuarios_dtes()
     {
-        // crear objeto del contribuyente
-        try {
-            $Contribuyente = new Model_Contribuyente($rut);
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-            \sowerphp\core\Model_Datasource_Session::message('No se encontró la empresa solicitada', 'error');
-            $this->redirect('/dte/contribuyentes/seleccionar');
-        }
+        $Contribuyente = $this->getContribuyente();
         // verificar que el usuario sea el administrador o sea soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada.', 'error');
             $this->redirect('/dte/contribuyentes/seleccionar');
         }
         // editar documentos de usuario
@@ -665,7 +598,7 @@ class Controller_Contribuyentes extends \Controller_App
             try {
                 $Contribuyente->setDocumentosAutorizadosPorUsuario($usuarios);
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Se editaron los documentos autorizados por usuario de la empresa', 'ok'
+                    'Se editaron los documentos autorizados por usuario de la empresa.', 'ok'
                 );
             } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
@@ -681,26 +614,20 @@ class Controller_Contribuyentes extends \Controller_App
                 'No puede acceder directamente a la página '.$this->request->request, 'error'
             );
         }
-        $this->redirect(str_replace('/usuarios_dtes/', '/usuarios/', $this->request->request).'#dtes');
+        $this->redirect('/dte/contribuyentes/usuarios#dtes');
     }
 
     /**
      * Método que permite editar los documentos autorizados por usuario
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-14
+     * @version 2023-10-08
      */
-    public function usuarios_sucursales($rut)
+    public function usuarios_sucursales()
     {
-        // crear objeto del contribuyente
-        try {
-            $Contribuyente = new Model_Contribuyente($rut);
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-            \sowerphp\core\Model_Datasource_Session::message('No se encontró la empresa solicitada', 'error');
-            $this->redirect('/dte/contribuyentes/seleccionar');
-        }
+        $Contribuyente = $this->getContribuyente();
         // verificar que el usuario sea el administrador o sea soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada.', 'error');
             $this->redirect('/dte/contribuyentes/seleccionar');
         }
         // editar sucursales por defecto
@@ -717,7 +644,7 @@ class Controller_Contribuyentes extends \Controller_App
             try {
                 $Contribuyente->setSucursalesPorUsuario($usuarios);
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Se editaron las sucursales por defecto de los usuarios de la empresa', 'ok'
+                    'Se editaron las sucursales por defecto de los usuarios de la empresa.', 'ok'
                 );
             } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
@@ -733,26 +660,20 @@ class Controller_Contribuyentes extends \Controller_App
                 'No puede acceder directamente a la página '.$this->request->request, 'error'
             );
         }
-        $this->redirect(str_replace('/usuarios_sucursales/', '/usuarios/', $this->request->request).'#sucursales');
+        $this->redirect('/dte/contribuyentes/usuarios#sucursales');
     }
 
     /**
      * Método que permite modificar la configuración general de usuarios de la empresa
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-14
+     * @version 2023-10-08
      */
-    public function usuarios_general($rut)
+    public function usuarios_general()
     {
-        // crear objeto del contribuyente
-        try {
-            $Contribuyente = new Model_Contribuyente($rut);
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-            \sowerphp\core\Model_Datasource_Session::message('No se encontró la empresa solicitada', 'error');
-            $this->redirect('/dte/contribuyentes/seleccionar');
-        }
+        $Contribuyente = $this->getContribuyente();
         // verificar que el usuario sea el administrador o sea soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada.', 'error');
             $this->redirect('/dte/contribuyentes/seleccionar');
         }
         // editar configuración de usuarios
@@ -771,7 +692,7 @@ class Controller_Contribuyentes extends \Controller_App
             $Contribuyente->modificado = date('Y-m-d H:i:s');
             try {
                 $Contribuyente->save();
-                \sowerphp\core\Model_Datasource_Session::message('Configuración general de usuarios de la empresa ha sido modificada ', 'ok');
+                \sowerphp\core\Model_Datasource_Session::message('Configuración general de usuarios de la empresa ha sido modificada. ', 'ok');
             } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message('No fue posible modificar la configuración de usuarios de la empresa:<br/>'.$e->getMessage(), 'error');
             }
@@ -780,102 +701,85 @@ class Controller_Contribuyentes extends \Controller_App
                 'No puede acceder directamente a la página '.$this->request->request, 'error'
             );
         }
-        $this->redirect(str_replace('/usuarios_general/', '/usuarios/', $this->request->request).'#general');
+        $this->redirect('/dte/contribuyentes/usuarios#general');
     }
 
     /**
      * Método que permite transferir una empresa a un nuevo usuario administrador
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-14
+     * @version 2023-10-08
      */
-    public function transferir($rut)
+    public function transferir()
     {
+        $Contribuyente = $this->getContribuyente();
         // verificar si es posible transferir la empresa
         if (!(boolean)\sowerphp\core\Configure::read('dte.transferir_contribuyente')) {
             \sowerphp\core\Model_Datasource_Session::message('No es posible que usted transfiera la empresa, contacte a soporte para realizar esta acción.', 'error');
-            $this->redirect('/dte/contribuyentes/usuarios/'.$rut.'#general');
+            $this->redirect('/dte/contribuyentes/usuarios#general');
         }
         // debe venir usuario
         if (empty($_POST['usuario'])) {
-            \sowerphp\core\Model_Datasource_Session::message('Debe especificar el nuevo usuario administrador', 'error');
-            $this->redirect('/dte/contribuyentes/usuarios/'.$rut.'#general');
-        }
-        // crear objeto del contribuyente
-        try {
-            $Contribuyente = new Model_Contribuyente($rut);
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-            \sowerphp\core\Model_Datasource_Session::message('No se encontró la empresa solicitada', 'error');
-            $this->redirect('/dte/contribuyentes/seleccionar');
+            \sowerphp\core\Model_Datasource_Session::message('Debe especificar el nuevo usuario administrador.', 'error');
+            $this->redirect('/dte/contribuyentes/usuarios#general');
         }
         // verificar que el usuario sea el administrador
-        if ($Contribuyente->usuario!=$this->Auth->User->id) {
-            \sowerphp\core\Model_Datasource_Session::message('Sólo el usuario que tiene la empresa registrada puede cambiar el administrador', 'error');
-            $this->redirect('/dte/contribuyentes/usuarios/'.$rut.'#general');
+        if ($Contribuyente->usuario != $this->Auth->User->id) {
+            \sowerphp\core\Model_Datasource_Session::message('Sólo el usuario que tiene la empresa registrada puede cambiar el administrador.', 'error');
+            $this->redirect('/dte/contribuyentes/usuarios#general');
         }
         // transferir al nuevo usuario administrador
         $Usuario = new \sowerphp\app\Sistema\Usuarios\Model_Usuario($_POST['usuario']);
         if (!$Usuario->exists()) {
             \sowerphp\core\Model_Datasource_Session::message('Usuario '.$_POST['usuario'].' no existe', 'error');
-            $this->redirect('/dte/contribuyentes/usuarios/'.$rut.'#general');
+            $this->redirect('/dte/contribuyentes/usuarios#general');
         }
         if ($Contribuyente->usuario == $Usuario->id) {
             \sowerphp\core\Model_Datasource_Session::message('El usuario administrador ya es '.$_POST['usuario'], 'warning');
-            $this->redirect('/dte/contribuyentes/usuarios/'.$rut.'#general');
+            $this->redirect('/dte/contribuyentes/usuarios#general');
         }
         $Contribuyente->usuario = $Usuario->id;
         if ($Contribuyente->save()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Se actualizó el usuario administrador a '.$_POST['usuario'], 'ok'
+                'Se actualizó el usuario administrador a '.$_POST['usuario'].'.', 'ok'
             );
         } else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible cambiar el administrador de la empresa', 'error'
+                'No fue posible cambiar el administrador de la empresa.', 'error'
             );
         }
-        $this->redirect('/dte/contribuyentes/usuarios/'.$rut.'#general');
+        $this->redirect('/dte/contribuyentes/usuarios#general');
     }
 
     /**
      * Acción que entrega el logo del contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+     * @version 2023-10-08
      */
     public function logo($rut)
     {
         $Contribuyente = new Model_Contribuyente(substr($rut, 0, -4));
-        if (!$Contribuyente->exists()) {
-            \sowerphp\core\Model_Datasource_Session::message(
-                'Contribuyente solicitado no existe'
-            );
-            $this->redirect('/');
-        }
         $logo = DIR_STATIC.'/contribuyentes/'.$Contribuyente->rut.'/logo.png';
         if (!is_readable($logo)) {
-            $logo = DIR_STATIC.'/contribuyentes/default/logo.png';
+            $logo = DIR_WEBSITE.'/webroot/img/logo.png';
         }
+        $filename = \sowerphp\core\Utility_String::normalize($Contribuyente->getNombre()).'.png';
         $this->response->type('image/png');
         $this->response->header('Content-Length', filesize($logo));
-        $this->response->header('Content-Disposition', 'inline; filename="'.$Contribuyente->rut.'.png"');
+        $this->response->header('Content-Disposition', 'inline; filename="'.$filename.'"');
         $this->response->send(file_get_contents($logo));
     }
 
     /**
      * Acción que permite probar la configuración de los correos electrónicos
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-07-31
+     * @version 2023-10-08
      */
-    public function config_email_test($rut, $email, $protocol = 'smtp')
+    public function config_email_test($email, $protocol = 'smtp')
     {
-        // crear objeto del contribuyente
-        try {
-            $class = $this->Contribuyente_class;
-            $Contribuyente = new $class($rut);
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-            $this->response->send('No se encontró la empresa solicitada');
-        }
+        $Contribuyente = $this->getContribuyente();
         // verificar que el usuario sea el administrador o de soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            $this->response->send('Usted no es el administrador de la empresa solicitada');
+            $this->response->send('Usted no es el administrador de la empresa solicitada.');
         }
         // verificar protocolo
         if (!in_array($protocol, ['smtp', 'imap'])) {
@@ -925,7 +829,7 @@ class Controller_Contribuyentes extends \Controller_App
     /**
      * Método de la API que permite obtener los datos de un contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-05-10
+     * @version 2023-10-08
      */
     public function _api_info_GET($rut, $emisor = null)
     {
@@ -954,7 +858,7 @@ class Controller_Contribuyentes extends \Controller_App
         }
         // si el contribuyente no existe error
         if (!$Contribuyente or !$Contribuyente->exists()) {
-            $this->Api->send('Contribuyente solicitado no existe', 404);
+            $this->Api->send('Contribuyente solicitado no existe.', 404);
         }
         // asignar ciertos valores de la configuración al objeto del contribuyente
         // se hace un "touch" para que el atributo sea cargado desde la configuración
@@ -962,8 +866,6 @@ class Controller_Contribuyentes extends \Controller_App
         $Contribuyente->config_ambiente_produccion_numero;
         $Contribuyente->config_email_intercambio_user;
         $Contribuyente->config_extra_web;
-        $Contribuyente->config_extra_representante_run;
-        $Contribuyente->config_contabilidad_contador_run;
         // se crea el arreglo con datos básicos del contribuyente
         $datos = array_merge(get_object_vars($Contribuyente), [
             'comuna_glosa' => $Contribuyente->getComuna()->comuna,
@@ -1016,10 +918,10 @@ class Controller_Contribuyentes extends \Controller_App
         }
         $Contribuyente = new Model_Contribuyente($rut);
         if (!$Contribuyente->exists()) {
-            $this->Api->send('Contribuyente solicitado no existe', 404);
+            $this->Api->send('Contribuyente solicitado no existe.', 404);
         }
         if (!$Contribuyente->usuarioAutorizado($User, 'admin')) {
-            $this->Api->send('Usted no es el administrador de la empresa solicitada', 401);
+            $this->Api->send('Usted no es el administrador de la empresa solicitada.', 401);
         }
         $config = [
             'ambiente_en_certificacion' => (int)$Contribuyente->config_ambiente_en_certificacion,

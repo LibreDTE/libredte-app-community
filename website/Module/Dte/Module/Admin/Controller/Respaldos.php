@@ -42,7 +42,7 @@ class Controller_Respaldos extends \Controller_App
         $Emisor = $this->getContribuyente();
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Sólo el administrador de la empresa puede descargar un respaldo', 'error'
+                'Sólo el administrador de la empresa puede descargar un respaldo.', 'error'
             );
             $this->redirect('/dte/admin');
         }

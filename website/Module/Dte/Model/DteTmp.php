@@ -621,7 +621,7 @@ class Model_DteTmp extends \Model_App
      * Método que entrega el listado de correos a los que se podría enviar el documento
      * temporal (correo receptor, correo del dte y contacto comercial)
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-02-12
+     * @version 2023-10-08
      */
     public function getEmails()
     {
@@ -654,16 +654,6 @@ class Model_DteTmp extends \Model_App
         }
         if (in_array($origen, [0, 1]) and $this->getReceptor()->usuario and $this->getReceptor()->getUsuario()->email and !in_array(strtolower($this->getReceptor()->getUsuario()->email), $emails)) {
             $emails['Usuario LibreDTE'] = strtolower($this->getReceptor()->getUsuario()->email);
-        }
-        if ($this->emisor==\sowerphp\core\Configure::read('libredte.proveedor.rut')) {
-            if ($this->getReceptor()->config_app_contacto_comercial) {
-                $i = 1;
-                foreach($this->getReceptor()->config_app_contacto_comercial as $contacto) {
-                    if (!in_array(strtolower($contacto->email), $emails)) {
-                        $emails['Comercial LibreDTE #'.$i++] = strtolower($contacto->email);
-                    }
-                }
-            }
         }
         $emails_trigger = \sowerphp\core\Trigger::run('dte_dte_tmp_emails', $this, $emails);
         return $emails_trigger ? $emails_trigger : $emails;

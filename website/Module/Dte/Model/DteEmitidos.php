@@ -533,47 +533,4 @@ class Model_DteEmitidos extends \Model_Plural_App
         ]);
     }
 
-    /**
-     * Método que entrega la boleta más antigua que tiene un XML
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-05-21
-     */
-    public function getBoletaMasAntiguaConXML() {
-        return $this->db->getRow('
-            SELECT dte, folio, fecha, total, fecha_hora_creacion
-            FROM dte_emitido
-            WHERE emisor = :emisor AND dte IN (39, 41) AND certificacion = :certificacion AND xml IS NOT NULL
-            ORDER BY fecha ASC
-            LIMIT 1
-        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion()]);
-    }
-
-    /**
-     * Método que elimina los XML de las boletas de cierto período
-     * También elimina los datos extra de la boleta
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-27
-     */
-    public function eliminarBoletasXML(int $periodo)
-    {
-        $periodo_desde_permitido = \sowerphp\general\Utility_Date::previousPeriod(date('Ym'), 3);
-        if ($periodo > $periodo_desde_permitido) {
-            throw new \Exception('El período debe ser menor o igual a '.$periodo_desde_permitido);
-        }
-        return $this->db->query('
-            UPDATE dte_emitido
-            SET xml = NULL, extra = NULL
-            WHERE
-                emisor = :emisor
-                AND dte IN (39, 41)
-                AND certificacion = :certificacion
-                AND '.$this->db->date('Ym', 'fecha').' = :periodo
-                AND xml IS NOT NULL
-        ', [
-            ':emisor' => $this->getContribuyente()->rut,
-            ':certificacion' => $this->getContribuyente()->enCertificacion(),
-            ':periodo' => $periodo,
-        ])->rowCount();
-    }
-
 }

@@ -6,19 +6,13 @@
         </a>
     </li>
     <li class="nav-item">
-        <a href="<?=$_base?>/dte/contribuyentes/modificar/<?=$Contribuyente->rut?>" title="Modificar empresa" class="nav-link">
+        <a href="<?=$_base?>/dte/contribuyentes/modificar" title="Modificar empresa" class="nav-link">
             <i class="fa fa-edit"></i>
             Modificar
         </a>
     </li>
-    <li class="nav-item">
-        <a href="<?=$_base?>/dte/contribuyentes/seleccionar/<?=$Contribuyente->rut?>" title="Seleccionar empresa" class="nav-link">
-            <i class="fa fa-check"></i>
-            Seleccionar
-        </a>
-    </li>
 </ul>
-<div class="page-header"><h1>Mantenedor de usuarios</h1></div>
+<div class="page-header"><h1>Usuarios de la empresa</h1></div>
 <p>Aquí podrá modificar los usuarios autorizados a operar con la empresa <?=$Contribuyente->razon_social?> RUT <?=num($Contribuyente->rut).'-'.$Contribuyente->dv?>, para la cual usted es el usuario administrador.</p>
 
 <script type="text/javascript">
@@ -74,27 +68,26 @@ echo $f->input([
     'type' => 'js',
     'id' => 'usuarios',
     'label' => 'Usuarios autorizados',
-    'titles' => array_merge(['Usuario o Email'], array_keys($permisos_usuarios)),
+    'titles' => array_merge(['Usuario o correo electrónico'], array_keys($permisos_usuarios)),
     'inputs' => $inputs,
     'values' => $usuarios,
 ]);
 $f->setStyle('horizontal');
 echo $f->end('Modificar usuarios autorizados');
 ?>
-<div class="card">
+<div class="card mt-4 mb-4">
     <div class="card-body">
-        <p>Debe ingresar el nombre del usuario que desea autorizar y alguno de los permisos:</p>
-        <?=$permisos_ayuda,"\n"?>
+        <i class="fa-solid fa-question-circle fa-fw text-warning mb-4"></i>
+        <strong>¿Cómo autorizar a otros usuarios a trabajar en la empresa?</strong><br/>
+        Acá podrá agregar usuarios para que trabajen con su empresa. Cada usuario debe primero <a href="<?=$_base?>/usuarios/registrar">registrarse</a> por su cuenta, luego con el nombre de usuario o el correo podrá autorizarlo acá. Para que el usuario sea guardado debe asignar a lo menos un permiso de acceso. Estos permisos permiten acceder a todas las funcionalidades del módulo.<br/><br/>
+        Si adicionalmente desea que el usuario emita DTE, después de agregar el usuario a la empresa debe indicar <a href="<?=$_base?>/dte/contribuyentes/usuarios#dtes">qué documentos puede emitir el usuario</a>.
     </div>
 </div>
-<div class="card-deck mt-4">
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=90">¿Cómo autorizar a otros usuarios a trabajar en la empresa?</a>
-            </h5>
-        </div>
+<div class="card mb-4">
+    <div class="card-body">
+        <i class="fa-solid fa-question-circle fa-fw text-warning mb-4"></i>
+        <strong>¿Cuáles son los permisos que se pueden asignar a los usuarios autorizados?</strong><br/>
+        <?=$permisos_ayuda,"\n"?>
     </div>
 </div>
 </div>
@@ -105,7 +98,7 @@ echo $f->end('Modificar usuarios autorizados');
 <p>Aquí puede asignar los documentos que un usuario puede emitir.</p>
 <?php
 echo $f->begin([
-    'action' => '../usuarios_dtes/'.$Contribuyente->rut,
+    'action' => $_base.'/dte/contribuyentes/usuarios_dtes',
     'id' => 'usuarios_dtes',
     'onsubmit' => 'Form.check(\'usuarios_dtes\')',
 ]);
@@ -146,7 +139,8 @@ echo $f->end('Guardar documentos por usuarios');
 ?>
 <div class="card">
     <div class="card-body">
-        <p>Documentos que la empresa tiene autorizados en LibreDTE:</p>
+        <i class="fa-solid fa-question-circle fa-fw text-warning mb-4"></i>
+        <strong>¿Cuáles son los documentos que podrían emitir los usuarios en LibreDTE?</strong><br/>
         <ul>
 <?php foreach ($documentos_autorizados as $codigo => $tipo) : ?>
             <li><strong><?=$codigo?></strong>: <?=$tipo?></li>
@@ -162,7 +156,7 @@ echo $f->end('Guardar documentos por usuarios');
 <p>Aquí puede asignar la sucursal por defecto de cada usuario para la emisión de los documentos.</p>
 <?php
 echo $f->begin([
-    'action' => '../usuarios_sucursales/'.$Contribuyente->rut,
+    'action' => $_base.'/dte/contribuyentes/usuarios_sucursales',
     'id' => 'usuarios_sucursales',
     'onsubmit' => 'Form.check(\'usuarios_sucursales\')',
 ]);
@@ -218,14 +212,14 @@ new \sowerphp\general\View_Helper_Table($usuarios, 'usuarios_autorizados_'.$Cont
 <div role="tabpanel" class="tab-pane" id="general" aria-labelledby="general-tab">
     <div class="card mb-4">
         <div class="card-header">
-            <i class="fa fa-cogs"></i>
+            <i class="fa fa-cogs fa-fw"></i>
             Configuración general usuarios
         </div>
         <div class="card-body">
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin([
-    'action' => '../usuarios_general/'.$Contribuyente->rut,
+    'action' => $_base.'/dte/contribuyentes/usuarios_general',
     'id' => 'general',
     'onsubmit' => 'Form.check(\'general\')',
 ]);
@@ -243,7 +237,7 @@ echo $f->end('Guardar configuración');
     </div>
     <div class="card mb-4">
         <div class="card-header">
-            <i class="fa fa-user-secret"></i>
+            <i class="fa fa-user-secret fa-fw"></i>
             Usuario administrador principal de la empresa
         </div>
         <div class="card-body">
@@ -251,7 +245,7 @@ echo $f->end('Guardar configuración');
 $f = new \sowerphp\general\View_Helper_Form();
 if ($transferir_contribuyente) {
     echo $f->begin([
-        'action' => '../transferir/'.$Contribuyente->rut,
+        'action' => $_base.'/dte/contribuyentes/transferir',
         'id' => 'transferir',
         'onsubmit' => 'Form.check(\'transferir\') && Form.confirm(this, \'¿Está seguro de querer transferir la empresa al nuevo usuario?\')',
     ]);

@@ -25,7 +25,7 @@ $f = new \sowerphp\general\View_Helper_Form(false);
 <?php if (!isset($DteEmitido)) : ?>
             <div class="card mb-4">
                 <div class="card-body">
-                    <h1 class="text-center mb-4">Consultar DTE</h1>
+                    <h1 class="text-center mb-4">Consultar documento tributario</h1>
                     <form action="<?=$_base.$_request?>" method="post" onsubmit="return Form.check()" class="mb-4" id="consultarForm">
                         <div class="form-group mb-3">
                             <label for="emisor" class="visually-hidden">RUT emisor</label>

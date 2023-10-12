@@ -61,7 +61,7 @@ class Controller_FirmaElectronicas extends \Controller_App
             // verificar que se haya podido subir el archivo con la firma
             if (!isset($_FILES['firma']) or $_FILES['firma']['error']) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Ocurrió un error al subir la firma', 'error'
+                    'Ocurrió un error al subir la firma.', 'error'
                 );
                 return;
             }
@@ -83,7 +83,7 @@ class Controller_FirmaElectronicas extends \Controller_App
             $FirmaElectronica = new Model_FirmaElectronica(trim($Firma->getID()));
             if ($FirmaElectronica->usuario and $FirmaElectronica->usuario != $this->Auth->User->id) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'La firma de '.$Firma->getID().' ya está cargada en el usuario '.$FirmaElectronica->getUsuario()->usuario.', no es posible asignar a '.$this->Auth->User->usuario, 'error'
+                    'La firma electrónica de '.$Firma->getID().' ya está asociada al usuario '.$FirmaElectronica->getUsuario()->usuario.', no es posible asignarla a su usuario '.$this->Auth->User->usuario.'. Si 2 empresas usan la misma firma, deberán tener ambas el mismo administrador principal en LibreDTE. En el caso que no desee tener el mismo administrador principal, deberá subir la firma de un usuario diferente, y que esté autorizada en SII.', 'error'
                 );
                 return;
             }
@@ -108,7 +108,7 @@ class Controller_FirmaElectronicas extends \Controller_App
             try {
                 $FirmaElectronica->save();
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Se asoció la firma electrónica de '.$Firma->getName().' ('.$Firma->getID().') al usuario '.$this->Auth->User->usuario, 'ok'
+                    'Se asoció la firma electrónica de '.$Firma->getName().' ('.$Firma->getID().') al usuario '.$this->Auth->User->usuario.'.', 'ok'
                 );
                 $this->redirect('/dte/admin/firma_electronicas');
             } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
@@ -131,7 +131,7 @@ class Controller_FirmaElectronicas extends \Controller_App
         // si el usuario no tiene firma electrónica no se elimina :-)
         if (!$FirmaElectronica) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Usted no tiene una firma electrónica registrada en el sistema, no fue necesario eliminar'
+                'Usted no tiene una firma electrónica registrada en el sistema. Sólo puede eliminar su firma previamente cargada.'
             );
             $this->redirect('/dte/admin/firma_electronicas');
         }
@@ -139,7 +139,7 @@ class Controller_FirmaElectronicas extends \Controller_App
         try {
             $FirmaElectronica->delete();
             \sowerphp\core\Model_Datasource_Session::message(
-                'Se eliminó la firma electrónica asociada a su usuario', 'ok'
+                'Se eliminó la firma electrónica asociada a su usuario.', 'ok'
             );
             $this->redirect('/dte/admin/firma_electronicas');
         } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
@@ -161,7 +161,7 @@ class Controller_FirmaElectronicas extends \Controller_App
         // si el usuario no tiene firma electrónica no hay algo que descargar
         if (!$FirmaElectronica) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Usted no tiene una firma electrónica registrada en el sistema, no es posible descargar'
+                'Usted no tiene una firma electrónica registrada en el sistema, sólo puede descargar su firma previamente cargada.',
             );
             $this->redirect('/dte/admin/firma_electronicas');
         }

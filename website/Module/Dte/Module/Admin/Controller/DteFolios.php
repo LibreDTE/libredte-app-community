@@ -54,12 +54,13 @@ class Controller_DteFolios extends \Controller_App
     /**
      * Acción que agrega mantenedor para un nuevo tipo de folios
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-22
+     * @version 2023-10-11
      */
     public function agregar()
     {
         $Emisor = $this->getContribuyente();
         $this->set([
+            'Emisor' => $Emisor,
             'dte_tipos' => $Emisor->getDocumentosAutorizados(),
         ]);
         // procesar creación del mantenedor
@@ -83,7 +84,7 @@ class Controller_DteFolios extends \Controller_App
                 }
             }
             // si todo fue bien se redirecciona a la página de carga de CAF
-            \sowerphp\core\Model_Datasource_Session::message('Ahora debe subir un archivo CAF para el tipo de documento '.$_POST['dte'].'. [faq:10]');
+            \sowerphp\core\Model_Datasource_Session::message('Ahora debe subir un archivo CAF para el tipo de documento '.mb_strtolower($DteFolio->getTipo()->tipo).'.');
             $this->redirect('/dte/admin/dte_folios/subir_caf');
         }
     }
@@ -311,7 +312,8 @@ class Controller_DteFolios extends \Controller_App
             \sowerphp\core\Model_Datasource_Session::message('No existe el archivo CAF solicitado.', 'error');
             $this->redirect('/dte/admin/dte_folios/ver/'.$dte);
         }
-        $vigente = $DteCaf->getCAF()->vigente();
+        $Caf = $DteCaf->getCAF();
+        $vigente = $Caf ? $Caf->vigente() : false;
         $usado = $DteCaf->usado();
         if ($vigente and $usado) {
             \sowerphp\core\Model_Datasource_Session::message('No es posible eliminar un XML de un CAF vigente y con folios usados en LibreDTE. Debe esperar a que el CAF esté vencido y ahí lo podrá eliminar.', 'error');

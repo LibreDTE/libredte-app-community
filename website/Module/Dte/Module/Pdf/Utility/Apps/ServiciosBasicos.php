@@ -40,73 +40,91 @@ class Utility_Apps_ServiciosBasicos extends Utility_Apps_Base_Formato
     /**
      * Método que entrega el código HTML de la página de configuración de la aplicación
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-28
+     * @version 2023-10-10
      */
     public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form)
     {
         $buffer = '';
-        $buffer .= '<p class="mb-4">Este formato sólo genera PDF en tamaño media hoja carta.</p>';
+        $buffer .= '<div class="alert alert-info mb-4"><i class="fas fa-exclamation-circle text-info"></i> Este formato sólo genera el PDF en tamaño media hoja carta.</div>';
         $buffer .= parent::getConfigPageHTML($form);
         $buffer .= $form->input([
             'type' => 'select',
             'name' => 'dtepdf_'.$this->getCodigo().'_hoja_copias',
             'label' => 'Copias',
-            'options' => [1=>'1 copia en media carta', 2=>'2 copias de media carta en una hoja carta'],
+            'options' => [1=>'1 copia en media hoja carta', 2=>'2 copias de media carta en una hoja carta'],
             'value' => !empty($this->getConfig()->hoja->copias) ? $this->getConfig()->hoja->copias : 10,
-            'help' => 'Permite indicar si se desea obtener 2 copias en una misma hoja carta',
+            'help' => 'Permite indicar si se desea obtener 2 copias en una misma hoja carta.',
         ]);
-        $buffer .= '<div class="page-header">&raquo; Datos del emisor</div>';
+        $buffer .= '<div class="page-header mt-4 mb-4">&raquo; Datos del emisor</div>';
         $buffer .= $form->input([
             'name' => 'dtepdf_'.$this->getCodigo().'_emisor_razonsocial',
             'label' => 'Razón social',
+            'placeholder' => $this->vars['Contribuyente']->razon_social,
             'value' => !empty($this->getConfig()->emisor->razonsocial) ? $this->getConfig()->emisor->razonsocial : null,
+            'attr' => 'maxlength="200"',
+            'help' => 'Puede agregar una razón social de hasta 200 caracteres.',
         ]);
         $buffer .= $form->input([
             'name' => 'dtepdf_'.$this->getCodigo().'_emisor_giro',
             'label' => 'Giro',
+            'placeholder' => $this->vars['Contribuyente']->giro,
             'value' => !empty($this->getConfig()->emisor->giro) ? $this->getConfig()->emisor->giro : null,
+            'attr' => 'maxlength="200"',
+            'help' => 'Puede agregar un giro de hasta 200 caracteres.',
         ]);
         $buffer .= $form->input([
             'name' => 'dtepdf_'.$this->getCodigo().'_emisor_direccion',
             'label' => 'Dirección',
+            'placeholder' => $this->vars['Contribuyente']->direccion.', '.$this->vars['Contribuyente']->getComuna()->comuna,
             'value' => !empty($this->getConfig()->emisor->direccion) ? $this->getConfig()->emisor->direccion : null,
+            'attr' => 'maxlength="200"',
+            'help' => 'Puede agregar múltiples direcciones.',
         ]);
         $buffer .= $form->input([
             'name' => 'dtepdf_'.$this->getCodigo().'_emisor_telefono',
             'label' => 'Teléfono',
+            'placeholder' => $this->vars['Contribuyente']->telefono,
             'value' => !empty($this->getConfig()->emisor->telefono) ? $this->getConfig()->emisor->telefono : null,
+            'attr' => 'maxlength="100"',
+            'help' => 'Puede agregar más de un teléfono.',
         ]);
         $buffer .= $form->input([
             'name' => 'dtepdf_'.$this->getCodigo().'_emisor_web',
             'label' => 'Sitio web',
+            'placeholder' => $this->vars['Contribuyente']->config_extra_web,
             'value' => !empty($this->getConfig()->emisor->web) ? $this->getConfig()->emisor->web : null,
+            'attr' => 'maxlength="100"',
+            'help' => 'Puede agregar más de un sitio web.',
         ]);
         $buffer .= $form->input([
             'name' => 'dtepdf_'.$this->getCodigo().'_emisor_email',
             'label' => 'Email',
+            'placeholder' => $this->vars['Contribuyente']->email,
             'value' => !empty($this->getConfig()->emisor->email) ? $this->getConfig()->emisor->email : null,
+            'attr' => 'maxlength="200"',
+            'help' => 'Puede agregar más de un correo electrónico.',
         ]);
-        $buffer .= '<div class="page-header">&raquo; Configuración del receptor</div>';
+        $buffer .= '<div class="page-header mt-4 mb-4">&raquo; Configuración del receptor</div>';
         $buffer .= $form->input([
             'type' => 'select',
             'name' => 'dtepdf_'.$this->getCodigo().'_receptor_fuente',
-            'label' => 'Tamaño fuente',
+            'label' => 'Tamaño del texto',
             'options' => [14=>14, 13=>13, 12=>12, 11=>11, 10=>10, 9=>9, 8=>8, 7=>7],
             'value' => !empty($this->getConfig()->receptor->fuente) ? $this->getConfig()->receptor->fuente : 7,
-            'help' => 'Tamaño de la fuente a utilizar en el nombre y dirección del receptor',
+            'help' => 'Tamaño de la fuente a utilizar en el nombre y dirección del receptor.',
         ]);
-        $buffer .= '<div class="page-header">&raquo; Observaciones</div>';
+        $buffer .= '<div class="page-header mt-4 mb-4">&raquo; Observaciones</div>';
         $buffer .= $form->input([
             'name' => 'dtepdf_'.$this->getCodigo().'_observaciones_pago',
-            'label' => 'Pago',
+            'label' => 'Nota bajo totales',
             'value' => !empty($this->getConfig()->observaciones->pago) ? $this->getConfig()->observaciones->pago : null,
-            'help' => 'Texto a mostrar bajo la sección "valor a pagar".',
+            'help' => 'Texto a mostrar bajo la sección "Valor a pagar".',
         ]);
         $buffer .= $form->input([
             'name' => 'dtepdf_'.$this->getCodigo().'_observaciones_grafico',
-            'label' => 'Gráfico',
+            'label' => 'Pie del gráfico',
             'value' => !empty($this->getConfig()->observaciones->grafico) ? $this->getConfig()->observaciones->grafico : null,
-            'help' => 'Texto a mostrar bajo el gráfico de consumos.',
+            'help' => 'Texto a mostrar bajo el gráfico con el historial de consumos del servicio.',
         ]);
         // entregar buffer
         return $buffer;

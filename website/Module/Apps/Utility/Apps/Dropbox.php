@@ -53,11 +53,13 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
         // si no está conectado mostrar opciones para conectar
         if (!$this->isConnected()) {
             $authUrl = $Dropbox->getAuthHelper()->getAuthUrl($this->getPairURL());
+            $buffer .= '<div class="d-grid gap-2 mt-4 mb-4"><a class="btn btn-primary" href="'.$authUrl.'" role="button">Conectar LibreDTE con Dropbox</a></div>';
+            $buffer .= '<div class="mb-4">¿No tienes una cuenta en Dropbox? <a href="https://www.dropbox.com/referrals/AABy8mEV_wH4dZc6CWT4c5cER7crZI-NOt4?src=global9" target="_blank">¡Crea una cuenta gratis ahora!</a></div>';
             $buffer .= $form->input([
                 'type' => 'div',
                 'label' => '&nbsp;',
-                'value' => '<a class="btn btn-primary" href="'.$authUrl.'" role="button">Conectar LibreDTE con Dropbox</a>',
-                'help' => '¿No tienes una cuenta en Dropbox? <a href="https://db.tt/328o5XBy" target="_blank">¡Crea una cuenta gratis ahora!</a>',
+                'value' => '',
+                'help' => '',
             ]);
         }
         // si ya está conectado mostrar datos
@@ -76,7 +78,7 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
             $buffer .= $form->input([
                 'type' => 'div',
                 'label' => '&nbsp;',
-                'value' => '<a href="#" onclick="return __.popup(\''.$this->vars['url'].'/apps/dropbox/info/'.$this->vars['Contribuyente']->rut.'\', 750, 550)" class="btn btn-primary">Ver información de la conexión con Dropbox</a>',
+                'value' => '<a href="#" onclick="return __.popup(\''.$this->vars['url'].'/apps/dropbox/info\', 750, 550)" class="btn btn-primary">Ver información de la conexión con Dropbox</a>',
             ]);
             $buffer .= $form->input([
                 'type' => 'div',
@@ -84,6 +86,7 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
                 'value' => '<a href="'.$this->vars['url'].'/apps/dropbox/unpair'.'" class="btn btn-danger">Desconectar LibreDTE de Dropbox</a>',
             ]);
         }
+        $buffer .= '<div class="alert alert-info mt-4 mb-4 text-center" role="alert">Los datos respaldados quedarán en la siguiente ubicación:<br/><code>Dropbox/Aplicaciones/LibreDTE/'.str_replace(' ', '\ ', $this->vars['Contribuyente']->razon_social).'/respaldos</code></div>';
         // entregar buffer
         return $buffer;
     }

@@ -1,16 +1,18 @@
-<?php $__block_title = 'Facturas y Boletas Electrónicas con LibreDTE Versión Comunidad'; ?>
+<?php $__block_title = 'Facturas y Boletas Electrónicas con LibreDTE Edición Comunidad'; ?>
 
 <div class="row mb-4">
     <div class="col-sm-12">
         <div class="bg-primary text-white rounded p-4 text-center">
-            <h2 class="display-4">LibreDTE Versión Comunidad</h2>
-            <p class="lead">LibreDTE<sup>&reg;</sup> es un proyecto de <a href="https://sasco.cl" class="text-white"><u>SASCO SpA</u></a> que tiene por objetivo proveer facturación electrónica libre para Chile</p>
+            <h2 class="display-4">LibreDTE Edición Comunidad</h2>
+            <p class="lead">
+                <a href="https://www.libredte.cl" class="text-white">LibreDTE</a><sup>&reg;</sup> es un proyecto de <a href="https://www.sasco.cl" class="text-white"><u>SASCO SpA</u></a> que tiene por objetivo proveer facturación electrónica libre para Chile
+            </p>
         </div>
     </div>
 </div>
 
 <div class="mb-4 text-center">
-    <img src="https://facturacionlibre.cl/assets/img/inicio/libredte-dashboard.png" alt="Dashboard de LibreDTE" class="img-fluid" style="max-height:300px" />
+    <img src="https://libredte.cl/img/layouts/LibreDTE.png" alt="Dashboard de LibreDTE" class="img-fluid img-thumbnail" style="max-height:300px" />
 </div>
 
 <div class="row row-cols-3 g-3">
@@ -20,9 +22,14 @@
                 <div class="text-center mb-4">
                     <i class="fas fa-balance-scale fa-fw fa-5x text-warning"></i>
                 </div>
-                <h2 class="text-center mb-4">Aspectos Legales</h2>
+                <h2 class="text-center mb-4">Términos y Condiciones</h2>
                 <hr/>
-                <p class="text-center text-dark">Revisa los <a href="https://libredte.cl/legal" target="_blank">Términos y Condiciones</a> de uso que te permiten usar LibreDTE.</p>
+                <p class="text-center text-dark lead">
+                    Revisa los <a href="https://www.libredte.cl/legal" target="_blank">términos y condiciones</a> de uso que te permiten usar la Edición Comunidad de LibreDTE.
+                </p>
+                <p class="text-center text-muted">
+                    <em>Think free as in free speech, not free beer.</em>
+                </p>
             </div>
         </div>
     </div>
@@ -34,7 +41,12 @@
                 </div>
                 <h2 class="text-center mb-4">Funcionalidades Extras</h2>
                 <hr/>
-                <p class="text-center text-dark">Desbloquea las <a href="https://apigateway.cl/#extras" target="_blank">Funcionalidades Extras</a> de LibreDTE y obtén más características.</p>
+                <p class="text-center text-dark lead">
+                    Desbloquea las <a href="https://www.libredte.cl//editions#edicion-comunidad-funcionalidades-extras" target="_blank">funcionalidades extras</a> de LibreDTE Edición Comunidad.
+                </p>
+                <p class="text-center text-muted">
+                    Simplifica procesos, ahorra tiempo y obtén características.
+                </p>
             </div>
         </div>
     </div>
@@ -44,58 +56,70 @@
                 <div class="text-center mb-4">
                     <i class="fas fa-question-circle fa-fw fa-5x text-warning"></i>
                 </div>
-                <h2 class="text-center mb-4">Soporte</h2>
+                <h2 class="text-center mb-4">Centro de Ayuda</h2>
                 <hr/>
-                <p class="text-center text-dark">Revisa las <a href="https://libredte.cl/faq" target="_blank">Preguntas y Respuestas Frecuentes</a> con las consultas más comunes.</p>
+                <p class="text-center text-dark lead">
+                    Revisa los <a href="https://www.sasco.cl/help" target="_blank">tipos de asistencia</a> que tenemos disponibles en SASCO SpA.
+                </p>
+                <p class="text-center text-muted">
+                    Personalización, soporte, entrenamiento e integración.
+                </p>
             </div>
         </div>
     </div>
-</div>
-
-<div class="mb-4 lead text-center">
-    <p>Esta aplicación web usa la <a href="https://github.com/LibreDTE/libredte-webapp" target="_blank">Versión Comunidad de LibreDTE</a> sobre el framework <a href="https://sowerphp.org" target="_blank">SowerPHP</a>.</p>
 </div>
 
 <div class="alert alert-info text-center mb-4">
-    El soporte de esta aplicación web <strong>no</strong> es entregado de manera directa por SASCO SpA
+    El soporte de esta aplicación web <strong>no</strong> es entregado de manera directa por SASCO SpA.
 </div>
 
-<div class="text-center display-4 mb-4">Sígue a LibreDTE en sus redes sociales</div>
+<div class="row row-cols-6 g-3 lead text-center text-primary">
+    <div class="col">
+        <div class="card mb-4">
+            <div class="card-body">
+                <i class="far fa-comments fa-fw"></i> <a href="https://www.libredte.cl/blog" target="_blank">Blog</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card mb-4">
+            <div class="card-body">
+                <i class="fab fa-instagram fa-fw"></i> <a href="https://instagram.com/libredte" target="_blank">Instagram</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card mb-4">
+            <div class="card-body">
+                <i class="fab fa-facebook fa-fw"></i> <a href="https://www.facebook.com/LibreDTE" target="_blank">Facebook</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card mb-4">
+            <div class="card-body">
+                <i class="fab fa-tiktok fa-fw"></i> <a href="https://www.tiktok.com/@libredte" target="_blank">TikTok</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card mb-4">
+            <div class="card-body">
+                <i class="fab fa-twitter fa-fw"></i> <a href="https://twitter.com/libredte" target="_blank">Twitter</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card mb-4">
+            <div class="card-body">
+                <i class="fab fa-github fa-fw"></i> <a href="https://github.com/LibreDTE" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </div>
+</div>
 
-<div class="row row-cols-5 g-3 lead text-center text-primary">
-    <div class="col">
-        <div class="card mb-4">
-            <div class="card-body">
-                <i class="fab fa-wordpress fa-fw"></i> <a href="https://blog.libredte.cl">Blog</a>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card mb-4">
-            <div class="card-body">
-                <i class="fab fa-instagram fa-fw"></i> <a href="https://instagram.com/libredte">Instagram</a>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card mb-4">
-            <div class="card-body">
-                <i class="fab fa-facebook fa-fw"></i> <a href="https://www.facebook.com/LibreDTE">Facebook</a>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card mb-4">
-            <div class="card-body">
-                <i class="fab fa-youtube fa-fw"></i> <a href="https://www.youtube.com/libredtecl">YouTube</a>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card mb-4">
-            <div class="card-body">
-                <i class="fab fa-youtube fa-fw"></i> <a href="https://twitter.com/libredte">Twitter</a>
-            </div>
-        </div>
-    </div>
+<div class="text-center mt-4 mb-4">
+    <a href="https://www.billmysales.com">
+        <img src="https://billmysales.com/static/img/banners/billmysales_banner_750x110.png" alt="Banner BillMySales">
+    </a>
 </div>

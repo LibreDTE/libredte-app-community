@@ -76,7 +76,7 @@ class Controller_Dropbox extends \Controller_App
                     'No fue posible conectar LibreDTE con Dropbox: '.$e->getMessage(), 'error'
                 );
             }
-            $this->redirect('/dte/contribuyentes/modificar/'.$Contribuyente->rut.'#apps');
+            $this->redirect('/dte/contribuyentes/modificar#apps');
         }
     }
 
@@ -125,40 +125,42 @@ class Controller_Dropbox extends \Controller_App
                 'Dropbox no pudo ser desconectado: '.$borrado, 'error'
             );
         }
-        $this->redirect('/dte/contribuyentes/modificar/'.$Contribuyente->rut.'#apps');
+        $this->redirect('/dte/contribuyentes/modificar#apps');
     }
 
     /**
      * Acción para mostrar la información de la cuenta de Dropbox configurada
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]delaf.cl)
-     * @version 2019-07-13
+     * @version 2023-10-08
      */
-    public function info($rut)
+    public function info()
     {
-        // crear contribuyente
-        $class = $this->Contribuyente_class;
-        $Contribuyente = new $class($rut);
-        if (!$Contribuyente->usuario and !$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            throw new \Exception('No está autorizado a operar con la empresa solicitada');
-        }
+        $Contribuyente = $this->getContribuyente();
         // cargar dropbox
         $DropboxApp = $Contribuyente->getApp('apps.dropbox');
         if (!$DropboxApp) {
-            throw new \Exception('No existe la aplicación Dropbox');
+            throw new \Exception('No existe la aplicación Dropbox.');
         }
         if (!$DropboxApp->isConnected()) {
-            throw new \Exception('La empresa '.$Contribuyente->getNombre().' no tiene conectada su cuenta a Dropbox');
+            throw new \Exception('La empresa '.$Contribuyente->getNombre().' no tiene conectada su cuenta a Dropbox.');
         }
         $Dropbox = $DropboxApp->getDropboxClient();
         if (!$Dropbox) {
-            throw new \Exception('Dropbox no está habilitado en esta versión de LibreDTE');
+            throw new \Exception('Dropbox no está habilitado en esta instancia de LibreDTE.');
         }
         // asignar variables y mostrar vista
-        $accountSpace = $Dropbox->getSpaceUsage();
+        try {
+            $accountSpace = $Dropbox->getSpaceUsage();
+            $account = $Dropbox->getCurrentAccount();
+        } catch (\Kunnu\Dropbox\Exceptions\DropboxClientException $e) {
+            $error = json_decode($e->getMessage(), true);
+            $message = !empty($error['error_summary']) ? $error['error_summary'] : $e->getMessage();
+            throw new \Exception('Error al obtener los datos de Dropbox: '.$message.'.');
+        }
         $this->layout .= '.min';
         $this->set([
             'Contribuyente' => $Contribuyente,
-            'account' => $Dropbox->getCurrentAccount(),
+            'account' => $account,
             'accountSpace' => $accountSpace,
             'uso' => round(($accountSpace['used']/$accountSpace['allocation']['allocated'])*100),
         ]);

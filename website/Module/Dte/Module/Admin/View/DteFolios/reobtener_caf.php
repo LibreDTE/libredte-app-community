@@ -5,21 +5,20 @@
         </a>
     </li>
 </ul>
-<div class="page-header"><h1>Reobtener CAF del SII</h1></div>
-<p>Aquí podrá reobtener un archivo de folios (CAF) previamente obtenido en el SII y que sea cargardo a LibreDTE.</p>
+<div class="page-header"><h1>Reobtener folios solicitados</h1></div>
+<p>Aquí podrá reobtener un archivo XML de folios (CAF) previamente obtenido en el SII y que sea cargardo inmediatamente a LibreDTE.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin(['onsubmit'=>'Form.check() && Form.loading(\'Buscando folios en el SII...\')']);
 echo $f->input([
     'type' => 'select',
     'name' => 'dte',
-    'label' => 'Tipo de DTE',
-    'options' => [''=>'Seleccione un tipo de DTE'] + $dte_tipos,
+    'label' => 'Tipo de documento',
+    'options' => [''=>'Seleccione un tipo de documento'] + $dte_tipos,
     'value' => $dte,
     'check' => 'notempty',
 ]);
-echo $f->end('Buscar folios sin cargar');
-
+echo $f->end('Buscar folios que se hayan solicitado en SII');
 if (isset($solicitudes)) {
     foreach ($solicitudes as &$s) {
         $s[] = '<a href="'.$_url.'/dte/admin/dte_folios/reobtener_caf_cargar/'.$dte.'/'.$s['inicial'].'/'.$s['final'].'/'.$s['fecha'].'" title="Reobtener el CAF y cargar en LibreDTE" class="btn btn-primary" onclick="Form.loading(\'Descargando CAF del SII y cargando en LibreDTE...\')"><i class="fa fa-download fa-fw"></i></a>';
@@ -29,14 +28,23 @@ if (isset($solicitudes)) {
     new \sowerphp\general\View_Helper_Table($solicitudes);
 }
 ?>
-
-<div class="mt-4">
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=83">¿Cómo reobtener folios?</a>
-            </h5>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-body">
+                <i class="fa-solid fa-question-circle fa-fw text-warning mb-4"></i>
+                <strong>¿Puedo reobtener cualquier folio?</strong><br/>
+                Sólo si la firma electrónica que el usuario <?=$_Auth->User->usuario?> puede utilizar es del usuario administrador de la empresa en SII. En caso contrario, podrá reobtener sólo los folios que se hayan obtenido con la firma electrónica.
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-body">
+                <i class="fa-solid fa-question-circle fa-fw text-warning mb-4"></i>
+                <strong>¿Debo realizar algo más después de reobtener los folios?</strong><br/>
+                Dependiendo del motivo de la reobtención, podría ser necesario modificar el folio siguiente para poder empezar a usar los folios reobtenidos. Para esto, deberá determinar primero cuál es el primer folio que se puede usar del CAF reobtenido.
+            </div>
         </div>
     </div>
 </div>

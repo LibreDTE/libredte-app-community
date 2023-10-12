@@ -6,8 +6,8 @@
         </a>
     </li>
 </ul>
-<div class="page-header"><h1>Agregar firma electrónica del usuario <?=$_Auth->User->usuario?></h1></div>
-<p>Aquí podrá subir y asociar una firma electrónica con su usuario <?=$_Auth->User->usuario?>.</p>
+<div class="page-header"><h1>Subir firma electrónica</h1></div>
+<p>Aquí podrá subir y asociar una firma electrónica a su usuario <?=$_Auth->User->usuario?>.</p>
 <div class="row">
     <div class="col-md-8">
 <?php
@@ -32,33 +32,42 @@ echo $f->end('Agregar o cambiar mi firma electrónica');
 ?>
     </div>
     <div class="col-md-4">
-        <div class="card">
-            <div class="card-header"><i class="fa fa-exclamation-circle text-warning"></i> ¿Cómo se usa la firma?</div>
+        <div class="card mb-4">
             <div class="card-body">
+                <i class="fa-solid fa-question-circle fa-fw text-warning mb-4"></i>
+                <strong>¿Cómo se usa la firma?</strong><br/>
                 <p>Si usted es el administrador de la empresa, siempre se usará la firma electrónica suya.</p>
                 <p>Si usted no es el administrador de la empresa hay dos casos: el administrador tiene firma asociada, en cuyo caso se usará esa; o bien el administrador no tiene firma asociada, en cuyo caso se usará la suya.</p>
             </div>
         </div>
     </div>
 </div>
-<div class="row text-center mt-4">
-    <div class="col-6">
-        <div class="card">
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
             <div class="card-body">
-                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                <h5 class="card-title">
-                    <a href="https://soporte.sasco.cl/kb/faq.php?id=174">¿Cómo cargo la firma?</a>
-                </h5>
+                <i class="fa-solid fa-question-circle fa-fw text-warning mb-4"></i>
+                <strong>¿Qué tipo de firma se debe subir?</strong><br/>
+                Una firma electrónica simple o certificado digital simple en formato p12 o pfx. No es posible usar una firma electrónica avanzada o eToken (USB) con LibreDTE.
             </div>
         </div>
     </div>
-    <div class="col-6">
-        <div class="card">
+    <div class="col-md-4">
+        <div class="card mb-4">
             <div class="card-body">
-                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                <h5 class="card-title">
-                    <a href="https://soporte.sasco.cl/kb/faq.php?id=59">¿Qué firma usar?</a>
-                </h5>
+                <i class="fa-solid fa-question-circle fa-fw text-warning mb-4"></i>
+                <strong>¿Dónde puedo comprar la firma electrónica?</strong><br/>
+                El SII tiene un <a href="https://www.sii.cl/servicios_online/1039-certificado_digital-1182.html" target="_blank">listado oficial de proveedores</a> autorizados en Chile para la venta de firmas electrónicas simples. De dichos proveedores, <a href="https://www.libredte.cl/blog/libredte-3/que-es-la-firma-electronica-por-que-el-tamano-de-la-clave-si-importa-31" target="_blank">no recomendamos E-CERTCHILE</a>.
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <i class="fa-solid fa-question-circle fa-fw text-warning mb-4"></i>
+                <strong>¿Puedo subir una firma a más de un usuario?</strong><br/>
+                Las firmas electrónicas, y los servicios, van asociados a los usuarios. LibreDTE no permite que dos usuarios tengan la misma firma electrónica cargada.
             </div>
         </div>
     </div>

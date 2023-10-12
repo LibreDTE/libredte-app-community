@@ -1,6 +1,5 @@
 <ul class="nav nav-pills float-end">
-<?php if ($Receptor->config_pdf_imprimir) : ?>
-<?php if ($Receptor->config_pdf_imprimir == 'pdf_escpos') : ?>
+<?php if (!$Receptor->config_pdf_imprimir or $Receptor->config_pdf_imprimir == 'pdf_escpos') : ?>
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-print"></i>
@@ -18,7 +17,6 @@
             Imprimir
         </a>
     </li>
-<?php endif; ?>
 <?php endif; ?>
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_recibidos/listar" title="Ir a los documentos recibidos" class="nav-link">

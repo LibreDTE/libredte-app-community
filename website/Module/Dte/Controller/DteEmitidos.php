@@ -178,7 +178,6 @@ class Controller_DteEmitidos extends \Controller_App
             'servidor_sii' => \sasco\LibreDTE\Sii::getServidor(),
             'tipos_dte' => array_map(function($t) {return $t['codigo'];}, (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->getList()),
             'cedible' => $cedible,
-            'empresas_factoring' => $cedible ? (array)\sowerphp\core\Configure::read('empresas_factoring') : false,
         ]);
     }
 
@@ -582,13 +581,13 @@ class Controller_DteEmitidos extends \Controller_App
     /**
      * Acción que permite ceder el documento emitido
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-22
+     * @version 2023-10-05
      */
     public function ceder($dte, $folio)
     {
         if (!isset($_POST['submit'])) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Debe enviar el formulario para poder realizar la cesión', 'error'
+                'Debe enviar el formulario para poder realizar la cesión.', 'error'
             );
             $this->redirect(str_replace('ceder', 'ver', $this->request->request).'#cesion');
         }
@@ -597,33 +596,37 @@ class Controller_DteEmitidos extends \Controller_App
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el DTE solicitado', 'error'
+                'No existe el DTE solicitado.', 'error'
             );
             $this->redirect('/dte/dte_emitidos/listar');
         }
         // verificar que sea documento cedible
         if (!$DteEmitido->getTipo()->cedible) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Documento no es cedible', 'error'
+                'Documento no es cedible.', 'error'
             );
             $this->redirect(str_replace('ceder', 'ver', $this->request->request));
         }
         // verificar que no esté cedido (enviado al SII)
         if ($DteEmitido->cesion_track_id) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Documento ya fue enviado al SII para cesión', 'error'
+                'Documento ya fue enviado al SII para cesión.', 'error'
             );
             $this->redirect(str_replace('ceder', 'ver', $this->request->request).'#cesion');
         }
         // verificar que no se esté cediendo al mismo rut del emisor del DTE
         if ($DteEmitido->getEmisor()->getRUT() == $_POST['cesionario_rut']) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No puede ceder el DTE a la empresa emisora', 'error'
+                'No puede ceder el DTE a la empresa emisora.', 'error'
             );
             $this->redirect(str_replace('ceder', 'ver', $this->request->request).'#cesion');
         }
         // objeto de firma electrónica
         $Firma = $Emisor->getFirma($this->Auth->User->id);
+        if (!$Firma) {
+            \sowerphp\core\Model_Datasource_Session::message('No hay firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe agregar su firma antes de ceder el DTE. [faq:174]', 'error');
+            $this->redirect(str_replace('ceder', 'ver', $this->request->request).'#cesion');
+        }
         // armar el DTE cedido
         $DteCedido = new \sasco\LibreDTE\Sii\Factoring\DteCedido($DteEmitido->getDte());
         $DteCedido->firmar($Firma);
@@ -656,7 +659,7 @@ class Controller_DteEmitidos extends \Controller_App
             $DteEmitido->cesion_xml = base64_encode($xml);
             $DteEmitido->cesion_track_id = $track_id;
             $DteEmitido->save();
-            \sowerphp\core\Model_Datasource_Session::message('Archivo de cesión enviado al SII con track id '.$track_id, 'ok');
+            \sowerphp\core\Model_Datasource_Session::message('Archivo de cesión enviado al SII con track id '.$track_id.'.', 'ok');
         } else {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
         }

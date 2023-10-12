@@ -1,6 +1,5 @@
 <ul class="nav nav-pills float-end">
-<?php if ($Emisor->config_pdf_imprimir) : ?>
-<?php if ($Emisor->config_pdf_imprimir == 'pdf_escpos') : ?>
+<?php if (!$Emisor->config_pdf_imprimir or $Emisor->config_pdf_imprimir == 'pdf_escpos') : ?>
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-print"></i>
@@ -18,7 +17,6 @@
             Imprimir
         </a>
     </li>
-<?php endif; ?>
 <?php endif; ?>
     <li class="nav-item">
         <a href="<?=$_base?>/dte/documentos/emitir/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>?copiar" title="Crear DTE con los mismos datos de este" class="nav-link">
@@ -590,7 +588,7 @@ if ($Cobro->datos) {
 <?php endif; ?>
 <?php endif; ?>
 <?php else : ?>
-        <p>No tiene los pagos en línea habilitados, debe al menos <a href="<?=$_base?>/dte/contribuyentes/modificar/<?=$Emisor->rut?>#pagos">configurar un medio de pago</a> primero.</p>
+        <p>No tiene los pagos en línea habilitados, debe al menos <a href="<?=$_base?>/dte/contribuyentes/modificar#pagos">configurar un medio de pago</a> primero.</p>
 <?php endif; ?>
     </div>
 </div>
@@ -751,6 +749,10 @@ $Cesionario = (new \website\Dte\Model_Contribuyentes())->get($DteEmitido->getDat
             <span class="far fa-file-code"></span>
             Descargar Archivo Electrónico de Cesión (AEC)
         </a>
+        <a class="btn btn-secondary btn-lg col-12 mb-4" href="<?=$_base?>/dte/cesiones/listar" role="button">
+            <span class="far fa-list-alt"></span>
+            Ver listado de documentos cedidos
+        </a>
     </div>
     <div class="col-md-3">
         <div class="card mb-4 bg-light">
@@ -798,7 +800,7 @@ $f->setStyle('horizontal');
 </div>
 <?php else : ?>
 <div class="row">
-    <div class="col-md-<?=$empresas_factoring?9:12?>">
+    <div class="col-md-12">
 <?php
 echo $f->begin([
     'action' => $_base.'/dte/dte_emitidos/ceder/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
@@ -853,49 +855,17 @@ echo $f->input([
 </div>
 <?php echo $f->end('Generar archivo cesión y enviar al SII'); ?>
     </div>
-<?php if ($empresas_factoring): ?>
-    <div class="col-md-3">
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="lead text-center">¿Buscas un factoring?</div>
-            </div>
-        </div>
-<?php foreach ($empresas_factoring as $factoring) : ?>
-        <a href="<?=$factoring['link']?>" target="_blank" title="Ir al sitio web de <?=$factoring['name']?>">
-            <img src="<?=$factoring['logo']?>" alt="<?=$factoring['name']?>" class="img-fluid img-thumbnail mb-4" />
-        </a>
-<?php endforeach; ?>
-    </div>
-<?php endif; ?>
 </div>
+<a class="btn btn-secondary btn-lg col-12 mt-4 mb-4" href="<?=$_base?>/dte/cesiones/listar" role="button">
+    <span class="far fa-list-alt"></span>
+    Ver listado de documentos cedidos
+</a>
 <?php endif; ?>
 <?php if (!$DteEmitido->cesion_track_id) : ?>
     <!--<a class="btn btn-primary btn-sm col-12 mt-4" href="<?=$_base?>/dte/dte_emitidos/receder/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
         ¿Desea receder este DTE?
     </a>-->
 <?php endif; ?>
-<div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 text-center mt-4">
-    <div class="col mb-4">
-        <div class="card">
-            <div class="card-body">
-                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                <h5 class="card-title">
-                    <a href="https://soporte.sasco.cl/kb/faq.php?id=178">¿Cómo cedo un documento?</a>
-                </h5>
-            </div>
-        </div>
-    </div>
-    <div class="col mb-4">
-        <div class="card">
-            <div class="card-body">
-                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                <h5 class="card-title">
-                    <a href="https://soporte.sasco.cl/kb/faq.php?id=245">¿Puedo revisar mis cesiones?</a>
-                </h5>
-            </div>
-        </div>
-    </div>
-</div>
 </div>
 <!-- FIN CESIÓN -->
 <?php endif; ?>

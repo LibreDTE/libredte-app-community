@@ -1,16 +1,17 @@
 <!--
-LibreDTE 2015 - 2023
-Copyright SASCO SpA (https://sasco.cl)
-Plataforma de facturación electrónica usando LibreDTE (https://facturacionlibre.cl)
-LibreDTE es un proyecto de SASCO SpA que tiene como misión proveer facturación electrónica libre para Chile
-Autor original: Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-Versión Oficial de LibreDTE, con soporte de SASCO SpA, en: https://libredte.cl
+LibreDTE Edición Comunidad (2015 - 2023)
+Copyright SASCO SpA (https://www.sasco.cl)
+Edición Enterprise de LibreDTE, con soporte de SASCO SpA, disponible en https://www.libredte.cl
+¿Te gusta ver código? ¿Necesitas una integración? Revisa https://www.billmysales.com
 -->
 <!DOCTYPE html>
 <html lang="es">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+        <meta name="author" content="SASCO SpA" />
+        <meta name="description" content="LibreDTE Edición Comunidad." />
+        <meta name="keywords" content="facturas, boletas, sii, dte" />
         <title><?=$_header_title?></title>
         <link rel="shortcut icon" href="<?=$_base?>/img/favicon.png" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.2.0/css/all.css">
@@ -20,12 +21,7 @@ Versión Oficial de LibreDTE, con soporte de SASCO SpA, en: https://libredte.cl
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
-        <script>
-            var _url = "<?=$_url?>",
-                _base = "<?=$_base?>",
-                _request = "<?=$_request?>"
-            ;
-        </script>
+        <script>var _url = "<?=$_url?>", _base = "<?=$_base?>", _request = "<?=$_request?>";</script>
         <script src="https://cdn.sasco.cl/js/__.min.js"></script>
         <script src="https://cdn.sasco.cl/js/form.min.js"></script>
         <script src="https://cdn.sasco.cl/js/datepicker/bootstrap-datepicker.js"></script>
@@ -38,6 +34,6 @@ Versión Oficial de LibreDTE, con soporte de SASCO SpA, en: https://libredte.cl
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
     </head>
     <body>
-<?php echo $_content; ?>
+        <?php echo $_content; ?>
     </body>
 </html>

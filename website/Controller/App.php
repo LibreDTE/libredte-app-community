@@ -56,14 +56,14 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
         'Notify',
     ]; ///< Componentes usados por el controlador
 
-    protected $Contribuyente_class = '\website\Dte\Model_Contribuyente'; ///< Clase para guardar el contribuyente
+    protected $Contribuyente_class = '\website\Dte\Model_Contribuyente'; ///< Clase para instanciar el contribuyente
     private $Contribuyente = null; ///< Contribuyente con el que se está trabajando
 
     /**
      * Método que fuerza la selección de un contribuyente si estamos en alguno
      * de los módulos que requieren uno para poder funcionar
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-05-04
+     * @version 2023-10-08
      */
     public function beforeFilter()
     {
@@ -88,7 +88,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
         // redireccionar al dashboard general de la aplicación
         if (class_exists('Controller_Dashboard') and $this->Auth->logged()) {
             if (in_array($this->request->request, ['/dte/contribuyentes/seleccionar'])) {
-                $this->redirect('/dashboard');
+                $this->redirect('/dashboard#empresas');
             }
         }
     }
@@ -110,9 +110,9 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
      * Método que entrega el objeto del contribuyente que ha sido seleccionado
      * para ser usado en la sesión. Si no hay uno seleccionado se fuerza a
      * seleccionar.
-     * @return Objeto con el contribuyente
+     * @return Object Objeto con el contribuyente
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-12-26
+     * @version 2023-10-08
      */
     protected function getContribuyente($obligar = true)
     {
@@ -120,11 +120,14 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
             $this->Contribuyente = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente');
             if (!$this->Contribuyente) {
                 if ($obligar) {
-                    \sowerphp\core\Model_Datasource_Session::message('Antes de utilizar el módulo '.$this->request->params['module'].' debe seleccionar un contribuyente con el que operará', 'error');
+                    \sowerphp\core\Model_Datasource_Session::message('Antes de acceder a '.$this->request->request.' debe seleccionar el contribuyente que usará durante la sesión de LibreDTE.', 'error');
                     \sowerphp\core\Model_Datasource_Session::write('referer', $this->request->request);
                     $this->redirect('/dte/contribuyentes/seleccionar');
                 }
             } else {
+                if (!($this->Contribuyente instanceof $this->Contribuyente_class)) {
+                    $this->Contribuyente = new $this->Contribuyente_class($this->Contribuyente->rut);
+                }
                 \sasco\LibreDTE\Sii::setAmbiente($this->Contribuyente->enCertificacion());
             }
         }

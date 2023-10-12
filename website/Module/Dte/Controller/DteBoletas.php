@@ -27,7 +27,7 @@ namespace website\Dte;
 /**
  * Clase para las acciones asociadas al libro de boletas electrónicas
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2018-11-07
+ * @version 2023-10-10
  */
 class Controller_DteBoletas extends \Controller_App
 {
@@ -35,18 +35,14 @@ class Controller_DteBoletas extends \Controller_App
     /**
      * Acción principal que lista los períodos con boletas
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-06-08
+     * @version 2023-10-10
      */
     public function index()
     {
         $Emisor = $this->getContribuyente();
-        $custodia_xml = (int)\sowerphp\core\Configure::read('dte.custodia_boletas');
         $this->set([
             'Emisor' => $Emisor,
             'periodos' => $Emisor->getResumenBoletasPeriodos(),
-            'custodia_boletas_limitada' => $Emisor->config_libredte_custodia_boletas_limitada,
-            'custodia_xml' => $custodia_xml,
-            'custodia_obligatoria' => 3,
         ]);
     }
 
@@ -138,37 +134,6 @@ class Controller_DteBoletas extends \Controller_App
         }
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($detalle);
         $this->response->sendContent($csv, $file.'.csv');
-    }
-
-    /**
-     * Acción para eliminar el XML de las boletas de un período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-01
-     */
-    public function eliminar_xml()
-    {
-        if (isset($_POST['submit'])) {
-            if (empty($_POST['periodo'])) {
-                \sowerphp\core\Model_Datasource_Session::message(
-                    'Debe indicar un período a eliminar', 'error'
-                );
-                return;
-            }
-            if (empty($_POST['respaldo'])) {
-                \sowerphp\core\Model_Datasource_Session::message(
-                    'Debe confirmar que ya realizó el respaldo de los XML', 'error'
-                );
-                return;
-            }
-            $Emisor = $this->getContribuyente();
-            $DteEmitidos = (new Model_DteEmitidos())->setContribuyente($Emisor);
-            try {
-                $borrados = $DteEmitidos->eliminarBoletasXML((int)$_POST['periodo']);
-                \sowerphp\core\Model_Datasource_Session::message('Se eliminaron '.num($borrados).' XML de boletas', 'ok');
-            } catch (\Exception $e) {
-                \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
-            }
-        }
     }
 
 }

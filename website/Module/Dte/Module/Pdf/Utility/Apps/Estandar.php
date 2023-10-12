@@ -40,46 +40,57 @@ class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
     /**
      * Método que entrega el código HTML de la página de configuración de la aplicación
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-02
+     * @version 2023-10-10
      */
     public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form)
     {
         $buffer = '';
         $buffer .= parent::getConfigPageHTML($form);
         // papel carta
-        $buffer .= '<div class="page-header">&raquo; Opciones para PDF formato hoja carta</div>';
+        $buffer .= '<div class="page-header mt-4 mb-4">&raquo; Opciones para PDF formato hoja carta</div>';
         $buffer .= $form->input([
             'type' => 'select',
             'name' => 'dtepdf_'.$this->getCodigo().'_carta_logo_posicion',
-            'label' => 'Posición logo en PDF',
-            'options' => ['Izquierda', 'Arriba', 'Reemplaza datos del emisor'],
+            'label' => 'Posición logo',
+            'options' => [
+                'A la izquierda de los datos del emisor',
+                'Arriba de los datos del emisor',
+                'Membrete que reemplaza los datos del emisor',
+            ],
             'value' => !empty($this->getConfig()->carta->logo->posicion) ? $this->getConfig()->carta->logo->posicion : 0,
-            'help' => '¿El logo va a la izquierda o arriba de los datos del contribuyente?',
+            'help' => 'Si se usa el logo como membrete debe tener todos los datos obligatorios exigidos por SII para el DTE.',
         ]);
         $buffer .= $form->input([
             'type' => 'select',
             'name' => 'dtepdf_'.$this->getCodigo().'_carta_detalle_fuente',
-            'label' => 'Fuente detalle PDF',
+            'label' => 'Tamaño de items',
             'options' => [11=>11, 10=>10, 9=>9, 8=>8],
             'value' => !empty($this->getConfig()->carta->detalle->fuente) ? $this->getConfig()->carta->detalle->fuente : 10,
-            'help' => 'Tamaño de la fuente a utilizar en el detalle del PDF ',
+            'help' => 'Tamaño de la fuente a utilizar en la tabla con el listado de productos y/o servicios.',
         ]);
         $buffer .= $form->input([
             'type' => 'select',
             'name' => 'dtepdf_'.$this->getCodigo().'_carta_detalle_posicion',
-            'label' => 'Posición detalle PDF',
-            'options' => ['Abajo', 'Derecha'],
+            'label' => 'Posición detalle',
+            'options' => [
+                'Abajo del nombre del item',
+                'A la derecha del nombre del item',
+            ],
             'value' => !empty($this->getConfig()->carta->detalle->posicion) ? $this->getConfig()->carta->detalle->posicion : 0,
-            'help' => '¿El detalle del item va a abajo o a la derecha del nombre del item?',
+            'help' => 'Para ahorrar espacio en el papel usar la opción que coloca el detalle a la derecha del nombre del item.',
         ]);
         $buffer .= $form->input([
             'type' => 'select',
             'name' => 'dtepdf_'.$this->getCodigo().'_carta_timbre_posicion',
-            'label' => 'Posición timbre PDF',
-            'options' => ['Al pie de la página', 'Inmediatamente bajo el detalle'],
+            'label' => 'Posición timbre',
+            'options' => [
+                'Al pie de la página (puede existir espacio en blanco entre items y timbre)',
+                'Inmediatamente bajo los items (deja espacios en blanco al final de la hoja)',
+            ],
             'value' => !empty($this->getConfig()->carta->timbre->posicion) ? $this->getConfig()->carta->timbre->posicion : 0,
-            'help' => '¿Dónde debe ir el timbre, acuse y totales?',
+            'help' => 'Esta opción permite definir la posición del timbre, acuse de recibo y totales.',
         ]);
+        $buffer .= '<p class="">Ancho de las columnas de los items en el PDF de hoja carta:</p>';
         $form->setStyle(false);
         $t = new \sowerphp\general\View_Helper_Table();
         $buffer .= $t->generate([
@@ -123,25 +134,28 @@ class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
                 ]),
             ]
         ]);
-        $buffer .= '<p class="help-block text-muted">Ancho de las columnas del detalle del PDF en hoja carta</p>';
+        $buffer .= '<p class="help-block text-muted small">El valor del ancho de cada columna deberá ser asignado en base a prueba y error revisando los PDF.</p>';
         $form->setStyle('horizontal');
         // papel continuo
-        $buffer .= '<div class="page-header">&raquo; Opciones para PDF formato papel contínuo</div>';
+        $buffer .= '<div class="page-header mt-4 mb-4">&raquo; Opciones para PDF formato papel contínuo</div>';
         $buffer .= $form->input([
             'type' => 'select',
             'name' => 'dtepdf_'.$this->getCodigo().'_continuo_logo_posicion',
-            'label' => 'Logo en papel contínuo',
+            'label' => 'Mostrar logo',
             'options' => ['No', 'Si'],
             'value' => !empty($this->getConfig()->continuo->logo->posicion) ? $this->getConfig()->continuo->logo->posicion : 0,
-            'help' => '¿Se debe agregar el logo al formato de papel contínuo?',
+            'help' => 'Un logo grande podría ocupar mucho papel. No se recomienda usar el logo si se usará impresora térmica.',
         ]);
         $buffer .= $form->input([
             'type' => 'select',
             'name' => 'dtepdf_'.$this->getCodigo().'_continuo_item_detalle',
-            'label' => '¿Detalle de item?',
-            'options' => ['No', 'Si'],
+            'label' => 'Mostrar detalle',
+            'options' => [
+                'Sólo mostrar el nombre del item',
+                'Mostrar el nombre y el detalle del item',
+            ],
             'value' => !empty($this->getConfig()->continuo->item->detalle) ? $this->getConfig()->continuo->item->detalle : 0,
-            'help' => '¿Se debe mostrar el detalle del item?',
+            'help' => 'Ocultar el detalle del item permitirá ahorrar papel si el nombre es suficiente para la generación del DTE.',
         ]);
         // entregar buffer
         return $buffer;

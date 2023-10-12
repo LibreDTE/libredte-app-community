@@ -1,23 +1,42 @@
 <ul class="nav nav-pills float-end">
     <li class="nav-item">
-        <a class="nav-link" href="firma_electronicas/agregar">
-            <span class="fa fa-edit"></span> Agregar
+        <a class="nav-link" href="<?=$_base?>/dte/admin/firma_electronicas/agregar">
+            <span class="fas fa-upload"></span> Subir firma
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="firma_electronicas/descargar">
-            <span class="fa fa-download"></span> Descargar
+        <a class="nav-link" href="<?=$_base?>/dte/admin/firma_electronicas/descargar" onclick="return Form.confirm(this, 'Sólo puede descargar su propia firma electrónica, no la de otros usuarios. Adicionalmente, sólo descargará el archivo de la firma electrónica, la contraseña debe conocerla previamente.')">
+            <span class="fas fa-download"></span> Descargar firma
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="firma_electronicas/eliminar">
-            <span class="fas fa-times"></span> Eliminar
+        <a class="nav-link" href="<?=$_base?>/dte/admin/firma_electronicas/eliminar" onclick="return Form.confirm(this, 'Sólo puede eliminar su propia firma electrónica, no la de otros usuarios. Adicionalmente, esta acción es irreversible y podría impedir que emita nuevos documentos tributarios si no sube una nueva firma.')">
+            <span class="fas fa-times"></span> Eliminar firma
         </a>
     </li>
 </ul>
-
-<div class="page-header"><h1>Mantenedor firma electrónica</h1></div>
-<p>A continuación se muestra un listado de los usuarios autorizados a operar con la empresa <?=$Emisor->razon_social?> y que tienen firma electrónica registrada en el sistema.</p>
+<div class="page-header"><h1>Firmas electrónicas asociadas a la empresa</h1></div>
+<?php if (!$firmas) : ?>
+    <div class="p-5 mb-4 bg-body-tertiary rounded-3">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">
+                Cargar firma electrónica
+            </h1>
+            <p class="fs-4">
+                <?php if ($Emisor->getUsuario()->usuario == $_Auth->User->usuario) : ?>
+                    Su usuario <code><?=$_Auth->User->usuario?></code> es el administrador principal de la empresa <strong><?=$Emisor->getNombre()?></strong>, por lo que si sube su firma será usada por todos los usuarios para la emisión de documentos y otras acciones asociadas al SII.
+                <?php else : ?>
+                    El administrador principal de la empresa <strong><?=$Emisor->getNombre()?></strong> es el usuario <code><?=$Emisor->getUsuario()->usuario?></code>, lo recomendado es que la firma electrónica la suba ese usuario. Así todos los asociados a la empresa la podrán usar de manera centralizada y transparente en LibreDTE.
+                <?php endif; ?>
+            </p>
+            <a href="<?=$_base?>/dte/admin/firma_electronicas/agregar" class="btn btn-primary btn-lg" type="button">
+                <span class="fas fa-upload"></span>
+                Subir firma electrónica
+            </a>
+        </div>
+    </div>
+<?php else : ?>
+<p>A continuación se muestra un listado de los usuarios autorizados a operar con la empresa SASCO SpA y que tienen firma electrónica registrada en el sistema.</p>
 <?php
 foreach ($firmas as &$f) {
     $f['desde'] = \sowerphp\general\Utility_Date::format($f['desde'], 'd/m/Y H:i');
@@ -27,25 +46,4 @@ foreach ($firmas as &$f) {
 array_unshift($firmas, ['RUN', 'Nombre', 'Email', 'Válida desde', 'Válida hasta', 'Emisor', 'Usuario', 'Administrador']);
 new \sowerphp\general\View_Helper_Table($firmas);
 ?>
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-2 text-center">
-    <div class="col mb-4">
-        <div class="card">
-            <div class="card-body">
-                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                <h5 class="card-title">
-                    <a href="https://soporte.sasco.cl/kb/faq.php?id=174">¿Cómo cargo la firma?</a>
-                </h5>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body">
-                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                <h5 class="card-title">
-                    <a href="https://soporte.sasco.cl/kb/faq.php?id=59">¿Qué firma usar?</a>
-                </h5>
-            </div>
-        </div>
-    </div>
-</div>
+<?php endif; ?>
