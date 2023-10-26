@@ -35,7 +35,7 @@ class Controller_Factoring extends \Controller_App
     /**
      * Acción para crear el AEC
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+     * @version 2023-10-26
      */
     public function ceder()
     {
@@ -50,7 +50,7 @@ class Controller_Factoring extends \Controller_App
             $EnvioDte->loadXML(file_get_contents($_FILES['xml']['tmp_name']));
             $documentos = $EnvioDte->getDocumentos();
             if (!$documentos) {
-                \sowerphp\core\Model_Datasource_Session::message('El XML no contiene un DTE', 'error');
+                \sowerphp\core\Model_Datasource_Session::message('El XML no contiene un DTE.', 'error');
                 return;
             }
             $Dte = $documentos[0];
@@ -79,23 +79,11 @@ class Controller_Factoring extends \Controller_App
             $AEC->agregarDteCedido($DteCedido);
             $AEC->agregarCesion($Cesion);
             // entregar XML de la cesión
-            if ($_POST['accion']==='descargar') {
-                $xml = $AEC->generar();
-                $this->response->type('application/xml', 'ISO-8859-1');
-                $this->response->header('Content-Length', strlen($xml));
-                $this->response->header('Content-Disposition', 'attachement; filename="aec_'.$Cesion->getCedente()['RUT'].'_'.$Cesion->getCesionario()['RUT'].'_'.date('U').'.xml"');
-                $this->response->send($xml);
-            }
-            // enviar el XML de la cesión al SII
-            else {
-                \sasco\LibreDTE\Sii::setAmbiente($Dte->getCertificacion());
-                $track_id = $AEC->enviar();
-                if ($track_id) {
-                    \sowerphp\core\Model_Datasource_Session::message('Archivo de cesión enviado al SII con track id '.$track_id, 'ok');
-                } else {
-                    \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
-                }
-            }
+            $xml = $AEC->generar();
+            $this->response->type('application/xml', 'ISO-8859-1');
+            $this->response->header('Content-Length', strlen($xml));
+            $this->response->header('Content-Disposition', 'attachement; filename="aec_'.$Cesion->getCedente()['RUT'].'_'.$Cesion->getCesionario()['RUT'].'_'.date('U').'.xml"');
+            $this->response->send($xml);
         }
     }
 

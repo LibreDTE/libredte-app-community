@@ -1,4 +1,4 @@
-<div class="page-header"><h1>Generar reporte de consumos de folios (RCOF)</h1></div>
+<div class="page-header"><h1>Generar RVD (ex RCOF)</h1></div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin(['focus'=>'rutField', 'onsubmit'=>'Form.check()']);
@@ -23,14 +23,14 @@ echo $f->input([
     'label' => 'Secuencia',
     'value' => 1,
     'check' => 'notempty integer',
-    'help' => 'Número de secuencia del envío, si es primer envío es la 1, si es un segundo envío, es la 2, etc.'
+    'help' => 'Número de secuencia del envío, si es el primer envío del día es la 1, si es un segundo envío, es la 2, etc.'
 ]);
 echo $f->input([
     'type' => 'file',
     'name' => 'detalle',
     'label' => 'Archivo',
     'check' => 'notempty',
-    'help' => 'Archivo CSV (separado por punto y coma, codificado en UTF-8) con el detalle de las boletas emitidas. <a href="'.$_base.'/dte/archivos/libro_boletas.csv" download="libro_boletas.csv">Ver ejemplo del formato de libro de boletas</a>'
+    'help' => 'Archivo CSV (separado por punto y coma, codificado en UTF-8) con el detalle de las boletas emitidas en el formato del libro de boletas.'
 ]);
 echo $f->input([
     'type' => 'file',
@@ -45,7 +45,7 @@ echo $f->input([
     'name' => 'contrasenia',
     'label' => 'Contraseña firma',
     'check' => 'notempty',
-    'help' => 'Contraseña que permite abrir el certificado digital de la firma electrónica',
+    'help' => 'Contraseña que permite utilizar la firma electrónica.',
 ]);
 echo $f->input([
     'type' => 'select',

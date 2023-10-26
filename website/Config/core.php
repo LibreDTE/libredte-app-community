@@ -304,12 +304,6 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
     ],
 ]);
 
-// configuración para FAQ (preguntas frecuentes)
-\sowerphp\core\Configure::write('faq', [
-    'url' => 'https://libredte.cl/faq/',
-    'text' => 'Revise aquí para más detalles',
-]);
-
 // método de encriptación por defecto
 \sowerphp\core\Configure::write('data.crypt.method', env('LIBREDTE_APP_DATA_CRYPT_METHOD', 'sodium'));
 

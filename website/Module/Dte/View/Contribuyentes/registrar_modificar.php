@@ -248,7 +248,7 @@ echo $f->input([
         <div class="card-body">
 <?php
 echo $f->input([
-    'type' => 'textpass',
+    'type' => 'password',
     'name' => 'config_sii_pass',
     'label' => 'Clave tributaria empresa',
     'value' => isset($Contribuyente) ? $Contribuyente->config_sii_pass : null,
@@ -335,7 +335,7 @@ echo $f->input([
     'check' => 'notempty email',
 ]);
 echo $f->input([
-    'type' => 'textpass',
+    'type' => 'password',
     'name' => 'config_email_intercambio_pass',
     'value' => isset($Contribuyente) ? $Contribuyente->config_email_intercambio_pass : null,
     'label' => 'Contraseña',
@@ -378,7 +378,7 @@ echo $f->input([
     'check' => 'notempty email',
 ]);
 echo $f->input([
-    'type' => 'textpass',
+    'type' => 'password',
     'name' => 'config_email_sii_pass',
     'value' => isset($Contribuyente) ? $Contribuyente->config_email_sii_pass : null,
     'label' => 'Contraseña',
@@ -969,7 +969,7 @@ echo $f->input([
         ['name' => 'config_api_servicio', 'type'=>'div', 'attr'=>'style="max-width:10em"'],
         ['name' => 'config_api_url', 'placeholder'=>'https://example.com/api/webhook'],
         ['name' => 'config_api_auth', 'type'=>'select', 'options'=>['http_auth_basic'=>'HTTP Auth Basic']],
-        ['type'=>'textpass', 'name'=>'config_api_credenciales', 'placeholder'=>'Ejemplo: usuario:contraseña', 'attr' => 'maxlength="255" onmouseover="this.type=\'text\'" onmouseout="this.type=\'password\'"'],
+        ['type'=>'password', 'name'=>'config_api_credenciales', 'placeholder'=>'Ejemplo: usuario:contraseña', 'attr' => 'maxlength="255" onmouseover="this.type=\'text\'" onmouseout="this.type=\'password\'"'],
     ],
     'values' => $api,
 ]);

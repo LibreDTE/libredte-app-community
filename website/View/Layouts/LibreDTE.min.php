@@ -22,8 +22,8 @@ Edición Enterprise de LibreDTE, con soporte de SASCO SpA, disponible en https:/
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
         <script>var _url = "<?=$_url?>", _base = "<?=$_base?>", _request = "<?=$_request?>";</script>
-        <script src="https://cdn.sasco.cl/js/__.min.js"></script>
-        <script src="https://cdn.sasco.cl/js/form.min.js"></script>
+        <script src="https://cdn.sasco.cl/js/__.js"></script>
+        <script src="https://cdn.sasco.cl/js/form.js"></script>
         <script src="https://cdn.sasco.cl/js/datepicker/bootstrap-datepicker.js"></script>
         <script src="https://cdn.sasco.cl/js/datepicker/bootstrap-datepicker.es.js"></script>
         <link rel="stylesheet" href="https://cdn.sasco.cl/js/datepicker/datepicker3.css" />

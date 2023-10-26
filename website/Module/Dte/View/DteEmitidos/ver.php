@@ -122,7 +122,7 @@ echo $t->generate([
                 <div class="card-body">
                     <h5 class="card-title">¡Es urgente realizar una acción con este documento!</h5>
                     <p class="card-text">
-                        Los documentos rechazados por el SII no son válidos, y no deben ser utilizados. Tampoco deben ser anulados, ya que al no ser válidos, no existen para el SII. <a href="https://soporte.sasco.cl/kb/faq.php?id=48" class="text-white"><u>Revise qué debe hacer si un documento es rechazado aquí</u></a>.
+                        Los documentos rechazados por el SII no son válidos, y no deben ser utilizados. Tampoco deben ser anulados, ya que al no ser válidos, no existen para el SII.
                     </p>
                 </div>
             </div>
@@ -200,40 +200,6 @@ echo $t->generate([
         </div>
 <?php endif; ?>
     </div>
-<?php if ($DteEmitido->getEstado()=='R') : ?>
-<div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 row-cols-lg-3">
-    <div class="col mb-4">
-        <div class="card">
-            <div class="card-body text-center">
-                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                <h5 class="card-title">
-                    <a href="https://soporte.sasco.cl/kb/faq.php?id=48">¿Documento rechazado?</a>
-                </h5>
-            </div>
-        </div>
-    </div>
-    <div class="col mb-4">
-        <div class="card">
-            <div class="card-body text-center">
-                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                <h5 class="card-title">
-                    <a href="https://soporte.sasco.cl/kb/faq.php?id=49">¿Rechazos más comunes?</a>
-                </h5>
-            </div>
-        </div>
-    </div>
-    <div class="col mb-4">
-        <div class="card">
-            <div class="card-body text-center">
-                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                <h5 class="card-title">
-                    <a href="https://soporte.sasco.cl/kb/faq.php?id=193">¿Error: "invalid character"?</a>
-                </h5>
-            </div>
-        </div>
-    </div>
-</div>
-<?php endif; ?>
 </div>
 <!-- FIN DATOS BÁSICOS -->
 
@@ -289,28 +255,6 @@ $share_message = '¡Hola! Soy de '.$Emisor->getNombre().'. Te adjunto el enlace 
             <a class="btn btn-success btn-lg col-12" href="#" onclick="__.share('<?=$share_telephone?>', '<?=$share_message?>'); return false" role="button">
                 Enviar PDF por WhatsApp
             </a>
-        </div>
-    </div>
-    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 text-center">
-        <div class="col mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                    <h5 class="card-title">
-                        <a href="https://soporte.sasco.cl/kb/faq.php?id=132">¿Cómo personalizo el PDF?</a>
-                    </h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                    <h5 class="card-title">
-                        <a href="https://soporte.sasco.cl/kb/faq.php?id=220">¿Puedo imprimir sin abrir el PDF?</a>
-                    </h5>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -402,28 +346,6 @@ if ($email_enviados) {
     new \sowerphp\general\View_Helper_Table($email_enviados);
 }
 ?>
-    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 text-center mt-4">
-        <div class="col mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                    <h5 class="card-title">
-                        <a href="https://soporte.sasco.cl/kb/faq.php?id=133">¿Cómo personalizo el email?</a>
-                    </h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                    <h5 class="card-title">
-                        <a href="https://soporte.sasco.cl/kb/faq.php?id=16">¿Por qué se demora el envío?</a>
-                    </h5>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 <!-- FIN ENVIAR POR EMAIL -->
 
@@ -695,28 +617,6 @@ if ($referencias) {
             <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/documentos/emitir/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
                 Crear referencia
             </a>
-        </div>
-    </div>
-    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 text-center mt-4">
-        <div class="col mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                    <h5 class="card-title">
-                        <a href="https://soporte.sasco.cl/kb/faq.php?id=55">¿Cómo anulo un documento?</a>
-                    </h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                    <h5 class="card-title">
-                        <a href="https://soporte.sasco.cl/kb/faq.php?id=106">¿Cómo realizo una devolución?</a>
-                    </h5>
-                </div>
-            </div>
         </div>
     </div>
 </div>

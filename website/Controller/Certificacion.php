@@ -34,7 +34,7 @@ class Controller_Certificacion extends \Controller_App
 
     private $nav = [
         '/set_pruebas' => [
-            'name' => 'Etapa 1: Set de pruebas',
+            'name' => 'Etapa 1: Casos de prueba',
             'desc' => '',
             'icon' => 'far fa-copy',
         ],
@@ -49,7 +49,7 @@ class Controller_Certificacion extends \Controller_App
             'icon' => 'fas fa-exchange-alt',
         ],
         '/muestras_pdf' => [
-            'name' => 'Etapa 4: Muestras PDF',
+            'name' => 'Etapa 4: Muestras en PDF',
             'desc' => '',
             'icon' => 'far fa-file-pdf',
         ],
@@ -107,7 +107,7 @@ class Controller_Certificacion extends \Controller_App
         // si no se pasó el archivo error
         if (!isset($_FILES['archivo']) or $_FILES['archivo']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Debes enviar el archivo del set de pruebas entregado por el SII', 'error'
+                'Debes enviar el archivo del set de pruebas entregado por el SII.', 'error'
             );
             $this->redirect('/certificacion/set_pruebas#dte');
         }
@@ -125,7 +125,7 @@ class Controller_Certificacion extends \Controller_App
         $json = \sasco\LibreDTE\Sii\Certificacion\SetPruebas::getJSON(file_get_contents($_FILES['archivo']['tmp_name']), $folios);
         if (!$json) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible crear el archivo JSON a partir del archivo del set de prueba, ¡verificar el formato y/o codificación!', 'error'
+                'No fue posible crear el archivo JSON a partir del archivo del set de prueba, ¡verificar el formato y/o codificación!.', 'error'
             );
             $this->redirect('/certificacion/set_pruebas#dte');
         }
@@ -145,7 +145,7 @@ class Controller_Certificacion extends \Controller_App
         // si no se pasó el archivo error
         if (!isset($_FILES['archivo']) or $_FILES['archivo']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Debes enviar el archivo XML del EnvioDTE al que quieres generar su Libro de Ventas', 'error'
+                'Debes enviar el archivo XML del EnvioDTE al que quieres generar su Libro de Ventas.', 'error'
             );
             $this->redirect('/certificacion/set_pruebas#ventas');
         }
@@ -181,7 +181,7 @@ class Controller_Certificacion extends \Controller_App
                 $LibroCompraVenta->setFirma($Firma);
             } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No fue posible abrir la firma digital, quizás contraseña incorrecta', 'error'
+                    'No fue posible abrir la firma electrónica, quizás contraseña incorrecta.', 'error'
             );
                 $this->redirect('/certificacion/set_pruebas#ventas');
             }
@@ -214,7 +214,7 @@ class Controller_Certificacion extends \Controller_App
         // si no se pasó el archivo error
         if (!isset($_FILES['archivo']) or $_FILES['archivo']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Debes enviar la planilla con el set de pruebas de las boletas electrónicas', 'error'
+                'Debes enviar la planilla con el set de pruebas de las boletas electrónicas.', 'error'
             );
             $this->redirect('/certificacion/set_pruebas#boletas');
         }
@@ -276,7 +276,7 @@ class Controller_Certificacion extends \Controller_App
         mkdir($dir.'/pdf');
         if (!is_dir($dir)) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible generar el directorio para archivos del set de boleta', 'error'
+                'No fue posible generar el directorio para archivos del set de boletas.', 'error'
             );
             $this->redirect('/certificacion/set_pruebas#boletas');
         }
@@ -308,7 +308,7 @@ class Controller_Certificacion extends \Controller_App
             ]);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible abrir la firma digital, quizás contraseña incorrecta', 'error'
+                'No fue posible abrir la firma electrónica, quizás contraseña incorrecta.', 'error'
             );
             $this->redirect('/certificacion/set_pruebas#boletas');
         }
@@ -326,7 +326,7 @@ class Controller_Certificacion extends \Controller_App
             $DTE = new \sasco\LibreDTE\Sii\Dte($documento);
             if (empty($Folios[$DTE->getTipo()])) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Faltó subir archivo CAF de tipo '.$DTE->getTipo(), 'error'
+                    'Faltó subir archivo CAF de tipo '.$DTE->getTipo().'.', 'error'
                 );
                 $this->redirect('/certificacion/set_pruebas#boletas');
             }
@@ -552,30 +552,31 @@ class Controller_Certificacion extends \Controller_App
         $this->set([
             'nav' => $this->nav,
         ]);
-        if (!isset($_POST['submit']))
+        if (!isset($_POST['submit'])) {
             return;
+        }
         // verificar que se hayan pasado los datos requeridos
         if (!isset($_FILES['xml']) or $_FILES['xml']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Hubo algún problema al subir el XML EnvioDTE', 'error'
+                'Hubo algún problema al subir el XML EnvioDTE.', 'error'
             );
             return;
         }
         if (empty($_POST['emisor'])) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'RUT emisor esperado no puede estar en blanco', 'error'
+                'RUT emisor esperado no puede estar en blanco.', 'error'
             );
             return;
         }
         if (empty($_POST['receptor'])) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'RUT receptor esperado no puede estar en blanco', 'error'
+                'RUT receptor esperado no puede estar en blanco.', 'error'
             );
             return;
         }
         if (!isset($_FILES['firma']) or $_FILES['firma']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Hubo algún problema al subir la firma electrónica', 'error'
+                'Hubo algún problema al subir la firma electrónica.', 'error'
             );
             return;
         }
@@ -591,7 +592,7 @@ class Controller_Certificacion extends \Controller_App
             ]);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible abrir la firma digital, quizás contraseña incorrecta', 'error'
+                'No fue posible abrir la firma electrónica, quizás contraseña incorrecta.', 'error'
             );
             return;
         }
@@ -656,7 +657,7 @@ class Controller_Certificacion extends \Controller_App
         $dir = TMP.'/intercambio_'.$Caratula['RutEmisor'].'_'.date('U');
         if (!mkdir($dir)) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible generar el archivo comprimido con los XML', 'error'
+                'No fue posible generar el archivo comprimido con los XML.', 'error'
             );
             return;
         }
@@ -711,8 +712,9 @@ class Controller_Certificacion extends \Controller_App
         // generar XML
         $xml = $RespuestaEnvio->generar();
         // validar schema del XML que se generó
-        if (!$RespuestaEnvio->schemaValidate())
+        if (!$RespuestaEnvio->schemaValidate()) {
             return false;
+        }
         // entregar xml
         return $xml;
     }
@@ -744,8 +746,9 @@ class Controller_Certificacion extends \Controller_App
         // generar XML
         $xml = $EnvioRecibos->generar();
         // validar schema del XML que se generó
-        if (!$EnvioRecibos->schemaValidate())
+        if (!$EnvioRecibos->schemaValidate()) {
             return false;
+        }
         // entregar xml
         return $xml;
     }
@@ -781,8 +784,9 @@ class Controller_Certificacion extends \Controller_App
         // generar XML
         $xml = $RespuestaEnvio->generar();
         // validar schema del XML que se generó
-        if (!$RespuestaEnvio->schemaValidate())
+        if (!$RespuestaEnvio->schemaValidate()) {
             return false;
+        }
         // entregar xml
         return $xml;
     }

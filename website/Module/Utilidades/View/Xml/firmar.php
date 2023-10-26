@@ -9,7 +9,7 @@ echo $f->input([
     'name' => 'xml',
     'label' => 'Archivo XML',
     'check' => 'notempty',
-    'help' => 'Archivo XML que se desea firmar',
+    'help' => 'Archivo XML que se desea firmar.',
     'attr' => 'accept=".xml"',
 ]);
 echo $f->input([
@@ -24,7 +24,7 @@ echo $f->input([
     'type' => 'password',
     'name' => 'contrasenia',
     'label' => 'Contraseña firma',
-    'help' => 'Contraseña que permite abrir el certificado digital de la firma electrónica',
+    'help' => 'Contraseña que permite utilizar la firma electrónica.',
     'check' => 'notempty',
 ]);
 echo $f->end('Generar XML firmado');
@@ -32,16 +32,12 @@ echo $f->end('Generar XML firmado');
     </div>
     <div class="col-md-4">
         <div class="card">
-            <div class="card-header"><i class="fa fa-exclamation-circle text-warning"></i> ¿Cómo se aplica la firma?</div>
             <div class="card-body">
-                <p>Se firmará el primer nodo que sea hijo de la raíz, en el siguiente ejemplo la raíz es A y se firmaría el contenido del nodo B.</p>
-                <pre>
-                    <code>
-&lt;A&gt;
-    &lt;B&gt;...&lt;/B&gt;
-&lt;/A&gt;
-                    </code>
-                </pre>
+                <i class="fa-solid fa-question-circle fa-fw text-warning mb-4"></i>
+                <strong>¿Cómo se realiza la firma del XML?</strong>
+                <p>Se firmará el primer nodo que sea hijo de la raíz.</p>
+                <p>En el siguiente ejemplo el nodo raíz es <code>A</code>, por lo que se firmaría el contenido del primer nodo hijo que es <code>B</code>.</p>
+                <code>&lt;A&gt; &lt;B&gt; ... &lt;/B&gt; &lt;/A&gt;</code>
             </div>
         </div>
     </div>

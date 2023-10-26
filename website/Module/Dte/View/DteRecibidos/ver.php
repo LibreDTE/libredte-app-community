@@ -97,18 +97,6 @@ echo $t->generate([
                     </a>
                 </div>
             </div>
-<?php if (!$DteRecibido->hasXML()) : ?>
-            <div class="card-deck mt-4">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                        <h5 class="card-title">
-                            <a href="https://soporte.sasco.cl/kb/faq.php?id=36">¿Por qué no veo el PDF ni el XML?</a>
-                        </h5>
-                    </div>
-                </div>
-            </div>
-<?php endif; ?>
         </div>
         <div class="col-md-3">
             <div class="card mb-4 bg-light">

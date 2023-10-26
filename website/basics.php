@@ -41,7 +41,7 @@ function libredte_api_consume($recurso, $datos = [])
     }
     // verificar si se pueden hacer consultas a la API o la cuenta se encuentra
     // en pausa por haber alcanzado el número máximo de consultas
-    $message_429 = 'Las consultas a API Gateway en apigateway.cl se encuentran en pausa ya que se alcanzó el límite de la cuota permitida. Se podrán volver a hacer consultas después del %s. Recuperará el acceso a las funcionalidades extras de LibreDTE una vez se restablezca la cuota de consultas.  [faq:265]';
+    $message_429 = 'Las consultas a API Gateway en apigateway.cl se encuentran en pausa ya que se alcanzó el límite de la cuota permitida. Se podrán volver a hacer consultas después del %s. Recuperará el acceso a las funcionalidades extras de LibreDTE una vez se restablezca la cuota de consultas. [faq:265]';
     $Cache = new \sowerphp\core\Cache();
     $retry_time = $Cache->get('libredte_api_retry_time');
     if ($retry_time) {

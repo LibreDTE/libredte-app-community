@@ -93,8 +93,6 @@ class Shell_Command_DteEmitidos_Actualizar extends \Shell_App
             }
             $msg .= "\n";
             $msg .= 'Es URGENTE que revise este listado de documento(s) y el estado en '.(new \sowerphp\core\Network_Request())->url.'/dte'."\n\n";
-            $msg .= 'Si tiene alguna duda, recuerde revisar el siguiente enlace https://soporte.sasco.cl/kb/faq.php?id=48'."\n\n";
-            $msg .= 'También puede encontrar más información sobre los motivos de los rechazos en https://soporte.sasco.cl/kb/faq.php?id=49';
             $Contribuyente->notificar('Estado rechazado en SII en '.$n_documentos.' documentos(s)', $msg);
         }
         // enviar lo generado sin track id

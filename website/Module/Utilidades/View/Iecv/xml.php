@@ -1,4 +1,4 @@
-<div class="page-header"><h1>Generar XML Libro de Compra o Venta</h1></div>
+<div class="page-header"><h1>Generar XML libro de compras o ventas</h1></div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin(['onsubmit'=>'Form.check()']);
@@ -7,85 +7,91 @@ echo $f->input([
     'name' => 'simplificado',
     'label' => '¿Libro normal o simplificado?',
     'options' => ['Normal', 'Simplificado'],
+    'value' => 1,
     'check' => 'notempty',
-    'help' => 'En certificación debe ser simplificado',
+    'help' => 'En certificación debe ser simplificado.',
     'attr' => 'onchange="libro_generar_tipo(this.value)"',
 ]);
 echo $f->input([
     'type' => 'select',
     'name' => 'TipoOperacion',
-    'label' => 'Tipo operación',
+    'label' => 'Tipo de operación',
     'options' => ['COMPRA'=>'COMPRA', 'VENTA'=>'VENTA'],
     'check' => 'notempty',
 ]);
 echo $f->input([
     'name' => 'RutEmisorLibro',
-    'label' => 'Emisor',
+    'label' => 'RUT del emisor',
     'placeholder' => '55666777-8',
-    'help' => 'RUT de la empresa que emite el libro',
+    'help' => 'RUT de la empresa que emite el libro.',
     'check' => 'notempty rut',
 ]);
 echo $f->input([
     'name' => 'PeriodoTributario',
     'label' => 'Período tributario',
     'placeholder' => '2000-01',
-    'help' => 'En certificación debe ser un mes del año 2000 (compras) o 1980 (ventas)',
+    'value' => '2000-01',
+    'help' => 'En certificación debe ser un mes del año 2000 (compras) o 1980 (ventas).',
     'check' => 'notempty',
 ]);
 echo $f->input([
     'type' => 'date',
     'name' => 'FchResol',
-    'label' => 'Fecha resolución',
+    'label' => 'Fecha de resolución',
     'placeholder' => '2006-01-20',
-    'help' => 'En simplificado debe ser: 2006-01-20',
+    'value' => '2006-01-20',
+    'help' => 'En simplificado debe ser: 2006-01-20.',
     'check' => 'notempty date',
 ]);
 echo $f->input([
     'name' => 'NroResol',
-    'label' => 'Número resolución',
+    'label' => 'Número de resolución',
     'placeholder' => 102006,
-    'help' => 'En simplificado debe ser: 102006',
+    'value' => 102006,
+    'help' => 'En simplificado debe ser: 102006.',
     'check' => 'notempty integer',
 ]);
 echo $f->input([
     'type' => 'select',
     'name' => 'TipoLibro',
-    'label' => 'Tipo libro',
+    'label' => 'Tipo de libro',
     'options' => ['MENSUAL'=>'MENSUAL', 'ESPECIAL'=>'ESPECIAL', 'RECTIFICA'=>'RECTIFICA'],
-    'help' => 'En simplificado debe ser: ESPECIAL',
+    'value' => 'ESPECIAL',
+    'help' => 'En simplificado debe ser: ESPECIAL.',
     'check' => 'notempty',
 ]);
 echo $f->input([
     'type' => 'select',
     'name' => 'TipoEnvio',
-    'label' => 'Tipo envío',
+    'label' => 'Tipo de envío',
     'options' => ['TOTAL'=>'TOTAL'],
-    'help' => 'En simplificado debe ser: TOTAL',
+    'help' => 'En simplificado debe ser: TOTAL.',
     'check' => 'notempty',
 ]);
 echo $f->input([
     'name' => 'FolioNotificacion',
-    'label' => 'Folio notificación',
+    'label' => 'Folio de notificación',
     'placeholder' => 102006,
-    'help' => 'Es obligatorio si el tipo de libro es: ESPECIAL. En simplificado debe ser: 102006',
+    'value' => 102006,
+    'help' => 'Es obligatorio si el tipo de libro es: ESPECIAL. En simplificado debe ser: 102006.',
     'check' => 'integer',
 ]);
 echo $f->input([
     'name' => 'CodAutRec',
     'label' => 'Autorización rectificación',
-    'help' => 'Código de autorización de rectificación, es obligatorio si el tipo de libro es: RECTIFICA',
+    'help' => 'Código de autorización de rectificación, es obligatorio si el tipo de libro es: RECTIFICA.',
 ]);
 echo $f->input([
     'type' => 'file',
     'name' => 'archivo',
-    'label' => 'Archivo detalle',
-    'help' => 'Archivo CSV (separado por punto y coma, codificado en UTF-8) con el detalle del Libro de Compras o Ventas que se desea generar en XML: <a href="'.$_base.'/dte/archivos/libro_ventas.csv" download="libro_ventas.csv">ejemplo archivo CSV ventas</a>, <a href="'.$_base.'/dte/archivos/libro_compras.csv" download="libro_compras.csv">ejemplo archivo CSV compras</a> o <a href="'.$_base.'/dte/archivos/libro_compras_exentos.csv" download="libro_compras_exentos.csv">ejemplo archivo CSV compras empresas no afectas</a>',
+    'label' => 'Archivo con movimientos',
+    'help' => 'Archivo CSV (separado por punto y coma, codificado en UTF-8) con el detalle del libro de compras o ventas que se desea generar.',
     'check' => 'notempty',
     'attr' => 'accept=".csv"',
 ]);
 echo $f->input([
     'type' => 'js',
-    'label' => 'Resúmenes',
+    'label' => 'Resúmenes manuales',
     'id' => 'resumenes',
     'titles' => ['Tipo Doc.', '# docs', 'Anulados', 'Op. exen.', 'Exento', 'Neto', 'IVA', 'IVA propio', 'IVA terc.', 'Ley 18211', 'Monto total', 'No fact.', 'Total periodo'],
     'inputs' => [
@@ -118,7 +124,7 @@ echo $f->input([
     'type' => 'password',
     'name' => 'contrasenia',
     'label' => 'Contraseña firma',
-    'help' => 'Contraseña que permite abrir el certificado digital de la firma electrónica',
+    'help' => 'Contraseña que permite utilizar la firma electrónica.',
     'check' => 'notempty',
 ]);
-echo $f->end('Generar XML del libro');
+echo $f->end('Generar XML libro IECV');

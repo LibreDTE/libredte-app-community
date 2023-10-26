@@ -14,7 +14,7 @@ echo $f->input([
     'type' => 'password',
     'name' => 'contrasenia',
     'label' => 'Contraseña firma',
-    'help' => 'Contraseña que permite abrir el certificado digital de la firma electrónica',
+    'help' => 'Contraseña que permite utilizar la firma electrónica.',
     'check' => 'notempty',
 ]);
 echo $f->end('Ver datos de la firma');
@@ -64,7 +64,7 @@ if (!empty($Firma)) : ?>
 <div class="card mb-4">
     <div class="card-header">Datos técnicos de la firma</div>
     <div class="card-body">
-        <pre><?=print_r($Firma->getData(),true)?></pre>
+        <pre><?=json_encode($Firma->getData(), JSON_PRETTY_PRINT)?></pre>
     </div>
 </div>
 <?php endif;

@@ -144,16 +144,3 @@ $maintainer = new \sowerphp\app\View_Helper_Maintainer ([
 $maintainer->setId($models);
 $maintainer->setColsWidth($colsWidth);
 echo $maintainer->listar ($data, $pages, $page);
-if ($rcof_rechazados or $rcof_reparos_secuencia):
-?>
-<div class="card-deck mt-4">
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=24">¿Qué hago si tengo un RCOF erróneo o rechazado?</a>
-            </h5>
-        </div>
-    </div>
-</div>
-<?php endif; ?>

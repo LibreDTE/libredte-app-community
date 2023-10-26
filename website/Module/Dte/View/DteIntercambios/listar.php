@@ -11,21 +11,21 @@
             RC SII
         </a>
     </li>
-<?php if ($soloPendientes) : ?>
-    <li class="nav-item">
-        <a href="<?=$_base?>/dte/dte_intercambios/listar" title="Listar todos los intercambios paginados" class="nav-link">
-            <i class="fa fa-list-alt"></i>
-            Listar todo
-        </a>
-    </li>
-<?php else : ?>
-    <li class="nav-item">
-        <a href="<?=$_base?>/dte/dte_intercambios/listar/0/1" title="Ver todos los documentos pendientes de procesar" class="nav-link">
-            <i class="fa fa-list-alt"></i>
-            Pendientes
-        </a>
-    </li>
-<?php endif; ?>
+    <?php if ($soloPendientes) : ?>
+        <li class="nav-item">
+            <a href="<?=$_base?>/dte/dte_intercambios/listar" title="Listar todos los intercambios paginados" class="nav-link">
+                <i class="fa fa-list-alt"></i>
+                Listar todo
+            </a>
+        </li>
+    <?php else : ?>
+        <li class="nav-item">
+            <a href="<?=$_base?>/dte/dte_intercambios/listar/0/1" title="Ver todos los documentos pendientes de procesar" class="nav-link">
+                <i class="fa fa-list-alt"></i>
+                Pendientes
+            </a>
+        </li>
+    <?php endif; ?>
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_intercambios/buscar" title="Búsqueda avanzada de los documentos de intercambio" class="nav-link">
             <i class="fa fa-search"></i>
@@ -90,37 +90,3 @@ $paginator = new \sowerphp\app\View_Helper_Paginator([
 ]);
 $paginator->setColsWidth([null, null, null, null, null, null, 110]);
 echo $paginator->generate($documentos, $paginas, $pagina);
-?>
-
-<div class="row row-cols-3 g-3 mt-4">
-    <div class="col">
-        <div class="card">
-            <div class="card-body text-center">
-                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                <h5 class="card-title">
-                    <a href="https://soporte.sasco.cl/kb/faq.php?id=196">¿Cómo procesar los documentos?</a>
-                </h5>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body text-center">
-                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                <h5 class="card-title">
-                    <a href="https://soporte.sasco.cl/kb/faq.php?id=31">¿Por qué faltan documentos?</a>
-                </h5>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body text-center">
-                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                <h5 class="card-title">
-                    <a href="https://soporte.sasco.cl/kb/faq.php?id=40">¿Puedo sincronizar con SII?</a>
-                </h5>
-            </div>
-        </div>
-    </div>
-</div>

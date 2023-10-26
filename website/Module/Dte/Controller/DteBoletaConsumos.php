@@ -42,17 +42,17 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
     /**
      * Acción principal que lista los períodos con boletas
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-09-21
+     * @version 2023-10-18
      */
     public function listar($page = 1, $orderby = null, $order = 'A')
     {
         $Emisor = $this->getContribuyente();
-        $rcof_rechazados = (new Model_DteBoletaConsumos())->setContribuyente($Emisor)->getTotalRechazados();
-        $rcof_reparos_secuencia = (new Model_DteBoletaConsumos())->setContribuyente($Emisor)->getTotalReparosSecuencia();
+        //$rcof_rechazados = (new Model_DteBoletaConsumos())->setContribuyente($Emisor)->getTotalRechazados();
+        //$rcof_reparos_secuencia = (new Model_DteBoletaConsumos())->setContribuyente($Emisor)->getTotalReparosSecuencia();
         $this->set([
             'is_admin' => $Emisor->usuarioAutorizado($this->Auth->User, 'admin'),
-            'rcof_rechazados' => $rcof_rechazados,
-            'rcof_reparos_secuencia' => $rcof_reparos_secuencia,
+            //'rcof_rechazados' => $rcof_rechazados,
+            //'rcof_reparos_secuencia' => $rcof_reparos_secuencia,
         ]);
         $this->forceSearch(['emisor'=>$Emisor->rut, 'certificacion'=>$Emisor->enCertificacion()]);
         parent::listar($page, $orderby, $order);

@@ -6,8 +6,8 @@ echo $f->input([
     'type' => 'file',
     'name' => 'xml',
     'label' => 'XML IECV',
-    'help' => 'Archivo XML del libro de compras o ventas',
+    'help' => 'Archivo XML del libro de compras o ventas.',
     'check' => 'notempty',
     'attr' => 'accept=".xml"',
 ]);
-echo $f->end('Generar documento en PDF');
+echo $f->end('Generar libro en PDF');

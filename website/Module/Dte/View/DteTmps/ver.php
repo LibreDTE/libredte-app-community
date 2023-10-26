@@ -204,28 +204,6 @@ $share_message = '¡Hola! Soy de '.$Emisor->getNombre().'. Te adjunto el enlace 
         </div>
     </div>
 <?php endif; ?>
-<div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2">
-    <div class="col mb-4">
-        <div class="card">
-            <div class="card-body text-center">
-                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                <h5 class="card-title">
-                    <a href="https://soporte.sasco.cl/kb/faq.php?id=132">¿Cómo personalizo el PDF?</a>
-                </h5>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body text-center">
-                <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-                <h5 class="card-title">
-                    <a href="https://soporte.sasco.cl/kb/faq.php?id=220">¿Puedo imprimir sin abrir el PDF?</a>
-                </h5>
-            </div>
-        </div>
-    </div>
-</div>
 </div>
 <!-- FIN PDF -->
 
@@ -310,16 +288,6 @@ if ($email_enviados) {
     new \sowerphp\general\View_Helper_Table($email_enviados);
 }
 ?>
-<div class="mt-4">
-    <div class="card">
-        <div class="card-body text-center">
-            <i class="fas fa-question-circle fa-fw fa-3x text-warning mb-4"></i>
-            <h5 class="card-title">
-                <a href="https://soporte.sasco.cl/kb/faq.php?id=133">¿Cómo personalizo el email?</a>
-            </h5>
-        </div>
-    </div>
-</div>
 </div>
 <!-- FIN ENVIAR POR EMAIL -->
 

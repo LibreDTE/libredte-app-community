@@ -48,15 +48,7 @@ echo $f->input([
     'type' => 'password',
     'name' => 'contrasenia',
     'label' => 'Contraseña firma',
-    'help' => 'Contraseña que permite abrir el certificado digital de la firma electrónica',
+    'help' => 'Contraseña que permite utilizar la firma electrónica.',
     'check' => 'notempty',
-]);
-echo $f->input([
-    'type' => 'select',
-    'name' => 'accion',
-    'label' => 'Acción',
-    'help' => '¿Qué hacer con el XML del AEC?',
-    //'options' => ['descargar'=>'Descargar', 'enviar'=>'Enviar al SII'],
-    'options' => ['descargar'=>'Descargar'],
 ]);
 echo $f->end('Generar AEC');

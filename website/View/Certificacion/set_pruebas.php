@@ -1,29 +1,21 @@
-<div class="dropdown mt-4">
-    <nav class="dropdown-toggle" type="button" id="dropdown_certificacion" data-bs-toggle="dropdown" aria-expanded="false">
-        Etapas
-    </nav>
-    <ul class="dropdown-menu" aria-labelledby="dropdown_certificacion">
-        <?php foreach ($nav as $link => $info) : ?>
-            <li><a href="<?=$_base?>/certificacion<?=$link?>" class="dropdown-item">
-                <span class="<?=$info['icon']?>"></span>
-                <?=$info['name']?>
-            </a></li>
-        <?php endforeach; ?>
-    </ul>
-</div>
+<ul class="nav nav-pills float-end">
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            <span class="fa-solid fa-list me-2"></span>
+            Etapas
+        </a>
+        <div class="dropdown-menu dropdown-menu-end">
+            <?php foreach ($nav as $link => $info) : ?>
+                <a href="<?=$_base?>/certificacion<?=$link?>" class="dropdown-item">
+                    <span class="<?=$info['icon']?>"></span>
+                    <?=$info['name']?>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </li>
+</ul>
 
-
-<div class="page-header"><h1>Certificación DTE  &raquo; Etapa 1: set de pruebas</h1></div>
-
-<div class="card mb-4">
-    <div class="card-header">Instrucciones SII</div>
-    <div class="card-body">
-        <p class="lead">Este paso consiste en la recepción en el SII, sin rechazos ni reparos, de un envío de documentos que el postulante construye en base a un <a href="https://maullin.sii.cl/cvc_cgi/dte/pe_generar" title="Generar set de pruebas">archivo con datos de prueba</a> que el SII genera en forma única para cada Postulante, en función de su giro y de los documentos que desea certificar. Además de documentos tributarios electrónicos, en este paso los Postulantes deben enviar también al SII, como parte de las pruebas, la Información Electrónica de Ventas y la Información Electrónica de Compras.</p>
-        <p>Se recomienda realizar el Set de Pruebas, una vez que Ud. haya realizado pruebas de envíos exitosos al SII (Aceptados sin Reparos). En cualquier momento, además, tiene la opción de obtener un nuevo Set de Pruebas. Recuerde que los envíos correspondientes al Set de Prueba serán evaluados respecto al último Set de Pruebas que haya bajado.</p>
-        <p>Los envíos con los documentos generados a partir de los datos del set de prueba deben ser enviados al SII dentro del plazo de 2 meses contados a partir del momento de obtener el set de prueba. Los envíos que excedan ese plazo serán rechazados y el postulante deberá Generar un Nuevo Set de pruebas para realizar las pruebas. El postulante puede iterar cuanto desee enviando archivos correspondientes al set de prueba. Cuando el resultado de la validación de dichos envíos resulte sin rechazos ni reparos el usuario administrador puede declararlos para la revisión del SII. Esta revisión consistirá en comprobar que el envío haya sido realizado con los datos del set de prueba entregado al postulante. Usando la opción <a href="https://maullin.sii.cl/cvc_cgi/dte/pe_avance1">Declarar Avance de la Postulación</a>, el Postulante puede informar al SII que completó exitosamente el Set de Pruebas, señalando la fecha y número de cada envío para permitir al SII verificar su validez.</p>
-        <p>Una vez que el SII haya verificado que el postulante completó satisfactoriamente el set de prueba, el SII le permitirá avanzar al siguiente paso, <a href="simulacion">la Simulación</a>.</p>
-    </div>
-</div>
+<div class="page-header"><h1>Certificación DTE  &raquo; Etapa 1: Casos de prueba</h1></div>
 
 <script type="text/javascript">
 $(function() {
@@ -37,11 +29,11 @@ $(function() {
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a href="#dte" aria-controls="dte" role="tab" data-bs-toggle="tab" id="dte-tab" class="nav-link active" aria-selected="true">Emisión de DTE</a></li>
-        <li class="nav-item"><a href="#ventas" aria-controls="ventas" role="tab" data-bs-toggle="tab" id="ventas-tab" class="nav-link">Libro de Ventas</a></li>
-        <li class="nav-item"><a href="#compras" aria-controls="compras" role="tab" data-bs-toggle="tab" id="compras-tab" class="nav-link">Libro de Compras</a></li>
-        <li class="nav-item"><a href="#guias" aria-controls="guias" role="tab" data-bs-toggle="tab" id="guias-tab" class="nav-link">Libro de Guías de Despacho</a></li>
-        <li class="nav-item"><a href="#boletas" aria-controls="boletas" role="tab" data-bs-toggle="tab" id="boletas-tab" class="nav-link">Boletas</a></li>
+        <li class="nav-item"><a href="#dte" aria-controls="dte" role="tab" data-bs-toggle="tab" id="dte-tab" class="nav-link active" aria-selected="true">Generar XML EnvioDTE</a></li>
+        <li class="nav-item"><a href="#ventas" aria-controls="ventas" role="tab" data-bs-toggle="tab" id="ventas-tab" class="nav-link">Generar XML libro de ventas</a></li>
+        <li class="nav-item"><a href="#compras" aria-controls="compras" role="tab" data-bs-toggle="tab" id="compras-tab" class="nav-link">Generar XML libro de compras</a></li>
+        <li class="nav-item"><a href="#guias" aria-controls="guias" role="tab" data-bs-toggle="tab" id="guias-tab" class="nav-link">Generar XML libro de guías de despacho</a></li>
+        <li class="nav-item"><a href="#boletas" aria-controls="boletas" role="tab" data-bs-toggle="tab" id="boletas-tab" class="nav-link">Generar archivos de boletas</a></li>
     </ul>
     <div class="tab-content pt-4">
 
@@ -53,21 +45,24 @@ echo $f->begin(['action'=>$_base.'/certificacion/set_pruebas_dte', 'id'=>'form_d
 echo $f->input([
     'type' => 'file',
     'name' => 'archivo',
-    'label' => 'Set pruebas ventas',
+    'label' => 'Archivo con casos',
     'check' => 'notempty',
-    'help' => 'Archivo del set de pruebas con los casos (de un mismo SET) que se desean generar, debe estar codificado en ISO-8859-1. Puedes ver un ejemplo del archivo que se espera <a href="'.$_base.'/dte/archivos/set-basico.txt" download="set-basico.txt">para el set básico</a>',
+    'help' => 'Archivo TXT con los casos de un grupo de pruebas que se desean generar. Debe haber sido previamente normalizado y estar codificado en ISO-8859-1.',
     'attr' => 'accept=".txt"',
 ]);
 echo $f->input([
     'type' => 'js',
     'name' => 'folios',
     'label' => 'Folios a usar',
-    'titles' => ['Tipo documento', 'Folio desde'],
-    'inputs' => [['name'=>'folios'], ['name'=>'desde']],
+    'titles' => ['Código del tipo de documento', 'Folio inicial presente en el CAF que se cargará'],
+    'inputs' => [
+        ['name'=>'folios', 'placeholder'=>'Ejemplo: 33 (para factura afecta)'],
+        ['name'=>'desde', 'placeholder'=>'Ejemplo: 123 (para partir con el folio 123)']
+    ],
     'check' => 'notempty',
-    'help' => 'Se debe indicar el código del tipo de documento y el folio desde el cual se generarán los documentos',
+    'help' => 'Por defecto los folios que se asignarán partirán en 1. Si se desea asignar un folio inicial diferente indicar acá el tipo de documento y el folio inicial a usar.',
 ]);
-echo $f->end('Siguiente &raquo;');
+echo $f->end('Procesar casos y preparar JSON para generar XML EnvioDTE');
 ?>
 </div>
 <!-- FIN EMISIÓN DTE -->
@@ -82,7 +77,7 @@ echo $f->input([
     'name' => 'archivo',
     'label' => 'XML EnvioDTE',
     'check' => 'notempty',
-    'help' => 'Archivo XML del EnvioDTE generado a partir del caso de prueba que se desea crear su libro de ventas',
+    'help' => 'Archivo XML del EnvioDTE generado a partir de los casos de prueba de ventas.',
     'attr' => 'accept=".xml"',
 ]);
 echo $f->input([
@@ -92,7 +87,7 @@ echo $f->input([
     'options' => ['Normal', 'Simplificado'],
     'value' => 1,
     'check' => 'notempty',
-    'help' => 'Si el contribuyente nunca ha sido autorizado debe ser simplificado'
+    'help' => 'Si el contribuyente nunca ha sido autorizado a emitir DTE debe ser simplificado.'
 ]);
 echo $f->input([
     'name' => 'PeriodoTributario',
@@ -100,82 +95,80 @@ echo $f->input([
     'value' => '1980-01',
     'placeholder' => '1980-01',
     'check' => 'notempty',
-    'help' => 'Si el libro es simplificado, debe ser un mes del año 1980',
+    'help' => 'Si el libro es simplificado, debe ser un mes del año 1980, partiendo desde enero de 1980 (1980-01).',
 ]);
 echo $f->input([
     'type' => 'date',
     'name' => 'FchResol',
-    'label' => 'Fecha resolución',
+    'label' => 'Fecha de resolución',
     'value' => '2006-01-20',
     'placeholder' => '2006-01-20',
     'check' => 'notempty date',
-    'help' => 'Si el libro es simplificado, debe ser 2006-01-20',
+    'help' => 'Si el libro es simplificado, debe ser la fecha 2006-01-20.',
 ]);
 echo $f->input([
     'type' => 'file',
     'name' => 'firma',
     'label' => 'Firma electrónica',
-    'help' => 'Obligatorio si libro es normal. Certificado digital con extensión .p12 o .pfx',
+    'help' => 'Obligatoria sólo si el libro es normal. Certificado digital con extensión .p12 o .pfx',
     'attr' => 'accept=".p12,.pfx"',
 ]);
 echo $f->input([
     'type' => 'password',
     'name' => 'contrasenia',
     'label' => 'Contraseña firma',
-    'help' => 'Contraseña que permite abrir el certificado digital de la firma electrónica',
+    'help' => 'Contraseña que permite utilizar la firma electrónica.',
 ]);
-echo $f->end('Descargar Libro de Ventas');
+echo $f->end('Generar XML libro de ventas');
 ?>
 </div>
 <!-- FIN VENTAS -->
 
 <!-- INICIO COMPRAS -->
 <div role="tabpanel" class="tab-pane" id="compras" aria-labelledby="compras-tab">
-    <p>Para generar el libro de compras deberá crear un archivo en formato CSV (separado por punto y coma, codificado en UTF-8) que contendrá los datos de las compras del set de pruebas entregado por el SII. Luego deberá cargar dicho archivo CSV en el <a href="<?=$_base?>/utilidades/iecv/xml">Generador de XML de Libro de Compra</a> de LibreDTE.</p>
-    <p>Ejemplos archivos:</p>
-    <ul>
-        <li><a href="<?=$_base?>/dte/archivos/libro_compras.txt" download="libro_compras.txt">Ejemplo set de pruebas de compras entregado por el SII</a></li>
-        <li><a href="<?=$_base?>/dte/archivos/libro_compras.csv" download="libro_compras.csv">Ejemplo archivo CSV generado con los datos del set de pruebas</a></li>
-    </ul>
-    <a class="btn btn-primary btn-lg col-12" href="<?=$_base?>/utilidades/iecv/xml" role="button">Generar XML de Libro de Compras usando archivo CSV</a>
+    <p>Para generar el libro de compras deberás crear un archivo en formato CSV (separado por punto y coma, codificado en UTF-8) con los datos de los casos de compras entregados por el SII. Luego deberás cargar dicho archivo CSV en el generador de XML de libros de compras y ventas de LibreDTE.</p>
+    <a class="btn btn-primary btn-lg col-12" href="<?=$_base?>/utilidades/iecv/xml" role="button">
+        Generar XML libro de compras
+    </a>
 </div>
 <!-- FIN COMPRAS -->
 
 <!-- INICIO GUÍAS -->
 <div role="tabpanel" class="tab-pane" id="guias" aria-labelledby="guias-tab">
-    <p>Para generar el libro de guías de despacho deberá crear un archivo en formato CSV (separado por punto y coma, codificado en UTF-8) que contendrá los datos de las guías del set de pruebas entregado por el SII. Luego deberá cargar dicho archivo CSV en el <a href="<?=$_base?>/utilidades/guias/libro">Generador de XML de Libro de Guías de Despacho</a> de LibreDTE.</p>
-    <p>Ejemplos archivos:</p>
-    <ul>
-        <li><a href="<?=$_base?>/dte/archivos/libro_guias.txt" download="libro_guias.txt">Ejemplo set de pruebas de guías entregado por el SII</a></li>
-        <li><a href="<?=$_base?>/dte/archivos/libro_guias.csv" download="libro_guias.csv">Ejemplo archivo CSV generado con los datos del set de pruebas</a></li>
-    </ul>
-    <a class="btn btn-primary btn-lg col-12" href="<?=$_base?>/utilidades/guias/libro" role="button">Generar XML de Libro de Guías de Despacho usando archivo CSV</a>
+    <p>Para generar el libro de guías de despacho deberás crear un archivo en formato CSV (separado por punto y coma, codificado en UTF-8) con los datos de los casos de guías entregados por el SII. Luego deberás cargar dicho archivo CSV en el generador de XML de libros de guías de despacho de LibreDTE.</p>
+    <a class="btn btn-primary btn-lg col-12" href="<?=$_base?>/utilidades/guias/libro" role="button">
+        Generar XML libro de guías de despacho
+    </a>
 </div>
 <!-- FIN GUÍAS -->
 
 <!-- INICIO BOLETAS -->
 <div role="tabpanel" class="tab-pane" id="boletas" aria-labelledby="boletas-tab">
+    <div class="alert alert-warning" role="alert">
+        <i class="fa-solid fa-exclamation-triangle fa-fw text-warning"></i>
+        Esta funcionalidad debe considerarse obsoleta. En SASCO SpA actualmente utilizamos otro método que no está disponible en LibreDTE pero puedes <a href="https://www.libredte.cl/shop/dte-cert-39-certificacion-boleta-electronica-29?category=1" class="alert-link">comprar el servicio aquí</a>.
+    </div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin(['action'=>$_base.'/certificacion/set_pruebas_boletas', 'id'=>'form_boletas', 'onsubmit'=>'Form.check(\'form_boletas\')']);
 echo $f->input([
     'name' => 'RUTEmisor',
-    'label' => 'RUT',
-    'placeholder' => 'RUT del emisor: 11222333-4',
+    'label' => 'RUT del emisor',
+    'placeholder' => '76192083-9',
     'check' => 'notempty rut',
     'attr' => 'maxlength="12" onblur="Emisor.setDatos(\'form_boletas\')"',
 ]);
 echo $f->input([
     'name' => 'RznSoc',
     'label' => 'Razón social',
-    'placeholder' => 'Razón social del emisor: Empresa S.A.',
+    'placeholder' => 'SASCO SpA',
     'check' => 'notempty',
     'attr' => 'maxlength="100"',
 ]);
 echo $f->input([
     'name' => 'GiroEmis',
     'label' => 'Giro',
-    'placeholder' => 'Giro del emisor',
+    'placeholder' => 'Servicios integrales de informática',
     'check' => 'notempty',
     'attr' => 'maxlength="80"',
 ]);
@@ -184,12 +177,13 @@ echo $f->input([
     'name' => 'Acteco',
     'label' => 'Actividad económica',
     'options' => [''=>'Actividad económica del emisor'] + $actividades_economicas,
+    'value' => '620200',
     'check' => 'notempty',
 ]);
 echo $f->input([
     'name' => 'DirOrigen',
     'label' => 'Dirección',
-    'placeholder' => 'Dirección del emisor',
+    'placeholder' => 'Santa Cruz',
     'check' => 'notempty',
     'attr' => 'maxlength="70"',
 ]);
@@ -198,6 +192,7 @@ echo $f->input([
     'name' => 'CmnaOrigen',
     'label' => 'Comuna',
     'options' => [''=>'Comuna del emisor'] + $comunas,
+    'value' => '06310',
     'check' => 'notempty',
 ]);
 echo $f->input([
@@ -212,8 +207,8 @@ echo $f->input([
     'type' => 'date',
     'id' => 'FchResolBoletas',
     'name' => 'FchResol',
-    'label' => 'Fecha resolución',
-    'help' => 'Fecha en que fue otorgada la resolución',
+    'label' => 'Fecha de resolución',
+    'help' => 'Fecha de la postulación a la certificación de DTE.',
     'check' => 'notempty date',
 ]);
 echo $f->input([
@@ -223,34 +218,38 @@ echo $f->input([
 echo $f->input([
     'type' => 'file',
     'name' => 'archivo',
-    'label' => 'Set de pruebas',
+    'label' => 'Archivo con casos',
     'check' => 'notempty',
-    'help' => 'Archivo CSV (separado por punto y coma, codificado en UTF-8) con el set de pruebas de las boletas electrónicas, <a href="'.$_base.'/dte/archivos/boletas.csv" download="boletas.csv">ejemplo archivo CSV</a>',
+    'help' => 'Archivo CSV (separado por punto y coma, codificado en UTF-8) con los casos de pruebas de las boletas electrónicas.',
     'attr' => 'accept=".csv"',
 ]);
 echo $f->input([
     'type' => 'js',
     'name' => 'folios_boletas',
     'label' => 'Folios a usar',
-    'titles' => ['Tipo documento', 'Folio desde', 'CAF'],
+    'titles' => ['Código del tipo de documento', 'Folio inicial presente en el CAF que se cargará', 'Archivo XML del CAF'],
     'inputs' => [
         ['name'=>'folios', 'check'=>'notempty integer'],
         ['name'=>'desde', 'check'=>'notempty integer'],
         ['type'=>'file', 'name'=>'caf', 'check'=>'notempty', 'attr' => 'accept=".xml"'],
     ],
+    'values' => [
+        ['folios'=>39, 'desde'=>1],
+        ['folios'=>61, 'desde'=>1],
+    ],
     'check' => 'notempty',
-    'help' => 'Se debe indicar el código del tipo de documento, el folio desde el cual se generarán los documentos y el XML del CAF para cada tipo de documento',
+    'help' => 'Se debe indicar el código del tipo de documento, el folio desde el cual se generarán los documentos y el XML del CAF para cada tipo de documento.',
 ]);
 echo $f->input([
     'name' => 'SecEnvio',
     'label' => 'N° secuencia',
     'value' => 1,
     'check' => 'notempty integer',
-    'help' => 'Número de secuencia para el RCOF',
+    'help' => 'Número de secuencia para el RCV (ex RCOF) que se generará.',
 ]);
 echo $f->input([
     'name' => 'web_verificacion',
-    'label' => 'Web verificación',
+    'label' => 'Web de verificación',
     'value' => 'libredte.cl/boletas',
     'check' => 'notempty',
     'help' => 'Página web para verificar las boletas (se coloca bajo el timbre en el PDF)',
@@ -259,7 +258,7 @@ echo $f->input([
     'type' => 'file',
     'name' => 'firma',
     'label' => 'Firma electrónica',
-    'help' => 'Certificado digital con extensión .p12',
+    'help' => 'Certificado digital con extensión .p12 o .pfx',
     'check' => 'notempty',
     'attr' => 'accept=".p12,.pfx"',
 ]);
@@ -268,9 +267,9 @@ echo $f->input([
     'name' => 'contrasenia',
     'label' => 'Contraseña firma',
     'check' => 'notempty',
-    'help' => 'Contraseña que permite abrir el certificado digital de la firma electrónica',
+    'help' => 'Contraseña que permite utilizar la firma electrónica.',
 ]);
-echo $f->end('Generar boletas, notas de crédito, consumo de folios, libro de boletas y muestras impresas');
+echo $f->end('Generar archivos de boletas (boletas, notas de crédito, consumo de folios, libro de boletas y muestras en PDF)');
 ?>
 </div>
 <!-- FIN BOLETAS -->

@@ -28,7 +28,7 @@
             <div class="list-group-item list-group-item-primary">Boletas</div>
             <div>
                 <a href="utilidades/boletas/rcof" title="Generar el XML del reporte de consumo de folios (RCOF)" class="list-group-item">
-                    <span class="far fa-file-code"></span> Generar RCOF
+                    <span class="far fa-file-code"></span> Generar RVD (ex RCOF)
                 </a>
             </div>
         </div>

@@ -28,13 +28,13 @@ Edición Enterprise de LibreDTE, con soporte de SASCO SpA, disponible en https:/
                 _request = "<?=$_request?>"
             ;
         </script>
-        <script src="https://cdn.sasco.cl/js/__.min.js"></script>
-        <script src="https://cdn.sasco.cl/js/form.min.js"></script>
+        <script src="https://cdn.sasco.cl/js/__.js"></script>
+        <script src="https://cdn.sasco.cl/js/form.js"></script>
         <script src="https://cdn.sasco.cl/js/datepicker/bootstrap-datepicker.js"></script>
         <script src="https://cdn.sasco.cl/js/datepicker/bootstrap-datepicker.es.js"></script>
         <link rel="stylesheet" href="https://cdn.sasco.cl/js/datepicker/datepicker3.css" />
         <link type="text/css" href="https://cdn.sasco.cl/css/typeahead.css" rel="stylesheet" />
-        <script src="https://cdn.sasco.cl/js/typeahead.bundle.min.js"></script>
+        <script src="https://cdn.sasco.cl/js/typeahead.bundle.js"></script>
         <script src="<?=$_base?>/js/app.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
