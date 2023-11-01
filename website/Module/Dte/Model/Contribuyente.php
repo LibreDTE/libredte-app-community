@@ -1031,9 +1031,9 @@ class Model_Contribuyente extends \Model_App
                 }
                 if ($caf) {
                     $Caf = new \sasco\LibreDTE\Sii\Folios($caf);
-                    $f['fecha_vencimiento'] = $Caf->getFechaVencimiento();
-                    $f['meses_autorizacion'] = $Caf->getMesesAutorizacion();
-                    $f['vigente'] = $Caf->vigente();
+                    $f['fecha_vencimiento'] = $Caf->getFechaVencimiento(); // esto puede ser null si no vence
+                    $f['meses_autorizacion'] = $Caf->getMesesAutorizacion(); // esto indica si se pudo obtener un CAF
+                    $f['vigente'] = $Caf->vigente(); // esto puede ser true forzado si no vence pero podría no haber caf
                 }
             }
             unset($f['xml']);

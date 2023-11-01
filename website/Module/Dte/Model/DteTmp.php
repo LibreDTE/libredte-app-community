@@ -385,7 +385,7 @@ class Model_DteTmp extends \Model_App
     /**
      * Método que crea el DTE real asociado al DTE temporal usando LibreDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-01
+     * @version 2023-11-01
      */
     private function generarConFacturadorLocal($user_id = null, $fecha_emision = null, $retry = null, $gzip = null)
     {
@@ -396,29 +396,65 @@ class Model_DteTmp extends \Model_App
         // obtener firma electrónica
         $Firma = $Emisor->getFirma($user_id);
         if (!$Firma) {
-            throw new \Exception('No hay firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe agregar su firma antes de generar el DTE. [faq:174]', 506);
+            $message = __(
+                'No existe una firma electrónica asociada a la empresa que se pueda utilizar para generar el DTE. Antes de intentar generar nuevamente el DTE, debe [subir una firma electrónica vigente](%s).',
+                url('/dte/admin/firma_electronicas')
+            );
+            throw new \Exception($message, 506);
         }
         // no hay fecha de resolución configurada
         $fecha_resolucion = $Emisor->enCertificacion() ? $Emisor->config_ambiente_certificacion_fecha : $Emisor->config_ambiente_produccion_fecha;
         if (empty($fecha_resolucion)) {
-            throw new \Exception('No hay fecha de resolución de SII configurada para el ambiente de emisión. Debe configurar la fecha antes de generar el DTE. [faq:249]', 400);
+            $message = __(
+                'Falta la fecha de %s que autoriza los DTE en el ambiente de %s del SII para generar el DTE. Antes de intenter generar nuevamente el DTE, debe [configurar la fecha en Configuración de la empresa >> Facturación >> Ambiente de facturación en SII](%s).',
+                $Emisor->enCertificacion() ? 'certificación': 'resolución',
+                $Emisor->enCertificacion() ? 'certificación': 'producción',
+                url('/dte/contribuyentes/modificar#facturacion')
+            );
+            throw new \Exception($message, 400);
         }
-        // solicitar folio
+        // determinar folio a usar
         $datos_dte = $this->getDatos();
         $folio_dte = !empty($datos_dte['Encabezado']['IdDoc']['Folio']) ? (int)$datos_dte['Encabezado']['IdDoc']['Folio'] : 0;
+        // se fuerza a folio 0 para que se asigne automáticamente por LibreDTE si el usuario no tiene permiso para asignar manualmente
         if ($folio_dte) {
             $Usuario = new \sowerphp\app\Sistema\Usuarios\Model_Usuario($user_id);
             if (!$Emisor->puedeAsignarFolio($Usuario)) {
                 $folio_dte = 0;
             }
         }
-        $FolioInfo = $Emisor->getFolio($this->dte, $folio_dte);
+        // buscar CAF que contiene el folio determinado
+        try {
+            $FolioInfo = $Emisor->getFolio($this->dte, $folio_dte);
+        } catch (\Exception $e) {
+            $message = __(
+                'No fue posible obtener el archivo XML del CAF para %s que contiene el siguiente folio que se debería usar para generar el DTE. Se recomienda [eliminar el XML del CAF que contiene al folio siguiente](%s), [volverlo a cargar](%s) y luego intentar generar el DTE.',
+                mb_strtolower($this->getTipo()->tipo),
+                url('/dte/admin/dte_folios/ver/'.$this->dte),
+                url('/dte/admin/dte_folios/subir_caf'),
+            );
+            throw new \Exception($message, 508);
+        }
         if (!$FolioInfo) {
-            throw new \Exception('No fue posible obtener un folio para '.$this->getTipo()->tipo.'. Revise el mantenedor de folios y corrobore que tiene un CAF vigente en uso. [faq:10]', 508);
+            $message = __(
+                'No se encontró el archivo XML del CAF para %s que contiene el siguiente folio que se debería usar para generar el DTE. Antes de intenter generar nuevamente el DTE, debe [cargar el XML de un CAF con folios, o bien verificar que el folio siguiente sea el correcto](%s).',
+                mb_strtolower($this->getTipo()->tipo),
+                url('/dte/admin/dte_folios'),
+            );
+            throw new \Exception($message, 508);
         }
         // si el CAF no está vigente se alerta al usuario
         if (!$FolioInfo->Caf->vigente()) {
-            throw new \Exception('Se obtuvo el CAF que contiene el folio '.$FolioInfo->folio.' de '.$this->getTipo()->tipo.', sin embargo este folio no puede ser usado porque el CAF no está vigente (está vencido). Debe anular los folios del CAF vencido y solicitar uno nuevo. [faq:3]', 508);
+            $message = __(
+                'El folio para %s número %d no puede ser usado porque pertenece a un rango de folios que está vencido. Antes de intenter generar nuevamente el DTE, debe [anular los folios vencidos](%s), [cargar folios nuevos](%s) y [modificar el siguiente folio](%s) para que coincida con el primer folio del nuevo rango cargado. Adicionalmente LibreDTE se ha saltado automáticamente el folio vencido número %d (aún así debe ser anulado).',
+                mb_strtolower($this->getTipo()->tipo),
+                $FolioInfo->folio,
+                $Emisor->enCertificacion() ? 'https://www4c.sii.cl/anulacionMsvDteInternet/': 'https://www4.sii.cl/anulacionMsvDteInternet/',
+                url('/dte/admin/dte_folios/subir_caf'),
+                url('/dte/admin/dte_folios/modificar/'.$this->dte),
+                $FolioInfo->folio,
+            );
+            throw new \Exception($message, 508);
         }
         // si quedan pocos folios timbrar o alertar según corresponda
         if ($FolioInfo->DteFolio->disponibles <= $FolioInfo->DteFolio->alerta) {
@@ -434,8 +470,8 @@ class Model_DteTmp extends \Model_App
             }
             // notificar al usuario administrador
             if (!$timbrado and !$FolioInfo->DteFolio->alertado) {
-                $asunto = 'Alerta de folios tipo '.$FolioInfo->DteFolio->dte;
-                $msg = 'Se ha alcanzado el límite de folios del tipo de DTE '.$FolioInfo->DteFolio->dte.' para el contribuyente '.$Emisor->razon_social.', quedan '.$FolioInfo->DteFolio->disponibles.'. Por favor, solicite un nuevo archivo CAF y súbalo a LibreDTE en '.\sowerphp\core\Configure::read('app.url').'/dte/admin/dte_folios';
+                $asunto = 'Alerta de folios de '.mb_strtolower($this->getTipo()->tipo);
+                $msg = 'Se ha alcanzado el límite de folios del tipo de DTE '.mb_strtolower($this->getTipo()->tipo).' para el contribuyente '.$Emisor->razon_social.', quedan '.$FolioInfo->DteFolio->disponibles.'. Por favor, solicite un nuevo archivo CAF y súbalo a LibreDTE en '.url('/dte/admin/dte_folios/subir_caf');
                 if ($Emisor->notificar($asunto, $msg)) {
                     $FolioInfo->DteFolio->alertado = 1;
                     $FolioInfo->DteFolio->save();
@@ -777,13 +813,13 @@ class Model_DteTmp extends \Model_App
     /**
      * Método que entrega el arreglo con los datos del documento
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-02
+     * @version 2023-11-01
      */
-    public function getDatos()
+    public function getDatos($force_reload = false)
     {
-        if (!isset($this->cache_datos)) {
+        if (!isset($this->cache_datos) or $force_reload) {
             $this->cache_datos = json_decode($this->datos, true);
-            $extra = (array)$this->getExtra();
+            $extra = (array)$this->getExtra($force_reload);
             if (!empty($extra['dte'])) {
                 $this->cache_datos = \sowerphp\core\Utility_Array::mergeRecursiveDistinct(
                     $this->cache_datos, $extra['dte']
@@ -878,9 +914,9 @@ class Model_DteTmp extends \Model_App
     /**
      * Método que entrega los datos extras del documento
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-01
+     * @version 2023-11-01
      */
-    public function getExtra()
+    public function getExtra($force_reload = false)
     {
         if (empty($this->extra)) {
             return null;

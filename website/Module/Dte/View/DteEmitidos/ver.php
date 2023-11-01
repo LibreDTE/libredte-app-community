@@ -118,12 +118,17 @@ echo $t->generate([
             </div>
 <?php if ($DteEmitido->getEstado() == 'R'): ?>
             <div class="card text-white bg-danger mb-4">
-                <div class="card-header">El SII determinó que este documento no es válido</div>
+                <div class="card-header">El SII ha rechazado el envío del XML de este documento</div>
                 <div class="card-body">
                     <h5 class="card-title">¡Es urgente realizar una acción con este documento!</h5>
-                    <p class="card-text">
-                        Los documentos rechazados por el SII no son válidos, y no deben ser utilizados. Tampoco deben ser anulados, ya que al no ser válidos, no existen para el SII.
-                    </p>
+                    <p class="card-text">Los documentos rechazados por el SII no son válidos, y no deben ser utilizados. Para corregir esta situación debe:</p>
+                    <ol>
+                        <li>Descargar el PDF y XML de este documento para respaldo del documento rechazado hasta que solucione este caso.</li>
+                        <li>Eliminar este documento de LibreDTE (al lado derecho al final está el enlace).</li>
+                        <li>Volver a emitir el documento, puede usar el PDF y/o XML previamente descargado para revisar los datos del documento. Al emitir y generar el DTE nuevamente es importante que revise lo que ocasionó este rechazo y resuelva dicha situación.</li>
+                        <li>Anular en el SII el folio de este documento, ya que quedará saltado en LibreDTE y no se usará.</li>
+                    </ol>
+                    <p class="card-text"><strong>Importante</strong>: no debe anular este documento, ya que al no ser válido, no existe en el SII. Si trata de anular este documento, el que genere para la anulación también será rechazado por el SII.</p>
                 </div>
             </div>
 <?php endif; ?>

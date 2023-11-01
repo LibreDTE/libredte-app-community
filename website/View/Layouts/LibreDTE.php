@@ -201,7 +201,7 @@ foreach ($messages as $message) {
         'warning' => 'warning-sign',
         'danger' => 'exclamation-sign',
     ];
-    $message['text'] = message_make_links($message['text']);
+    $message['text'] = message_format($message['text']);
     echo '<div class="alert alert-',$message['type'],'" role="alert">',"\n";
     echo '<div class="float-end"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button></div>',"\n";
     echo '<span class="glyphicon glyphicon-',$icons[$message['type']],'" aria-hidden="true"></span>',"\n";

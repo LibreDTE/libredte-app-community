@@ -182,7 +182,7 @@ class Controller_DteFolios extends \Controller_App
     /**
      * Acción que permite modificar un mantenedor de folios
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-16
+     * @version 2023-11-01
      */
     public function modificar($dte)
     {
@@ -206,7 +206,12 @@ class Controller_DteFolios extends \Controller_App
                 $DteFolio->$attr = $_POST[$attr];
             }
             // verificar CAF vigente
-            $Caf = $DteFolio->getCaf();
+            try {
+                $Caf = $DteFolio->getCaf();
+            } catch (\Exception $e) {
+                \sowerphp\core\Model_Datasource_Session::message('No fue posible abrir el XML del CAF que contiene el folio '.$DteFolio->siguiente.'. Por lo que no se pudo editar el mantenedor de folios. Se recomienda eliminar el XML del CAF que contiene al folio '.$DteFolio->siguiente.', volverlo a cargar y luego intentar modificar el mantenedor de folios.', 'error');
+                return;
+            }
             if (!$Caf) {
                 \sowerphp\core\Model_Datasource_Session::message('No se encontró un CAF que contenga el folio '.$DteFolio->siguiente.'.', 'error');
                 return;

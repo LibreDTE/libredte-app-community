@@ -38,13 +38,15 @@ foreach ($folios as &$f) {
         } else {
             $f['fecha_vencimiento'] = '<span class="badge bg-danger">'.$f['fecha_vencimiento'].'</span>';
         }
-    } else {
+    } else if ($f['meses_autorizacion']) {
         $f['fecha_vencimiento'] = '<span class="badge bg-success">Vigente</span>';
+    } else {
+        $f['fecha_vencimiento'] = '<span class="badge bg-warning">No disponible</span>';
     }
     $f[] = '<a href="dte_folios/ver/'.$f['dte'].'" title="Ver mantenedor del folio tipo '.$f['dte'].'" class="btn btn-primary"><i class="fa fa-search fa-fw"></i></a>';
     unset($f['meses_autorizacion'], $f['vigente']);
 }
-array_unshift($folios, ['Código', 'Documento tributario', 'Siguiente folio', 'Folios disponibles', 'Cantidad alerta', 'Vigencia', 'Ver']);
+array_unshift($folios, ['Código', 'Documento tributario', 'Siguiente folio', 'Folios disponibles', 'Alerta de folios', 'Vigencia', 'Ver']);
 new \sowerphp\general\View_Helper_Table($folios);
 ?>
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3">
