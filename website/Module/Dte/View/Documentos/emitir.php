@@ -44,6 +44,7 @@ $(function() {
 <?php
 $f = new \sowerphp\general\View_Helper_Form(false);
 echo $f->begin(['id'=>'emitir_dte', 'action'=>$_base.'/dte/documentos/previsualizacion', 'onsubmit'=>'DTE.check(this)']);
+// si es un documento temporal que se reemplaza se asignan los datos del documento
 if (!empty($reemplazar_receptor) and !empty($reemplazar_dte) and !empty($reemplazar_codigo)) {
     echo $f->input([
         'type' => 'hidden',
@@ -61,6 +62,8 @@ if (!empty($reemplazar_receptor) and !empty($reemplazar_dte) and !empty($reempla
         'value' => $reemplazar_codigo,
     ]);
 }
+// siempre debe ser la lista por defecto ya que no hay listas de precios actualmente
+echo $f->input(['type'=>'hidden', 'name'=>'lista_precios', 'value'=>0]);
 ?>
 <!-- DATOS DEL DOCUMENTO -->
 <div class="card mb-4">
