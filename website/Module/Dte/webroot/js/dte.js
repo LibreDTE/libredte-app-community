@@ -223,7 +223,7 @@ DTE.setTipo = function (tipo) {
             input_comuna_receptor.setAttribute('id','CiudadRecepField');
             input_comuna_receptor.setAttribute('name','CiudadRecep');
             input_comuna_receptor.setAttribute('class','form-control');
-            input_comuna_receptor.setAttribute('placeholder','Comuna del receptor');
+            input_comuna_receptor.setAttribute('placeholder','Ciudad del receptor');
         }
         // fin cambio select
         $('#datosExportacion').show();

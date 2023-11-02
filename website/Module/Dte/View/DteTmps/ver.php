@@ -191,10 +191,10 @@ $share_message = '¡Hola! Soy de '.$Emisor->getNombre().'. Te adjunto el enlace 
     <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2">
         <div class="col mb-4">
             <div class="btn-group w-100" role="group">
-                <a class="btn btn-info btn-lg col-12" href="<?=$links['pdf']?>" role="button">
+                <a class="btn btn-primary btn-lg col-12" href="<?=$links['pdf']?>" role="button">
                     Enlace público a la cotización
                 </a>
-                <button type="button" class="btn btn-info" onclick="__.copy('<?=$links['pdf']?>')" title="Copiar enlace"><i class="fa fa-copy"></i></button>
+                <button type="button" class="btn btn-primary" onclick="__.copy('<?=$links['pdf']?>')" title="Copiar enlace"><i class="fa fa-copy"></i></button>
             </div>
         </div>
         <div class="col mb-4">
@@ -303,11 +303,11 @@ if ($email_enviados) {
         <div class="row">
             <div class="col-sm-6 mb-2">
                 <div class="btn-group w-100" role="group">
-                    <a class="btn btn-info btn-lg col-12<?=!empty($links['pagar'])?'':' disabled'?>" href="<?=!empty($links['pagar'])?$links['pagar']:''?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=!empty($links['pagar'])?'':' disabled'?>" href="<?=!empty($links['pagar'])?$links['pagar']:''?>" role="button">
                         Enlace público para pagar
                     </a>
 <?php if (!empty($links['pagar'])) : ?>
-                    <button type="button" class="btn btn-info" onclick="__.copy('<?=$links['pagar']?>')" title="Copiar enlace"><i class="fa fa-copy"></i></button>
+                    <button type="button" class="btn btn-primary" onclick="__.copy('<?=$links['pagar']?>')" title="Copiar enlace"><i class="fa fa-copy"></i></button>
 <?php endif; ?>
                 </div>
             </div>

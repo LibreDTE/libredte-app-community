@@ -172,7 +172,7 @@ class Controller_DteEmitidos extends \Controller_App
             'referencias' => $DteEmitido->getReferencias(),
             'referencia' => $DteEmitido->getPropuestaReferencia(),
             'enviar_sii' => $DteEmitido->seEnvia(),
-            'Cobro' => (\sowerphp\core\Module::loaded('Pagos') and $DteEmitido->getTipo()->operacion=='S') ? $DteEmitido->getCobro(false) : false,
+            'Cobro' => $DteEmitido->getCobro(false),
             'email_html' => $Emisor->getEmailFromTemplate('dte'),
             'sucursales' => $Emisor->getSucursales(),
             'servidor_sii' => \sasco\LibreDTE\Sii::getServidor(),

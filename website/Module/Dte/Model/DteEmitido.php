@@ -1061,7 +1061,7 @@ class Model_DteEmitido extends Model_Base_Envio
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
      * @version 2020-05-21
      */
-    public function canBeDeletedXML()
+    private function canBeDeletedXML()
     {
         // si no hay XML error
         if (!$this->xml) {
@@ -1505,7 +1505,7 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que envía el DTE por correo electrónico
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-02-15
+     * @version 2023-11-01
      */
     public function email($to = null, $subject = null, $msg = null, $pdf = false, $cedible = false, $papelContinuo = null, $use_template = true)
     {
@@ -1535,10 +1535,14 @@ class Model_DteEmitido extends Model_Base_Envio
             $links = $this->getLinks();
             if (!empty($links['pagar'])) {
                 $Cobro = $this->getCobro(false);
-                if (!$Cobro->pagado) {
-                    $msg .= 'Enlace pago en línea: '.$links['pagar']."\n\n";
+                if ($Cobro) {
+                    if (!$Cobro->pagado) {
+                        $msg .= 'Enlace pago en línea: '.$links['pagar']."\n\n";
+                    } else {
+                        $msg .= 'El documento se encuentra pagado con fecha '.\sowerphp\general\Utility_Date::format($Cobro->pagado).' usando el medio de pago '.$Cobro->getMedioPago()->getNombre()."\n\n";
+                        $msg .= 'Puede descargar el documento en: '.$links['pdf']."\n\n";
+                    }
                 } else {
-                    $msg .= 'El documento se encuentra pagado con fecha '.\sowerphp\general\Utility_Date::format($Cobro->pagado).' usando el medio de pago '.$Cobro->getMedioPago()->getNombre()."\n\n";
                     $msg .= 'Puede descargar el documento en: '.$links['pdf']."\n\n";
                 }
             } else {
@@ -1632,10 +1636,13 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que entrega el cobro asociado al DTE emitido
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-12-16
+     * @version 2023-11-01
      */
     public function getCobro($crearSiNoExiste = true)
     {
+        if (!$this->getTipo()->permiteCobro()) {
+            return false;
+        }
         return (new \libredte\oficial\Pagos\Model_Cobro())->setDocumento($this, $crearSiNoExiste);
     }
 

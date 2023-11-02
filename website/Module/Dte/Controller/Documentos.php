@@ -135,7 +135,7 @@ class Controller_Documentos extends \Controller_App
      * enviado al SII. Luego se debe usar la función generar de la API para
      * generar el DTE final y enviarlo al SII.
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-03
+     * @version 2023-11-01
      */
     public function _api_emitir_POST()
     {
@@ -144,6 +144,9 @@ class Controller_Documentos extends \Controller_App
             'normalizar' => true,
             'links' => false,
             'email' => false,
+            'reemplazar_receptor' => null,
+            'reemplazar_dte' => null,
+            'reemplazar_codigo' => null,
         ]));
         // verificar si se pasaron credenciales de un usuario
         $User = $this->Api->getAuthUser();
@@ -398,7 +401,6 @@ class Controller_Documentos extends \Controller_App
         $DteTmp->emisor = $Emisor->rut;
         $DteTmp->receptor = $Receptor->rut;
         $DteTmp->dte = $resumen['TpoDoc'];
-        $DteTmp->codigo = md5(md5($DteTmp->datos).date('U'));
         $DteTmp->fecha = $resumen['FchDoc'];
         if (!empty($dte['Encabezado']['Emisor']['CdgSIISucur'])) {
             $DteTmp->sucursal_sii = $dte['Encabezado']['Emisor']['CdgSIISucur'];
@@ -406,6 +408,19 @@ class Controller_Documentos extends \Controller_App
         $DteTmp->usuario = $User->id;
         if (!empty($datos_extra)) {
             $DteTmp->extra = $datos_extra;
+        }
+        // si es reemplazo se mantiene código de temporal previo y se borra el temporal original
+        if (!empty($reemplazar_receptor) and !empty($reemplazar_dte) and !empty($reemplazar_codigo)) {
+            $DocumentoOriginal = new Model_DteTmp(
+                $Emisor->rut,
+                (int)$reemplazar_receptor,
+                (int)$reemplazar_dte,
+                $reemplazar_codigo
+            );
+            $DteTmp->codigo = $DocumentoOriginal->codigo;
+            $DocumentoOriginal->delete();
+        } else {
+            $DteTmp->codigo = md5(md5($DteTmp->datos).date('U'));
         }
         // si no es DTE exportación, se saca el total en pesos del MntTotal
         if (!$Dte->esExportacion()) {
@@ -468,7 +483,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Acción para mostrar página de emisión de DTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-18
+     * @version 2023-11-01
      */
     public function emitir($referencia_dte = null, $referencia_folio = null, $dte_defecto = null, $referencia_codigo = '', $referencia_razon = '')
     {
@@ -498,6 +513,13 @@ class Controller_Documentos extends \Controller_App
                         \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
                         $this->redirect('/dte/dte_emitidos/ver/'.$referencia_dte.'/'.$referencia_folio.'#referencias');
                     }
+                    $this->set([
+                        'referenciar_documento' => 'T'.$DocumentoOriginal->dte.'F'.$DocumentoOriginal->folio,
+                    ]);
+                } else {
+                    $this->set([
+                        'copiar_documento' => 'T'.$DocumentoOriginal->dte.'F'.$DocumentoOriginal->folio,
+                    ]);
                 }
                 if (!$DocumentoOriginal->hasXML()) {
                     \sowerphp\core\Model_Datasource_Session::message(
@@ -517,13 +539,19 @@ class Controller_Documentos extends \Controller_App
                     $this->redirect('/dte/dte_tmps/listar');
                 }
                 if (isset($_GET['reemplazar'])) {
+                    $CobroOriginal = $DocumentoOriginal->getCobro(false);
                     $this->set([
+                        'reemplazar_documento' => $DocumentoOriginal->getFolio(),
+                        'reemplazar_cobro' => ($CobroOriginal && $CobroOriginal->exists()),
                         'reemplazar_receptor' => $DocumentoOriginal->receptor,
                         'reemplazar_dte' => $DocumentoOriginal->dte,
                         'reemplazar_codigo' => $DocumentoOriginal->codigo,
-
                     ]);
                     $_GET['copiar'] = 1;
+                } else {
+                    $this->set([
+                        'copiar_documento' => $DocumentoOriginal->getFolio(),
+                    ]);
                 }
             }
             $datos = $DocumentoOriginal->getDatos();
@@ -581,7 +609,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Acción para generar y mostrar previsualización de emisión de DTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-04-25
+     * @version 2023-11-01
      */
     public function previsualizacion()
     {
@@ -624,11 +652,6 @@ class Controller_Documentos extends \Controller_App
                 );
                 $this->redirect('/dte/documentos/emitir');
             }
-        }
-        // eliminar el documento temporal del que viene este si es reemplazo
-        if (!empty($_POST['reemplazar_receptor']) and !empty($_POST['reemplazar_dte']) and !empty($_POST['reemplazar_codigo'])) {
-            $DocumentoOriginal = new Model_DteTmp($Emisor->rut, (int)$_POST['reemplazar_receptor'], (int)$_POST['reemplazar_dte'], $_POST['reemplazar_codigo']);
-            $DocumentoOriginal->delete();
         }
         // crear receptor
         list($rut, $dv) = explode('-', str_replace('.', '', $_POST['RUTRecep']));
@@ -916,7 +939,13 @@ class Controller_Documentos extends \Controller_App
         }
         // consumir servicio web para crear documento temporal
         try {
-            $response = $this->consume('/api/dte/documentos/emitir', $dte);
+            $query_data = [];
+            if (!empty($_POST['reemplazar_receptor']) and !empty($_POST['reemplazar_dte']) and !empty($_POST['reemplazar_codigo'])) {
+                $query_data['reemplazar_receptor'] = $_POST['reemplazar_receptor'];
+                $query_data['reemplazar_dte'] = $_POST['reemplazar_dte'];
+                $query_data['reemplazar_codigo'] = $_POST['reemplazar_codigo'];
+            }
+            $response = $this->consume('/api/dte/documentos/emitir?'.http_build_query($query_data), $dte);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
             $this->redirect('/dte/documentos/emitir');

@@ -250,10 +250,10 @@ $share_message = '¡Hola! Soy de '.$Emisor->getNombre().'. Te adjunto el enlace 
     <div class="row col-12 text-center mt-4 mb-4">
         <div class="col-md-6 mb-2">
             <div class="btn-group col-12" role="group">
-                <a class="btn btn-info btn-lg col-12" href="<?=$pdf_publico?>" role="button">
+                <a class="btn btn-primary btn-lg col-12" href="<?=$pdf_publico?>" role="button">
                     Enlace público al PDF
                 </a>
-                <button type="button" class="btn btn-info" onclick="__.copy('<?=$pdf_publico?>')" title="Copiar enlace"><i class="fa fa-copy"></i></button>
+                <button type="button" class="btn btn-primary" onclick="__.copy('<?=$pdf_publico?>')" title="Copiar enlace"><i class="fa fa-copy"></i></button>
             </div>
         </div>
         <div class="col-md-6 mb-2">
@@ -479,11 +479,11 @@ if ($Resultado) {
         <div class="row">
             <div class="col-sm-6 mb-2">
                 <div class="btn-group w-100" role="group">
-                    <a class="btn btn-info btn-lg col-12<?=!empty($enlace_pagar_dte)?'':' disabled'?>" href="<?=$enlace_pagar_dte?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=!empty($enlace_pagar_dte)?'':' disabled'?>" href="<?=$enlace_pagar_dte?>" role="button">
                         Enlace público para pagar
                     </a>
 <?php if (!empty($enlace_pagar_dte)) : ?>
-                    <button type="button" class="btn btn-info" onclick="__.copy('<?=$enlace_pagar_dte?>')" title="Copiar enlace"><i class="fa fa-copy"></i></button>
+                    <button type="button" class="btn btn-primary" onclick="__.copy('<?=$enlace_pagar_dte?>')" title="Copiar enlace"><i class="fa fa-copy"></i></button>
 <?php endif; ?>
                 </div>
             </div>
