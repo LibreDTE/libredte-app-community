@@ -1636,13 +1636,13 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que entrega el cobro asociado al DTE emitido
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-01
+     * @version 2023-11-02
      */
     public function getCobro($crearSiNoExiste = true)
     {
-        if (!$this->getTipo()->permiteCobro()) {
+        /*if (!$this->getTipo()->permiteCobro()) {
             return false;
-        }
+        }*/
         return (new \libredte\oficial\Pagos\Model_Cobro())->setDocumento($this, $crearSiNoExiste);
     }
 
