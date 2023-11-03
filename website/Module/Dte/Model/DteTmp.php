@@ -406,7 +406,7 @@ class Model_DteTmp extends \Model_App
         $fecha_resolucion = $Emisor->enCertificacion() ? $Emisor->config_ambiente_certificacion_fecha : $Emisor->config_ambiente_produccion_fecha;
         if (empty($fecha_resolucion)) {
             $message = __(
-                'Falta la fecha de %s que autoriza los DTE en el ambiente de %s del SII para generar el DTE. Antes de intenter generar nuevamente el DTE, debe [configurar la fecha en Configuración de la empresa >> Facturación >> Ambiente de facturación en SII](%s).',
+                'Falta la fecha de %s que autoriza los DTE en el ambiente de %s del SII para generar el DTE. Antes de intentar generar nuevamente el DTE, debe [configurar la fecha en Configuración de la empresa >> Facturación >> Ambiente de facturación en SII](%s).',
                 $Emisor->enCertificacion() ? 'certificación': 'resolución',
                 $Emisor->enCertificacion() ? 'certificación': 'producción',
                 url('/dte/contribuyentes/modificar#facturacion')
@@ -437,7 +437,7 @@ class Model_DteTmp extends \Model_App
         }
         if (!$FolioInfo) {
             $message = __(
-                'No se encontró el archivo XML del CAF para %s que contiene el siguiente folio que se debería usar para generar el DTE. Antes de intenter generar nuevamente el DTE, debe [cargar el XML de un CAF con folios, o bien verificar que el folio siguiente sea el correcto](%s).',
+                'No se encontró el archivo XML del CAF para %s que contiene el siguiente folio que se debería usar para generar el DTE. Antes de intentar generar nuevamente el DTE, debe [cargar el XML de un CAF con folios, o bien verificar que el folio siguiente sea el correcto](%s).',
                 mb_strtolower($this->getTipo()->tipo),
                 url('/dte/admin/dte_folios'),
             );
@@ -446,7 +446,7 @@ class Model_DteTmp extends \Model_App
         // si el CAF no está vigente se alerta al usuario
         if (!$FolioInfo->Caf->vigente()) {
             $message = __(
-                'El folio para %s número %d no puede ser usado porque pertenece a un rango de folios que está vencido. Antes de intenter generar nuevamente el DTE, debe [anular los folios vencidos](%s), [cargar folios nuevos](%s) y [modificar el siguiente folio](%s) para que coincida con el primer folio del nuevo rango cargado. Adicionalmente LibreDTE se ha saltado automáticamente el folio vencido número %d (aún así debe ser anulado).',
+                'El folio para %s número %d no puede ser usado porque pertenece a un rango de folios que está vencido. Antes de intentar generar nuevamente el DTE, debe [anular los folios vencidos](%s), [cargar folios nuevos](%s) y [modificar el siguiente folio](%s) para que coincida con el primer folio del nuevo rango cargado. Adicionalmente LibreDTE se ha saltado automáticamente el folio vencido número %d (aún así debe ser anulado).',
                 mb_strtolower($this->getTipo()->tipo),
                 $FolioInfo->folio,
                 $Emisor->enCertificacion() ? 'https://www4c.sii.cl/anulacionMsvDteInternet/': 'https://www4.sii.cl/anulacionMsvDteInternet/',

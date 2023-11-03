@@ -193,7 +193,8 @@ echo $f->input(['type'=>'hidden', 'name'=>'lista_precios', 'value'=>0]);
         Detalle de los productos y/o servicios de la transacción
     </div>
     <div class="card-body">
-        <div class="table-responsive">
+        <!--<div class="table-responsive">-->
+        <div>
 <?php
 $popover_growup = ' <i class="fa fa-question-circle fa-fw text-muted" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="Haz doble clic en el campo para ampliarlo" onmouseover="$(this).popover(\'show\')" onmouseout="$(this).popover(\'hide\')"></i>';
 $titles = [
