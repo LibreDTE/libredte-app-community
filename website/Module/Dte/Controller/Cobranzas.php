@@ -22,7 +22,7 @@
  */
 
 // namespace del controlador
-namespace website\Dte\Cobranzas;
+namespace website\Dte;
 
 /**
  * Clase para el controlador asociado a la tabla cobranza de la base de
@@ -78,10 +78,10 @@ class Controller_Cobranzas extends \Controller_App
             \sowerphp\core\Model_Datasource_Session::message(
                 'Pago programado solicitado no existe', 'error'
             );
-            $this->redirect('/dte/cobranzas/cobranzas/buscar');
+            $this->redirect('/dte/cobranzas/buscar');
         }
         $this->set([
-            '_header_extra' => ['js'=>['/dte/cobranzas/js/cobranzas.js']],
+            '_header_extra' => ['js'=>['/dte/js/cobranzas.js']],
             'Emisor' => $Emisor,
             'Pago' => $Pago
         ]);
@@ -116,7 +116,7 @@ class Controller_Cobranzas extends \Controller_App
             \sowerphp\core\Model_Datasource_Session::message(
                 'Pago programado solicitado no existe', 'error'
             );
-            $this->redirect('/dte/cobranzas/cobranzas/buscar');
+            $this->redirect('/dte/cobranzas/buscar');
         }
         if ($Pago->pagado == $Pago->monto) {
             \sowerphp\core\Model_Datasource_Session::message(

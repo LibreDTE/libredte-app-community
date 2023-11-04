@@ -58,14 +58,8 @@
 <div class="page-header"><h1>Libro de compras período <?=$Libro->periodo?></h1></div>
 <p>Esta es la página del libro de compras del período <?=$Libro->periodo?> de la empresa <?=$Emisor->razon_social?>.</p>
 
-<script type="text/javascript">
-$(function() {
-    var url = document.location.toString();
-    if (url.match('#')) {
-        $('#'+url.split('#')[1]+'-tab').tab('show');
-        $('html,body').scrollTop(0);
-    }
-});
+<script>
+$(function() { __.tabs_init(); });
 </script>
 
 <div role="tabpanel">

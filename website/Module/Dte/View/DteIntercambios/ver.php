@@ -29,14 +29,8 @@
 </div>
 <p>Esta es la página del intercambio N° <?=$DteIntercambio->codigo?> de la empresa <?=$Emisor->razon_social?>.</p>
 
-<script type="text/javascript">
-$(function() {
-    var url = document.location.toString();
-    if (url.match('#')) {
-        $('#'+url.split('#')[1]+'-tab').tab('show');
-        $('html,body').scrollTop(0);
-    }
-});
+<script>
+$(function() { __.tabs_init(); });
 function intercambio_recibir() {
     $('select[name="rcv_accion_codigo[]"]').each(function (i, e) {
         $('select[name="rcv_accion_codigo[]"]').get(i).value = 'ERM';

@@ -564,7 +564,7 @@ class Model_DteTmp extends \Model_App
         $MntPagos = $DteEmitido->getPagosProgramados();
         if (!empty($MntPagos)) {
             foreach ($MntPagos as $pago) {
-                $Cobranza = new \website\Dte\Cobranzas\Model_Cobranza();
+                $Cobranza = new \website\Dte\Model_Cobranza();
                 $Cobranza->emisor = $DteEmitido->emisor;
                 $Cobranza->dte = $DteEmitido->dte;
                 $Cobranza->folio = $DteEmitido->folio;

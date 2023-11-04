@@ -29,14 +29,8 @@
 <div class="page-header"><h1>Documento recibido T<?=$DteRecibido->dte?>F<?=$DteRecibido->folio?> <small>de <?=$Emisor->rut.'-'.$Emisor->dv?></small></h1></div>
 <p>Esta es la página del documento recibido <?=$DteRecibido->getTipo()->tipo?> (<?=$DteRecibido->dte?>) folio número <?=$DteRecibido->folio?> del emisor <?=$Emisor->razon_social?> (<?=$Emisor->rut.'-'.$Emisor->dv?>) emitido a <?=$Receptor->razon_social?>.</p>
 
-<script type="text/javascript">
-$(function() {
-    var url = document.location.toString();
-    if (url.match('#')) {
-        $('#'+url.split('#')[1]+'-tab').tab('show');
-        $('html,body').scrollTop(0);
-    }
-});
+<script>
+$(function() { __.tabs_init(); });
 </script>
 
 <div role="tabpanel">

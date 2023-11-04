@@ -22,7 +22,7 @@
  */
 
 // namespace del modelo
-namespace website\Dte\Cobranzas;
+namespace website\Dte;
 
 /**
  * Clase para mapear la tabla cobranza de la base de datos
@@ -73,6 +73,7 @@ class Model_Cobranzas extends \Model_Plural_App
         }
         // receptor
         if (!empty($filtros['receptor'])) {
+            $filtros['receptor'] = (string)$filtros['receptor'];
             // se espera un RUT sin DV, si no es numérico puede ser
             //  - RUT con DV
             //  - texto con razón social o parte de ella

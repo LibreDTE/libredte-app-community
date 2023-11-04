@@ -136,7 +136,7 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
                 'desc' => 'Cesiones de documentos tributarios electrónicos',
                 'icon' => 'fas fa-external-link-square-alt',
             ],
-            '/cobranzas/cobranzas/buscar' => [
+            '/cobranzas/buscar' => [
                 'name' => 'Pagos programados',
                 'desc' => 'Buscar pagos programados ventas a crédito',
                 'icon' => 'fas fa-calendar-alt',
@@ -214,7 +214,6 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
 \sowerphp\core\Module::uses([
     'Dev',
     'Dte',
-    'Dte.Cobranzas',
     'Dte.Informes',
     'Dte.Admin',
     'Dte.Admin.Informes',

@@ -28,14 +28,8 @@
 <div class="page-header"><h1>Libro de ventas período <?=$Libro->periodo?></h1></div>
 <p>Esta es la página del libro de ventas del período <?=$Libro->periodo?> de la empresa <?=$Emisor->razon_social?>.</p>
 
-<script type="text/javascript">
-$(function() {
-    var url = document.location.toString();
-    if (url.match('#')) {
-        $('#'+url.split('#')[1]+'-tab').tab('show');
-        $('html,body').scrollTop(0);
-    }
-});
+<script>
+$(function() { __.tabs_init(); });
 function get_codigo_reemplazo() {
     $.get(_base+'/api/dte/dte_ventas/codigo_reemplazo/<?=$Libro->periodo?>/<?=$Emisor->rut?>', function(codigo) {
         document.getElementById('CodAutRecField').value = codigo;
@@ -175,7 +169,7 @@ foreach ($resumen as &$r) {
         $r['TotMntIVA'] .= ' '.$alerta_iva_boleta;
     }
 }
-?>  
+?>
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 text-center">
         <div class="col mb-4">
             <div class="card">

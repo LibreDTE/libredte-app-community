@@ -30,15 +30,9 @@ $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin(['id'=>$form_id, 'onsubmit'=>'Form.check() && Form.confirm(this)']);
 ?>
 
-<script type="text/javascript">
+<script>
 var impuestos_adicionales_tasa = <?=json_encode($impuestos_adicionales_tasa)?>;
-$(function() {
-    var url = document.location.toString();
-    if (url.match('#')) {
-        $('#'+url.split('#')[1]+'-tab').tab('show');
-        $('html,body').scrollTop(0);
-    }
-});
+$(function() { __.tabs_init(); });
 </script>
 
 <div role="tabpanel">

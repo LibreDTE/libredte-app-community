@@ -15,14 +15,8 @@
 <div class="page-header"><h1>Usuarios de la empresa</h1></div>
 <p>Aquí podrá modificar los usuarios autorizados a operar con la empresa <?=$Contribuyente->razon_social?> RUT <?=num($Contribuyente->rut).'-'.$Contribuyente->dv?>, para la cual usted es el usuario administrador.</p>
 
-<script type="text/javascript">
-$(function() {
-    var url = document.location.toString();
-    if (url.match('#')) {
-        $('#'+url.split('#')[1]+'-tab').tab('show');
-        $('html,body').scrollTop(0);
-    }
-});
+<script>
+$(function() { __.tabs_init(); });
 </script>
 
 <div role="tabpanel">

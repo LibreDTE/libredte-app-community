@@ -22,7 +22,7 @@
  */
 
 // namespace del modelo
-namespace website\Dte\Cobranzas;
+namespace website\Dte;
 
 /**
  * Clase para mapear la tabla cobranza de la base de datos

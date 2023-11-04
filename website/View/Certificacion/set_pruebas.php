@@ -17,14 +17,8 @@
 
 <div class="page-header"><h1>Certificación DTE  &raquo; Etapa 1: Casos de prueba</h1></div>
 
-<script type="text/javascript">
-$(function() {
-    var url = document.location.toString();
-    if (url.match('#')) {
-        $('#'+url.split('#')[1]+'-tab').tab('show');
-        $('html,body').scrollTop(0);
-    }
-});
+<script>
+$(function() { __.tabs_init(); });
 </script>
 
 <div role="tabpanel">

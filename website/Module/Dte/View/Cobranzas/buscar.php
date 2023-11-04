@@ -4,11 +4,11 @@
             <span class="fa fa-search"></span> Filtrar
         </a>
         <div class="dropdown-menu dropdown-menu-end">
-            <a href="<?=$_base?>/dte/cobranzas/cobranzas/buscar?vencidos" class="dropdown-item">Vencidos <span class="badge bg-danger border"><?=num($cobranza_resumen['vencidos'])?></span></a>
-            <a href="<?=$_base?>/dte/cobranzas/cobranzas/buscar?vencen_hoy" class="dropdown-item">Vencen hoy <span class="badge bg-warning border"><?=num($cobranza_resumen['vencen_hoy'])?></span></a>
-            <a href="<?=$_base?>/dte/cobranzas/cobranzas/buscar?vigentes" class="dropdown-item">Vigentes <span class="badge bg-success border"><?=num($cobranza_resumen['vigentes'])?></span></a>
+            <a href="<?=$_base?>/dte/cobranzas/buscar?vencidos" class="dropdown-item">Vencidos <span class="badge bg-danger border"><?=num($cobranza_resumen['vencidos'])?></span></a>
+            <a href="<?=$_base?>/dte/cobranzas/buscar?vencen_hoy" class="dropdown-item">Vencen hoy <span class="badge bg-warning border"><?=num($cobranza_resumen['vencen_hoy'])?></span></a>
+            <a href="<?=$_base?>/dte/cobranzas/buscar?vigentes" class="dropdown-item">Vigentes <span class="badge bg-success border"><?=num($cobranza_resumen['vigentes'])?></span></a>
             <div class="dropdown-divider"></div>
-            <a href="<?=$_base?>/dte/cobranzas/cobranzas/buscar" class="dropdown-item">Limpiar búsqueda</a>
+            <a href="<?=$_base?>/dte/cobranzas/buscar" class="dropdown-item">Limpiar búsqueda</a>
         </div>
     </li>
 </ul>
@@ -37,7 +37,7 @@ echo $f->end('Buscar');
 
 if (isset($cobranza)) {
     foreach ($cobranza as &$c) {
-        $c[] = '<a href="'.$_base.'/dte/cobranzas/cobranzas/ver/'.$c['dte'].'/'.$c['folio'].'/'.$c['fecha_pago'].'" title="Ver pago" class="btn btn-primary"><span class="fa fa-search fa-fw"></span></a>';
+        $c[] = '<a href="'.$_base.'/dte/cobranzas/ver/'.$c['dte'].'/'.$c['folio'].'/'.$c['fecha_pago'].'" title="Ver pago" class="btn btn-primary"><span class="fa fa-search fa-fw"></span></a>';
         $c['fecha_emision'] = \sowerphp\general\Utility_Date::format($c['fecha_emision']);
         $c['fecha_pago'] = \sowerphp\general\Utility_Date::format($c['fecha_pago']);
         $c['total'] = num($c['total']);

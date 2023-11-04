@@ -43,14 +43,8 @@
 <div class="page-header"><h1>Documento T<?=$DteEmitido->dte?>F<?=$DteEmitido->folio?></h1></div>
 <p>Esta es la página del documento <?=$DteEmitido->getTipo()->tipo?> (<?=$DteEmitido->dte?>) folio número <?=$DteEmitido->folio?> de la empresa <?=$Emisor->razon_social?> emitido a <?=$Receptor->razon_social?> (<?=$Receptor->rut.'-'.$Receptor->dv?>) en la sucursal <?=$Emisor->getSucursal($DteEmitido->sucursal_sii)->sucursal?>.</p>
 
-<script type="text/javascript">
-$(function() {
-    var url = document.location.toString();
-    if (url.match('#')) {
-        $('#'+url.split('#')[1]+'-tab').tab('show');
-        $('html,body').scrollTop(0);
-    }
-});
+<script>
+$(function() { __.tabs_init(); });
 </script>
 
 <div role="tabpanel">
@@ -532,7 +526,7 @@ $cobranza = $DteEmitido->getCobranza();
 if ($cobranza) {
     echo '<p>El documento emitido tiene los siguientes pagos programados asociados.</p>',"\n";
     foreach ($cobranza as &$c) {
-        $c[] = '<a href="'.$_base.'/dte/cobranzas/cobranzas/ver/'.$DteEmitido->dte.'/'.$DteEmitido->folio.'/'.$c['fecha'].'" title="Ver pago" class="btn btn-primary"><i class="fa fa-search fa-fw"></i></a>';
+        $c[] = '<a href="'.$_base.'/dte/cobranzas/ver/'.$DteEmitido->dte.'/'.$DteEmitido->folio.'/'.$c['fecha'].'" title="Ver pago" class="btn btn-primary"><i class="fa fa-search fa-fw"></i></a>';
         $c['fecha'] = \sowerphp\general\Utility_Date::format($c['fecha']);
         $c['monto'] = num($c['monto']);
         if ($c['pagado']!==null) {
