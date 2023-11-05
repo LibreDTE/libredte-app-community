@@ -881,19 +881,22 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que indica si un documento es o no referenciable
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-07-28
+     * @version 2023-11-05
      */
     public function esReferenciable()
     {
-        if ($this->getEstado() == 'R') {
+        $estado_envio = $this->getEstado();
+        if ($estado_envio == 'R') {
             throw new \Exception('Documento T'.$this->dte.'F'.$this->folio.' está rechazado por el SII. Un documento rechazado no es válido y por eso no debe ser referenciado.');
         }
         if ($this->seEnvia()) {
             if (!$this->track_id) {
                 throw new \Exception('Documento T'.$this->dte.'F'.$this->folio.' no está enviado al SII. Un documento no enviado aun no ha sido validado por el SII y por eso no debe ser referenciado.');
             }
-            if ($this->track_id > 0 and empty($this->revision_estado)) {
-                throw new \Exception('Documento T'.$this->dte.'F'.$this->folio.' fue enviado al SII, pero no se conoce el estado de validación. Un documento sin estado podría no ser válido y por eso no debe ser referenciado.');
+            if ($this->track_id > 0) {
+                if (empty($this->revision_estado) or $estado_envio == 'N') {
+                    throw new \Exception('Documento T'.$this->dte.'F'.$this->folio.' fue enviado al SII, pero no se conoce el estado final de validación. Un documento sin estado final podría no ser válido y por eso no debe ser referenciado.');
+                }
             }
         }
         return true;

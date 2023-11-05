@@ -309,21 +309,9 @@ new \sowerphp\general\View_Helper_Table($impuestos);
 <?php
 $referencias_values = [];
 if (isset($datos)) {
-    // no se agregan referencias de boletas (ya que no tienen todos los campos requeridos en la vista).
-    if (!in_array($datos['Encabezado']['IdDoc']['TipoDTE'], [39, 41])) {
-        if (!empty($datos['Referencia'])) {
-            if (!isset($datos['Referencia'][0])) {
-                $datos['Referencia'] = [$datos['Referencia']];
-            }
-            foreach ($datos['Referencia'] as $r) {
-                // si es una NC o ND que tiene código de referencia (anulación, corrige texto o monto) no se copia
-                if (!(in_array($datos['Encabezado']['IdDoc']['TipoDTE'], [61, 56, 111, 112]) and !empty($r['CodRef']))) {
-                    $referencias_values[] = $r;
-                }
-            }
-        }
-    }
-    // si es un DTE que referencia a otro se agrega la referencia
+    // si es un DTE que referencia a otro se agrega sólo la referencia al DTE
+    // cualquier otra referencia que tenga el DTE no se copiará ya que se puede
+    // ver en el mismo DTE referenciado
     if ($referencia=='referencia') {
         array_unshift($referencias_values, [
             'FchRef' => $datos['Encabezado']['IdDoc']['FchEmis'],
@@ -332,6 +320,25 @@ if (isset($datos)) {
             'CodRef' => $referencia_codigo,
             'RazonRef' => $referencia_razon,
         ]);
+    }
+    // se agregan las referencias del DTE original sólo si no es una referencia de DTE
+    else {
+        // se agrega las referencias de todos los documentos, excepto de de boletas,
+        // ya que no tienen todos los campos requeridos en la vista
+        if (!in_array($datos['Encabezado']['IdDoc']['TipoDTE'], [39, 41])) {
+            if (!empty($datos['Referencia'])) {
+                if (!isset($datos['Referencia'][0])) {
+                    $datos['Referencia'] = [$datos['Referencia']];
+                }
+                foreach ($datos['Referencia'] as $r) {
+                    // se copia la referencia sólo si:
+                    //  - no es es una NC o ND que tiene código de referencia (anulación, corrige texto o monto)
+                    if (!(in_array($datos['Encabezado']['IdDoc']['TipoDTE'], [61, 56, 111, 112]) and !empty($r['CodRef']))) {
+                        $referencias_values[] = $r;
+                    }
+                }
+            }
+        }
     }
 }
 echo $f->input([

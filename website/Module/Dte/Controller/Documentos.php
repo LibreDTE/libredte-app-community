@@ -483,7 +483,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Acción para mostrar página de emisión de DTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-01
+     * @version 2023-11-04
      */
     public function emitir($referencia_dte = null, $referencia_folio = null, $dte_defecto = null, $referencia_codigo = '', $referencia_razon = '')
     {
@@ -496,7 +496,7 @@ class Controller_Documentos extends \Controller_App
         }
         // si hay un DTE de referencia se arman datos para poder copiar
         if ($referencia_dte and $referencia_folio) {
-            $referencia_tipo = isset($_GET['copiar']) ? 'copia' : 'referencia';
+            $referencia_tipo = (isset($_GET['copiar']) or isset($_GET['reemplazar'])) ? 'copia' : 'referencia';
             // si el folio de referencia es un número se busca un DTE emitido
             if (is_numeric($referencia_folio)) {
                 $DocumentoOriginal = new Model_DteEmitido($Emisor->rut, $referencia_dte, $referencia_folio, $Emisor->enCertificacion());

@@ -90,7 +90,7 @@ class Controller_DteEmitidos extends \Controller_App
             'search' => $filtros,
             'tipos_dte' => $Emisor->getDocumentosAutorizados(),
             'sucursales' => $Emisor->getSucursales(),
-            'sucursal' => -1, // sin sucursal por defecto
+            'sucursal' => '', // sin sucursal por defecto
             'usuarios' => $Emisor->getListUsuarios(),
             'searchUrl' => $searchUrl,
         ]);

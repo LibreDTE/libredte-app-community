@@ -226,7 +226,11 @@ class Model_DteTmp extends \Model_App
                             }
                         }
                         if (!$total) {
-                            $this->Api->send('No fue posible determinar el valor total en pesos del DTE. [faq:12]', 400);
+                            $message = __(
+                                'No fue posible emitir el documento porque el tipo de cambio para determinar el valor en pesos del día %s no se encuentra cargado en LibreDTE. Para poder emitir el documento puede especificar el valor del tipo de cambio en los datos del documento, dicho valor se obtiene desde el [Banco Central de Chile](https://www.bcentral.cl).',
+                                $fecha
+                            );
+                            throw new \Exception($message);
                         }
                     }
                     $this->db->beginTransaction();
@@ -261,7 +265,7 @@ class Model_DteTmp extends \Model_App
         }
         $Emisor = $this->getEmisor();
         $EnvioDte->setCaratula([
-            'RutEnvia' => $Firma ? $Firma->getID() : false,
+            'RutEnvia' => $Firma ? $Firma->getID() : null,
             'RutReceptor' => $RutReceptor ? $RutReceptor : $Dte->getReceptor(),
             'FchResol' => $Emisor->enCertificacion() ? $Emisor->config_ambiente_certificacion_fecha : $Emisor->config_ambiente_produccion_fecha,
             'NroResol' => $Emisor->enCertificacion() ? 0 : $Emisor->config_ambiente_produccion_numero,
@@ -385,7 +389,7 @@ class Model_DteTmp extends \Model_App
     /**
      * Método que crea el DTE real asociado al DTE temporal usando LibreDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-01
+     * @version 2023-11-04
      */
     private function generarConFacturadorLocal($user_id = null, $fecha_emision = null, $retry = null, $gzip = null)
     {
@@ -398,7 +402,7 @@ class Model_DteTmp extends \Model_App
         if (!$Firma) {
             $message = __(
                 'No existe una firma electrónica asociada a la empresa que se pueda utilizar para generar el DTE. Antes de intentar generar nuevamente el DTE, debe [subir una firma electrónica vigente](%s).',
-                url('/dte/admin/firma_electronicas')
+                url('/dte/admin/firma_electronicas/agregar')
             );
             throw new \Exception($message, 506);
         }
@@ -406,10 +410,10 @@ class Model_DteTmp extends \Model_App
         $fecha_resolucion = $Emisor->enCertificacion() ? $Emisor->config_ambiente_certificacion_fecha : $Emisor->config_ambiente_produccion_fecha;
         if (empty($fecha_resolucion)) {
             $message = __(
-                'Falta la fecha de %s que autoriza los DTE en el ambiente de %s del SII para generar el DTE. Antes de intentar generar nuevamente el DTE, debe [configurar la fecha en Configuración de la empresa >> Facturación >> Ambiente de facturación en SII](%s).',
+                'Falta la fecha de %s que autoriza los DTE en el ambiente de %s del SII para generar el DTE. Antes de intentar generar nuevamente el DTE, debe [configurar la fecha del ambiente de facturación en SII](%s).',
                 $Emisor->enCertificacion() ? 'certificación': 'resolución',
                 $Emisor->enCertificacion() ? 'certificación': 'producción',
-                url('/dte/contribuyentes/modificar#facturacion')
+                url('/dte/contribuyentes/modificar#facturacion:ambiente')
             );
             throw new \Exception($message, 400);
         }
@@ -471,7 +475,7 @@ class Model_DteTmp extends \Model_App
             // notificar al usuario administrador
             if (!$timbrado and !$FolioInfo->DteFolio->alertado) {
                 $asunto = 'Alerta de folios de '.mb_strtolower($this->getTipo()->tipo);
-                $msg = 'Se ha alcanzado el límite de folios del tipo de DTE '.mb_strtolower($this->getTipo()->tipo).' para el contribuyente '.$Emisor->razon_social.', quedan '.$FolioInfo->DteFolio->disponibles.'. Por favor, solicite un nuevo archivo CAF y súbalo a LibreDTE en '.url('/dte/admin/dte_folios/subir_caf');
+                $msg = 'Se ha alcanzado el límite de folios del tipo de DTE '.mb_strtolower($this->getTipo()->tipo).' para el contribuyente '.$Emisor->razon_social.', quedan '.$FolioInfo->DteFolio->disponibles.' folios de acuerdo al folio siguiente actual. Por favor, solicite un nuevo archivo CAF y súbalo a LibreDTE en '.url('/dte/admin/dte_folios/subir_caf');
                 if ($Emisor->notificar($asunto, $msg)) {
                     $FolioInfo->DteFolio->alertado = 1;
                     $FolioInfo->DteFolio->save();
@@ -481,17 +485,59 @@ class Model_DteTmp extends \Model_App
         // armar xml a partir del DTE temporal
         $EnvioDte = $this->getEnvioDte($FolioInfo->folio, $FolioInfo->Caf, $Firma, null, $fecha_emision);
         if (!$EnvioDte) {
-            throw new \Exception('No fue posible generar el objeto del EnvioDTE. Folio '.$FolioInfo->folio.' quedará sin usar.<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 510);
+            $message = __(
+                'Ocurrió un error al preparar los datos del EnvioDTE del documento. Del rango de folios del %d al %d de %s, el folio %d fue saltado, por lo que quedará sin usar y debe ser [anulado en el SII](%s). Debe revisar el siguiente error y corregir la situación que lo ocasionó antes de intentar emitir nuevamente el documento (o podría tener más folios saltados).<br/><br/>- %s',
+                $FolioInfo->Caf->getDesde(),
+                $FolioInfo->Caf->getHasta(),
+                mb_strtolower($this->getTipo()->tipo),
+                $FolioInfo->folio,
+                $Emisor->enCertificacion() ? 'https://www4c.sii.cl/anulacionMsvDteInternet/': 'https://www4.sii.cl/anulacionMsvDteInternet/',
+                implode(
+                    '<br/><br/>- ',
+                    array_map(function($error) {
+                        return str_replace("\n", '<br/>&nbsp;&nbsp;&nbsp;&nbsp;- ', $error);
+                    }, \sasco\LibreDTE\Log::readAll())
+                )
+            );
+            throw new \Exception($message, 510);
         }
         $xml = $EnvioDte->generar();
         if (!$xml or !$EnvioDte->schemaValidate()) {
-            throw new \Exception('No fue posible generar el XML del EnvioDTE. Folio '.$FolioInfo->folio.' quedará sin usar.<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()).'<br/>[faq:69]', 510);
+            $doc_sii = $EnvioDte->esBoleta()
+                ? 'https://www.sii.cl/factura_electronica/factura_mercado/boletas_elec_0720_3.pdf'
+                : 'https://www.sii.cl/factura_electronica/factura_mercado/formato_dte_201911.pdf'
+            ;
+            $message = __(
+                'Ocurrió un error al generar el XML del EnvioDTE del documento. Del rango de folios del %d al %d de %s, el folio %d fue saltado, por lo que quedará sin usar y debe ser [anulado en el SII](%s). Debe revisar el error y corregir la situación que lo ocasionó antes de intentar emitir nuevamente el documento (o podría tener más folios saltados).<br/><br/>- %s',
+                $FolioInfo->Caf->getDesde(),
+                $FolioInfo->Caf->getHasta(),
+                mb_strtolower($this->getTipo()->tipo),
+                $FolioInfo->folio,
+                $Emisor->enCertificacion() ? 'https://www4c.sii.cl/anulacionMsvDteInternet/': 'https://www4.sii.cl/anulacionMsvDteInternet/',
+                str_replace(
+                    'Error en la estructura del XML EnvioDte. ',
+                    'Error en la estructura del XML EnvioDte, podrá encontrar la estructura correcta en la [documentación oficial del SII]('.$doc_sii.').<br/>&nbsp;&nbsp;&nbsp;&nbsp;- ',
+                    implode(
+                        '<br/><br/>- ',
+                        array_map(function($error) {
+                            return str_replace("\n", '<br/>&nbsp;&nbsp;&nbsp;&nbsp;- ', $error);
+                        }, \sasco\LibreDTE\Log::readAll())
+                    )
+                )
+            );
+            throw new \Exception($message, 510);
         }
         // guardar DTE
         $r = $EnvioDte->getDocumentos()[0]->getResumen();
-        $DteEmitido = new Model_DteEmitido($Emisor->rut, $r['TpoDoc'], $r['NroDoc'], $Emisor->enCertificacion());
+        $DteEmitido = new Model_DteEmitido($Emisor->rut, (int)$r['TpoDoc'], (int)$r['NroDoc'], $Emisor->enCertificacion());
         if ($DteEmitido->exists()) {
-            throw new \Exception('Ya existe un DTE del tipo '.$r['TpoDoc'].' y folio '.$r['NroDoc'].' emitido en LibreDTE. Probablemente debe corregir el folio siguiente a usar. [faq:93]', 409);
+            $message = __(
+                'No fue posible generar el documento puesto que ya existía una %s de folio %d emitida en LibreDTE. Antes de intentar generar nuevamente el documento [actualice el folio siguiente a utilizar](%s) por uno que sea válido.',
+                mb_strtolower($this->getTipo()->tipo),
+                $r['NroDoc'],
+                url('/dte/admin/dte_folios/modificar/'.(int)$r['TpoDoc'])
+            );
+            throw new \Exception($message, 409);
         }
         $cols = ['tasa'=>'TasaImp', 'fecha'=>'FchDoc', 'sucursal_sii'=>'CdgSIISucur', 'receptor'=>'RUTDoc', 'exento'=>'MntExe', 'neto'=>'MntNeto', 'iva'=>'MntIVA', 'total'=>'MntTotal'];
         foreach ($cols as $attr => $col) {

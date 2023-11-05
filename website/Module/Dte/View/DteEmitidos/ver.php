@@ -114,7 +114,6 @@ echo $t->generate([
             <div class="card text-white bg-danger mb-4">
                 <div class="card-header">El SII ha rechazado el envío del XML de este documento</div>
                 <div class="card-body">
-                    <h5 class="card-title">¡Es urgente realizar una acción con este documento!</h5>
                     <p class="card-text">Los documentos rechazados por el SII no son válidos, y no deben ser utilizados. Para corregir esta situación debe:</p>
                     <ol>
                         <li>Descargar el PDF y XML de este documento para respaldo del documento rechazado hasta que solucione este caso.</li>
