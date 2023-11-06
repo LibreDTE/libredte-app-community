@@ -443,7 +443,7 @@ class Model_DteTmp extends \Model_App
             $message = __(
                 'No se encontró el archivo XML del CAF para %s que contiene el siguiente folio que se debería usar para generar el DTE. Antes de intentar generar nuevamente el DTE, debe [cargar el XML de un CAF con folios, o bien verificar que el folio siguiente sea el correcto](%s).',
                 mb_strtolower($this->getTipo()->tipo),
-                url('/dte/admin/dte_folios'),
+                url('/dte/admin/dte_folios#faq_solicitar_folios'),
             );
             throw new \Exception($message, 508);
         }

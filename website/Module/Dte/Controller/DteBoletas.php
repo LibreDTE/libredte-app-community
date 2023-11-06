@@ -58,9 +58,11 @@ class Controller_DteBoletas extends \Controller_App
         $Libro = new \sasco\LibreDTE\Sii\LibroBoleta();
         $Firma = $Emisor->getFirma();
         if (!$Firma) {
-            \sowerphp\core\Model_Datasource_Session::message(
-                'No hay firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe agregar su firma antes de generar el XML. [faq:174]', 'error'
+            $message = __(
+                'No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
+                url('/dte/admin/firma_electronicas/agregar')
             );
+            \sowerphp\core\Model_Datasource_Session::message($message, 'error');
             $this->redirect('/dte/dte_boletas');
         }
         $Libro->setFirma($Firma);

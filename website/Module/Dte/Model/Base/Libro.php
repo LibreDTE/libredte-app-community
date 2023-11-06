@@ -62,7 +62,11 @@ abstract class Model_Base_Libro extends Model_Base_Envio
         // obtener firma
         $Firma = $Contribuyente->getFirma($user_id);
         if (!$Firma) {
-            throw new \Exception('No hay firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe agregar su firma antes de actualizar el estado del libro. [faq:174]');
+            $message = __(
+                'No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
+                url('/dte/admin/firma_electronicas/agregar')
+            );
+            throw new \Exception($message);
         }
         \sasco\LibreDTE\Sii::setAmbiente((int)$this->certificacion);
         // solicitar token

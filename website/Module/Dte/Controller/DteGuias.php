@@ -61,8 +61,12 @@ class Controller_DteGuias extends Controller_Base_Libros
         // obtener firma
         $Firma = $Emisor->getFirma($this->Auth->User->id);
         if (!$Firma) {
-            \sowerphp\core\Model_Datasource_Session::message('No hay firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe agregar su firma antes de enviar el libro al SII. [faq:174]', 'error');
-            $this->redirect('/dte/admin/firma_electronicas');
+            $message = __(
+                'No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
+                url('/dte/admin/firma_electronicas/agregar')
+            );
+            \sowerphp\core\Model_Datasource_Session::message($message, 'error');
+            $this->redirect('/dte/admin/firma_electronicas/agregar');
         }
         // agregar detalle
         $documentos = 0;

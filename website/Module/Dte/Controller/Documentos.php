@@ -442,7 +442,11 @@ class Controller_Documentos extends \Controller_App
                     }
                 }
                 if (!$total) {
-                    $this->Api->send('No fue posible determinar el valor total en pesos del DTE. [faq:12]', 400);
+                    $message = __(
+                        'No fue posible emitir el documento porque el tipo de cambio para determinar el valor en pesos del día %s no se encuentra cargado en LibreDTE. Para poder emitir el documento puede especificar el valor del tipo de cambio en los datos del documento, dicho valor se obtiene desde el [Banco Central de Chile](https://www.bcentral.cl).',
+                        $fecha
+                    );
+                    $this->Api->send($message, 400);
                 }
             }
             $DteTmp->total = round($total);
@@ -522,9 +526,12 @@ class Controller_Documentos extends \Controller_App
                     ]);
                 }
                 if (!$DocumentoOriginal->hasXML()) {
-                    \sowerphp\core\Model_Datasource_Session::message(
-                        'Documento T'.$referencia_dte.'F'.$referencia_folio.' no tiene un XML asociado, sólo se puede referenciar manualmente. [faq:11]', 'error'
+                    $message = __(
+                        'El documento T%dF%d no tiene un XML cargado en LibreDTE, por lo que no es posible usar la opción seleccionada. Deberá crear la referencia manualmente al emitir o bien ingresar los datos manualmente si deseaba copiarlos.',
+                        $referencia_dte,
+                        $referencia_folio
                     );
+                    \sowerphp\core\Model_Datasource_Session::message($message, 'error');
                     $this->redirect('/dte/dte_emitidos/ver/'.$referencia_dte.'/'.$referencia_folio.'#referencias');
                 }
             }
@@ -838,9 +845,11 @@ class Controller_Documentos extends \Controller_App
                 $iva = round($detalle['PrcItem'] * (\sasco\LibreDTE\Sii::getIVA()/100), (int)$Emisor->config_items_decimales);
                 // impuesto adicional TODO: no se permiten impuestos adicionales en boletas por el momento
                 if (!empty($detalle['CodImpAdic'])) {
-                    \sowerphp\core\Model_Datasource_Session::message(
-                        'No es posible generar una boleta que tenga impuestos adicionales mediante la plataforma web. [faq:251]', 'error'
+                    $message = __(
+                        'No es posible generar una boleta que tenga impuestos adicionales mediante la plataforma web de LibreDTE. Este es un caso de uso no considerado. Si desea que sea activada esta opción por favor [contáctenos](%).',
+                        url('/contacto')
                     );
+                    \sowerphp\core\Model_Datasource_Session::message($message, 'error');
                     $this->redirect('/dte/documentos/emitir');
                     //$tasa = $_POST['impuesto_adicional_tasa_'.$detalle['CodImpAdic']];
                     //$adicional = round($detalle['PrcItem'] * ($_POST['impuesto_adicional_tasa_'.$detalle['CodImpAdic']]/100));
@@ -1003,7 +1012,7 @@ class Controller_Documentos extends \Controller_App
         }
         // verificar datos del DTE pasados
         if (!is_array($this->Api->data)) {
-            $this->Api->send('Debe enviar los datos del DTE temporal como objeto. [faq:84]', 400);
+            $this->Api->send('Los datos que se envían del documento temporal deben ser un objeto JSON válido y adicionalmente se debe incluir la cabecera "Content-Type: application/json" en la solicitud HTTP.', 400);
         }
         // buscar datos mínimos
         foreach (['emisor', 'receptor', 'dte', 'codigo'] as $col) {
@@ -1090,12 +1099,12 @@ class Controller_Documentos extends \Controller_App
                 );
             } else {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Documento emitido, pero no pudo ser envíado al SII, debe reenviar.<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()).'<br/>[faq:8]', 'warning'
+                    'El documento fue emitido, pero no fue envíado al SII, debe enviarlo manualmente desde la página del documento.<br/><br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'warning'
                 );
             }
         } else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Documento emitido', 'ok'
+                'Documento emitido.', 'ok'
             );
         }
         $this->redirect('/dte/dte_emitidos/ver/'.$DteEmitido->dte.'/'.$DteEmitido->folio);

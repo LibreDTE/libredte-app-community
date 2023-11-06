@@ -105,8 +105,12 @@ class Controller_DteIntercambios extends \Controller_App
         // obtener firma
         $Firma = $Emisor->getFirma($this->Auth->User->id);
         if (!$Firma) {
-            \sowerphp\core\Model_Datasource_Session::message('No hay firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe agregar su firma antes de ver un intercambio (ya que se consulta al SII el estado). [faq:174]', 'error');
-            $this->redirect('/dte/admin/firma_electronicas');
+            $message = __(
+                'No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción, ya que se requiere consultar el estado del DTE al SII para poder ver el intercambio. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
+                url('/dte/admin/firma_electronicas/agregar')
+            );
+            \sowerphp\core\Model_Datasource_Session::message($message, 'error');
+            $this->redirect('/dte/admin/firma_electronicas/agregar');
         }
         // asignar variables para la vista
         $this->set([

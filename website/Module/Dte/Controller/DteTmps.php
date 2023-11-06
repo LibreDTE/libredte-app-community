@@ -543,9 +543,11 @@ class Controller_DteTmps extends \Controller_App
         }
         // verificar que se puedan eliminar los documentos masivamente
         if (!$Emisor->config_temporales_eliminar) {
-            \sowerphp\core\Model_Datasource_Session::message(
-                'La opción para eliminación masiva de documentos temporales está desactivada en su empresa. Debe ir a la configuración de la empresa y activar la opción para que pueda ser usada. [faq:262]', 'error'
+            $message = __(
+                'La opción para eliminación masiva de documentos temporales está desactivada en su empresa. Debe [activar la opción en la configuración](%s) para que pueda ser usada.',
+                url('/dte/contribuyentes/modificar#facturacion:config_temporales_eliminarField')
             );
+            \sowerphp\core\Model_Datasource_Session::message($message, 'error');
             $this->redirect('/dte/dte_tmps/listar');
         }
         // eliminar los documentos
@@ -717,20 +719,20 @@ class Controller_DteTmps extends \Controller_App
         }
         // si no viene el indice DTE nada que actualizar
         if (empty($this->Api->data['dte'])) {
-            $this->Api->send('Debe enviar los datos del DTE que desea actualizar', 400);
+            $this->Api->send('Debe enviar los datos del DTE que desea actualizar.', 400);
         }
         // crear emisor
         $Emisor = new \website\Dte\Model_Contribuyente($emisor);
         if (!$Emisor->usuario) {
-            $this->Api->send('Contribuyente no está registrado en la aplicación', 404);
+            $this->Api->send('Contribuyente no está registrado en la aplicación.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_tmps/actualizar')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
-            $this->Api->send('No existe el documento temporal solicitado', 404);
+            $this->Api->send('No existe el documento temporal solicitado.', 404);
         }
         // actualizar el documento temporal
         $datos = json_decode($DteTmp->datos, true);
@@ -823,7 +825,12 @@ class Controller_DteTmps extends \Controller_App
                     }
                 }
                 if (!$total) {
-                    $this->Api->send('No fue posible determinar el valor total en pesos del DTE. [faq:12]', 400);
+                    $message = __(
+                        'No fue posible actualizar el documento porque el tipo de cambio para determinar el valor en pesos del día %s no se encuentra cargado en LibreDTE. Si la fecha del documento es correcta, recomendamos [emitir un nuevo documento](%s) donde podrá especificar el valor del tipo de cambio en los datos del documento, dicho valor se obtiene desde el [Banco Central de Chile](https://www.bcentral.cl).',
+                        $fecha,
+                        url('/dte/documentos/emitir')
+                    );
+                    $this->Api->send($message, 400);
                 }
             }
             $DteTmp->total = round($total);

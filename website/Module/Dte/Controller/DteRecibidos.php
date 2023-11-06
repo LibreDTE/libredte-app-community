@@ -262,10 +262,13 @@ class Controller_DteRecibidos extends \Controller_App
             // obtener firma
             $Firma = $Receptor->getFirma($this->Auth->User->id);
             if (!$Firma) {
-                \sowerphp\core\Model_Datasource_Session::message(
-                    'No hay firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe agregar su firma antes de guardar el DTE (ya que se consulta al SII el estado). [faq:174]', 'error'
+                $message = __(
+                    'No existe una firma electrónica asociada a la empresa que se pueda utilizar para guardar el documento. Se requiere para consultar el estado del documento al SII antes de que sea guardado. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
+                    url('/dte/admin/firma_electronicas/agregar')
                 );
-                $this->redirect('/dte/admin/firma_electronicas');
+                \sowerphp\core\Model_Datasource_Session::message($message, 'error'
+                );
+                $this->redirect('/dte/admin/firma_electronicas/agregar');
             }
             // consultar estado dte
             $estado = $DteRecibido->getEstado($Firma);

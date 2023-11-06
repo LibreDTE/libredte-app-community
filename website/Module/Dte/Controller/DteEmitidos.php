@@ -624,7 +624,11 @@ class Controller_DteEmitidos extends \Controller_App
         // objeto de firma electrónica
         $Firma = $Emisor->getFirma($this->Auth->User->id);
         if (!$Firma) {
-            \sowerphp\core\Model_Datasource_Session::message('No hay firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe agregar su firma antes de ceder el DTE. [faq:174]', 'error');
+            $message = __(
+                'No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
+                url('/dte/admin/firma_electronicas/agregar')
+            );
+            \sowerphp\core\Model_Datasource_Session::message($message, 'error');
             $this->redirect(str_replace('ceder', 'ver', $this->request->request).'#cesion');
         }
         // armar el DTE cedido

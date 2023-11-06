@@ -77,16 +77,23 @@ class Controller_DteVentas extends Controller_Base_Libros
         }
         // verificar que no existan documentos rechazados en el período
         if ($DteVenta->countDteRechazadosSII()) {
-            \sowerphp\core\Model_Datasource_Session::message(
-                'Existen documentos que han sido rechazados por el SII en el libro de ventas del período '.$periodo.'. Debe corregir los casos rechazados antes de poder generar el libro. [faq:48]', 'error'
+            $message = __(
+                'Existen documentos que han sido rechazados por el SII en el libro de ventas del período %s. Debe corregir los casos rechazados antes de poder generar el libro. Puede buscar los documentos con estado rechazado [aquí](%s).',
+                $periodo,
+                url('/dte/informes/dte_emitidos/estados')
             );
+            \sowerphp\core\Model_Datasource_Session::message($message, 'error');
             $this->redirect(str_replace('enviar_sii', 'ver', $this->request->request));
         }
         // obtener firma
         $Firma = $Emisor->getFirma($this->Auth->User->id);
         if (!$Firma) {
-            \sowerphp\core\Model_Datasource_Session::message('No hay firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe agregar su firma antes de enviar el libro al SII. [faq:174]', 'error');
-            $this->redirect('/dte/admin/firma_electronicas');
+            $message = __(
+                'No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
+                url('/dte/admin/firma_electronicas/agregar')
+            );
+            \sowerphp\core\Model_Datasource_Session::message($message, 'error');
+            $this->redirect('/dte/admin/firma_electronicas/agregar');
         }
         // agregar carátula al libro
         $caratula = [

@@ -624,7 +624,11 @@ class Model_DteIntercambio extends \Model_App
         // obtener firma
         $Firma = $this->getReceptor()->getFirma($config['user_id']);
         if (!$Firma) {
-            throw new \Exception('No hay firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe agregar su firma antes de generar una respuesta al intercambio. [faq:174]');
+            $message = __(
+                'No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
+                url('/dte/admin/firma_electronicas/agregar')
+            );
+            throw new \Exception($message);
         }
         // si es un booleano se acepta o reclaman todos los documentos del intercambio
         if (is_bool($accion) or is_numeric($accion)) {

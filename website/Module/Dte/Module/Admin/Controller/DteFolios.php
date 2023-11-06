@@ -78,7 +78,7 @@ class Controller_DteFolios extends \Controller_App
                 $DteFolio->alerta = $_POST['alerta'];
                 try {
                     $DteFolio->save();
-                } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+                } catch (\Exception $e) {
                     \sowerphp\core\Model_Datasource_Session::message('No fue posible crear el mantenedor del folio: '.$e->getMessage(), 'error');
                     return;
                 }
@@ -92,7 +92,7 @@ class Controller_DteFolios extends \Controller_App
     /**
      * Acción que permite subir un caf para un tipo de folio
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-13
+     * @version 2023-11-06
      */
     public function subir_caf()
     {
@@ -105,32 +105,88 @@ class Controller_DteFolios extends \Controller_App
         if (isset($_POST['submit'])) {
             // verificar que se haya podido subir CAF
             if (!isset($_FILES['caf']) or $_FILES['caf']['error']) {
-                \sowerphp\core\Model_Datasource_Session::message('Ocurrió un error al subir el CAF.', 'error');
+                $e = new \sowerphp\general\Exception_File_Upload($_FILES['caf']['error']);
+                $message = __('Error al subir el archivo XML del CAF. %s', $e->getMessage());
+                \sowerphp\core\Model_Datasource_Session::message($message, 'error');
                 return;
             }
             $mimetype = \sowerphp\general\Utility_File::mimetype($_FILES['caf']['tmp_name']);
             if (!in_array($mimetype, ['application/xml', 'text/xml'])) {
-                \sowerphp\core\Model_Datasource_Session::message('Formato '.$mimetype.' del archivo '.$_FILES['caf']['name'].' es incorrecto. Debe obtener un XML correcto desde SII para agregar acá. [faq:10]', 'error');
+                $message = __(
+                    'No ha sido posible cargar el archivo %s pues tiene formato %s, el cual es incorrecto. Debe [obtener un archivo XML de CAF válido en SII](%s) y luego subirlo acá.',
+                    $_FILES['caf']['name'],
+                    $mimetype,
+                    $Emisor->enCertificacion()
+                        ? 'https://maullin.sii.cl/cvc_cgi/dte/of_solicita_folios'
+                        : 'https://palena.sii.cl/cvc_cgi/dte/of_solicita_folios',
+                );
+                \sowerphp\core\Model_Datasource_Session::message($message, 'error');
                 return;
             }
             $caf = file_get_contents($_FILES['caf']['tmp_name']);
             $Folios = new \sasco\LibreDTE\Sii\Folios($caf);
             // si no hay tipo se asume que el archivo no es válido
             if (!$Folios->getTipo()) {
-                \sowerphp\core\Model_Datasource_Session::message('El archivo '.$_FILES['caf']['name'].' no es un XML de un CAF válido. Debe obtener un XML correcto desde SII para agregar acá. [faq:10]', 'error');
+                $message = __(
+                    'No ha sido posible cargar el archivo %s pues no es un XML de un CAF válido. Debe [obtener un archivo XML de CAF válido en SII](%s) y luego subirlo acá.',
+                    $_FILES['caf']['name'],
+                    $Emisor->enCertificacion()
+                        ? 'https://maullin.sii.cl/cvc_cgi/dte/of_solicita_folios'
+                        : 'https://palena.sii.cl/cvc_cgi/dte/of_solicita_folios',
+                );
+                \sowerphp\core\Model_Datasource_Session::message($message, 'error');
                 return;
             }
-            // buscar el mantenedor de folios del CAF
+            // buscar el mantenedor de folios del CAF, si no existe se tratará de crear el mantenedor
             $DteFolio = new Model_DteFolio($Emisor->rut, $Folios->getTipo(), (int)$Folios->getCertificacion());
             if (!$DteFolio->exists()) {
-                \sowerphp\core\Model_Datasource_Session::message('Primero debe crear el mantenedor de los folios de tipo '.$Folios->getTipo().'.', 'error');
-                return;
+                // verificar que esté autorizado a cargar folios del tipo de dte
+                if (!$Emisor->documentoAutorizado($Folios->getTipo())) {
+                    $message = __(
+                        'La empresa no tiene habilitado en LibreDTE el documento %s. Debe [contactarnos](%s) para que sea habilitado este tipo de documento en su cuenta.',
+                        strtolower($DteFolio->getTipo()->tipo),
+                        url('/contacto')
+                    );
+                    \sowerphp\core\Model_Datasource_Session::message($message, 'error');
+                    return;
+                }
+                // determinar alerta
+                $cantidad = $Folios->getCantidad();
+                if ($cantidad && $Emisor->config_sii_timbraje_multiplicador) {
+                    $alerta = ceil((int)$cantidad / (int)$Emisor->config_sii_timbraje_multiplicador);
+                } else {
+                    $alerta = (int)$cantidad;
+                }
+                // crear mantenedor del folio
+                $DteFolio->siguiente = 0;
+                $DteFolio->disponibles = 0;
+                $DteFolio->alerta = $alerta;
+                try {
+                    $DteFolio->save();
+                } catch (\Exception $e) {
+                    $message = __(
+                        'No fue posible subir el XML del CAF pues no existía el mantenedor de folios asociado. Se trató de crear automáticamente dicho mantenedor pero no fue posible.<br/><br/>%s<br/><br/>Debe [crear el mantenedor de folios](%s) y luego tratar de [subir nuevamente el XML del CAF](%s).',
+                        $e->getMessage(),
+                        url('/dte/admin/dte_folios/agregar'),
+                        url('/dte/admin/dte_folios/subir_caf')
+                    );
+                    \sowerphp\core\Model_Datasource_Session::message($message, 'error');
+                    return;
+                }
             }
             // guardar el CAF
             try {
                 $DteFolio->guardarFolios($caf);
-                \sowerphp\core\Model_Datasource_Session::message('El CAF para el documento de tipo '.$Folios->getTipo().' que inicia en '.$Folios->getDesde().' fue cargado. El siguiente folio disponible es '.$DteFolio->siguiente.'.', 'ok');
-                $this->redirect('/dte/admin/dte_folios');
+                $message = __(
+                    'El archivo XML del CAF para el documento de tipo %s que inicia en %d y termina en %d fue cargado. El siguiente folio disponible es el %d, si necesita modificar el folio siguiente debe hacerlo [aquí](%s).',
+                    strtolower($DteFolio->getTipo()->tipo),
+                    $Folios->getDesde(),
+                    $Folios->getHasta(),
+                    $DteFolio->siguiente,
+                    url('/dte/admin/dte_folios/modificar/'.$Folios->getTipo())
+                );
+                \sowerphp\core\Model_Datasource_Session::message($message, 'ok');
+                $this->redirect('/dte/admin/dte_folios/ver/'.$Folios->getTipo());
             } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
                 return;
@@ -235,7 +291,7 @@ class Controller_DteFolios extends \Controller_App
                 \sowerphp\core\Model_Datasource_Session::message('El mantenedor de folios para tipo '.$DteFolio->dte.' ha sido actualizado.', 'ok'
                 );
                 $this->redirect('/dte/admin/dte_folios');
-            } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+            } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message('No fue posible actualizar el mantenedor de folios: '.$e->getMessage(), 'error');
                 return;
             }
@@ -333,7 +389,7 @@ class Controller_DteFolios extends \Controller_App
     /**
      * Acción que permite reobtener un archivo CAF al SII y cargarlo en LibreDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-05
+     * @version 2023-11-06
      */
     public function reobtener_caf($dte = null)
     {
@@ -346,15 +402,24 @@ class Controller_DteFolios extends \Controller_App
         // procesar solicitud de folios
         if (isset($_POST['submit'])) {
             // buscar el mantenedor de folios del CAF
-            $DteFolio = new Model_DteFolio($Emisor->rut, $_POST['dte'], $Emisor->enCertificacion());
+            $DteFolio = new Model_DteFolio($Emisor->rut, (int)$_POST['dte'], $Emisor->enCertificacion());
             if (!$DteFolio->exists()) {
-                \sowerphp\core\Model_Datasource_Session::message('Antes de reobtener un CAF para este tipo de documento, primero debe crear el mantenedor de folios de tipo '.$_POST['dte'].'.', 'error');
+                $message = __(
+                    'Antes de reobtener el XML de un CAF de %s, primero debe [crear el mantenedor de folios](%s).',
+                    strtolower($DteFolio->getTipo()->tipo),
+                    url('/dte/admin/dte_folios/agregar')
+                );
+                \sowerphp\core\Model_Datasource_Session::message($message, 'error');
                 return;
             }
             // recuperar firma electrónica
             $Firma = $Emisor->getFirma($this->Auth->User->id);
             if (!$Firma) {
-                \sowerphp\core\Model_Datasource_Session::message('No hay firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe agregar su firma antes de reobtener un CAF. [faq:174]', 'error');
+                $message = __(
+                    'No ha sido posible obtener el listado de CAF solicitados en el SII, pues no hay una firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe [agregar su firma](%s) antes de utilizar esta opción.',
+                    url('/dte/admin/firma_electronicas')
+                );
+                \sowerphp\core\Model_Datasource_Session::message($message, 'error');
                 return;
             }
             // consultar listado de solicitudes
@@ -403,7 +468,7 @@ class Controller_DteFolios extends \Controller_App
      * Acción que permite descargar un archivo CAF previamente solicitado al SII
      * y cargarlo en LibreDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-05
+     * @version 2023-11-06
      */
     public function reobtener_caf_cargar($dte, $folio_inicial, $folio_final, $fecha_autorizacion)
     {
@@ -423,8 +488,12 @@ class Controller_DteFolios extends \Controller_App
         // recuperar firma electrónica
         $Firma = $Emisor->getFirma($this->Auth->User->id);
         if (!$Firma) {
-            \sowerphp\core\Model_Datasource_Session::message('No hay firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe agregar su firma antes de reobtener un CAF. [faq:174]', 'error');
-            $this->redirect('/dte/admin/dte_folios');
+            $message = __(
+                'No ha sido posible reobtener el XML del CAF, pues no hay una firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe [agregar su firma](%s) antes de utilizar esta opción.',
+                url('/dte/admin/firma_electronicas')
+            );
+            \sowerphp\core\Model_Datasource_Session::message($message, 'error');
+            $this->redirect('/dte/admin/dte_folios/reobtener_caf/'.$DteFolio->dte);
         }
         // consultar listado de solicitudes
         $r = libredte_api_consume(
@@ -438,18 +507,35 @@ class Controller_DteFolios extends \Controller_App
                 ],
             ]
         );
-        if ($r['status']['code']!=200) {
-            \sowerphp\core\Model_Datasource_Session::message('No fue posible obtener el CAF desde el SII: '.$r['body'].' Se recomienda usar la opción de reobtención directa en SII. [faq:83]', 'error');
+        if ($r['status']['code'] != 200) {
+            $message = __(
+                'No fue posible obtener el XML del CAF desde el SII.<br/><br/>%s<br/><br/>Se recomienda usar la opción de [reobtención directa en SII](%s) y luego [subir el XML del CAF a LibreDTE](%s).',
+                $r['body'],
+                $Emisor->enCertificacion()
+                    ? 'https://maullin.sii.cl/cvc_cgi/dte/rf_reobtencion1_folios'
+                    : 'https://palena.sii.cl/cvc_cgi/dte/rf_reobtencion1_folios',
+                url('/dte/admin/dte_folios/subir_caf')
+            );
+            \sowerphp\core\Model_Datasource_Session::message($message, 'error');
             $this->redirect('/dte/admin/dte_folios/reobtener_caf/'.$DteFolio->dte);
         }
         // guardar el CAF
         try {
             $DteFolio->guardarFolios($r['body']);
             $Folios = new \sasco\LibreDTE\Sii\Folios($r['body']);
-            \sowerphp\core\Model_Datasource_Session::message('El CAF para el documento de tipo '.$Folios->getTipo().' que inicia en '.$Folios->getDesde().' fue cargado. El siguiente folio disponible es '.$DteFolio->siguiente.'.', 'ok');
+            \sowerphp\core\Model_Datasource_Session::message('El XML del CAF para el documento de tipo '.$Folios->getTipo().' que inicia en '.$Folios->getDesde().' fue cargado. El siguiente folio disponible es '.$DteFolio->siguiente.'.', 'ok');
             $this->redirect('/dte/admin/dte_folios/reobtener_caf/'.$DteFolio->dte);
         } catch (\Exception $e) {
-            \sowerphp\core\Model_Datasource_Session::message($e->getMessage().' Se recomienda usar la opción de reobtención directa en SII. [faq:83]', 'error');
+            $message = __(
+                'No fue posible guardar el XML del CAF obtenido desde el SII.<br/><br/>%s<br/><br/>Se recomienda usar la opción de [reobtención directa en SII](%s) y luego [subir el XML del CAF a LibreDTE](%s).',
+                $e->getMessage(),
+                $Emisor->enCertificacion()
+                    ? 'https://maullin.sii.cl/cvc_cgi/dte/rf_reobtencion1_folios'
+                    : 'https://palena.sii.cl/cvc_cgi/dte/rf_reobtencion1_folios',
+                url('/dte/admin/dte_folios/subir_caf')
+            );
+
+            \sowerphp\core\Model_Datasource_Session::message($message, 'error');
             $this->redirect('/dte/admin/dte_folios/reobtener_caf/'.$DteFolio->dte);
         }
     }
@@ -457,7 +543,7 @@ class Controller_DteFolios extends \Controller_App
     /**
      * Acción que permite solicitar un archivo CAF al SII y cargarlo en LibreDTE
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-14
+     * @version 2023-11-06
      */
     public function solicitar_caf($dte = null)
     {
@@ -472,7 +558,7 @@ class Controller_DteFolios extends \Controller_App
             // buscar el mantenedor de folios del CAF
             $DteFolio = new Model_DteFolio($Emisor->rut, $_POST['dte'], $Emisor->enCertificacion());
             if (!$DteFolio->exists()) {
-                \sowerphp\core\Model_Datasource_Session::message('Primero debe crear el mantenedor de los folios de tipo '.$_POST['dte'].'. [faq:10]', 'error');
+                \sowerphp\core\Model_Datasource_Session::message('Primero debe crear el mantenedor de los folios de tipo '.$_POST['dte'].'.', 'error');
                 return;
             }
             // solicitar timbraje
@@ -483,7 +569,15 @@ class Controller_DteFolios extends \Controller_App
             try {
                 $xml = $DteFolio->timbrar($_POST['cantidad']);
             } catch (\Exception $e) {
-                \sowerphp\core\Model_Datasource_Session::message($e->getMessage().' Se recomienda usar la opción de timbraje directo en SII. [faq:10]', 'error');
+                $message = __(
+                    'No fue posible solicitar un nuevo XML de CAF al SII mediante LibreDTE.<br/><br/>%s<br/><br/>Se recomienda usar la opción de [timbraje directo en SII](%s) y luego [subir el XML del CAF a LibreDTE](%s).',
+                    $e->getMessage(),
+                    $Emisor->enCertificacion()
+                        ? 'https://maullin.sii.cl/cvc_cgi/dte/of_solicita_folios'
+                        : 'https://palena.sii.cl/cvc_cgi/dte/of_solicita_folios',
+                    url('/dte/admin/dte_folios/subir_caf')
+                );
+                \sowerphp\core\Model_Datasource_Session::message($message, 'error');
                 return;
             }
             // guardar timbraje
@@ -494,7 +588,19 @@ class Controller_DteFolios extends \Controller_App
                 );
                 $this->redirect('/dte/admin/dte_folios');
             } catch (\Exception $e) {
-                throw new \Exception('No fue posible guardar el CAF obtenido desde el SII: '.$e->getMessage().' Se recomienda usar la opción de timbraje directo en SII. [faq:10]');
+                $message = __(
+                    'No fue posible guardar el XML del CAF obtenido desde el SII.<br/><br/>%s<br/><br/>Se recomienda revisar si se puede [reobtener el CAF](%s) o bien usar la opción de [timbraje directo en SII](%s). Luego, teniendo el XML con alguna de las opciones previas, [subir el XML del CAF a LibreDTE](%s).',
+                    $e->getMessage(),
+                    $Emisor->enCertificacion()
+                        ? 'https://maullin.sii.cl/cvc_cgi/dte/rf_reobtencion1_folios'
+                        : 'https://palena.sii.cl/cvc_cgi/dte/rf_reobtencion1_folios',
+                    $Emisor->enCertificacion()
+                        ? 'https://maullin.sii.cl/cvc_cgi/dte/of_solicita_folios'
+                        : 'https://palena.sii.cl/cvc_cgi/dte/of_solicita_folios',
+                    url('/dte/admin/dte_folios/subir_caf')
+                );
+                \sowerphp\core\Model_Datasource_Session::message($message, 'error');
+                return;
             }
         }
     }
@@ -683,7 +789,7 @@ class Controller_DteFolios extends \Controller_App
                 $this->Api->send('No fue posible actualizar el mantenedor de folios.', 500);
             }
             return $DteFolio;
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+        } catch (\Exception $e) {
             $this->Api->send('No fue posible actualizar el mantenedor de folios: '.$e->getMessage().'.', 500);
         }
     }
@@ -747,7 +853,11 @@ class Controller_DteFolios extends \Controller_App
         // recuperar firma electrónica
         $Firma = $Emisor->getFirma($User->id);
         if (!$Firma) {
-            $this->Api->send('No hay firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe agregar su firma antes de consultar el estado de un folio. [faq:174]', 506);
+            $message = __(
+                'No ha sido posible consultar el estado de un folio, pues no hay una firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe [agregar su firma](%s) antes de utilizar esta opción.',
+                url('/dte/admin/firma_electronicas')
+            );
+            $this->Api->send($message, 506);
         }
         // consultar estado del folio
         $r = libredte_api_consume(
@@ -795,7 +905,11 @@ class Controller_DteFolios extends \Controller_App
         // recuperar firma electrónica
         $Firma = $Emisor->getFirma($User->id);
         if (!$Firma) {
-            $this->Api->send('No hay firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe agregar su firma antes de anular un folio. [faq:174]', 506);
+            $message = __(
+                'No ha sido posible anular el folio, pues no hay una firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe [agregar su firma](%s) antes de utilizar esta opción.',
+                url('/dte/admin/firma_electronicas')
+            );
+            $this->Api->send($message, 506);
         }
         // anular folio
         $r = libredte_api_consume(

@@ -24,14 +24,14 @@
 /**
  * Función para consumir Servicios Web de API Gateway en apigateway.cl
  * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2022-11-09
+ * @version 2023-11-06
  */
 function libredte_api_consume($recurso, $datos = [])
 {
     // configuración de la API para funcionalidades extras
     $config = \sowerphp\core\Configure::read('proveedores.api.apigateway');
     if (!$config or (is_array($config) and empty($config['token']))) {
-        throw new \Exception('Funcionalidades extras no disponibles en esta versión de LibreDTE. Desbloquea las funcionalidades, desde costo 0, en www.apigateway.cl [faq:265]', 402);
+        throw new \Exception('Las funcionalidades extras no están disponibles en esta Edición Comunidad de LibreDTE. Para desbloquear las funcionalidades extras se debe [contratar un plan de www.apigateway.cl](https://www.apigateway.cl)', 402);
     }
     if (!is_array($config)) {
         $config = [
@@ -41,7 +41,7 @@ function libredte_api_consume($recurso, $datos = [])
     }
     // verificar si se pueden hacer consultas a la API o la cuenta se encuentra
     // en pausa por haber alcanzado el número máximo de consultas
-    $message_429 = 'Las consultas a API Gateway en apigateway.cl se encuentran en pausa ya que se alcanzó el límite de la cuota permitida. Se podrán volver a hacer consultas después del %s. Recuperará el acceso a las funcionalidades extras de LibreDTE una vez se restablezca la cuota de consultas. [faq:265]';
+    $message_429 = 'Las consultas a API Gateway en apigateway.cl se encuentran en pausa ya que se alcanzó el límite de la cuota permitida. Se podrán volver a realizar consultas después del %s. Recuperará el acceso a las funcionalidades extras de LibreDTE una vez se restablezca la cuota de consultas. Si se requiere aumentar la cantidad de consultas de manera inmediata se debe [contratar un plan superior de www.apigateway.cl](https://www.apigateway.cl)';
     $Cache = new \sowerphp\core\Cache();
     $retry_time = $Cache->get('libredte_api_retry_time');
     if ($retry_time) {

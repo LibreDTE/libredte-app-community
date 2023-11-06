@@ -340,7 +340,7 @@ class Model_DteFolio extends \Model_App
         $Folios = new \sasco\LibreDTE\Sii\Folios($xml);
         // si no se pudo validar el caf error
         if (!$Folios->getTipo()) {
-            throw new \Exception('No fue posible cargar el CAF:<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()));
+            throw new \Exception('No fue posible cargar el archivo XML del CAF:<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()));
         }
         // verificar que el caf sea del emisor
         if ($Folios->getEmisor()!=$Emisor->rut.'-'.$Emisor->dv) {
@@ -355,7 +355,7 @@ class Model_DteFolio extends \Model_App
         // crear caf para el folio
         $DteCaf = new Model_DteCaf($this->emisor, $this->dte, (int)$Folios->getCertificacion(), $Folios->getDesde());
         if ($DteCaf->exists()) {
-            throw new \Exception('El CAF para el documento de tipo '.$DteCaf->dte.' que inicia en '.$Folios->getDesde().' en ambiente de '.$ambiente_caf.' ya estaba cargado');
+            throw new \Exception('El archivo XML del CAF para el documento de tipo '.$DteCaf->dte.' que inicia en '.$Folios->getDesde().' en ambiente de '.$ambiente_caf.' ya estaba cargado en LibreDTE.');
         }
         $DteCaf->hasta = $Folios->getHasta();
         $DteCaf->xml = \website\Dte\Utility_Data::encrypt($xml);
