@@ -82,7 +82,7 @@ echo $f->input(['type'=>'hidden', 'name'=>'lista_precios', 'value'=>0]);
             </div>
         <?php endif; ?>
         <div class="row">
-            <div class="col-md-3 mb-2"><?=$f->input(['name'=>'TpoDoc', 'type'=>'select', 'options'=> $tipos_dte_autorizados, 'value'=>$dte_defecto, 'onblur'=>'DTE.setTipo(this.value)'])?></div>
+            <div class="col-md-3 mb-2"><?=$f->input(['name'=>'TpoDoc', 'type'=>'select', 'options'=> $tipos_dte_autorizados, 'value'=>$dte_defecto, 'onblur'=>'DTE.setTipo(this.value)', 'auto_options'=>false])?></div>
             <div class="col-md-3 mb-2"><?=$f->input(['type' => 'date', 'name' => 'FchEmis', 'placeholder'=>'Fecha de emisión del documento', 'popover'=>'Día, mes y año con el que se emitirá el documento. Esta fecha determinará en qué período (mes) contable quedará el documento al ser ingresado al registro de ventas del SII.', 'value'=>$hoy, 'check' => 'notempty date', 'attr'=>'onchange="$(\'#FchVencField\').datepicker(\'setDate\', this.value)"'])?></div>
             <div class="col-md-3 mb-2"><?=$f->input(['name'=>'FmaPago', 'type'=>'select', 'options'=>[''=>'Sin forma de pago', 1=>'Contado', 2=>'Crédito', 3=>'Sin costo (entrega gratuita)'], 'value'=>!empty($datos['Encabezado']['IdDoc']['FmaPago'])?$datos['Encabezado']['IdDoc']['FmaPago']:$Emisor->config_emision_forma_pago, 'onblur'=>'DTE.setFormaPago(this.value)'])?></div>
             <div class="col-md-3 mb-2"><?=$f->input(['type' => 'date', 'name' => 'FchVenc', 'placeholder'=>'Vencimiento o pago anticipado', 'popover'=>'Día máximo a pagar (fecha mayor a emisión) o día en que se pagó el documento (fecha menor a emisión).', 'value'=>$hoy, 'check' => 'notempty date'])?></div>

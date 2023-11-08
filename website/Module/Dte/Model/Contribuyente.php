@@ -781,59 +781,62 @@ class Model_Contribuyente extends \Model_App
      * @param Usuario Objeto \sowerphp\app\Sistema\Usuarios\Model_Usuario al que se asignarán permisos
      * @return =true si está autorizado
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-10-21
+     * @version 2023-11-08
      */
     public function setPermisos(&$Usuario)
     {
-        $grupos_usuario = $Usuario->groups(true);
-        // si el usuario es el administrador de la empresa se colocan sus permisos estándares
+        $usuario_grupos_reales = $Usuario->groups(true);
+        // si el usuario es el administrador de la empresa se asignan sus propios grupos como los que tiene acceso
         if ($this->usuario == $Usuario->id) {
-            $grupos = $grupos_usuario;
+            $usuario_grupos_sesion = $usuario_grupos_reales;
         }
         // si el usuario es de soporte se colocan los permisos completos del usuario principal de la empresa
         else if ($this->config_app_soporte and $Usuario->inGroup(['soporte'])) {
-            $grupos = $this->getUsuario()->groups(true);
+            $usuario_grupos_sesion = $this->getUsuario()->groups(true);
         }
         // si es un usuario autorizado, entonces se copian los permisos asignados de los disponibles en el
         // administrador
         else {
-            // asignar permisos copiados del administrador
-            $permisos = \sowerphp\core\Configure::read('empresa.permisos');
+            $usuario_grupos_sesion = [];
+            // asignar grupo 'distribuidor' a usuarios autorizados de un contribuyente
+            // que es distribuidor
+            $admin_grupos = $this->getUsuario()->getGroups();
+            if (in_array('distribuidor', $admin_grupos)) {
+                $usuario_grupos_sesion[] = 'distribuidor';
+            }
+            // siempre asignar el grupo 'usuarios' para mantener permisos básicos
+            $usuario_grupos_sesion[] = 'usuarios';
+            // buscar los permisos que tiene el usuario autorizado sobre la empresa
             $usuario_permisos = $this->db->getCol('
                 SELECT permiso
                 FROM contribuyente_usuario
                 WHERE contribuyente = :rut AND usuario = :usuario
             ', [':rut'=>$this->rut, ':usuario'=>$Usuario->id]);
-            $grupos = [];
+            // mapa de permisos definidos por la configuración y la empresa
+            $permisos = \sowerphp\core\Configure::read('empresa.permisos');
+            // asignar los grupos del sistema a los que se podría tener acceso por el permisos de la empresa
             foreach ($usuario_permisos as $p) {
                 foreach ($permisos[$p]['grupos'] as $g) {
-                    if (!in_array($g, $grupos)) {
-                        $grupos[] = $g;
+                    if (!in_array($g, $usuario_grupos_sesion) and in_array($g, $admin_grupos)) {
+                        $usuario_grupos_sesion[] = $g;
                     }
                 }
             }
-            // parche para asignar grupo 'distribuidor' a usuarios autorizados de un contribuyente
-            // que es distribuidor
-            if (in_array('distribuidor', $this->getUsuario()->getGroups())) {
-                $grupos[] = 'distribuidor';
-            }
-            // siempre asignar el grupo 'usuarios' para mantener permisos básicos
-            $grupos[] = 'usuarios';
         }
         // buscar permisos y grupos del usuario principal administrador
-        $auths = $this->getUsuario()->getAuths($grupos);
-        $grupos = $this->getUsuario()->getGroups($grupos);
+        $usuario_auths_sesion = $this->getUsuario()->getAuths($usuario_grupos_sesion);
         // corregir permisos con soporte si corresponde
-        if (in_array('soporte', $grupos_usuario)) {
+        if (in_array('soporte', $usuario_grupos_reales)) {
             foreach (['appadmin', 'passwd', 'soporte', 'sysadmin'] as $grupo) {
-                if (!in_array($grupo, $grupos)) {
-                    $auths = array_merge($auths, $Usuario->getAuths([$grupo]));
+                if (!in_array($grupo, $usuario_grupos_sesion)) {
+                    $usuario_auths_sesion = array_merge($usuario_auths_sesion, $Usuario->getAuths([$grupo]));
                     $grupos[] = $grupo;
                 }
             }
         }
-        $Usuario->setAuths($auths);
-        $Usuario->setGroups($grupos);
+        // guardar los permisos y los grupos que tendrá el usuario durante la sesión
+        $Usuario->setAuths($usuario_auths_sesion);
+        $Usuario->setGroups($usuario_grupos_sesion);
     }
 
     /**
