@@ -827,10 +827,11 @@ class Model_Contribuyente extends \Model_App
         $usuario_auths_sesion = $this->getUsuario()->getAuths($usuario_grupos_sesion);
         // corregir permisos con soporte si corresponde
         if (in_array('soporte', $usuario_grupos_reales)) {
-            foreach (['appadmin', 'passwd', 'soporte', 'sysadmin'] as $grupo) {
+            foreach ($usuario_grupos_reales as $grupo) {
                 if (!in_array($grupo, $usuario_grupos_sesion)) {
-                    $usuario_auths_sesion = array_merge($usuario_auths_sesion, $Usuario->getAuths([$grupo]));
-                    $grupos[] = $grupo;
+                    $grupo_auths = $Usuario->getAuths([$grupo]);
+                    $usuario_auths_sesion = array_merge($usuario_auths_sesion, $grupo_auths);
+                    $usuario_grupos_sesion[] = $grupo;
                 }
             }
         }

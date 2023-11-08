@@ -1230,12 +1230,13 @@ class Controller_DteEmitidos extends \Controller_App
      * Acción que permite realizar una búsqueda avanzada dentro de los DTE
      * emitidos
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-18
+     * @version 2023-11-08
      */
     public function buscar()
     {
         $Emisor = $this->getContribuyente();
         $this->set([
+            'Emisor' => $Emisor,
             'tipos_dte' => $Emisor->getDocumentosAutorizados(),
             'values_xml' => [],
         ]);
@@ -1272,7 +1273,6 @@ class Controller_DteEmitidos extends \Controller_App
             }
             else {
                 $this->set([
-                    'Emisor' => $Emisor,
                     'documentos' => $response['body'],
                 ]);
             }
