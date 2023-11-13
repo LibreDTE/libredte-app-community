@@ -204,7 +204,7 @@ new \sowerphp\general\View_Helper_Table($usuarios, 'usuarios_autorizados_'.$Cont
 
 <!-- INICIO GENERAL -->
 <div role="tabpanel" class="tab-pane" id="general" aria-labelledby="general-tab">
-    <div class="card mb-4">
+    <div class="card mb-4" id="general_usuarios-card">
         <div class="card-header">
             <i class="fa fa-cogs fa-fw"></i>
             Configuración general usuarios

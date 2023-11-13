@@ -205,7 +205,7 @@ new \sowerphp\general\View_Helper_Table([
 <?php if ($DteRecibido->hasLocalXML()) : ?>
 <!-- INICIO REFERENCIAS -->
 <div role="tabpanel" class="tab-pane" id="referencias" aria-labelledby="referencias-tab">
-    <div class="card mb-4">
+    <div class="card mb-4" id="referencias_referenciados-card">
         <div class="card-header">Documentos referenciados</div>
         <div class="card-body">
 <?php
@@ -244,7 +244,7 @@ if ($referenciados) {
         </a>
     </div>
 </div>
-<div class="card mb-4">
+<div class="card mb-4" id="avanzado_datos-documento-card">
     <div class="card-header">
         <i class="fas fa-file-code"></i>
         Datos del documento
@@ -274,7 +274,7 @@ if ($referenciados) {
         </table>
     </div>
 </div>
-<div class="card mb-4">
+<div class="card mb-4" id="avanzado_datos-proveedor-card">
     <div class="card-header">
         <i class="fas fa-parachute-box"></i>
         Datos del Proveedor

@@ -196,7 +196,7 @@ foreach ($resumen as &$r) {
             </div>
         </div>
     </div>
-    <div class="card mb-4">
+    <div class="card mb-4" id="resumen_detalle-registrado-card">
         <div class="card-header">
             Documentos con detalle registrado
         </div>
@@ -226,7 +226,7 @@ if (!empty($alerta_iva_boleta)) :
 <?php endif; ?>
         </div>
     </div>
-    <div class="card mb-4">
+    <div class="card mb-4" id="resumen_resumenes-manuales-card">
         <div class="card-header">
             Enviar libro agregando resúmenes manuales
         </div>
@@ -300,7 +300,7 @@ new \sowerphp\general\View_Helper_Table($detalle);
 
 <!-- INICIO ESTADÍSTICAS -->
 <div role="tabpanel" class="tab-pane" id="estadisticas" aria-labelledby="estadisticas-tab">
-<div class="card mb-4">
+<div class="card mb-4" id="estadisticas_emitidos-dia-card">
     <div class="card-header">
         <i class="far fa-chart-bar fa-fw"></i> Documentos emitidos por día
     </div>
@@ -308,7 +308,7 @@ new \sowerphp\general\View_Helper_Table($detalle);
         <div id="grafico-documentos_por_dia"></div>
     </div>
 </div>
-<div class="card mb-4">
+<div class="card mb-4" id="estadisticas_emitidos-tipo-card">
     <div class="card-header">
         <i class="far fa-chart-bar fa-fw"></i> Documentos emitidos por tipo
     </div>
@@ -316,7 +316,7 @@ new \sowerphp\general\View_Helper_Table($detalle);
         <div id="grafico-documentos_por_tipo"></div>
     </div>
 </div>
-<div class="card mb-4">
+<div class="card mb-4" id="estadisticas_emitidos-estado-receptor-card">
     <div class="card-header">
         <i class="far fa-chart-bar fa-fw"></i> Documentos emitidos según el estado que asignó el receptor
     </div>

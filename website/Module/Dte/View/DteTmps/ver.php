@@ -352,7 +352,7 @@ echo $f->end('Actualizar fecha');
 <?php if ($Emisor->usuarioAutorizado($_Auth->User, 'admin')): ?>
 <!-- INICIO AVANZADO -->
 <div role="tabpanel" class="tab-pane" id="avanzado" aria-labelledby="avanzado-tab">
-<div class="card mt-4">
+<div class="card mt-4" id="avanzado_datos-documento-temporal-card">
     <div class="card-header">
         <i class="fas fa-file-code"></i>
         Datos del Documento Temporal
@@ -386,7 +386,7 @@ echo $f->end(false);
 ?>
     </div>
 </div>
-<div class="card mt-4">
+<div class="card mt-4" id="avanzado_datos-documento-card">
     <div class="card-header">
         <i class="fas fa-file-code"></i>
         Datos del documento

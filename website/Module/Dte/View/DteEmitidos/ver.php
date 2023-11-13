@@ -369,7 +369,7 @@ $color = [
 <?php endif; ?>
 <?php endif; ?>
 <?php if ($DteEmitido->hasLocalXML()) : ?>
-   <div class="card mb-4">
+   <div class="card mb-4" id="intercambio_recibo-card">
         <div class="card-header">Recibo</div>
         <div class="card-body">
 <?php
@@ -397,7 +397,7 @@ if ($Recibo) {
 ?>
         </div>
     </div>
-    <div class="card mb-4">
+    <div class="card mb-4" id="intercambio_recepcion-card">
         <div class="card-header">Recepción</div>
         <div class="card-body">
 <?php
@@ -425,7 +425,7 @@ if ($Recepcion) {
 ?>
         </div>
     </div>
-    <div class="card mb-4">
+    <div class="card mb-4" id="intercambio_resultado-card">
         <div class="card-header">Resultado</div>
         <div class="card-body">
 <?php
@@ -462,7 +462,7 @@ if ($Resultado) {
 <div role="tabpanel" class="tab-pane" id="pagos" aria-labelledby="pagos-tab">
 <?php if ($DteEmitido->getTipo()->permiteCobro()): ?>
 <!-- módulo Pagos -->
-<div class="card mb-4">
+<div class="card mb-4" id="pagos_pagos-cobros-card">
     <div class="card-header">
         Pagos y cobros de LibreDTE
     </div>
@@ -515,7 +515,7 @@ if ($Cobro->datos) {
 <?php endif; ?>
 <?php if ($DteEmitido->hasLocalXML()) : ?>
 <!-- módulo Cobranza -->
-<div class="card mb-4">
+<div class="card mb-4"id="pagos_cobranza-card">
     <div class="card-header">
         Cobranza de ventas a crédito
     </div>
@@ -551,7 +551,7 @@ if ($cobranza) {
 <!-- INICIO REFERENCIAS -->
 <div role="tabpanel" class="tab-pane" id="referencias" aria-labelledby="referencias-tab">
 <?php if ($DteEmitido->hasLocalXML()) : ?>
-    <div class="card mb-4">
+    <div class="card mb-4" id="referencias_referenciados-card">
         <div class="card-header">Documentos referenciados</div>
         <div class="card-body">
 <?php
@@ -583,7 +583,7 @@ if ($referenciados) {
         </div>
     </div>
 <?php endif; ?>
-    <div class="card mb-4">
+    <div class="card mb-4" id="referencias_documentos-referencian-card">
         <div class="card-header">Documentos que referencian este</div>
         <div class="card-body">
 <?php
@@ -706,7 +706,7 @@ echo $f->begin([
     'onsubmit' => 'Form.check(\'cesionForm\') && Form.confirm(this, \'¿Está seguro de querer ceder el DTE?\', \'Generando cesión del DTE...\')',
 ]);
 ?>
-<div class="card mb-4">
+<div class="card mb-4" id="cesion_datos-cedente-card">
     <div class="card-header">Datos del cedente (<?=$Emisor->getNombre()?>)</div>
     <div class="card-body">
 <?php
@@ -720,7 +720,7 @@ echo $f->input([
 ?>
     </div>
 </div>
-<div class="card mb-4">
+<div class="card mb-4" id="cesion_datos-cesionario-card">
     <div class="card-header">Datos del cesionario (ej: la empresa de factoring a quien se cede el DTE)</div>
     <div class="card-body">
 <?php
@@ -774,7 +774,7 @@ echo $f->input([
 // si es nota de crédito permitir marcar iva como fuera de plazo
 if ($DteEmitido->dte == 61) :
 ?>
-<div class="card mt-4">
+<div class="card mt-4" id="avanzado_iva-fuera-plazo-card">
     <div class="card-header">
         <i class="fa fa-ban"></i>
         IVA fuera de plazo (no recuperable)
@@ -803,7 +803,7 @@ echo $f->end('Guardar');
 // si es guía de despacho permitir anular
 if ($DteEmitido->dte == 52) :
 ?>
-<div class="card mt-4">
+<div class="card mt-4" id="avanzado_anular-dte-card">
     <div class="card-header">
         <i class="fa fa-ban"></i>
         Anular DTE
@@ -832,7 +832,7 @@ echo $f->end('Guardar');
 // si es exportación permitir cambiar tipo de cambio (sólo si es usuario administrador)
 if ($Emisor->usuarioAutorizado($_Auth->User, 'admin') and $DteEmitido->getTipo()->esExportacion() and $DteEmitido->hasLocalXML()) :
 ?>
-<div class="card mt-4">
+<div class="card mt-4" id="avanzado_tipo-cambio-card">
     <div class="card-header">
         <i class="fas fa-dollar-sign"></i>
         Tipo de cambio para valor en pesos (CLP)
@@ -856,7 +856,7 @@ if ($Emisor->usuarioAutorizado($_Auth->User, 'admin') and $DteEmitido->getTipo()
 </div>
 <?php endif; ?>
 <?php if ($enviar_sii) : ?>
-<div class="card mt-4">
+<div class="card mt-4" id="avanzado_track-id-card">
     <div class="card-header">
         <i class="far fa-paper-plane"></i>
         Track ID o identificador del envío
@@ -881,7 +881,7 @@ echo $f->end('Modificar Track ID');
     </div>
 </div>
 <?php endif; ?>
-<div class="card mt-4">
+<div class="card mt-4" id="avanzado_cambiar-sucursal-card">
     <div class="card-header">
         <i class="fas fa-map-marker-alt"></i>
         Cambiar sucursal
@@ -905,7 +905,7 @@ echo $f->end('Modificar sucursal');
 ?>
     </div>
 </div>
-<div class="card mt-4 mb-4">
+<div class="card mt-4 mb-4" id="avanzado_datos-documento-card">
     <div class="card-header">
         <i class="fas fa-file-code"></i>
         Datos del documento

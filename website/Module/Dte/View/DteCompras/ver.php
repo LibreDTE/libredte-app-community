@@ -244,7 +244,7 @@ new \sowerphp\general\View_Helper_Table($detalle);
 
 <!-- INICIO ESTADÍSTICAS -->
 <div role="tabpanel" class="tab-pane" id="estadisticas" aria-labelledby="estadisticas-tab">
-<div class="card mt-4">
+<div class="card mt-4" id="estadisticas_documentos-dia-card">
     <div class="card-header">
         <i class="far fa-chart-bar fa-fw"></i> Documentos por día recibidos con fecha en el período <?=$Libro->periodo?>
     </div>
@@ -252,7 +252,7 @@ new \sowerphp\general\View_Helper_Table($detalle);
         <canvas id="documentos_por_dia_grafico"></canvas>
     </div>
 </div>
-<div class="card mt-4">
+<div class="card mt-4" id="estadisticas_documentos-tipo-card">
     <div class="card-header">
         <i class="far fa-chart-bar fa-fw"></i> Documentos por tipo recibidos con fecha en el período <?=$Libro->periodo?>
     </div>
