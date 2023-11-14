@@ -748,7 +748,6 @@ class Model_DteTmp extends \Model_App
      */
     public function email($to = null, $subject = null, $msg = null, $cotizacion = true, $use_template = true)
     {
-        $Request = new \sowerphp\core\Network_Request();
         // variables por defecto
         if (!$to) {
             $to = $this->getEmails();
@@ -795,9 +794,9 @@ class Model_DteTmp extends \Model_App
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($this->getEmisor()->getUsuario()->hash);
         if ($cotizacion) {
-            $response = $rest->get($Request->url.'/dte/dte_tmps/cotizacion/'.$this->receptor.'/'.$this->dte.'/'.$this->codigo.'/'.$this->emisor);
+            $response = $rest->get(url('/dte/dte_tmps/cotizacion/'.$this->receptor.'/'.$this->dte.'/'.$this->codigo.'/'.$this->emisor));
         } else {
-            $response = $rest->get($Request->url.'/api/dte/dte_tmps/pdf/'.$this->receptor.'/'.$this->dte.'/'.$this->codigo.'/'.$this->emisor);
+            $response = $rest->get(url('/api/dte/dte_tmps/pdf/'.$this->receptor.'/'.$this->dte.'/'.$this->codigo.'/'.$this->emisor));
         }
         if ($response['status']['code']!=200) {
             throw new \Exception($response['body']);
@@ -917,10 +916,9 @@ class Model_DteTmp extends \Model_App
      */
     public function getLinks()
     {
-        $Request = new \sowerphp\core\Network_Request();
         $links = [];
-        $links['ver'] = $Request->url.'/dte/dte_tmps/ver/'.$this->receptor.'/'.$this->dte.'/'.$this->codigo;
-        $links['pdf'] = $Request->url.'/dte/dte_tmps/cotizacion/'.$this->receptor.'/'.$this->dte.'/'.$this->codigo.'/'.$this->emisor;
+        $links['ver'] = url('/dte/dte_tmps/ver/'.$this->receptor.'/'.$this->dte.'/'.$this->codigo);
+        $links['pdf'] = url('/dte/dte_tmps/cotizacion/'.$this->receptor.'/'.$this->dte.'/'.$this->codigo.'/'.$this->emisor);
         $links_trigger = \sowerphp\core\Trigger::run('dte_dte_tmp_links', $this, $links);
         return $links_trigger ? $links_trigger : $links;
     }
@@ -1032,8 +1030,7 @@ class Model_DteTmp extends \Model_App
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($config['hash']);
             unset($config['hash']);
-            $Request = new \sowerphp\core\Network_Request();
-            $response = $rest->post($Request->url.'/api/utilidades/documentos/generar_pdf', $config);
+            $response = $rest->post(url('/api/utilidades/documentos/generar_pdf'), $config);
             if ($response===false) {
                 throw new \Exception(implode("\n", $rest->getErrors()), 500);
             }

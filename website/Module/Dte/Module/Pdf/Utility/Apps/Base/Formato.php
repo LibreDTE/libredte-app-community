@@ -32,6 +32,8 @@ namespace website\Dte\Pdf;
 abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base_Apps
 {
 
+    protected $namespace = 'dtepdfs'; ///< nombre del grupo de las aplicaciones que heredan esta clase
+
     /**
      * Método que entrega el código HTML de la página de configuración de la aplicación
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)

@@ -513,7 +513,7 @@ class Controller_Contribuyentes extends \Controller_App
         $this->set([
             'Contribuyente' => $Contribuyente,
             'permisos_usuarios' => $permisos_usuarios,
-            'transferir_contribuyente' => (boolean)\sowerphp\core\Configure::read('dte.transferir_contribuyente'),
+            'transferir_contribuyente' => (bool)\sowerphp\core\Configure::read('dte.transferir_contribuyente'),
         ]);
         // editar usuarios autorizados
         if (isset($_POST['submit'])) {
@@ -713,7 +713,7 @@ class Controller_Contribuyentes extends \Controller_App
     {
         $Contribuyente = $this->getContribuyente();
         // verificar si es posible transferir la empresa
-        if (!(boolean)\sowerphp\core\Configure::read('dte.transferir_contribuyente')) {
+        if (!(bool)\sowerphp\core\Configure::read('dte.transferir_contribuyente')) {
             \sowerphp\core\Model_Datasource_Session::message('No es posible que usted transfiera la empresa, contacte a soporte para realizar esta acción.', 'error');
             $this->redirect('/dte/contribuyentes/usuarios#general');
         }
@@ -902,7 +902,7 @@ class Controller_Contribuyentes extends \Controller_App
         // se quita el usuario de los atributos (por seguridad)
         unset($datos['usuario']);
         // se entregan los datos del contribuyente
-        $this->Api->send($datos, 200, JSON_PRETTY_PRINT);
+        $this->Api->send($datos, 200);
     }
 
     /**
@@ -927,7 +927,7 @@ class Controller_Contribuyentes extends \Controller_App
             'ambiente_en_certificacion' => (int)$Contribuyente->config_ambiente_en_certificacion,
             'documentos_autorizados' => $Contribuyente->getDocumentosAutorizados(),
         ];
-        $this->Api->send($config, 200, JSON_PRETTY_PRINT);
+        $this->Api->send($config, 200);
     }
 
 }

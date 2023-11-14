@@ -659,7 +659,7 @@ class Controller_DteTmps extends \Controller_App
         $Cobro = $DteTmp->getCobro();
         $links = $DteTmp->getLinks();
         $Cobro->url = !empty($links['pagar']) ? $links['pagar'] : null;
-        return $this->Api->send($Cobro, 200, JSON_PRETTY_PRINT);
+        return $this->Api->send($Cobro, 200);
     }
 
     /**
@@ -1040,7 +1040,7 @@ class Controller_DteTmps extends \Controller_App
             $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
         }
         // buscar documentos
-        $this->Api->send($Emisor->getDocumentosTemporales($this->Api->data, true), 200, JSON_PRETTY_PRINT);
+        $this->Api->send($Emisor->getDocumentosTemporales($this->Api->data, true), 200);
     }
 
     /**
@@ -1107,7 +1107,7 @@ class Controller_DteTmps extends \Controller_App
         // los datos se deben modificar al final para evitar borrarlos antes que se usen arriba
         $DteTmp->datos = $getDatosDte ? $DteTmp->getDatos() : null;
         // entregar documento
-        $this->Api->send($DteTmp, 200, JSON_PRETTY_PRINT);
+        $this->Api->send($DteTmp, 200);
     }
 
 }

@@ -674,7 +674,7 @@ class Controller_DteRecibidos extends \Controller_App
                 $DteRecibido->xml = null;
             }
         }
-        $this->Api->send($DteRecibido, 200, JSON_PRETTY_PRINT);
+        $this->Api->send($DteRecibido, 200);
     }
 
     /**
@@ -737,7 +737,7 @@ class Controller_DteRecibidos extends \Controller_App
             $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
         }
         // buscar documentos
-        $this->Api->send($Receptor->getDocumentosRecibidos($this->Api->data, true), 200, JSON_PRETTY_PRINT);
+        $this->Api->send($Receptor->getDocumentosRecibidos($this->Api->data, true), 200);
     }
 
     /**
@@ -775,7 +775,7 @@ class Controller_DteRecibidos extends \Controller_App
         if (!$documentos) {
             $this->Api->send('No se encontraron documentos', 404);
         }
-        $this->Api->send($documentos, 200, JSON_PRETTY_PRINT);
+        $this->Api->send($documentos, 200);
     }
 
 }

@@ -1174,8 +1174,7 @@ class Model_DteIntercambio extends \Model_App
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($config['hash']);
             unset($config['hash']);
-            $Request = new \sowerphp\core\Network_Request();
-            $response = $rest->post($Request->url.'/api/utilidades/documentos/generar_pdf', $config);
+            $response = $rest->post(url('/api/utilidades/documentos/generar_pdf'), $config);
         }
         // procesar respuesta
         if ($response===false) {

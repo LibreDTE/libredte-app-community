@@ -1366,7 +1366,7 @@ class Controller_DteEmitidos extends \Controller_App
         $DteEmitido->tipo = $DteEmitido->getTipo();
         $DteEmitido->estado = $DteEmitido->getEstado();
         // el "olvidar" el XML debe ser siempre lo último a realizar
-        $DteEmitido->has_xml = (boolean)$DteEmitido->xml;
+        $DteEmitido->has_xml = (bool)$DteEmitido->xml;
         if (!$getXML) {
             $DteEmitido->xml = false;
             $DteEmitido->cesion_xml = false;
@@ -1374,7 +1374,7 @@ class Controller_DteEmitidos extends \Controller_App
             $DteEmitido->xml = base64_encode($DteEmitido->getXML());
         }
         // entregar respuesta
-        $this->Api->send($DteEmitido, 200, JSON_PRETTY_PRINT);
+        $this->Api->send($DteEmitido, 200);
     }
 
     /**
@@ -1611,7 +1611,7 @@ class Controller_DteEmitidos extends \Controller_App
         }
         // actualizar estado
         try {
-            $this->Api->send($DteEmitido->actualizarEstado($User->id, $usarWebservice), 200, JSON_PRETTY_PRINT);
+            $this->Api->send($DteEmitido->actualizarEstado($User->id, $usarWebservice), 200);
         } catch (\Exception $e) {
             $this->Api->send($e->getMessage(), 500);
         }
@@ -1831,7 +1831,7 @@ class Controller_DteEmitidos extends \Controller_App
         $Cobro = $DteEmitido->getCobro();
         $links = $DteEmitido->getLinks();
         $Cobro->url = !empty($links['pagar']) ? $links['pagar'] : null;
-        return $this->Api->send($Cobro, 200, JSON_PRETTY_PRINT);
+        return $this->Api->send($Cobro, 200);
     }
 
     /**
@@ -1957,7 +1957,7 @@ class Controller_DteEmitidos extends \Controller_App
         // olvidar XML que se subió para no entregarlo en la respuesta
         $DteEmitido->xml = false;
         // entregar objeto del DTE emitido via la API
-        $this->Api->send($DteEmitido, 200, JSON_PRETTY_PRINT);
+        $this->Api->send($DteEmitido, 200);
     }
 
     /**
@@ -1986,7 +1986,7 @@ class Controller_DteEmitidos extends \Controller_App
         if (!$documentos) {
             $this->Api->send('No se encontraron documentos emitidos que coincidan con la búsqueda', 404);
         }
-        $this->Api->send($documentos, 200, JSON_PRETTY_PRINT);
+        $this->Api->send($documentos, 200);
     }
 
     /**

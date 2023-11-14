@@ -1744,11 +1744,10 @@ class Model_DteEmitido extends Model_Base_Envio
      */
     public function getLinks()
     {
-        $Request = new \sowerphp\core\Network_Request();
         $links = [];
-        $links['ver'] = $Request->url.'/dte/dte_emitidos/ver/'.$this->dte.'/'.$this->folio;
-        $links['pdf'] = $Request->url.'/dte/dte_emitidos/pdf/'.$this->dte.'/'.$this->folio.'/1/'.$this->emisor.'/'.$this->fecha.'/'.$this->total;
-        $links['xml'] = $Request->url.'/dte/dte_emitidos/xml/'.$this->dte.'/'.$this->folio.'/'.$this->emisor.'/'.$this->fecha.'/'.$this->total;
+        $links['ver'] = url('/dte/dte_emitidos/ver/'.$this->dte.'/'.$this->folio);
+        $links['pdf'] = url('/dte/dte_emitidos/pdf/'.$this->dte.'/'.$this->folio.'/1/'.$this->emisor.'/'.$this->fecha.'/'.$this->total);
+        $links['xml'] = url('/dte/dte_emitidos/xml/'.$this->dte.'/'.$this->folio.'/'.$this->emisor.'/'.$this->fecha.'/'.$this->total);
         $links['whatsapp'] = false;
         if ($this->getCelular()) {
             $links['whatsapp'] = 'https://wa.me/'.(int)str_replace(['+',' '], '', $this->getCelular()).'?text='.urlencode(
@@ -1975,8 +1974,7 @@ class Model_DteEmitido extends Model_Base_Envio
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($config['hash']);
             unset($config['hash']);
-            $Request = new \sowerphp\core\Network_Request();
-            $response = $rest->post($Request->url.'/api/utilidades/documentos/generar_pdf', $config);
+            $response = $rest->post(url('/api/utilidades/documentos/generar_pdf'), $config);
             if ($response===false) {
                 throw new \Exception(implode("\n", $rest->getErrors()), 500);
             }

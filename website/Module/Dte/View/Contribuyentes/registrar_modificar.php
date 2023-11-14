@@ -763,7 +763,7 @@ echo $f->input([
 $template_email_dte = '';
 if (isset($Contribuyente)) {
     if ($Contribuyente->getEmailFromTemplate('dte')) {
-        $template_email_dte_url = \sowerphp\core\Configure::read('app.url_static').'/contribuyentes/'.$Contribuyente->rut.'/email/dte.html';
+        $template_email_dte_url = url('/static/contribuyentes/'.$Contribuyente->rut.'/email/dte.html');
         $template_email_dte = '. <a href="'.$template_email_dte_url.'" target="_blank">Plantilla vigente</a>';
     }
 }

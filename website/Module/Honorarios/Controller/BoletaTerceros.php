@@ -106,7 +106,7 @@ class Controller_BoletaTerceros extends \Controller_App
             $this->Api->send('Debe definir a lo menos un filtro para la búsqueda', 400);
         }
         $boletas = (new Model_BoletaTerceros())->setContribuyente($Emisor)->buscar($filtros, 'DESC');
-        $this->Api->send($boletas, 200, JSON_PRETTY_PRINT);
+        $this->Api->send($boletas, 200);
     }
 
     /**
@@ -330,7 +330,7 @@ class Controller_BoletaTerceros extends \Controller_App
         // emitir boleta
         try {
             $BoletaTercero = (new Model_BoletaTerceros())->setContribuyente($Emisor)->emitir($boleta);
-            $this->Api->send($BoletaTercero, 200, JSON_PRETTY_PRINT);
+            $this->Api->send($BoletaTercero, 200);
         } catch (\Exception $e) {
             $this->Api->send($e->getMessage(), 500);
         }

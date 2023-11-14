@@ -331,10 +331,9 @@ class Model_DteGuias extends \Model_Plural_App
             ];
         }
         // consumir servicio web para crear documento temporal
-        $Request = new \sowerphp\core\Network_Request();
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($this->getContribuyente()->getUsuario()->hash);
-        $response = $rest->post($Request->url.'/api/dte/documentos/emitir', $dte);
+        $response = $rest->post(url('/api/dte/documentos/emitir'), $dte);
         if ($response['status']['code']!=200) {
             throw new \Exception($response['body']);
         }

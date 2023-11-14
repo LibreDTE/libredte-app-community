@@ -183,7 +183,7 @@ class Controller_RegistroCompras extends \Controller_App
         }
         $filtros['estado'] = 0; // forzar estado PENDIENTE
         $documentos = (new Model_RegistroCompras())->setContribuyente($Receptor)->buscar($filtros);
-        $this->Api->send($documentos, 200, JSON_PRETTY_PRINT);
+        $this->Api->send($documentos, 200);
     }
 
     /**

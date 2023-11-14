@@ -92,7 +92,7 @@ class Shell_Command_DteEmitidos_Actualizar extends \Shell_App
                 $msg .= '- Documento T'.$d_r['dte'].'F'.$d_r['folio'].' se encuentra '.$d_r['revision_estado'].': '.$d_r['revision_detalle']."\n";
             }
             $msg .= "\n";
-            $msg .= 'Es URGENTE que revise este listado de documento(s) y el estado en '.(new \sowerphp\core\Network_Request())->url.'/dte'."\n\n";
+            $msg .= 'Es URGENTE que revise este listado de documento(s) y el estado en '.url('/dte')."\n\n";
             $Contribuyente->notificar('Estado rechazado en SII en '.$n_documentos.' documentos(s)', $msg);
         }
         // enviar lo generado sin track id

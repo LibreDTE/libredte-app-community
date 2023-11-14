@@ -168,7 +168,7 @@ class Controller_Estadisticas extends \Controller_App
             'contribuyentes_por_comuna' => $Contribuyentes->countByComuna($certificacion),
             'contribuyentes_por_actividad' => $Contribuyentes->countByActividadEconomica($certificacion),
             'contribuyentes_activos' => $contribuyentes_activos,
-        ], 200, JSON_PRETTY_PRINT);
+        ], 200);
     }
 
     /**
@@ -178,7 +178,7 @@ class Controller_Estadisticas extends \Controller_App
      */
     public function _api_version_GET()
     {
-        $this->Api->send($this->getVersion(), 200, JSON_PRETTY_PRINT);
+        $this->Api->send($this->getVersion(), 200);
     }
 
     /**

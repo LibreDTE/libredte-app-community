@@ -102,7 +102,7 @@ class Controller_BoletaHonorarios extends \Controller_App
             $this->Api->send('Debe definir a lo menos un filtro para la búsqueda', 400);
         }
         $boletas = (new Model_BoletaHonorarios())->setContribuyente($Receptor)->buscar($filtros, 'DESC');
-        $this->Api->send($boletas, 200, JSON_PRETTY_PRINT);
+        $this->Api->send($boletas, 200);
     }
 
     /**

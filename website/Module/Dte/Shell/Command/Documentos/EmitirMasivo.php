@@ -124,7 +124,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
             return 1;
         }
         // si se solicitó incluir los PDF se crea directorio para irlos generando
-        $pdf = (boolean)$pdf;
+        $pdf = (bool)$pdf;
         if ($pdf) {
             $dir = TMP.'/libredte_dte_emitido_pdf_'.$Emisor->rut.'_'.md5(date('U').$Usuario->ultimo_ingreso_hash);
             if (file_exists($dir)) {
@@ -141,7 +141,6 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
             return 1;
         }
         // ir generando cada documento
-        $Request = new \sowerphp\core\Network_Request();
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($Usuario->hash);
         foreach($documentos as $dte) {
@@ -156,7 +155,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
                 unset($dte['LibreDTE']);
             }
             // emitir DTE temporal
-            $response = $rest->post($Request->url.'/api/dte/documentos/emitir', $dte);
+            $response = $rest->post(url('/api/dte/documentos/emitir'), $dte);
             if ($response['status']['code']!=200) {
                 $this->documentoAgregarResultado(
                     $datos,
@@ -171,7 +170,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
             if (!$dte_real) {
                 // crear PDF del DTE temporal
                 if ($pdf) {
-                    $response_pdf = $rest->get($Request->url.'/api/dte/dte_tmps/pdf/'.$response['body']['receptor'].'/'.$response['body']['dte'].'/'.$response['body']['codigo'].'/'.$response['body']['emisor'].'?cotizacion=1');
+                    $response_pdf = $rest->get(url('/api/dte/dte_tmps/pdf/'.$response['body']['receptor'].'/'.$response['body']['dte'].'/'.$response['body']['codigo'].'/'.$response['body']['emisor'].'?cotizacion=1'));
                     if ($response_pdf['status']['code']==200) {
                         $filename = !empty($dte_config['pdf']['nombre']) ? $dte_config['pdf']['nombre'] : 'LibreDTE_{rut}_{folio}';
                         $file_pdf = $dir.'/'.str_replace(
@@ -214,7 +213,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
             // emitir DTE real
             else {
                 // consumir servicio web
-                $response = $rest->post($Request->url.'/api/dte/documentos/generar', $response['body']);
+                $response = $rest->post(url('/api/dte/documentos/generar'), $response['body']);
                 if ($response['status']['code']!=200) {
                     $this->documentoAgregarResultado(
                         $datos,
@@ -227,7 +226,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
                 }
                 // crear PDF del DTE real
                 if ($pdf===true) {
-                    $response_pdf = $rest->get($Request->url.'/api/dte/dte_emitidos/pdf/'.$response['body']['dte'].'/'.$response['body']['folio'].'/'.$response['body']['emisor']);
+                    $response_pdf = $rest->get(url('/api/dte/dte_emitidos/pdf/'.$response['body']['dte'].'/'.$response['body']['folio'].'/'.$response['body']['emisor']));
                     if ($response_pdf['status']['code']==200) {
                         $filename = !empty($dte_config['pdf']['nombre']) ? $dte_config['pdf']['nombre'] : 'LibreDTE_{rut}_T{dte}F{folio}';
                         $file_pdf = $dir.'/'.str_replace(
@@ -274,7 +273,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
             if (!rename($output, $filename)) {
                 $pdf = 'Error al mover el archivo comprimido al directorio de descarga';
             } else {
-                $pdf = \sowerphp\core\Configure::read('app.url_static').'/emision_masiva_pdf/'.basename($filename).' (enlace válido por 24 horas)';
+                $pdf = url('/static/emision_masiva_pdf/'.basename($filename)).' (enlace válido por 24 horas)';
             }
         }
         // notificar al usuario que solicitó la emisión masiva

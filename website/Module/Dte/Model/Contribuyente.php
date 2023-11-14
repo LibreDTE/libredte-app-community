@@ -873,7 +873,7 @@ class Model_Contribuyente extends \Model_App
         // invertir parámetros recibidos si User es objeto (se pasó el objeto del usuario)
         if (is_object($onlyPK)) {
             $aux = $onlyPK;
-            $onlyPK = (boolean)$User;
+            $onlyPK = (bool)$User;
             $User = $aux;
         }
         // buscar documentos
@@ -3929,7 +3929,7 @@ class Model_Contribuyente extends \Model_App
                 $config_obj = $this;
                 $config_prefix = 'config_'.$namespace.'_';
             }
-            // cargar la configuración de cada tienda
+            // cargar la configuración de cada aplicación
             foreach ($apps as $App) {
                 $App->setConfig($config_obj->{$config_prefix.$App->getCodigo()});
                 // si se solicitó sólo disponibles o sólo no disponibles verificar
