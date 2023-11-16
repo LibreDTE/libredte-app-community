@@ -781,7 +781,7 @@ class Model_Contribuyente extends \Model_App
      * @param Usuario Objeto \sowerphp\app\Sistema\Usuarios\Model_Usuario al que se asignarán permisos
      * @return =true si está autorizado
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-08
+     * @version 2023-11-16
      */
     public function setPermisos(&$Usuario)
     {
@@ -791,7 +791,7 @@ class Model_Contribuyente extends \Model_App
             $usuario_grupos_sesion = $usuario_grupos_reales;
         }
         // si el usuario es de soporte se colocan los permisos completos del usuario principal de la empresa
-        else if ($this->config_app_soporte and $Usuario->inGroup(['soporte'])) {
+        else if ($this->config_app_soporte and in_array('soporte', $usuario_grupos_reales)) {
             $usuario_grupos_sesion = $this->getUsuario()->groups(true);
         }
         // si es un usuario autorizado, entonces se copian los permisos asignados de los disponibles en el
@@ -825,10 +825,15 @@ class Model_Contribuyente extends \Model_App
         }
         // buscar permisos y grupos del usuario principal administrador
         $usuario_auths_sesion = $this->getUsuario()->getAuths($usuario_grupos_sesion);
-        // corregir permisos con soporte si corresponde
+        // corregir permisos de soporte
+        // si el contribuyente tiene activado soporte: los del usuario
+        // si el contribuyente no tiene soporte activo: se añaden los de soporte/backoffice
         if (in_array('soporte', $usuario_grupos_reales)) {
-            foreach ($usuario_grupos_reales as $grupo) {
-                if (!in_array($grupo, $usuario_grupos_sesion)) {
+            $grupos_soporte = $this->config_app_soporte ? $usuario_grupos_reales : [
+                'sysadmin', 'appadmin', 'passwd', 'soporte', 'mantenedores'
+            ];
+            foreach ($grupos_soporte as $grupo) {
+                if (in_array($grupo, $usuario_grupos_reales) && !in_array($grupo, $usuario_grupos_sesion)) {
                     $grupo_auths = $Usuario->getAuths([$grupo]);
                     $usuario_auths_sesion = array_merge($usuario_auths_sesion, $grupo_auths);
                     $usuario_grupos_sesion[] = $grupo;
