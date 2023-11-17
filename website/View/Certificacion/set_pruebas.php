@@ -140,7 +140,7 @@ echo $f->end('Generar XML libro de ventas');
 <div role="tabpanel" class="tab-pane" id="boletas" aria-labelledby="boletas-tab">
     <div class="alert alert-warning" role="alert">
         <i class="fa-solid fa-exclamation-triangle fa-fw text-warning"></i>
-        Esta funcionalidad debe considerarse obsoleta. En SASCO SpA actualmente utilizamos otro método que no está disponible en LibreDTE pero puedes <a href="https://www.libredte.cl/shop/dte-cert-39-certificacion-boleta-electronica-29?category=1" class="alert-link">comprar el servicio aquí</a>.
+        Esta funcionalidad debe considerarse obsoleta, se puede seguir usando, pero no se garantiza su funcionamiento ni recibirá actualizaciones. Si el SII cambia algo respecto a este proceso podría dejar de funcionar. En SASCO SpA actualmente utilizamos otro método que no está disponible en LibreDTE pero puedes <a href="https://www.libredte.cl/shop/dte-cert-39-certificacion-boleta-electronica-29?category=1" class="alert-link">comprar el servicio aquí</a>.
     </div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
