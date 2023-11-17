@@ -422,6 +422,7 @@ if (!empty($tipos_dte)) {
         'options' => $tipos_dte,
         'value' => isset($Contribuyente) ? $Contribuyente->config_emision_dte_defecto : 33,
         'help' => '¿Qué documento debe estar seleccionado por defecto al emitir?',
+        'auto_options' => false,
     ]);
 }
 echo $f->input([
