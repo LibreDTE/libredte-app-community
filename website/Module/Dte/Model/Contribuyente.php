@@ -3759,7 +3759,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega la plantilla de un correo ya armada con los datos
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-14
+     * @version 2023-11-17
      */
     public function getEmailFromTemplate($template, $params = null)
     {
@@ -3808,14 +3808,19 @@ class Model_Contribuyente extends \Model_App
             }
             $fecha_pago = $mostrar_pagado ? \sowerphp\general\Utility_Date::format($Cobro->pagado) : '00/00/0000';
             $medio_pago = $mostrar_pagado ? $Cobro->getMedioPago()->getNombre() : '"sin pago"';
+            $fecha_vencimiento = !empty($Cobro->vencimiento) ? $Cobro->vencimiento : $Documento->fecha;
             return str_replace(
                 [
                     '{dte_cotizacion}',
+                    '{total_int}',
                     '{total}',
                     '{razon_social}',
                     '{documento}',
                     '{folio}',
+                    '{fecha_emision_estandar}',
                     '{fecha_emision}',
+                    '{fecha_vencimiento_estandar}',
+                    '{fecha_vencimiento}',
                     '{link_pagar}',
                     '{link_pdf}',
                     '{msg_text}',
@@ -3828,11 +3833,15 @@ class Model_Contribuyente extends \Model_App
                 ],
                 [
                     $dte_cotizacion,
+                    $Documento->total,
                     num($Documento->total),
                     $Documento->getReceptor()->razon_social,
                     $dte_tipo,
                     $Documento->getFolio(),
+                    $Documento->fecha,
                     \sowerphp\general\Utility_Date::format($Documento->fecha),
+                    $fecha_vencimiento,
+                    \sowerphp\general\Utility_Date::format($fecha_vencimiento),
                     $mostrar_pagar ? $links['pagar'] : '',
                     $links['pdf'],
                     $msg_text ? str_replace("\n", '</p><p>', $msg_text) : null,
