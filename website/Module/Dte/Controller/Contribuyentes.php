@@ -892,12 +892,12 @@ class Controller_Contribuyentes extends \Controller_App
             if (!$Emisor->usuarioAutorizado($User)) {
                 $this->Api->send('No está autorizado a operar con el emisor seleccionado para el tipo de búsqueda '.$tipo, 404);
             }
-            $datos = array_merge(
-                $datos,
-                (array)\sowerphp\core\Trigger::run(
-                    'contribuyente_info', $Contribuyente, $tipo, $Emisor, $User
-                )
+            $datos_trigger = \sowerphp\core\Trigger::run(
+                'contribuyente_info', $Contribuyente, $tipo, $Emisor, $User, $datos
             );
+            if (!empty($datos_trigger)) {
+                $datos = $datos_trigger;
+            }
         }
         // se quita el usuario de los atributos (por seguridad)
         unset($datos['usuario']);
