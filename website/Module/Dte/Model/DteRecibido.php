@@ -844,7 +844,7 @@ class Model_DteRecibido extends \Model_App
     /**
      * Método que entrega las referencias que este DTE hace a otros documentos
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+     * @version 2023-11-17
      */
     public function getReferenciados()
     {
@@ -857,18 +857,30 @@ class Model_DteRecibido extends \Model_App
         }
         $referenciados = [];
         foreach ($datos['Referencia'] as $r) {
-            $referenciados[] = array_merge([
+            $referencia = array_merge([
                 'NroLinRef' => false,
+                'IdDocRef' => false,
                 'TpoDocRef' => false,
-                'IndGlobal' => false,
                 'FolioRef' => false,
+                'IndGlobal' => false,
                 'RUTOtr' => false,
                 'FchRef' => false,
                 'CodRef' => false,
+                'TipoRef' => false,
                 'RazonRef' => false,
                 'CodVndor' => false,
                 'CodCaja' => false,
             ], $r);
+            if (is_numeric($referencia['TpoDocRef']) && is_numeric($referencia['FolioRef'])) {
+                $referencia['IdDocRef'] = 'T'.$referencia['TpoDocRef'].'F'.$referencia['FolioRef'];
+            }
+            if (!empty($referencia['CodRef'])) {
+                $DteReferenciaTipo = (new \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos())->get($referencia['CodRef']);
+                if (!empty($DteReferenciaTipo->tipo)) {
+                    $referencia['TipoRef'] = $DteReferenciaTipo->tipo;
+                }
+            }
+            $referenciados[] = $referencia;
         }
         return $referenciados;
     }

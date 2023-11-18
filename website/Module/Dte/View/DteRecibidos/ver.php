@@ -216,7 +216,7 @@ if ($referenciados) {
             $referenciado['FchRef'] = \sowerphp\general\Utility_Date::format($referenciado['FchRef']);
         }
     }
-    array_unshift($referenciados, ['#', 'DTE', 'Ind. Global', 'Folio', 'RUT otro cont.', 'Fecha', 'Código ref.', 'Razón ref.', 'Vendedor', 'Caja']);
+    array_unshift($referenciados, ['#', 'Documento', 'Tipo', 'Folio', 'Ind. Global', 'RUT otro cont.', 'Fecha', 'Código ref.', 'Tipo ref.', 'Razón ref.', 'Vendedor', 'Caja']);
     $t = new \sowerphp\general\View_Helper_Table();
     $t->setShowEmptyCols(false);
     echo $t->generate($referenciados);
