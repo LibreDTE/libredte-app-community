@@ -572,7 +572,7 @@ if ($referenciados) {
         }
         $referenciado[] = $acciones;
     }
-    array_unshift($referenciados, ['#', 'DTE', 'Ind. Global', 'Folio', 'RUT otro cont.', 'Fecha', 'Código ref.', 'Razón ref.', 'Vendedor', 'Caja', 'Acciones']);
+    array_unshift($referenciados, ['#', 'Documento', 'Tipo', 'Folio', 'Ind. Global', 'RUT otro cont.', 'Fecha', 'Código ref.', 'Tipo ref.', 'Razón ref.', 'Vendedor', 'Caja', 'Acciones']);
     $t = new \sowerphp\general\View_Helper_Table();
     $t->setShowEmptyCols(false);
     echo $t->generate($referenciados);

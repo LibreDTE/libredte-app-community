@@ -95,3 +95,23 @@ function libredte_api_consume($recurso, $datos = [])
     // entregar resultado normalizado como arreglo (cabecera y cuerpo)
     return $LibreDTE->toArray();
 }
+
+/**
+ * Función que entrega el tipo de DTE y folio de un documento a partir de su ID
+ * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+ * @version 2023-11-18
+ */
+function dte_id_unpack(string $dte_id): array
+{
+    if (!empty($dte_id) && $dte_id[0] == 'T') {
+        $aux = explode('F', $dte_id);
+        if (count($aux) == 2) {
+            $dte = substr($aux[0], 1);
+            $folio = $aux[1];
+            if (is_numeric($dte) && is_numeric($folio)) {
+                return [(int)$dte, (int)$folio];
+            }
+        }
+    }
+    throw new \Exception(__('%s no es un ID de DTE válido.', $dte_id));
+}
