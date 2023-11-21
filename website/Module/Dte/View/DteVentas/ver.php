@@ -304,23 +304,23 @@ new \sowerphp\general\View_Helper_Table($detalle);
     <div class="card-header">
         <i class="far fa-chart-bar fa-fw"></i> Documentos emitidos por día
     </div>
-    <div class="card-body">
-        <div id="grafico-documentos_por_dia"></div>
+    <div class="card-body" id="documentos_por_dia">
+        <canvas id="grafico-documentos_por_dia"></canvas>
     </div>
 </div>
 <div class="card mb-4" id="estadisticas_emitidos-tipo-card">
     <div class="card-header">
         <i class="far fa-chart-bar fa-fw"></i> Documentos emitidos por tipo
     </div>
-    <div class="card-body">
-        <div id="grafico-documentos_por_tipo"></div>
+    <div class="card-body" id="documentos_por_tipo">
+        <canvas id="grafico-documentos_por_tipo"></canvas>
     </div>
 </div>
 <div class="card mb-4" id="estadisticas_emitidos-estado-receptor-card">
     <div class="card-header">
         <i class="far fa-chart-bar fa-fw"></i> Documentos emitidos según el estado que asignó el receptor
     </div>
-    <div class="card-body">
+    <div class="card-body" id="documentos_por_estado_receptor">
 <?php
 $documentos_por_estado_receptor = $Libro->getDocumentosPorEventoReceptor();
 $tabla = [['Evento', 'Documentos', 'Ver']];
@@ -333,41 +333,116 @@ foreach ($documentos_por_estado_receptor as $evento) {
 }
 new \sowerphp\general\View_Helper_Table($tabla, 'eventos_receptor', false, false);
 ?>
-        <div id="grafico-documentos_por_estado_receptor"></div>
+        <canvas id="grafico-documentos_por_estado_receptor"></canvas>
     </div>
 </div>
 <script>
-var documentos_por_dia = Morris.Line({
-    element: 'grafico-documentos_por_dia',
-    data: <?=json_encode($Libro->getDocumentosPorDia())?>,
-    xkey: 'dia',
-    ykeys: ['documentos'],
-    labels: ['Documentos'],
-    resize: true,
-    parseTime: false
-});
-var documentos_por_tipo = Morris.Bar({
-    element: 'grafico-documentos_por_tipo',
-    data: <?=json_encode($Libro->getDocumentosPorTipo())?>,
-    xkey: 'tipo',
-    ykeys: ['documentos'],
-    labels: ['Documentos'],
-    resize: true
-});
-var documentos_por_estado_receptor = Morris.Bar({
-    element: 'grafico-documentos_por_estado_receptor',
-    data: <?=json_encode($documentos_por_estado_receptor)?>,
-    xkey: 'glosa',
-    ykeys: ['documentos'],
-    labels: ['Documentos'],
-    resize: true
-});
+const getDataColors = opacity => {
+    const colors = ['#7448c2', '#21c0d7', '#d99e2b', '#cd3a81', '#9c99cc', '#e14eca', '#a1a1a1', '#ff0000', '#d6ff00', '#0038ff']
+    return colors.map(color => opacity ? `${color + opacity}` : color)
+}
+
+const printCharts = () => {
+    documentoDiaChart(<?=json_encode($Libro->getDocumentosPorDia())?>)
+    documentoTipoChart(<?=json_encode($Libro->getDocumentosPorTipo())?>)
+    documentoEstadoReceptorChart(<?=json_encode($documentos_por_estado_receptor)?>)
+}
+
+const documentoDiaChart = documentos_dias => {
+
+    const data = {
+
+        labels: documentos_dias.map(documento_dia => documento_dia.dia),
+        datasets: [
+            {
+                label: 'Documentos',
+                data: documentos_dias.map(documento_dia => documento_dia.documentos),
+                tension: .5,
+                borderColor: getDataColors()[1],
+                backgroundColor: getDataColors(20)[1],
+                fill: true,
+                pointBorderWidth: 5
+            }
+        ]
+    }
+
+    const options = {
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
+        plugins: {
+        legend: { display: false }
+        }
+
+    }
+    new Chart('grafico-documentos_por_dia', { type: 'line', data, options})
+}
+
+const documentoTipoChart = documentos_tipo => {
+
+    const data = {
+        labels: documentos_tipo.map(documento_tipo => documento_tipo.tipo),
+        datasets: [{
+            label: 'Documentos',
+            data: documentos_tipo.map(documento_tipo => documento_tipo.documentos),
+            borderColor: getDataColors()[2],
+            backgroundColor: getDataColors(70)[2],
+        }]
+    }
+
+    const options = {
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+        }
+    }
+
+    new Chart('grafico-documentos_por_tipo', { type: 'bar', data, options})
+}
+
+const documentoEstadoReceptorChart = documentos_estado_receptor => {
+
+    const data = {
+        labels: documentos_estado_receptor.map(documento_estado_receptor => documento_estado_receptor.glosa),
+        datasets: [{
+            label: 'Documentos',
+            data: documentos_estado_receptor.map(documento_estado_receptor => documento_estado_receptor.documentos),
+            borderColor: getDataColors()[3],
+            backgroundColor: getDataColors(70)[3],
+        }]
+    }
+
+    const options = {
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+        }
+    }
+
+    new Chart('grafico-documentos_por_estado_receptor', { type: 'bar', data, options})
+}
+
+printCharts()
+
 $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
     var target = $(e.target).attr("href");
     if (target=='#estadisticas') {
-        documentos_por_dia.redraw();
-        documentos_por_tipo.redraw();
-        documentos_por_estado_receptor.redraw();
+        $("canvas#grafico-documentos_por_dia").remove();
+        $("#documentos_por_dia").append('<canvas id="grafico-documentos_por_dia"></canvas>');
+        $("canvas#grafico-documentos_por_tipo").remove();
+        $("#documentos_por_tipo").append('<canvas id="grafico-documentos_por_tipo"></canvas>');
+        $("canvas#grafico-documentos_por_estado_receptor").remove();
+        $("#documentos_por_estado_receptor").append('<canvas id="grafico-documentos_por_estado_receptor"></canvas>');
+        printCharts()
         $(window).trigger('resize');
     }
 });
