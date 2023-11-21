@@ -103,8 +103,8 @@ new \sowerphp\general\View_Helper_Table($detalle);
     <div class="card-header">
         <i class="far fa-chart-bar fa-fw"></i> Guías por día emitidas con fecha en el período <?=$Libro->periodo?>
     </div>
-    <div class="card-body">
-        <div id="grafico-documentos_por_dia"></div>
+    <div class="card-body" id="documentos_por_dia">
+        <canvas id="grafico-documentos_por_dia"></canvas>
     </div>
 </div>
 </div>
@@ -116,19 +116,54 @@ new \sowerphp\general\View_Helper_Table($detalle);
 </div>
 
 <script>
-var documentos_por_dia = Morris.Line({
-    element: 'grafico-documentos_por_dia',
-    data: <?=json_encode($Libro->getDocumentosPorDia())?>,
-    xkey: 'dia',
-    ykeys: ['documentos'],
-    labels: ['Documentos'],
-    resize: true,
-    parseTime: false
-});
+const getDataColors = opacity => {
+    const colors = ['#7448c2', '#21c0d7', '#d99e2b', '#cd3a81', '#9c99cc', '#e14eca', '#a1a1a1', '#ff0000', '#d6ff00', '#0038ff']
+    return colors.map(color => opacity ? `${color + opacity}` : color)
+}
+
+const printCharts = () => {
+    documentoDiaChart(<?=json_encode($Libro->getDocumentosPorDia())?>)
+}
+
+const documentoDiaChart = documentos_dias => {
+
+    const data = {
+
+        labels: documentos_dias.map(documento_dia => documento_dia.dia),
+        datasets: [
+            {
+                label: 'Documentos',
+                data: documentos_dias.map(documento_dia => documento_dia.documentos),
+                tension: .5,
+                borderColor: getDataColors()[1],
+                backgroundColor: getDataColors(20)[1],
+                fill: true,
+                pointBorderWidth: 5
+            }
+        ]
+    }
+
+    const options = {
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
+        plugins: {
+        legend: { display: false }
+        }
+
+    }
+    new Chart('grafico-documentos_por_dia', { type: 'line', data, options})
+}
+
+printCharts();
+
 $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
     var target = $(e.target).attr("href");
     if (target=='#estadisticas') {
-        documentos_por_dia.redraw();
+        $("canvas#grafico-documentos_por_dia").remove();
+        $("#documentos_por_dia").append('<canvas id="grafico-documentos_por_dia"></canvas>');
+        printCharts();
         $(window).trigger('resize');
     }
 });
