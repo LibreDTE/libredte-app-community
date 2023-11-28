@@ -73,7 +73,7 @@ new \sowerphp\general\View_Helper_Table($folios);
             <div class="card-body" id="faq_anular_folios">
                 <i class="fa-solid fa-question-circle fa-fw text-warning mb-4"></i>
                 <strong>¿Cómo puedo anular folios sin uso?</strong><br/>
-                Los folios sin uso (saltados o vencidos) deben ser anualados en el <a href="https://www4<?=$Emisor->enCertificacion()?'c':''?>.sii.cl/anulacionMsvDteInternet/" target="_blank">sitio web del SII</a>. Si no los anula, esto afectará futuras solicitudes de nuevos folios.
+                Los folios sin uso (saltados o vencidos) deben ser anulados en el <a href="https://www4<?=$Emisor->enCertificacion()?'c':''?>.sii.cl/anulacionMsvDteInternet/" target="_blank">sitio web del SII</a>. Si no los anula, esto afectará futuras solicitudes de nuevos folios.
             </div>
         </div>
     </div>
