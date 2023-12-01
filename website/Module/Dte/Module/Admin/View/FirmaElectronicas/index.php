@@ -36,7 +36,7 @@
         </div>
     </div>
 <?php else : ?>
-<p>A continuación se muestra un listado de los usuarios autorizados a operar con la empresa SASCO SpA y que tienen firma electrónica registrada en el sistema.</p>
+<p>A continuación se muestra un listado de los usuarios autorizados a operar con la empresa <?=$Emisor->getNombre()?> y que tienen firma electrónica registrada en el sistema.</p>
 <?php
 foreach ($firmas as &$f) {
     $f['desde'] = \sowerphp\general\Utility_Date::format($f['desde'], 'd/m/Y H:i');
