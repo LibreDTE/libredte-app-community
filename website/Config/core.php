@@ -311,3 +311,6 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
     'host' => env('LIBREDTE_APP_CACHE_DEFAULT_HOST', '127.0.0.1'),
     'port' => env('LIBREDTE_APP_CACHE_DEFAULT_PORT', 11211),
 ]);
+
+// Extensiones para las páginas que se desean renderizar
+Configure::write('page.extensions', ['php']);

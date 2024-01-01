@@ -781,7 +781,7 @@ class Model_Contribuyente extends \Model_App
      * @param Usuario Objeto \sowerphp\app\Sistema\Usuarios\Model_Usuario al que se asignarán permisos
      * @return =true si está autorizado
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-16
+     * @version 2024-01-01
      */
     public function setPermisos(&$Usuario)
     {
@@ -798,12 +798,6 @@ class Model_Contribuyente extends \Model_App
         // administrador
         else {
             $usuario_grupos_sesion = [];
-            // asignar grupo 'distribuidor' a usuarios autorizados de un contribuyente
-            // que es distribuidor
-            $admin_grupos = $this->getUsuario()->getGroups();
-            if (in_array('distribuidor', $admin_grupos)) {
-                $usuario_grupos_sesion[] = 'distribuidor';
-            }
             // siempre asignar el grupo 'usuarios' para mantener permisos básicos
             $usuario_grupos_sesion[] = 'usuarios';
             // buscar los permisos que tiene el usuario autorizado sobre la empresa
@@ -815,6 +809,7 @@ class Model_Contribuyente extends \Model_App
             // mapa de permisos definidos por la configuración y la empresa
             $permisos = \sowerphp\core\Configure::read('empresa.permisos');
             // asignar los grupos del sistema a los que se podría tener acceso por el permisos de la empresa
+            $admin_grupos = $this->getUsuario()->getGroups();
             foreach ($usuario_permisos as $p) {
                 foreach ($permisos[$p]['grupos'] as $g) {
                     if (!in_array($g, $usuario_grupos_sesion) and in_array($g, $admin_grupos)) {
