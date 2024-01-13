@@ -48,7 +48,7 @@ if (isset($guias)) {
         $acciones .= ' <a href="'.$_base.'/dte/dte_emitidos/pdf/52/'.$g['folio'].'" class="btn btn-primary"><i class="far fa-file-pdf fa-fw"></i></a>';
         $g[] = $acciones;
     }
-    echo $f->begin(['id'=>'facturarForm', 'onsubmit'=>'Form.check(\'facturarForm\') && Form.loading(\'Facturando...\')']);
+    echo $f->begin(['id'=>'facturarForm', 'onsubmit'=>'Form.check(\'facturarForm\') && __.loading(\'Facturando...\')']);
     echo $f->input([
         'type'=>'tablecheck',
         'name'=>'guias',
@@ -148,7 +148,7 @@ if (isset($temporales)) {
         $acciones = '<a href="'.$_base.'/dte/dte_tmps/cotizacion/'.$DteTmp->receptor.'/'.$DteTmp->dte.'/'.$DteTmp->codigo.'" title="Descargar cotización" class="btn btn-primary"><i class="fas fa-dollar-sign fa-fw"></i></a>';
         $acciones .= ' <a href="'.$_base.'/dte/dte_tmps/pdf/'.$DteTmp->receptor.'/'.$DteTmp->dte.'/'.$DteTmp->codigo.'" title="Descargar previsualización" class="btn btn-primary"><i class="far fa-file-pdf fa-fw"></i></a>';
         $acciones .= ' <a href="'.$_base.'/dte/dte_tmps/ver/'.$DteTmp->receptor.'/'.$DteTmp->dte.'/'.$DteTmp->codigo.'" title="Ver el documento temporal" class="btn btn-primary"><i class="fa fa-search fa-fw"></i></a>';
-        $acciones .= ' <a href="'.$_base.'/dte/documentos/generar/'.$DteTmp->receptor.'/'.$DteTmp->dte.'/'.$DteTmp->codigo.'" title="Generar DTE y enviar al SII" onclick="return Form.confirm(this, \'¿Está seguro de querer generar el DTE?\')" class="btn btn-primary"><i class="far fa-paper-plane fa-fw"></i></a>';
+        $acciones .= ' <a href="'.$_base.'/dte/documentos/generar/'.$DteTmp->receptor.'/'.$DteTmp->dte.'/'.$DteTmp->codigo.'" title="Generar DTE y enviar al SII" onclick="return __.confirm(this, \'¿Está seguro de querer generar el DTE?\')" class="btn btn-primary"><i class="far fa-paper-plane fa-fw"></i></a>';
         $tabla[] = [
             $DteTmp->getFolio(),
             $DteTmp->getReceptor()->razon_social,

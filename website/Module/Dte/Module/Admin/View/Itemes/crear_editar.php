@@ -23,7 +23,7 @@
 </ul>
 <div class="page-header"><h1><?=$accion?> producto o servicio</h1></div>
 <script>
-$(function() { __.tabs_init(); });
+$(function() { __.tabs(); });
 </script>
 
 <div role="tabpanel">

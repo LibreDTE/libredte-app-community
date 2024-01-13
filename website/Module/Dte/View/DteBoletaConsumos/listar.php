@@ -115,19 +115,19 @@ foreach ($Objs as &$obj) {
     }
     // acciones
     $actions = '<div class="btn-group">';
-    $actions .= '<a href="'.$_base.$module_url.$controller.'/actualizar_estado/'.$obj->dia.$listarFilterUrl.'" title="Actualizar estado del envio al SII" class="btn btn-primary" onclick="return Form.loading(\'Actualizando estado del RCOF...\')"><i class="fas fa-sync fa-fw me-2"></i></a>';
+    $actions .= '<a href="'.$_base.$module_url.$controller.'/actualizar_estado/'.$obj->dia.$listarFilterUrl.'" title="Actualizar estado del envio al SII" class="btn btn-primary" onclick="return __.loading(\'Actualizando estado del RCOF...\')"><i class="fas fa-sync fa-fw me-2"></i></a>';
     $actions .= '<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="visually-hidden">Toggle Dropdown</span></button>';
     $actions .= '<div class="dropdown-menu dropdown-menu-end">';
     if ($obj->track_id) {
         $actions .= '<a href="'.$_base.$module_url.$controller.'/xml/'.$obj->dia.'" title="Descargar XML" class="dropdown-item"><i class="far fa-file-code fa-fw me-2"></i> Descargar XML</a>';
-        $actions .= '<a href="'.$_base.$module_url.$controller.'/solicitar_revision/'.$obj->dia.$listarFilterUrl.'" title="Solicitar revisión del envio al SII" class="dropdown-item" onclick="return Form.loading(\'Solicitando revisión del envío al SII...\')"><i class="fab fa-rev fa-fw me-2"></i> Solicitar revisión</a>';
+        $actions .= '<a href="'.$_base.$module_url.$controller.'/solicitar_revision/'.$obj->dia.$listarFilterUrl.'" title="Solicitar revisión del envio al SII" class="dropdown-item" onclick="return __.loading(\'Solicitando revisión del envío al SII...\')"><i class="fab fa-rev fa-fw me-2"></i> Solicitar revisión</a>';
         $actions .= '<a href="#" onclick="__.popup(\''.$_base.'/dte/sii/estado_envio/'.$obj->track_id.'\', 750, 550); return false" title="Ver el estado del envío en la web del SII" class="dropdown-item"><i class="fa fa-eye fa-fw me-2"></i> Ver estado en SII</a>';
         $actions .= '<div class="dropdown-divider"></div>';
-        $actions .= '<a href="'.$_base.$module_url.$controller.'/enviar_sii/'.$obj->dia.$listarFilterUrl.'" title="Reenviar el RCOF al SII" class="dropdown-item" onclick="return Form.loading(\'Enviando RCOF al SII...\')"><i class="fas fa-paper-plane fa-fw me-2"></i> Reenviar RCOF</a>';
+        $actions .= '<a href="'.$_base.$module_url.$controller.'/enviar_sii/'.$obj->dia.$listarFilterUrl.'" title="Reenviar el RCOF al SII" class="dropdown-item" onclick="return __.loading(\'Enviando RCOF al SII...\')"><i class="fas fa-paper-plane fa-fw me-2"></i> Reenviar RCOF</a>';
     }
     if ($is_admin) {
         $actions .= '<div class="dropdown-divider"></div>';
-        $actions .= '<a href="'.$_base.$module_url.$controller.'/eliminar/'.$obj->dia.$listarFilterUrl.'" title="Eliminar el RCOF" class="dropdown-item" onclick="return Form.confirm(this, \'¿Desea eliminar el RCOF del día '.\sowerphp\general\Utility_Date::format($obj->dia).'?<br/><br/><strong>Importante</strong>: Esto no lo eliminará del SII si fue aceptado\')"><i class="fas fa-times fa-fw me-2"></i> Eliminar RCOF</a>';
+        $actions .= '<a href="'.$_base.$module_url.$controller.'/eliminar/'.$obj->dia.$listarFilterUrl.'" title="Eliminar el RCOF" class="dropdown-item" onclick="return __.confirm(this, \'¿Desea eliminar el RCOF del día '.\sowerphp\general\Utility_Date::format($obj->dia).'?<br/><br/><strong>Importante</strong>: Esto no lo eliminará del SII si fue aceptado\')"><i class="fas fa-times fa-fw me-2"></i> Eliminar RCOF</a>';
     }
     $actions .= '</div>';
     $actions .= '</div>';

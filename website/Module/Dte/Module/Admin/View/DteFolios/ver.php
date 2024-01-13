@@ -1,7 +1,7 @@
 <ul class="nav nav-pills float-end">
     <?php if (empty($cafs)) : ?>
         <li class="nav-item">
-            <a href="<?=$_base?>/dte/admin/dte_folios/eliminar/<?=$DteFolio->dte?>" title="Eliminar el mantenedor de folios" class="nav-link" onclick="return Form.confirm(this, '¿Desea eliminar el mantenedor de folios?')">
+            <a href="<?=$_base?>/dte/admin/dte_folios/eliminar/<?=$DteFolio->dte?>" title="Eliminar el mantenedor de folios" class="nav-link" onclick="return __.confirm(this, '¿Desea eliminar el mantenedor de folios?')">
                 <i class="fas fa-times"></i> Eliminar
             </a>
         </li>
@@ -69,7 +69,7 @@ $promedioUltimosMeses = round($sumaUltimosMeses / $i);
 </div>
 
 <script>
-$(function() { __.tabs_init(); });
+$(function() { __.tabs(); });
 </script>
 
 <div role="tabpanel">
@@ -80,7 +80,7 @@ $(function() { __.tabs_init(); });
             </a>
         </li>
         <li class="nav-item">
-            <a href="#uso_mensual" aria-controls="caf" role="tab" data-bs-toggle="tab" id="uso_mensual-tab" class="nav-link">
+            <a href="#uso_mensual" aria-controls="uso_mensual" role="tab" data-bs-toggle="tab" id="uso_mensual-tab" class="nav-link">
                 Estadística de folios usados mensualmente
             </a>
         </li>
@@ -116,7 +116,7 @@ foreach ($cafs as &$caf) {
         $actions .= '<a href="'.$_base.'/dte/admin/dte_folios/descargar/'.$DteFolio->dte.'/'.$caf['desde'].'/pendientes" title="Descargar folios pendientes en SII del CAF que inicia en '.$caf['desde'].'" class="dropdown-item"><i class="fab fa-creative-commons-share fa-fw"></i> Descargar Pendientes</a> ';
         $actions .= '<div class="dropdown-divider"></div>';
     }
-    $actions .= '<a href="'.$_base.'/dte/admin/dte_folios/eliminar_xml/'.$DteFolio->dte.'/'.$caf['desde'].'" title="Eliminar XML del CAF que inicia en '.$caf['desde'].'" class="dropdown-item" onclick="return Form.confirm(this, \'¿Desea eliminar el CAF que inicia en '.$caf['desde'].'?\')"><i class="fas fa-times fa-fw"></i> Eliminar CAF</a> ';
+    $actions .= '<a href="'.$_base.'/dte/admin/dte_folios/eliminar_xml/'.$DteFolio->dte.'/'.$caf['desde'].'" title="Eliminar XML del CAF que inicia en '.$caf['desde'].'" class="dropdown-item" onclick="return __.confirm(this, \'¿Desea eliminar el CAF que inicia en '.$caf['desde'].'?\')"><i class="fas fa-times fa-fw"></i> Eliminar CAF</a> ';
     $actions .= '</div>';
     $actions .= '</div>';
     unset($caf['vigente']);
@@ -141,7 +141,7 @@ echo $t->generate($cafs);
     array_unshift($foliosMensuales, ['Período', 'Cantidad de folios usados', 'Usado respecto a la alerta', 'Porcentaje usado respecto a la alerta']);
     new \sowerphp\general\View_Helper_Table($foliosMensuales);
     ?>
-    <p>En el <a href="<?=$_base?>/dte/admin/dte_folios/sin_uso/<?=$DteFolio->dte?>" onclick="Form.loading('Buscando folios sin uso...')">siguiente enlace</a> podrá buscar si existen folios sin uso en LibreDTE para el tipo de documento <?=$DteFolio->getTipo()->tipo?>.</p>
+    <p>En el <a href="<?=$_base?>/dte/admin/dte_folios/sin_uso/<?=$DteFolio->dte?>" onclick="__.loading('Buscando folios sin uso...')">siguiente enlace</a> podrá buscar si existen folios sin uso en LibreDTE para el tipo de documento <?=$DteFolio->getTipo()->tipo?>.</p>
 </div>
 <!-- FIN ESTADISTICA -->
 

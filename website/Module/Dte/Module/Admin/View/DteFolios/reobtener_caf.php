@@ -9,7 +9,7 @@
 <p>Aquí podrá reobtener un archivo XML de folios (CAF) previamente obtenido en el SII y que sea cargardo inmediatamente a LibreDTE.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check() && Form.loading(\'Buscando folios en el SII...\')']);
+echo $f->begin(['onsubmit'=>'Form.check() && __.loading(\'Buscando folios en el SII...\')']);
 echo $f->input([
     'type' => 'select',
     'name' => 'dte',
@@ -21,7 +21,7 @@ echo $f->input([
 echo $f->end('Buscar folios que se hayan solicitado en SII');
 if (isset($solicitudes)) {
     foreach ($solicitudes as &$s) {
-        $s[] = '<a href="'.$_url.'/dte/admin/dte_folios/reobtener_caf_cargar/'.$dte.'/'.$s['inicial'].'/'.$s['final'].'/'.$s['fecha'].'" title="Reobtener el CAF y cargar en LibreDTE" class="btn btn-primary" onclick="Form.loading(\'Descargando CAF del SII y cargando en LibreDTE...\')"><i class="fa fa-download fa-fw"></i></a>';
+        $s[] = '<a href="'.$_url.'/dte/admin/dte_folios/reobtener_caf_cargar/'.$dte.'/'.$s['inicial'].'/'.$s['final'].'/'.$s['fecha'].'" title="Reobtener el CAF y cargar en LibreDTE" class="btn btn-primary" onclick="__.loading(\'Descargando CAF del SII y cargando en LibreDTE...\')"><i class="fa fa-download fa-fw"></i></a>';
         $s['fecha'] = \sowerphp\general\Utility_Date::format($s['fecha']);
     }
     array_unshift($solicitudes, ['Desde', 'Hasta', 'Cantidad', 'Fecha autorización', 'Solicitante', 'Reobtener']);

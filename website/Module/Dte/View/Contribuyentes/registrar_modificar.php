@@ -1,7 +1,7 @@
 <?php if (isset($Contribuyente)) : ?>
 <?php
 if ($Contribuyente->enCertificacion() == $Contribuyente->config_ambiente_en_certificacion) {
-    $ambiente_onclick = 'onclick="return Form.confirm(this, \'Cambiará a un ambiente que no es el que tiene configurado. Al hacer esto, use la sesión sólo pare revisar datos, <strong>no emita documentos</strong>.<br/><br/>Si desea emitir documentos, realice el cambio de sesión de manera global en la sección del ambiente de la pestaña <em>Facturación</em>.\')"';
+    $ambiente_onclick = 'onclick="return __.confirm(this, \'Cambiará a un ambiente que no es el que tiene configurado. Al hacer esto, use la sesión sólo pare revisar datos, <strong>no emita documentos</strong>.<br/><br/>Si desea emitir documentos, realice el cambio de sesión de manera global en la sección del ambiente de la pestaña <em>Facturación</em>.\')"';
 } else {
     $ambiente_onclick = '';
 }
@@ -27,12 +27,12 @@ if ($Contribuyente->enCertificacion() == $Contribuyente->config_ambiente_en_cert
 
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['id'=>$form_id, 'onsubmit'=>'Form.check() && Form.confirm(this)']);
+echo $f->begin(['id'=>$form_id, 'onsubmit'=>'Form.check() && __.confirm(this)']);
 ?>
 
 <script>
 var impuestos_adicionales_tasa = <?=json_encode($impuestos_adicionales_tasa)?>;
-$(function() { __.tabs_init(); });
+$(function() { __.tabs(); });
 </script>
 
 <div role="tabpanel">

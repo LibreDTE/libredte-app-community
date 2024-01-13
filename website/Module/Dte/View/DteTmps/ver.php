@@ -58,7 +58,7 @@
 <p>Esta es la página del documento temporal <?=$DteTmp->getTipo()->tipo?> folio <?=$DteTmp->getFolio()?> de la empresa <?=$Emisor->razon_social?> emitido a <?=$Receptor->razon_social?> (<?=$Receptor->rut.'-'.$Receptor->dv?>).</p>
 
 <script>
-$(function() { __.tabs_init(); });
+$(function() { __.tabs(); });
 </script>
 
 <div role="tabpanel">
@@ -122,10 +122,10 @@ echo $t->generate([
     <br/>
     <div class="row">
         <div class="col-md-6 mb-2">
-            <a class="btn btn-danger btn-lg col-12" href="<?=$_base?>/dte/dte_tmps/eliminar/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" title="Eliminar documento" onclick="return Form.confirm(this, 'Confirmar la eliminación del documento temporal')">Eliminar documento</a>
+            <a class="btn btn-danger btn-lg col-12" href="<?=$_base?>/dte/dte_tmps/eliminar/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" title="Eliminar documento" onclick="return __.confirm(this, 'Confirmar la eliminación del documento temporal')">Eliminar documento</a>
         </div>
         <div class="col-md-6 mb-2">
-            <a class="btn btn-success btn-lg col-12" href="<?=$_base?>/dte/documentos/generar/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button" onclick="return Form.confirm(this, 'Confirmar la generación del DTE real', 'Generando el DTE...')">Generar DTE</a>
+            <a class="btn btn-success btn-lg col-12" href="<?=$_base?>/dte/documentos/generar/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button" onclick="return __.confirm(this, 'Confirmar la generación del DTE real', 'Generando el DTE...')">Generar DTE</a>
         </div>
     </div>
 </div>
@@ -236,7 +236,7 @@ $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin([
     'action'=>$_base.'/dte/dte_tmps/enviar_email/'.$DteTmp->receptor.'/'.$DteTmp->dte.'/'.$DteTmp->codigo,
     'id'=>'emailForm',
-    'onsubmit'=>'Form.check(\'emailForm\') && Form.loading(\'Enviando correo electrónico...\')',
+    'onsubmit'=>'Form.check(\'emailForm\') && __.loading(\'Enviando correo electrónico...\')',
 ]);
 if ($emails) {
     $table = [];

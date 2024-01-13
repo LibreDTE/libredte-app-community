@@ -22,17 +22,15 @@
  */
 
 /**
- * @file core.php
  * Configuración de la aplicación web de LibreDTE
- * @version 2023-01-05
  */
 
 // directorio para datos estáticos (debe tener permisos de escritura)
 define('DIR_STATIC', DIR_PROJECT . '/data/static');
 
 // Configuración depuración
-if (env('LIBREDTE_APP_DEBUG', true)) {
-    \sowerphp\core\Configure::write('debug', true);
+\sowerphp\core\Configure::write('debug', env('LIBREDTE_APP_DEBUG', true));
+if (\sowerphp\core\Configure::read('debug')) {
     \sowerphp\core\Configure::write('error.level', E_ALL);
 }
 

@@ -129,7 +129,7 @@ new \sowerphp\general\View_Helper_Table($otros);
                 </a>
             </div>
             <div class="col mb-4">
-                <a class="btn btn-danger col-12" href="<?=$_base?>/dte/cobranzas/eliminar/<?=$Pago->dte?>/<?=$Pago->folio?>/<?=$Pago->fecha?>" role="button" onclick="return Form.confirm(this, '¿Desea eliminar el pago programado?')">
+                <a class="btn btn-danger col-12" href="<?=$_base?>/dte/cobranzas/eliminar/<?=$Pago->dte?>/<?=$Pago->folio?>/<?=$Pago->fecha?>" role="button" onclick="return __.confirm(this, '¿Desea eliminar el pago programado?')">
                     <span class="fas fa-times"></span>
                     Eliminar
                 </a>

@@ -16,7 +16,7 @@
 <p>Aquí podrá modificar los usuarios autorizados a operar con la empresa <?=$Contribuyente->razon_social?> RUT <?=num($Contribuyente->rut).'-'.$Contribuyente->dv?>, para la cual usted es el usuario administrador.</p>
 
 <script>
-$(function() { __.tabs_init(); });
+$(function() { __.tabs(); });
 </script>
 
 <div role="tabpanel">
@@ -55,7 +55,7 @@ foreach ($Contribuyente->getUsuarios() as $u => $p) {
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin([
     'id' => 'usuarios',
-    'onsubmit' => 'Form.check(\'usuarios\') && Form.confirm(this)',
+    'onsubmit' => 'Form.check(\'usuarios\') && __.confirm(this)',
 ]);
 $f->setStyle(false);
 echo $f->input([
@@ -241,7 +241,7 @@ if ($transferir_contribuyente) {
     echo $f->begin([
         'action' => $_base.'/dte/contribuyentes/transferir',
         'id' => 'transferir',
-        'onsubmit' => 'Form.check(\'transferir\') && Form.confirm(this, \'¿Está seguro de querer transferir la empresa al nuevo usuario?\')',
+        'onsubmit' => 'Form.check(\'transferir\') && __.confirm(this, \'¿Está seguro de querer transferir la empresa al nuevo usuario?\')',
     ]);
 }
 echo $f->input([

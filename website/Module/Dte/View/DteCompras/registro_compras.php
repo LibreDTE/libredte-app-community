@@ -9,7 +9,7 @@
 <div class="page-header"><h1>Registro de compras del SII</small></h1></div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check() && Form.loading(\'Consultando datos al SII...\')']);
+echo $f->begin(['onsubmit'=>'Form.check() && __.loading(\'Consultando datos al SII...\')']);
 echo $f->input([
     'type' => 'date',
     'name' => 'periodo',

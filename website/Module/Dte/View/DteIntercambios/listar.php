@@ -37,11 +37,11 @@
             <i class="fas fa-sync"></i> Actualizar
         </a>
         <div class="dropdown-menu dropdown-menu-end">
-            <a href="<?=$_base?>/dte/dte_intercambios/actualizar/3" class="dropdown-item" onclick="return Form.loading('Actualizando últimos 3 días...')">Últimos 3 días</a>
-            <a href="<?=$_base?>/dte/dte_intercambios/actualizar/7" class="dropdown-item" onclick="return Form.loading('Actualizando última semana...')">Última semana</a>
-            <a href="<?=$_base?>/dte/dte_intercambios/actualizar/14" class="dropdown-item" onclick="return Form.loading('Actualizando últimas 2 semanas...')">Últimas 2 semanas</a>
-            <a href="<?=$_base?>/dte/dte_intercambios/actualizar/30" class="dropdown-item" onclick="return Form.loading('Actualizando último mes...')">Último mes</a>
-            <a href="<?=$_base?>/dte/dte_intercambios/actualizar/90" class="dropdown-item" onclick="return Form.loading('Actualizando últimos 3 meses...')">Últimos 3 meses</a>
+            <a href="<?=$_base?>/dte/dte_intercambios/actualizar/3" class="dropdown-item" onclick="return __.loading('Actualizando últimos 3 días...')">Últimos 3 días</a>
+            <a href="<?=$_base?>/dte/dte_intercambios/actualizar/7" class="dropdown-item" onclick="return __.loading('Actualizando última semana...')">Última semana</a>
+            <a href="<?=$_base?>/dte/dte_intercambios/actualizar/14" class="dropdown-item" onclick="return __.loading('Actualizando últimas 2 semanas...')">Últimas 2 semanas</a>
+            <a href="<?=$_base?>/dte/dte_intercambios/actualizar/30" class="dropdown-item" onclick="return __.loading('Actualizando último mes...')">Último mes</a>
+            <a href="<?=$_base?>/dte/dte_intercambios/actualizar/90" class="dropdown-item" onclick="return __.loading('Actualizando últimos 3 meses...')">Últimos 3 meses</a>
         </div>
     </li>
 </ul>

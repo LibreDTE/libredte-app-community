@@ -13,7 +13,7 @@ $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin([
     'action' => $_base.'/dte/dte_emitidos/receder/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
     'id' => 'cesionForm',
-    'onsubmit' => 'Form.check(\'cesionForm\') && Form.confirm(this, \'¿Está seguro de querer ceder el DTE?\', \'Generando cesión del DTE...\')',
+    'onsubmit' => 'Form.check(\'cesionForm\') && __.confirm(this, \'¿Está seguro de querer ceder el DTE?\', \'Generando cesión del DTE...\')',
 ]);
 ?>
 <div class="card mb-4">

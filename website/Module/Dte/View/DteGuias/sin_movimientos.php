@@ -12,7 +12,7 @@
     <div class="col-md-8">
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check() && Form.confirm(this, \'¿Está seguro de enviar el libro sin movimientos?\')']);
+echo $f->begin(['onsubmit'=>'Form.check() && __.confirm(this, \'¿Está seguro de enviar el libro sin movimientos?\')']);
 echo $f->input([
     'type' => 'date',
     'name' => 'periodo',

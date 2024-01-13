@@ -23,8 +23,8 @@ function set_receptor(form) {
         return;
     }
     // verificar validez del rut
-    if (Form.check_rut(f.RUTRecep) !== true) {
-        Form.alert('RUT receptor es incorrecto', f.RUTRecep);
+    if (Form.check.rut(f.RUTRecep) !== true) {
+        __.alert('RUT receptor es incorrecto', f.RUTRecep);
         return;
     }
     // buscar datos del rut en el servicio web y asignarlos si existen
@@ -49,7 +49,7 @@ function set_receptor(form) {
 function item_nuevo(tr) {
     var n_items = $('input[name="MontoItem[]"]').length;
     if (n_items > 4) {
-        Form.alert('No puede agregar más de 4 filas de detalle');
+        __.alert('No puede agregar más de 4 filas de detalle');
         Form.delJS(tr.childNodes[0].childNodes[0]);
         return false;
     }
@@ -78,7 +78,7 @@ function calcular() {
 </script>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['id'=>'formBTE', 'onsubmit'=>'Form.check() && Form.confirm(this, \'¿Desea emitir la boleta?\')']);
+echo $f->begin(['id'=>'formBTE', 'onsubmit'=>'Form.check() && __.confirm(this, \'¿Desea emitir la boleta?\')']);
 echo $f->input([
     'type' => 'select',
     'name' => 'CdgSIISucur',

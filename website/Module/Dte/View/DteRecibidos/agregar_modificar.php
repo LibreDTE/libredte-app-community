@@ -22,7 +22,7 @@
 <?php
 endif;
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check() && Form.loading(\'Guardando DTE recibido...\')', 'focus'=>(!isset($DteRecibido)?'emisorField':false)]);
+echo $f->begin(['onsubmit'=>'Form.check() && __.loading(\'Guardando DTE recibido...\')', 'focus'=>(!isset($DteRecibido)?'emisorField':false)]);
 $f->setColsLabel(5);
 echo '<div class="row">',"\n";
 echo '<div class="col-md-6">',"\n";

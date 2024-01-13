@@ -1,7 +1,7 @@
 <ul class="nav nav-pills float-end">
 <?php if (!empty($documentos)) : ?>
     <li class="nav-item">
-        <a href="<?=$_base?>/dte/dte_tmps/eliminar_masivo" title="Eliminar todos las documentos temporales" class="nav-link" onclick="return Form.confirm(this, '¿Desea eliminar todos los documentos temporales?<br/><br/><strong>¡Se perderán todos los datos!</strong>', 'Eliminando documentos temporales...')">
+        <a href="<?=$_base?>/dte/dte_tmps/eliminar_masivo" title="Eliminar todos las documentos temporales" class="nav-link" onclick="return __.confirm(this, '¿Desea eliminar todos los documentos temporales?<br/><br/><strong>¡Se perderán todos los datos!</strong>', 'Eliminando documentos temporales...')">
             <span class="fa fa-times"></span> Eliminar todo
         </a>
     </li>
@@ -23,7 +23,7 @@
 foreach ($documentos as &$d) {
     $acciones = '<a href="'.$_base.'/dte/dte_tmps/ver/'.$d['receptor'].'/'.$d['dte'].'/'.$d['codigo'].'" title="Ver el documento temporal" id="dte_'.$d['folio'].'" class="btn btn-primary mb-2"><i class="fa fa-search fa-fw"></i></a>';
     $acciones .= ' <a href="'.$_base.'/dte/dte_tmps/eliminar/'.$d['receptor'].'/'.$d['dte'].'/'.$d['codigo'].'" title="Eliminar DTE temporal" onclick="return eliminar(this, \'DteTmp\', \''.$d['receptor'].', '.$d['dte'].', '.$d['codigo'].'\')" class="btn btn-primary mb-2"><i class="fas fa-times fa-fw"></i></a>';
-    $acciones .= ' <a href="'.$_base.'/dte/documentos/generar/'.$d['receptor'].'/'.$d['dte'].'/'.$d['codigo'].'" title="Generar DTE (documento real emitido)" onclick="return Form.confirm(this, \'¿Desea generar el documento real y enviar al SII?\', \'Generando el DTE...\')" class="btn btn-primary mb-2"><i class="far fa-paper-plane fa-fw"></i></a>';
+    $acciones .= ' <a href="'.$_base.'/dte/documentos/generar/'.$d['receptor'].'/'.$d['dte'].'/'.$d['codigo'].'" title="Generar DTE (documento real emitido)" onclick="return __.confirm(this, \'¿Desea generar el documento real y enviar al SII?\', \'Generando el DTE...\')" class="btn btn-primary mb-2"><i class="far fa-paper-plane fa-fw"></i></a>';
     $d[] = $acciones;
     $d['fecha'] = \sowerphp\general\Utility_Date::format($d['fecha']);
     $d['total'] = num($d['total']);

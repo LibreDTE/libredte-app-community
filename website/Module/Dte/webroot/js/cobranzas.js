@@ -18,8 +18,8 @@ function pago_check(formulario) {
     }
     pago_actualizar();
     if (parseInt(pendiente.value) < 0) {
-        Form.alert('No puede pagar más del monto del pago programado');
+        __.alert('No puede pagar más del monto del pago programado');
         return false;
     }
-    return Form.confirm(formulario, '¿Desea registrar el pago?');
+    return __.confirm(formulario, '¿Desea registrar el pago?');
 }

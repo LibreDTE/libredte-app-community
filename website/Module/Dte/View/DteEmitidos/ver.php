@@ -44,7 +44,7 @@
 <p>Esta es la página del documento <?=$DteEmitido->getTipo()->tipo?> (<?=$DteEmitido->dte?>) folio número <?=$DteEmitido->folio?> de la empresa <?=$Emisor->razon_social?> emitido a <?=$Receptor->razon_social?> (<?=$Receptor->rut.'-'.$Receptor->dv?>) en la sucursal <?=$Emisor->getSucursal($DteEmitido->sucursal_sii)->sucursal?>.</p>
 
 <script>
-$(function() { __.tabs_init(); });
+$(function() { __.tabs(); });
 </script>
 
 <div role="tabpanel">
@@ -145,11 +145,11 @@ echo $t->generate([
 <?php endif; ?>
 <?php if ($DteEmitido->track_id) : ?>
                     <p>
-                        <a class="btn btn-primary<?=$DteEmitido->track_id < 0 ?' disabled':''?>" href="<?=$_base?>/dte/dte_emitidos/actualizar_estado/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button" onclick="return Form.loading('Actualizando estado del DTE...')">Actualizar estado</a><br/>
+                        <a class="btn btn-primary<?=$DteEmitido->track_id < 0 ?' disabled':''?>" href="<?=$_base?>/dte/dte_emitidos/actualizar_estado/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button" onclick="return __.loading('Actualizando estado del DTE...')">Actualizar estado</a><br/>
                         <span style="font-size:0.8em">
 <?php if (!$DteEmitido->getTipo()->esBoleta()) : ?>
 <?php if (!$Emisor->config_sii_estado_dte_webservice and $DteEmitido->track_id > 0) : ?>
-                            <a href="<?=$_base?>/dte/dte_emitidos/solicitar_revision/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" title="Solicitar nueva revisión del documento por correo electrónico al SII" onclick="return Form.loading('Solicitando revisión del envío al SII...')">solicitar revisión del envío</a>
+                            <a href="<?=$_base?>/dte/dte_emitidos/solicitar_revision/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" title="Solicitar nueva revisión del documento por correo electrónico al SII" onclick="return __.loading('Solicitando revisión del envío al SII...')">solicitar revisión del envío</a>
                             <br/>
 <?php endif; ?>
 <?php if ($DteEmitido->track_id > 0) : ?>
@@ -170,17 +170,17 @@ echo $t->generate([
 <?php endif; ?>
 <?php if (substr($DteEmitido->revision_estado,0,3)=='RFR') : ?>
                             <br/>
-                            <a href="<?=$_base?>/dte/dte_emitidos/enviar_sii/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" onclick="return Form.confirm(this, '¿Confirmar el reenvío del DTE al SII?', 'Reenviando DTE al SII...')">reenviar DTE al SII</a>
+                            <a href="<?=$_base?>/dte/dte_emitidos/enviar_sii/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" onclick="return __.confirm(this, '¿Confirmar el reenvío del DTE al SII?', 'Reenviando DTE al SII...')">reenviar DTE al SII</a>
 <?php endif; ?>
 <?php if ($DteEmitido->eliminable()) : ?>
                             <br/>
-                            <a href="<?=$_base?>/dte/dte_emitidos/eliminar/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" title="Eliminar documento" onclick="return Form.confirm(this, '¿Confirmar la eliminación del DTE?')">eliminar documento</a>
+                            <a href="<?=$_base?>/dte/dte_emitidos/eliminar/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" title="Eliminar documento" onclick="return __.confirm(this, '¿Confirmar la eliminación del DTE?')">eliminar documento</a>
 <?php endif; ?>
                         </span>
                     </p>
 <?php else: ?>
                     <p>
-                        <a class="btn btn-primary<?=(!$DteEmitido->hasLocalXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_emitidos/enviar_sii/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button" onclick="return Form.loading('Enviando DTE al SII...')">Enviar documento al SII</a>
+                        <a class="btn btn-primary<?=(!$DteEmitido->hasLocalXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_emitidos/enviar_sii/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button" onclick="return __.loading('Enviando DTE al SII...')">Enviar documento al SII</a>
                         <br/>
                         <span style="font-size:0.8em">
 <?php if (!$DteEmitido->getTipo()->esBoleta() and $DteEmitido->getTotal(false) !== false) : ?>
@@ -188,7 +188,7 @@ echo $t->generate([
 <?php endif; ?>
 <?php if ($DteEmitido->eliminable()) : ?>
                             <br/>
-                            <a href="<?=$_base?>/dte/dte_emitidos/eliminar/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" title="Eliminar documento" onclick="return Form.confirm(this, '¿Confirmar la eliminación del DTE?')">eliminar documento</a>
+                            <a href="<?=$_base?>/dte/dte_emitidos/eliminar/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" title="Eliminar documento" onclick="return __.confirm(this, '¿Confirmar la eliminación del DTE?')">eliminar documento</a>
 <?php endif; ?>
                         </span>
                     </p>
@@ -298,7 +298,7 @@ if (!$email_html) {
 echo $f->begin([
     'action'=>$_base.'/dte/dte_emitidos/enviar_email/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
     'id'=>'emailForm',
-    'onsubmit'=>'Form.check(\'emailForm\') && Form.loading(\'Enviando correo electrónico...\')',
+    'onsubmit'=>'Form.check(\'emailForm\') && __.loading(\'Enviando correo electrónico...\')',
 ]);
 if ($emails) {
     $table = [];
@@ -690,7 +690,7 @@ $f->setStyle('horizontal');
             Receder DTE
         </a>-->
 <?php if ($Emisor->usuarioAutorizado($_Auth->User, 'admin')) : ?>
-        <a class="btn btn-danger btn-sm col-12" href="<?=$_base?>/dte/dte_emitidos/cesion_eliminar/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button" onclick="return Form.confirm(this, '¿Está seguro de eliminar la cesión de LibreDTE?\nSi continúa ¡perderá el archivo AEC!')">
+        <a class="btn btn-danger btn-sm col-12" href="<?=$_base?>/dte/dte_emitidos/cesion_eliminar/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button" onclick="return __.confirm(this, '¿Está seguro de eliminar la cesión de LibreDTE?\nSi continúa ¡perderá el archivo AEC!')">
             Eliminar cesión
         </a>
 <?php endif; ?>
@@ -703,7 +703,7 @@ $f->setStyle('horizontal');
 echo $f->begin([
     'action' => $_base.'/dte/dte_emitidos/ceder/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
     'id' => 'cesionForm',
-    'onsubmit' => 'Form.check(\'cesionForm\') && Form.confirm(this, \'¿Está seguro de querer ceder el DTE?\', \'Generando cesión del DTE...\')',
+    'onsubmit' => 'Form.check(\'cesionForm\') && __.confirm(this, \'¿Está seguro de querer ceder el DTE?\', \'Generando cesión del DTE...\')',
 ]);
 ?>
 <div class="card mb-4" id="cesion_datos-cedente-card">
@@ -842,7 +842,7 @@ if ($Emisor->usuarioAutorizado($_Auth->User, 'admin') and $DteEmitido->getTipo()
     echo $f->begin([
         'action' => $_base.'/dte/dte_emitidos/avanzado_tipo_cambio/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
         'id' => 'avanzadoTipoCambioForm',
-        'onsubmit' => 'Form.check(\'avanzadoTipoCambioForm\') && Form.confirm(this, \'¿Está seguro de querer modificar el tipo de cambio del documento?\')'
+        'onsubmit' => 'Form.check(\'avanzadoTipoCambioForm\') && __.confirm(this, \'¿Está seguro de querer modificar el tipo de cambio del documento?\')'
     ]);
     echo $f->input([
         'name' => 'tipo_cambio',
@@ -867,7 +867,7 @@ if ($Emisor->usuarioAutorizado($_Auth->User, 'admin') and $DteEmitido->getTipo()
 echo $f->begin([
     'action' => $_base.'/dte/dte_emitidos/avanzado_track_id/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
     'id' => 'avanzadoTrackIdForm',
-    'onsubmit' => 'Form.check(\'avanzadoTrackIdForm\') && Form.confirm(this, \'¿Está seguro de querer cambiar el Track ID?\n\n¡Perderá el valor actual!\', \'Actualizando el Track ID del DTE...\')'
+    'onsubmit' => 'Form.check(\'avanzadoTrackIdForm\') && __.confirm(this, \'¿Está seguro de querer cambiar el Track ID?\n\n¡Perderá el valor actual!\', \'Actualizando el Track ID del DTE...\')'
 ]);
 echo $f->input([
     'name' => 'track_id',
@@ -943,10 +943,10 @@ echo $f->end('Modificar sucursal');
     </div>
 </div>
 <?php if ($DteEmitido->eliminable()) : ?>
-    <a class="btn btn-danger col-12 mb-4" href="<?=$_base?>/dte/dte_emitidos/eliminar/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" title="Eliminar documento" onclick="return Form.confirm(this, '¿Confirmar la eliminación del DTE?')">Eliminar documento</a>
+    <a class="btn btn-danger col-12 mb-4" href="<?=$_base?>/dte/dte_emitidos/eliminar/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" title="Eliminar documento" onclick="return __.confirm(this, '¿Confirmar la eliminación del DTE?')">Eliminar documento</a>
 <?php endif; ?>
 <?php if ($DteEmitido->eliminableXML()) : ?>
-    <a class="btn btn-danger col-12 mb-4" href="<?=$_base?>/dte/dte_emitidos/eliminar_xml/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" title="Eliminar XML del documento" onclick="return Form.confirm(this, '¿Confirmar la eliminación del XML del DTE?')">Eliminar XML del documento</a>
+    <a class="btn btn-danger col-12 mb-4" href="<?=$_base?>/dte/dte_emitidos/eliminar_xml/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" title="Eliminar XML del documento" onclick="return __.confirm(this, '¿Confirmar la eliminación del XML del DTE?')">Eliminar XML del documento</a>
 <?php endif; ?>
 </div>
 <!-- FIN AVANZADO -->

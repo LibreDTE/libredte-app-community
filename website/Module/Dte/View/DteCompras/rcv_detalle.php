@@ -11,16 +11,16 @@
             <span class="fas fa-university"></span> Ver resumen RC
         </a>
         <div class="dropdown-menu">
-            <a href="<?=$_base?>/dte/dte_compras/rcv_resumen/<?=$periodo?>" class="dropdown-item" onclick="return Form.loading('Consultando datos al SII...')">
+            <a href="<?=$_base?>/dte/dte_compras/rcv_resumen/<?=$periodo?>" class="dropdown-item" onclick="return __.loading('Consultando datos al SII...')">
                 Registrados
             </a>
-            <a href="<?=$_base?>/dte/dte_compras/rcv_resumen/<?=$periodo?>/PENDIENTE" class="dropdown-item" onclick="return Form.loading('Consultando datos al SII...')">
+            <a href="<?=$_base?>/dte/dte_compras/rcv_resumen/<?=$periodo?>/PENDIENTE" class="dropdown-item" onclick="return __.loading('Consultando datos al SII...')">
                 Pendientes
             </a>
-            <a href="<?=$_base?>/dte/dte_compras/rcv_resumen/<?=$periodo?>/NO_INCLUIR" class="dropdown-item" onclick="return Form.loading('Consultando datos al SII...')">
+            <a href="<?=$_base?>/dte/dte_compras/rcv_resumen/<?=$periodo?>/NO_INCLUIR" class="dropdown-item" onclick="return __.loading('Consultando datos al SII...')">
                 No incluídos
             </a>
-            <a href="<?=$_base?>/dte/dte_compras/rcv_resumen/<?=$periodo?>/RECLAMADO" class="dropdown-item" onclick="return Form.loading('Consultando datos al SII...')">
+            <a href="<?=$_base?>/dte/dte_compras/rcv_resumen/<?=$periodo?>/RECLAMADO" class="dropdown-item" onclick="return __.loading('Consultando datos al SII...')">
                 Reclamados
             </a>
         </div>

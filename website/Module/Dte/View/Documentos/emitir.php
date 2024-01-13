@@ -527,13 +527,13 @@ function item_nuevo(tr) {
     n_items = $('input[name="QtyItem[]"]').length;
     if (TpoDoc == 39 || TpoDoc == 41) {
         if (n_items > 1000) {
-            Form.alert('Boletas no pueden tener más de 1000 items en su detalle.');
+            __.alert('Boletas no pueden tener más de 1000 items en su detalle.');
             Form.delJS(tr.childNodes[0].childNodes[0]);
             return false;
         }
     } else {
         if (n_items > 60) {
-            Form.alert('Documentos no pueden tener más de 60 items en su detalle.');
+            __.alert('Documentos no pueden tener más de 60 items en su detalle.');
             Form.delJS(tr.childNodes[0].childNodes[0]);
             return false;
         }
@@ -543,7 +543,7 @@ function item_nuevo(tr) {
 function referencia_nueva(tr) {
     n_referencias = $('select[name="TpoDocRef[]"]').length;
     if (n_referencias > 40) {
-        Form.alert('Documentos no pueden tener más de 40 referencias.');
+        __.alert('Documentos no pueden tener más de 40 referencias.');
         Form.delJS(tr.childNodes[0].childNodes[0]);
         return false;
     }

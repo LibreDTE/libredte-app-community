@@ -30,7 +30,7 @@
 <p>Esta es la página del documento recibido <?=$DteRecibido->getTipo()->tipo?> (<?=$DteRecibido->dte?>) folio número <?=$DteRecibido->folio?> del emisor <?=$Emisor->razon_social?> (<?=$Emisor->rut.'-'.$Emisor->dv?>) emitido a <?=$Receptor->razon_social?>.</p>
 
 <script>
-$(function() { __.tabs_init(); });
+$(function() { __.tabs(); });
 </script>
 
 <div role="tabpanel">
@@ -165,7 +165,7 @@ echo $f->end('Descargar PDF');
             </a>
         </div>
         <div class="col mb-4">
-            <a href="<?=$_base?>/dte/registro_compras/ingresar_accion/<?=$Emisor->rut?>-<?=$Emisor->dv?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" title="Ingresar acción del registro de compra/venta en el SII" class="btn btn-primary btn-lg col-12" onclick="return Form.loading('Conectando al SII para responder...')">
+            <a href="<?=$_base?>/dte/registro_compras/ingresar_accion/<?=$Emisor->rut?>-<?=$Emisor->dv?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" title="Ingresar acción del registro de compra/venta en el SII" class="btn btn-primary btn-lg col-12" onclick="return __.loading('Conectando al SII para responder...')">
                 <i class="fa fa-edit fa-fw"></i>
                 Recibir / Reclamar
             </a>
@@ -234,7 +234,7 @@ if ($referenciados) {
 <div role="tabpanel" class="tab-pane" id="avanzado" aria-labelledby="avanzado-tab">
 <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2">
     <div class="col mb-4">
-        <a class="btn btn-danger btn-lg col-12" href="<?=$_base?>/dte/dte_recibidos/eliminar/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button" onclick="return Form.confirm(this, '¿Confirmar la eliminación del documento?')">
+        <a class="btn btn-danger btn-lg col-12" href="<?=$_base?>/dte/dte_recibidos/eliminar/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button" onclick="return __.confirm(this, '¿Confirmar la eliminación del documento?')">
             Eliminar documento
         </a>
     </div>

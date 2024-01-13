@@ -49,16 +49,16 @@
             <i class="fas fa-university"></i> Ver resumen RC
         </a>
         <div class="dropdown-menu">
-            <a href="<?=$_base?>/dte/dte_compras/rcv_resumen/<?=$periodo?>" class="dropdown-item" onclick="return Form.loading('Consultando datos al SII...')">
+            <a href="<?=$_base?>/dte/dte_compras/rcv_resumen/<?=$periodo?>" class="dropdown-item" onclick="return __.loading('Consultando datos al SII...')">
                 Registrados
             </a>
-            <a href="<?=$_base?>/dte/dte_compras/rcv_resumen/<?=$periodo?>/PENDIENTE" class="dropdown-item" onclick="return Form.loading('Consultando datos al SII...')">
+            <a href="<?=$_base?>/dte/dte_compras/rcv_resumen/<?=$periodo?>/PENDIENTE" class="dropdown-item" onclick="return __.loading('Consultando datos al SII...')">
                 Pendientes
             </a>
-            <a href="<?=$_base?>/dte/dte_compras/rcv_resumen/<?=$periodo?>/NO_INCLUIR" class="dropdown-item" onclick="return Form.loading('Consultando datos al SII...')">
+            <a href="<?=$_base?>/dte/dte_compras/rcv_resumen/<?=$periodo?>/NO_INCLUIR" class="dropdown-item" onclick="return __.loading('Consultando datos al SII...')">
                 No incluídos
             </a>
-            <a href="<?=$_base?>/dte/dte_compras/rcv_resumen/<?=$periodo?>/RECLAMADO" class="dropdown-item" onclick="return Form.loading('Consultando datos al SII...')">
+            <a href="<?=$_base?>/dte/dte_compras/rcv_resumen/<?=$periodo?>/RECLAMADO" class="dropdown-item" onclick="return __.loading('Consultando datos al SII...')">
                 Reclamados
             </a>
         </div>
@@ -77,7 +77,7 @@ foreach ($resumen as &$r) {
     foreach(['rsmnMntExe', 'rsmnMntNeto', 'rsmnMntIVA', 'rsmnMntIVANoRec', 'rsmnIVAUsoComun', 'rsmnMntTotal', 'rsmnTotDoc'] as $col) {
         $r[$col] = num($r[$col]);
     }
-    $r[] = $r['rsmnLink'] ? ('<a href="'.$_base.'/dte/dte_compras/rcv_detalle/'.$periodo.'/'.$r['rsmnTipoDocInteger'].'/'.$estado.'" title="Ver detalles de los documentos" class="btn btn-primary" onclick="return Form.loading(\'Consultando datos al SII...\')"><i class="fa fa-search fa-fw"></a>') : '';
+    $r[] = $r['rsmnLink'] ? ('<a href="'.$_base.'/dte/dte_compras/rcv_detalle/'.$periodo.'/'.$r['rsmnTipoDocInteger'].'/'.$estado.'" title="Ver detalles de los documentos" class="btn btn-primary" onclick="return __.loading(\'Consultando datos al SII...\')"><i class="fa fa-search fa-fw"></a>') : '';
     unset($r['dcvCodigo'], $r['rsmnCodigo'], $r['rsmnTipoDocInteger'], $r['rsmnLink'], $r['dcvOperacion'], $r['rsmnEstadoContab'], $r['rsmnTotalRutEmisor']);
 }
 array_unshift($resumen, ['DTE', 'Ingreso', 'Exento', 'Neto', 'IVA', 'IVA no rec.', 'IVA uso común', 'Total', 'Docs', 'Ver']);

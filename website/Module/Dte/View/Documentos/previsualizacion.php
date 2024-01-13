@@ -34,7 +34,7 @@ new \sowerphp\general\View_Helper_Table([
         </a>
     </div>
     <div class="col-md-3">
-        <a class="btn btn-primary btn-lg col-12" href="generar/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button" onclick="return Form.confirm(this, '¿Está seguro de querer generar el DTE?', 'Generando el DTE...')">
+        <a class="btn btn-primary btn-lg col-12" href="generar/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button" onclick="return __.confirm(this, '¿Está seguro de querer generar el DTE?', 'Generando el DTE...')">
             <i class="far fa-paper-plane"></i>
             Generar DTE
         </a>

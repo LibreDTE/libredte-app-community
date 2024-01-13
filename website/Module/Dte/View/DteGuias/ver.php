@@ -11,7 +11,7 @@
 <p>Esta es la página del libro de guías de despacho del período <?=$Libro->periodo?> de la empresa <?=$Emisor->razon_social?>.</p>
 
 <script>
-$(function() { __.tabs_init(); });
+$(function() { __.tabs(); });
 </script>
 
 <div role="tabpanel">
@@ -63,7 +63,7 @@ new \sowerphp\general\View_Helper_Table([
                         <span style="font-size:0.8em">
                             <a href="<?=$_base?>/dte/dte_guias/solicitar_revision/<?=$Libro->periodo?>" title="Solicitar nueva revisión del libro al SII">solicitar nueva revisión</a><br/>
                             <a href="#" onclick="__.popup('<?=$_base?>/dte/sii/estado_envio/<?=$Libro->track_id?>', 750, 550)" title="Ver el estado del envío en la web del SII">ver estado envío en SII</a><br/>
-                            <a href="<?=$_base?>/dte/dte_guias/enviar_sii/<?=$Libro->periodo?>" title="Enviar nuevamente el libro de guías al SII" onclick="return Form.confirm(this, '¿Confirmar reenvío del libro al SII?')">reenviar libro al SII</a>
+                            <a href="<?=$_base?>/dte/dte_guias/enviar_sii/<?=$Libro->periodo?>" title="Enviar nuevamente el libro de guías al SII" onclick="return __.confirm(this, '¿Confirmar reenvío del libro al SII?')">reenviar libro al SII</a>
                         </span>
                     </p>
 <?php else: ?>

@@ -16,7 +16,7 @@
 <p>Aquí podrá buscar entre sus documentos recibidos.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form(false);
-echo $f->begin(['onsubmit'=>'Form.check() && Form.loading(\'Buscando documentos...\')']);
+echo $f->begin(['onsubmit'=>'Form.check() && __.loading(\'Buscando documentos...\')']);
 ?>
 <div class="row mb-3">
     <div class="form-group col-md-6"><?=$f->input(['type'=>'select', 'name'=>'dte', 'options'=>[''=>'Todos los tipos de documentos'] + $tipos_dte])?></div>

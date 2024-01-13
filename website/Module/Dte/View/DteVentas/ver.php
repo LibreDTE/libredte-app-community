@@ -1,6 +1,6 @@
 <ul class="nav nav-pills float-end">
     <li class="nav-item">
-        <a href="<?=$_base?>/dte/dte_ventas/rcv_resumen/<?=$Libro->periodo?>" class="nav-link" onclick="return Form.loading('Consultando datos al SII...')">
+        <a href="<?=$_base?>/dte/dte_ventas/rcv_resumen/<?=$Libro->periodo?>" class="nav-link" onclick="return __.loading('Consultando datos al SII...')">
             <span class="fas fa-university"></span> Ver resumen RV
         </a>
     </li>
@@ -29,11 +29,11 @@
 <p>Esta es la página del libro de ventas del período <?=$Libro->periodo?> de la empresa <?=$Emisor->razon_social?>.</p>
 
 <script>
-$(function() { __.tabs_init(); });
+$(function() { __.tabs(); });
 function get_codigo_reemplazo() {
     $.get(_base+'/api/dte/dte_ventas/codigo_reemplazo/<?=$Libro->periodo?>/<?=$Emisor->rut?>', function(codigo) {
         document.getElementById('CodAutRecField').value = codigo;
-    }).fail(function(error){Form.alert(error.responseJSON, document.getElementById('CodAutRecField'))});
+    }).fail(function(error){__.alert(error.responseJSON, document.getElementById('CodAutRecField'))});
 }
 </script>
 
@@ -90,21 +90,21 @@ new \sowerphp\general\View_Helper_Table([
 <?php if ($Libro->track_id and $Libro->getEstado()!='LRH') : ?>
                     <p>
 <?php if ($Libro->track_id!=-1) : ?>
-                        <a class="btn btn-primary" href="<?=$_base?>/dte/dte_ventas/actualizar_estado/<?=$Libro->periodo?>" role="button" onclick="return Form.loading('Actualizando estado del envío...')">Actualizar estado</a><br/>
+                        <a class="btn btn-primary" href="<?=$_base?>/dte/dte_ventas/actualizar_estado/<?=$Libro->periodo?>" role="button" onclick="return __.loading('Actualizando estado del envío...')">Actualizar estado</a><br/>
                         <span class="small">
-                            <a href="<?=$_base?>/dte/dte_ventas/solicitar_revision/<?=$Libro->periodo?>" title="Solicitar revisión del libro al SII" onclick="return Form.loading('Solicitando revisión del envío al SII...')">solicitar revisión del envío</a><br/>
+                            <a href="<?=$_base?>/dte/dte_ventas/solicitar_revision/<?=$Libro->periodo?>" title="Solicitar revisión del libro al SII" onclick="return __.loading('Solicitando revisión del envío al SII...')">solicitar revisión del envío</a><br/>
                             <a href="#" onclick="__.popup('<?=$_base?>/dte/sii/estado_envio/<?=$Libro->track_id?>', 750, 550)" title="Ver el estado del envío en la web del SII">ver estado envío en SII</a><br/>
                             <a href="<?=$_base?>/dte/dte_ventas/enviar_rectificacion/<?=$Libro->periodo?>" title="Enviar rectificación del libro al SII">enviar rectificación</a>
                         </span>
 <?php else : ?>
                         <span class="small">
-                            <a href="<?=$_base?>/dte/dte_ventas/enviar_sii/<?=$Libro->periodo?>" onclick="return Form.confirm(this, '¿Confirmar la generación del libro?', 'Generando libro...')">Generar nuevo libro</a>
+                            <a href="<?=$_base?>/dte/dte_ventas/enviar_sii/<?=$Libro->periodo?>" onclick="return __.confirm(this, '¿Confirmar la generación del libro?', 'Generando libro...')">Generar nuevo libro</a>
                         </span>
 <?php endif; ?>
                     </p>
 <?php else: ?>
                     <p>
-                        <a class="btn btn-primary" href="<?=$_base?>/dte/dte_ventas/enviar_sii/<?=$Libro->periodo?>" role="button" onclick="return Form.confirm(this, '¿Confirmar la generación del libro?', 'Generando libro...')">
+                        <a class="btn btn-primary" href="<?=$_base?>/dte/dte_ventas/enviar_sii/<?=$Libro->periodo?>" role="button" onclick="return __.confirm(this, '¿Confirmar la generación del libro?', 'Generando libro...')">
                             <?=$Libro->periodo<201708?'Enviar libro al SII':'Generar libro'?>
                         </a>
                     </p>
@@ -237,7 +237,7 @@ $f = new \sowerphp\general\View_Helper_Form(false);
 echo $f->begin([
     'id'=>'enviar_sii',
     'action'=>$_base.'/dte/dte_ventas/enviar_sii/'.$Libro->periodo,
-    'onsubmit'=>'Form.check(\'enviar_sii\') && Form.confirm(this)'
+    'onsubmit'=>'Form.check(\'enviar_sii\') && __.confirm(this)'
 ]);
 echo $f->input([
     'type' => 'js',

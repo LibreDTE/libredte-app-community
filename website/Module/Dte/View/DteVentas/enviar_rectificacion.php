@@ -10,7 +10,7 @@
 function get_codigo_reemplazo() {
     $.get(_base+'/api/dte/dte_ventas/codigo_reemplazo/<?=$periodo?>/<?=$Emisor->rut?>', function(codigo) {
         document.getElementById('CodAutRecField').value = codigo;
-    }).fail(function(error){Form.alert(error.responseJSON, document.getElementById('CodAutRecField'))});
+    }).fail(function(error){__.alert(error.responseJSON, document.getElementById('CodAutRecField'))});
 }
 </script>
 <div class="page-header"><h1>Rectificación IEV para el período <?=$periodo?></h1></div>
@@ -18,7 +18,7 @@ function get_codigo_reemplazo() {
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin([
     'action' => $_base.'/dte/dte_ventas/enviar_sii/'.$periodo,
-    'onsubmit'=>'Form.check() && Form.confirm(this, \'¿Está seguro de enviar la rectificación del libro?\')'
+    'onsubmit'=>'Form.check() && __.confirm(this, \'¿Está seguro de enviar la rectificación del libro?\')'
 ]);
 echo $f->input([
     'name' => 'CodAutRec',

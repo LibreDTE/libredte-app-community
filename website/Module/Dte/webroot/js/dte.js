@@ -21,8 +21,8 @@ Contribuyente.setDatos = function (form) {
     if (__.empty(f.rut.value))
         return;
     // verificar validez del rut
-    if (Form.check_rut(f.rut) !== true) {
-        Form.alert('RUT contribuyente es incorrecto', f.rut);
+    if (Form.check.rut(f.rut) !== true) {
+        __.alert('RUT contribuyente es incorrecto', f.rut);
         return;
     }
     // buscar datos del rut en el servicio web y asignarlos si existen
@@ -73,8 +73,8 @@ Emisor.setDatos = function (form) {
     if (__.empty(f.RUTEmisor.value))
         return;
     // verificar validez del rut
-    if (Form.check_rut(f.RUTEmisor) !== true) {
-        Form.alert('RUT emisor es incorrecto', f.RUTEmisor);
+    if (Form.check.rut(f.RUTEmisor) !== true) {
+        __.alert('RUT emisor es incorrecto', f.RUTEmisor);
         return;
     }
     // buscar datos del rut en el servicio web y asignarlos si existen
@@ -127,8 +127,8 @@ Receptor.setDatos = function (form, tipo) {
         return;
     }
     // verificar validez del rut
-    if (Form.check_rut(f.RUTRecep) !== true) {
-        Form.alert('RUT receptor es incorrecto', f.RUTRecep);
+    if (Form.check.rut(f.RUTRecep) !== true) {
+        __.alert('RUT receptor es incorrecto', f.RUTRecep);
         return;
     }
     // si no se indicó tipo se usa el de receptor
@@ -452,38 +452,38 @@ DTE.check = function (formulario) {
     $('input[name="QtyItem[]"]').each(function (i, e) {
         $('input[name="NmbItem[]"]').get(i).value = $('input[name="NmbItem[]"]').get(i).value.trim();
         if (__.empty($('input[name="NmbItem[]"]').get(i).value)) {
-            Form.alert('En la línea '+(i+1)+', item no puede estar en blanco', $('input[name="NmbItem[]"]').get(i));
+            __.alert('En la línea '+(i+1)+', item no puede estar en blanco', $('input[name="NmbItem[]"]').get(i));
             $('input[name="NmbItem[]"]').get(i).focus();
             status = false;
             return false;
         }
         if (dte_check_detalle.indexOf(TpoDoc)!=-1) {
             if (__.empty($(e).val())) {
-                Form.alert('En la línea '+(i+1)+', cantidad no puede estar en blanco', $(e));
+                __.alert('En la línea '+(i+1)+', cantidad no puede estar en blanco', $(e));
                 $(e).focus();
                 status = false;
                 return false;
             }
-            if (Form.check_real($('input[name="QtyItem[]"]').get(i))!==true) {
-                Form.alert('En la línea '+(i+1)+', cantidad debe ser un número (entero o decimal)', $(e));
+            if (Form.check.real($('input[name="QtyItem[]"]').get(i))!==true) {
+                __.alert('En la línea '+(i+1)+', cantidad debe ser un número (entero o decimal)', $(e));
                 $(e).focus();
                 status = false;
                 return false;
             }
             if (__.empty($('input[name="PrcItem[]"]').get(i).value)) {
-                Form.alert('En la línea '+(i+1)+', precio no puede estar en blanco', $('input[name="PrcItem[]"]').get(i));
+                __.alert('En la línea '+(i+1)+', precio no puede estar en blanco', $('input[name="PrcItem[]"]').get(i));
                 $('input[name="PrcItem[]"]').get(i).focus();
                 status = false;
                 return false;
             }
-            if (Form.check_real($('input[name="PrcItem[]"]').get(i))!==true) {
-                Form.alert('En la línea '+(i+1)+', cantidad debe ser un número (entero o decimal)', $('input[name="PrcItem[]"]').get(i));
+            if (Form.check.real($('input[name="PrcItem[]"]').get(i))!==true) {
+                __.alert('En la línea '+(i+1)+', cantidad debe ser un número (entero o decimal)', $('input[name="PrcItem[]"]').get(i));
                 $('input[name="PrcItem[]"]').get(i).focus();
                 status = false;
                 return false;
             }
             if (__.empty($('input[name="ValorDR[]"]').get(i).value)) {
-                Form.alert('En la línea '+(i+1)+', descuento no puede estar en blanco', $('input[name="ValorDR[]"]').get(i));
+                __.alert('En la línea '+(i+1)+', descuento no puede estar en blanco', $('input[name="ValorDR[]"]').get(i));
                 $('input[name="ValorDR[]"]').get(i).focus();
                 status = false;
                 return false;
@@ -517,19 +517,19 @@ DTE.check = function (formulario) {
     // revisión referencia del dte
     $('select[name="CodRef[]"]').each(function (i, e) {
         if (__.empty($('select[name="TpoDocRef[]"]').get(i).value)) {
-            Form.alert('En la línea '+(i+1)+' de referencia:'+"\n"+'Tipo de documento referenciado no puede estar en blanco', $('select[name="TpoDocRef[]"]').get(i));
+            __.alert('En la línea '+(i+1)+' de referencia:'+"\n"+'Tipo de documento referenciado no puede estar en blanco', $('select[name="TpoDocRef[]"]').get(i));
             $('select[name="TpoDocRef[]"]').get(i).focus();
             status = false;
             return false;
         }
         if (__.empty($('input[name="FolioRef[]"]').get(i).value)) {
-            Form.alert('En la línea '+(i+1)+' de referencia:'+"\n"+'Folio no puede estar en blanco', $('input[name="FolioRef[]"]').get(i));
+            __.alert('En la línea '+(i+1)+' de referencia:'+"\n"+'Folio no puede estar en blanco', $('input[name="FolioRef[]"]').get(i));
             $('input[name="FolioRef[]"]').get(i).focus();
             status = false;
             return false;
         }
         if (__.empty($('input[name="FchRef[]"]').get(i).value)) {
-            Form.alert('En la línea '+(i+1)+' de referencia:'+"\n"+'Fecha no puede estar en blanco', $('input[name="FchRef[]"]').get(i));
+            __.alert('En la línea '+(i+1)+' de referencia:'+"\n"+'Fecha no puede estar en blanco', $('input[name="FchRef[]"]').get(i));
             $('input[name="FchRef[]"]').get(i).focus();
             status = false;
             return false;
@@ -544,13 +544,13 @@ DTE.check = function (formulario) {
             monto_pago += DTE.parseInt(m.value);
         });
         if (monto_pago != $('input[name="total"]').val()) {
-            Form.alert('Monto de pago programado $' + __.num(monto_pago) + '.- no cuadra con el total del documento', $('input[name="total"]'));
+            __.alert('Monto de pago programado $' + __.num(monto_pago) + '.- no cuadra con el total del documento', $('input[name="total"]'));
             return false;
         }
     }
     // pedir confirmación de generación de factura
     DTE.calcular();
-    return Form.confirm(formulario, 'Confirmar '+document.getElementById("TpoDocField").selectedOptions[0].textContent+' por $'+__.num($('input[name="total"]').val())+' a '+$('input[name="RUTRecep"]').val());
+    return __.confirm(formulario, 'Confirmar '+document.getElementById("TpoDocField").selectedOptions[0].textContent+' por $'+__.num($('input[name="total"]').val())+' a '+$('input[name="RUTRecep"]').val());
 }
 
 function dte_recibido_check() {
@@ -559,9 +559,9 @@ function dte_recibido_check() {
     var folio = document.getElementById("folioField");
     var receptor = document.getElementById("receptorField");
     if (emisor.value && dte.value && folio.value) {
-        estado = Form.check_rut(emisor);
+        estado = Form.check.rut(emisor);
         if (estado !== true) {
-            Form.alert(estado.replace("%s", "RUT emisor"), emisor);
+            __.alert(estado.replace("%s", "RUT emisor"), emisor);
             return;
         }
         $.ajax({
@@ -632,11 +632,11 @@ function dte_imprimir(formato, documento, id) {
                 socket.onmessage = function (event) {
                     if (event.data !==undefined) {
                         response = JSON.parse(event.data)
-                        Form.alert(response.message);
+                        __.alert(response.message);
                     }
                 }
                 socket.onerror=function(event){
-                    Form.alert('<p>No fue posible enviar a imprimir desde LibreDTE porque no se logró conectar con el servidor de impresión.</p><p>Para imprimir desde LibreDTE se debe descargar y ejecutar en el computador el software Websocketd Printer que permitirá imprimir directo desde LibreDTE sin tener que descargar el documento.</p><div class="row"><div class="col-md-4"><a href="https://www.sasco.cl/shop/websocketd-printer-windows-65?category=17" target="_blank" class="btn btn-primary d-block mb-2"><i class="fa-brands fa-windows fa-fw fa-3x"></i><br/>Obtener Websocketd Printer para Windows</a></div><div class="col-md-4"><a href="https://www.sasco.cl/shop/websocketd-printer-mac-71?category=17" target="_blank" class="btn btn-primary d-block mb-2"><i class="fa-brands fa-apple fa-fw fa-3x"></i><br/>Obtener Websocketd Printer para macOS</a></div><div class="col-md-4"><a href="https://www.sasco.cl/shop/websocketd-printer-linux-67?category=17" target="_blank" class="btn btn-primary d-block mb-2"><i class="fa-brands fa-linux fa-fw fa-3x"></i><br/>Obtener Websocketd Printer para GNU/Linux</a></div></div>');
+                    __.alert('<p>No fue posible enviar a imprimir desde LibreDTE porque no se logró conectar con el servidor de impresión.</p><p>Para imprimir desde LibreDTE se debe descargar y ejecutar en el computador el software Websocketd Printer que permitirá imprimir directo desde LibreDTE sin tener que descargar el documento.</p><div class="row"><div class="col-md-4"><a href="https://www.sasco.cl/shop/websocketd-printer-windows-65?category=17" target="_blank" class="btn btn-primary d-block mb-2"><i class="fa-brands fa-windows fa-fw fa-3x"></i><br/>Obtener Websocketd Printer para Windows</a></div><div class="col-md-4"><a href="https://www.sasco.cl/shop/websocketd-printer-mac-71?category=17" target="_blank" class="btn btn-primary d-block mb-2"><i class="fa-brands fa-apple fa-fw fa-3x"></i><br/>Obtener Websocketd Printer para macOS</a></div><div class="col-md-4"><a href="https://www.sasco.cl/shop/websocketd-printer-linux-67?category=17" target="_blank" class="btn btn-primary d-block mb-2"><i class="fa-brands fa-linux fa-fw fa-3x"></i><br/>Obtener Websocketd Printer para GNU/Linux</a></div></div>');
                 }
             } catch(e) {
                 console.log(e);

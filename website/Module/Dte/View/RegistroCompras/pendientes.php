@@ -12,7 +12,7 @@
         </a>
     </li>
     <li class="nav-item" class="dropdown">
-        <a href="<?=$_base?>/dte/registro_compras/actualizar" title="Actualizar documentos recibidos pendientes en SII" class="nav-link" onclick="return Form.loading('Actualizando...')">
+        <a href="<?=$_base?>/dte/registro_compras/actualizar" title="Actualizar documentos recibidos pendientes en SII" class="nav-link" onclick="return __.loading('Actualizando...')">
             <i class="fas fa-sync"></i>
             Actualizar
         </a>
@@ -25,7 +25,7 @@
 foreach ($documentos as &$d) {
     $acciones = '<a href="#" onclick="__.popup(\''.$_base.'/dte/sii/verificar_datos/'.$Receptor->getRUT().'/'.$d['dte'].'/'.$d['folio'].'/'.$d['fecha'].'/'.$d['total'].'/'.$d['proveedor_rut'].'-'.$d['proveedor_dv'].'\', 750, 550)" title="Verificar datos del documento en la web del SII" class="btn btn-primary mb-2"><i class="fa fa-eye fa-fw"></i></a>';
     $acciones .= ' <a href="#" onclick="__.popup(\''.$_base.'/dte/sii/dte_rcv/'.$d['proveedor_rut'].'-'.$d['proveedor_dv'].'/'.$d['dte'].'/'.$d['folio'].'\', 750, 550); return false" title="Ver datos del registro de compra/venta en el SII" class="btn btn-primary mb-2"><i class="fa fa-book fa-fw"></i></a>';
-    $acciones .= ' <a href="'.$_base.'/dte/registro_compras/ingresar_accion/'.$d['proveedor_rut'].'-'.$d['proveedor_dv'].'/'.$d['dte'].'/'.$d['folio'].'" title="Ingresar acción del registro de compra/venta en el SII" class="btn btn-primary mb-2" onclick="return Form.loading(\'Conectando al SII para responder...\')"><i class="fa fa-edit fa-fw"></i></a>';
+    $acciones .= ' <a href="'.$_base.'/dte/registro_compras/ingresar_accion/'.$d['proveedor_rut'].'-'.$d['proveedor_dv'].'/'.$d['dte'].'/'.$d['folio'].'" title="Ingresar acción del registro de compra/venta en el SII" class="btn btn-primary mb-2" onclick="return __.loading(\'Conectando al SII para responder...\')"><i class="fa fa-edit fa-fw"></i></a>';
     $d[] = $acciones;
     $d['fecha'] = \sowerphp\general\Utility_Date::format($d['fecha']);
     $d['fecha_recepcion_sii'] = \sowerphp\general\Utility_Date::format($d['fecha_recepcion_sii'], 'd/m/Y H:i');

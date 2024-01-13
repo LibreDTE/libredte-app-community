@@ -1,6 +1,6 @@
 <ul class="nav nav-pills float-end">
     <li class="nav-item">
-        <a href="<?=$_base?>/dte/dte_ventas/rcv_resumen/<?=$periodo?>" title="Ir al resumen del RV de <?=$periodo?>" class="nav-link" onclick="return Form.loading('Consultando datos al SII...')">
+        <a href="<?=$_base?>/dte/dte_ventas/rcv_resumen/<?=$periodo?>" title="Ir al resumen del RV de <?=$periodo?>" class="nav-link" onclick="return __.loading('Consultando datos al SII...')">
             <i class="fa fa-university"></i>
             Resumen RV <?=$periodo?>
         </a>

@@ -30,7 +30,7 @@
 <p>Esta es la página del intercambio N° <?=$DteIntercambio->codigo?> de la empresa <?=$Emisor->razon_social?>.</p>
 
 <script>
-$(function() { __.tabs_init(); });
+$(function() { __.tabs(); });
 function intercambio_recibir() {
     $('select[name="rcv_accion_codigo[]"]').each(function (i, e) {
         $('select[name="rcv_accion_codigo[]"]').get(i).value = 'ERM';
@@ -138,7 +138,7 @@ new \sowerphp\general\View_Helper_Table([
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin([
     'action'=>$_base.'/dte/dte_intercambios/responder/'.$DteIntercambio->codigo,
-    'onsubmit'=>'Form.check() && Form.confirm(this, \'¿Está seguro de la respuesta de intercambio?\', \'Enviando respuesta al intercambio...\')',
+    'onsubmit'=>'Form.check() && __.confirm(this, \'¿Está seguro de la respuesta de intercambio?\', \'Enviando respuesta al intercambio...\')',
 ]);
 $f->setColsLabel(3);
 echo '<div class="row">',"\n";
@@ -324,7 +324,7 @@ echo $f->end(false);
     </div>
 </div>
 <?php endif; ?>
-<a class="btn btn-danger btn-lg col-12" href="<?=$_base?>/dte/dte_intercambios/eliminar/<?=$DteIntercambio->codigo?>" role="button" title="Eliminar intercambio" onclick="return Form.confirm(this, '¿Confirmar la eliminación del intercambio?<br/><br/><span class=\'small\'>Podrá recuperar el XML desde su correo de intercambio si existe ahí.</span>')">
+<a class="btn btn-danger btn-lg col-12" href="<?=$_base?>/dte/dte_intercambios/eliminar/<?=$DteIntercambio->codigo?>" role="button" title="Eliminar intercambio" onclick="return __.confirm(this, '¿Confirmar la eliminación del intercambio?<br/><br/><span class=\'small\'>Podrá recuperar el XML desde su correo de intercambio si existe ahí.</span>')">
     Eliminar archivo EnvioDTE de intercambio
 </a>
 </div>

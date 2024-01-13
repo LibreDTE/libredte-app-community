@@ -12,7 +12,7 @@
         </a>
     </li>
     <li class="nav-item" class="dropdown">
-        <a href="<?=$_base?>/honorarios/boleta_honorarios/actualizar" title="Actualizar listado de boletas" class="nav-link" onclick="return Form.loading('Actualizando...')">
+        <a href="<?=$_base?>/honorarios/boleta_honorarios/actualizar" title="Actualizar listado de boletas" class="nav-link" onclick="return __.loading('Actualizando...')">
             <i class="fas fa-sync"></i>
             Actualizar
         </a>
