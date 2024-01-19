@@ -48,7 +48,7 @@ class Controller_Sii extends \Controller_App
             }
             $Firma = $Emisor->getFirma($this->Auth->User->id);
             $certificacion = $Emisor->enCertificacion();
-            $response = libredte_api_consume(
+            $response = apigateway_consume(
                 '/sii/dte/contribuyentes/datos/'.$Emisor->getRUT().'?formato=html&certificacion='.$certificacion,
                 [
                     'auth' => [
@@ -86,7 +86,7 @@ class Controller_Sii extends \Controller_App
                 die('No hay firma electrónica asociada al usuario');
             }
             $certificacion = $Emisor->enCertificacion();
-            $response = libredte_api_consume(
+            $response = apigateway_consume(
                 '/sii/dte/contribuyentes/usuarios/'.$Emisor->getRUT().'?formato=html&certificacion='.$certificacion,
                 [
                     'auth' => [
@@ -117,7 +117,7 @@ class Controller_Sii extends \Controller_App
         ]));
         // si existe el proveedor libredte se consulta al servicio web de LibreDTE oficial
         try {
-            $response = libredte_api_consume(
+            $response = apigateway_consume(
                 '/sii/dte/contribuyentes/autorizado/'.$rut.'?formato=html&certificacion='.$certificacion
             );
             $this->response->send($response['body']);
@@ -137,7 +137,7 @@ class Controller_Sii extends \Controller_App
     {
         // si existe el proveedor libredte se consulta al servicio web de LibreDTE oficial
         try {
-            $response = libredte_api_consume(
+            $response = apigateway_consume(
                 '/sii/contribuyentes/situacion_tributaria/tercero/'.$rut.'?formato=html'
             );
             $this->response->send($response['body']);
@@ -163,7 +163,7 @@ class Controller_Sii extends \Controller_App
                 die('No hay firma electrónica asociada al usuario');
             }
             $certificacion = $Emisor->enCertificacion();
-            $response = libredte_api_consume(
+            $response = apigateway_consume(
                 '/sii/dte/emitidos/estado_envio/'.$Emisor->getRUT().'/'.$track_id.'?certificacion='.$certificacion.'&formato=html',
                 [
                     'auth' => [
@@ -289,7 +289,7 @@ class Controller_Sii extends \Controller_App
                 die('No hay firma electrónica asociada al usuario');
             }
             $certificacion = $Emisor->enCertificacion();
-            $response = libredte_api_consume(
+            $response = apigateway_consume(
                 '/sii/rtc/cesiones/estado_envio/'.$track_id.'?certificacion='.$certificacion.'&formato=html',
                 [
                     'auth' => [
@@ -323,7 +323,7 @@ class Controller_Sii extends \Controller_App
                 die('No hay firma electrónica asociada al usuario');
             }
             $certificacion = $Emisor->enCertificacion();
-            $response = libredte_api_consume(
+            $response = apigateway_consume(
                 '/sii/rtc/cesiones/certificado/'.$Emisor->getRUT().'/'.$dte.'/'.$folio.'/'.$fecha.'?certificacion='.$certificacion,
                 [
                     'auth' => [

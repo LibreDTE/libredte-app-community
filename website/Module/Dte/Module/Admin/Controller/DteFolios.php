@@ -423,7 +423,7 @@ class Controller_DteFolios extends \Controller_App
                 return;
             }
             // consultar listado de solicitudes
-            $r = libredte_api_consume(
+            $r = apigateway_consume(
                 '/sii/dte/caf/solicitudes/'.$Emisor->getRUT().'/'.$DteFolio->dte.'?formato=json&certificacion='.$Emisor->enCertificacion(),
                 [
                     'auth' => [
@@ -496,7 +496,7 @@ class Controller_DteFolios extends \Controller_App
             $this->redirect('/dte/admin/dte_folios/reobtener_caf/'.$DteFolio->dte);
         }
         // consultar listado de solicitudes
-        $r = libredte_api_consume(
+        $r = apigateway_consume(
             '/sii/dte/caf/xml/'.$Emisor->getRUT().'/'.$DteFolio->dte.'/'.$folio_inicial.'/'.$folio_final.'/'.$fecha_autorizacion.'?certificacion='.$Emisor->enCertificacion(),
             [
                 'auth' => [
@@ -860,7 +860,7 @@ class Controller_DteFolios extends \Controller_App
             $this->Api->send($message, 506);
         }
         // consultar estado del folio
-        $r = libredte_api_consume(
+        $r = apigateway_consume(
             '/sii/dte/caf/estado/'.$Emisor->getRUT().'/'.$dte.'/'.$folio.'?formato='.$formato.'&certificacion='.$Emisor->enCertificacion(),
             [
                 'auth' => [
@@ -912,7 +912,7 @@ class Controller_DteFolios extends \Controller_App
             $this->Api->send($message, 506);
         }
         // anular folio
-        $r = libredte_api_consume(
+        $r = apigateway_consume(
             '/sii/dte/caf/anular/'.$Emisor->getRUT().'/'.$dte.'/'.$folio.'?formato='.$formato.'&certificacion='.$Emisor->enCertificacion(),
             [
                 'auth' => [

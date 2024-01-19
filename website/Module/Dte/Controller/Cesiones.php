@@ -114,7 +114,7 @@ class Controller_Cesiones extends \Controller_App
             ][$consulta];
             $certificacion = $Contribuyente->enCertificacion();
             try {
-                $response = libredte_api_consume(
+                $response = apigateway_consume(
                     '/sii/rtc/cesiones/documentos/'.$_POST['desde'].'/'.$_POST['hasta'].'/'.$consulta_codigo.'?formato=json&certificacion='.$certificacion,
                     [
                         'auth' => [

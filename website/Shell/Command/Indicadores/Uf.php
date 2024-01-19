@@ -41,17 +41,19 @@ class Shell_Command_Indicadores_Uf extends \sowerphp\core\Shell_App
      */
     public function main($anio = null, $save = null)
     {
-        if ($anio!==null and !is_numeric($anio)) {
+        if ($anio !== null && !is_numeric($anio)) {
             $this->out('<error>Año debe ser un número entero</error>');
             return 1;
         }
-        if ($save!==null and $save!='--save') {
+        if ($save !== null && $save != '--save') {
             $this->out('<error>Segundo argumento del comando solo puede ser --save</error>');
             return 1;
         }
-        if ($anio===null) $anio = date('Y');
+        if ($anio === null) {
+            $anio = date('Y');
+        }
         $this->out('Obteniendo valor de la UF para el año '.$anio);
-        $response = libredte_api_consume('/sii/indicadores/uf/anual/'.$anio);
+        $response = apigateway_consume('/sii/indicadores/uf/anual/'.$anio);
         if ($response['status']['code']!=200 or empty($response['body'])) {
             $msg = 'No fue posible obtener los valores de la UF para el año '.$anio;
             if ($response['body']) {
@@ -60,7 +62,7 @@ class Shell_Command_Indicadores_Uf extends \sowerphp\core\Shell_App
             $this->out('<error>'.$msg.'</error>');
             return 2;
         }
-        if ($save=='--save') {
+        if ($save == '--save') {
             $this->saveValores($response['body']);
         } else {
             $this->showValores($response['body']);

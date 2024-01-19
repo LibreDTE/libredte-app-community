@@ -312,7 +312,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $operacion = $datos['LibroCompraVenta']['EnvioLibro']['Caratula']['TipoOperacion'];
         $tipo_libro = $datos['LibroCompraVenta']['EnvioLibro']['Caratula']['TipoLibro'];
         $url = '/sii/dte/iecv/codigo_reemplazo/'.$Contribuyente->getRUT().'/'.$periodo.'/'.$operacion.'/'.$tipo_libro.'/'.$Libro->track_id.'?certificacion='.$Contribuyente->enCertificacion();
-        $response = libredte_api_consume($url, [
+        $response = apigateway_consume($url, [
             'auth' => [
                 'cert' => [
                     'cert-data' => $Firma->getCertificate(),

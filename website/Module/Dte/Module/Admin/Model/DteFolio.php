@@ -311,7 +311,7 @@ class Model_DteFolio extends \Model_App
             throw new \Exception('No hay firma electrónica');
         }
         // solicitar timbraje
-        $r = libredte_api_consume(
+        $r = apigateway_consume(
             '/sii/dte/caf/solicitar/'.$Emisor->getRUT().'/'.$this->dte.'/'.$cantidad.'?certificacion='.(int)$this->certificacion,
             [
                 'auth' => [

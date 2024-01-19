@@ -1104,7 +1104,7 @@ class Model_DteTmp extends \Model_App
         // consultar servicio web de LibreDTE
         else {
             unset($config['hash']);
-            $response = libredte_api_consume('/libredte/dte/documentos/escpos', $config);
+            $response = apigateway_consume('/libredte/dte/documentos/escpos', $config);
         }
         if ($response['status']['code']!=200) {
             throw new \Exception($response['body'], 500);

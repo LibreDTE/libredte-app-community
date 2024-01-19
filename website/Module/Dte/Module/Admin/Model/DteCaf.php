@@ -184,7 +184,7 @@ class Model_DteCaf extends \Model_App
             throw new \Exception('No hay firma electrónica');
         }
         // solicitar listado de folios según estado
-        $r = libredte_api_consume(
+        $r = apigateway_consume(
             '/sii/dte/caf/estados/'.$Emisor->getRUT().'/'.$this->dte.'/'.$this->desde.'/'.$this->hasta.'/'.$estado.'?certificacion='.(int)$this->certificacion,
             [
                 'auth' => [

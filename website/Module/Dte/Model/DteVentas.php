@@ -298,7 +298,7 @@ class Model_DteVentas extends \Model_Plural_App
         // sincronizar periodos
         foreach ($periodos as $periodo) {
             // obtener documentos emitidos en el portal mipyme
-            $r = libredte_api_consume(
+            $r = apigateway_consume(
                 '/sii/mipyme/emitidos/documentos/'.$this->getContribuyente()->getRUT().'?formato=json',
                 [
                     'auth' => $this->getContribuyente()->getSiiAuthUser(),

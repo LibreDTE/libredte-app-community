@@ -1,11 +1,14 @@
 {
     "config": {
-        "vendor-dir": "Vendor"
+        "vendor-dir": "Vendor",
+        "platform": {
+            "php": "7.3"
+        }
     },
     "require": {
-        "php": "7.3.* || 7.4.*",
+        "php": "^7.3",
         "sasco/libredte": "21.10.*",
-        "sasco/libredte-api-client": "1.*",
+        "apigatewaycl/apigateway-api-client": "^2",
         "kunalvarma05/dropbox-php-sdk": "0.4.1",
         "phpmailer/phpmailer": "~6.5",
         "libchart/libchart": "1.5.0",

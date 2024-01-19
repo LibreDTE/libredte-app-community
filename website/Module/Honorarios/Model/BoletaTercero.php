@@ -211,7 +211,7 @@ class Model_BoletaTercero extends \Model_App
      */
     public function getHTML()
     {
-        $r = libredte_api_consume('/sii/bte/emitidas/html/'.$this->codigo, [
+        $r = apigateway_consume('/sii/bte/emitidas/html/'.$this->codigo, [
             'auth' => [
                 'pass' => [
                     'rut' => $this->getEmisor()->getRUT(),

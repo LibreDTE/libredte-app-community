@@ -1877,7 +1877,7 @@ class Model_DteEmitido extends Model_Base_Envio
         // si no hay XML en la base de datos, se busca si es un DTE del Portal
         // MIPYME en cuyo casi se obtiene el XML directo desde el SII
         else if ($this->mipyme) {
-            $r = libredte_api_consume(
+            $r = apigateway_consume(
                 sprintf(
                     '/sii/mipyme/emitidos/xml/%s/%d/%d',
                     $this->getEmisor()->getRUT(),
@@ -2057,7 +2057,7 @@ class Model_DteEmitido extends Model_Base_Envio
         // consultar servicio web de LibreDTE
         else {
             unset($config['hash']);
-            $response = libredte_api_consume('/libredte/dte/documentos/escpos', $config);
+            $response = apigateway_consume('/libredte/dte/documentos/escpos', $config);
         }
         if ($response['status']['code']!=200) {
             throw new \Exception($response['body'], 500);

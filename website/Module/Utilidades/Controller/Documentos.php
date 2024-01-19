@@ -237,7 +237,7 @@ class Controller_Documentos extends \Controller_App
             foreach ($EnvioDTE->getDocumentos() as $DTE) {
                 // verificar DTE con funcionalidad avanzada
                 try {
-                    $r = libredte_api_consume(
+                    $r = apigateway_consume(
                         '/sii/dte/emitidos/verificar?certificacion='.$certificacion,
                         [
                             'auth' => [

@@ -96,7 +96,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
      */
     public function getBoletas($periodo)
     {
-        $r = libredte_api_consume('/sii/bte/emitidas/documentos/'.$this->getContribuyente()->getRUT().'/'.$periodo.'?formato=json', [
+        $r = apigateway_consume('/sii/bte/emitidas/documentos/'.$this->getContribuyente()->getRUT().'/'.$periodo.'?formato=json', [
             'auth' => [
                 'pass' => [
                     'rut' => $this->getContribuyente()->getRUT(),
@@ -253,7 +253,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
             $Receptor->save();
         }
         // consumir servicio web y emitir boleta
-        $r = libredte_api_consume('/sii/bte/emitidas/emitir', [
+        $r = apigateway_consume('/sii/bte/emitidas/emitir', [
             'auth' => [
                 'pass' => [
                     'rut' => $this->getContribuyente()->getRUT(),

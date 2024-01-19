@@ -184,7 +184,7 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
             }
         }
         // generar PDF mediante funcionalidades extras
-        return libredte_api_consume('/libredte/dte/documentos/pdf', $config);
+        return apigateway_consume('/libredte/dte/documentos/pdf', $config);
     }
 
 }

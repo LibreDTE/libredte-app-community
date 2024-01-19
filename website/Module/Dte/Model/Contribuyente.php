@@ -225,7 +225,9 @@ class Model_Contribuyente extends \Model_App
             $this->dv = \sowerphp\app\Utility_Rut::dv($this->rut);
             if (self::$autocompletar) {
                 try {
-                    $response = libredte_api_consume('/sii/contribuyentes/situacion_tributaria/tercero/'.$this->rut.'-'.$this->dv);
+                    $response = apigateway_consume(
+                        '/sii/contribuyentes/situacion_tributaria/tercero/'.$this->rut.'-'.$this->dv
+                    );
                     if ($response['status']['code']==200) {
                         $info = $response['body'];
                         if (!empty($info['razon_social'])) {
@@ -3652,7 +3654,7 @@ class Model_Contribuyente extends \Model_App
                     $this->rut, $this->dv, $filtros['periodo'], $this->enCertificacion()
                 );
             }
-            $r = libredte_api_consume($url, ['auth'=>$auth]);
+            $r = apigateway_consume($url, ['auth'=>$auth]);
             if ($r['status']['code']!=200) {
                 throw new \Exception('Error al obtener el resumen del RCV: '.$r['body']);
             }
@@ -3680,7 +3682,7 @@ class Model_Contribuyente extends \Model_App
                         $this->rut, $this->dv, $filtros['periodo'], $dte, $this->enCertificacion(), $filtros['tipo']
                     );
                 }
-                $r = libredte_api_consume($url, ['auth'=>$auth]);
+                $r = apigateway_consume($url, ['auth'=>$auth]);
                 if ($r['status']['code']!=200) {
                     throw new \Exception('Error al obtener el detalle del RCV: '.$r['body']);
                 }

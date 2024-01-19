@@ -43,7 +43,7 @@ class Utility_EnvioBoleta
     public static function enviar($usuario, $empresa, $xml, $Firma, $gzip = false, $retry = null)
     {
         $certificacion = \sasco\LibreDTE\Sii::getAmbiente();
-        $r = libredte_api_consume(
+        $r = apigateway_consume(
             '/libredte/dte/envios/enviar?certificacion='.(int)$certificacion.'&gzip='.(int)$gzip.'&retry='.(int)$retry,
             [
                 'auth' => [
@@ -71,7 +71,7 @@ class Utility_EnvioBoleta
     public static function estado_normalizado($rut, $dv, $track_id, $Firma, $dte, $folio)
     {
         $certificacion = \sasco\LibreDTE\Sii::getAmbiente();
-        $r = libredte_api_consume(
+        $r = apigateway_consume(
             '/libredte/dte/envios/estado?certificacion='.(int)$certificacion,
             [
                 'auth' => [

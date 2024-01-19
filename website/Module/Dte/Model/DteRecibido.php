@@ -588,7 +588,7 @@ class Model_DteRecibido extends \Model_App
             }
             // enviar al SII
             try {
-                $r = libredte_api_consume(
+                $r = apigateway_consume(
                     '/sii/rcv/compras/set_tipo_transaccion/'.$this->getReceptor()->rut.'-'.$this->getReceptor()->dv.'/'.$this->getPeriodo().'?certificacion='.$this->getReceptor()->enCertificacion(),
                     [
                         'auth' => [
@@ -927,7 +927,7 @@ class Model_DteRecibido extends \Model_App
         // si no hay XML en la base de datos, se busca si es un DTE del Portal
         // MIPYME en cuyo casi se obtiene el XML directo desde el SII
         if ($this->mipyme) {
-            $r = libredte_api_consume(
+            $r = apigateway_consume(
                 sprintf(
                     '/sii/mipyme/recibidos/xml/%s/%s/%d/%d',
                     $this->getReceptor()->getRUT(),
@@ -998,7 +998,7 @@ class Model_DteRecibido extends \Model_App
         $config = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($default_config, $config);
         // si es un DTE del portal MIPYME se busca el PDF ahí
         if ($this->mipyme) {
-            $r = libredte_api_consume(
+            $r = apigateway_consume(
                 sprintf(
                     '/sii/mipyme/recibidos/pdf/%s/%s/%d',
                     $this->getReceptor()->getRUT(),
@@ -1109,7 +1109,7 @@ class Model_DteRecibido extends \Model_App
         // consultar servicio web de LibreDTE
         else {
             unset($config['hash']);
-            $response = libredte_api_consume('/libredte/dte/documentos/escpos', $config);
+            $response = apigateway_consume('/libredte/dte/documentos/escpos', $config);
         }
         if ($response['status']['code']!=200) {
             throw new \Exception($response['body'], 500);

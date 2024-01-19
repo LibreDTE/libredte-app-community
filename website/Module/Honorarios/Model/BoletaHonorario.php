@@ -187,7 +187,7 @@ class Model_BoletaHonorario extends \Model_App
      */
     public function getPDF()
     {
-        $r = libredte_api_consume('/sii/bhe/recibidas/pdf/'.$this->codigo, [
+        $r = apigateway_consume('/sii/bhe/recibidas/pdf/'.$this->codigo, [
             'auth' => [
                 'pass' => [
                     'rut' => $this->getReceptor()->getRUT(),

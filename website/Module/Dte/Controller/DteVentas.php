@@ -170,7 +170,7 @@ class Controller_DteVentas extends Controller_Base_Libros
                 $resumenes_errores = [];
                 foreach ($resumenes as $resumen) {
                     try {
-                        $r = libredte_api_consume('/sii/rcv/ventas/set_resumen/'.$Emisor->rut.'-'.$Emisor->dv.'/'.$periodo.'?certificacion='.$Emisor->enCertificacion(), [
+                        $r = apigateway_consume('/sii/rcv/ventas/set_resumen/'.$Emisor->rut.'-'.$Emisor->dv.'/'.$periodo.'?certificacion='.$Emisor->enCertificacion(), [
                             'auth' => [
                                 'cert' => [
                                     'cert-data' => $Firma->getCertificate(),

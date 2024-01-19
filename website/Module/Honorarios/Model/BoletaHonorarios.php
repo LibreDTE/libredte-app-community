@@ -84,7 +84,7 @@ class Model_BoletaHonorarios extends \Model_Plural_App
      */
     public function getBoletas($periodo)
     {
-        $r = libredte_api_consume('/sii/bhe/recibidas/documentos/'.$this->getContribuyente()->getRUT().'/'.$periodo.'?formato=json', [
+        $r = apigateway_consume('/sii/bhe/recibidas/documentos/'.$this->getContribuyente()->getRUT().'/'.$periodo.'?formato=json', [
             'auth' => [
                 'pass' => [
                     'rut' => $this->getContribuyente()->getRUT(),

@@ -398,7 +398,7 @@ class Controller_DteCompras extends Controller_Base_Libros
             $this->redirect(str_replace('rcv_sincronizar_tipo_transacciones', 'ver', $this->request->request));
         }
         // enviar al SII
-        $r = libredte_api_consume('/sii/rcv/compras/set_tipo_transaccion/'.$Emisor->rut.'-'.$Emisor->dv.'/'.$periodo.'?certificacion='.$Emisor->enCertificacion(), [
+        $r = apigateway_consume('/sii/rcv/compras/set_tipo_transaccion/'.$Emisor->rut.'-'.$Emisor->dv.'/'.$periodo.'?certificacion='.$Emisor->enCertificacion(), [
             'auth' => [
                 'pass' => [
                     'rut' => $Emisor->rut.'-'.$Emisor->dv,
