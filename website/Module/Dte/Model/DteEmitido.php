@@ -1238,7 +1238,7 @@ class Model_DteEmitido extends Model_Base_Envio
         if (in_array($this->dte, [39, 41])) {
             $class = \sowerphp\core\Configure::read('dte.clase_boletas');
             if (!$class or !class_exists($class)) {
-                throw new \Exception('Envío de boletas al SII no está disponible en esta versión de LibreDTE');
+                throw new \Exception('El envío de boletas al SII no está disponible en esta instancia de LibreDTE.');
             }
             $result = $class::enviar($Firma->getID(), $Emisor->rut.'-'.$Emisor->dv, $xml, $Firma, $gzip, $retry);
             if ($result===false) {

@@ -33,9 +33,9 @@ class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
 {
 
     protected $activa = true;
-    protected $nombre = 'PDF Estándar de LibreDTE';
-    protected $descripcion = 'Es el formato por defecto del proyecto LibreDTE. Es un diseño sencillo que cumple con lo exigido por el SII.';
-    protected $logo = 'https://i.imgur.com/WcBGmc5.png';
+    protected $nombre = 'Formato de PDF Estándar';
+    protected $descripcion = 'Diseño sencillo que cumple con lo exigido por el SII. Es el formato por defecto en LibreDTE Edición Comunidad.';
+    protected $logo = 'https://libredte.cl/img/logo.png';
 
     /**
      * Método que entrega el código HTML de la página de configuración de la aplicación

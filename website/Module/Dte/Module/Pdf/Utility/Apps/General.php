@@ -33,9 +33,9 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
 {
 
     protected $activa = true;
-    protected $nombre = 'PDF de Propósito General';
-    protected $descripcion = 'Es el formato oficial de SASCO SpA, que ha sido compartido con LibreDTE. Permite agregar imágenes, mejor diseño, código de barras y gráfico con historial.';
-    protected $logo = 'https://i.imgur.com/J8tVevj.png';
+    protected $nombre = 'Formato de PDF para Propósito General';
+    protected $descripcion = 'Permite agregar imágenes, código de barras y gráfico con historial entre otras opciones. Es el formato por defecto en LibreDTE Edición Enterprise.';
+    protected $logo = 'https://libredte.cl/img/logo.png';
 
     protected $config_flags = [
         'historial_mostrar_valor' => 'Mostrar valor en el gráfico del historial (sólo cuando se pasan datos en vez de URL).',

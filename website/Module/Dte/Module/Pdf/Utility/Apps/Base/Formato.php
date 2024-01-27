@@ -164,7 +164,8 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
     public function generar($config)
     {
         // generar PDF localmente
-        $class = '\sasco\LibreDTE\Extra\Sii\Dte\PDF\Formatos\\'.\sowerphp\core\Utility_Inflector::camelize($config['formato']);
+        $class = '\libredte\lib_extra\Sii\Dte\PDF\Formatos\\'
+            . \sowerphp\core\Utility_Inflector::camelize($config['formato']);
         if (class_exists($class)) {
             try {
                 $data = (new $class($this->getConfigPDF($config)))->generar();

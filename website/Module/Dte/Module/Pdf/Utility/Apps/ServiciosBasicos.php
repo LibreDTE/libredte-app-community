@@ -33,7 +33,7 @@ class Utility_Apps_ServiciosBasicos extends Utility_Apps_Base_Formato
 {
 
     protected $activa = true;
-    protected $nombre = 'PDF para Servicios Básicos';
+    protected $nombre = 'Formato de PDF para Servicios Básicos';
     protected $descripcion = 'Por ejemplo, para empresas de Agua Potable Rural.';
     protected $logo = 'https://i.imgur.com/j6lz7Aq.png';
 
