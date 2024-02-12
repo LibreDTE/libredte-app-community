@@ -1,16 +1,15 @@
-<?php $Contribuyente = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente'); ?>
 <!--
-LibreDTE Edición Comunidad (2015 - 2023)
-Copyright SASCO SpA (https://www.sasco.cl)
-Edición Enterprise de LibreDTE, con soporte de SASCO SpA, disponible en https://www.libredte.cl
-¿Te gusta ver código? ¿Necesitas una integración? Revisa https://www.billmysales.com
+LibreDTE: Edición Comunidad (2015 - 2024).
+Copyright (C) LibreDTE <https://www.libredte.cl>
+Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www.libredte.cl>
+¿Te gusta ver código? ¿Necesitas una integración? Revisa <https://www.billmysales.com>
 -->
 <!DOCTYPE html>
 <html lang="es">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
-        <meta name="author" content="SASCO SpA" />
+        <meta name="author" content="LibreDTE" />
         <meta name="description" content="LibreDTE Edición Comunidad." />
         <meta name="keywords" content="facturas, boletas, sii, dte" />
         <title><?=$_header_title?></title>
@@ -28,13 +27,13 @@ Edición Enterprise de LibreDTE, con soporte de SASCO SpA, disponible en https:/
                 _request = "<?=$_request?>"
             ;
         </script>
-        <script src="https://cdn.sasco.cl/js/__.js"></script>
-        <script src="https://cdn.sasco.cl/js/form.js"></script>
-        <script src="https://cdn.sasco.cl/js/datepicker/bootstrap-datepicker.js"></script>
-        <script src="https://cdn.sasco.cl/js/datepicker/bootstrap-datepicker.es.js"></script>
-        <link rel="stylesheet" href="https://cdn.sasco.cl/js/datepicker/datepicker3.css" />
-        <link type="text/css" href="https://cdn.sasco.cl/css/typeahead.css" rel="stylesheet" />
-        <script src="https://cdn.sasco.cl/js/typeahead.bundle.js"></script>
+        <script src="https://cdn.libredte.cl/js/__.js"></script>
+        <script src="https://cdn.libredte.cl/js/form.js"></script>
+        <script src="https://cdn.libredte.cl/js/datepicker/bootstrap-datepicker.js"></script>
+        <script src="https://cdn.libredte.cl/js/datepicker/bootstrap-datepicker.es.js"></script>
+        <link rel="stylesheet" href="https://cdn.libredte.cl/js/datepicker/datepicker3.css" />
+        <link type="text/css" href="https://cdn.libredte.cl/css/typeahead.css" rel="stylesheet" />
+        <script src="https://cdn.libredte.cl/js/typeahead.bundle.js"></script>
         <script src="<?=$_base?>/js/app.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>

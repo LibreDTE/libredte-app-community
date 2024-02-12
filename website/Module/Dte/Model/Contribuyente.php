@@ -194,6 +194,10 @@ class Model_Contribuyente extends \Model_App
         'extra_otras_actividades' => [],
     ]; ///< valores por defecto para columnas de la configuración en caso que no estén especificadas
 
+    protected static $onDeleteSaveConfig = [
+        'email' => ['intercambio_user'],
+    ]; ///< configuración del contribuyente que se mantendrá cuando sea eliminado
+
     private static $reservados = [
         0,
         55555555,
@@ -469,10 +473,14 @@ class Model_Contribuyente extends \Model_App
         }
         // eliminar todos los registros de la empresa de la base de datos
         if ($all) {
-            // mantener correo de intercambio y eliminar todo el resto de la configuración extra del contribuyente
-            $this->config = [
-                'email' => ['intercambio_user' => $this->config_email_intercambio_user],
-            ];
+            // mantener cierta configuración extra del contribuyente y eliminar todo el resto
+            $this->config = [];
+            foreach (static::$onDeleteSaveConfig as $configuracion => $variables) {
+                foreach ($variables as $variable) {
+                    $valor = 'config_' . $configuracion . '_' . $variable;
+                    $this->config[$configuracion][$variable] = $this->$valor;
+                }
+            }
             $this->db->query('DELETE FROM contribuyente_config WHERE contribuyente = :rut', [':rut'=>$this->rut]);
             if (!$this->save()) {
                 $this->db->rollback();
