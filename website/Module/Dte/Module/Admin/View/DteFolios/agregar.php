@@ -16,7 +16,7 @@ echo $f->input([
     'label' => 'Tipo de documento',
     'options' => [''=>'Seleccione el tipo de documento'] + $dte_tipos,
     'check' => 'notempty',
-    'help' => '¿Necesitas activar un documento que no está en la lista? <a href="'.$_base.'/soporte">Solicítalo a soporte</a>.',
+    'help' => '¿Necesitas activar un documento que no está en la lista? <a href="'.$_base.'/dte/contribuyentes/modificar#facturacion:documentos_disponibles">Hazlo en la configuración del contribuyente</a>.',
 ]);
 echo $f->input([
     'name' => 'alerta',
