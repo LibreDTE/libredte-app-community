@@ -1189,18 +1189,16 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que crea los filtros para ser usados en las consultas de documentos temporales
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-16
+     * Método que crea los filtros para ser usados en las consultas de documentos temporales.
      */
     private function crearFiltrosDocumentosTemporales($filtros)
     {
         $where = ['d.emisor = :rut'];
-        $vars = [':rut'=>$this->rut];
+        $vars = [':rut' => $this->rut];
         foreach (['codigo', 'fecha', 'total'] as $c) {
             if (!empty($filtros[$c])) {
-                $where[] = 'd.'.$c.' = :'.$c;
-                $vars[':'.$c] = $filtros[$c];
+                $where[] = 'd.' . $c . ' = :' . $c;
+                $vars[':' . $c] = $filtros[$c];
             }
         }
         // usuario
@@ -1216,7 +1214,7 @@ class Model_Contribuyente extends \Model_App
         if (!empty($filtros['folio'])) {
             $aux = explode('-', str_replace("'", '-', $filtros['folio']));
             if (!isset($aux[1])) {
-                throw new \Exception('Folio del DTE temporal debe ser en formato DTE-CODIGO_7');
+                throw new \Exception('Folio del DTE temporal debe ser en formato DTE-CODIGO_7.');
             }
             list($dte, $codigo) = $aux;
             $where[] = 'd.dte = :dte AND SUBSTR(d.codigo,1,7) = :codigo';
@@ -1229,8 +1227,8 @@ class Model_Contribuyente extends \Model_App
                 $i = 0;
                 $where_dte = [];
                 foreach ($filtros['dte'] as $filtro_dte) {
-                    $where_dte[] = ':dte'.$i;
-                    $vars[':dte'.$i] = $filtro_dte;
+                    $where_dte[] = ':dte' . $i;
+                    $vars[':dte' . $i] = $filtro_dte;
                     $i++;
                 }
                 $where[] = 'd.dte IN ('.implode(', ', $where_dte).')';
@@ -1257,7 +1255,7 @@ class Model_Contribuyente extends \Model_App
             }
             // armar consulta dependiendo si se desea incluir o excluir al receptor
             if (!empty($filtros['receptor'])) {
-                if ($filtros['receptor'][0]=='!') {
+                if ($filtros['receptor'][0] == '!') {
                     $where[] = 'd.receptor != :receptor';
                     $vars[':receptor'] = substr($filtros['receptor'],1);
                 }
@@ -1268,7 +1266,14 @@ class Model_Contribuyente extends \Model_App
             }
         }
         if (!empty($filtros['razon_social'])) {
-            $where[] = 'r.razon_social ILIKE :razon_social';
+            $where[] = '(
+                (
+                    d.receptor IN (55555555, 66666666)
+                    AND d.datos::JSONB->\'Encabezado\'->\'Receptor\'->>\'RznSocRecep\' ILIKE :razon_social
+                ) OR (
+                    r.razon_social ILIKE :razon_social
+                )
+            )';
             $vars[':razon_social'] = '%'.$filtros['razon_social'].'%';
         }
         // otros filtros
@@ -1288,7 +1293,7 @@ class Model_Contribuyente extends \Model_App
             $where[] = 'd.total <= :total_hasta';
             $vars[':total_hasta'] = $filtros['total_hasta'];
         }
-        if (isset($filtros['sucursal_sii']) and $filtros['sucursal_sii']!=-1) {
+        if (isset($filtros['sucursal_sii']) && $filtros['sucursal_sii'] != -1) {
             if ($filtros['sucursal_sii']) {
                 $where[] = 'd.sucursal_sii = :sucursal_sii';
                 $vars[':sucursal_sii'] = $filtros['sucursal_sii'];
@@ -1321,14 +1326,12 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega el listado de documentos temporales por el contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+     * Método que entrega el listado de documentos temporales por el contribuyente.
      */
     public function getDocumentosTemporales($filtros = [])
     {
         list($where, $vars) = $this->crearFiltrosDocumentosTemporales($filtros);
-        // armar consulta interna (no obtiene razón social verdadera en DTE exportación por que requiere acceder al JSON)
+        // armar consulta interna
         $query = '
             SELECT
                 d.dte,
@@ -1336,7 +1339,12 @@ class Model_Contribuyente extends \Model_App
                 d.codigo,
                 (d.dte || \'-\' || UPPER(SUBSTR(d.codigo,1,7))) AS folio,
                 d.receptor,
-                r.razon_social,
+                CASE
+                    WHEN d.receptor IN (55555555, 66666666) THEN
+                        d.datos::JSONB->\'Encabezado\'->\'Receptor\'->>\'RznSocRecep\'
+                    ELSE
+                        r.razon_social
+                END AS razon_social,
                 d.fecha,
                 d.total,
                 d.sucursal_sii,
@@ -1358,17 +1366,15 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que crea los filtros para ser usados en las consultas de documentos emitidos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-04-01
+     * Método que crea los filtros para ser usados en las consultas de documentos emitidos.
      */
     private function crearFiltrosDocumentosEmitidos($filtros)
     {
         $where = ['d.emisor = :rut', 'd.certificacion = :certificacion'];
-        $vars = [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion()];
+        $vars = [':rut' => $this->rut, ':certificacion' => $this->enCertificacion()];
         foreach (['folio', 'fecha', 'total'] as $c) {
             if (!empty($filtros[$c])) {
-                $where[] = 'd.'.$c.' = :'.$c;
+                $where[] = 'd.' . $c . ' = :' . $c;
                 $vars[':'.$c] = $filtros[$c];
             }
         }
@@ -1387,17 +1393,17 @@ class Model_Contribuyente extends \Model_App
                 $i = 0;
                 $where_dte = [];
                 foreach ($filtros['dte'] as $filtro_dte) {
-                    $where_dte[] = ':dte'.$i;
-                    $vars[':dte'.$i] = $filtro_dte;
+                    $where_dte[] = ':dte' . $i;
+                    $vars[':dte' . $i] = $filtro_dte;
                     $i++;
                 }
                 $where[] = 'd.dte IN ('.implode(', ', $where_dte).')';
             }
             else {
                 $filtros['dte'] = (string)$filtros['dte'];
-                if ($filtros['dte'][0]=='!') {
+                if ($filtros['dte'][0] == '!') {
                     $where[] = 'd.dte != :dte';
-                    $vars[':dte'] = substr($filtros['dte'],1);
+                    $vars[':dte'] = substr($filtros['dte'], 1);
                 }
                 else {
                     $where[] = 'd.dte = :dte';
@@ -1424,7 +1430,7 @@ class Model_Contribuyente extends \Model_App
             // armar consulta dependiendo si se desea incluir o excluir al receptor
             if (!empty($filtros['receptor'])) {
                 $filtros['receptor'] = (string)$filtros['receptor'];
-                if ($filtros['receptor'][0]=='!') {
+                if ($filtros['receptor'][0] == '!') {
                     $where[] = 'd.receptor != :receptor';
                     $vars[':receptor'] = substr($filtros['receptor'],1);
                 }
@@ -1435,8 +1441,20 @@ class Model_Contribuyente extends \Model_App
             }
         }
         if (!empty($filtros['razon_social'])) {
-            $where[] = 'r.razon_social ILIKE :razon_social';
-            $vars[':razon_social'] = '%'.$filtros['razon_social'].'%';
+            $razon_social_xpath = $this->db->xml(
+                'd.xml',
+                '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep',
+                'http://www.sii.cl/SiiDte'
+            );
+            $where[] = '(
+                (
+                    d.receptor IN (55555555, 66666666)
+                    AND '.$razon_social_xpath.' ILIKE :razon_social
+                ) OR (
+                    r.razon_social ILIKE :razon_social
+                )
+            )';
+            $vars[':razon_social'] = '%' . $filtros['razon_social'] . '%';
         }
         // otros filtros
         if (!empty($filtros['periodo'])) {
@@ -1459,7 +1477,7 @@ class Model_Contribuyente extends \Model_App
             $where[] = 'd.total <= :total_hasta';
             $vars[':total_hasta'] = $filtros['total_hasta'];
         }
-        if (isset($filtros['sucursal_sii']) and $filtros['sucursal_sii']!=-1) {
+        if (isset($filtros['sucursal_sii']) && $filtros['sucursal_sii'] != -1) {
             if ($filtros['sucursal_sii']) {
                 $where[] = 'd.sucursal_sii = :sucursal_sii';
                 $vars[':sucursal_sii'] = $filtros['sucursal_sii'];
@@ -1480,8 +1498,12 @@ class Model_Contribuyente extends \Model_App
         }
         // vendedor
         if (!empty($filtros['vendedor'])) {
-            $vendedor_col = $this->db->xml('d.xml', '/EnvioDTE/SetDTE/DTE/*/Encabezado/Emisor/CdgVendedor', 'http://www.sii.cl/SiiDte');
-            $where[] = $vendedor_col.' = :vendedor';
+            $vendedor_col = $this->db->xml(
+                'd.xml',
+                '/EnvioDTE/SetDTE/DTE/*/Encabezado/Emisor/CdgVendedor',
+                'http://www.sii.cl/SiiDte'
+            );
+            $where[] = $vendedor_col . ' = :vendedor';
             $vars[':vendedor'] = $filtros['vendedor'];
         }
         // filtrar por estado del DTE
@@ -1587,7 +1609,11 @@ class Model_Contribuyente extends \Model_App
             $query = $this->db->setLimit($query, $filtros['limit'], !empty($filtros['offset']) ? $filtros['offset'] : 0);
         }
         // entregar consulta verdadera (esta si obtiene razón social verdadera en DTE exportación, pero sólo para las filas del límite consultado)
-        $razon_social_xpath = $this->db->xml('d.xml', '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep', 'http://www.sii.cl/SiiDte');
+        $razon_social_xpath = $this->db->xml(
+            'd.xml',
+            '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep',
+            'http://www.sii.cl/SiiDte'
+        );
         return $this->db->getTable('
             SELECT
                 d.dte,
