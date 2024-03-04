@@ -1153,7 +1153,7 @@ class Model_Contribuyente extends \Model_App
                 SELECT f.archivo, f.contrasenia
                 FROM firma_electronica AS f, contribuyente AS c
                 WHERE f.usuario = c.usuario AND c.rut = :rut
-            ', [':rut'=>$this->rut]);
+            ', [':rut' => $this->rut]);
             // buscar firma del usuario que está haciendo la solicitud
             if (empty($datos) and $user_id and $user_id!=$this->usuario) {
                 $datos = $this->db->getRow('
@@ -1163,6 +1163,7 @@ class Model_Contribuyente extends \Model_App
                 ', [':usuario'=>$user_id]);
             }
             if (empty($datos)) {
+                $this->firmas[(int)$user_id] = false;
                 return false;
             }
             // obtener contraseña de la firma (que está encriptada)
@@ -1172,6 +1173,7 @@ class Model_Contribuyente extends \Model_App
                 $pass = null;
             }
             if (!$pass) {
+                $this->firmas[(int)$user_id] = false;
                 return false;
             }
             // cargar firma
