@@ -1140,36 +1140,6 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que permite crear el cobro para el DTE y enviar al formulario de pago
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-29
-     */
-    public function pagar($dte, $folio)
-    {
-        $Emisor = $this->getContribuyente();
-        // obtener DTE emitido
-        $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
-        if (!$DteEmitido->exists()) {
-            \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el DTE solicitado', 'error'
-            );
-            $this->redirect('/dte/dte_emitidos/listar');
-        }
-        // si no permite cobro error
-        if (!$DteEmitido->permiteCobro()) {
-            \sowerphp\core\Model_Datasource_Session::message('Documento no permite cobro', 'error');
-            $this->redirect(str_replace('pagar', 'ver', $this->request->request));
-        }
-        // obtener cobro
-        $Cobro = $DteEmitido->getCobro();
-        if ($Cobro->pagado) {
-            \sowerphp\core\Model_Datasource_Session::message('Documento ya se encuentra pagado', 'ok');
-            $this->redirect(str_replace('pagar', 'ver', $this->request->request));
-        }
-        $this->redirect('/pagos/cobros/pagar/'.$Cobro->codigo);
-    }
-
-    /**
      * Acción que permite usar la verificación avanzada de datos del DTE
      * Permite validar firma con la enviada al SII
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
@@ -1798,40 +1768,6 @@ class Controller_DteEmitidos extends \Controller_App
             $this->Api->send('No fue posible eliminar el XML del DTE: '.$e->getMessage(), 500);
         }
         return true;
-    }
-
-    /**
-     * Acción de la API que entrega el cobro asociado al documento
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-29
-     */
-    public function _api_cobro_GET($dte, $folio, $emisor)
-    {
-        // verificar permisos y crear DteEmitido
-        $User = $this->Api->getAuthUser();
-        if (is_string($User)) {
-            $this->Api->send($User, 401);
-        }
-        $Emisor = new Model_Contribuyente($emisor);
-        if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
-        }
-        if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/ver')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
-        }
-        $DteEmitido = new Model_DteEmitido($Emisor->rut, (int)$dte, (int)$folio, $Emisor->enCertificacion());
-        if (!$DteEmitido->exists()) {
-            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio, 404);
-        }
-        // si no permite cobro error
-        if (!$DteEmitido->permiteCobro()) {
-            $this->Api->send('Documento T'.$dte.'F'.$folio.' no permite cobro', 400);
-        }
-        // entregar cobro (se agrega URL)
-        $Cobro = $DteEmitido->getCobro();
-        $links = $DteEmitido->getLinks();
-        $Cobro->url = !empty($links['pagar']) ? $links['pagar'] : null;
-        return $this->Api->send($Cobro, 200);
     }
 
     /**

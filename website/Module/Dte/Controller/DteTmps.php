@@ -631,38 +631,6 @@ class Controller_DteTmps extends \Controller_App
     }
 
     /**
-     * Acción de la API que entrega el cobro asociado al documento
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-06-16
-     */
-    public function _api_cobro_GET($receptor, $dte, $codigo, $emisor)
-    {
-        // verificar permisos y crear DteEmitido
-        $User = $this->Api->getAuthUser();
-        if (is_string($User)) {
-            $this->Api->send($User, 401);
-        }
-        // crear emisor
-        $Emisor = new \website\Dte\Model_Contribuyente($emisor);
-        if (!$Emisor->usuario) {
-            $this->Api->send('Contribuyente no está registrado en la aplicación', 404);
-        }
-        if (!$Emisor->usuarioAutorizado($User, '/dte/dte_tmps/ver')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
-        }
-        // obtener documento temporal
-        $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
-        if (!$DteTmp->exists()) {
-            $this->Api->send('No existe el documento temporal solicitado', 404);
-        }
-        // entregar cobro (se agrega URL)
-        $Cobro = $DteTmp->getCobro();
-        $links = $DteTmp->getLinks();
-        $Cobro->url = !empty($links['pagar']) ? $links['pagar'] : null;
-        return $this->Api->send($Cobro, 200);
-    }
-
-    /**
      * Método que actualiza un documento temporal
      * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
      * @version 2021-08-24
@@ -877,36 +845,6 @@ class Controller_DteTmps extends \Controller_App
         // pasar datos a la vista
         $this->layout .= '.min';
         $this->set('DteTmp', $DteTmp);
-    }
-
-    /**
-     * Acción que permite crear el cobro para el DTE y enviar al formulario de pago
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-01-10
-     */
-    public function pagar($receptor, $dte, $codigo)
-    {
-        $Emisor = $this->getContribuyente();
-        // obtener documento temporal
-        $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
-        if (!$DteTmp->exists()) {
-            \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el documento temporal solicitado', 'error'
-            );
-            $this->redirect('/dte/dte_tmps/listar');
-        }
-        // si no permite cobro error
-        if (!$DteTmp->getTipo()->permiteCobro()) {
-            \sowerphp\core\Model_Datasource_Session::message('Documento no permite cobro', 'error');
-            $this->redirect(str_replace('pagar', 'ver', $this->request->request));
-        }
-        // obtener cobro
-        $Cobro = $DteTmp->getCobro();
-        if ($Cobro->pagado) {
-            \sowerphp\core\Model_Datasource_Session::message('Documento ya se encuentra pagado', 'ok');
-            $this->redirect(str_replace('pagar', 'ver', $this->request->request));
-        }
-        $this->redirect('/pagos/cobros/pagar/'.$Cobro->codigo);
     }
 
     /**
