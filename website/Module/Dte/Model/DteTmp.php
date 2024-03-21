@@ -986,6 +986,42 @@ class Model_DteTmp extends \Model_App
     }
 
     /**
+     * Método que entrega el monto neto del DTE temporal.
+     */
+    public function getNeto()
+    {
+        if (in_array($this->dte, [110, 111, 112])) {
+            return 0;
+        }
+        $datos = $this->getDatos();
+        return $datos['Encabezado']['Totales']['MntNeto'] ?? 0;
+    }
+
+    /**
+     * Método que entrega el IVA del DTE temporal.
+     */
+    public function getIva()
+    {
+        if (in_array($this->dte, [110, 111, 112])) {
+            return 0;
+        }
+        $datos = $this->getDatos();
+        return $datos['Encabezado']['Totales']['IVA'] ?? 0;
+    }
+
+    /**
+     * Método que entrega el monto exento del DTE temporal.
+     */
+    public function getExento()
+    {
+        if (in_array($this->dte, [110, 111, 112])) {
+            return $this->total;
+        }
+        $datos = $this->getDatos();
+        return $datos['Encabezado']['Totales']['MntExe'] ?? 0;
+    }
+
+    /**
      * Método que entrega el PDF del documento temporal.
      * Entrega el PDF que se ha generado con LibreDTE a partir del JSON del DTE
      * temporal.
