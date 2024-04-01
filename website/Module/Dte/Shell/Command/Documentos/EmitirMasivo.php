@@ -107,7 +107,17 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
             else {
                 try {
                     if (!empty($datos[$i][13])) {
-                        $this->agregarItem($documento, array_slice($datos[$i], 11, 8));
+                        $datosItem = array_merge(
+                            // Datos originales del item (vienen juntos en el archivo).
+                            array_slice($datos[$i], 11, 8),
+                            // Datos adicionales del item (vienen después del item, "al final",
+                            // porque se añadieron después de los previos al archivo)
+                            [
+                                // CodImpAdic.
+                                !empty($datos[$i][38]) ? $datos[$i][38] : null,
+                            ]
+                        );
+                        $this->agregarItem($documento, $datosItem);
                     }
                     $this->agregarReferencia($documento, array_slice($datos[$i], 28, 5));
                 } catch (\Exception $e) {
@@ -416,7 +426,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
             // porque se añadieron después de los previos al archivo)
             [
                 // CodImpAdic.
-                !empty($datos[37]) ? $datos[37] : null,
+                !empty($datos[38]) ? $datos[38] : null,
             ]
         );
         $this->agregarItem($documento, $datosItem);
