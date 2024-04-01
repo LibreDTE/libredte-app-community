@@ -10,3 +10,4 @@ TipoDTE;Folio;FchEmis;FchVenc;RUTRecep;RznSocRecep;GiroRecep;Telefono;CorreoRece
 110;2;2020-01-14;;55555555-5;Jackie Chan;Extranjero;+1 2345 9874;receptor@example.com;123 Street, Beijing, China;Santiago;hosting1;1;Servicio web;;1;;50.6;;Nota del DTE;;;;;;;;;;;;;;USD;EFH123;0.6;;;
 61;1;2021-03-03;;55777888-9;Empresa 2;Giro 2;;contacto@empresa2.cl;Calle 1234;Santa Cruz;dte-plus;;Servicio Plus;;1;;25210;;;;;;;;;;;33;831;2021-03-01;1;Sin uso;;;;;;
 52;1;2021-03-03;;55777888-9;Empresa 2;Giro 2;;contacto@empresa2.cl;Calle 1234;Santa Cruz;;;Mesa;;1;;50000;;;;;ABCD12;;;Jorge;Dir Despacho;Santa Cruz;;;;;;;;;;;
+46;1;;;59224080-7;Google LLC;Tecnología e informática en la nube;;;1600 Amphitheatre Pkwy (94043);Mountain View;;;Arriendo de Software as a Service (SaaS).;Google Workspace: aplicación web con funciones de Suite Ofimática, como Gmail, Meet, Drive, Docs, entre otros.;1;;100000;;;;;;;;;;;;;;;;;;;;;15
