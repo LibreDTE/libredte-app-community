@@ -409,7 +409,17 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
             }
             $documento['Encabezado']['IdDoc']['FmaPago'] = (int)$datos[37];
         }
-        $this->agregarItem($documento, array_slice($datos, 11, 8));
+        $datosItem = array_merge(
+            // Datos originales del item (vienen juntos en el archivo).
+            array_slice($datos, 11, 8),
+            // Datos adicionales del item (vienen después del item, "al final",
+            // porque se añadieron después de los previos al archivo)
+            [
+                // CodImpAdic.
+                !empty($datos[37]) ? $datos[37] : null,
+            ]
+        );
+        $this->agregarItem($documento, $datosItem);
         $this->agregarTransporte($documento, array_slice($datos, 22, 6));
         $this->agregarReferencia($documento, array_slice($datos, 28, 5));
         return $documento;
@@ -454,6 +464,9 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
             } else {
                 $detalle['DescuentoMonto'] = (float)$item[7];
             }
+        }
+        if (!empty($item[8])) {
+            $detalle['CodImpAdic'] = (int)trim($item[8]);
         }
         // agregar detalle al documento
         $documento['Detalle'][] = $detalle;
