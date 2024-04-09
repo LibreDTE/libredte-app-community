@@ -1530,25 +1530,27 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que envía el DTE por correo electrónico
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-01
+     * Método que envía el DTE por correo electrónico.
      */
     public function email($to = null, $subject = null, $msg = null, $pdf = false, $cedible = false, $papelContinuo = null, $use_template = true)
     {
-        // variables por defecto
+        // destinatario(s) del correo
         if (!$to) {
-            $to = $this->getReceptor()->config_email_intercambio_user;
+            if (!$this->getReceptor()->config_email_intercambio_user) {
+                throw new \Exception('El receptor no tiene configurado un correo de intercambio. Debe proporcionar un correo para enviar el documento.');
+            }
+            $to = [$this->getReceptor()->config_email_intercambio_user];
+            if ($this->getEmisor()->config_email_intercambio_cc) {
+                $to = array_merge($to, $this->getEmisor()->config_email_intercambio_cc);
+            }
         }
-        if (!$to) {
-            throw new \Exception('No hay correo a quien enviar el DTE');
-        }
-        if ($to == 'all') {
+        else if ($to == 'all') {
             $to = $this->getEmails();
         }
         if (!is_array($to)) {
             $to = [$to];
         }
+        // asunto por defecto del correo
         if (!$subject) {
             $subject = $this->getTipo()->tipo.' N° '.$this->folio.' de '.$this->getEmisor()->getNombre().' ('.$this->getEmisor()->getRUT().')';
         }
