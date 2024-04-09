@@ -1540,15 +1540,17 @@ class Model_DteEmitido extends Model_Base_Envio
                 throw new \Exception('El receptor no tiene configurado un correo de intercambio. Debe proporcionar un correo para enviar el documento.');
             }
             $to = [$this->getReceptor()->config_email_intercambio_user];
-            if ($this->getEmisor()->config_email_intercambio_cc) {
-                $to = array_merge($to, $this->getEmisor()->config_email_intercambio_cc);
-            }
         }
         else if ($to == 'all') {
             $to = $this->getEmails();
         }
         if (!is_array($to)) {
             $to = [$to];
+        }
+        // agregar correos con copia oculta al enviar el correo del documento emitido
+        $bcc = [];
+        if ($this->getEmisor()->config_email_intercambio_bcc) {
+            $bcc = $this->getEmisor()->config_email_intercambio_bcc;
         }
         // asunto por defecto del correo
         if (!$subject) {
@@ -1584,6 +1586,7 @@ class Model_DteEmitido extends Model_Base_Envio
         // crear email
         $email = $this->getEmisor()->getEmailSender();
         $email->to($to);
+        $email->bcc($bcc);
         $email->subject($subject);
         // agregar reply to si corresponde
         if (!empty($this->getEmisor()->config_email_intercambio_sender->reply_to)) {
