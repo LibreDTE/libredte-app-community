@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Edición Comunidad - Aplicación Web.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,9 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para todas las acciones asociadas a documentos (incluyendo API)
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2018-05-22
+ * Clase para todas las acciones asociadas a documentos (incluyendo API).
  */
 class Controller_Documentos extends \Controller_App
 {
@@ -85,9 +83,7 @@ class Controller_Documentos extends \Controller_App
     ]; // Medios de pago
 
     /**
-     * Método que corrije el tipo de documento en caso de ser factura o boleta
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-24
+     * Método que corrije el tipo de documento en caso de ser factura o boleta.
      */
     private function getTipoDTE($tipo, $Detalle)
     {
@@ -108,20 +104,20 @@ class Controller_Documentos extends \Controller_App
             }
         }
         // el documento es factura
-        if ($tipo == 33 or $tipo == 34) {
-            if ($tipo == 33 and !$netos and $exentos) {
+        if ($tipo == 33 || $tipo == 34) {
+            if ($tipo == 33 && !$netos && $exentos) {
                 return 34;
             }
-            if ($tipo == 34 and !$exentos and $netos) {
+            if ($tipo == 34 && !$exentos && $netos) {
                 return 33;
             }
         }
         // es boleta
-        else if ($tipo == 39 or $tipo == 41) {
-            if ($tipo == 39 and !$netos and $exentos) {
+        else if ($tipo == 39 || $tipo == 41) {
+            if ($tipo == 39 && !$netos && $exentos) {
                 return 41;
             }
-            if ($tipo == 41 and !$exentos and $netos) {
+            if ($tipo == 41 && !$exentos && $netos) {
                 return 39;
             }
         }
@@ -134,8 +130,6 @@ class Controller_Documentos extends \Controller_App
      * temporal. El documento generado no tiene folio, no está firmado y no es
      * enviado al SII. Luego se debe usar la función generar de la API para
      * generar el DTE final y enviarlo al SII.
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-01
      */
     public function _api_emitir_POST()
     {
@@ -160,7 +154,7 @@ class Controller_Documentos extends \Controller_App
             if (is_string($this->Api->data)) {
                 $this->Api->data = ['datos' => $this->Api->data];
             }
-            if (empty($this->Api->data['datos']) or !is_string($this->Api->data['datos'])) {
+            if (empty($this->Api->data['datos']) || !is_string($this->Api->data['datos'])) {
                 $this->Api->send('Debe enviar los datos codificados en base64 en un string JSON.', 400);
             }
             try {
@@ -269,28 +263,28 @@ class Controller_Documentos extends \Controller_App
         // asignar giro u otros campos si no fue entregado y existe en la base de datos,
         // no se recomienda confiar en que exista el giro en la base de datos, pero ayuda
         // a reducir reparos leves del DTE
-        if ($normalizar and !in_array($Receptor->rut, [55555555, 66666666])) {
-            if (empty($dte['Encabezado']['Receptor']['RznSocRecep']) and $Receptor->razon_social) {
+        if ($normalizar && !in_array($Receptor->rut, [55555555, 66666666])) {
+            if (empty($dte['Encabezado']['Receptor']['RznSocRecep']) && $Receptor->razon_social) {
                 $dte['Encabezado']['Receptor']['RznSocRecep'] = $Receptor->razon_social;
             }
-            if (empty($dte['Encabezado']['Receptor']['GiroRecep']) and $Receptor->giro) {
+            if (empty($dte['Encabezado']['Receptor']['GiroRecep']) && $Receptor->giro) {
                 $dte['Encabezado']['Receptor']['GiroRecep'] = $Receptor->giro;
             }
-            if (empty($dte['Encabezado']['Receptor']['Contacto']) and $Receptor->telefono) {
+            if (empty($dte['Encabezado']['Receptor']['Contacto']) && $Receptor->telefono) {
                 $dte['Encabezado']['Receptor']['Contacto'] = $Receptor->telefono;
             }
-            if (empty($dte['Encabezado']['Receptor']['CorreoRecep']) and $Receptor->email) {
+            if (empty($dte['Encabezado']['Receptor']['CorreoRecep']) && $Receptor->email) {
                 $dte['Encabezado']['Receptor']['CorreoRecep'] = $Receptor->email;
             }
-            if (empty($dte['Encabezado']['Receptor']['DirRecep']) and $Receptor->direccion) {
+            if (empty($dte['Encabezado']['Receptor']['DirRecep']) && $Receptor->direccion) {
                 $dte['Encabezado']['Receptor']['DirRecep'] = $Receptor->direccion;
             }
-            if (empty($dte['Encabezado']['Receptor']['CmnaRecep']) and $Receptor->comuna) {
+            if (empty($dte['Encabezado']['Receptor']['CmnaRecep']) && $Receptor->comuna) {
                 $dte['Encabezado']['Receptor']['CmnaRecep'] = $Receptor->getComuna()->comuna;
             }
         }
         // asignar tipo de cambio
-        if ($normalizar and in_array($dte['Encabezado']['IdDoc']['TipoDTE'], [110,111,112])) {
+        if ($normalizar && in_array($dte['Encabezado']['IdDoc']['TipoDTE'], [110,111,112])) {
             // se convierte a arreglo de OtraMoneda si existe o se crea arreglo OtraMoneda vacio si existe
             if (!empty($dte['Encabezado']['OtraMoneda'])) {
                 if (!isset($dte['Encabezado']['OtraMoneda'][0])) {
@@ -304,13 +298,13 @@ class Controller_Documentos extends \Controller_App
             // caso el usuario podría ingresar el tipo de cambio manualmente)
             $cambio = false;
             foreach ($dte['Encabezado']['OtraMoneda'] as $OtraMoneda) {
-                if ($OtraMoneda['TpoMoneda'] == 'PESO CL' and !empty($OtraMoneda['TpoCambio'])) {
+                if ($OtraMoneda['TpoMoneda'] == 'PESO CL' && !empty($OtraMoneda['TpoCambio'])) {
                     $cambio = $OtraMoneda['TpoCambio'];
                     break;
                 }
             }
             // si no se encontró el tipo de cambio se determina según el del banco central
-            if (!$cambio and !empty($dte['Encabezado']['Totales']['TpoMoneda'])) {
+            if (!$cambio && !empty($dte['Encabezado']['Totales']['TpoMoneda'])) {
                 if (empty($dte['Encabezado']['IdDoc']['FchEmis'])) {
                     $dte['Encabezado']['IdDoc']['FchEmis'] = date('Y-m-d');
                 }
@@ -364,8 +358,14 @@ class Controller_Documentos extends \Controller_App
                 $dte['Referencia'] = [$dte['Referencia']];
             }
             foreach ($dte['Referencia'] as $r) {
-                if (!empty($r['TpoDocRef']) and is_numeric($r['TpoDocRef']) and $r['TpoDocRef']<200 and !empty($r['FolioRef']) and is_numeric($r['FolioRef'])) {
-                    $DocumentoOriginal = new Model_DteEmitido(
+                if (
+                    !empty($r['TpoDocRef'])
+                    && is_numeric($r['TpoDocRef'])
+                    && $r['TpoDocRef'] < 200
+                    && !empty($r['FolioRef'])
+                    && is_numeric($r['FolioRef'])
+                ) {
+                    $DocumentoOriginal = (new Model_DteEmitidos())->get(
                         $Emisor->rut,
                         (int)$r['TpoDocRef'],
                         (int)$r['FolioRef'],
@@ -381,16 +381,22 @@ class Controller_Documentos extends \Controller_App
                 }
             }
         }
+        // ejecutar trigger previo a procesar los datos del DTE para la emisión (ya sean normalizados o que se deban normalizar)
+        $dte_trigger = \sowerphp\core\Trigger::run('dte_datos_documento_pre_emision', $Emisor, $dte, (bool)$normalizar);
+        if ($dte_trigger) {
+            $dte = $dte_trigger;
+            unset($dte_trigger);
+        }
         // crear objeto Dte y documento temporal asignando valores
         $Dte = new \sasco\LibreDTE\Sii\Dte($dte, (bool)$normalizar);
         $datos_dte = $Dte->getDatos();
         $datos_json = json_encode($datos_dte);
-        if ($datos_dte === false or $datos_json === false) {
+        if ($datos_dte === false || $datos_json === false) {
             $this->Api->send('No fue posible recuperar los datos del DTE para guardarlos como JSON en el DTE temporal. '.implode('. ', \sasco\LibreDTE\Log::readAll()).'.', 507);
         }
-        // verificar los datos del DTE con trigger antes de emitir
+        // verificar los datos del DTE normalizado con trigger antes de emitir
         try {
-            \sowerphp\core\Trigger::run('dte_documento_validar_emision', $Emisor, $datos_dte);
+            \sowerphp\core\Trigger::run('dte_documento_normalizado', $Emisor, $datos_dte);
         } catch (\Exception $e) {
             $this->Api->send($e->getMessage(), $e->getCode() >= 400 ? $e->getCode() : 400);
         }
@@ -410,7 +416,7 @@ class Controller_Documentos extends \Controller_App
             $DteTmp->extra = $datos_extra;
         }
         // si es reemplazo se mantiene código de temporal previo y se borra el temporal original
-        if (!empty($reemplazar_receptor) and !empty($reemplazar_dte) and !empty($reemplazar_codigo)) {
+        if (!empty($reemplazar_receptor) && !empty($reemplazar_dte) && !empty($reemplazar_codigo)) {
             $DocumentoOriginal = new Model_DteTmp(
                 $Emisor->rut,
                 (int)$reemplazar_receptor,
@@ -435,7 +441,7 @@ class Controller_Documentos extends \Controller_App
                         $datos_dte['Encabezado']['OtraMoneda'] = [$dte['Encabezado']['OtraMoneda']];
                     }
                     foreach ($datos_dte['Encabezado']['OtraMoneda'] as $OtraMoneda) {
-                        if ($OtraMoneda['TpoMoneda'] == 'PESO CL' and !empty($OtraMoneda['MntTotOtrMnda'])) {
+                        if ($OtraMoneda['TpoMoneda'] == 'PESO CL' && !empty($OtraMoneda['MntTotOtrMnda'])) {
                             $total = $OtraMoneda['MntTotOtrMnda'];
                             break;
                         }
@@ -485,9 +491,7 @@ class Controller_Documentos extends \Controller_App
     }
 
     /**
-     * Acción para mostrar página de emisión de DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-04
+     * Acción para mostrar página de emisión de DTE.
      */
     public function emitir($referencia_dte = null, $referencia_folio = null, $dte_defecto = null, $referencia_codigo = '', $referencia_razon = '')
     {
@@ -499,11 +503,16 @@ class Controller_Documentos extends \Controller_App
             $this->redirect('/dte');
         }
         // si hay un DTE de referencia se arman datos para poder copiar
-        if ($referencia_dte and $referencia_folio) {
+        if ($referencia_dte && $referencia_folio) {
             $referencia_tipo = (isset($_GET['copiar']) or isset($_GET['reemplazar'])) ? 'copia' : 'referencia';
             // si el folio de referencia es un número se busca un DTE emitido
             if (is_numeric($referencia_folio)) {
-                $DocumentoOriginal = new Model_DteEmitido($Emisor->rut, $referencia_dte, $referencia_folio, $Emisor->enCertificacion());
+                $DocumentoOriginal = (new Model_DteEmitidos())->get(
+                    $Emisor->rut,
+                    $referencia_dte,
+                    $referencia_folio,
+                    $Emisor->enCertificacion()
+                );
                 if (!$DocumentoOriginal->exists()) {
                     \sowerphp\core\Model_Datasource_Session::message(
                         'Documento T'.$referencia_dte.'F'.$referencia_folio.' no existe, no se puede referenciar.', 'error'
@@ -564,9 +573,18 @@ class Controller_Documentos extends \Controller_App
             $datos = $DocumentoOriginal->getDatos();
             unset($datos['TED']);
             $Comunas = new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas();
-            $datos['Encabezado']['Emisor']['CmnaOrigen'] = !empty($datos['Encabezado']['Emisor']['CmnaOrigen']) ? $Comunas->getComunaByName($datos['Encabezado']['Emisor']['CmnaOrigen']) : null;
-            $datos['Encabezado']['Receptor']['CmnaRecep'] = !empty($datos['Encabezado']['Receptor']['CmnaRecep']) ? $Comunas->getComunaByName($datos['Encabezado']['Receptor']['CmnaRecep']) : null;
-            $datos['Encabezado']['Transporte']['CmnaDest'] = !empty($datos['Encabezado']['Transporte']['CmnaDest']) ? $Comunas->getComunaByName($datos['Encabezado']['Transporte']['CmnaDest']) : null;
+            $datos['Encabezado']['Emisor']['CmnaOrigen'] = !empty($datos['Encabezado']['Emisor']['CmnaOrigen'])
+                ? $Comunas->getComunaByName($datos['Encabezado']['Emisor']['CmnaOrigen'])
+                : null
+            ;
+            $datos['Encabezado']['Receptor']['CmnaRecep'] = !empty($datos['Encabezado']['Receptor']['CmnaRecep'])
+                ? $Comunas->getComunaByName($datos['Encabezado']['Receptor']['CmnaRecep'])
+                : null
+            ;
+            $datos['Encabezado']['Transporte']['CmnaDest'] = !empty($datos['Encabezado']['Transporte']['CmnaDest'])
+                ? $Comunas->getComunaByName($datos['Encabezado']['Transporte']['CmnaDest'])
+                : null
+            ;
             if (empty($datos['Encabezado']['Receptor']['GiroRecep'])) {
                 $datos['Encabezado']['Receptor']['GiroRecep'] = $DocumentoOriginal->getReceptor()->giro;
             }
@@ -585,7 +603,7 @@ class Controller_Documentos extends \Controller_App
         }
         // variables para la vista
         $this->set([
-            '_header_extra' => ['js'=>['/dte/js/dte.js'], 'css'=>['/dte/css/dte.css']],
+            '_header_extra' => ['js' => ['/dte/js/dte.js'], 'css' => ['/dte/css/dte.css']],
             'Emisor' => $Emisor,
             'sucursales_actividades' => $Emisor->getSucursalesActividades(),
             'actividades_economicas' => $Emisor->getListActividades(),
@@ -605,8 +623,12 @@ class Controller_Documentos extends \Controller_App
             'TpoTranVenta' => $this->TpoTranVenta,
             'nacionalidades' => \sasco\LibreDTE\Sii\Aduana::getNacionalidades(),
             'items' => (new \website\Dte\Admin\Model_Itemes())->setContribuyente($Emisor)->getItems(),
-            'impuesto_adicionales' => (new \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales())->getListContribuyente($Emisor->config_extra_impuestos_adicionales),
-            'ImpuestoAdicionales' => (new \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales())->getObjectsContribuyente($Emisor->config_extra_impuestos_adicionales),
+            'impuesto_adicionales' => (new \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales())
+                ->getListContribuyente($Emisor->config_extra_impuestos_adicionales)
+            ,
+            'ImpuestoAdicionales' => (new \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales())
+                ->getObjectsContribuyente($Emisor->config_extra_impuestos_adicionales)
+            ,
             'dte_defecto' => $dte_defecto ? $dte_defecto : $Emisor->config_emision_dte_defecto,
             'RUTRecep' => !empty($_GET['RUTRecep']) ? $_GET['RUTRecep'] : false,
             'hoy' => date('Y-m-d'),
@@ -614,9 +636,7 @@ class Controller_Documentos extends \Controller_App
     }
 
     /**
-     * Acción para generar y mostrar previsualización de emisión de DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-01
+     * Acción para generar y mostrar previsualización de emisión de DTE.
      */
     public function previsualizacion()
     {
@@ -721,11 +741,11 @@ class Controller_Documentos extends \Controller_App
             ],
         ];
         // agregar pagos programados si es venta a crédito y no es boleta
-        if ($_POST['FmaPago']==2 and !in_array($dte['Encabezado']['IdDoc']['TipoDTE'], [39, 41])) {
+        if ($_POST['FmaPago'] == 2 && !in_array($dte['Encabezado']['IdDoc']['TipoDTE'], [39, 41])) {
             // si no hay pagos explícitos se copia la fecha de vencimiento y el
             // monto total se determinará en el proceso de normalización
             if (empty($_POST['FchPago'])) {
-                if ($_POST['FchVenc']>$_POST['FchEmis']) {
+                if ($_POST['FchVenc'] > $_POST['FchEmis']) {
                     $dte['Encabezado']['IdDoc']['MntPagos'] = [
                         'FchPago' => $_POST['FchVenc'],
                         'GlosaPagos' => 'Fecha de pago igual al vencimiento',
@@ -746,18 +766,27 @@ class Controller_Documentos extends \Controller_App
             }
         }
         // agregar datos de traslado si es guía de despacho
-        if ($dte['Encabezado']['IdDoc']['TipoDTE']==52) {
+        if ($dte['Encabezado']['IdDoc']['TipoDTE'] == 52) {
             $dte['Encabezado']['IdDoc']['IndTraslado'] = $_POST['IndTraslado'];
-            if (!empty($_POST['Patente']) or !empty($_POST['RUTTrans']) or (!empty($_POST['RUTChofer']) and !empty($_POST['NombreChofer'])) or !empty($_POST['DirDest']) or !empty($_POST['CmnaDest'])) {
+            if (
+                !empty($_POST['Patente'])
+                || !empty($_POST['RUTTrans'])
+                || (!empty($_POST['RUTChofer']) && !empty($_POST['NombreChofer']))
+                || !empty($_POST['DirDest'])
+                || !empty($_POST['CmnaDest'])
+            ) {
                 $dte['Encabezado']['Transporte'] = [
                     'Patente' => !empty($_POST['Patente']) ? $_POST['Patente'] : false,
                     'RUTTrans' => !empty($_POST['RUTTrans']) ? str_replace('.', '', $_POST['RUTTrans']) : false,
-                    'Chofer' => (!empty($_POST['RUTChofer']) and !empty($_POST['NombreChofer'])) ? [
+                    'Chofer' => (!empty($_POST['RUTChofer']) && !empty($_POST['NombreChofer'])) ? [
                         'RUTChofer' => str_replace('.', '', $_POST['RUTChofer']),
                         'NombreChofer' => $_POST['NombreChofer'],
                     ] : false,
                     'DirDest' => !empty($_POST['DirDest']) ? $_POST['DirDest'] : false,
-                    'CmnaDest' => !empty($_POST['CmnaDest']) ? (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna($_POST['CmnaDest']))->comuna : false,
+                    'CmnaDest' => !empty($_POST['CmnaDest'])
+                        ? (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna($_POST['CmnaDest']))->comuna
+                        : false
+                    ,
                 ];
             }
         }
@@ -765,10 +794,10 @@ class Controller_Documentos extends \Controller_App
         if (!empty($_POST['IndServicio'])) {
             // se cambia el tipo de indicador en boletas ya que es el contrario a facturas
             if (in_array($dte['Encabezado']['IdDoc']['TipoDTE'], [39, 41])) {
-                if ($_POST['IndServicio']==1) {
+                if ($_POST['IndServicio'] == 1) {
                     $_POST['IndServicio'] = 2;
                 }
-                else if ($_POST['IndServicio']==2) {
+                else if ($_POST['IndServicio'] == 2) {
                     $_POST['IndServicio'] = 1;
                 }
             }
@@ -840,13 +869,13 @@ class Controller_Documentos extends \Controller_App
                 }
             }
             // si es boleta y el item no es exento se le agrega el IVA al precio y el impuesto adicional si existe
-            if ($dte['Encabezado']['IdDoc']['TipoDTE']==39 and (!isset($detalle['IndExe']) or !$detalle['IndExe'])) {
+            if ($dte['Encabezado']['IdDoc']['TipoDTE'] == 39 && (!isset($detalle['IndExe']) || !$detalle['IndExe'])) {
                 // IVA
                 $iva = round($detalle['PrcItem'] * (\sasco\LibreDTE\Sii::getIVA()/100), (int)$Emisor->config_items_decimales);
-                // impuesto adicional TODO: no se permiten impuestos adicionales en boletas por el momento
+                // impuesto adicional (no se permiten impuestos adicionales en boletas)
                 if (!empty($detalle['CodImpAdic'])) {
                     $message = __(
-                        'No es posible generar una boleta que tenga impuestos adicionales mediante la plataforma web de LibreDTE. Este es un caso de uso no considerado. Si desea que sea activada esta opción por favor [contáctenos](%).',
+                        'No es posible generar una boleta que tenga impuestos adicionales mediante la plataforma web de LibreDTE. Este es un caso de uso no considerado. Si tiene dudas con esta opción por favor [contáctenos](%).',
                         url('/contacto')
                     );
                     \sowerphp\core\Model_Datasource_Session::message($message, 'error');
@@ -854,18 +883,20 @@ class Controller_Documentos extends \Controller_App
                     //$tasa = $_POST['impuesto_adicional_tasa_'.$detalle['CodImpAdic']];
                     //$adicional = round($detalle['PrcItem'] * ($_POST['impuesto_adicional_tasa_'.$detalle['CodImpAdic']]/100));
                     //unset($detalle['CodImpAdic']);
-                } else $adicional = 0;
+                } else {
+                    $adicional = 0;
+                }
                 // agregar al precio
                 $detalle['PrcItem'] += $iva + $adicional;
             }
             // descuento
-            if (!empty($_POST['ValorDR'][$i]) and !empty($_POST['TpoValor'][$i])) {
-                if ($_POST['TpoValor'][$i]=='%') {
+            if (!empty($_POST['ValorDR'][$i]) && !empty($_POST['TpoValor'][$i])) {
+                if ($_POST['TpoValor'][$i] == '%') {
                     $detalle['DescuentoPct'] = round($_POST['ValorDR'][$i], 2);
                 } else {
                     $detalle['DescuentoMonto'] = $_POST['ValorDR'][$i];
                     // si es boleta y el item no es exento se le agrega el IVA al descuento
-                    if ($dte['Encabezado']['IdDoc']['TipoDTE']==39 and (!isset($detalle['IndExe']) or !$detalle['IndExe'])) {
+                    if ($dte['Encabezado']['IdDoc']['TipoDTE'] == 39 && (!isset($detalle['IndExe']) || !$detalle['IndExe'])) {
                         $iva_descuento = round($detalle['DescuentoMonto'] * (\sasco\LibreDTE\Sii::getIVA()/100));
                         $detalle['DescuentoMonto'] += $iva_descuento;
                     }
@@ -884,7 +915,7 @@ class Controller_Documentos extends \Controller_App
         // calculen los montos
         $CodImpAdic = [];
         foreach ($dte['Detalle'] as $d) {
-            if (!empty($d['CodImpAdic']) and !in_array($d['CodImpAdic'], $CodImpAdic)) {
+            if (!empty($d['CodImpAdic']) && !in_array($d['CodImpAdic'], $CodImpAdic)) {
                 $CodImpAdic[] = $d['CodImpAdic'];
             }
         }
@@ -900,18 +931,22 @@ class Controller_Documentos extends \Controller_App
         if ($ImptoReten) {
             $dte['Encabezado']['Totales']['ImptoReten'] = $ImptoReten;
         }
-        // si la empresa es constructora se marca para obtener el cŕedito del 65%
-        if ($Emisor->config_extra_constructora and in_array($dte['Encabezado']['IdDoc']['TipoDTE'], [33, 52, 56, 61]) and !empty($_POST['CredEC'])) {
+        // si la empresa es constructora se marca para obtener el crédito del 65%
+        if (
+            $Emisor->config_extra_constructora
+            && in_array($dte['Encabezado']['IdDoc']['TipoDTE'], [33, 52, 56, 61])
+            && !empty($_POST['CredEC'])
+        ) {
             $dte['Encabezado']['Totales']['CredEC'] = true;
         }
         // agregar descuento globales
-        if (!empty($_POST['ValorDR_global']) and !empty($_POST['TpoValor_global'])) {
+        if (!empty($_POST['ValorDR_global']) && !empty($_POST['TpoValor_global'])) {
             $TpoValor_global = $_POST['TpoValor_global'];
             $ValorDR_global = $_POST['ValorDR_global'];
-            if ($TpoValor_global=='%') {
+            if ($TpoValor_global == '%') {
                 $ValorDR_global = round($ValorDR_global, 2);
             }
-            if ($dte['Encabezado']['IdDoc']['TipoDTE']==39 and $TpoValor_global=='$') {
+            if ($dte['Encabezado']['IdDoc']['TipoDTE'] == 39 && $TpoValor_global == '$') {
                 $ValorDR_global = round($ValorDR_global * (1+\sasco\LibreDTE\Sii::getIVA()/100));
             }
             $dte['DscRcgGlobal'] = [];
@@ -938,7 +973,7 @@ class Controller_Documentos extends \Controller_App
             for ($i=0; $i<$n_referencias; $i++) {
                 $dte['Referencia'][] = [
                     'TpoDocRef' => $_POST['TpoDocRef'][$i],
-                    'IndGlobal' => is_numeric($_POST['FolioRef'][$i]) and $_POST['FolioRef'][$i] == 0 ? 1 : false,
+                    'IndGlobal' => is_numeric($_POST['FolioRef'][$i]) && $_POST['FolioRef'][$i] == 0 ? 1 : false,
                     'FolioRef' => $_POST['FolioRef'][$i],
                     'FchRef' => $_POST['FchRef'][$i],
                     'CodRef' => !empty($_POST['CodRef'][$i]) ? $_POST['CodRef'][$i] : false,
@@ -949,7 +984,7 @@ class Controller_Documentos extends \Controller_App
         // consumir servicio web para crear documento temporal
         try {
             $query_data = [];
-            if (!empty($_POST['reemplazar_receptor']) and !empty($_POST['reemplazar_dte']) and !empty($_POST['reemplazar_codigo'])) {
+            if (!empty($_POST['reemplazar_receptor']) && !empty($_POST['reemplazar_dte']) && !empty($_POST['reemplazar_codigo'])) {
                 $query_data['reemplazar_receptor'] = $_POST['reemplazar_receptor'];
                 $query_data['reemplazar_dte'] = $_POST['reemplazar_dte'];
                 $query_data['reemplazar_codigo'] = $_POST['reemplazar_codigo'];
@@ -959,11 +994,16 @@ class Controller_Documentos extends \Controller_App
             \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
             $this->redirect('/dte/documentos/emitir');
         }
-        if ($response['status']['code']!=200) {
+        if ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             $this->redirect('/dte/documentos/emitir');
         }
-        if (empty($response['body']['emisor']) or empty($response['body']['receptor']) or empty($response['body']['dte']) or empty($response['body']['codigo'])) {
+        if (
+            empty($response['body']['emisor'])
+            || empty($response['body']['receptor'])
+            || empty($response['body']['dte'])
+            || empty($response['body']['codigo'])
+        ) {
             $msg = is_string($response['body']) ? $response['body'] : json_encode($response['body']);
             \sowerphp\core\Model_Datasource_Session::message('Hubo problemas al generar el documento temporal: '.$msg, 'error');
             $this->redirect('/dte/documentos/emitir');
@@ -992,9 +1032,7 @@ class Controller_Documentos extends \Controller_App
 
     /**
      * Función de la API que permite emitir un DTE a partir de un documento
-     * temporal, asignando folio, firmando y enviando al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+     * temporal, asignando folio, firmando y enviando al SII.
      */
     public function _api_generar_POST()
     {
@@ -1048,7 +1086,7 @@ class Controller_Documentos extends \Controller_App
             $this->Api->send($e->getMessage(), $e->getCode() ? $e->getCode() : 500);
         }
         // enviar por correo el DTE si así se solicitó o está configurado
-        if ($email or ($email===false and $Emisor->config_emision_email)) {
+        if ($email || ($email === false && $Emisor->config_emision_email)) {
             try {
                 $DteEmitido->email($DteEmitido->getEmails(), null, null, true);
             } catch (\Exception $e) {
@@ -1072,9 +1110,7 @@ class Controller_Documentos extends \Controller_App
 
     /**
      * Método que genera el XML del DTE temporal con Folio y Firma y lo envía
-     * al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+     * al SII.
      */
     public function generar($receptor, $dte, $codigo)
     {
@@ -1085,7 +1121,7 @@ class Controller_Documentos extends \Controller_App
             'dte' => $dte,
             'codigo' => $codigo,
         ]);
-        if ($response['status']['code']!=200) {
+        if ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message(
                 $response['body'], 'error'
             );
@@ -1111,9 +1147,7 @@ class Controller_Documentos extends \Controller_App
     }
 
     /**
-     * Método que guarda un Receptor
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-02-01
+     * Método que guarda un Receptor de un DTE que se está emitiendo.
      */
     private function guardarReceptor($datos)
     {
@@ -1143,7 +1177,7 @@ class Controller_Documentos extends \Controller_App
                 $Receptor->telefono = mb_substr(trim($datos['Contacto']), 0, 20);
             }
         }
-        if (!empty($datos['CorreoRecep']) and strpos($datos['CorreoRecep'], '@')) {
+        if (!empty($datos['CorreoRecep']) && strpos($datos['CorreoRecep'], '@')) {
             $Receptor->email = mb_substr(trim($datos['CorreoRecep']), 0, 80);
         }
         if (!empty($datos['DirRecep'])) {
@@ -1167,20 +1201,21 @@ class Controller_Documentos extends \Controller_App
     }
 
     /**
-     * Acción que permite generar masivamente los DTE
-     * En estrictor rigor esta opción sólo lanza un comando que permite hacer la generación masiva
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-14
+     * Acción que permite generar masivamente los DTE.
+     * En estrictor rigor esta opción sólo lanza un comando que permite hacer la generación masiva.
      */
     public function emitir_masivo()
     {
         $Emisor = $this->getContribuyente();
         $this->set([
             'Emisor' => $Emisor,
-            'codigos_referencias' => array_map(function($r){return $r['id'].' para '.strtolower($r['glosa']);}, (new \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos())->getList()),
+            'codigos_referencias' => array_map(
+                function($r) { return $r['id'].' para '.strtolower($r['glosa']); },
+                (new \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos())->getList()
+            ),
         ]);
         if (isset($_POST['submit'])) {
-            if (empty($_FILES['archivo']) or $_FILES['archivo']['error']) {
+            if (empty($_FILES['archivo']) || $_FILES['archivo']['error']) {
                 \sowerphp\core\Model_Datasource_Session::message('No fue posible subir el archivo con los documentos.', 'error');
                 return;
             }
@@ -1214,9 +1249,7 @@ class Controller_Documentos extends \Controller_App
     }
 
     /**
-     * Acción que permite buscar un documento (ya sea temporal o real)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-03-23
+     * Acción que permite buscar un documento (ya sea temporal o real).
      */
     public function buscar($q = null)
     {
@@ -1235,7 +1268,7 @@ class Controller_Documentos extends \Controller_App
             $DteEmitidos = new Model_DteEmitidos();
             $DteEmitidos->setWhereStatement(
                 ['emisor = :emisor', 'certificacion = :certificacion', 'folio = :folio'],
-                [':emisor'=>$Emisor->rut, ':certificacion'=>$Emisor->enCertificacion(), ':folio'=>$q]
+                [':emisor' => $Emisor->rut, ':certificacion' => $Emisor->enCertificacion(), ':folio' => $q]
             );
             try {
                 $documentos = $DteEmitidos->getObjects();
@@ -1257,9 +1290,9 @@ class Controller_Documentos extends \Controller_App
             }
         }
         // buscar si es documento real
-        else if ($q[0]=='T') {
+        else if ($q[0] == 'T') {
             $aux = explode('F', $q);
-            if (count($aux)==2) {
+            if (count($aux) == 2) {
                 $dte = (int)substr($aux[0], 1);
                 $folio = (int)$aux[1];
                 $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
@@ -1271,9 +1304,9 @@ class Controller_Documentos extends \Controller_App
         // buscar si es documento temporal
         else {
             $aux = explode('-', str_replace("'", '-', $q));
-            if (count($aux)==2) {
+            if (count($aux) == 2) {
                 $codigo = strtolower($aux[1]);
-                if (!is_numeric($aux[0]) or strlen($codigo)!=7) {
+                if (!is_numeric($aux[0]) || strlen($codigo) != 7) {
                     \sowerphp\core\Model_Datasource_Session::message(
                         'Código del documento temporal no es válido.', 'error'
                     );
@@ -1282,7 +1315,7 @@ class Controller_Documentos extends \Controller_App
                 $DteTmps = new Model_DteTmps();
                 $DteTmps->setWhereStatement(
                     ['emisor = :emisor', 'dte = :dte', 'codigo LIKE :codigo'],
-                    [':emisor'=>$Emisor->rut, ':dte'=>(int)$aux[0], ':codigo'=>$codigo.'%']
+                    [':emisor' => $Emisor->rut, ':dte' => (int)$aux[0], ':codigo' => $codigo.'%']
                 );
                 $documentos = $DteTmps->getObjects();
                 if (isset($documentos[0])) {
@@ -1304,9 +1337,7 @@ class Controller_Documentos extends \Controller_App
     }
 
     /**
-     * Acción que permite buscar masivamente los documentos asociados a un archivo masivo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-14
+     * Acción que permite buscar masivamente los documentos asociados a un archivo masivo.
      */
     public function buscar_masivo()
     {
@@ -1315,7 +1346,7 @@ class Controller_Documentos extends \Controller_App
             'Emisor' => $Emisor,
         ]);
         if (isset($_POST['submit'])) {
-            if (empty($_FILES['archivo']) or $_FILES['archivo']['error']) {
+            if (empty($_FILES['archivo']) || $_FILES['archivo']['error']) {
                 \sowerphp\core\Model_Datasource_Session::message('No fue posible subir el archivo con los documentos.', 'error');
                 return;
             }
@@ -1387,7 +1418,7 @@ class Controller_Documentos extends \Controller_App
                     $DteTmps = new Model_DteTmps();
                     $DteTmps->setWhereStatement(
                         ['emisor = :emisor', 'dte = :dte', 'fecha = :fecha', 'receptor = :receptor'],
-                        [':emisor'=>$Emisor->rut, ':dte'=>$dte, ':fecha'=>$fecha, ':receptor'=>$receptor]
+                        [':emisor' => $Emisor->rut, ':dte' => $dte, ':fecha' => $fecha, ':receptor' => $receptor]
                     );
                     try {
                         $documentos = $DteTmps->getTable();

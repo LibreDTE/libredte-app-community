@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE: Aplicación Web Edición Comunidad
- * Copyright (C) LibreDTE (https://www.libredte.cl)
+ * LibreDTE: Edición Comunidad - Aplicación Web.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
