@@ -102,6 +102,12 @@ echo $t->generate([
 <?php endif; ?>
                 </div>
             </div>
+            <div class="card mb-4 bg-light">
+                <div class="card-header lead text-center">Tipo de transacción SII</div>
+                <div class="card-body text-center">
+                    <?=$DteRecibido->getTipoTransaccion()->glosa?>
+                </div>
+            </div>
 <?php if (!$DteRecibido->hasXML()) : ?>
         <div class="card mb-4">
             <div class="card-header"><i class="fa fa-exclamation-circle text-warning"></i> DTE sin XML</div>

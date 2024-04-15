@@ -24,6 +24,8 @@
 // namespace del modelo
 namespace website\Dte;
 
+use stdClass;
+
 /**
  * Clase para mapear la tabla dte_recibido de la base de datos
  * Comentario de la tabla:
@@ -550,9 +552,7 @@ class Model_DteRecibido extends \Model_App
     }
 
     /**
-     * Método que inserta un registro nuevo en la base de datos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-12-01
+     * Método que inserta un registro nuevo en la base de datos.
      */
     public function insert()
     {
@@ -563,13 +563,25 @@ class Model_DteRecibido extends \Model_App
     }
 
     /**
-     * Método que determina y envía al SII el tipo de transacción del DTE recibido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+     * Método que entrega el tipo de transación asociado
+     */
+    public function getTipoTransaccion(): stdClass
+    {
+        $tipo_transaccion = new stdClass();
+        $tipo_transaccion->codigo = isset(\sasco\LibreDTE\Sii\RegistroCompraVenta::$tipo_transacciones[$this->tipo_transaccion])
+            ? $this->tipo_transaccion
+            : 1
+        ;
+        $tipo_transaccion->glosa = \sasco\LibreDTE\Sii\RegistroCompraVenta::$tipo_transacciones[$tipo_transaccion->codigo];
+        return $tipo_transaccion;
+    }
+
+    /**
+     * Método que determina y envía al SII el tipo de transacción del DTE recibido.
      */
     public function setTipoTransaccionSII()
     {
-        if (($this->tipo_transaccion or $this->iva_uso_comun or $this->iva_no_recuperable)) {
+        if (($this->tipo_transaccion || $this->iva_uso_comun || $this->iva_no_recuperable)) {
             // determinar códigos
             $codigo_impuesto = 1;
             if ($this->iva_uso_comun) {
@@ -580,7 +592,7 @@ class Model_DteRecibido extends \Model_App
                 $codigo_impuesto = 2;
             }
             if ($this->iva_no_recuperable) {
-                if ($this->tipo_transaccion!=6) {
+                if ($this->tipo_transaccion != 6) {
                     $this->tipo_transaccion = 6;
                     parent::save();
                 }
@@ -624,9 +636,7 @@ class Model_DteRecibido extends \Model_App
     }
 
     /**
-     * Método que entrega el período al que corresponde el DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-06
+     * Método que entrega el período al que corresponde el DTE.
      */
     public function getPeriodo()
     {

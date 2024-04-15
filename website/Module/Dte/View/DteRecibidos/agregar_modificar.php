@@ -15,6 +15,21 @@
 <?php endif; ?>
 </ul>
 
+<script>
+function dte_recibido_tipo_transaccion() {
+    // Está seleccionado compra de activo fijo.
+    if (document.getElementById('tipo_transaccionField').value == 4) {
+        document.getElementById('monto_activo_fijoField').value = document.getElementById('netoField').value;
+        document.getElementById('monto_iva_activo_fijoField').value = document.getElementById('ivaField').value;
+    }
+    // Otro tipo de transacción
+    else {
+        document.getElementById('monto_activo_fijoField').value = '';
+        document.getElementById('monto_iva_activo_fijoField').value = '';
+    }
+}
+</script>
+
 <?php if (isset($DteRecibido)) : ?>
 <div class="page-header"><h1><?=$DteRecibido->getTipo()->tipo?> N° <?=$DteRecibido->folio?> <small><?=$DteRecibido->getEmisor()->razon_social?></small></h1></div>
 <?php else : ?>
@@ -137,6 +152,7 @@ echo $f->input([
     'name' => 'tipo_transaccion',
     'label' => 'Tipo transacción',
     'value' => isset($DteRecibido) ? $DteRecibido->tipo_transaccion : '',
+    'onblur' => 'dte_recibido_tipo_transaccion()',
 ]);
 echo $f->input([
     'name' => 'iva_uso_comun',
