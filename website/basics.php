@@ -24,7 +24,7 @@
 /**
  * Función para consumir Servicios Web de API Gateway que se contratan en www.apigateway.cl
  */
-function apigateway_consume($recurso, $datos = [])
+function apigateway_consume(string $recurso, $datos = []): array
 {
     // configuración de la API para funcionalidades extras
     $config = \sowerphp\core\Configure::read('proveedores.api.apigateway');

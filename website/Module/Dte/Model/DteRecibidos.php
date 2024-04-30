@@ -159,7 +159,7 @@ class Model_DteRecibidos extends \Model_Plural_App
             $f['sucursal'] = $this->getContribuyente()->getSucursal($f['sucursal'])->sucursal;
             if ($f['items']) {
                 $f['items'] = explode('","', utf8_decode($f['items']));
-                $f['precios'] = explode('","', utf8_decode($f['precios']));
+                $f['precios'] = explode(',', str_replace('"', '', $f['precios']));
             } else {
                 $f['items'] = $f['precios'] = [];
             }
