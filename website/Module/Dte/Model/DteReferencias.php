@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_referencia de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla dte_referencia
- * @author SowerPHP Code Generator
- * @version 2015-09-25 16:06:34
+ * Clase para mapear la tabla dte_referencia de la base de datos.
  */
 class Model_DteReferencias extends \Model_Plural_App
 {

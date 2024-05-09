@@ -9,12 +9,12 @@
 <p>Aquí podrá agregar un mantenedor de folios para un nuevo tipo de documento. En el paso siguiente se le pedirá que suba el primer archio XML del CAF (folios).</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check()']);
+echo $f->begin(['onsubmit' => 'Form.check()']);
 echo $f->input([
     'type' => 'select',
     'name' => 'dte',
     'label' => 'Tipo de documento',
-    'options' => [''=>'Seleccione el tipo de documento'] + $dte_tipos,
+    'options' => ['' => 'Seleccione el tipo de documento'] + $dte_tipos,
     'check' => 'notempty',
     'help' => '¿Necesitas activar un documento que no está en la lista? <a href="'.$_base.'/dte/contribuyentes/modificar#facturacion:documentos_disponibles">Hazlo en la configuración del contribuyente</a>.',
 ]);

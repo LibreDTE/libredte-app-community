@@ -24,7 +24,7 @@
         No fue posible recuperar los eventos desde el SII
 <?php endif; ?>
     </li>
-    <li><strong>Datos para cesión</strong>: <?=$cedible?$cedible['glosa']:'No fue posible determinar si el DTE es o no cedible'?></li>
+    <li><strong>Datos para cesión</strong>: <?=$cedible ? $cedible['glosa'] : 'No fue posible determinar si el DTE es o no cedible'?></li>
 </ul>
 <hr/>
 <?php

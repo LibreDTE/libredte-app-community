@@ -37,11 +37,11 @@ $(function() { __.tabs(); });
 <div role="tabpanel" class="tab-pane active" id="datos" aria-labelledby="datos-tab">
 <?php
 $f = new \sowerphp\general\View_Helper_Form ();
-echo $f->begin(array('onsubmit'=>'Form.check()'));
+echo $f->begin(array('onsubmit' => 'Form.check()'));
 echo $f->input([
     'name' => 'codigo_tipo',
     'label' => 'Tipo de código',
-    'value' => isset($Obj)?$Obj->codigo_tipo:'INT1',
+    'value' => isset($Obj) ? $Obj->codigo_tipo:'INT1',
     'check' => 'notempty',
     'attr' => isset($Obj)?'disabled="disabled"':'maxlength="10"',
     'help' => $Contribuyente->config_extra_agente_retenedor?'Si es agente retenedor del producto debe utilizar el tipo de código CPCS':false,
@@ -50,39 +50,39 @@ $help = 'Si es agente retenedor del producto debe utilizar el código, nombre y 
 echo $f->input([
     'name' => 'codigo',
     'label' => 'Código',
-    'value' => isset($Obj)?$Obj->codigo:'',
+    'value' => isset($Obj) ? $Obj->codigo:'',
     'check' => 'notempty',
     'attr' => isset($Obj)?'disabled="disabled"':'maxlength="35" onblur="this.value=this.value.replace(\'/\', \'_\')"',
-    'help' => $Contribuyente->config_extra_agente_retenedor?$help:false,
+    'help' => $Contribuyente->config_extra_agente_retenedor ? $help:false,
 ]);
 echo $f->input([
     'name' => 'item',
     'label' => 'Nombre',
-    'value' => isset($Obj)?$Obj->item:'',
+    'value' => isset($Obj) ? $Obj->item:'',
     'check' => 'notempty',
     'attr' => 'maxlength="80"',
-    'help' => $Contribuyente->config_extra_agente_retenedor?$help:false,
+    'help' => $Contribuyente->config_extra_agente_retenedor ? $help:false,
 ]);
 echo $f->input([
     'name' => 'descripcion',
     'label' => 'Descripción',
-    'value' => isset($Obj)?$Obj->descripcion:'',
+    'value' => isset($Obj) ? $Obj->descripcion:'',
     'attr' => 'maxlength="1000"',
 ]);
 echo $f->input([
     'type' => 'select',
     'name' => 'clasificacion',
     'label' => 'Clasificación',
-    'options' => [''=>'Seleccionar clasificación'] + $clasificaciones,
-    'value' => isset($Obj)?$Obj->clasificacion:'',
+    'options' => ['' => 'Seleccionar clasificación'] + $clasificaciones,
+    'value' => isset($Obj) ? $Obj->clasificacion:'',
     'check' => 'notempty',
 ]);
 echo $f->input([
     'name' => 'unidad',
     'label' => 'Unidad',
-    'value' => isset($Obj)?$Obj->unidad:'',
+    'value' => isset($Obj) ? $Obj->unidad:'',
     'attr' => 'maxlength="4"',
-    'help' => $Contribuyente->config_extra_agente_retenedor?$help:false,
+    'help' => $Contribuyente->config_extra_agente_retenedor ? $help:false,
 ]);
 echo $f->input([
     'name' => 'precio',
@@ -94,8 +94,8 @@ echo $f->input([
     'type' => 'select',
     'name' => 'moneda',
     'label' => 'Moneda',
-    'options' => ['CLP'=>'Pesos', 'CLF'=>'UF', 'USD'=>'Dólares', 'EUR'=>'Euros'],
-    'value' => isset($Obj)?$Obj->moneda:'CLP',
+    'options' => ['CLP' => 'Pesos', 'CLF' => 'UF', 'USD' => 'Dólares', 'EUR' => 'Euros'],
+    'value' => isset($Obj) ? $Obj->moneda:'CLP',
     'check' => 'notempty',
 ]);
 echo $f->input([
@@ -103,7 +103,7 @@ echo $f->input([
     'name' => 'bruto',
     'label' => 'Tipo precio',
     'options' => ['Neto', 'Bruto'],
-    'value' => isset($Obj)?$Obj->bruto:false,
+    'value' => isset($Obj) ? $Obj->bruto:false,
     'check' => 'notempty',
 ]);
 echo $f->input([
@@ -111,7 +111,7 @@ echo $f->input([
     'name' => 'exento',
     'label' => '¿Exento?',
     'options' => ['No', 'Si'],
-    'value' => isset($Obj)?$Obj->exento:(int)$Contribuyente->config_extra_exenta,
+    'value' => isset($Obj) ? $Obj->exento:(int)$Contribuyente->config_extra_exenta,
     'check' => 'notempty',
 ]);
 echo $f->input([
@@ -124,23 +124,23 @@ echo $f->input([
     'type' => 'select',
     'name' => 'descuento_tipo',
     'label' => 'Tipo descuento',
-    'options' => ['%'=>'%', '$'=>'$'],
-    'value' => isset($Obj)?$Obj->descuento_tipo:'%',
+    'options' => ['%' => '%', '$' => '$'],
+    'value' => isset($Obj) ? $Obj->descuento_tipo:'%',
     'check' => 'notempty',
 ]);
 echo $f->input([
     'type' => 'select',
     'name' => 'impuesto_adicional',
     'label' => 'Impuesto adicional',
-    'options' => [''=>'Sin impuesto adicional'] + $impuesto_adicionales,
-    'value' => isset($Obj)?$Obj->impuesto_adicional:'',
+    'options' => ['' => 'Sin impuesto adicional'] + $impuesto_adicionales,
+    'value' => isset($Obj) ? $Obj->impuesto_adicional:'',
 ]);
 echo $f->input([
     'type' => 'select',
     'name' => 'activo',
     'label' => '¿Activo?',
     'options' => ['No', 'Si'],
-    'value' => isset($Obj)?$Obj->activo:1,
+    'value' => isset($Obj) ? $Obj->activo:1,
     'check' => 'notempty',
 ]);
 ?>

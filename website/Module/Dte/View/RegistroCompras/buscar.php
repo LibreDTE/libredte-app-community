@@ -9,7 +9,7 @@
 <div class="page-header"><h1>Buscar documentos pendientes en SII</h1></div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check()']);
+echo $f->begin(['onsubmit' => 'Form.check()']);
 echo $f->input([
     'name' => 'emisor',
     'label' => 'Emisor',
@@ -19,7 +19,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'dte',
     'label' => 'Documento',
-    'options' => [''=>'Todos los documentos'] + $dte_tipos,
+    'options' => ['' => 'Todos los documentos'] + $dte_tipos,
 ]);
 echo $f->input([
     'type' => 'date',
@@ -37,13 +37,13 @@ echo $f->input([
     'name' => 'total_desde',
     'label' => 'Total desde',
     'check' => 'integer',
-    'attr'=>'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"',
+    'attr' => 'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"',
 ]);
 echo $f->input([
     'name' => 'total_hasta',
     'label' => 'Total hasta',
     'check' => 'integer',
-    'attr'=>'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"',
+    'attr' => 'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"',
 ]);
 echo $f->end('Buscar');
 

@@ -1,7 +1,7 @@
 <div class="page-header"><h1>Generar XML libro de compras o ventas</h1></div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check()']);
+echo $f->begin(['onsubmit' => 'Form.check()']);
 echo $f->input([
     'type' => 'select',
     'name' => 'simplificado',
@@ -16,7 +16,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'TipoOperacion',
     'label' => 'Tipo de operación',
-    'options' => ['COMPRA'=>'COMPRA', 'VENTA'=>'VENTA'],
+    'options' => ['COMPRA' => 'COMPRA', 'VENTA' => 'VENTA'],
     'check' => 'notempty',
 ]);
 echo $f->input([
@@ -55,7 +55,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'TipoLibro',
     'label' => 'Tipo de libro',
-    'options' => ['MENSUAL'=>'MENSUAL', 'ESPECIAL'=>'ESPECIAL', 'RECTIFICA'=>'RECTIFICA'],
+    'options' => ['MENSUAL' => 'MENSUAL', 'ESPECIAL' => 'ESPECIAL', 'RECTIFICA' => 'RECTIFICA'],
     'value' => 'ESPECIAL',
     'help' => 'En simplificado debe ser: ESPECIAL.',
     'check' => 'notempty',
@@ -64,7 +64,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'TipoEnvio',
     'label' => 'Tipo de envío',
-    'options' => ['TOTAL'=>'TOTAL'],
+    'options' => ['TOTAL' => 'TOTAL'],
     'help' => 'En simplificado debe ser: TOTAL.',
     'check' => 'notempty',
 ]);
@@ -95,19 +95,19 @@ echo $f->input([
     'id' => 'resumenes',
     'titles' => ['Tipo Doc.', '# docs', 'Anulados', 'Op. exen.', 'Exento', 'Neto', 'IVA', 'IVA propio', 'IVA terc.', 'Ley 18211', 'Monto total', 'No fact.', 'Total periodo'],
     'inputs' => [
-        ['type'=>'select', 'name'=>'TpoDoc', 'options'=>[35=>'Boleta', 38=>'Boleta exenta', 48=>'Pago electrónico'], 'attr'=>'style="width:10em"'],
-        ['name'=>'TotDoc', 'check'=>'notempty integer'],
-        ['name'=>'TotAnulado', 'check'=>'integer'],
-        ['name'=>'TotOpExe', 'check'=>'integer'],
-        ['name'=>'TotMntExe', 'check'=>'integer'],
-        ['name'=>'TotMntNeto', 'check'=>'integer'],
-        ['name'=>'TotMntIVA', 'check'=>'integer'],
-        ['name'=>'TotIVAPropio', 'check'=>'integer'],
-        ['name'=>'TotIVATerceros', 'check'=>'integer'],
-        ['name'=>'TotLey18211', 'check'=>'integer'],
-        ['name'=>'TotMntTotal', 'check'=>'notempty integer'],
-        ['name'=>'TotMntNoFact', 'check'=>'integer'],
-        ['name'=>'TotMntPeriodo', 'check'=>'integer'],
+        ['type' => 'select', 'name' => 'TpoDoc', 'options' => [35=>'Boleta', 38=>'Boleta exenta', 48=>'Pago electrónico'], 'attr' => 'style="width:10em"'],
+        ['name' => 'TotDoc', 'check' => 'notempty integer'],
+        ['name' => 'TotAnulado', 'check' => 'integer'],
+        ['name' => 'TotOpExe', 'check' => 'integer'],
+        ['name' => 'TotMntExe', 'check' => 'integer'],
+        ['name' => 'TotMntNeto', 'check' => 'integer'],
+        ['name' => 'TotMntIVA', 'check' => 'integer'],
+        ['name' => 'TotIVAPropio', 'check' => 'integer'],
+        ['name' => 'TotIVATerceros', 'check' => 'integer'],
+        ['name' => 'TotLey18211', 'check' => 'integer'],
+        ['name' => 'TotMntTotal', 'check' => 'notempty integer'],
+        ['name' => 'TotMntNoFact', 'check' => 'integer'],
+        ['name' => 'TotMntPeriodo', 'check' => 'integer'],
     ],
     'values' => [],
     'help' => 'Resúmenes manuales para boletas no electrónicas y pagos electrónicos (ej: transbank) que se deben incluir en el libro de ventas'

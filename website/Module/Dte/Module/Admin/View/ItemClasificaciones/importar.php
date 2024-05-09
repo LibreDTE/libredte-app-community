@@ -8,7 +8,7 @@
 <div class="page-header"><h1>Importar clasificaciones de items</h1></div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check() && __.confirm(this, \'¿Está seguro de importar el archivo seleccionado?\')']);
+echo $f->begin(['onsubmit' => 'Form.check() && __.confirm(this, \'¿Está seguro de importar el archivo seleccionado?\')']);
 echo $f->input([
     'type' => 'file',
     'name' => 'archivo',

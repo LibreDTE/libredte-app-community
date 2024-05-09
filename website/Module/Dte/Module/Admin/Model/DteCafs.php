@@ -25,11 +25,7 @@
 namespace website\Dte\Admin;
 
 /**
- * Clase para mapear la tabla dte_caf de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla dte_caf
- * @author SowerPHP Code Generator
- * @version 2015-09-22 10:44:45
+ * Clase para mapear la tabla dte_caf de la base de datos.
  */
 class Model_DteCafs extends \Model_Plural_App
 {

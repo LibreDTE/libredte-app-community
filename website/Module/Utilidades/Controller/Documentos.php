@@ -24,28 +24,31 @@
 // namespace del controlador
 namespace website\Utilidades;
 
+use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna;
+use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+use \website\Sistema\General\Model_ActividadEconomicas;
+
 /**
- * Controlador para utilidades asociadas a documentos tributarios electrónicos (DTE)
- * @version 2016-09-12
+ * Controlador para utilidades asociadas a documentos tributarios electrónicos (DTE).
  */
 class Controller_Documentos extends \Controller_App
 {
 
     /**
      * Acción que permite la generación del XML del EnvioDTE a partir de los
-     * datos en JSON
-         * @version 2021-08-16
+     * datos en JSON.
      */
     public function xml()
     {
         // variables para el formulario
         $documentos_json = \sowerphp\core\Model_Datasource_Session::read('documentos_json');
-        if ($documentos_json)
+        if ($documentos_json) {
             \sowerphp\core\Model_Datasource_Session::delete('documentos_json');
+        }
         $this->set([
-            '_header_extra' => ['js'=>['/utilidades/js/utilidades.js', '/dte/js/dte.js']],
-            'actividades_economicas' => (new \website\Sistema\General\Model_ActividadEconomicas())->getList(),
-            'comunas' => (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->getList(),
+            '_header_extra' => ['js' => ['/utilidades/js/utilidades.js', '/dte/js/dte.js']],
+            'actividades_economicas' => (new Model_ActividadEconomicas())->getList(),
+            'comunas' => (new Model_Comunas())->getList(),
             'documentos_json' => $documentos_json,
         ]);
         // generar xml
@@ -59,12 +62,12 @@ class Controller_Documentos extends \Controller_App
             foreach (['RUTEmisor', 'RznSoc', 'GiroEmis', 'Acteco', 'DirOrigen', 'CmnaOrigen'] as $attr) {
                 if (empty($Emisor[$attr])) {
                     \sowerphp\core\Model_Datasource_Session::message(
-                        'Debe especificar el campo '.$attr, 'error'
+                        'Debe especificar el campo '.$attr.'.', 'error'
                     );
                     return;
                 }
             }
-            $Emisor['CmnaOrigen'] = (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna($Emisor['CmnaOrigen']))->comuna;
+            $Emisor['CmnaOrigen'] = (new Model_Comuna($Emisor['CmnaOrigen']))->comuna;
             // datos del receptor
             $Receptor = [];
             foreach (['RUTRecep', 'RznSocRecep', 'GiroRecep', 'DirRecep', 'CmnaRecep', 'Contacto', 'CorreoRecep'] as $attr) {
@@ -74,24 +77,24 @@ class Controller_Documentos extends \Controller_App
             foreach (['RUTRecep', 'RznSocRecep', 'GiroRecep', 'DirRecep', 'CmnaRecep'] as $attr) {
                 if (empty($Receptor[$attr])) {
                     \sowerphp\core\Model_Datasource_Session::message(
-                        'Debe especificar el campo '.$attr, 'error'
+                        'Debe especificar el campo '.$attr.'.', 'error'
                     );
                     return;
                 }
             }
-            $Receptor['CmnaRecep'] = (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna($Receptor['CmnaRecep']))->comuna;
+            $Receptor['CmnaRecep'] = (new Model_Comuna($Receptor['CmnaRecep']))->comuna;
             // documentos
             $documentos_json = trim($_POST['documentos']);
             if (empty($documentos_json)) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Debe enviar los datos JSON con los documentos', 'error'
+                    'Debe enviar los datos JSON con los documentos.', 'error'
                 );
                 return;
             }
             $documentos = json_decode($documentos_json);
             if (!$documentos) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No fue posible procesar los datos JSON con los documentos, posible error de sintaxis', 'error'
+                    'No fue posible procesar los datos JSON con los documentos, posible error de sintaxis.', 'error'
                 );
                 return;
             }
@@ -107,14 +110,14 @@ class Controller_Documentos extends \Controller_App
             }
             if (empty($folios)) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Debe enviar a lo menos un archivo CAF con folios', 'error'
+                    'Debe enviar a lo menos un archivo CAF con folios.', 'error'
                 );
                 return;
             }
             // firma
             if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Hubo algún problema al subir la firma electrónica', 'error'
+                    'Hubo algún problema al subir la firma electrónica.', 'error'
                 );
                 return;
             }
@@ -157,16 +160,15 @@ class Controller_Documentos extends \Controller_App
     }
 
     /**
-     * Acción que permite la generación del PDF con los DTEs contenidos en un
-     * XML de EnvioDTE
-         * @version 2019-07-17
+     * Acción que permite la generación del PDF con los DTE contenidos en un
+     * XML de EnvioDTE.
      */
     public function pdf()
     {
         if (isset($_POST['submit'])) {
             // si hubo problemas al subir el archivo error
             if (!isset($_FILES['xml']) || $_FILES['xml']['error']) {
-                \sowerphp\core\Model_Datasource_Session::message('Hubo algún problema al recibir el archivo XML con el EnvioDTE', 'error');
+                \sowerphp\core\Model_Datasource_Session::message('Hubo algún problema al recibir el archivo XML con el EnvioDTE.', 'error');
                 return;
             }
             // armar datos con archivo XML y flag para indicar si es cedible o no
@@ -199,23 +201,22 @@ class Controller_Documentos extends \Controller_App
     }
 
     /**
-     * Acción para verificar la firma de un XML EnvioDTE
-         * @version 2020-01-26
+     * Acción para verificar la firma de un XML EnvioDTE.
      */
     public function verificar()
     {
         if (isset($_FILES['xml']) && !$_FILES['xml']['error']) {
             $EnvioDTE = new \sasco\LibreDTE\Sii\EnvioDte();
             $EnvioDTE->loadXML(file_get_contents($_FILES['xml']['tmp_name']));
-            if ($EnvioDTE->esBoleta()===null) {
-                \sowerphp\core\Model_Datasource_Session::message('Archivo XML EnvioDTE no válido', 'error');
+            if ($EnvioDTE->esBoleta() === null) {
+                \sowerphp\core\Model_Datasource_Session::message('Archivo XML EnvioDTE no válido.', 'error');
                 return;
             }
             $certificacion = (int)(bool)!$EnvioDTE->getCaratula()['NroResol'];
             // verificar la firma de cada documento
             if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Hubo algún problema al subir la firma electrónica', 'error'
+                    'Hubo algún problema al subir la firma electrónica.', 'error'
                 );
                 return;
             }
@@ -225,7 +226,7 @@ class Controller_Documentos extends \Controller_App
             ]);
             $cert_data = $Firma->getCertificate();
             if (!$cert_data) {
-                \sowerphp\core\Model_Datasource_Session::message('No hay firma electrónica por defecto asignada en LibreDTE o no pudo ser cargada', 'error');
+                \sowerphp\core\Model_Datasource_Session::message('No hay firma electrónica por defecto asignada en LibreDTE o no pudo ser cargada.', 'error');
                 return;
             }
             $pkey_data = $Firma->getPrivateKey();
@@ -257,7 +258,10 @@ class Controller_Documentos extends \Controller_App
                         $firma = '-';
                         $verificacion = $r['body'];
                     } else {
-                        $firma = $r['body']['datos']['firma'] ? 'Ok' : ($r['body']['datos']['firma'] === false?':-(':'-');
+                        $firma = $r['body']['datos']['firma']
+                            ? 'Ok'
+                            : ($r['body']['datos']['firma'] === false ? ':-(' : '-')
+                        ;
                         $verificacion =
                             '- '.$r['body']['datos']['detalle'].'<br/>'.
                             '- '.$r['body']['cedible']['glosa']
@@ -305,8 +309,7 @@ class Controller_Documentos extends \Controller_App
     }
 
     /**
-     * Acción para convertir un XML de DTEs a JSONs
-         * @version 2016-09-12
+     * Acción para convertir un XML de DTE a JSONs.
      */
     public function xml2json()
     {
@@ -329,10 +332,10 @@ class Controller_Documentos extends \Controller_App
                 unset($datos['@attributes'], $datos['TED'], $datos['TmstFirma']);
                 $dtes = [$datos];
             }
-            // si no hay DTEs error
+            // si no hay DTE error
             if (!isset($dtes[0])) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No fue posible leer DTEs desde el archivo', 'error'
+                    'No fue posible leer DTE desde el archivo.', 'error'
                 );
                 $this->redirect($this->request->request);
             }
@@ -356,7 +359,7 @@ class Controller_Documentos extends \Controller_App
                     \sasco\LibreDTE\File::rmdir($dir);
                 if (!mkdir($dir)) {
                     \sowerphp\core\Model_Datasource_Session::message(
-                        'No fue posible crear directorio temporal para DTEs', 'error'
+                        'No fue posible crear directorio temporal para DTE.', 'error'
                     );
                     $this->redirect($this->request->request);
                 }
@@ -365,14 +368,13 @@ class Controller_Documentos extends \Controller_App
                     $json = json_encode($dte, JSON_PRETTY_PRINT);
                     file_put_contents($dir.'/'.$name, $json);
                 }
-                \sasco\LibreDTE\File::compress($dir, ['format'=>'zip', 'delete'=>true]);
+                \sasco\LibreDTE\File::compress($dir, ['format' => 'zip', 'delete' => true]);
             }
         }
     }
 
     /**
-     * Recurso de la API que genera el XML de los DTEs solicitados
-         * @version 2016-12-21
+     * Recurso de la API que genera el XML de los DTE solicitados.
      */
     public function _api_generar_xml_POST()
     {
@@ -392,8 +394,9 @@ class Controller_Documentos extends \Controller_App
         foreach ($this->Api->data['folios'] as $folio) {
             $Folios = new \sasco\LibreDTE\Sii\Folios(base64_decode($folio));
             $folios[$Folios->getTipo()] = $Folios;
-            if ($Folios->getCertificacion())
+            if ($Folios->getCertificacion()) {
                 $certificacion = true;
+            }
         }
         // normalizar datos emisor
         $this->Api->data['Emisor']['RUTEmisor'] = str_replace('.', '', $this->Api->data['Emisor']['RUTEmisor']);
@@ -402,14 +405,17 @@ class Controller_Documentos extends \Controller_App
         // objeto de la firma
         try {
             $Firma = new \sasco\LibreDTE\FirmaElectronica([
-                'data'=>base64_decode($this->Api->data['firma']['data']),
-                'pass'=>$this->Api->data['firma']['pass']
+                'data' => base64_decode($this->Api->data['firma']['data']),
+                'pass' => $this->Api->data['firma']['pass']
             ]);
         } catch (\Exception $e) {
             $this->Api->send('No fue posible abrir la firma digital, quizás contraseña incorrecta', 506);
         }
         // normalizar dte?
-        $normalizar_dte = isset($this->Api->data['normalizar_dte']) ? $this->Api->data['normalizar_dte'] : true;
+        $normalizar_dte = isset($this->Api->data['normalizar_dte'])
+            ? $this->Api->data['normalizar_dte']
+            : true
+        ;
         // armar documentos y guardar en un arreglo
         $Documentos = [];
         foreach ($this->Api->data['documentos'] as $d) {
@@ -418,7 +424,9 @@ class Controller_Documentos extends \Controller_App
             if (empty($d['Encabezado']['Receptor'])) {
                 $d['Encabezado']['Receptor'] = $this->Api->data['Receptor'];
             } else {
-                $d['Encabezado']['Receptor'] = \sasco\LibreDTE\Arreglo::mergeRecursiveDistinct($this->Api->data['Receptor'], $d['Encabezado']['Receptor']);
+                $d['Encabezado']['Receptor'] = \sasco\LibreDTE\Arreglo::mergeRecursiveDistinct(
+                    $this->Api->data['Receptor'], $d['Encabezado']['Receptor']
+                );
             }
             $DTE = new \sasco\LibreDTE\Sii\Dte($d, $normalizar_dte);
             // timbrar, firmar y validar el documento
@@ -432,7 +440,11 @@ class Controller_Documentos extends \Controller_App
             $Documentos[] = $DTE;
         }
         // armar EnvioDTE si se pasó fecha de resolución y número de resolución
-        if (isset($this->Api->data['resolucion']) && !empty($this->Api->data['resolucion']['FchResol']) && isset($this->Api->data['resolucion']['NroResol'])) {
+        if (
+            isset($this->Api->data['resolucion'])
+            && !empty($this->Api->data['resolucion']['FchResol'])
+            && isset($this->Api->data['resolucion']['NroResol'])
+        ) {
             $EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
             foreach ($Documentos as $DTE) {
                 $EnvioDte->agregar($DTE);
@@ -453,15 +465,17 @@ class Controller_Documentos extends \Controller_App
             $dir = sys_get_temp_dir().'/EnvioDTE_'.$this->Api->data['Emisor']['RUTEmisor'].'_'.$this->Api->data['Receptor']['RUTRecep'].'_'.date('U').'.xml';
             file_put_contents($dir, $xml);
         }
-        // entregar DTEs comprimidos y en archivos sueltos
+        // entregar DTE comprimidos y en archivos sueltos
         else {
             // directorio temporal para guardar los XML
             $dir = sys_get_temp_dir().'/DTE_'.$this->Api->data['Emisor']['RUTEmisor'].'_'.$this->Api->data['Receptor']['RUTRecep'].'_'.date('U');
-            if (is_dir($dir))
+            if (is_dir($dir)) {
                 \sasco\LibreDTE\File::rmdir($dir);
-            if (!mkdir($dir))
-                $this->Api->send('No fue posible crear directorio temporal para DTEs', 507);
-            // procesar cada DTEs e ir agregándolo al directorio que se comprimirá
+            }
+            if (!mkdir($dir)) {
+                $this->Api->send('No fue posible crear directorio temporal para DTE.', 507);
+            }
+            // procesar cada DTE e ir agregándolo al directorio que se comprimirá
             foreach ($Documentos as $DTE) {
                 // guardar XML
                 file_put_contents($dir.'/dte_'.$this->Api->data['Emisor']['RUTEmisor'].'_'.$DTE->getID().'.xml', $DTE->saveXML());
@@ -470,13 +484,12 @@ class Controller_Documentos extends \Controller_App
         // guardar datos de emisor y receptor
         $this->guardarEmisor($this->Api->data['Emisor']);
         $this->guardarReceptor($this->Api->data['Receptor']);
-        // entregar archivo comprimido que incluirá cada uno de los DTEs
-        \sasco\LibreDTE\File::compress($dir, ['format'=>'zip', 'delete'=>true]);
+        // entregar archivo comprimido que incluirá cada uno de los DTE
+        \sasco\LibreDTE\File::compress($dir, ['format' => 'zip', 'delete' => true]);
     }
 
     /**
-     * Recurso de la API que genera el PDF de los DTEs contenidos en un EnvioDTE
-         * @version 2020-08-21
+     * Recurso de la API que genera el PDF de los DTE contenidos en un EnvioDTE.
      */
     public function _api_generar_pdf_POST()
     {
@@ -489,7 +502,7 @@ class Controller_Documentos extends \Controller_App
         }
         // si hubo problemas al subir el archivo error
         if (!isset($this->Api->data['xml']) && (!isset($_FILES['xml']) || $_FILES['xml']['error'])) {
-            $this->Api->send('Hubo algún problema al recibir el archivo XML con el EnvioDTE', 400);
+            $this->Api->send('Hubo algún problema al recibir el archivo XML con el EnvioDTE.', 400);
         }
         // recuperar contenido del archivo xml
         if (isset($this->Api->data['xml'])) {
@@ -506,10 +519,10 @@ class Controller_Documentos extends \Controller_App
         // copias
         $copias_tributarias = isset($this->Api->data['copias_tributarias']) ? (int)$this->Api->data['copias_tributarias'] : 1;
         $copias_cedibles = isset($this->Api->data['copias_cedibles']) ? (int)$this->Api->data['copias_cedibles'] : 1;
-        // Cargar EnvioDTE y extraer arreglo con datos de carátula y DTEs
+        // Cargar EnvioDTE y extraer arreglo con datos de carátula y DTE
         $EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
         if (!$EnvioDte->loadXML($xml)) {
-            $this->Api->send('Hubo algún problema al cargar el archivo XML con el EnvioDTE', 400);
+            $this->Api->send('Hubo algún problema al cargar el archivo XML con el EnvioDTE.', 400);
         }
         $Caratula = $EnvioDte->getCaratula();
         if (!empty($this->Api->data['caratula'])) {
@@ -547,13 +560,13 @@ class Controller_Documentos extends \Controller_App
             \sasco\LibreDTE\File::rmdir($dir);
         }
         if (!mkdir($dir)) {
-            $this->Api->send('No fue posible crear directorio temporal para DTEs', 507);
+            $this->Api->send('No fue posible crear directorio temporal para DTE.', 507);
         }
-        // procesar cada DTEs e ir agregándolo al PDF
+        // procesar cada DTE e ir agregándolo al PDF
         foreach ($Documentos as $DTE) {
             $datos = $DTE->getDatos();
             if (!$datos) {
-                $this->Api->send('No se pudieron obtener los datos de un DTE', 500);
+                $this->Api->send('No se pudieron obtener los datos de un DTE.', 500);
             }
             if (!empty($extra['dte'])) {
                 $datos = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($datos, $extra['dte']);
@@ -569,7 +582,7 @@ class Controller_Documentos extends \Controller_App
             $pdf = new \sasco\LibreDTE\Sii\Dte\PDF\Dte($papelContinuo);
             $pdf->setFooterText(\sowerphp\core\Configure::read('dte.pdf.footer'));
             if (!empty($Caratula['FchResol']) && isset($Caratula['NroResol'])) {
-                $pdf->setResolucion(['FchResol'=>$Caratula['FchResol'], 'NroResol'=>(int)$Caratula['NroResol']]);
+                $pdf->setResolucion(['FchResol' => $Caratula['FchResol'], 'NroResol' => (int)$Caratula['NroResol']]);
             }
             if ($webVerificacion) {
                 $pdf->setWebVerificacion($webVerificacion);
@@ -635,21 +648,20 @@ class Controller_Documentos extends \Controller_App
             }
         }
         // si solo es un archivo y se pidió no comprimir se entrega directamente
-        if (empty($this->Api->data['compress']) && !isset($Documentos[1]) && $cedible!=2) {
+        if (empty($this->Api->data['compress']) && !isset($Documentos[1]) && $cedible != 2) {
             $disposition = !$Emisor->config_pdf_disposition ? 'attachement' : 'inline';
-            $this->response->sendFile($file, ['disposition'=>$disposition, 'exit'=>false]);
+            $this->response->sendFile($file, ['disposition' => $disposition, 'exit' => false]);
             \sowerphp\general\Utility_File::rmdir($dir);
             exit; // TODO: enviar usando $this->response->send() / File::rmdir()
         }
-        // entregar archivo comprimido que incluirá cada uno de los DTEs
+        // entregar archivo comprimido que incluirá cada uno de los DTE
         else {
-            \sasco\LibreDTE\File::compress($dir, ['format'=>'zip', 'delete'=>true]);
+            \sasco\LibreDTE\File::compress($dir, ['format' => 'zip', 'delete' => true]);
         }
     }
 
     /**
-     * Recurso de la API que permite validar el TED (timbre electrónico)
-         * @version 2017-02-23
+     * Recurso de la API que permite validar el TED (timbre electrónico).
      */
     public function _api_verificar_ted_POST()
     {
@@ -661,7 +673,7 @@ class Controller_Documentos extends \Controller_App
         // obtener TED
         $TED = base64_decode($this->Api->data);
         $TED = mb_detect_encoding($TED, ['UTF-8', 'ISO-8859-1']) != 'ISO-8859-1' ? utf8_decode($TED) : $TED;
-        if (strpos($TED, '<?xml')!==0) {
+        if (strpos($TED, '<?xml') !== 0) {
             $TED = '<?xml version="1.0" encoding="ISO-8859-1"?'.'>'."\n".$TED;
         }
         // crear xml con el ted y obtener datos en arreglo
@@ -690,7 +702,7 @@ class Controller_Documentos extends \Controller_App
             $ok = false;
         }
         if (!$ok) {
-            $this->Api->send('El XML del TED es incorrecto', 400);
+            $this->Api->send('El XML del TED es incorrecto.', 400);
         }
         // verificar firma del ted
         $DD = $xml->getFlattened('/TED/DD');
@@ -702,25 +714,28 @@ class Controller_Documentos extends \Controller_App
             $datos['TED']['DD']['CAF']['DA']['RSAPK']['M'],
             $datos['TED']['DD']['CAF']['DA']['RSAPK']['E']
         );
-        if (openssl_verify($DD, base64_decode($FRMT), $pub_key, OPENSSL_ALGO_SHA1)!==1) {
+        if (openssl_verify($DD, base64_decode($FRMT), $pub_key, OPENSSL_ALGO_SHA1) !== 1) {
             $this->Api->send('Firma del timbre incorrecta', 500);
         }
         // verificar que datos del timbre correspondan con datos del CAF
         if ($datos['TED']['DD']['RE'] != $datos['TED']['DD']['CAF']['DA']['RE']) {
-            $this->Api->send('RUT del timbre no corresponde con RUT del CAF', 500);
+            $this->Api->send('RUT del timbre no corresponde con RUT del CAF.', 500);
         }
         if ($datos['TED']['DD']['TD'] != $datos['TED']['DD']['CAF']['DA']['TD']) {
-            $this->Api->send('Tipo de DTE del timbre no corresponde con tipo de DTE del CAF', 500);
+            $this->Api->send('Tipo de DTE del timbre no corresponde con tipo de DTE del CAF.', 500);
         }
-        if ($datos['TED']['DD']['F']<$datos['TED']['DD']['CAF']['DA']['RNG']['D'] || $datos['TED']['DD']['F']>$datos['TED']['DD']['CAF']['DA']['RNG']['H']) {
-            $this->Api->send('Folio del DTE del timbre fuera del rango del CAF', 500);
+        if (
+            $datos['TED']['DD']['F'] < $datos['TED']['DD']['CAF']['DA']['RNG']['D']
+            || $datos['TED']['DD']['F'] > $datos['TED']['DD']['CAF']['DA']['RNG']['H']
+        ) {
+            $this->Api->send('Folio del DTE del timbre fuera del rango del CAF.', 500);
         }
         // si es boleta no se consulta su estado ya que no son envíadas al SII
         if (in_array($datos['TED']['DD']['TD'], [39, 41])) {
-            return ['GLOSA_ERR'=>'Documento es boleta, no se envía al SII'];
+            return ['GLOSA_ERR' => 'Documento es boleta, no se envía al SII.'];
         }
         // definir si se consultará en certificación o producción
-        \sasco\LibreDTE\Sii::setAmbiente($datos['TED']['DD']['CAF']['DA']['IDK']==100);
+        \sasco\LibreDTE\Sii::setAmbiente($datos['TED']['DD']['CAF']['DA']['IDK'] == 100);
         // crear objeto firma
         $Firma = new \sasco\LibreDTE\FirmaElectronica();
         // obtener token
@@ -753,8 +768,7 @@ class Controller_Documentos extends \Controller_App
     }
 
     /**
-     * Método que guarda los datos del Emisor
-         * @version 2019-08-12
+     * Método que guarda los datos del Emisor.
      */
     private function guardarEmisor($datos)
     {
@@ -781,7 +795,7 @@ class Controller_Documentos extends \Controller_App
         if (is_numeric($datos['CmnaOrigen'])) {
             $Emisor->comuna = $datos['CmnaOrigen'];
         } else {
-            $comuna = (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->getComunaByName($datos['CmnaOrigen']);
+            $comuna = (new Model_Comunas())->getComunaByName($datos['CmnaOrigen']);
             if ($comuna) {
                 $Emisor->comuna = $comuna;
             }
@@ -795,8 +809,7 @@ class Controller_Documentos extends \Controller_App
     }
 
     /**
-     * Método que guarda un Receptor
-         * @version 2019-08-12
+     * Método que guarda un Receptor.
      */
     private function guardarReceptor($datos)
     {
@@ -833,7 +846,7 @@ class Controller_Documentos extends \Controller_App
             if (is_numeric($datos['CmnaRecep'])) {
                 $Receptor->comuna = $datos['CmnaRecep'];
             } else {
-                $comuna = (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->getComunaByName($datos['CmnaRecep']);
+                $comuna = (new Model_Comunas())->getComunaByName($datos['CmnaRecep']);
                 if ($comuna) {
                     $Receptor->comuna = $comuna;
                 }

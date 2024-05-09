@@ -10,17 +10,17 @@
 <p>Aquí podrá buscar entre sus documentos emitidos.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form(false);
-echo $f->begin(['onsubmit'=>'Form.check() && __.loading(\'Buscando documentos...\')']);
+echo $f->begin(['onsubmit' => 'Form.check() && __.loading(\'Buscando documentos...\')']);
 ?>
 <div class="row mb-3">
-    <div class="form-group col-md-6"><?=$f->input(['type'=>'select', 'name'=>'dte', 'options'=>[''=>'Todos los tipos de documentos'] + $tipos_dte])?></div>
-    <div class="form-group col-md-6"><?=$f->input(['name'=>'receptor', 'placeholder'=>'Receptor: RUT o razón social'])?></div>
+    <div class="form-group col-md-6"><?=$f->input(['type' => 'select', 'name' => 'dte', 'options' => ['' => 'Todos los tipos de documentos'] + $tipos_dte])?></div>
+    <div class="form-group col-md-6"><?=$f->input(['name' => 'receptor', 'placeholder' => 'Receptor: RUT o razón social'])?></div>
 </div>
 <div class="row mb-3">
-    <div class="form-group col-md-3"><?=$f->input(['type'=>'date', 'name'=>'fecha_desde', 'placeholder'=>'Fecha desde', 'check'=>'date'])?></div>
-    <div class="form-group col-md-3"><?=$f->input(['type'=>'date', 'name'=>'fecha_hasta', 'placeholder'=>'Fecha hasta', 'check'=>'date'])?></div>
-    <div class="form-group col-md-3"><?=$f->input(['name'=>'total_desde', 'placeholder'=>'Total desde', 'check'=>'integer', 'attr'=>'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"'])?></div>
-    <div class="form-group col-md-3"><?=$f->input(['name'=>'total_hasta', 'placeholder'=>'Total hasta', 'check'=>'integer', 'attr'=>'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"'])?></div>
+    <div class="form-group col-md-3"><?=$f->input(['type' => 'date', 'name' => 'fecha_desde', 'placeholder' => 'Fecha desde', 'check' => 'date'])?></div>
+    <div class="form-group col-md-3"><?=$f->input(['type' => 'date', 'name' => 'fecha_hasta', 'placeholder' => 'Fecha hasta', 'check' => 'date'])?></div>
+    <div class="form-group col-md-3"><?=$f->input(['name' => 'total_desde', 'placeholder' => 'Total desde', 'check' => 'integer', 'attr' => 'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"'])?></div>
+    <div class="form-group col-md-3"><?=$f->input(['name' => 'total_hasta', 'placeholder' => 'Total hasta', 'check' => 'integer', 'attr' => 'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"'])?></div>
 </div>
 <?php
 echo $f->input([
@@ -28,14 +28,14 @@ echo $f->input([
     'id' => 'xml',
     'titles' => ['Nodo', 'Valor'],
     'inputs' => [
-        ['name'=>'xml_nodo', 'check'=>'notempty'],
-        ['name'=>'xml_valor', 'check'=>'notempty'],
+        ['name' => 'xml_nodo', 'check' => 'notempty'],
+        ['name' => 'xml_valor', 'check' => 'notempty'],
     ],
     'values' => $values_xml,
 ]);
 ?>
 <p>Los nodos deben ser los del XML desde el tag Documento del DTE. Por ejemplo para buscar en los productos usar: Detalle/NmbItem</p>
-<div class="text-center"><?=$f->input(['type'=>'submit', 'name'=>'submit', 'value'=>'Buscar documentos'])?></div>
+<div class="text-center"><?=$f->input(['type' => 'submit', 'name' => 'submit', 'value' => 'Buscar documentos'])?></div>
 <?php
 echo $f->end(false);
 // mostrar documentos

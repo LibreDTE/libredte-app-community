@@ -533,7 +533,7 @@ const dteEmitidosEstadosChart = estados => {
     const data = {
         labels: estados.map(estado => estado.estado),
         datasets: [{
-            label: 'DTEs',
+            label: 'DTE',
             data: estados.map(estado => estado.total),
             borderColor: getDataColors()[0],
             backgroundColor: getDataColors(50)[0],
@@ -559,7 +559,7 @@ const dteEmitidosEventosChart = eventos => {
     const data = {
         labels: eventos.map(evento => evento.evento),
         datasets: [{
-            label: 'DTEs',
+            label: 'DTE',
             data: eventos.map(evento => evento.total),
             borderColor: getDataColors()[0],
             backgroundColor: getDataColors(50)[0],

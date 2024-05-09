@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_intercambio_recepcion_dte de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla dte_intercambio_recepcion_dte
- * @author SowerPHP Code Generator
- * @version 2015-12-23 21:47:25
+ * Clase para mapear la tabla dte_intercambio_recepcion_dte de la base de datos.
  */
 class Model_DteIntercambioRecepcionDte extends \Model_App
 {
@@ -150,8 +146,7 @@ class Model_DteIntercambioRecepcionDte extends \Model_App
     ); ///< Namespaces que utiliza esta clase
 
     /**
-     * Método que entrega el sobre (xml) donde veía la recepción
-         * @version 2015-12-23
+     * Método que entrega el sobre (xml) donde veía la recepción.
      */
     public function getSobre()
     {

@@ -24,8 +24,7 @@
 namespace website;
 
 /**
- * Controlador base de la aplicación
- * @version 2017-10-10
+ * Controlador base de la aplicación.
  */
 abstract class Controller_App extends \sowerphp\app\Controller_App
 {
@@ -60,8 +59,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
 
     /**
      * Método que fuerza la selección de un contribuyente si estamos en alguno
-     * de los módulos que requieren uno para poder funcionar
-         * @version 2023-10-08
+     * de los módulos que requieren uno para poder funcionar.
      */
     public function beforeFilter()
     {
@@ -72,7 +70,11 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
             return;
         }
         // forzar obtener contribuyente
-        $dte = (strpos($this->request->params['module'], 'Dte') === 0 && $this->request->params['controller'] != 'contribuyentes' && !$this->Auth->allowedWithoutLogin());
+        $dte = (
+            strpos($this->request->params['module'], 'Dte') === 0
+            && $this->request->params['controller'] != 'contribuyentes'
+            && !$this->Auth->allowedWithoutLogin()
+        );
         $otros = false;
         foreach ((array)\sowerphp\core\Configure::read('app.modulos_empresa') as $modulo) {
             if (strpos($this->request->params['module'], $modulo) === 0) {
@@ -92,8 +94,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
     }
 
     /**
-     * Método que asigna el objeto del contribuyente para ser "recordado"
-         * @version 2021-05-27
+     * Método que asigna el objeto del contribuyente para ser "recordado".
      */
     protected function setContribuyente($Contribuyente)
     {
@@ -107,10 +108,9 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
      * Método que entrega el objeto del contribuyente que ha sido seleccionado
      * para ser usado en la sesión. Si no hay uno seleccionado se fuerza a
      * seleccionar.
-     * @return Object Objeto con el contribuyente
-         * @version 2023-10-08
+     * @return Object Objeto con el contribuyente.
      */
-    protected function getContribuyente($obligar = true)
+    protected function getContribuyente(bool $obligar = true)
     {
         if (!isset($this->Contribuyente)) {
             $this->Contribuyente = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente');

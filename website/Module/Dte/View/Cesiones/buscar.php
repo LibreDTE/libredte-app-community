@@ -27,7 +27,7 @@
 </p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check() && __.loading(\'Buscando en el SII...\')']);
+echo $f->begin(['onsubmit' => 'Form.check() && __.loading(\'Buscando en el SII...\')']);
 echo $f->input([
     'type' => 'date',
     'name' => 'desde',

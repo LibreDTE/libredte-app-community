@@ -1,8 +1,8 @@
 <?php
 
 /**
- * SowerPHP
- * Copyright (C) SowerPHP (http://sowerphp.org)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla registro_compra de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla registro_compra
- * @author SowerPHP Code Generator
- * @version 2019-08-09 13:54:15
+ * Clase para mapear la tabla registro_compra de la base de datos.
  */
 class Model_RegistroCompras extends \Model_Plural_App
 {
@@ -67,7 +63,7 @@ class Model_RegistroCompras extends \Model_Plural_App
             $this->db->beginTransaction();
             $this->db->query(
                 'DELETE FROM registro_compra WHERE receptor = :receptor AND periodo = :periodo AND certificacion = :certificacion AND estado = :estado',
-                [':receptor'=>$this->getContribuyente()->rut, ':periodo'=>$periodo, ':certificacion'=>$this->getContribuyente()->enCertificacion(), ':estado'=>$estado_codigo]
+                [':receptor' => $this->getContribuyente()->rut, ':periodo' => $periodo, ':certificacion' => $this->getContribuyente()->enCertificacion(), ':estado' => $estado_codigo]
             );
             foreach ($pendientes as $pendiente) {
                 $RegistroCompra = new Model_RegistroCompra();
@@ -127,7 +123,7 @@ class Model_RegistroCompras extends \Model_Plural_App
     public function buscar(array $filtros = [], $detalle = false)
     {
         $where = ['rc.receptor = :receptor', 'rc.certificacion = :certificacion', ];
-        $vars = [':receptor'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion()];
+        $vars = [':receptor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion()];
         if (isset($filtros['estado'])) {
             $where[] = 'rc.estado = :estado';
             $vars[':estado'] = $filtros['estado'];
@@ -259,7 +255,7 @@ class Model_RegistroCompras extends \Model_Plural_App
                 AND estado = 0
             GROUP BY rc.dettipodoc, t.tipo
             ORDER BY fecha_recepcion_sii_inicial
-        ', [':receptor'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion()]);
+        ', [':receptor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion()]);
     }
 
     /**

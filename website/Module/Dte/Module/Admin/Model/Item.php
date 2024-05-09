@@ -25,11 +25,7 @@
 namespace website\Dte\Admin;
 
 /**
- * Clase para mapear la tabla item de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla item
- * @author SowerPHP Code Generator
- * @version 2016-02-24 22:53:35
+ * Clase para mapear la tabla item de la base de datos.
  */
 class Model_Item extends \Model_App
 {

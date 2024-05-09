@@ -96,6 +96,14 @@ function apigateway_consume(string $recurso, $datos = []): array
 }
 
 /**
+ * Función que indica si la instancia de LibreDTE es Edición Enterprise o no.
+ */
+function is_libredte_enterprise(): bool
+{
+    return class_exists('libredte\enterprise\Controller_App');
+}
+
+/**
  * Función que entrega el tipo de DTE y folio de un documento a partir de su ID.
  */
 function dte_id_unpack(string $dte_id): array

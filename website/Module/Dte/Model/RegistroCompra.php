@@ -1,8 +1,8 @@
 <?php
 
 /**
- * SowerPHP
- * Copyright (C) SowerPHP (http://sowerphp.org)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla registro_compra de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla registro_compra
- * @author SowerPHP Code Generator
- * @version 2019-08-09 13:54:15
+ * Clase para mapear la tabla registro_compra de la base de datos.
  */
 class Model_RegistroCompra extends \Model_App
 {
@@ -833,8 +829,7 @@ class Model_RegistroCompra extends \Model_App
     ); ///< Namespaces que utiliza esta clase
 
     /**
-     * Método que se ejecuta al insertar un nuevo registro en la base de datos
-         * @version 2019-08-11
+     * Método que se ejecuta al insertar un nuevo registro en la base de datos.
      */
     protected function insert()
     {

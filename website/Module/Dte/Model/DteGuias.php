@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_guia de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla dte_guia
- * @author SowerPHP Code Generator
- * @version 2015-12-25 16:49:12
+ * Clase para mapear la tabla dte_guia de la base de datos.
  */
 class Model_DteGuias extends \Model_Plural_App
 {
@@ -39,16 +35,19 @@ class Model_DteGuias extends \Model_Plural_App
     protected $_table = 'dte_guia'; ///< Tabla del modelo
 
     /**
-     * Método que entrega los despachos de un contribuyente para cierta fecha
-         * @version 2021-10-12
+     * Método que entrega los despachos de un contribuyente para cierta fecha.
      */
-    public function getDespachos(array $filtros = [])
+    public function getDespachos(array $filtros = []): array
     {
         if (empty($filtros['fecha'])) {
             $filtros['fecha'] = date('Y-m-d');
         }
         $where = ['e.fecha = :fecha', 'e.anulado = false'];
-        $vars = [':rut'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion(), ':fecha' => $filtros['fecha']];
+        $vars = [
+            ':rut' => $this->getContribuyente()->rut, 
+            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
+            ':fecha' => $filtros['fecha'],
+        ];
         if (!empty($filtros['receptor'])) {
             // se espera un RUT sin DV, si no es numérico puede ser
             //  - RUT con DV
@@ -140,13 +139,18 @@ class Model_DteGuias extends \Model_Plural_App
     /**
      * Método que entrega las guías de despacho que no se han facturado, esto
      * es aquellas que tienen indicador de traslado "operación constituye venta"
-     * y no poseen una referencia desde una factura electrónica
-         * @version 2019-02-03
+     * y no poseen una referencia desde una factura electrónica.
      */
-    public function getSinFacturar($desde, $hasta, $receptor = null, $con_referencia = false)
+    public function getSinFacturar($desde, $hasta, $receptor = null, $con_referencia = false): array
     {
         $where = ['e.fecha BETWEEN :desde AND :hasta AND anulado = :anulado'];
-        $vars = [':rut'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion(), ':desde'=>$desde, ':hasta'=>$hasta, ':anulado'=>0];
+        $vars = [
+            ':rut' => $this->getContribuyente()->rut, 
+            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
+            ':desde' => $desde, 
+            ':hasta' => $hasta, 
+            ':anulado' => 0,
+        ];
         if ($receptor) {
             $vars[':receptor'] = \sowerphp\app\Utility_Rut::normalizar($receptor);
             $where[] = 'e.receptor = :receptor';
@@ -175,11 +179,10 @@ class Model_DteGuias extends \Model_Plural_App
     }
 
     /**
-     * Método que realiza la facturación masiva de las guías de despacho
-     * Creará una factura para cada RUT que se esté facturando
-         * @version 2020-10-08
+     * Método que realiza la facturación masiva de las guías de despacho.
+     * Creará una factura para cada RUT que se esté facturando.
      */
-    public function facturar(array $folios, array $datos = [])
+    public function facturar(array $folios, array $datos = []): array
     {
         if (empty($datos['FchEmis'])) {
             $datos['FchEmis'] = date('Y-m-d');
@@ -188,7 +191,11 @@ class Model_DteGuias extends \Model_Plural_App
         sort($folios);
         $facturacion = [];
         foreach ($folios as $folio) {
-            $Guia = new Model_DteEmitido($this->getContribuyente()->rut, 52, $folio, $this->getContribuyente()->enCertificacion());
+            $Guia = new Model_DteEmitido(
+                $this->getContribuyente()->rut,
+                52, $folio,
+                $this->getContribuyente()->enCertificacion()
+            );
             $facturacion[$Guia->receptor][] = $Guia;
         }
         // crear el documento temporal de cada receptor
@@ -202,10 +209,9 @@ class Model_DteGuias extends \Model_Plural_App
 
     /**
      * Método que crea el DTE temporal de una factura para un grupo de guías de
-     * despacho
-         * @version 2020-10-08
+     * despacho.
      */
-    private function crearDteTmp($guias, array $datos = [], $guias_max = 10)
+    private function crearDteTmp($guias, array $datos = [], int $guias_max = 10)
     {
         // crear detalle único y con una referencia por cada guía que se está facturando
         if (!empty($datos['agrupar'])) {
@@ -333,7 +339,12 @@ class Model_DteGuias extends \Model_Plural_App
         if ($response['status']['code'] != 200) {
             throw new \Exception($response['body']);
         }
-        return new \website\Dte\Model_DteTmp($response['body']['emisor'], $response['body']['receptor'], $response['body']['dte'], $response['body']['codigo']);
+        return new \website\Dte\Model_DteTmp(
+            $response['body']['emisor'],
+            $response['body']['receptor'],
+            $response['body']['dte'],
+            $response['body']['codigo']
+        );
     }
 
 }

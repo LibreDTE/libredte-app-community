@@ -14,12 +14,12 @@
     <div class="col-md-8">
         <?php
         $f = new \sowerphp\general\View_Helper_Form();
-        echo $f->begin(['onsubmit'=>'Form.check() && __.loading(\'Solicitando CAF al SII...\')']);
+        echo $f->begin(['onsubmit' => 'Form.check() && __.loading(\'Solicitando CAF al SII...\')']);
         echo $f->input([
             'type' => 'select',
             'name' => 'dte',
             'label' => 'Tipo de documento',
-            'options' => [''=>'Seleccione un tipo de documento'] + $dte_tipos,
+            'options' => ['' => 'Seleccione un tipo de documento'] + $dte_tipos,
             'value' => $dte,
             'check' => 'notempty',
         ]);

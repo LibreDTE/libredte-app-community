@@ -26,12 +26,7 @@ namespace website\Dte\Admin\Mantenedores;
 
 /**
  * Clase para el controlador asociado a la tabla dte_referencia_tipo de la base de
- * datos
- * Comentario de la tabla:
- * Esta clase permite controlar las acciones entre el modelo y vista para la
- * tabla dte_referencia_tipo
- * @author SowerPHP Code Generator
- * @version 2015-09-25 15:27:00
+ * datos.
  */
 class Controller_DteReferenciaTipos extends \Controller_Maintainer
 {

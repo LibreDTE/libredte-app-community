@@ -24,8 +24,7 @@
 namespace website\Dte;
 
 /**
- * Comando para actualizar la bandeja de intercambio de los contribuyentes
- * @version 2016-09-20
+ * Comando para actualizar la bandeja de intercambio de los contribuyentes.
  */
 class Shell_Command_DteEmitidos_ExportacionCorregirTotal extends \Shell_App
 {
@@ -48,7 +47,7 @@ class Shell_Command_DteEmitidos_ExportacionCorregirTotal extends \Shell_App
             $this->out('Corrigiendo DTE T'.$dte.'F'.$folio.' de '.$DteEmitido->getEmisor()->razon_social);
         }
         $clp = $DteEmitido->calcularCLP();
-        if ($clp && $clp!=-1) {
+        if ($clp && $clp != -1) {
             $DteEmitido->exento = $DteEmitido->total = $clp;
             $DteEmitido->save();
             if ($this->verbose) {
@@ -56,7 +55,7 @@ class Shell_Command_DteEmitidos_ExportacionCorregirTotal extends \Shell_App
             }
         } else {
             if ($this->verbose) {
-                $this->out('  No fue posible determinar el monto en CLP');
+                $this->out('  No fue posible determinar el monto en CLP.');
             }
         }
     }
@@ -77,7 +76,10 @@ class Shell_Command_DteEmitidos_ExportacionCorregirTotal extends \Shell_App
                 AND e.certificacion = :certificacion
                 AND (e.exento = -1 OR e.total = -1)
             ORDER BY e.emisor, e.fecha, e.dte, e.folio
-        ', [':certificacion'=>(int)$certificacion, ':grupo' => $grupo]);
+        ', [
+            ':certificacion' => (int)$certificacion,
+            ':grupo' => $grupo,
+        ]);
     }
 
 }

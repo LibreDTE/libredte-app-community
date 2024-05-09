@@ -24,8 +24,7 @@
 namespace website\Dte\Admin;
 
 /**
- * Helper para generar el informe de estado de los folios
- * @version 2018-05-18
+ * Helper para generar el informe de estado de los folios.
  */
 class View_Helper_DteFolios_Estados extends \sowerphp\general\View_Helper_Spreadsheet
 {
@@ -40,7 +39,10 @@ class View_Helper_DteFolios_Estados extends \sowerphp\general\View_Helper_Spread
             }
             $this->setActiveSheetIndex($sheet);
             $this->getActiveSheet()->setTitle('T'.$dte);
-            $this->getActiveSheet()->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::ORIENTATION_PORTRAIT);
+            $this->getActiveSheet()
+                ->getPageSetup()
+                ->setOrientation(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::ORIENTATION_PORTRAIT)
+            ;
             $this->getActiveSheet()->getPageSetup()->setFitToPage(true);
             $this->getActiveSheet()->getPageSetup()->setFitToWidth(1);
             $this->setMargins(0.8);

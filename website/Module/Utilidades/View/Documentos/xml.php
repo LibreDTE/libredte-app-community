@@ -1,7 +1,7 @@
 <div class="page-header"><h1>Generar XML DTE y EnvioDTE</h1></div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['id'=>'generar_xml', 'onsubmit'=>'dte_generar_xml_validar(this)']);
+echo $f->begin(['id' => 'generar_xml', 'onsubmit' => 'dte_generar_xml_validar(this)']);
 ?>
 
 <div class="card-group">
@@ -35,7 +35,7 @@ echo $f->begin(['id'=>'generar_xml', 'onsubmit'=>'dte_generar_xml_validar(this)'
                 'type' => 'select',
                 'name' => 'Acteco',
                 'label' => 'Actividad económica',
-                'options' => [''=>'Actividad económica del emisor'] + $actividades_economicas,
+                'options' => ['' => 'Actividad económica del emisor'] + $actividades_economicas,
                 'check' => 'notempty',
             ]); echo '<br/>';
             echo $f->input([
@@ -49,7 +49,7 @@ echo $f->begin(['id'=>'generar_xml', 'onsubmit'=>'dte_generar_xml_validar(this)'
                 'type' => 'select',
                 'name' => 'CmnaOrigen',
                 'label' => 'Comuna',
-                'options' => [''=>'Comuna del emisor'] + $comunas,
+                'options' => ['' => 'Comuna del emisor'] + $comunas,
                 'check' => 'notempty',
             ]); echo '<br/>';
             echo $f->input([
@@ -103,7 +103,7 @@ echo $f->begin(['id'=>'generar_xml', 'onsubmit'=>'dte_generar_xml_validar(this)'
                 'type' => 'select',
                 'name' => 'CmnaRecep',
                 'label' => 'Comuna',
-                'options' => [''=>'Comuna del receptor'] + $comunas,
+                'options' => ['' => 'Comuna del receptor'] + $comunas,
                 'check' => 'notempty',
             ]); echo '<br/>';
             echo $f->input([
@@ -159,7 +159,7 @@ echo $f->begin(['id'=>'generar_xml', 'onsubmit'=>'dte_generar_xml_validar(this)'
                 'name' => 'folios',
                 'label' => 'Folios',
                 'titles' => ['Archivo XML del CAF a utilizar'],
-                'inputs' => [['type'=>'file', 'name'=>'folios', 'attr' => 'accept=".xml"']],
+                'inputs' => [['type' => 'file', 'name' => 'folios', 'attr' => 'accept=".xml"']],
                 'help' => 'Los folios a utilizar por cada tipo de documento deben estar contenidos en un único archivo CAF.',
                 'check' => 'notempty',
             ]);

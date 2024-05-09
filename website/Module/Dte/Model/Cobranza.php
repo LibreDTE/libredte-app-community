@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla cobranza de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla cobranza
- * @author SowerPHP Code Generator
- * @version 2016-02-28 18:10:55
+ * Clase para mapear la tabla cobranza de la base de datos.
  */
 class Model_Cobranza extends \Model_App
 {
@@ -186,17 +182,17 @@ class Model_Cobranza extends \Model_App
     ); ///< Namespaces que utiliza esta clase
 
     /**
-     * Método que entrega el DTE emitido asociado al pago que
-         * @version 2021-10-14
+     * Método que entrega el DTE emitido asociado al pago que.
      */
     public function getDocumento()
     {
-        return (new \website\Dte\Model_DteEmitidos())->get($this->emisor, $this->dte, $this->folio, $this->certificacion);
+        return (new \website\Dte\Model_DteEmitidos())->get(
+            $this->emisor, $this->dte, $this->folio, $this->certificacion
+        );
     }
 
     /**
-     * Método que entrega los otros pagos asociados al documento
-         * @version 2016-02-28
+     * Método que entrega los otros pagos asociados al documento.
      */
     public function otrosPagos()
     {

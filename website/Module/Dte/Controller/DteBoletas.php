@@ -25,15 +25,13 @@
 namespace website\Dte;
 
 /**
- * Clase para las acciones asociadas al libro de boletas electrónicas
- * @version 2023-10-10
+ * Clase para las acciones asociadas al libro de boletas electrónicas.
  */
 class Controller_DteBoletas extends \Controller_App
 {
 
     /**
-     * Acción principal que lista los períodos con boletas
-         * @version 2023-10-10
+     * Acción principal que lista los períodos con boletas.
      */
     public function index()
     {
@@ -45,8 +43,7 @@ class Controller_DteBoletas extends \Controller_App
     }
 
     /**
-     * Acción para descargar libro de boletas en XML
-         * @version 2022-09-10
+     * Acción para descargar libro de boletas en XML.
      */
     public function xml($periodo, $FolioNotificacion = 1)
     {
@@ -76,8 +73,14 @@ class Controller_DteBoletas extends \Controller_App
         }
         $Libro->setCaratula([
             'RutEmisorLibro' => $Emisor->rut.'-'.$Emisor->dv,
-            'FchResol' => $Emisor->enCertificacion() ? $Emisor->config_ambiente_certificacion_fecha : $Emisor->config_ambiente_produccion_fecha,
-            'NroResol' =>  $Emisor->enCertificacion() ? 0 : $Emisor->config_ambiente_produccion_numero,
+            'FchResol' => $Emisor->enCertificacion()
+                ? $Emisor->config_ambiente_certificacion_fecha
+                : $Emisor->config_ambiente_produccion_fecha
+            ,
+            'NroResol' =>  $Emisor->enCertificacion()
+                ? 0
+                : $Emisor->config_ambiente_produccion_numero
+            ,
             'FolioNotificacion' => $FolioNotificacion,
         ]);
         $xml = $Libro->generar();
@@ -96,8 +99,7 @@ class Controller_DteBoletas extends \Controller_App
     }
 
     /**
-     * Acción para descargar libro de boletas en CSV
-         * @version 2022-09-10
+     * Acción para descargar libro de boletas en CSV.
      */
     public function csv($periodo)
     {

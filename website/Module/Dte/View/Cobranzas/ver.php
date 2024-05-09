@@ -25,7 +25,7 @@ new \sowerphp\general\View_Helper_Table([
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
 $f->setColsLabel(5);
-echo $f->begin(['onsubmit'=>'pago_check(this)']);
+echo $f->begin(['onsubmit' => 'pago_check(this)']);
 echo $f->input([
     'type' => 'date',
     'name' => 'modificado',

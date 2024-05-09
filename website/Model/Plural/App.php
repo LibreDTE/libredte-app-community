@@ -24,17 +24,15 @@
 namespace website;
 
 /**
- * Clase abstracta para todos los modelos  (clase sobreescribible)
- * @version 2018-07-04
+ * Clase abstracta para todos los modelos plurales (clase sobreescribible).
  */
-class Model_Plural_App extends \sowerphp\app\Model_Plural
+abstract class Model_Plural_App extends \sowerphp\app\Model_Plural
 {
 
     private $Contribuyente = null; ///< Contribuyente con el que se realizarán las consultas
 
     /**
-     * Método que asigna el contribuyente que se utilizará en las consultas
-         * @version 2016-09-27
+     * Método que asigna el contribuyente que se utilizará en las consultas.
      */
     public function setContribuyente($Contribuyente)
     {
@@ -44,11 +42,9 @@ class Model_Plural_App extends \sowerphp\app\Model_Plural
 
     /**
      * Método que entrega el contribuyente previamente seteado en el modelo o bien el
-     * de la sesión si no existe seteado
-     * @return \website\Dte\Model_Contribuyente
-         * @version 2018-07-04
+     * de la sesión si no existe seteado.
      */
-    public function getContribuyente($readSession = true)
+    public function getContribuyente(bool $readSession = true)
     {
         if (!isset($this->Contribuyente) && $readSession) {
             $this->Contribuyente = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente');

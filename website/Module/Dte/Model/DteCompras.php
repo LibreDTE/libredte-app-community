@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_compra de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla dte_compra
- * @author SowerPHP Code Generator
- * @version 2015-09-28 01:07:23
+ * Clase para mapear la tabla dte_compra de la base de datos.
  */
 class Model_DteCompras extends \Model_Plural_App
 {
@@ -48,7 +44,7 @@ class Model_DteCompras extends \Model_Plural_App
             SELECT COUNT(*)
             FROM dte_compra
             WHERE receptor = :receptor AND periodo = :periodo AND certificacion = :certificacion AND track_id IS NOT NULL
-        ', [':receptor'=>$this->getContribuyente()->rut, ':periodo'=>$periodo, ':certificacion'=>$this->getContribuyente()->enCertificacion()]);
+        ', [':receptor' => $this->getContribuyente()->rut, ':periodo' => $periodo, ':certificacion' => $this->getContribuyente()->enCertificacion()]);
     }
 
     /**
@@ -65,7 +61,7 @@ class Model_DteCompras extends \Model_Plural_App
                 break;
             }
             $totales_mensuales[$periodo] = array_merge(
-                ['periodo'=>$periodo],
+                ['periodo' => $periodo],
                 (new Model_DteCompra($this->getContribuyente()->rut, $periodo, $this->getContribuyente()->enCertificacion()))->getTotales()
             );
             $periodo = \sowerphp\general\Utility_Date::nextPeriod($periodo);
@@ -243,7 +239,7 @@ class Model_DteCompras extends \Model_Plural_App
         sort($periodos);
         // sincronizar periodos
         foreach ($periodos as $periodo) {
-            $config = ['periodo'=>$periodo];
+            $config = ['periodo' => $periodo];
             $documentos = $this->getContribuyente()->getRCV([
                 'operacion' => 'COMPRA',
                 'periodo' => $periodo,
@@ -312,7 +308,7 @@ class Model_DteCompras extends \Model_Plural_App
                 $DteRecibido->iva_uso_comun = $doc['iva_uso_comun'];
                 $DteRecibido->iva_no_recuperable =
                     $doc['iva_no_recuperable_monto']
-                    ? json_encode([['codigo'=>$doc['iva_no_recuperable_codigo'], 'monto'=>$doc['iva_no_recuperable_monto']]])
+                    ? json_encode([['codigo' => $doc['iva_no_recuperable_codigo'], 'monto' => $doc['iva_no_recuperable_monto']]])
                     : null
                 ;
                 $DteRecibido->impuesto_adicional = null;

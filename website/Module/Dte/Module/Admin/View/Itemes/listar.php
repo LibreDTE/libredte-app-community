@@ -41,20 +41,20 @@ $data = array($titles);
 $row = array();
 $form = new \sowerphp\general\View_Helper_Form(false);
 $optionsBoolean = array(array('', 'Todos'), array('1', 'Si'), array('0', 'No'));
-$types_check = ['integer'=>'integer', 'real'=>'real'];
+$types_check = ['integer' => 'integer', 'real' => 'real'];
 foreach ($columns as $column => &$info) {
     // si es la moneda se muestra un select
     if ($column == 'moneda') {
         $row[] = $form->input([
             'type' => 'select',
             'name' => $column,
-            'options' => [''=>'Todas', 'CLP'=>'Pesos', 'CLF'=>'UF', 'USD'=>'Dólares', 'EUR'=>'Euros'],
-            'value' => (isset($search[$column])?$search[$column]:''),
+            'options' => ['' => 'Todas', 'CLP' => 'Pesos', 'CLF' => 'UF', 'USD' => 'Dólares', 'EUR' => 'Euros'],
+            'value' => (isset($search[$column]) ? $search[$column] : ''),
         ]);
     }
     // si es de tipo boolean se muestra lista desplegable
     else if ($info['type'] == 'boolean' || $info['type'] == 'tinyint') {
-        $row[] = $form->input(array('type'=>'select', 'name'=>$column, 'options' => $optionsBoolean, 'value' => (isset($search[$column])?$search[$column]:'')));
+        $row[] = $form->input(array('type' => 'select', 'name' => $column, 'options' => $optionsBoolean, 'value' => (isset($search[$column]) ? $search[$column] : '')));
     }
     // si es llave foránea
     else if ($info['fk']) {
@@ -67,17 +67,17 @@ foreach ($columns as $column => &$info) {
         $objs = new $classs();
         $options = $objs->getList();
         array_unshift($options, array('', 'Todos'));
-        $row[] = $form->input(array('type'=>'select', 'name'=>$column, 'options' => $options, 'value' => (isset($search[$column])?$search[$column]:'')));
+        $row[] = $form->input(array('type' => 'select', 'name' => $column, 'options' => $options, 'value' => (isset($search[$column]) ? $search[$column] : '')));
     }
     // si es un tipo de dato de fecha o fecha con hora se muestra un input para fecha
     else if (in_array($info['type'], ['date', 'timestamp', 'timestamp without time zone'])) {
-        $row[] = $form->input(array('type'=>'date', 'name'=>$column, 'value'=>(isset($search[$column])?$search[$column]:'')));
+        $row[] = $form->input(array('type' => 'date', 'name' => $column, 'value' => (isset($search[$column]) ? $search[$column] : '')));
     }
     // si es cualquier otro tipo de datos
     else {
         $row[] = $form->input([
             'name' => $column,
-            'value' => (isset($search[$column])?$search[$column]:''),
+            'value' => (isset($search[$column]) ? $search[$column] : ''),
             'check' => !empty($types_check[$info['type']]) ? $types_check[$info['type']] : null,
         ]);
     }
@@ -120,7 +120,7 @@ foreach ($Objs as &$obj) {
     $actions = '';
     if (!empty($extraActions)) {
         foreach ($extraActions as $a => $i) {
-            $actions .= '<a href="'.$_base.$module_url.$controller.'/'.$a.'/'.$pkURL.$listarFilterUrl.'" title="'.(isset($i['desc'])?$i['desc']:'').'"><i class="'.$i['icon'].' btn btn-primary"></i></a> ';
+            $actions .= '<a href="'.$_base.$module_url.$controller.'/'.$a.'/'.$pkURL.$listarFilterUrl.'" title="'.(isset($i['desc']) ? $i['desc'] : '').'"><i class="'.$i['icon'].' btn btn-primary"></i></a> ';
         }
     }
     $actions .= '<a href="'.$_base.$module_url.$controller.'/editar/'.urlencode($obj->codigo).'/'.urlencode($obj->codigo_tipo).$listarFilterUrl.'" title="Editar" class="btn btn-primary mb-2"><i class="fa fa-edit fa-fw"></i></a>';

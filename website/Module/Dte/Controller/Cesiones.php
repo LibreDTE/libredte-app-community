@@ -25,16 +25,14 @@
 namespace website\Dte;
 
 /**
- * Controlador de cesiones
- * @version 2019-07-06
+ * Controlador de cesiones.
  */
 class Controller_Cesiones extends \Controller_App
 {
 
     /**
      * Acción que permite mostrar las cesiones de documentos emitidos por el
-     * contribuyente
-         * @version 2019-07-06
+     * contribuyente.
      */
     public function listar($pagina = 1)
     {
@@ -49,14 +47,14 @@ class Controller_Cesiones extends \Controller_App
                 $filtros[$var] = $val;
             }
         }
-        $searchUrl = isset($_GET['search'])?('?search='.$_GET['search']):'';
+        $searchUrl = isset($_GET['search']) ? ('?search='.$_GET['search']) : '';
         $paginas = 1;
         try {
             $filtros['cedido'] = true;
             $documentos_total = $Emisor->countDocumentosEmitidos($filtros);
             if (!empty($pagina)) {
                 $filtros['limit'] = \sowerphp\core\Configure::read('app.registers_per_page');
-                $filtros['offset'] = ($pagina-1)*$filtros['limit'];
+                $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = $documentos_total ? ceil($documentos_total/$filtros['limit']) : 0;
                 if ($pagina != 1 && $pagina > $paginas) {
                     $this->redirect('/dte/'.$this->request->params['controller'].'/listar'.$searchUrl);
@@ -86,13 +84,12 @@ class Controller_Cesiones extends \Controller_App
     }
 
     /**
-     * Acción que permite buscar en las cesiones de documentos
-         * @version 2023-10-06
+     * Acción que permite buscar en las cesiones de documentos.
      */
     public function buscar($consulta = null)
     {
         if (!in_array($consulta, ['deudor', 'cedente', 'cesionario'])) {
-            \sowerphp\core\Model_Datasource_Session::message('Búsqueda por "'.$consulta.'" no existe', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('Búsqueda por "'.$consulta.'" no existe.', 'error');
             $this->redirect('/dte/cesiones/listar');
         }
         $Contribuyente = $this->getContribuyente();
@@ -131,7 +128,7 @@ class Controller_Cesiones extends \Controller_App
                 return;
             }
             if (empty($response['body'])) {
-                \sowerphp\core\Model_Datasource_Session::message('No se encontraron documentos cedidos en el período de búsqueda', 'info');
+                \sowerphp\core\Model_Datasource_Session::message('No se encontraron documentos cedidos en el período de búsqueda.', 'info');
                 return;
             }
             $this->set([

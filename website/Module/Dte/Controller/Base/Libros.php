@@ -244,7 +244,7 @@ abstract class Controller_Base_Libros extends \Controller_App
     public function actualizar_estado($periodo, $usarWebservice = null)
     {
         $Emisor = $this->getContribuyente();
-        if ($usarWebservice===null) {
+        if ($usarWebservice === null) {
             $usarWebservice = $Emisor->config_sii_estado_dte_webservice;
         }
         // obtener libro envíado

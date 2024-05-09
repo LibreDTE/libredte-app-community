@@ -25,11 +25,7 @@
 namespace website\Dte\Admin;
 
 /**
- * Clase para mapear la tabla item_clasificacion de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla item_clasificacion
- * @author SowerPHP Code Generator
- * @version 2016-02-24 22:53:35
+ * Clase para mapear la tabla item_clasificacion de la base de datos.
  */
 class Model_ItemClasificacion extends \Model_App
 {
@@ -161,7 +157,7 @@ class Model_ItemClasificacion extends \Model_App
             SELECT COUNT(*)
             FROM item
             WHERE contribuyente = :contribuyente AND clasificacion = :clasificacion
-        ', [':contribuyente'=>$this->contribuyente, ':clasificacion'=>$this->codigo]);
+        ', [':contribuyente' => $this->contribuyente, ':clasificacion' => $this->codigo]);
     }
 
     /**
@@ -173,7 +169,7 @@ class Model_ItemClasificacion extends \Model_App
         $Itemes = new Model_Itemes();
         $Itemes->setWhereStatement(
             ['contribuyente = :contribuyente', 'clasificacion = :clasificacion'],
-            [':contribuyente'=>$this->contribuyente, ':clasificacion'=>$this->codigo]
+            [':contribuyente' => $this->contribuyente, ':clasificacion' => $this->codigo]
         );
         return $Itemes->getObjects();
     }

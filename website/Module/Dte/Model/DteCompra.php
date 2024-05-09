@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_compra de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla dte_compra
- * @author SowerPHP Code Generator
- * @version 2015-09-28 01:07:23
+ * Clase para mapear la tabla dte_compra de la base de datos.
  */
 class Model_DteCompra extends Model_Base_Libro
 {
@@ -315,7 +311,7 @@ class Model_DteCompra extends Model_Base_Libro
     public function countDocumentosConMontosExentos()
     {
         $periodo_col = $this->db->date('Ym', 'r.fecha', 'INTEGER');
-        $vars = [':receptor'=>$this->receptor, ':periodo'=>$this->periodo, ':certificacion'=>(int)$this->certificacion];
+        $vars = [':receptor' => $this->receptor, ':periodo' => $this->periodo, ':certificacion' => (int)$this->certificacion];
         return (int)$this->db->getValue('
             SELECT COUNT(*)
             FROM

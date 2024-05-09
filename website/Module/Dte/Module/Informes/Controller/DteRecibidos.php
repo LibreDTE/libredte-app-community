@@ -25,15 +25,13 @@
 namespace website\Dte\Informes;
 
 /**
- * Clase para informes de los documentos recibidos
- * @version 2019-06-30
+ * Clase para informes de los documentos recibidos.
  */
 class Controller_DteRecibidos extends \Controller_App
 {
 
     /**
-     * Acción principal del informe de compras
-         * @version 2019-06-30
+     * Acción principal del informe de compras.
      */
     public function index()
     {
@@ -46,7 +44,9 @@ class Controller_DteRecibidos extends \Controller_App
             'hasta' => $hasta,
         ]);
         if (isset($_POST['submit'])) {
-            $DteRecibidos = (new \website\Dte\Model_DteRecibidos())->setContribuyente($Receptor);
+            $DteRecibidos = (new \website\Dte\Model_DteRecibidos())
+                ->setContribuyente($Receptor)
+            ;
             $this->set([
                 'por_tipo' => $DteRecibidos->getPorTipo($desde, $hasta),
                 'por_dia' => $DteRecibidos->getPorDia($desde, $hasta),
@@ -57,8 +57,7 @@ class Controller_DteRecibidos extends \Controller_App
     }
 
     /**
-     * Acción que entrega el informe de compras en CSV
-         * @version 2022-08-22
+     * Acción que entrega el informe de compras en CSV.
      */
     public function csv($desde, $hasta)
     {
@@ -101,12 +100,15 @@ class Controller_DteRecibidos extends \Controller_App
         $cols[] = 'Monto período';
         $cols[] = 'Saldo anterior';
         $cols[] = 'Valor a pagar';
-        $aux = (new \website\Dte\Model_DteRecibidos())->setContribuyente($Emisor)->getDetalle($desde, $hasta, $detalle);
+        $aux = (new \website\Dte\Model_DteRecibidos())
+            ->setContribuyente($Emisor)
+            ->getDetalle($desde, $hasta, $detalle)
+        ;
         if ($aux && $detalle) {
             $recibidos = [];
             foreach($aux as $r) {
                 foreach ($r['items'] as $item) {
-                    if ($item[0]==1 || $detalle == 2) {
+                    if ($item[0] == 1 || $detalle == 2) {
                         $recibido = array_slice($r, 0, 15);
                     } else {
                         $recibido = array_fill(0, 15, '');
@@ -125,8 +127,7 @@ class Controller_DteRecibidos extends \Controller_App
     }
 
     /**
-     * Acción que
-         * @version 2021-02-22
+     * Acción que genera el reporte de documentos recibidos sin XML.
      */
     public function sin_xml()
     {
@@ -139,7 +140,9 @@ class Controller_DteRecibidos extends \Controller_App
             'hasta' => $hasta,
         ]);
         if (isset($_POST['submit'])) {
-            $DteRecibidos = (new \website\Dte\Model_DteRecibidos())->setContribuyente($Receptor);
+            $DteRecibidos = (new \website\Dte\Model_DteRecibidos())
+                ->setContribuyente($Receptor)
+            ;
             $this->set([
                 'documentos' => $DteRecibidos->getDocumentosSinXML($desde, $hasta),
             ]);

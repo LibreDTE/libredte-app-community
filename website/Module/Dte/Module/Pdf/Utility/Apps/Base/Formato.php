@@ -25,8 +25,7 @@
 namespace website\Dte\Pdf;
 
 /**
- * Clase abstracta para las aplicaciones de formatos de PDF
- * @version 2020-08-02
+ * Clase abstracta para las aplicaciones de formatos de PDF.
  */
 abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base_Apps
 {
@@ -34,8 +33,7 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
     protected $namespace = 'dtepdfs'; ///< nombre del grupo de las aplicaciones que heredan esta clase
 
     /**
-     * Método que entrega el código HTML de la página de configuración de la aplicación
-         * @version 2020-08-10
+     * Método que entrega el código HTML de la página de configuración de la aplicación.
      */
     public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form)
     {
@@ -58,7 +56,7 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
                 'type' => 'div',
                 'label' => 'Flags',
                 'value' => $flags,
-                'help' => 'Flags que permiten activar o desactivar opciones en el formato del PDF',
+                'help' => 'Flags que permiten activar o desactivar opciones en el formato del PDF.',
             ]);
         }
         // entregar buffer
@@ -66,8 +64,7 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
     }
 
     /**
-     * Método que asigna la configuración de la aplicación procesando el formulario enviado por POST
-         * @version 2020-08-02
+     * Método que asigna la configuración de la aplicación procesando el formulario enviado por POST.
      */
     public function setConfigPOST()
     {
@@ -86,7 +83,6 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
 
     /**
      * Método que crea la configuración de manera automágica :)
-         * @version 2020-08-10
      */
     private function createConfig(string $id): array
     {
@@ -127,9 +123,8 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
 
     /**
      * Método que entrega la configuración de los flags del formato que
-     * permiten activar o desactivar opciones (de un flag o de todos)
-     * @param flag Flag que se quiere obtener o null para obtenerlos todos
-         * @version 2020-08-10
+     * permiten activar o desactivar opciones (de un flag o de todos).
+     * @param flag Flag que se quiere obtener o null para obtenerlos todos.
      */
     public function getConfigFlags($flag = null)
     {
@@ -140,10 +135,9 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
     }
 
     /**
-     * Método que entrega los datos con la configuración para el PDF que se generará
+     * Método que entrega los datos con la configuración para el PDF que se generará.
      * Permite sobreescribir en clase de aplicación de PDF para pasar datos específicos
-     * de cierta aplicación que no son configurables por el usuario
-         * @version 2021-04-04
+     * de cierta aplicación que no son configurables por el usuario.
      */
     protected function getConfigPDF($config)
     {
@@ -151,8 +145,7 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
     }
 
     /**
-     * Método que genera el PDF consumiendo el servicio web de la API de LibreDTE
-         * @version 2020-08-04
+     * Método que genera el PDF consumiendo el servicio web de la API de LibreDTE.
      */
     public function generar($config)
     {

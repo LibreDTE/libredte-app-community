@@ -40,7 +40,6 @@ namespace website\Dte;
  *    FOREIGN KEY (receptor, intercambio, certificacion)
  *    REFERENCES dte_intercambio(receptor, codigo, certificacion)
  *    ON UPDATE CASCADE ON DELETE RESTRICT;
- * @version 2018-05-21
  */
 class Shell_Command_DteIntercambios_Limpiar extends \Shell_App
 {

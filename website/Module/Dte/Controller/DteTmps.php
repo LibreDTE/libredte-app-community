@@ -109,7 +109,7 @@ class Controller_DteTmps extends \Controller_App
             $this->redirect('/dte/dte_tmps/listar');
         }
         $this->set([
-            '_header_extra' => ['js'=>['/dte/js/dte.js']],
+            '_header_extra' => ['js' => ['/dte/js/dte.js']],
             'Emisor' => $Emisor,
             'Receptor' => $DteTmp->getReceptor(),
             'DteTmp' => $DteTmp,
@@ -125,7 +125,7 @@ class Controller_DteTmps extends \Controller_App
      */
     public function cotizacion($receptor, $dte, $codigo, $emisor = null)
     {
-        $Emisor = $emisor===null ? $this->getContribuyente() : new Model_Contribuyente($emisor);
+        $Emisor = $emisor === null ? $this->getContribuyente() : new Model_Contribuyente($emisor);
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
@@ -200,7 +200,7 @@ class Controller_DteTmps extends \Controller_App
                 $this->response->header($header, $response['header'][$header]);
             }
         }
-        $this->response->header('Content-Disposition', ($disposition == 'inline'?'inline':(!empty($response['header']['Content-Disposition'])?$response['header']['Content-Disposition']:'inline')));
+        $this->response->header('Content-Disposition', ($disposition == 'inline'?'inline':(!empty($response['header']['Content-Disposition']) ? $response['header']['Content-Disposition'] : 'inline')));
         $this->response->send($response['body']);
     }
 
@@ -288,10 +288,10 @@ class Controller_DteTmps extends \Controller_App
         }
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/actualizar_estado')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists())
@@ -335,10 +335,10 @@ class Controller_DteTmps extends \Controller_App
         }
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/xml')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
@@ -393,7 +393,7 @@ class Controller_DteTmps extends \Controller_App
             $this->Api->send('Contribuyente no está registrado en la aplicación', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/escpos')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
@@ -596,7 +596,7 @@ class Controller_DteTmps extends \Controller_App
             $this->Api->send('Contribuyente no está registrado en la aplicación', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_tmps/eliminar')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
@@ -934,7 +934,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Acción de la API que permite realizar una búsqueda avanzada dentro de los
-     * DTEs temporales
+     * DTE temporales
          * @version 2018-05-03
      */
     public function _api_buscar_POST($emisor)
@@ -947,10 +947,10 @@ class Controller_DteTmps extends \Controller_App
         // verificar permisos del usuario autenticado sobre el emisor del DTE
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_tmps/buscar')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // buscar documentos
         $this->Api->send($Emisor->getDocumentosTemporales($this->Api->data, true), 200);
@@ -972,7 +972,7 @@ class Controller_DteTmps extends \Controller_App
             $this->Api->send('Contribuyente no está registrado en la aplicación', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_tmps/ver')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);

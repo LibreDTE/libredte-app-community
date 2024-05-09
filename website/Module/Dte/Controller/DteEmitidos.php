@@ -25,15 +25,13 @@
 namespace website\Dte;
 
 /**
- * Controlador de dte emitidos
- * @version 2019-02-22
+ * Controlador de dte emitidos.
  */
 class Controller_DteEmitidos extends \Controller_App
 {
 
     /**
-     * Método para permitir acciones sin estar autenticado
-         * @version 2017-02-23
+     * Método para permitir acciones sin estar autenticado.
      */
     public function beforeFilter()
     {
@@ -42,8 +40,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que permite mostrar los documentos emitidos por el contribuyente
-         * @version 2016-10-06
+     * Acción que permite mostrar los documentos emitidos por el contribuyente.
      */
     public function listar($pagina = 1)
     {
@@ -94,8 +91,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que permite eliminar un DTE
-         * @version 2021-08-18
+     * Acción que permite eliminar un DTE.
      */
     public function eliminar($dte, $folio)
     {
@@ -116,8 +112,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que permite eliminar el XML de un DTE
-         * @version 2021-08-18
+     * Acción que permite eliminar el XML de un DTE.
      */
     public function eliminar_xml($dte, $folio)
     {
@@ -138,8 +133,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que muestra la página de un DTE
-         * @version 2021-08-06
+     * Acción que muestra la página de un DTE.
      */
     public function ver($dte, $folio)
     {
@@ -148,7 +142,7 @@ class Controller_DteEmitidos extends \Controller_App
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el DTE solicitado', 'error'
+                'No existe el DTE solicitado.', 'error'
             );
             $this->redirect('/dte/dte_emitidos/listar');
         }
@@ -156,7 +150,7 @@ class Controller_DteEmitidos extends \Controller_App
         $cedible = ($DteEmitido->getTipo()->cedible && $DteEmitido->hasLocalXML());
         // asignar variables para la vista
         $this->set([
-            '_header_extra' => ['js'=>['/dte/js/dte.js']],
+            '_header_extra' => ['js' => ['/dte/js/dte.js']],
             'Emisor' => $Emisor,
             'DteEmitido' => $DteEmitido,
             'datos' => $DteEmitido->hasLocalXML() ? $DteEmitido->getDatos() : [],
@@ -179,10 +173,9 @@ class Controller_DteEmitidos extends \Controller_App
      * Acción que envía el DTE al SII si este no ha sido envíado (no tiene
      * track_id) o bien si se solicita reenviar (tiene track id) y está
      * rechazado (no se permite reenviar documentos que estén aceptados o
-     * aceptados con reparos (flag generar no tendrá efecto si no se cumple esto)
-     * @param dte Tipo de DTE
-     * @param folio Folio del DTE
-         * @version 2021-08-18
+     * aceptados con reparos (flag generar no tendrá efecto si no se cumple esto).
+     * @param dte Tipo de DTE.
+     * @param folio Folio del DTE.
      */
     public function enviar_sii($dte, $folio, $retry = 1)
     {
@@ -197,14 +190,13 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
         }
         else {
-            \sowerphp\core\Model_Datasource_Session::message('Se envió el DTE al SII', 'ok');
+            \sowerphp\core\Model_Datasource_Session::message('Se envió el DTE al SII.', 'ok');
         }
         $this->redirect(str_replace('enviar_sii', 'ver', $this->request->request));
     }
 
     /**
-     * Acción que solicita se envíe una nueva revisión del DTE al email
-         * @version 2016-06-11
+     * Acción que solicita se envíe una nueva revisión del DTE al email.
      */
     public function solicitar_revision($dte, $folio)
     {
@@ -213,7 +205,7 @@ class Controller_DteEmitidos extends \Controller_App
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el DTE solicitado', 'error'
+                'No existe el DTE solicitado.', 'error'
             );
             $this->redirect('/dte/dte_emitidos/listar');
         }
@@ -241,13 +233,12 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que actualiza el estado del envío del DTE
-         * @version 2021-08-12
+     * Acción que actualiza el estado del envío del DTE.
      */
     public function actualizar_estado($dte, $folio, $usarWebservice = null)
     {
         $Emisor = $this->getContribuyente();
-        if ($usarWebservice===null) {
+        if ($usarWebservice === null) {
             $usarWebservice = $Emisor->config_sii_estado_dte_webservice;
         }
         $rest = new \sowerphp\core\Network_Http_Rest();
@@ -260,14 +251,13 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
         }
         else {
-            \sowerphp\core\Model_Datasource_Session::message('Se actualizó el estado del DTE', 'ok');
+            \sowerphp\core\Model_Datasource_Session::message('Se actualizó el estado del DTE.', 'ok');
         }
         $this->redirect(str_replace('actualizar_estado', 'ver', $this->request->request));
     }
 
     /**
-     * Acción que descarga el PDF del documento emitido
-         * @version 2021-10-14
+     * Acción que descarga el PDF del documento emitido.
      */
     public function pdf($dte, $folio, $cedible = false, $emisor = null, $fecha = null, $total = null)
     {
@@ -281,31 +271,40 @@ class Controller_DteEmitidos extends \Controller_App
             $Emisor = new Model_Contribuyente($emisor);
             if (!$Emisor->exists() || !$Emisor->usuario) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Emisor no está registrado en la aplicación', 'error'
+                    'Emisor no está registrado en la aplicación.', 'error'
                 );
                 $this->redirect($this->Auth->logged() ? '/dte/dte_emitidos/consultar' : '/');
             }
         }
         // datos por defecto y recibidos por GET
         extract($this->getQuery([
-            'cedible' => isset($_POST['copias_cedibles']) ? (int)(bool)$_POST['copias_cedibles'] : $cedible,
+            'cedible' => isset($_POST['copias_cedibles'])
+                ? (int)(bool)$_POST['copias_cedibles']
+                : $cedible
+            ,
             'compress' => false,
-            'copias_tributarias' => isset($_POST['copias_tributarias']) ? (int)$_POST['copias_tributarias'] : $Emisor->config_pdf_copias_tributarias,
-            'copias_cedibles' => isset($_POST['copias_cedibles']) ? (int)$_POST['copias_cedibles'] : $Emisor->config_pdf_copias_cedibles,
+            'copias_tributarias' => isset($_POST['copias_tributarias'])
+                ? (int)$_POST['copias_tributarias']
+                : $Emisor->config_pdf_copias_tributarias
+            ,
+            'copias_cedibles' => isset($_POST['copias_cedibles'])
+                ? (int)$_POST['copias_cedibles']
+                : $Emisor->config_pdf_copias_cedibles
+            ,
         ]));
         // obtener DTE emitido
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el DTE solicitado', 'error'
+                'No existe el DTE solicitado.', 'error'
             );
             $this->redirect($this->Auth->logged() ? '/dte/dte_emitidos/listar' : '/');
         }
         // si se está pidiendo con un emisor por parámetro se debe verificar
         // fecha de emisión y monto total del dte
-        if ($emisor && ($DteEmitido->fecha!=$fecha || $DteEmitido->total!=$total)) {
+        if ($emisor && ($DteEmitido->fecha != $fecha || $DteEmitido->total != $total)) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'DTE existe, pero fecha y/o monto no coinciden con los registrados', 'error'
+                'DTE existe, pero fecha y/o monto no coinciden con los registrados.', 'error'
             );
             $this->redirect($this->Auth->logged() ? '/dte/dte_emitidos/listar' : '/dte/dte_emitidos/consultar');
         }
@@ -324,8 +323,13 @@ class Controller_DteEmitidos extends \Controller_App
             'compress' => $compress,
             'copias_tributarias' => $copias_tributarias,
             'copias_cedibles' => $copias_cedibles,
-            'formato' => isset($_POST['formato']) ? $_POST['formato'] : ( isset($_GET['formato']) ? $_GET['formato'] : $formatoPDF['formato'] ),
-            'papelContinuo' => isset($_POST['papelContinuo']) ? $_POST['papelContinuo'] : ( isset($_GET['papelContinuo']) ? $_GET['papelContinuo'] : $formatoPDF['papelContinuo'] ),
+            'formato' => isset($_POST['formato'])
+                ? $_POST['formato']
+                : (isset($_GET['formato']) ? $_GET['formato'] : $formatoPDF['formato'])
+            ,
+            'papelContinuo' => isset($_POST['papelContinuo'])
+                ? $_POST['papelContinuo']
+                : (isset($_GET['papelContinuo']) ? $_GET['papelContinuo'] : $formatoPDF['papelContinuo']),
             'webVerificacion' => in_array($DteEmitido->dte, [39,41]) ? $webVerificacion : false,
         ];
         // generar PDF
@@ -347,8 +351,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que descarga el XML del documento emitido
-         * @version 2021-10-14
+     * Acción que descarga el XML del documento emitido.
      */
     public function xml($dte, $folio, $emisor = null, $fecha = null, $total = null)
     {
@@ -362,7 +365,7 @@ class Controller_DteEmitidos extends \Controller_App
             $Emisor = new Model_Contribuyente($emisor);
             if (!$Emisor->exists() || !$Emisor->usuario) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Emisor no está registrado en la aplicación', 'error'
+                    'Emisor no está registrado en la aplicación.', 'error'
                 );
                 $this->redirect($this->Auth->logged() ? '/dte/dte_emitidos/consultar' : '/');
             }
@@ -371,22 +374,22 @@ class Controller_DteEmitidos extends \Controller_App
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el DTE solicitado', 'error'
+                'No existe el DTE solicitado.', 'error'
             );
             $this->redirect($this->Auth->logged() ? '/dte/dte_emitidos/listar' : '/');
         }
         // si no tiene XML error
         if (!$DteEmitido->hasXML()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'El DTE no tiene XML asociado', 'error'
+                'El DTE no tiene XML asociado.', 'error'
             );
             $this->redirect($this->Auth->logged() ? '/dte/dte_emitidos/ver/'.$dte.'/'.$folio : '/');
         }
         // si se está pidiendo con un emisor por parámetro se debe verificar
         // fecha de emisión y monto total del dte
-        if ($emisor && ($DteEmitido->fecha!=$fecha || $DteEmitido->total!=$total)) {
+        if ($emisor && ($DteEmitido->fecha != $fecha || $DteEmitido->total != $total)) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'DTE existe, pero fecha y/o monto no coinciden con los registrados', 'error'
+                'DTE existe, pero fecha y/o monto no coinciden con los registrados.', 'error'
             );
             $this->redirect($this->Auth->logged() ? '/dte/dte_emitidos/listar' : '/dte/dte_emitidos/consultar');
         }
@@ -400,8 +403,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que descarga el JSON del documento emitido
-         * @version 2020-02-22
+     * Acción que descarga el JSON del documento emitido.
      */
     public function json($dte, $folio)
     {
@@ -410,14 +412,14 @@ class Controller_DteEmitidos extends \Controller_App
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el DTE solicitado', 'error'
+                'No existe el DTE solicitado.', 'error'
             );
             $this->redirect('/dte/dte_emitidos/listar');
         }
         // si no tiene XML error
         if (!$DteEmitido->hasXML()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'El DTE no tiene XML asociado para convertir a JSON', 'error'
+                'El DTE no tiene XML asociado para convertir a JSON.', 'error'
             );
             $this->redirect('/dte/dte_emitidos/ver/'.$dte.'/'.$folio);
         }
@@ -433,8 +435,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Recurso de la API que descarga el código ESCPOS del DTE
-         * @version 2021-02-28
+     * Recurso de la API que descarga el código ESCPOS del DTE.
      */
     public function _api_escpos_GET($dte, $folio, $contribuyente)
     {
@@ -446,23 +447,29 @@ class Controller_DteEmitidos extends \Controller_App
         // crear emisor y verificar permisos
         $Emisor = new Model_Contribuyente($contribuyente);
         if (!$Emisor->usuario) {
-            $this->Api->send('Contribuyente no está registrado en la aplicación', 404);
+            $this->Api->send('Contribuyente no está registrado en la aplicación.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/escpos')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // obtener DTE emitido
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
-            $this->Api->send('No existe el DTE solicitado', 400);
+            $this->Api->send('No existe el DTE solicitado.', 400);
         }
         // datos por defecto
         $config = $this->getQuery([
             'base64' => false,
             'cedible' => $Emisor->config_pdf_dte_cedible,
             'compress' => false,
-            'copias_tributarias' => $Emisor->config_pdf_copias_tributarias ? $Emisor->config_pdf_copias_tributarias : 1,
-            'copias_cedibles' => $Emisor->config_pdf_copias_cedibles ? $Emisor->config_pdf_copias_cedibles : $Emisor->config_pdf_dte_cedible,
+            'copias_tributarias' => $Emisor->config_pdf_copias_tributarias
+                ? $Emisor->config_pdf_copias_tributarias
+                : 1
+            ,
+            'copias_cedibles' => $Emisor->config_pdf_copias_cedibles
+                ? $Emisor->config_pdf_copias_cedibles
+                : $Emisor->config_pdf_dte_cedible
+            ,
             'papelContinuo' => 80,
             'profile' => 'default',
             'hash' => $User->hash,
@@ -496,8 +503,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que permite ver una vista previa del correo en HTML
-         * @version 2019-07-17
+     * Acción que permite ver una vista previa del correo en HTML.
      */
     public function email_html($dte, $folio)
     {
@@ -506,22 +512,21 @@ class Controller_DteEmitidos extends \Controller_App
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el DTE solicitado', 'error'
+                'No existe el DTE solicitado.', 'error'
             );
             $this->redirect('/dte/dte_emitidos/listar');
         }
         // tratar de obtener email
         $email_html = $Emisor->getEmailFromTemplate('dte', $DteEmitido);
         if (!$email_html) {
-            \sowerphp\core\Model_Datasource_Session::message('No existe correo en HTML para el envío del documento', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('No existe correo en HTML para el envío del documento.', 'error');
             $this->redirect(str_replace('email_html', 'ver', $this->request->request));
         }
         $this->response->send($email_html);
     }
 
     /**
-     * Acción que envía por email el PDF y el XML del DTE
-         * @version 2021-08-18
+     * Acción que envía por email el PDF y el XML del DTE.
      */
     public function enviar_email($dte, $folio)
     {
@@ -564,8 +569,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que permite ceder el documento emitido
-         * @version 2023-10-05
+     * Acción que permite ceder el documento emitido.
      */
     public function ceder($dte, $folio)
     {
@@ -655,8 +659,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que permite receder el DTE emitido
-         * @version 2020-07-28
+     * Acción que permite receder el DTE emitido.
      */
     public function receder($dte, $folio)
     {
@@ -665,21 +668,21 @@ class Controller_DteEmitidos extends \Controller_App
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el DTE solicitado', 'error'
+                'No existe el DTE solicitado.', 'error'
             );
             $this->redirect('/dte/dte_emitidos/listar');
         }
         // verificar que sea documento cedible
         if (!$DteEmitido->getTipo()->cedible) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Documento no es cedible', 'error'
+                'Documento no es cedible.', 'error'
             );
             $this->redirect(str_replace('receder', 'ver', $this->request->request));
         }
         // verificar que no esté cargada una cesión
         if ($DteEmitido->cesion_track_id) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Debe respaldar el XML del AEC actual y eliminar de LibreDTE antes de receder el DTE', 'error'
+                'Debe respaldar el XML del AEC actual y eliminar de LibreDTE antes de receder el DTE.', 'error'
             );
             $this->redirect(str_replace('receder', 'ver', $this->request->request).'#cesion');
         }
@@ -693,7 +696,7 @@ class Controller_DteEmitidos extends \Controller_App
             // verificar que no se esté cediendo al mismo rut del emisor del DTE
             if ($DteEmitido->getEmisor()->getRUT() == $_POST['cesionario_rut']) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No puede ceder el DTE a la empresa emisora', 'error'
+                    'No puede ceder el DTE a la empresa emisora.', 'error'
                 );
                 $this->redirect(str_replace('receder', 'ver', $this->request->request).'#cesion');
             }
@@ -746,7 +749,7 @@ class Controller_DteEmitidos extends \Controller_App
                 $DteEmitido->cesion_xml = base64_encode($xml);
                 $DteEmitido->cesion_track_id = $track_id;
                 $DteEmitido->save();
-                \sowerphp\core\Model_Datasource_Session::message('Archivo de cesión enviado al SII con track id '.$track_id, 'ok');
+                \sowerphp\core\Model_Datasource_Session::message('Archivo de cesión enviado al SII con track id '.$track_id.'.', 'ok');
             } else {
                 \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
             }
@@ -755,14 +758,13 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que permite enviar el XML de la cesión por correo elecrtrónico
-         * @version 2020-07-27
+     * Acción que permite enviar el XML de la cesión por correo elecrtrónico.
      */
     public function cesion_email($dte, $folio)
     {
         if (!isset($_POST['submit']) || empty($_POST['emails'])) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Debe enviar el formulario para poder realizar en envío del a cesión', 'error'
+                'Debe enviar el formulario para poder realizar en envío del a cesión.', 'error'
             );
             $this->redirect(str_replace('cesion_email', 'ver', $this->request->request).'#cesion');
         }
@@ -771,14 +773,14 @@ class Controller_DteEmitidos extends \Controller_App
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el DTE solicitado', 'error'
+                'No existe el DTE solicitado.', 'error'
             );
             $this->redirect('/dte/dte_emitidos/listar');
         }
         // verificar que esté cedido (enviado al SII)
         if (!$DteEmitido->cesion_track_id) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Documento no ha sido enviado al SII para cesión', 'error'
+                'Documento no ha sido enviado al SII para cesión.', 'error'
             );
             $this->redirect(str_replace('cesion_email', 'ver', $this->request->request).'#cesion');
         }
@@ -798,15 +800,14 @@ class Controller_DteEmitidos extends \Controller_App
             );
         } else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible enviar el correo electrónico', 'error'
+                'No fue posible enviar el correo electrónico.', 'error'
             );
         }
         $this->redirect(str_replace('cesion_email', 'ver', $this->request->request).'#cesion');
     }
 
     /**
-     * Acción que descarga el XML de la cesión del documento emitido
-         * @version 2019-07-17
+     * Acción que descarga el XML de la cesión del documento emitido.
      */
     public function cesion_xml($dte, $folio)
     {
@@ -815,14 +816,14 @@ class Controller_DteEmitidos extends \Controller_App
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el DTE solicitado', 'error'
+                'No existe el DTE solicitado.', 'error'
             );
             $this->redirect('/dte/dte_emitidos/listar');
         }
         // verificar que exista XML
         if (!$DteEmitido->cesion_xml) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'DTE no tiene XML de AEC asociado', 'error'
+                'DTE no tiene XML de AEC asociado.', 'error'
             );
             $this->redirect(str_replace('cesion_xml', 'ver', $this->request->request).'#cesion');
         }
@@ -836,8 +837,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que permite eliminar la cesión de un DTE desde LibreDTE
-         * @version 2019-03-11
+     * Acción que permite eliminar la cesión de un DTE desde LibreDTE.
      */
     public function cesion_eliminar($dte, $folio)
     {
@@ -846,21 +846,21 @@ class Controller_DteEmitidos extends \Controller_App
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el DTE solicitado', 'error'
+                'No existe el DTE solicitado.', 'error'
             );
             $this->redirect('/dte/dte_emitidos/listar');
         }
         // verificar que exista track ID asociado al envio
         if (!$DteEmitido->cesion_track_id) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'DTE no tiene Track ID de AEC asociado', 'error'
+                'DTE no tiene Track ID de AEC asociado.', 'error'
             );
             $this->redirect(str_replace('cesion_eliminar', 'ver', $this->request->request).'#cesion');
         }
         // verificar que el usuario puede eliminar la cesión
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No está autorizado a eliminar el archivo de cesión', 'error'
+                'No está autorizado a eliminar el archivo de cesión.', 'error'
             );
             $this->redirect(str_replace('cesion_eliminar', 'ver', $this->request->request).'#cesion');
         }
@@ -869,13 +869,12 @@ class Controller_DteEmitidos extends \Controller_App
         $DteEmitido->cesion_xml = null;
         $DteEmitido->cesion_track_id = null;
         $DteEmitido->save();
-        \sowerphp\core\Model_Datasource_Session::message('Archivo de cesión eliminado de LibreDTE. Recuerde anular la cesión del DTE en la oficina del SII usando el formulario 2117', 'ok');
+        \sowerphp\core\Model_Datasource_Session::message('Archivo de cesión eliminado de LibreDTE. Recuerde anular la cesión del DTE en la oficina del SII usando el formulario 2117.', 'ok');
         $this->redirect(str_replace('cesion_eliminar', 'ver', $this->request->request).'#cesion');
     }
 
     /**
-     * Acción que permite marcar el IVA como fuera de plazo
-         * @version 2016-12-01
+     * Acción que permite marcar el IVA como fuera de plazo.
      */
     public function avanzado_iva_fuera_plazo($dte, $folio)
     {
@@ -884,28 +883,30 @@ class Controller_DteEmitidos extends \Controller_App
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el DTE solicitado', 'error'
+                'No existe el DTE solicitado.', 'error'
             );
             $this->redirect('/dte/dte_emitidos/listar');
         }
         // verificar que sea documento que se puede marcar como fuera de plazo
         if ($DteEmitido->dte!=61) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Solo es posible marcar IVA fuera de plazo en notas de crédito', 'error'
+                'Solo es posible marcar IVA fuera de plazo en notas de crédito.', 'error'
             );
             $this->redirect(str_replace('avanzado_iva_fuera_plazo', 'ver', $this->request->request));
         }
         // marcar IVA como fuera de plazo
         $DteEmitido->iva_fuera_plazo = (int)$_POST['iva_fuera_plazo'];
         $DteEmitido->save();
-        $msg = $DteEmitido->iva_fuera_plazo ? 'IVA marcado como fuera de plazo (no recuperable)' : 'IVA marcado como recuperable';
+        $msg = $DteEmitido->iva_fuera_plazo
+            ? 'IVA marcado como fuera de plazo (no recuperable).'
+            : 'IVA marcado como recuperable.'
+        ;
         \sowerphp\core\Model_Datasource_Session::message($msg, 'ok');
         $this->redirect(str_replace('avanzado_iva_fuera_plazo', 'ver', $this->request->request).'#avanzado');
     }
 
     /**
-     * Acción que permite anular un DTE
-         * @version 2018-02-20
+     * Acción que permite anular un DTE.
      */
     public function avanzado_anular($dte, $folio)
     {
@@ -915,20 +916,19 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Model_Datasource_Session::message(
                 str_replace("\n", '<br/>', $r['body']), 'error'
             );
-            if ($r['status']['code']==404) {
+            if ($r['status']['code'] == 404) {
                 $this->redirect('/dte/dte_emitidos/listar');
             } else {
                 $this->redirect(str_replace('avanzado_anular', 'ver', $this->request->request).'#avanzado');
             }
         }
-        $msg = $r['body'] ? 'DTE anulado' : 'DTE ya no está anulado';
+        $msg = $r['body'] ? 'DTE anulado.' : 'DTE ya no está anulado.';
         \sowerphp\core\Model_Datasource_Session::message($msg, 'ok');
         $this->redirect(str_replace('avanzado_anular', 'ver', $this->request->request).'#avanzado');
     }
 
     /**
-     * Recurso de la API que permite anular un DTE
-         * @version 2020-02-18
+     * Recurso de la API que permite anular un DTE.
      */
     public function _api_avanzado_anular_POST($dte, $folio, $emisor)
     {
@@ -941,21 +941,23 @@ class Controller_DteEmitidos extends \Controller_App
         $Emisor = new Model_Contribuyente($emisor);
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
-            $this->Api->send('No existe el DTE solicitado', 404);
+            $this->Api->send('No existe el DTE solicitado.', 404);
         }
         // verificar que sea documento que se puede anular
         if ($DteEmitido->dte!=52) {
-            $this->Api->send('Solo es posible anular guias de despacho con la opción avanzada', 400);
+            $this->Api->send('Solo es posible anular guias de despacho con la opción avanzada.', 400);
         }
         // cambiar estado anulado del documento
-        $DteEmitido->anulado = isset($this->Api->data['anulado']) ? (int)$this->Api->data['anulado'] : 1;
+        $DteEmitido->anulado = isset($this->Api->data['anulado'])
+            ? (int)$this->Api->data['anulado']
+            : 1
+        ;
         $DteEmitido->save();
         return (int)$DteEmitido->anulado;
     }
 
     /**
-     * Acción que permite cambiar la sucursal de un DTE emitido (pero no del XML)
-         * @version 2018-05-22
+     * Acción que permite cambiar la sucursal de un DTE emitido (pero no del XML).
      */
     public function avanzado_sucursal($dte, $folio)
     {
@@ -965,19 +967,18 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Model_Datasource_Session::message(
                 str_replace("\n", '<br/>', $r['body']), 'error'
             );
-            if ($r['status']['code']==404) {
+            if ($r['status']['code'] == 404) {
                 $this->redirect('/dte/dte_emitidos/listar');
             } else {
                 $this->redirect(str_replace('avanzado_sucursal', 'ver', $this->request->request).'#avanzado');
             }
         }
-        \sowerphp\core\Model_Datasource_Session::message('Se cambió la sucursal', 'ok');
+        \sowerphp\core\Model_Datasource_Session::message('Se cambió la sucursal.', 'ok');
         $this->redirect(str_replace('avanzado_sucursal', 'ver', $this->request->request).'#avanzado');
     }
 
     /**
-     * Recurso de la API que permite cambiar la sucursal de un DTE (pero no del XML)
-         * @version 2018-05-22
+     * Recurso de la API que permite cambiar la sucursal de un DTE (pero no del XML).
      */
     public function _api_avanzado_sucursal_POST($dte, $folio, $emisor)
     {
@@ -990,12 +991,12 @@ class Controller_DteEmitidos extends \Controller_App
         $Emisor = new Model_Contribuyente($emisor);
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
-            $this->Api->send('No existe el DTE solicitado', 404);
+            $this->Api->send('No existe el DTE solicitado.', 404);
         }
         // verificar que la sucursal exista
         $codigo_sucursal = $Emisor->getSucursal($this->Api->data['sucursal'])->codigo;
         if ($codigo_sucursal != $this->Api->data['sucursal']) {
-            $this->Api->send('No existe el código de sucursal solicitado', 400);
+            $this->Api->send('No existe el código de sucursal solicitado.', 400);
         }
         // cambiar estado anulado del documento
         $DteEmitido->sucursal_sii = (int)$this->Api->data['sucursal'];
@@ -1004,8 +1005,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que permite actualizar el tipo de cambio de un documento de exportación
-         * @version 2020-02-21
+     * Acción que permite actualizar el tipo de cambio de un documento de exportación.
      */
     public function avanzado_tipo_cambio($dte, $folio)
     {
@@ -1014,39 +1014,40 @@ class Controller_DteEmitidos extends \Controller_App
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el DTE solicitado', 'error'
+                'No existe el DTE solicitado.', 'error'
             );
             $this->redirect('/dte/dte_emitidos/listar');
         }
         // verificar que sea de exportación
         if (!$DteEmitido->getTipo()->esExportacion()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Documento no es de exportación', 'error'
+                'Documento no es de exportación.', 'error'
             );
             $this->redirect(str_replace('avanzado_tipo_cambio', 'ver', $this->request->request).'#avanzado');
         }
         //
         if (!$DteEmitido->hasLocalXML()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Documento no tiene un XML en LibreDTE', 'error'
+                'Documento no tiene un XML en LibreDTE.', 'error'
             );
             $this->redirect(str_replace('avanzado_tipo_cambio', 'ver', $this->request->request));
         }
         // solo administrador puede cambiar el tipo de cambio
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Solo el administrador de la empresa puede cambiar el tipo de cambio', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('Solo el administrador de la empresa puede cambiar el tipo de cambio.', 'error');
             $this->redirect(str_replace('avanzado_tipo_cambio', 'ver', $this->request->request));
         }
         // cambiar monto total
-        $DteEmitido->exento = $DteEmitido->total = abs(round($DteEmitido->getDte()->getMontoTotal() * (float)$_POST['tipo_cambio']));
+        $DteEmitido->exento = $DteEmitido->total = abs(round(
+            $DteEmitido->getDte()->getMontoTotal() * (float)$_POST['tipo_cambio']
+        ));
         $DteEmitido->save();
-        \sowerphp\core\Model_Datasource_Session::message('Monto en pesos (CLP) del DTE actualizado', 'ok');
+        \sowerphp\core\Model_Datasource_Session::message('Monto en pesos (CLP) del DTE actualizado.', 'ok');
         $this->redirect(str_replace('avanzado_tipo_cambio', 'ver', $this->request->request));
     }
 
     /**
-     * Acción que permite actualizar el track_id del DteEmitido
-         * @version 2022-05-24
+     * Acción que permite actualizar el track_id del DteEmitido.
      */
     public function avanzado_track_id($dte, $folio)
     {
@@ -1059,7 +1060,7 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Model_Datasource_Session::message(
                 str_replace("\n", '<br/>', $r['body']), 'error'
             );
-            if ($r['status']['code']==404) {
+            if ($r['status']['code'] == 404) {
                 $this->redirect('/dte/dte_emitidos/listar');
             } else {
                 $this->redirect(str_replace('avanzado_track_id', 'ver', $this->request->request).'#avanzado');
@@ -1070,8 +1071,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Recurso que permite actualizar el track_id del DteEmitido
-         * @version 2022-05-24
+     * Recurso que permite actualizar el track_id del DteEmitido.
      */
     public function _api_avanzado_track_id_POST($dte, $folio, $emisor)
     {
@@ -1087,16 +1087,19 @@ class Controller_DteEmitidos extends \Controller_App
         ]));
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, (int)$certificacion);
         if (!$DteEmitido->exists()) {
-            $this->Api->send('No existe el DTE solicitado', 404);
+            $this->Api->send('No existe el DTE solicitado.', 404);
         }
         // solo administrador puede cambiar track id
         if (!$Emisor->usuarioAutorizado($User, 'admin')) {
-            $this->Api->send('Solo el administrador de la empresa puede cambiar el Track ID', 401);
+            $this->Api->send('Solo el administrador de la empresa puede cambiar el Track ID.', 401);
         }
         // verificar que track id sea mayor o igual a -2
-        $track_id = isset($this->Api->data['track_id']) ? (int)trim($this->Api->data['track_id']) : null;
+        $track_id = isset($this->Api->data['track_id'])
+            ? (int)trim($this->Api->data['track_id'])
+            : null
+        ;
         if ($track_id !== null && $track_id < -2) {
-            $this->Api->send('Track ID debe ser igual o superior a -2', 400);
+            $this->Api->send('Track ID debe ser igual o superior a -2.', 400);
         }
         // cambiar track id
         $DteEmitido->track_id = $track_id ? $track_id : null;
@@ -1112,9 +1115,8 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que permite usar la verificación avanzada de datos del DTE
-     * Permite validar firma con la enviada al SII
-         * @version 2022-05-24
+     * Acción que permite usar la verificación avanzada de datos del DTE.
+     * Permite validar firma con la enviada al SII.
      */
     public function verificar_datos_avanzado($dte, $folio)
     {
@@ -1140,8 +1142,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que permite cargar un archivo XML como DTE emitido
-         * @version 2021-08-18
+     * Acción que permite cargar un archivo XML como DTE emitido.
      */
     public function cargar_xml()
     {
@@ -1161,15 +1162,14 @@ class Controller_DteEmitidos extends \Controller_App
             }
             else {
                 $dte = $response['body'];
-                \sowerphp\core\Model_Datasource_Session::message('XML del DTE T'.$dte['dte'].'F'.$dte['folio'].' fue cargado correctamente', 'ok');
+                \sowerphp\core\Model_Datasource_Session::message('XML del DTE T'.$dte['dte'].'F'.$dte['folio'].' fue cargado correctamente.', 'ok');
             }
         }
     }
 
     /**
      * Acción que permite realizar una búsqueda avanzada dentro de los DTE
-     * emitidos
-         * @version 2023-11-08
+     * emitidos.
      */
     public function buscar()
     {
@@ -1219,8 +1219,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción de la API que permite obtener la información de un DTE emitido
-         * @version 2021-08-20
+     * Acción de la API que permite obtener la información de un DTE emitido.
      */
     public function _api_info_GET($dte, $folio, $emisor)
     {
@@ -1230,14 +1229,14 @@ class Controller_DteEmitidos extends \Controller_App
         }
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/ver')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $DteEmitido = new Model_DteEmitido($Emisor->rut, (int)$dte, (int)$folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
-            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio, 404);
+            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio.'.', 404);
         }
         extract($this->getQuery([
             'getXML' => false,
@@ -1276,8 +1275,14 @@ class Controller_DteEmitidos extends \Controller_App
         }
         if ($getResolucion) {
             $DteEmitido->resolucion = [
-                'fecha' => $Emisor->enCertificacion() ? $Emisor->config_ambiente_certificacion_fecha : $Emisor->config_ambiente_produccion_fecha,
-                'numero' => $Emisor->enCertificacion() ? 0 : $Emisor->config_ambiente_produccion_numero,
+                'fecha' => $Emisor->enCertificacion()
+                    ? $Emisor->config_ambiente_certificacion_fecha
+                    : $Emisor->config_ambiente_produccion_fecha
+                ,
+                'numero' => $Emisor->enCertificacion()
+                    ? 0
+                    : $Emisor->config_ambiente_produccion_numero
+                ,
             ];
         }
         if ($getEmailEnviados) {
@@ -1316,8 +1321,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción de la API que permite obtener el PDF de un DTE emitido
-         * @version 2020-08-01
+     * Acción de la API que permite obtener el PDF de un DTE emitido.
      */
     public function _api_pdf_GET($dte, $folio, $emisor)
     {
@@ -1325,9 +1329,8 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción de la API que permite obtener el PDF de un DTE emitido
-     * Permite pasar datos extras al PDF por POST
-         * @version 2020-08-04
+     * Acción de la API que permite obtener el PDF de un DTE emitido.
+     * Permite pasar datos extras al PDF por POST.
      */
     public function _api_pdf_POST($dte, $folio, $emisor)
     {
@@ -1337,14 +1340,14 @@ class Controller_DteEmitidos extends \Controller_App
         }
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/pdf')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
-            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio, 404);
+            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio.'.', 404);
         }
         // datos por defecto
         $formatoPDF = $Emisor->getConfigPDF($DteEmitido);
@@ -1354,8 +1357,14 @@ class Controller_DteEmitidos extends \Controller_App
             'base64' => false,
             'cedible' => $Emisor->config_pdf_dte_cedible,
             'compress' => false,
-            'copias_tributarias' => $Emisor->config_pdf_copias_tributarias ? $Emisor->config_pdf_copias_tributarias : 1,
-            'copias_cedibles' => $Emisor->config_pdf_copias_cedibles ? $Emisor->config_pdf_copias_cedibles : $Emisor->config_pdf_dte_cedible,
+            'copias_tributarias' => $Emisor->config_pdf_copias_tributarias
+                ? $Emisor->config_pdf_copias_tributarias
+                : 1
+            ,
+            'copias_cedibles' => $Emisor->config_pdf_copias_cedibles
+                ? $Emisor->config_pdf_copias_cedibles
+                : $Emisor->config_pdf_dte_cedible
+            ,
             'hash' => $User->hash,
         ]);
         if ($Emisor->config_pdf_web_verificacion) {
@@ -1366,7 +1375,10 @@ class Controller_DteEmitidos extends \Controller_App
                 $webVerificacion = $this->request->url.'/boletas';
             }
         }
-        $config['webVerificacion'] = in_array($DteEmitido->dte, [39,41]) ? $webVerificacion : false;
+        $config['webVerificacion'] = in_array($DteEmitido->dte, [39,41])
+            ? $webVerificacion
+            : false
+        ;
         if (!empty($this->Api->data)) {
             $config = array_merge($config, $this->Api->data);
         }
@@ -1390,8 +1402,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción de la API que permite obtener el XML de un DTE emitido
-         * @version 2020-02-16
+     * Acción de la API que permite obtener el XML de un DTE emitido.
      */
     public function _api_xml_GET($dte, $folio, $emisor)
     {
@@ -1405,39 +1416,38 @@ class Controller_DteEmitidos extends \Controller_App
         }
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/xml')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
-            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio, 404);
+            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio.'.', 404);
         }
         return base64_encode($DteEmitido->getXML());
     }
 
     /**
-     * Acción de la API que permite obtener el timbre de un DTE emitido
-         * @version 2020-03-01
+     * Acción de la API que permite obtener el timbre de un DTE emitido.
      */
     public function _api_ted_GET($dte, $folio, $emisor)
     {
-        extract($this->getQuery(['formato'=>'png', 'ecl'=>5, 'size' => 1]));
+        extract($this->getQuery(['formato' => 'png', 'ecl' => 5, 'size' => 1]));
         $User = $this->Api->getAuthUser();
         if (is_string($User)) {
             $this->Api->send($User, 401);
         }
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/ver')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
-            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio, 404);
+            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio.'.', 404);
         }
         $EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
         $EnvioDte->loadXML($DteEmitido->getXML());
@@ -1469,8 +1479,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción de la API que permite consultar el estado del envío del DTE al SII
-         * @version 2022-05-24
+     * Acción de la API que permite consultar el estado del envío del DTE al SII.
      */
     public function _api_estado_GET($dte, $folio, $emisor)
     {
@@ -1480,14 +1489,14 @@ class Controller_DteEmitidos extends \Controller_App
         }
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/xml')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $Firma = $Emisor->getFirma($User->id);
         if (!$Firma) {
-            $this->Api->send('No existe firma asociada', 506);
+            $this->Api->send('No existe firma asociada.', 506);
         }
         extract($this->getQuery([
             'avanzado' => false,
@@ -1495,29 +1504,28 @@ class Controller_DteEmitidos extends \Controller_App
         ]));
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $certificacion);
         if (!$DteEmitido->exists()) {
-            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio, 404);
+            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio.'.', 404);
         }
         if (!$DteEmitido->getDte()) {
-            $this->Api->send('El documento T'.$dte.'F'.$folio.' no tiene XML en LibreDTE', 400);
+            $this->Api->send('El documento T'.$dte.'F'.$folio.' no tiene XML en LibreDTE.', 400);
         }
         if (!in_array($dte, [39, 41])) {
             \sasco\LibreDTE\Sii::setAmbiente($certificacion);
             return $avanzado ? $DteEmitido->getDte()->getEstadoAvanzado($Firma) : $DteEmitido->getDte()->getEstado($Firma);
         } else {
             if ($avanzado) {
-                $this->Api->send('No es posible obtener el estado avanzado con boletas', 400);
+                $this->Api->send('No es posible obtener el estado avanzado con boletas.', 400);
             }
             return $DteEmitido->actualizarEstado($User->id);
         }
     }
 
     /**
-     * Acción de la API que permite actualizar el estado de envio del DTE
-         * @version 2020-08-22
+     * Acción de la API que permite actualizar el estado de envio del DTE.
      */
     public function _api_actualizar_estado_GET($dte, $folio, $emisor)
     {
-        extract($this->getQuery(['usarWebservice'=>true]));
+        extract($this->getQuery(['usarWebservice' => true]));
         // verificar permisos y crear DteEmitido
         if ($this->Auth->User) {
             $User = $this->Auth->User;
@@ -1529,17 +1537,17 @@ class Controller_DteEmitidos extends \Controller_App
         }
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/actualizar_estado')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $DteEmitido = new Model_DteEmitido($Emisor->rut, (int)$dte, (int)$folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
-            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio, 404);
+            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio.'.', 404);
         }
         if (!$DteEmitido->seEnvia()) {
-            $this->Api->send('Documento no se envía al SII, no puede consultar estado de envío', 400);
+            $this->Api->send('Documento no se envía al SII, no puede consultar estado de envío.', 400);
         }
         // actualizar estado
         try {
@@ -1553,10 +1561,9 @@ class Controller_DteEmitidos extends \Controller_App
      * Recurso de la API que envía el DTE al SII si este no ha sido envíado (no
      * tiene track_id) o bien si se solicita reenviar (tiene track id) y está
      * rechazado (no se permite reenviar documentos que estén aceptados o
-     * aceptados con reparos (flag generar no tendrá efecto si no se cumple esto)
-     * @param dte Tipo de DTE
-     * @param folio Folio del DTE
-         * @version 2020-08-22
+     * aceptados con reparos (flag generar no tendrá efecto si no se cumple esto).
+     * @param dte Tipo de DTE.
+     * @param folio Folio del DTE.
      */
     public function _api_enviar_sii_GET($dte, $folio, $emisor, $retry = 1)
     {
@@ -1567,17 +1574,17 @@ class Controller_DteEmitidos extends \Controller_App
         }
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/enviar_sii')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $DteEmitido = new Model_DteEmitido($Emisor->rut, (int)$dte, (int)$folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
-            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio, 404);
+            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio.'.', 404);
         }
         if (!$DteEmitido->seEnvia()) {
-            $this->Api->send('Documento de tipo '.$dte.' no se envía al SII', 400);
+            $this->Api->send('Documento de tipo '.$dte.' no se envía al SII.', 400);
         }
         // enviar DTE (si no se puede enviar se generará excepción)
         try {
@@ -1589,8 +1596,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción de la API para obtener los documentos rechazados en un rango de fechas
-         * @version 2022-08-09
+     * Acción de la API para obtener los documentos rechazados en un rango de fechas.
      */
     public function _api_rechazados_GET($desde, $hasta, $emisor)
     {
@@ -1601,18 +1607,17 @@ class Controller_DteEmitidos extends \Controller_App
         }
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // entregar documentos rechazados
         return (new Model_DteEmitidos())->setContribuyente($Emisor)->getRechazados($desde, $hasta);
     }
 
     /**
-     * Acción de la API que permite enviar el DTE emitido por correo electrónico
-         * @version 2023-02-15
+     * Acción de la API que permite enviar el DTE emitido por correo electrónico.
      */
     public function _api_enviar_email_POST($dte, $folio, $emisor)
     {
@@ -1623,19 +1628,22 @@ class Controller_DteEmitidos extends \Controller_App
         }
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/enviar_email')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $DteEmitido = new Model_DteEmitido($Emisor->rut, (int)$dte, (int)$folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
-            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio, 404);
+            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio.'.', 404);
         }
         // guardar correo si receptor no tiene
         $Receptor = $DteEmitido->getReceptor();
         if (empty($Receptor->email) && !empty($this->Api->data['emails'])) {
-            $email = is_array($this->Api->data['emails']) ? $this->Api->data['emails'][0] : $this->Api->data['emails'];
+            $email = is_array($this->Api->data['emails'])
+                ? $this->Api->data['emails'][0]
+                : $this->Api->data['emails']
+            ;
             if (\sowerphp\core\Utility_Data_Validation::check($email, 'email') === true) {
                 $Receptor->email = $email;
                 $Receptor->save();
@@ -1654,7 +1662,15 @@ class Controller_DteEmitidos extends \Controller_App
         ], $this->Api->data);
         // enviar por correo
         try {
-            $emails = $DteEmitido->email($data['emails'], $data['asunto'], $data['mensaje'], $data['pdf'], $data['cedible'], $data['papelContinuo'], $data['plantilla']);
+            $emails = $DteEmitido->email(
+                $data['emails'], 
+                $data['asunto'], 
+                $data['mensaje'], 
+                $data['pdf'], 
+                $data['cedible'], 
+                $data['papelContinuo'], 
+                $data['plantilla']
+            );
             return $emails;
         } catch (\Exception $e) {
             $this->Api->send($e->getMessage(), 500);
@@ -1662,8 +1678,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Recurso de la API que permite eliminar un DTE
-         * @version 2020-05-21
+     * Recurso de la API que permite eliminar un DTE.
      */
     public function _api_eliminar_GET($dte, $folio, $emisor)
     {
@@ -1674,19 +1689,19 @@ class Controller_DteEmitidos extends \Controller_App
         }
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/eliminar')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $DteEmitido = new Model_DteEmitido($Emisor->rut, (int)$dte, (int)$folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
-            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio, 404);
+            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio.'.', 404);
         }
         // eliminar DTE
         try {
             if (!$DteEmitido->delete($User)) {
-                $this->Api->send('No fue posible eliminar el DTE', 500);
+                $this->Api->send('No fue posible eliminar el DTE.', 500);
             }
         } catch (\Exception $e) {
             $this->Api->send('No fue posible eliminar el DTE: '.$e->getMessage(), 500);
@@ -1695,8 +1710,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Recurso de la API que permite eliminar el XML de un DTE
-         * @version 2020-05-21
+     * Recurso de la API que permite eliminar el XML de un DTE.
      */
     public function _api_eliminar_xml_GET($dte, $folio, $emisor)
     {
@@ -1707,19 +1721,19 @@ class Controller_DteEmitidos extends \Controller_App
         }
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/eliminar')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $DteEmitido = new Model_DteEmitido($Emisor->rut, (int)$dte, (int)$folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
-            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio, 404);
+            $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio.'.', 404);
         }
         // eliminar XML del DTE
         try {
             if (!$DteEmitido->deleteXML($User)) {
-                $this->Api->send('No fue posible eliminar el XML del DTE', 500);
+                $this->Api->send('No fue posible eliminar el XML del DTE.', 500);
             }
         } catch (\Exception $e) {
             $this->Api->send('No fue posible eliminar el XML del DTE: '.$e->getMessage(), 500);
@@ -1729,8 +1743,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción de la API que permite cargar el XML de un DTE como documento
-     * emitido
-         * @version 2022-05-24
+     * emitido.
      */
     public function _api_cargar_xml_POST()
     {
@@ -1741,37 +1754,37 @@ class Controller_DteEmitidos extends \Controller_App
         }
         // cargar XML
         if (empty($this->Api->data)) {
-            $this->Api->send('Debe enviar el XML del DTE emitido', 400);
+            $this->Api->send('Debe enviar el XML del DTE emitido.', 400);
         }
         if ($this->Api->data[0] != '"') {
             $this->Api->data = '"'.$this->Api->data.'"';
         }
         $xml = base64_decode(json_decode($this->Api->data));
         if (!$xml) {
-            $this->Api->send('No fue posible recibir el XML enviado', 400);
+            $this->Api->send('No fue posible recibir el XML enviado.', 400);
         }
         $EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
         if (!$EnvioDte->loadXML($xml)) {
-            $this->Api->send('No fue posible cargar el XML enviado', 400);
+            $this->Api->send('No fue posible cargar el XML enviado.', 400);
         }
         $Documentos = $EnvioDte->getDocumentos();
         $n_docs = count($Documentos);
-        if ($n_docs!=1) {
-            $this->Api->send('Solo puede cargar XML que contengan un DTE, envío '.num($n_docs), 400);
+        if ($n_docs != 1) {
+            $this->Api->send('Solo puede cargar XML que contengan un DTE, envío '.num($n_docs).'.', 400);
         }
         $Caratula = $EnvioDte->getCaratula();
         // verificar permisos del usuario autenticado sobre el emisor del DTE
         $Emisor = new Model_Contribuyente($Caratula['RutEmisor']);
         $certificacion = !(bool)$Caratula['NroResol'];
         if (!$Emisor->exists())
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/cargar_xml')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // verificar RUT carátula con RUT documento
         $datos = $Documentos[0]->getDatos();
         if ($Caratula['RutReceptor'] != $datos['Encabezado']['Receptor']['RUTRecep']) {
-            $this->Api->send('RUT del receptor en la carátula no coincide con el RUT del receptor del documento', 400);
+            $this->Api->send('RUT del receptor en la carátula no coincide con el RUT del receptor del documento.', 400);
         }
         // si el receptor no existe, se crea con los datos del XML
         $Receptor = new Model_Contribuyente($datos['Encabezado']['Receptor']['RUTRecep']);
@@ -1810,11 +1823,11 @@ class Controller_DteEmitidos extends \Controller_App
         $Dte = $Documentos[0];
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $Dte->getTipo(), $Dte->getFolio(), (int)$certificacion);
         if ($DteEmitido->exists()) {
-            $this->Api->send('XML enviado ya está registrado', 409);
+            $this->Api->send('XML enviado ya está registrado.', 409);
         }
         // guardar DteEmitido
         $r = $Dte->getResumen();
-        $cols = ['tasa'=>'TasaImp', 'fecha'=>'FchDoc', 'receptor'=>'RUTDoc', 'exento'=>'MntExe', 'neto'=>'MntNeto', 'iva'=>'MntIVA', 'total'=>'MntTotal'];
+        $cols = ['tasa' => 'TasaImp', 'fecha' => 'FchDoc', 'receptor' => 'RUTDoc', 'exento' => 'MntExe', 'neto' => 'MntNeto', 'iva' => 'MntIVA', 'total' => 'MntTotal'];
         foreach ($cols as $attr => $col) {
             if ($r[$col] !== false) {
                 $DteEmitido->$attr = $r[$col];
@@ -1854,8 +1867,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción de la API que permite realizar una búsqueda avanzada dentro de los
-     * DTEs emitidos
-         * @version 2021-08-23
+     * DTE emitidos.
      */
     public function _api_buscar_POST($emisor)
     {
@@ -1867,22 +1879,21 @@ class Controller_DteEmitidos extends \Controller_App
         // verificar permisos del usuario autenticado sobre el emisor del DTE
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/buscar')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // buscar documentos
         $documentos = $Emisor->getDocumentosEmitidos($this->Api->data, true);
         if (!$documentos) {
-            $this->Api->send('No se encontraron documentos emitidos que coincidan con la búsqueda', 404);
+            $this->Api->send('No se encontraron documentos emitidos que coincidan con la búsqueda.', 404);
         }
         $this->Api->send($documentos, 200);
     }
 
     /**
-     * Acción que permite buscar y consultar un DTE emitido
-         * @version 2022-08-14
+     * Acción que permite buscar y consultar un DTE emitido.
      */
     public function consultar($dte = null)
     {
@@ -1918,8 +1929,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Función de la API para consultar por un DTE
-         * @version 2020-02-16
+     * Función de la API para consultar por un DTE.
      */
     public function _api_consultar_POST()
     {
@@ -1934,13 +1944,13 @@ class Controller_DteEmitidos extends \Controller_App
         // verificar que se hayan pasado los índices básicos
         foreach (['emisor', 'dte', 'folio', 'fecha', 'total'] as $key) {
             if (!isset($this->Api->data[$key])) {
-                $this->Api->send('Falta índice/variable '.$key.' por POST', 400);
+                $this->Api->send('Falta el índice/variable '.$key.' en el JSON de la consulta realizada.', 400);
             }
         }
         // verificar si el emisor existe
         $Emisor = new Model_Contribuyente($this->Api->data['emisor']);
         if (!$Emisor->exists() || !$Emisor->usuario) {
-            $this->Api->send('Emisor no está registrado en la aplicación', 404);
+            $this->Api->send('Emisor no está registrado en la aplicación.', 404);
         }
         // buscar si existe el DTE en el ambiente que el emisor esté usando
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $this->Api->data['dte'], $this->Api->data['folio'], $Emisor->enCertificacion());
@@ -1949,7 +1959,7 @@ class Controller_DteEmitidos extends \Controller_App
         }
         // verificar que coincida fecha de emisión y monto total del DTE
         if ($DteEmitido->fecha!=$this->Api->data['fecha'] || $DteEmitido->total!=$this->Api->data['total']) {
-            $this->Api->send('DTE existe, pero fecha y/o monto no coinciden con los registrados', 409);
+            $this->Api->send('DTE existe, pero fecha y/o monto no coinciden con los registrados.', 409);
         }
         // quitar XML si no se pidió explícitamente
         if (!$getXML) {

@@ -36,8 +36,8 @@ if ($soporte) :
         <div class="card-header">Ingresar a una empresa como usuario del grupo de soporte</div>
         <div class="card-body">
             <?php $f = new \sowerphp\general\View_Helper_Form(); ?>
-            <?=$f->begin(['onsubmit'=>'soporte_ingresar_empresa()'])?>
-            <?=$f->input(['name'=>'rut', 'label'=>'RUT empresa', 'check'=>'notempty rut'])?>
+            <?=$f->begin(['onsubmit' => 'soporte_ingresar_empresa()'])?>
+            <?=$f->input(['name' => 'rut', 'label' => 'RUT empresa', 'check' => 'notempty rut'])?>
             <?=$f->end('Ingresar a la empresa')?>
         </div>
     </div>

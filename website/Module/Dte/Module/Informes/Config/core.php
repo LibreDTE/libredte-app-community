@@ -62,17 +62,17 @@ Configure::write('nav.module', array(
         'icon' => 'fas fa-shopping-cart',
     ],
     '/dte_emitidos/sin_intercambio' => [
-        'name' => 'DTEs sin intercambio',
+        'name' => 'DTE sin intercambio',
         'desc' => 'Documentos emitidos que no han sido enviados en el proceso de intercambio',
         'icon' => 'far fa-envelope',
     ],
     '/dte_emitidos/intercambio' => [
-        'name' => 'Intercambio DTEs emitidos',
+        'name' => 'Intercambio DTE emitidos',
         'desc' => 'Respuestas del proceso de intercambio para DTE emitidos a clientes',
         'icon' => 'fas fa-exchange-alt',
     ],
     '/dte_emitidos/eventos' => [
-        'name' => 'Eventos DTEs emitidos',
+        'name' => 'Eventos DTE emitidos',
         'desc' => 'Eventos registrados por los receptores de los documentos emitidos',
         'icon' => 'fas fa-user-secret',
     ],
@@ -82,12 +82,12 @@ Configure::write('nav.module', array(
         'icon' => 'far fa-envelope',
     ],
     '/dte_emitidos/sin_enviar' => [
-        'name' => 'DTEs sin enviar al SII',
+        'name' => 'DTE sin enviar al SII',
         'desc' => 'Documentos emitidos y que no han sido envíados al SII',
         'icon' => 'far fa-paper-plane',
     ],
     '/dte_emitidos/estados' => [
-        'name' => 'Estado envío DTEs al SII',
+        'name' => 'Estado envío DTE al SII',
         'desc' => 'Estados de documentos emitidos y envíados al SII',
         'icon' => 'far fa-copy',
     ],

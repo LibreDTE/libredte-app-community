@@ -124,7 +124,7 @@ class Controller_DteEmitidos extends \Controller_App
             $emitidos = [];
             foreach($aux as $e) {
                 foreach ($e['items'] as $item) {
-                    if ($item[0]==1 || $detalle == 2) {
+                    if ($item[0] == 1 || $detalle == 2) {
                         $emitido = array_slice($e, 0, $n_cols_no_item);
                     } else {
                         $emitido = array_fill(0, $n_cols_no_item, '');
@@ -287,8 +287,8 @@ class Controller_DteEmitidos extends \Controller_App
             'desde' => $desde,
             'hasta' => $hasta,
             'recibo' => $recibo ? 'si' : 'no',
-            'recepcion' => $recepcion!==null ? (isset(\sasco\LibreDTE\Sii\RespuestaEnvio::$estados['envio'][$recepcion]) ? \sasco\LibreDTE\Sii\RespuestaEnvio::$estados['envio'][$recepcion] : $recepcion) : null,
-            'resultado' => $resultado!==null ? (isset(\sasco\LibreDTE\Sii\RespuestaEnvio::$estados['respuesta_documento'][$resultado]) ? \sasco\LibreDTE\Sii\RespuestaEnvio::$estados['respuesta_documento'][$resultado] : $resultado) : null,
+            'recepcion' => $recepcion !== null ? (isset(\sasco\LibreDTE\Sii\RespuestaEnvio::$estados['envio'][$recepcion]) ? \sasco\LibreDTE\Sii\RespuestaEnvio::$estados['envio'][$recepcion] : $recepcion) : null,
+            'resultado' => $resultado !== null ? (isset(\sasco\LibreDTE\Sii\RespuestaEnvio::$estados['respuesta_documento'][$resultado]) ? \sasco\LibreDTE\Sii\RespuestaEnvio::$estados['respuesta_documento'][$resultado] : $resultado) : null,
             'documentos' => $Emisor->getDocumentosEmitidosEstadoIntercambio($desde, $hasta, $recibo, $recepcion, $resultado),
         ]);
     }

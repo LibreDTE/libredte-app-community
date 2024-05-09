@@ -1,8 +1,8 @@
 <?php
 
 /**
- * SowerPHP
- * Copyright (C) SowerPHP (http://sowerphp.org)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,11 +25,7 @@
 namespace website\Honorarios;
 
 /**
- * Clase para mapear la tabla boleta_honorario de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla boleta_honorario
- * @author SowerPHP Code Generator
- * @version 2019-08-09 15:00:08
+ * Clase para mapear la tabla boleta_honorario de la base de datos.
  */
 class Model_BoletaHonorario extends \Model_App
 {
@@ -161,8 +157,7 @@ class Model_BoletaHonorario extends \Model_App
     ); ///< Namespaces que utiliza esta clase
 
     /**
-     * Método que entrega el objeto del emisor de la boleta
-         * @version 2021-06-29
+     * Método que entrega el objeto del emisor de la boleta.
      */
     public function getEmisor()
     {
@@ -170,8 +165,7 @@ class Model_BoletaHonorario extends \Model_App
     }
 
     /**
-     * Método que entrega el objeto del receptor de la boleta
-         * @version 2021-06-29
+     * Método que entrega el objeto del receptor de la boleta.
      */
     public function getReceptor()
     {
@@ -179,8 +173,7 @@ class Model_BoletaHonorario extends \Model_App
     }
 
     /**
-     * Método que obtiene el PDF de la boleta de honorarios desde el SII
-         * @version 2021-06-29
+     * Método que obtiene el PDF de la boleta de honorarios desde el SII.
      */
     public function getPDF()
     {
@@ -193,7 +186,7 @@ class Model_BoletaHonorario extends \Model_App
             ],
         ]);
         if ($r['status']['code'] != 200 || empty($r['body'])) {
-            $message = 'No fue posible descargar el PDF de la boleta de honorarios desde el SII';
+            $message = 'No fue posible descargar el PDF de la boleta de honorarios desde el SII.';
             if (!empty($r['body'])) {
                 $message .= ': '.$r['body'];
             }

@@ -25,15 +25,13 @@
 namespace website\Dte\Informes;
 
 /**
- * Clase para informes de los documentos usados
- * @version 2016-09-23
+ * Clase para informes de los documentos usados.
  */
 class Controller_DocumentosUsados extends \Controller_App
 {
 
     /**
-     * Acción principal que muestra el resumen del uso de documentos
-         * @version 2016-09-23
+     * Acción principal que muestra el resumen del uso de documentos.
      */
     public function index()
     {

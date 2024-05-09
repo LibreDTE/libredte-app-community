@@ -1,12 +1,12 @@
 <div class="page-header"><h1>Convertir formato soportado a JSON</h1></div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check()']);
+echo $f->begin(['onsubmit' => 'Form.check()']);
 echo $f->input([
     'type' => 'select',
     'name' => 'formato',
     'label' => 'Formato',
-    'options' => [''=>'Seleccionar un formato'] + $formatos,
+    'options' => ['' => 'Seleccionar un formato'] + $formatos,
     'value' => $formato,
     'check' => 'notempty',
     'help' => 'Formato del archivo que se desea convertir a JSON',

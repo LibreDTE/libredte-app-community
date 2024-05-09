@@ -1,8 +1,8 @@
 <?php
 
 /**
- * SowerPHP
- * Copyright (C) SowerPHP (http://sowerphp.org)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,11 +25,7 @@
 namespace website\Dte\Admin\Mantenedores;
 
 /**
- * Clase para mapear la tabla dte_tipo de la base de datos
- * Comentario de la tabla: Tipos de documentos (electrónicos y no electrónicos)
- * Esta clase permite trabajar sobre un registro de la tabla dte_tipo
- * @author SowerPHP Code Generator
- * @version 2016-10-05 21:20:59
+ * Clase para mapear la tabla dte_tipo de la base de datos.
  */
 class Model_DteTipo extends \Model_App
 {
@@ -159,8 +155,7 @@ class Model_DteTipo extends \Model_App
     public static $fkNamespace = array(); ///< Namespaces que utiliza esta clase
 
     /**
-     * Constructor del tipo de dte
-         * @version 2015-09-21
+     * Constructor del tipo de dte.
      */
     public function __construct($codigo = null)
     {
@@ -169,58 +164,52 @@ class Model_DteTipo extends \Model_App
     }
 
     /**
-     * Método que indica si se puede generar cotización al DTE
-         * @version 2017-01-10
+     * Método que indica si se puede generar cotización al DTE.
      */
-    public function permiteCotizacion()
+    public function permiteCotizacion(): bool
     {
         return $this->operacion == 'S';
     }
 
     /**
-     * Método que indica si se puede generar un cobro al DTE
-         * @version 2016-01-10
+     * Método que indica si se puede generar un cobro al DTE.
      */
-    public function permiteCobro()
+    public function permiteCobro(): bool
     {
         return \sowerphp\core\Module::loaded('Pagos') && $this->operacion == 'S';
     }
 
     /**
-     * Método que indica si se genera o no intercambio con el tipo de DTE
-         * @version 2018-11-20
+     * Método que indica si se genera o no intercambio con el tipo de DTE.
      */
-    public function permiteIntercambio()
+    public function permiteIntercambio(): bool
     {
         return !in_array($this->codigo, [39, 41, 110, 111, 112]);
     }
 
     /**
-     * Método que indica si el documento es o no cedible
-     * @return =true si el documento es cedible
-         * @version 2015-09-10
+     * Método que indica si el documento es o no cedible.
+     * @return =true si el documento es cedible.
      */
-    public function esCedible()
+    public function esCedible(): bool
     {
         return !in_array($this->codigo, [39, 41, 56, 61, 110, 111, 112]);
     }
 
     /**
-     * Método que indica si el documento es o no una boleta electrónica
-     * @return =true si el documento es una boleta electrónica
-         * @version 2015-12-11
+     * Método que indica si el documento es o no una boleta electrónica.
+     * @return =true si el documento es una boleta electrónica.
      */
-    public function esBoleta()
+    public function esBoleta(): bool
     {
         return in_array($this->codigo, [39, 41]);
     }
 
     /**
-     * Método que indica si el documento es o no una exportación
-     * @return =true si el documento es una exportación
-         * @version 2016-04-05
+     * Método que indica si el documento es o no una exportación.
+     * @return =true si el documento es una exportación.
      */
-    public function esExportacion()
+    public function esExportacion(): bool
     {
         return in_array($this->codigo, [110, 111, 112]);
     }

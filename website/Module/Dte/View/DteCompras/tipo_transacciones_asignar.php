@@ -9,7 +9,7 @@
 <p>Aquí puede hacer una búsqueda de los documentos recibidos en el período <?=$periodo?> y realizar la asignación del tipo de transacción.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check()']);
+echo $f->begin(['onsubmit' => 'Form.check()']);
 echo $f->input([
     'name' => 'emisor',
     'label' => 'RUT emisor',

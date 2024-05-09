@@ -10,7 +10,7 @@
 <p>Aquí puede buscar documentos emitidos (temporales o reales) emitidos de manera masiva usando el mismo formato del archivo de emisión masiva.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check()']);
+echo $f->begin(['onsubmit' => 'Form.check()']);
 echo $f->input([
     'type' => 'file',
     'name' => 'archivo',

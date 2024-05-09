@@ -26,12 +26,7 @@ namespace website\Sistema\General;
 
 /**
  * Clase para el controlador asociado a la tabla actividad_economica de la base de
- * datos
- * Comentario de la tabla: Actividades económicas del país
- * Esta clase permite controlar las acciones entre el modelo y vista para la
- * tabla actividad_economica
- * @author SowerPHP Code Generator
- * @version 2014-04-26 01:34:18
+ * datos.
  */
 class Controller_ActividadEconomicas extends \Controller_Maintainer
 {

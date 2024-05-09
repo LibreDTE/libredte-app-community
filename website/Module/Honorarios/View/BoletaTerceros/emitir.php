@@ -78,7 +78,7 @@ function calcular() {
 </script>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['id'=>'formBTE', 'onsubmit'=>'Form.check() && __.confirm(this, \'¿Desea emitir la boleta?\')']);
+echo $f->begin(['id' => 'formBTE', 'onsubmit' => 'Form.check() && __.confirm(this, \'¿Desea emitir la boleta?\')']);
 echo $f->input([
     'type' => 'select',
     'name' => 'CdgSIISucur',
@@ -116,27 +116,27 @@ echo $f->input([
     'type' => 'select',
     'name' => 'CmnaRecep',
     'label' => 'Comuna',
-    'options' => [''=>'Seleccionar comuna'] + $comunas,
+    'options' => ['' => 'Seleccionar comuna'] + $comunas,
     'check' => 'notempty',
 ]);
 $f->setStyle(false);
 echo $f->input([
-    'type'=>'js',
-    'id'=>'prestaciones',
-    'label'=>'Prestaciones',
-    'titles'=>['Prestación profesional', 'Valor bruto'],
-    'inputs'=>[
-        ['name'=>'NmbItem', 'check'=>'notempty', 'maxlength="100"'],
-        ['name'=>'MontoItem', 'attr'=>'onblur="calcular()"', 'check'=>'notempty integer'],
+    'type' => 'js',
+    'id' => 'prestaciones',
+    'label' => 'Prestaciones',
+    'titles' => ['Prestación profesional', 'Valor bruto'],
+    'inputs' => [
+        ['name' => 'NmbItem', 'check' => 'notempty', 'maxlength="100"'],
+        ['name' => 'MontoItem', 'attr' => 'onblur="calcular()"', 'check' => 'notempty integer'],
     ],
     'accesskey' => 'P',
     'callback' => 'item_nuevo',
 ]);
 $titles = ['Valor Bruto', 'Monto Retención', 'Líquido a pagar'];
 $totales = [
-    $f->input(['name'=>'MntBruto', 'value'=>0, 'attr'=>'readonly="readonly"']),
-    $f->input(['name'=>'MntRetencion', 'value'=>0, 'attr'=>'readonly="readonly"']),
-    $f->input(['name'=>'MntNeto', 'value'=>0, 'attr'=>'readonly="readonly"']),
+    $f->input(['name' => 'MntBruto', 'value' => 0, 'attr' => 'readonly="readonly"']),
+    $f->input(['name' => 'MntRetencion', 'value' => 0, 'attr' => 'readonly="readonly"']),
+    $f->input(['name' => 'MntNeto', 'value' => 0, 'attr' => 'readonly="readonly"']),
 ];
 new \sowerphp\general\View_Helper_Table([$titles, $totales]);
 $f->setStyle('horizontal');

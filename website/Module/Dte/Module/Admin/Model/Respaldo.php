@@ -56,7 +56,7 @@ class Model_Respaldo
         ],
         'dte_emitido' => [
             'rut' => 'emisor',
-            'archivos' => ['xml', 'cesion_xml', 'extra'=>['ext'=>'json','base64'=>false]],
+            'archivos' => ['xml', 'cesion_xml', 'extra' => ['ext' => 'json','base64' => false]],
         ],
         'dte_folio' => [
             'rut' => 'emisor',
@@ -67,7 +67,7 @@ class Model_Respaldo
         ],
         'dte_intercambio' => [
             'rut' => 'receptor',
-            'archivos' => ['mensaje'=>'txt', 'mensaje_html'=>'html', 'archivo_xml', 'recepcion_xml', 'recibos_xml', 'resultado_xml'],
+            'archivos' => ['mensaje' => 'txt', 'mensaje_html' => 'html', 'archivo_xml', 'recepcion_xml', 'recibos_xml', 'resultado_xml'],
         ],
         'dte_intercambio_recepcion' => [
             'rut' => 'recibe',
@@ -92,7 +92,7 @@ class Model_Respaldo
         ],
         'dte_tmp' => [
             'rut' => 'emisor',
-            'archivos' => ['datos'=>['ext'=>'json','base64'=>false], 'extra'=>['ext'=>'json','base64'=>false]],
+            'archivos' => ['datos' => ['ext' => 'json','base64' => false], 'extra' => ['ext' => 'json','base64' => false]],
         ],
         'dte_recibido' => [
             'rut' => 'receptor',
@@ -213,10 +213,10 @@ class Model_Respaldo
                     foreach ($info['archivos'] as $col => $file_meta) {
                         if (is_numeric($col)) {
                             $col = $file_meta;
-                            $file_meta = ['ext'=>'xml', 'base64'=>true];
+                            $file_meta = ['ext' => 'xml', 'base64' => true];
                         }
                         if (!is_array($file_meta)) {
-                            $file_meta = ['ext'=>$file_meta, 'base64'=>true];
+                            $file_meta = ['ext' => $file_meta, 'base64' => true];
                         }
                         // recuperar el archivo si está en base64 (o sea no está encriptado)
                         if ($file_meta['base64'] && (!isset($info['encriptar']) || !in_array($col, $info['encriptar']))) {

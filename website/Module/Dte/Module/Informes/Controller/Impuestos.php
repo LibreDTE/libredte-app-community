@@ -25,20 +25,21 @@
 namespace website\Dte\Informes;
 
 /**
- * Clase para informes de impuestos
- * @version 2016-02-01
+ * Clase para informes de impuestos.
  */
 class Controller_Impuestos extends \Controller_App
 {
 
     /**
      * Acción que permite generar una propuesta del formulario 29 según las
-     * compras y ventas del contribuyente para cierto período
-         * @version 2016-02-03
+     * compras y ventas del contribuyente para cierto período.
      */
     public function propuesta_f29($periodo = null)
     {
-        $periodo = $periodo ? $periodo : (isset($_POST['periodo'])?$_POST['periodo']:null);
+        $periodo = $periodo
+            ? $periodo
+            : (isset($_POST['periodo']) ? $_POST['periodo'] : null)
+        ;
         if (isset($periodo)) {
             $Emisor = $this->getContribuyente();
             $compras = $Emisor->getCompras($periodo);

@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_intercambio de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla dte_intercambio
- * @author SowerPHP Code Generator
- * @version 2015-10-08 18:03:39
+ * Clase para mapear la tabla dte_intercambio de la base de datos.
  */
 class Model_DteIntercambio extends \Model_App
 {
@@ -434,9 +430,9 @@ class Model_DteIntercambio extends \Model_App
     public function getEstado()
     {
         if (!isset($this->estado)) {
-            return (object)['estado'=>null];
+            return (object)['estado' => null];
         }
-        return (object)['estado'=>\sasco\LibreDTE\Sii\RespuestaEnvio::$estados['envio'][$this->estado]];
+        return (object)['estado' => \sasco\LibreDTE\Sii\RespuestaEnvio::$estados['envio'][$this->estado]];
     }
 
     /**
@@ -496,7 +492,7 @@ class Model_DteIntercambio extends \Model_App
             SELECT COUNT(*)
             FROM dte_recibido
             WHERE receptor = :receptor AND emisor = :emisor AND certificacion = :certificacion AND intercambio = :intercambio
-        ', [':receptor'=>$this->receptor, ':emisor'=>$this->emisor, ':certificacion'=>(int)$this->certificacion, ':intercambio'=>$this->codigo]);
+        ', [':receptor' => $this->receptor, ':emisor' => $this->emisor, ':certificacion' => (int)$this->certificacion, ':intercambio' => $this->codigo]);
     }
 
     /**
@@ -546,9 +542,9 @@ class Model_DteIntercambio extends \Model_App
             if ($ApiDteIntercambioResponder) {
                 $response = $ApiDteIntercambioResponder->post(
                     $ApiDteIntercambioResponder->url,
-                    ['xml'=>$this->archivo_xml]
+                    ['xml' => $this->archivo_xml]
                 );
-                if ($response['status']['code']==200 && !is_string($response['body'])) {
+                if ($response['status']['code'] == 200 && !is_string($response['body'])) {
                     if (is_array($response['body'])) {
                         if (!empty($response['body']['recibir']) || !empty($response['body']['reclamar'])) {
                             $accion = $response['body'];
@@ -562,11 +558,11 @@ class Model_DteIntercambio extends \Model_App
             // si el trigger entrega 'null' (no existe handler para el trigger o bien el trigger retornó 'null') se deja
             // sin procesar la acción.
             // se llama solo si no se logró determinar la acción usando el servicio web del contribuyente
-            if ($accion===null) {
+            if ($accion === null) {
                 $accion = \sowerphp\core\Trigger::run('dte_dte_intercambio_responder', $this);
             }
             // ejecutar acción según se haya indicado
-            if ($accion!==null) {
+            if ($accion !== null) {
                 try {
                     if (is_array($accion) && isset($accion['accion']) && isset($accion['config'])) {
                         $config = $accion['config'];
@@ -635,7 +631,7 @@ class Model_DteIntercambio extends \Model_App
                     $reclamar[] = $info;
                 }
             }
-            $accion = ['recibir'=>$recibir, 'reclamar'=>$reclamar];
+            $accion = ['recibir' => $recibir, 'reclamar' => $reclamar];
         }
         // si es un arreglo con un índice númerico entonces se pasó el arreglo con los documentos directamente
         else if (is_array($accion) && isset($accion[0])) {
@@ -737,7 +733,7 @@ class Model_DteIntercambio extends \Model_App
         // enviar XML al emisor del intercambio por corre electrónico
         $resultado_email = $this->enviarEmailRespuestaXML($config['responder_a'], $xmlRecepcionDte, $xmlEnvioRecibos, $xmlResultadoDte);
         // todo ok, intercambio fue respondido (independientemente del tipo de respuesta)
-        return ['rc'=>$resultado_rc, 'email'=>$resultado_email];
+        return ['rc' => $resultado_rc, 'email' => $resultado_email];
     }
 
     /**
@@ -921,7 +917,7 @@ class Model_DteIntercambio extends \Model_App
      */
     private function enviarRespuestaSII($documentos, $Firma)
     {
-        $resultado = ['estado'=>[], 'accion'=>[]];
+        $resultado = ['estado' => [], 'accion' => []];
         try {
             $RCV = new \sasco\LibreDTE\Sii\RegistroCompraVenta($Firma);
         } catch (\Exception $e) {
@@ -1016,7 +1012,7 @@ class Model_DteIntercambio extends \Model_App
                             $meses = \sowerphp\general\Utility_Date::countMonths($periodo_dte, $DteRecibido->periodo);
                             if ($meses > 2) {
                                 $DteRecibido->iva_no_recuperable = json_encode([
-                                    ['codigo'=>2, 'monto'=>$DteRecibido->iva]
+                                    ['codigo' => 2, 'monto' => $DteRecibido->iva]
                                 ]);
                             }
                         }
@@ -1049,7 +1045,7 @@ class Model_DteIntercambio extends \Model_App
                         // si es empresa exenta el IVA es no recuperable
                         if ($DteRecibido->iva && $this->getReceptor()->config_extra_exenta) {
                             $DteRecibido->iva_no_recuperable = json_encode([
-                                ['codigo'=>1, 'monto'=>$DteRecibido->iva]
+                                ['codigo' => 1, 'monto' => $DteRecibido->iva]
                             ]);
                         }
                     }
@@ -1172,7 +1168,7 @@ class Model_DteIntercambio extends \Model_App
      */
     public function testXML()
     {
-        $filtros = ['codigo' => $this->codigo, 'soloPendientes'=>false];
+        $filtros = ['codigo' => $this->codigo, 'soloPendientes' => false];
         try {
             $docs = (new Model_DteIntercambios())->setContribuyente($this->getReceptor())->getDocumentos($filtros);
             return true;

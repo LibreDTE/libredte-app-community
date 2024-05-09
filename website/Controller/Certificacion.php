@@ -25,8 +25,7 @@
 namespace website;
 
 /**
- * Controlador para el proceso de certificación ante el SII
- * @version 2018-10-15
+ * Controlador para el proceso de certificación ante el SII.
  */
 class Controller_Certificacion extends \Controller_App
 {
@@ -55,8 +54,7 @@ class Controller_Certificacion extends \Controller_App
     ]; ///< Menú web del controlador
 
     /**
-     * Método para permitir acciones sin estar autenticado
-         * @version 2016-08-24
+     * Método para permitir acciones sin estar autenticado.
      */
     public function beforeFilter()
     {
@@ -65,8 +63,7 @@ class Controller_Certificacion extends \Controller_App
     }
 
     /**
-     * Acción que muestra la página principal de certificación
-         * @version 2015-12-26
+     * Acción que muestra la página principal de certificación.
      */
     public function index()
     {
@@ -78,14 +75,13 @@ class Controller_Certificacion extends \Controller_App
     }
 
     /**
-     * Acción para la etapa de certificación de generación de DTEs del set de
-     * pruebas
-         * @version 2016-02-15
+     * Acción para la etapa de certificación de generación de DTE del set de
+     * pruebas.
      */
     public function set_pruebas()
     {
         $this->set([
-            '_header_extra' => ['js'=>['/dte/js/dte.js']],
+            '_header_extra' => ['js' => ['/dte/js/dte.js']],
             'actividades_economicas' => (new \website\Sistema\General\Model_ActividadEconomicas())->getList(),
             'comunas' => (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->getList(),
             'nav' => $this->nav,
@@ -94,8 +90,7 @@ class Controller_Certificacion extends \Controller_App
 
     /**
      * Acción que genera el JSON a partir del archivo de pruebas y lo pasa a la
-     * utilidad que genera el XML EnvioDTE a partir de dicho JSON
-         * @version 2016-09-12
+     * utilidad que genera el XML EnvioDTE a partir de dicho JSON.
      */
     public function set_pruebas_dte()
     {
@@ -131,8 +126,7 @@ class Controller_Certificacion extends \Controller_App
 
     /**
      * Acción que genera el libro de ventas a partir del XML de EnvioDTE creado
-     * para la certificación
-         * @version 2016-03-11
+     * para la certificación.
      */
     public function set_pruebas_ventas()
     {
@@ -193,7 +187,7 @@ class Controller_Certificacion extends \Controller_App
         // descargar XML
         $file = TMP.'/'.$LibroCompraVenta->getID().'.xml';
         file_put_contents($file, $xml);
-        \sasco\LibreDTE\File::compress($file, ['format'=>'zip', 'delete'=>true]);
+        \sasco\LibreDTE\File::compress($file, ['format' => 'zip', 'delete' => true]);
         exit; // TODO: enviar usando $this->response->send() / File::compress()
     }
 
@@ -529,14 +523,13 @@ class Controller_Certificacion extends \Controller_App
             file_put_contents($dir.'/pdf/NotasCredito.zip', $response['body']);
         }
         // descargar archivo comprimido con los XML
-        \sasco\LibreDTE\File::compress($dir, ['format'=>'zip', 'delete'=>true]);
+        \sasco\LibreDTE\File::compress($dir, ['format' => 'zip', 'delete' => true]);
         exit; // TODO: enviar usando $this->response->send() / File::compress()
     }
 
     /**
-     * Acción para la etapa de certificación de generación de DTEs de la
-     * actividad real de la empresa
-         * @version 2015-09-10
+     * Acción para la etapa de certificación de generación de DTE de la
+     * actividad real de la empresa.
      */
     public function simulacion()
     {
@@ -546,8 +539,7 @@ class Controller_Certificacion extends \Controller_App
     }
 
     /**
-     * Acción para la etapa de certificación de intercambio de DTEs
-         * @version 2016-02-17
+     * Acción para la etapa de certificación de intercambio de DTE.
      */
     public function intercambio()
     {
@@ -582,15 +574,15 @@ class Controller_Certificacion extends \Controller_App
             );
             return;
         }
-        // Cargar EnvioDTE y extraer arreglo con datos de carátula y DTEs
+        // Cargar EnvioDTE y extraer arreglo con datos de carátula y DTE
         $EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
         $EnvioDte->loadXML(file_get_contents($_FILES['xml']['tmp_name']));
         $Caratula = $EnvioDte->getCaratula();
         // objeto firma electrónica
         try {
             $Firma = new \sasco\LibreDTE\FirmaElectronica([
-                'data'=>file_get_contents($_FILES['firma']['tmp_name']),
-                'pass'=>$_POST['contrasenia']
+                'data' => file_get_contents($_FILES['firma']['tmp_name']),
+                'pass' => $_POST['contrasenia']
             ]);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message(
@@ -668,19 +660,18 @@ class Controller_Certificacion extends \Controller_App
         file_put_contents($dir.'/3_ResultadoDTE.xml', $ResultadoDTE);
         unset($RecepcionDTE, $EnvioRecibos, $ResultadoDTE);
         // entregar archivos XML comprimidos al usuario
-        \sasco\LibreDTE\File::compress($dir, ['format'=>'zip', 'delete'=>true]);
+        \sasco\LibreDTE\File::compress($dir, ['format' => 'zip', 'delete' => true]);
     }
 
     /**
-     * Acción que genera los datos del archivo RecepcionDTE del intercambio
-         * @version 2015-09-11
+     * Acción que genera los datos del archivo RecepcionDTE del intercambio.
      */
     private function intercambio_RecepcionDTE($EnvioDte, $emisor, $receptor, $caratula, $Firma)
     {
         // procesar cada DTE
         $RecepcionDTE = [];
         foreach ($EnvioDte->getDocumentos() as $DTE) {
-            $estado = $DTE->getEstadoValidacion(['RUTEmisor'=>$emisor, 'RUTRecep'=>$receptor]);
+            $estado = $DTE->getEstadoValidacion(['RUTEmisor' => $emisor, 'RUTRecep' => $receptor]);
             $RecepcionDTE[] = [
                 'TipoDTE' => $DTE->getTipo(),
                 'Folio' => $DTE->getFolio(),
@@ -693,7 +684,7 @@ class Controller_Certificacion extends \Controller_App
             ];
         }
         // armar respuesta de envío
-        $estado = $EnvioDte->getEstadoValidacion(['RutReceptor'=>$receptor]);
+        $estado = $EnvioDte->getEstadoValidacion(['RutReceptor' => $receptor]);
         $RespuestaEnvio = new \sasco\LibreDTE\Sii\RespuestaEnvio();
         $RespuestaEnvio->agregarRespuestaEnvio([
             'NmbEnvio' => $_FILES['xml']['name'],
@@ -721,8 +712,7 @@ class Controller_Certificacion extends \Controller_App
     }
 
     /**
-     * Acción que genera los datos del archivo EnvioRecibos del intercambio
-         * @version 2015-09-11
+     * Acción que genera los datos del archivo EnvioRecibos del intercambio.
      */
     private function intercambio_EnvioRecibos($EnvioDTE, $caratula, $Firma)
     {
@@ -754,8 +744,7 @@ class Controller_Certificacion extends \Controller_App
     }
 
     /**
-     * Acción que genera los datos del archivo ResultadoDTE del intercambio
-         * @version 2015-09-11
+     * Acción que genera los datos del archivo ResultadoDTE del intercambio.
      */
     private function intercambio_ResultadoDTE($EnvioDte, $emisor, $receptor, $caratula, $Firma)
     {
@@ -764,7 +753,7 @@ class Controller_Certificacion extends \Controller_App
         // procesar cada DTE
         $i = 1;
         foreach ($EnvioDte->getDocumentos() as $DTE) {
-            $estado = !$DTE->getEstadoValidacion(['RUTEmisor'=>$emisor, 'RUTRecep'=>$receptor]) ? 0 : 2;
+            $estado = !$DTE->getEstadoValidacion(['RUTEmisor' => $emisor, 'RUTRecep' => $receptor]) ? 0 : 2;
             $RespuestaEnvio->agregarRespuestaDocumento([
                 'TipoDTE' => $DTE->getTipo(),
                 'Folio' => $DTE->getFolio(),
@@ -792,8 +781,7 @@ class Controller_Certificacion extends \Controller_App
 
     /**
      * Acción para la etapa de certificación de generación de las muestras
-     * impresas
-         * @version 2018-10-15
+     * impresas.
      */
     public function muestras_pdf()
     {

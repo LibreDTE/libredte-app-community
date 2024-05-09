@@ -25,15 +25,13 @@
 namespace website\Dte;
 
 /**
- * Clase para el Dashboard del módulo de facturación
- * @version 2016-02-02
+ * Clase para el Dashboard del módulo de facturación.
  */
 class Controller_Dashboard extends \Controller_App
 {
 
     /**
-     * Acción principal que muestra el dashboard
-         * @version 2021-10-13
+     * Acción principal que muestra el dashboard.
      */
     public function index()
     {
@@ -111,7 +109,10 @@ class Controller_Dashboard extends \Controller_App
                 $n_emitidos_reclamados = $evento['total'];
             }
         }
-        $rcof_estados = (new Model_DteBoletaConsumos())->setContribuyente($Emisor)->getResumenEstados($desde, $hasta);
+        $rcof_estados = (new Model_DteBoletaConsumos())
+            ->setContribuyente($Emisor)
+            ->getResumenEstados($desde, $hasta)
+        ;
         foreach ($rcof_estados as &$estado) {
             if (!$estado['estado']) {
                 $estado['estado'] = 'Sin estado';
@@ -141,7 +142,7 @@ class Controller_Dashboard extends \Controller_App
             'n_intercambios' => $n_intercambios,
             'libro_ventas_existe' => $libro_ventas_existe,
             'libro_compras_existe' => $libro_compras_existe,
-            'propuesta_f29' => ($libro_ventas_existe && $libro_compras_existe && (date('d')<=20 || ($periodo < $periodo_actual))),
+            'propuesta_f29' => ($libro_ventas_existe && $libro_compras_existe && (date('d') <= 20 || ($periodo < $periodo_actual))),
             'ventas_periodo' => $ventas_periodo,
             'compras_periodo' => $compras_periodo,
             'folios' => $folios,

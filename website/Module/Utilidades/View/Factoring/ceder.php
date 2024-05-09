@@ -1,7 +1,7 @@
 <div class="page-header"><h1>Generar XML de archivo de cesión electrónica (AEC)</h1></div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check()']);
+echo $f->begin(['onsubmit' => 'Form.check()']);
 echo $f->input([
     'name' => 'cedente_email',
     'label' => 'Email cedente',

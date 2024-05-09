@@ -25,16 +25,14 @@
 namespace website\Dte;
 
 /**
- * Controlador registro de ventas
- * @version 2020-06-26
+ * Controlador registro de ventas.
  */
 class Controller_RegistroVentas extends \Controller_App
 {
 
     /**
      * API que permite obtener un resumen de los documentos emitidos
-     * en el Registro de Ventas del SII
-         * @version 2020-06-26
+     * en el Registro de Ventas del SII.
      */
     public function _api_resumen_GET($emisor, $periodo)
     {
@@ -46,10 +44,10 @@ class Controller_RegistroVentas extends \Controller_App
         // crear emisor
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send(__('Emisor no existe'), 404);
+            $this->Api->send(__('Emisor no existe.'), 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/registro_ventas/resumen')) {
-            $this->Api->send(__('No está autorizado a operar con la empresa solicitada'), 403);
+            $this->Api->send(__('No está autorizado a operar con la empresa solicitada.'), 403);
         }
         // entregar datos
         return $Emisor->getRCV([

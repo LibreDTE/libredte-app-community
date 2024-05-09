@@ -35,12 +35,12 @@ foreach ($documentos as &$d) {
 }
 $f = new \sowerphp\general\View_Helper_Form(false);
 array_unshift($documentos, [
-    $f->input(['name'=>'emisor', 'value'=>(isset($search['emisor'])?$search['emisor']:'')]),
-    $f->input(['type'=>'select', 'name'=>'dte', 'options'=>[''=>'Todos'] + $tipos_dte, 'value'=>(isset($search['dte'])?$search['dte']:'')]),
-    $f->input(['name'=>'folio', 'value'=>(isset($search['folio'])?$search['folio']:''), 'check'=>'integer']),
-    $f->input(['type'=>'date', 'name'=>'fecha', 'value'=>(isset($search['fecha'])?$search['fecha']:''), 'check'=>'date']),
-    $f->input(['name'=>'total', 'value'=>(isset($search['total'])?$search['total']:''), 'check'=>'integer', 'attr'=>'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"']),
-    $f->input(['type'=>'select', 'name'=>'usuario', 'options'=>[''=>'Todos'] + $usuarios, 'value'=>(isset($search['usuario'])?$search['usuario']:'')]),
+    $f->input(['name' => 'emisor', 'value' => (isset($search['emisor']) ? $search['emisor'] : '')]),
+    $f->input(['type' => 'select', 'name' => 'dte', 'options' => ['' => 'Todos'] + $tipos_dte, 'value' => (isset($search['dte']) ? $search['dte'] : '')]),
+    $f->input(['name' => 'folio', 'value' => (isset($search['folio']) ? $search['folio'] : ''), 'check' => 'integer']),
+    $f->input(['type' => 'date', 'name' => 'fecha', 'value' => (isset($search['fecha']) ? $search['fecha'] : ''), 'check' => 'date']),
+    $f->input(['name' => 'total', 'value' => (isset($search['total']) ? $search['total'] : ''), 'check' => 'integer', 'attr' => 'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"']),
+    $f->input(['type' => 'select', 'name' => 'usuario', 'options' => ['' => 'Todos'] + $usuarios, 'value' => (isset($search['usuario']) ? $search['usuario'] : '')]),
     '<button type="submit" class="btn btn-primary" onclick="return Form.check()"><i class="fas fa-search fa-fw" aria-hidden="true"></i></button>',
 ]);
 array_unshift($documentos, ['Emisor', 'Documento', 'Folio', 'Fecha', 'Total', 'Usuario', 'Acciones']);

@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_boleta_consumo de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla dte_boleta_consumo
- * @author SowerPHP Code Generator
- * @version 2016-02-14 05:05:56
+ * Clase para mapear la tabla dte_boleta_consumo de la base de datos.
  */
 class Model_DteBoletaConsumo extends Model_Base_Envio
 {
@@ -151,8 +147,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     private $_Emisor; //< Para emisor
 
     /**
-     * Método que obtiene el objeto del emisor y lo guarda en caché en la clase
-         * @version 2020-10-10
+     * Método que obtiene el objeto del emisor y lo guarda en caché en la clase.
      */
     public function getEmisor()
     {
@@ -163,8 +158,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     }
 
     /**
-     * Método que indica si el RCOF se debe enviar o no al SII
-         * @version 2022-06-20
+     * Método que indica si el RCOF se debe enviar o no al SII.
      */
     public function seEnvia(): bool
     {
@@ -176,10 +170,16 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
         if ($this->dia >= date('Y-m-d')) {
             return false;
         }
-        if ($this->getEmisor()->config_sii_envio_rcof_desde && $this->dia < $this->getEmisor()->config_sii_envio_rcof_desde) {
+        if (
+            $this->getEmisor()->config_sii_envio_rcof_desde
+            && $this->dia < $this->getEmisor()->config_sii_envio_rcof_desde
+        ) {
             return false;
         }
-        if ($this->getEmisor()->config_sii_envio_rcof_hasta && $this->dia > $this->getEmisor()->config_sii_envio_rcof_hasta) {
+        if (
+            $this->getEmisor()->config_sii_envio_rcof_hasta
+            && $this->dia > $this->getEmisor()->config_sii_envio_rcof_hasta
+        ) {
             return false;
         }
         // otros días se pueden enviar
@@ -187,14 +187,16 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     }
 
     /**
-     * Método que envia el reporte de consumo de folios al SII
-         * @version 2020-10-10
+     * Método que envia el reporte de consumo de folios al SII.
      */
     public function enviar($user_id = null)
     {
         if (!$this->seEnvia()) {
             $msg = 'Solo se pueden enviar RCOF de días pasados.';
-            if ($this->getEmisor()->config_sii_envio_rcof_desde && $this->getEmisor()->config_sii_envio_rcof_hasta) {
+            if (
+                $this->getEmisor()->config_sii_envio_rcof_desde
+                && $this->getEmisor()->config_sii_envio_rcof_hasta
+            ) {
                 $msg .= sprintf(
                     ' Y solo entre los días %s y %s.',
                     \sowerphp\general\Utility_Date::format($this->getEmisor()->config_sii_envio_rcof_desde),
@@ -231,8 +233,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el XML del consumo de folios
-         * @version 2016-02-14
+     * Método que entrega el XML del consumo de folios.
      */
     public function getXML()
     {
@@ -243,8 +244,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     }
 
     /**
-     * Método que genera el XML del consumo de folios
-         * @version 2020-09-14
+     * Método que genera el XML del consumo de folios.
      */
     private function generarXML()
     {
@@ -257,8 +257,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     }
 
     /**
-     * Método que crea el objeto del consumo de folios de LibreDTE
-         * @version 2020-09-14
+     * Método que crea el objeto del consumo de folios de LibreDTE.
      */
     private function generarConsumoFolio($user_id)
     {
@@ -307,25 +306,26 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
 
     /**
      * Método que actualiza el estado del RCOF enviado al SII, en realidad
-     * es un wrapper para las verdaderas llamadas
-     * @param usarWebservice =true se consultará vía servicio web =false vía email
-         * @version 2021-08-18
+     * es un wrapper para las verdaderas llamadas.
+     * @param bool usarWebservice =true se consultará vía servicio web =false vía email.
      */
-    public function actualizarEstado($user_id = null, $usarWebservice = true)
+    public function actualizarEstado($user_id = null, bool $usarWebservice = true)
     {
         if (!$this->track_id) {
-            throw new \Exception('RCOF no tiene Track ID, primero debe enviarlo al SII');
+            throw new \Exception('RCOF no tiene Track ID, primero debe enviarlo al SII.');
         }
         if ($this->getEmisor()->isEmailReceiverLibredte('sii')) {
             $usarWebservice = true;
         }
-        return $usarWebservice ? $this->actualizarEstadoWebservice($user_id) : $this->actualizarEstadoEmail();
+        return $usarWebservice
+            ? $this->actualizarEstadoWebservice($user_id)
+            : $this->actualizarEstadoEmail()
+        ;
     }
 
     /**
      * Método que actualiza el estado del RCOF enviado al SII a través del
-     * servicio web que dispone el SII para esta consulta
-         * @version 2021-08-18
+     * servicio web que dispone el SII para esta consulta.
      */
     private function actualizarEstadoWebservice($user_id = null)
     {
@@ -342,13 +342,13 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
         // solicitar token
         $token = \sasco\LibreDTE\Sii\Autenticacion::getToken($Firma);
         if (!$token) {
-            throw new \Exception('No fue posible obtener el token');
+            throw new \Exception('No fue posible obtener el token.');
         }
         // consultar estado enviado
         $estado_up = \sasco\LibreDTE\Sii::request('QueryEstUp', 'getEstUp', [$this->getEmisor()->rut, $this->getEmisor()->dv, $this->track_id, $token]);
         // si el estado no se pudo recuperar error
         if ($estado_up === false) {
-            throw new \Exception('No fue posible obtener el estado del RCOF');
+            throw new \Exception('No fue posible obtener el estado del RCOF.');
         }
         // armar estado del dte
         $estado = (string)$estado_up->xpath('/SII:RESPUESTA/SII:RESP_HDR/ESTADO')[0];
@@ -384,8 +384,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
 
     /**
      * Método que actualiza el estado del RCOF enviado al SII a través del
-     * email que es recibido desde el SII
-         * @version 2019-07-15
+     * email que es recibido desde el SII.
      */
     private function actualizarEstadoEmail()
     {
@@ -401,15 +400,16 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
         $uids = $Imap->search('FROM @sii.cl SUBJECT "'.$asunto.'" UNSEEN');
         if (!$uids) {
             throw new \Exception(
-                'No se encontró respuesta de envío del reporte de consumo de folios, espere unos segundos'
+                'No se encontró respuesta de envío del reporte de consumo de folios, espere unos segundos.'
             );
         }
         // procesar emails recibidos
         foreach ($uids as $uid) {
             $estado = $detalle = null;
             $m = $Imap->getMessage($uid);
-            if (!$m)
+            if (!$m) {
                 continue;
+            }
             foreach ($m['attachments'] as $file) {
                 if (!in_array($file['type'], ['application/xml', 'text/xml'])) {
                     continue;
@@ -450,8 +450,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega un resumen de los datos del RCOF enviado
-         * @version 2021-12-20
+     * Método que entrega un resumen de los datos del RCOF enviado.
      */
     public function getResumen()
     {

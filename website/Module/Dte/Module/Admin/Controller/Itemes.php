@@ -33,7 +33,7 @@ class Controller_Itemes extends \Controller_Maintainer
 
     protected $namespace = __NAMESPACE__; ///< Namespace del controlador y modelos asociados
     protected $columnsView = [
-        'listar'=>['codigo', 'item', 'precio', 'moneda', 'bruto', 'clasificacion', 'activo']
+        'listar' => ['codigo', 'item', 'precio', 'moneda', 'bruto', 'clasificacion', 'activo']
     ]; ///< Columnas que se deben mostrar en las vistas
 
     /**
@@ -43,7 +43,7 @@ class Controller_Itemes extends \Controller_Maintainer
     public function listar($page = 1, $orderby = null, $order = 'A')
     {
         $Contribuyente = $this->getContribuyente();
-        $this->forceSearch(['contribuyente'=>$Contribuyente->rut]);
+        $this->forceSearch(['contribuyente' => $Contribuyente->rut]);
         parent::listar($page, $orderby, $order);
     }
 
@@ -122,7 +122,7 @@ class Controller_Itemes extends \Controller_Maintainer
             $this->Api->send('Empresa solicitada no existe', 404);
         }
         if (!$Empresa->usuarioAutorizado($User, '/dte/documentos/emitir')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // consultar item en servicio web del contribuyente
         $ApiDteItemsClient = $Empresa->getApiClient('dte_items');
@@ -183,7 +183,7 @@ class Controller_Itemes extends \Controller_Maintainer
             $this->Api->send('Empresa solicitada no existe', 404);
         }
         if (!$Empresa->usuarioAutorizado($User, '/dte/documentos/emitir')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // entregar datos
         return (new Model_Itemes())
@@ -215,7 +215,7 @@ class Controller_Itemes extends \Controller_Maintainer
                 return;
             }
             array_shift($items);
-            $resumen = ['nuevos'=>0, 'editados'=>0, 'error'=>0];
+            $resumen = ['nuevos' => 0, 'editados' => 0, 'error' => 0];
             $cols = ['codigo_tipo', 'codigo', 'item', 'descripcion', 'clasificacion', 'unidad', 'precio', 'moneda', 'exento', 'descuento', 'descuento_tipo', 'impuesto_adicional', 'activo', 'bruto'];
             $n_cols = count($cols);
             $Clasificaciones = new Model_ItemClasificaciones();
@@ -274,15 +274,15 @@ class Controller_Itemes extends \Controller_Maintainer
             }
             // asignar mensajes de sesión
             if ($resumen['nuevos']) {
-                $msg = $resumen['nuevos']==1 ? __('Se agregó un item') : __('Se agregaron %s items', $resumen['nuevos']);
+                $msg = $resumen['nuevos'] == 1 ? __('Se agregó un item') : __('Se agregaron %s items', $resumen['nuevos']);
                 \sowerphp\core\Model_Datasource_Session::message($msg, 'ok');
             }
             if ($resumen['editados']) {
-                $msg = $resumen['editados']==1 ? __('Se editó un item') : __('Se editaron %s items', $resumen['editados']);
+                $msg = $resumen['editados'] == 1 ? __('Se editó un item') : __('Se editaron %s items', $resumen['editados']);
                 \sowerphp\core\Model_Datasource_Session::message($msg, 'ok');
             }
             if ($resumen['error']) {
-                $msg = $resumen['error']==1 ? __('Se encontró un item con error (detalle en tabla de items)') : __('Se encontraron %s items con error (detalle en tabla de items)', $resumen['error']);
+                $msg = $resumen['error'] == 1 ? __('Se encontró un item con error (detalle en tabla de items)') : __('Se encontraron %s items con error (detalle en tabla de items)', $resumen['error']);
                 \sowerphp\core\Model_Datasource_Session::message($msg, 'error');
             }
             // mostrar resultado de lo realizado

@@ -175,8 +175,8 @@ class Controller_DteIntercambios extends \Controller_App
     }
 
     /**
-     * Acción para actualizar la bandeja de intercambio. Guarda los DTEs
-     * recibidos por intercambio y guarda los acuses de recibos de DTEs
+     * Acción para actualizar la bandeja de intercambio. Guarda los DTE
+     * recibidos por intercambio y guarda los acuses de recibos de DTE
      * enviados por otros contribuyentes
          * @version 2020-04-17
      */
@@ -222,7 +222,7 @@ class Controller_DteIntercambios extends \Controller_App
         // crear contribuyente
         $Receptor = new Model_Contribuyente($contribuyente);
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_intercambios/pdf')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // obtener DTE intercambiado
         $DteIntercambio = new Model_DteIntercambio($Receptor->rut, $codigo, $Receptor->enCertificacion());
@@ -318,7 +318,7 @@ class Controller_DteIntercambios extends \Controller_App
         // crear contribuyente
         $Receptor = new Model_Contribuyente($contribuyente);
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_intercambios/xml')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // obtener DTE intercambio
         $DteIntercambio = new Model_DteIntercambio($Receptor->rut, $codigo, $Receptor->enCertificacion());
@@ -371,7 +371,7 @@ class Controller_DteIntercambios extends \Controller_App
         // crear contribuyente
         $Emisor = new Model_Contribuyente($contribuyente);
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_intercambios/resultados_xml')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // obtener DTE intercambio
         $DteIntercambio = new Model_DteIntercambio($Emisor->rut, (int)$codigo, $Emisor->enCertificacion());
@@ -399,7 +399,7 @@ class Controller_DteIntercambios extends \Controller_App
         if ($DteIntercambio->resultado_xml) {
             file_put_contents($dir.'/ResultadoDTE.xml', base64_decode($DteIntercambio->resultado_xml));
         }
-        \sowerphp\general\Utility_File::compress($dir, ['format'=>'zip', 'delete'=>true]);
+        \sowerphp\general\Utility_File::compress($dir, ['format' => 'zip', 'delete' => true]);
         exit; // TODO: enviar usando $this->Api->send() / File::compress()
     }
 
@@ -482,13 +482,13 @@ class Controller_DteIntercambios extends \Controller_App
         try {
             $resultado = $DteIntercambio->responder($documentos, $config);
             if ($resultado['email'] === true) {
-                $msg = 'Se procesaron DTEs de intercambio y se envió la respuesta a: '.$config['responder_a'];
+                $msg = 'Se procesaron DTE de intercambio y se envió la respuesta a: '.$config['responder_a'];
                 if ($resultado['rc']['estado']) {
                     $msg .= '<br/><br/>- '.implode('<br/> -', $resultado['rc']['estado']);
                 }
                 \sowerphp\core\Model_Datasource_Session::message($msg, 'ok');
             } else {
-                $msg = 'Se procesaron DTEs de intercambio, pero no fue posible enviar el email, por favor intente nuevamente.<br /><em>'.$resultado['email']['message'].'</em>';
+                $msg = 'Se procesaron DTE de intercambio, pero no fue posible enviar el email, por favor intente nuevamente.<br /><em>'.$resultado['email']['message'].'</em>';
                 if ($resultado['rc']['estado']) {
                     $msg .= '<br/><br/>- '.implode('<br/> -', $resultado['rc']['estado']);
                 }
@@ -570,9 +570,9 @@ class Controller_DteIntercambios extends \Controller_App
         // verificar permisos del usuario autenticado sobre el emisor del DTE
         $Receptor = new Model_Contribuyente($receptor);
         if (!$Receptor->exists())
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_intercambios/buscar')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // buscar documentos
         $intercambios = $Receptor->getDocumentosIntercambios((array)$this->Api->data);
@@ -595,7 +595,7 @@ class Controller_DteIntercambios extends \Controller_App
             $this->Api->send('Receptor no existe', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_intercambios/listar')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // buscar documentos
         $filtros = $this->getQuery([
@@ -642,7 +642,7 @@ class Controller_DteIntercambios extends \Controller_App
                 // tratar de procesar como EnvioDTE
                 try {
                     $procesarEnvioDTE = (new Model_DteIntercambios())->setContribuyente($Emisor)->procesarEnvioDTE($file);
-                    if ($procesarEnvioDTE!==null) {
+                    if ($procesarEnvioDTE !== null) {
                         $archivo['estado'] = 'EnvioDTE: procesado y guardado';
                         $archivos[] = $archivo;
                         continue;
@@ -655,7 +655,7 @@ class Controller_DteIntercambios extends \Controller_App
                 // tratar de procesar como Recibo
                 try {
                     $procesarRecibo = (new Model_DteIntercambioRecibo())->saveXML($this->getContribuyente(), $file['data']);
-                    if ($procesarRecibo!==null) {
+                    if ($procesarRecibo !== null) {
                         $archivo['estado'] = 'Recibo: procesado y guardado';
                         $archivos[] = $archivo;
                         continue;
@@ -668,7 +668,7 @@ class Controller_DteIntercambios extends \Controller_App
                 // tratar de procesar como Recepción
                 try {
                     $procesarRecepcion = (new Model_DteIntercambioRecepcion())->saveXML($this->getContribuyente(), $file['data']);
-                    if ($procesarRecepcion!==null) {
+                    if ($procesarRecepcion !== null) {
                         $archivo['estado'] = 'Recepción: procesado y guardado';
                         $archivos[] = $archivo;
                         continue;
@@ -681,7 +681,7 @@ class Controller_DteIntercambios extends \Controller_App
                 // tratar de procesar como Resultado
                 try {
                     $procesarResultado = (new Model_DteIntercambioResultado())->saveXML($this->getContribuyente(), $file['data']);
-                    if ($procesarResultado!==null) {
+                    if ($procesarResultado !== null) {
                         $archivo['estado'] = 'Resultado: procesado y guardado';
                         $archivos[] = $archivo;
                         continue;

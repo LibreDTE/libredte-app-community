@@ -27,7 +27,7 @@ if ($Contribuyente->enCertificacion() == $Contribuyente->config_ambiente_en_cert
 
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['id'=>$form_id, 'onsubmit'=>'Form.check() && __.confirm(this)']);
+echo $f->begin(['id' => $form_id, 'onsubmit' => 'Form.check() && __.confirm(this)']);
 ?>
 
 <script>
@@ -78,9 +78,9 @@ echo $f->input([
     'label' => 'Actividad principal',
     'value' => isset($Contribuyente) ? $Contribuyente->actividad_economica : null,
     'help' => 'Indique la actividad económica principal de la empresa',
-    'options' => [''=>'Seleccionar una actividad económica'] + $actividades_economicas,
+    'options' => ['' => 'Seleccionar una actividad económica'] + $actividades_economicas,
     'check' => 'notempty',
-    'attr'=>'onchange="document.getElementById(\'giroField\').value = this.options[this.selectedIndex].text.substr(this.options[this.selectedIndex].text.indexOf(\'-\')+1, 80)"',
+    'attr' => 'onchange="document.getElementById(\'giroField\').value = this.options[this.selectedIndex].text.substr(this.options[this.selectedIndex].text.indexOf(\'-\')+1, 80)"',
 ]);
 echo $f->input([
     'name' => 'giro',
@@ -104,7 +104,7 @@ echo $f->input([
     'label' => 'Comuna',
     'value' => isset($Contribuyente) ? $Contribuyente->comuna : null,
     'help' => 'Comuna casa matriz',
-    'options' => [''=>'Seleccionar una comuna'] + $comunas,
+    'options' => ['' => 'Seleccionar una comuna'] + $comunas,
     'check' => 'notempty',
 ]);
 ?>
@@ -135,7 +135,7 @@ echo $f->input([
         [
             'type' => 'select',
             'name' => 'config_extra_otras_actividades_actividad',
-            'options' => [''=>'Seleccionar una actividad económica'] + $actividades_economicas,
+            'options' => ['' => 'Seleccionar una actividad económica'] + $actividades_economicas,
             'check' => 'notempty',
         ],
         [
@@ -183,13 +183,13 @@ echo $f->input([
         [
             'type' => 'select',
             'name' => 'config_extra_sucursales_comuna',
-            'options' => [''=>'Seleccionar una comuna'] + $comunas,
+            'options' => ['' => 'Seleccionar una comuna'] + $comunas,
             'check' => 'notempty',
         ],
         [
             'type' => 'select',
             'name' => 'config_extra_sucursales_actividad_economica',
-            'options' => [''=>'Misma casa matriz'] + (isset($Contribuyente)?$Contribuyente->getListActividades():[]),
+            'options' => ['' => 'Misma casa matriz'] + (isset($Contribuyente) ? $Contribuyente->getListActividades():[]),
             'attr' => 'style="max-width:14em"'
         ]
     ],
@@ -452,7 +452,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'config_extra_indicador_servicio',
     'label' => 'Indicador servicio',
-    'options' => [''=>'No mostrar opciones', -1 => 'Mostrar opciones, sin uno por defecto'] + $IndServicio,
+    'options' => ['' => 'No mostrar opciones', -1 => 'Mostrar opciones, sin uno por defecto'] + $IndServicio,
     'value' => isset($Contribuyente) ? $Contribuyente->config_extra_indicador_servicio : 0,
     'help' => '¿Se debe usar un indicador de servicio por defecto?',
 ]);
@@ -472,7 +472,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'config_emision_forma_pago',
     'label' => 'Forma de pago',
-    'options' => [''=>'Sin forma de pago', 1=>'Contado', 2=>'Crédito'],
+    'options' => ['' => 'Sin forma de pago', 1=>'Contado', 2=>'Crédito'],
     'value' => isset($Contribuyente) ? $Contribuyente->config_emision_forma_pago : 0,
     'help' => '¿Forma de pago por defecto?',
 ]);
@@ -480,7 +480,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'config_boletas_eliminar',
     'label' => 'Eliminar Boletas',
-    'options' => [''=>'No (recomendado)', 1=>'Solo las del día actual', 2=>'Solo las del mes actual', 3=>'Las del mes actual y mes anterior (no recomendado)', 4=>'Cualquier boleta (no recomendado)'],
+    'options' => ['' => 'No (recomendado)', 1=>'Solo las del día actual', 2=>'Solo las del mes actual', 3=>'Las del mes actual y mes anterior (no recomendado)', 4=>'Cualquier boleta (no recomendado)'],
     'value' => isset($Contribuyente) ? $Contribuyente->config_boletas_eliminar : 0,
     'help' => '¿Administradores pueden eliminar boletas emitidas?',
 ]);
@@ -542,7 +542,7 @@ echo $f->input([
     'label' => 'Intercambio automático',
     'options' => ['No', 'Si'],
     'value' => isset($Contribuyente) ? $Contribuyente->config_emision_intercambio_automatico : 0,
-    'help' => '¿Enviar automáticamente al correo de intercambio el DTE emitido que no tiene recepción registrada? (no envía boletas, solo DTEs aceptados por el SII)',
+    'help' => '¿Enviar automáticamente al correo de intercambio el DTE emitido que no tiene recepción registrada? (no envía boletas, solo DTE aceptados por el SII)',
 ]);
 echo $f->input([
     'type' => 'select',
@@ -575,9 +575,9 @@ echo $f->input([
         [
             'type' => 'select',
             'name' => 'config_extra_impuestos_adicionales_codigo',
-            'options' => [''=>'Seleccionar un impuesto adicional'] + $impuestos_adicionales,
+            'options' => ['' => 'Seleccionar un impuesto adicional'] + $impuestos_adicionales,
             'check' => 'notempty',
-            'onblur'=>'impuesto_adicional_sugerir_tasa(this, impuestos_adicionales_tasa)',
+            'onblur' => 'impuesto_adicional_sugerir_tasa(this, impuestos_adicionales_tasa)',
         ],
         [
             'name' => 'config_extra_impuestos_adicionales_tasa',
@@ -606,7 +606,7 @@ if (!empty($tipos_dte)) {
             [
                 'type' => 'select',
                 'name' => 'config_emision_observaciones_dte',
-                'options' => [''=>'Seleccionar un tipo de documento'] + $tipos_dte,
+                'options' => ['' => 'Seleccionar un tipo de documento'] + $tipos_dte,
                 'check' => 'notempty',
             ],
             [
@@ -636,7 +636,7 @@ echo $f->input([
         [
             'type' => 'select',
             'name' => 'config_extra_impuestos_sin_credito_codigo',
-            'options' => [''=>'Seleccionar un impuesto'] + $impuestos_adicionales_todos,
+            'options' => ['' => 'Seleccionar un impuesto'] + $impuestos_adicionales_todos,
             'check' => 'notempty',
         ],
     ],
@@ -726,7 +726,7 @@ echo $f->input([
     'name' => 'config_sii_envio_intentos',
     'label' => 'Intentos envío DTE',
     'options' => [0,1,2,3,4,5,6,7,8,9,10],
-    'value' => isset($Contribuyente) ? ($Contribuyente->config_sii_envio_intentos!==null?$Contribuyente->config_sii_envio_intentos:1) : 1,
+    'value' => isset($Contribuyente) ? ($Contribuyente->config_sii_envio_intentos !== null ? $Contribuyente->config_sii_envio_intentos:1) : 1,
     'help' => '¿Cuántos intentos de envío del XML del DTE se deberán hacer al generar el documento?',
 ]);
 echo $f->input([
@@ -890,11 +890,11 @@ if ($formatos_pdf) {
         'label' => 'Mapeo PDF',
         'titles' => ['Documento', 'Actividad Económica', 'Sucursal', 'Formato por defecto', 'Papel por defecto'],
         'inputs' => [
-            ['type'=>'select', 'name' => 'config_pdf_mapeo_documento', 'options' => ['*'=>'Todos'] + $tipos_dte],
-            ['type'=>'select', 'name' => 'config_pdf_mapeo_actividad', 'options' => ['*'=>'Todas'] + (array)$Contribuyente->getListActividades(), 'attr'=>'style="width:12em"'],
-            ['type'=>'select', 'name' => 'config_pdf_mapeo_sucursal', 'options' => ['*'=>'Todas'] + (array)$Contribuyente->getSucursales()],
-            ['type'=>'select', 'name' => 'config_pdf_mapeo_formato', 'options' => $formatos_pdf],
-            ['type'=>'select', 'name' => 'config_pdf_mapeo_papel', 'options' => \sasco\LibreDTE\Sii\Dte\PDF\Dte::$papel],
+            ['type' => 'select', 'name' => 'config_pdf_mapeo_documento', 'options' => ['*' => 'Todos'] + $tipos_dte],
+            ['type' => 'select', 'name' => 'config_pdf_mapeo_actividad', 'options' => ['*' => 'Todas'] + (array)$Contribuyente->getListActividades(), 'attr' => 'style="width:12em"'],
+            ['type' => 'select', 'name' => 'config_pdf_mapeo_sucursal', 'options' => ['*' => 'Todas'] + (array)$Contribuyente->getSucursales()],
+            ['type' => 'select', 'name' => 'config_pdf_mapeo_formato', 'options' => $formatos_pdf],
+            ['type' => 'select', 'name' => 'config_pdf_mapeo_papel', 'options' => \sasco\LibreDTE\Sii\Dte\PDF\Dte::$papel],
         ],
         'values' => $config_pdf_mapeo,
     ]);
@@ -960,11 +960,11 @@ echo $f->input([
     'label' => 'API',
     'titles' => ['Servicio', 'URL del webhook', 'Tipo de autenticación', 'Credenciales'],
     'inputs' => [
-        ['name' => 'config_api_codigo', 'type'=>'hidden'],
-        ['name' => 'config_api_servicio', 'type'=>'div', 'attr'=>'style="max-width:10em"'],
-        ['name' => 'config_api_url', 'placeholder'=>'https://example.com/api/webhook'],
-        ['name' => 'config_api_auth', 'type'=>'select', 'options'=>['http_auth_basic'=>'HTTP Auth Basic']],
-        ['type'=>'password', 'name'=>'config_api_credenciales', 'placeholder'=>'Ejemplo: usuario:contraseña', 'attr' => 'maxlength="255" onmouseover="this.type=\'text\'" onmouseout="this.type=\'password\'"'],
+        ['name' => 'config_api_codigo', 'type' => 'hidden'],
+        ['name' => 'config_api_servicio', 'type' => 'div', 'attr' => 'style="max-width:10em"'],
+        ['name' => 'config_api_url', 'placeholder' => 'https://example.com/api/webhook'],
+        ['name' => 'config_api_auth', 'type' => 'select', 'options' => ['http_auth_basic' => 'HTTP Auth Basic']],
+        ['type' => 'password', 'name' => 'config_api_credenciales', 'placeholder' => 'Ejemplo: usuario:contraseña', 'attr' => 'maxlength="255" onmouseover="this.type=\'text\'" onmouseout="this.type=\'password\'"'],
     ],
     'values' => $api,
 ]);

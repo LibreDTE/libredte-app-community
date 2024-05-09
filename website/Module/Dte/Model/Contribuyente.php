@@ -229,7 +229,7 @@ class Model_Contribuyente extends \Model_App
                     $response = apigateway_consume(
                         '/sii/contribuyentes/situacion_tributaria/tercero/'.$this->rut.'-'.$this->dv
                     );
-                    if ($response['status']['code']==200) {
+                    if ($response['status']['code'] == 200) {
                         $info = $response['body'];
                         if (!empty($info['razon_social'])) {
                             $this->razon_social = mb_substr($info['razon_social'], 0, 100);
@@ -270,7 +270,7 @@ class Model_Contribuyente extends \Model_App
     {
         if ($this->config === false || !$this->rut)
             return null;
-        if ($this->config===null) {
+        if ($this->config === null) {
             $config = $this->db->getAssociativeArray('
                 SELECT configuracion, variable, valor, json
                 FROM contribuyente_config
@@ -430,11 +430,11 @@ class Model_Contribuyente extends \Model_App
                         $Config->json = 1;
                     }
                     $class = get_called_class();
-                    if (in_array($configuracion.'_'.$variable, $class::$encriptar) && $valor!==null) {
+                    if (in_array($configuracion.'_'.$variable, $class::$encriptar) && $valor !== null) {
                         $valor = Utility_Data::encrypt($valor);
                     }
                     $Config->valor = $valor;
-                    if ($valor!==null)
+                    if ($valor !== null)
                         $Config->save();
                     else
                         $Config->delete();
@@ -470,33 +470,33 @@ class Model_Contribuyente extends \Model_App
                     $this->config[$configuracion][$variable] = $this->$valor;
                 }
             }
-            $this->db->query('DELETE FROM contribuyente_config WHERE contribuyente = :rut', [':rut'=>$this->rut]);
+            $this->db->query('DELETE FROM contribuyente_config WHERE contribuyente = :rut', [':rut' => $this->rut]);
             if (!$this->save()) {
                 $this->db->rollback();
                 return false;
             }
             // módulo Dte
-            $this->db->query('DELETE FROM contribuyente_dte WHERE contribuyente = :rut', [':rut'=>$this->rut]);
-            $this->db->query('DELETE FROM contribuyente_usuario WHERE contribuyente = :rut', [':rut'=>$this->rut]);
-            $this->db->query('DELETE FROM contribuyente_usuario_dte WHERE contribuyente = :rut', [':rut'=>$this->rut]);
-            $this->db->query('DELETE FROM contribuyente_usuario_sucursal WHERE contribuyente = :rut', [':rut'=>$this->rut]);
-            $this->db->query('DELETE FROM dte_boleta_consumo WHERE emisor = :rut', [':rut'=>$this->rut]);
-            $this->db->query('DELETE FROM dte_compra WHERE receptor = :rut', [':rut'=>$this->rut]);
-            $this->db->query('DELETE FROM dte_emitido WHERE emisor = :rut', [':rut'=>$this->rut]); // borra: dte_emitido_email, cobranza
-            $this->db->query('DELETE FROM dte_folio WHERE emisor = :rut', [':rut'=>$this->rut]); // borra: dte_caf
-            $this->db->query('DELETE FROM dte_guia WHERE emisor = :rut', [':rut'=>$this->rut]);
-            $this->db->query('DELETE FROM dte_recibido WHERE receptor = :rut', [':rut'=>$this->rut]);
-            $this->db->query('DELETE FROM dte_intercambio WHERE receptor = :rut', [':rut'=>$this->rut]);
-            $this->db->query('DELETE FROM dte_intercambio_recepcion WHERE recibe = :rut', [':rut'=>$this->rut]); // borra: dte_intercambio_recepcion_dte
-            $this->db->query('DELETE FROM dte_intercambio_recibo WHERE recibe = :rut', [':rut'=>$this->rut]); // borra: dte_intercambio_recibo_dte
-            $this->db->query('DELETE FROM dte_intercambio_resultado WHERE recibe = :rut', [':rut'=>$this->rut]); // borra: dte_intercambio_resultado_dte
-            $this->db->query('DELETE FROM dte_referencia WHERE emisor = :rut', [':rut'=>$this->rut]);
-            $this->db->query('DELETE FROM dte_tmp WHERE emisor = :rut', [':rut'=>$this->rut]); // borra: dte_tmp_email
-            $this->db->query('DELETE FROM dte_venta WHERE emisor = :rut', [':rut'=>$this->rut]);
-            $this->db->query('DELETE FROM item_clasificacion WHERE contribuyente = :rut', [':rut'=>$this->rut]); // borra: item
-            $this->db->query('DELETE FROM registro_compra WHERE receptor = :rut', [':rut'=>$this->rut]);
-            $this->db->query('DELETE FROM boleta_honorario WHERE receptor = :rut', [':rut'=>$this->rut]);
-            $this->db->query('DELETE FROM boleta_tercero WHERE emisor = :rut', [':rut'=>$this->rut]);
+            $this->db->query('DELETE FROM contribuyente_dte WHERE contribuyente = :rut', [':rut' => $this->rut]);
+            $this->db->query('DELETE FROM contribuyente_usuario WHERE contribuyente = :rut', [':rut' => $this->rut]);
+            $this->db->query('DELETE FROM contribuyente_usuario_dte WHERE contribuyente = :rut', [':rut' => $this->rut]);
+            $this->db->query('DELETE FROM contribuyente_usuario_sucursal WHERE contribuyente = :rut', [':rut' => $this->rut]);
+            $this->db->query('DELETE FROM dte_boleta_consumo WHERE emisor = :rut', [':rut' => $this->rut]);
+            $this->db->query('DELETE FROM dte_compra WHERE receptor = :rut', [':rut' => $this->rut]);
+            $this->db->query('DELETE FROM dte_emitido WHERE emisor = :rut', [':rut' => $this->rut]); // borra: dte_emitido_email, cobranza
+            $this->db->query('DELETE FROM dte_folio WHERE emisor = :rut', [':rut' => $this->rut]); // borra: dte_caf
+            $this->db->query('DELETE FROM dte_guia WHERE emisor = :rut', [':rut' => $this->rut]);
+            $this->db->query('DELETE FROM dte_recibido WHERE receptor = :rut', [':rut' => $this->rut]);
+            $this->db->query('DELETE FROM dte_intercambio WHERE receptor = :rut', [':rut' => $this->rut]);
+            $this->db->query('DELETE FROM dte_intercambio_recepcion WHERE recibe = :rut', [':rut' => $this->rut]); // borra: dte_intercambio_recepcion_dte
+            $this->db->query('DELETE FROM dte_intercambio_recibo WHERE recibe = :rut', [':rut' => $this->rut]); // borra: dte_intercambio_recibo_dte
+            $this->db->query('DELETE FROM dte_intercambio_resultado WHERE recibe = :rut', [':rut' => $this->rut]); // borra: dte_intercambio_resultado_dte
+            $this->db->query('DELETE FROM dte_referencia WHERE emisor = :rut', [':rut' => $this->rut]);
+            $this->db->query('DELETE FROM dte_tmp WHERE emisor = :rut', [':rut' => $this->rut]); // borra: dte_tmp_email
+            $this->db->query('DELETE FROM dte_venta WHERE emisor = :rut', [':rut' => $this->rut]);
+            $this->db->query('DELETE FROM item_clasificacion WHERE contribuyente = :rut', [':rut' => $this->rut]); // borra: item
+            $this->db->query('DELETE FROM registro_compra WHERE receptor = :rut', [':rut' => $this->rut]);
+            $this->db->query('DELETE FROM boleta_honorario WHERE receptor = :rut', [':rut' => $this->rut]);
+            $this->db->query('DELETE FROM boleta_tercero WHERE emisor = :rut', [':rut' => $this->rut]);
             // eliminar archivos asociados al contribuyente (carpeta: data/static/contribuyentes/RUT)
             // TODO
         }
@@ -589,7 +589,7 @@ class Model_Contribuyente extends \Model_App
         $giros = [$this->actividad_economica => $this->giro];
         if ($this->config_extra_otras_actividades) {
             foreach ($this->config_extra_otras_actividades as $a) {
-                $giros[is_object($a) ? $a->actividad : $a] = is_object($a) ? ($a->giro?$a->giro:$this->giro) : $this->giro;
+                $giros[is_object($a) ? $a->actividad : $a] = is_object($a) ? ($a->giro ? $a->giro:$this->giro) : $this->giro;
             }
         }
         return $giros;
@@ -604,7 +604,7 @@ class Model_Contribuyente extends \Model_App
         $this->db->beginTransaction();
         $this->db->query(
             'DELETE FROM contribuyente_usuario WHERE contribuyente = :rut',
-            [':rut'=>$this->rut]
+            [':rut' => $this->rut]
         );
         foreach ($usuarios as $usuario => $permisos) {
             if (!$permisos) {
@@ -643,7 +643,7 @@ class Model_Contribuyente extends \Model_App
                 FROM contribuyente_usuario AS c JOIN usuario AS u ON u.id = c.usuario
                 WHERE c.contribuyente = :rut AND c.permiso = :permiso AND u.activo = true
             )
-        ', [':rut'=>$this->rut, ':permiso'=>$permiso]);
+        ', [':rut' => $this->rut, ':permiso' => $permiso]);
         return $emails;
     }
 
@@ -659,7 +659,7 @@ class Model_Contribuyente extends \Model_App
             FROM usuario AS u, contribuyente_usuario AS c
             WHERE u.id = c.usuario AND c.contribuyente = :rut
             ORDER BY u.usuario
-        ', [':rut'=>$this->rut]);
+        ', [':rut' => $this->rut]);
         foreach ($usuarios as &$permisos) {
             if (!is_array($permisos)) {
                 $permisos = [$permisos];
@@ -686,7 +686,7 @@ class Model_Contribuyente extends \Model_App
                 WHERE c.rut = :rut
             )
             ORDER BY usuario
-        ', [':rut'=>$this->rut]);
+        ', [':rut' => $this->rut]);
     }
 
     /**
@@ -726,7 +726,7 @@ class Model_Contribuyente extends \Model_App
             SELECT permiso
             FROM contribuyente_usuario
             WHERE contribuyente = :rut AND usuario = :usuario
-        ', [':rut'=>$this->rut, ':usuario'=>$Usuario->id]);
+        ', [':rut' => $this->rut, ':usuario' => $Usuario->id]);
         if (!$usuario_permisos) {
             return false;
         }
@@ -792,7 +792,7 @@ class Model_Contribuyente extends \Model_App
                 SELECT permiso
                 FROM contribuyente_usuario
                 WHERE contribuyente = :rut AND usuario = :usuario
-            ', [':rut'=>$this->rut, ':usuario'=>$Usuario->id]);
+            ', [':rut' => $this->rut, ':usuario' => $Usuario->id]);
             // mapa de permisos definidos por la configuración y la empresa
             $permisos = \sowerphp\core\Configure::read('empresa.permisos');
             // asignar los grupos del sistema a los que se podría tener acceso por el permisos de la empresa
@@ -868,14 +868,14 @@ class Model_Contribuyente extends \Model_App
                 FROM dte_tipo AS t, contribuyente_dte AS c
                 WHERE t.codigo = c.dte AND c.contribuyente = :rut AND c.activo = :activo
                 ORDER BY t.codigo
-            ', [':rut'=>$this->rut, ':activo'=>1]);
+            ', [':rut' => $this->rut, ':activo' => 1]);
         } else {
             $documentos = $this->db->getTable('
                 SELECT t.codigo, t.tipo
                 FROM dte_tipo AS t, contribuyente_dte AS c
                 WHERE t.codigo = c.dte AND c.contribuyente = :rut AND c.activo = :activo
                 ORDER BY t.codigo
-            ', [':rut'=>$this->rut, ':activo'=>1]);
+            ', [':rut' => $this->rut, ':activo' => 1]);
         }
         // entregar todos los documentos si no se pidió filtrar por usuario o el usuario es administrador o el usuario es de soporte
         if (!$User || $User->id == $this->usuario || $User->inGroup(['soporte'])) {
@@ -927,7 +927,7 @@ class Model_Contribuyente extends \Model_App
         $this->db->beginTransaction();
         $this->db->query(
             'DELETE FROM contribuyente_usuario_dte WHERE contribuyente = :rut',
-            [':rut'=>$this->rut]
+            [':rut' => $this->rut]
         );
         foreach ($usuarios as $usuario => $documentos) {
             if (!$documentos)
@@ -961,7 +961,7 @@ class Model_Contribuyente extends \Model_App
             SELECT COUNT(*)
             FROM contribuyente_dte
             WHERE contribuyente = :rut AND dte = :dte AND activo = :activo
-        ', [':rut'=>$this->rut, ':dte'=>$dte, ':activo'=>1]);
+        ', [':rut' => $this->rut, ':dte' => $dte, ':activo' => 1]);
         if (!$dte_autorizado) {
             return false;
         }
@@ -971,7 +971,7 @@ class Model_Contribuyente extends \Model_App
             }
             $dtes = $this->db->getCol(
                 'SELECT dte FROM contribuyente_usuario_dte WHERE contribuyente = :contribuyente AND usuario = :usuario',
-                [':contribuyente'=>$this->rut, ':usuario'=>$Usuario->id]
+                [':contribuyente' => $this->rut, ':usuario' => $Usuario->id]
             );
             if (!$dtes) {
                 return false; // si nada está autorizado se rechaza el DTE (=true si nada está autorizado se acepta cualquier DTE)
@@ -1005,7 +1005,7 @@ class Model_Contribuyente extends \Model_App
                 f.emisor = :rut
                 AND f.certificacion = :certificacion
             ORDER BY f.dte
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion()]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion()]);
         foreach ($folios as &$f) {
             $f['fecha_vencimiento'] = $f['meses_autorizacion'] = $f['vigente'] = null;
             if ($f['xml']) {
@@ -1102,7 +1102,7 @@ class Model_Contribuyente extends \Model_App
                 )
             )
             ORDER BY administrador DESC, nombre ASC
-        ', [':rut'=>$this->rut]);
+        ', [':rut' => $this->rut]);
     }
 
     /**
@@ -1128,7 +1128,7 @@ class Model_Contribuyente extends \Model_App
                     SELECT archivo, contrasenia
                     FROM firma_electronica
                     WHERE usuario = :usuario
-                ', [':usuario'=>$user_id]);
+                ', [':usuario' => $user_id]);
             }
             if (empty($datos)) {
                 $this->firmas[(int)$user_id] = false;
@@ -1614,7 +1614,7 @@ class Model_Contribuyente extends \Model_App
      */
     public function getEmailSender($email = 'intercambio', $debug = false)
     {
-        $Sender = \sowerphp\core\Trigger::run('dte_contribuyente_email_sender', $this, $email, ['debug'=>$debug]);
+        $Sender = \sowerphp\core\Trigger::run('dte_contribuyente_email_sender', $this, $email, ['debug' => $debug]);
         if ($Sender) {
             return $Sender;
         }
@@ -1662,7 +1662,7 @@ class Model_Contribuyente extends \Model_App
             'host' => $host,
             'user' => $user,
             'pass' => $pass,
-            'from' => ['email'=>$user, 'name'=>str_replace(',', '', $this->getNombre())],
+            'from' => ['email' => $user, 'name' => str_replace(',', '', $this->getNombre())],
             'debug' => $debug,
         ]);
     }
@@ -1740,7 +1740,7 @@ class Model_Contribuyente extends \Model_App
             WHERE emisor = :rut AND certificacion = :certificacion AND dte IN (39, 41)
             GROUP BY '.$periodo_col.'
             ORDER BY '.$periodo_col.' DESC
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion()]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion()]);
     }
 
     /**
@@ -1864,7 +1864,7 @@ class Model_Contribuyente extends \Model_App
                 WHERE emisor = :rut AND certificacion = :certificacion
             )
             ORDER BY periodo DESC
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion()]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion()]);
     }
 
     /**
@@ -1994,7 +1994,7 @@ class Model_Contribuyente extends \Model_App
                         WHERE e.emisor = :rut AND '.$periodo_col.' = :periodo AND r.referencia_dte = 46
                 )
             ORDER BY e.fecha, e.dte, e.folio
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':periodo'=>$periodo]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo]);
     }
 
     /**
@@ -2032,7 +2032,7 @@ class Model_Contribuyente extends \Model_App
                 AND e.receptor = :receptor
             GROUP BY periodo, t.operacion
             ORDER BY periodo
-        ', [':emisor'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':receptor'=>$receptor, ':desde'=>$desde, ':hasta'=>$hasta]);
+        ', [':emisor' => $this->rut, ':certificacion' => $this->enCertificacion(), ':receptor' => $receptor, ':desde' => $desde, ':hasta' => $hasta]);
         if (!$montos) {
             return [];
         }
@@ -2065,8 +2065,8 @@ class Model_Contribuyente extends \Model_App
             // armar detalle para agregar al libro
             $d = [];
             foreach ($venta as $k => $v) {
-                if (strpos($k, 'impuesto_')!==0 and strpos($k, 'extranjero_')!==0) {
-                    if ($v!==null) {
+                if (strpos($k, 'impuesto_') !== 0 and strpos($k, 'extranjero_') !== 0) {
+                    if ($v !== null) {
                         $d[Model_DteVenta::$libro_cols[$k]] = $v;
                     }
                 }
@@ -2106,7 +2106,7 @@ class Model_Contribuyente extends \Model_App
             WHERE t.codigo = e.dte AND t.venta = true AND e.emisor = :rut AND e.certificacion = :certificacion AND '.$periodo_col.' = :periodo AND e.dte != 46
             GROUP BY e.fecha
             ORDER BY e.fecha
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':periodo'=>$periodo]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo]);
     }
 
     /**
@@ -2122,7 +2122,7 @@ class Model_Contribuyente extends \Model_App
             FROM dte_tipo AS t, dte_emitido AS e
             WHERE t.codigo = e.dte AND t.venta = true AND e.emisor = :rut AND e.certificacion = :certificacion AND '.$periodo_col.' = :periodo AND e.dte != 46
             GROUP BY t.tipo
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':periodo'=>$periodo]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo]);
     }
 
     /**
@@ -2144,7 +2144,7 @@ class Model_Contribuyente extends \Model_App
                 WHERE emisor = :rut AND certificacion = :certificacion
             )
             ORDER BY periodo DESC
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion()]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion()]);
     }
 
     /**
@@ -2162,7 +2162,7 @@ class Model_Contribuyente extends \Model_App
                 LEFT JOIN dte_referencia AS ref ON e.emisor = ref.emisor AND e.dte = ref.referencia_dte AND e.folio = ref.referencia_folio AND e.certificacion = ref.certificacion
                 LEFT JOIN dte_emitido AS re ON re.emisor = ref.emisor AND re.dte = ref.dte AND re.folio = ref.folio AND re.certificacion = ref.certificacion
             WHERE e.emisor = :rut AND e.certificacion = :certificacion AND '.$periodo_col.' = :periodo AND e.dte = 52
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':periodo'=>$periodo]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo]);
     }
 
     /**
@@ -2198,7 +2198,7 @@ class Model_Contribuyente extends \Model_App
                 contribuyente AS r
             WHERE e.receptor = r.rut AND e.emisor = :rut AND e.certificacion = :certificacion AND '.$periodo_col.' = :periodo AND e.dte = 52
             ORDER BY e.fecha, e.folio
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':periodo'=>$periodo]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo]);
     }
 
     /**
@@ -2215,7 +2215,7 @@ class Model_Contribuyente extends \Model_App
             WHERE emisor = :rut AND certificacion = :certificacion AND '.$periodo_col.' = :periodo AND dte = 52
             GROUP BY fecha
             ORDER BY fecha
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':periodo'=>$periodo]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo]);
     }
 
     /**
@@ -2252,7 +2252,7 @@ class Model_Contribuyente extends \Model_App
     private function crearFiltrosDocumentosRecibidos($filtros)
     {
         $where = ['d.receptor = :rut', 'd.certificacion = :certificacion'];
-        $vars = [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion()];
+        $vars = [':rut' => $this->rut, ':certificacion' => $this->enCertificacion()];
         foreach (['folio', 'fecha', 'total', 'intercambio', 'usuario'] as $c) {
             if (isset($filtros[$c])) {
                 $where[] = 'd.'.$c.' = :'.$c;
@@ -2457,7 +2457,7 @@ class Model_Contribuyente extends \Model_App
                 WHERE receptor = :rut AND certificacion = :certificacion
             )
             ORDER BY periodo DESC
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion()]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion()]);
     }
 
     /**
@@ -2481,7 +2481,7 @@ class Model_Contribuyente extends \Model_App
                 WHERE receptor = :rut AND certificacion = :certificacion
             )
             ORDER BY periodo DESC
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion()]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion()]);
     }
 
     /**
@@ -2558,7 +2558,7 @@ class Model_Contribuyente extends \Model_App
             '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Totales/ImptoReten/TasaImp',
             '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Totales/ImptoReten/MontoImp',
         ], 'http://www.sii.cl/SiiDte');
-        $vars = [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':periodo'=>$periodo];
+        $vars = [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo];
         if ($tipo_dte !== null) {
             if (is_array($tipo_dte)) {
                 $where_tipo_dte = 'AND t.codigo IN ('.implode(', ', array_map('intval', $tipo_dte)).')';
@@ -2729,8 +2729,8 @@ class Model_Contribuyente extends \Model_App
             // armar detalle para agregar al libro
             $d = [];
             foreach ($compra as $k => $v) {
-                if (strpos($k, 'impuesto_adicional')!==0 and strpos($k, 'iva_no_recuperable')!==0) {
-                    if ($v!==null && isset(Model_DteCompra::$libro_cols[$k])) {
+                if (strpos($k, 'impuesto_adicional') !== 0 and strpos($k, 'iva_no_recuperable') !== 0) {
+                    if ($v !== null && isset(Model_DteCompra::$libro_cols[$k])) {
                         $d[Model_DteCompra::$libro_cols[$k]] = $v;
                     }
                 }
@@ -2811,7 +2811,7 @@ class Model_Contribuyente extends \Model_App
                     GROUP BY r.fecha_hora_creacion
                 ) AS f ON r.dia = f.dia
             ORDER BY dia
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':periodo'=>$periodo]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo]);
     }
 
     /**
@@ -2830,7 +2830,7 @@ class Model_Contribuyente extends \Model_App
             WHERE t.codigo = r.dte AND t.compra = true AND r.receptor = :rut AND r.certificacion = :certificacion AND '.$periodo_col.' = :periodo
             GROUP BY r.fecha
             ORDER BY r.fecha
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':periodo'=>$periodo]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo]);
     }
 
     /**
@@ -2861,7 +2861,7 @@ class Model_Contribuyente extends \Model_App
                 WHERE  r.emisor = :rut AND r.certificacion = :certificacion AND r.dte = 46 AND '.$periodo_col_46.' = :periodo
                 GROUP BY t.tipo
             )
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':periodo'=>$periodo]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo]);
     }
 
     /**
@@ -2882,7 +2882,7 @@ class Model_Contribuyente extends \Model_App
                 AND (track_id IS NULL OR track_id = 0)
                 AND NOW() AT TIME ZONE \'America/Santiago\' >= (fecha_hora_creacion + interval \'1h\' * :creados_hace_horas)
         ', [
-            ':rut'=>$this->rut,
+            ':rut' => $this->rut,
             ':certificacion' => $certificacion,
             ':envio_boleta' => Model_DteEmitidos::ENVIO_BOLETA,
             ':creados_hace_horas' => (int)$creados_hace_horas,
@@ -2910,7 +2910,7 @@ class Model_Contribuyente extends \Model_App
                     OR revision_estado LIKE \'-%\'
                     OR SUBSTRING(revision_estado FROM 1 FOR 3) IN (\''.implode('\', \'', Model_DteEmitidos::$revision_estados['no_final']).'\')
                 )
-        ', [':rut'=>$this->rut, ':certificacion'=>$certificacion, ':envio_boleta'=>Model_DteEmitidos::ENVIO_BOLETA]);
+        ', [':rut' => $this->rut, ':certificacion' => $certificacion, ':envio_boleta' => Model_DteEmitidos::ENVIO_BOLETA]);
     }
 
     /**
@@ -2991,7 +2991,7 @@ class Model_Contribuyente extends \Model_App
             SELECT sucursal_sii
             FROM contribuyente_usuario_sucursal
             WHERE contribuyente = :rut AND usuario = :usuario
-        ', [':rut'=>$this->rut, ':usuario'=>$Usuario->id]);
+        ', [':rut' => $this->rut, ':usuario' => $Usuario->id]);
         if ($sucursal) {
             return $sucursal;
         }
@@ -3007,7 +3007,7 @@ class Model_Contribuyente extends \Model_App
     {
         $this->db->beginTransaction();
         // se eliminan todas las sucursales (para dejar solo lo que viene en el arreglo)
-        $this->db->query('DELETE FROM contribuyente_usuario_sucursal WHERE contribuyente = :rut', [':rut'=>$this->rut]);
+        $this->db->query('DELETE FROM contribuyente_usuario_sucursal WHERE contribuyente = :rut', [':rut' => $this->rut]);
         // se agregan las sucursales por defecto
         foreach ($usuarios as $usuario => $sucursal) {
             $Usuario = new \sowerphp\app\Sistema\Usuarios\Model_Usuario($usuario);
@@ -3022,7 +3022,7 @@ class Model_Contribuyente extends \Model_App
             }
             $this->db->query(
                 'INSERT INTO contribuyente_usuario_sucursal VALUES (:rut, :usuario, :sucursal)',
-                [':rut'=>$this->rut, ':usuario'=>$Usuario->id, ':sucursal'=>$Sucursal->codigo]
+                [':rut' => $this->rut, ':usuario' => $Usuario->id, ':sucursal' => $Sucursal->codigo]
             );
         }
         return $this->db->commit();
@@ -3038,7 +3038,7 @@ class Model_Contribuyente extends \Model_App
             SELECT u.usuario, s.sucursal_sii
             FROM contribuyente_usuario_sucursal AS s JOIN usuario AS u ON u.id = s.usuario
             WHERE contribuyente = :rut
-        ', [':rut'=>$this->rut]);
+        ', [':rut' => $this->rut]);
     }
 
     /**
@@ -3080,7 +3080,7 @@ class Model_Contribuyente extends \Model_App
                     AND d.receptor NOT IN (55555555, 66666666)
                     AND d.certificacion = :certificacion
                 ORDER BY c.razon_social
-            ', [':emisor'=>$this->rut, ':certificacion'=>$this->enCertificacion()]);
+            ', [':emisor' => $this->rut, ':certificacion' => $this->enCertificacion()]);
         }
         // si hay módulo CRM se sacan los clientes desde el módulo
         else {
@@ -3104,7 +3104,7 @@ class Model_Contribuyente extends \Model_App
      */
     public function getDocumentosUsados($periodo = null)
     {
-        $vars = [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion()];
+        $vars = [':rut' => $this->rut, ':certificacion' => $this->enCertificacion()];
         // columnas de periodos
         $periodo_col = $this->db->date('Ym', 'fecha_hora_creacion');
         $intercambio_periodo_col = $this->db->date('Ym', 'fecha_hora_email');
@@ -3245,7 +3245,7 @@ class Model_Contribuyente extends \Model_App
             WHERE emisor = :rut AND certificacion = :certificacion AND fecha BETWEEN :desde AND :hasta AND track_id > 0
             GROUP BY revision_estado
             ORDER BY total DESC
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':desde'=>$desde, ':hasta'=>$hasta]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta]);
     }
 
     /**
@@ -3293,7 +3293,7 @@ class Model_Contribuyente extends \Model_App
     public function getDocumentosEmitidosEstado($desde, $hasta, $estado = null)
     {
         // filtros
-        $vars = [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':desde'=>$desde, ':hasta'=>$hasta];
+        $vars = [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta];
         if ($estado) {
             $vars[':estado'] = $estado;
             $estado = 'd.revision_estado = :estado';
@@ -3349,7 +3349,7 @@ class Model_Contribuyente extends \Model_App
             WHERE emisor = :rut AND certificacion = :certificacion AND fecha BETWEEN :desde AND :hasta AND dte IN (33, 34, 43)
             GROUP BY receptor_evento
             ORDER BY total DESC
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':desde'=>$desde, ':hasta'=>$hasta]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta]);
     }
 
     /**
@@ -3360,7 +3360,7 @@ class Model_Contribuyente extends \Model_App
     public function getDocumentosEmitidosEvento($desde, $hasta, $evento = null)
     {
         // filtros
-        $vars = [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':desde'=>$desde, ':hasta'=>$hasta];
+        $vars = [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta];
         if ($evento) {
             $vars[':evento'] = $evento;
             $evento = 'd.receptor_evento = :evento';
@@ -3441,7 +3441,7 @@ class Model_Contribuyente extends \Model_App
                 AND (d.track_id IS NULL OR d.track_id = 0)
                 AND d.xml IS NOT NULL
             ORDER BY d.fecha DESC, t.tipo, d.folio DESC
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':envio_boleta'=>Model_DteEmitidos::ENVIO_BOLETA]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':envio_boleta' => Model_DteEmitidos::ENVIO_BOLETA]);
     }
 
     /**
@@ -3469,7 +3469,7 @@ class Model_Contribuyente extends \Model_App
                 AND  e.revision_estado IS NOT NULL
             GROUP BY recibo, recepcion, resultado
             ORDER BY total DESC
-        ', [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':desde'=>$desde, ':hasta'=>$hasta]);
+        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta]);
     }
 
     /**
@@ -3479,15 +3479,15 @@ class Model_Contribuyente extends \Model_App
     public function getDocumentosEmitidosEstadoIntercambio($desde, $hasta, $recibo, $recepcion, $resultado)
     {
         // filtros
-        $vars = [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':desde'=>$desde, ':hasta'=>$hasta];
+        $vars = [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta];
         $where = [$recibo ? 'recibo.responde IS NOT NULL' : 'recibo.responde IS NULL'];
-        if ($recepcion!==null && $recepcion!=-1) {
+        if ($recepcion !== null && $recepcion!=-1) {
             $where[] = 'recepcion.estado = :recepcion';
             $vars[':recepcion'] = $recepcion;
         } else {
             $where[] = 'recepcion.estado IS NULL';
         }
-        if ($resultado!==null && $resultado!=-1) {
+        if ($resultado !== null && $resultado!=-1) {
             $where[] = 'resultado.estado = :resultado';
             $vars[':resultado'] = $resultado;
         } else {
@@ -3600,7 +3600,7 @@ class Model_Contribuyente extends \Model_App
                     $this->rut, $this->dv, $filtros['periodo'], $this->enCertificacion()
                 );
             }
-            $r = apigateway_consume($url, ['auth'=>$auth]);
+            $r = apigateway_consume($url, ['auth' => $auth]);
             if ($r['status']['code'] != 200) {
                 throw new \Exception('Error al obtener el resumen del RCV: '.$r['body']);
             }
@@ -3628,7 +3628,7 @@ class Model_Contribuyente extends \Model_App
                         $this->rut, $this->dv, $filtros['periodo'], $dte, $this->enCertificacion(), $filtros['tipo']
                     );
                 }
-                $r = apigateway_consume($url, ['auth'=>$auth]);
+                $r = apigateway_consume($url, ['auth' => $auth]);
                 if ($r['status']['code'] != 200) {
                     throw new \Exception('Error al obtener el detalle del RCV: '.$r['body']);
                 }
@@ -3970,9 +3970,8 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que indica si el contribuyente está o no en ambiente de certificación
-     * @return =0 ambiente de producción, =1 ambiente de certificación
-         * @version 2021-05-27
+     * Método que indica si el contribuyente está o no en ambiente de certificación.
+     * @return =0 ambiente de producción, =1 ambiente de certificación.
      */
     public function enCertificacion(): int
     {

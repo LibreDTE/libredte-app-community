@@ -25,41 +25,43 @@
 namespace website\Dte;
 
 /**
- * Clase base para para el modelo singular de documentos del SII
- * @version 2016-06-14
+ * Clase base para para el modelo singular de documentos del SII.
  */
 abstract class Model_Base_Documento extends \Model_App
 {
 
     /**
      * Método que entrega el objeto del emisor o receptor del dte según
-     * corresponda (si es compra es receptor, otro caso es emisor)
-     * @return \website\Dte\Model_Contribuyente
-         * @version 2016-06-14
+     * corresponda (si es compra es receptor, otro caso es emisor).
      */
     public function getContribuyente()
     {
-        return $this->_table == 'dte_compra' ? $this->getReceptor() : $this->getEmisor();
+        return $this->_table == 'dte_compra'
+            ? $this->getReceptor()
+            : $this->getEmisor()
+        ;
     }
 
     /**
-     * Método que entrega el objeto del emisor del dte
-     * @return \website\Dte\Model_Contribuyente
-         * @version 2016-06-14
+     * Método que entrega el objeto del emisor del dte.
      */
     public function getEmisor()
     {
-        return !empty($this->emisor) ? (new \website\Dte\Model_Contribuyentes())->get($this->emisor) : null;
+        return !empty($this->emisor)
+            ? (new \website\Dte\Model_Contribuyentes())->get($this->emisor)
+            : null
+        ;
     }
 
     /**
-     * Método que entrega el objeto del receptor del dte
-     * @return \website\Dte\Model_Contribuyente
-         * @version 2016-06-14
+     * Método que entrega el objeto del receptor del dte.
      */
     public function getReceptor()
     {
-        return !empty($this->receptor) ? (new \website\Dte\Model_Contribuyentes())->get($this->receptor) : null;
+        return !empty($this->receptor)
+            ? (new \website\Dte\Model_Contribuyentes())->get($this->receptor)
+            : null
+        ;
     }
 
 }

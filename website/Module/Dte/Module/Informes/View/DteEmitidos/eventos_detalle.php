@@ -1,4 +1,4 @@
-<div class="page-header"><h1>DTEs emitidos <small>evento: <?=$evento?></small></h1></div>
+<div class="page-header"><h1>DTE emitidos <small>evento: <?=$evento?></small></h1></div>
 <p>Aquí podrá ver los documentos emitidos que tienen el evento de receptor "<?=(isset(\sasco\LibreDTE\Sii\RegistroCompraVenta::$eventos[$evento]) ? \sasco\LibreDTE\Sii\RegistroCompraVenta::$eventos[$evento] : 'Sin evento registrado')?>" de la empresa <?=$Emisor->razon_social?> que tienen fecha de emisión del DTE entre el <?=$desde?> y el <?=$hasta?>.</p>
 <?php
 foreach ($documentos as &$d) {

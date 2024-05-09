@@ -26,19 +26,14 @@ namespace website\Dte\Admin;
 
 /**
  * Clase para el controlador asociado a la tabla item_clasificacion de la base de
- * datos
- * Comentario de la tabla:
- * Esta clase permite controlar las acciones entre el modelo y vista para la
- * tabla item_clasificacion
- * @author SowerPHP Code Generator
- * @version 2016-02-24 15:52:58
+ * datos.
  */
 class Controller_ItemClasificaciones extends \Controller_Maintainer
 {
 
     protected $namespace = __NAMESPACE__; ///< Namespace del controlador y modelos asociados
     protected $columnsView = [
-        'listar'=>['codigo', 'clasificacion', 'superior', 'activa']
+        'listar' => ['codigo', 'clasificacion', 'superior', 'activa']
     ]; ///< Columnas que se deben mostrar en las vistas
 
     /**
@@ -48,7 +43,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
     public function listar($page = 1, $orderby = null, $order = 'A')
     {
         $Contribuyente = $this->getContribuyente();
-        $this->forceSearch(['contribuyente'=>$Contribuyente->rut]);
+        $this->forceSearch(['contribuyente' => $Contribuyente->rut]);
         parent::listar($page, $orderby, $order);
     }
 
@@ -119,7 +114,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
             $Contribuyente = $this->getContribuyente();
             $clasificaciones = \sowerphp\general\Utility_Spreadsheet::read($_FILES['archivo']);
             array_shift($clasificaciones);
-            $resumen = ['nuevas'=>[], 'editadas'=>[], 'error'=>[]];
+            $resumen = ['nuevas' => [], 'editadas' => [], 'error' => []];
             $cols = ['codigo', 'clasificacion', 'superior', 'activa'];
             $n_cols = count($cols);
             foreach ($clasificaciones as $c) {
@@ -197,7 +192,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
             $this->Api->send('Empresa solicitada no existe', 404);
         }
         if (!$Empresa->usuarioAutorizado($User, '/dte/documentos/emitir')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // entregar datos
         return (new Model_ItemClasificaciones())

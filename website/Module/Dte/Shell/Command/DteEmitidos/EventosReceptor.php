@@ -24,8 +24,7 @@
 namespace website\Dte;
 
 /**
- * Comando para actualizar los eventos de receptores de DTE emitidos
- * @version 2021-05-21
+ * Comando para actualizar los eventos de receptores de DTE emitidos.
  */
 class Shell_Command_DteEmitidos_EventosReceptor extends \Shell_App
 {
@@ -66,7 +65,10 @@ class Shell_Command_DteEmitidos_EventosReceptor extends \Shell_App
                     AND e.certificacion = :certificacion
                     AND e.receptor_evento IS NULL
                     AND e.fecha  >=  (CURRENT_DATE - INTERVAL \''.(int)$meses.' MONTHS\')
-            ', [':certificacion'=>(int)$certificacion, ':grupo' => $grupo]);
+            ', [
+                ':certificacion' => (int)$certificacion, 
+                ':grupo' => $grupo,
+            ]);
         }
         $periodo_actual = (int)date('Ym');
         $periodos = [$periodo_actual];
@@ -90,7 +92,6 @@ class Shell_Command_DteEmitidos_EventosReceptor extends \Shell_App
                         $this->out('  Procesado período '.$periodo);
                     }
                 }
-
             } catch (\Exception $e) {
                 if ($this->verbose) {
                     $this->out('  '.$e->getMessage());

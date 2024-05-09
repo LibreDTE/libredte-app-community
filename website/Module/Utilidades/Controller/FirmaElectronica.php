@@ -25,15 +25,13 @@
 namespace website\Utilidades;
 
 /**
- * Controlador para utilidades asociadas a la firma electrónica
- * @version 2017-01-27
+ * Controlador para utilidades asociadas a la firma electrónica.
  */
 class Controller_FirmaElectronica extends \Controller_App
 {
 
     /**
-     * Acción para ver los datos de la firma
-         * @version 2017-01-27
+     * Acción para ver los datos de la firma.
      */
     public function datos()
     {

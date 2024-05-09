@@ -25,8 +25,7 @@
 namespace website\Dte;
 
 /**
- * Controlador de compras
- * @version 2017-09-11
+ * Controlador de compras.
  */
 class Controller_DteCompras extends Controller_Base_Libros
 {
@@ -39,15 +38,14 @@ class Controller_DteCompras extends Controller_Base_Libros
     ]; ///< Configuración para las acciones del controlador
 
     /**
-     * Acción que permite importar un libro desde un archivo CSV
-         * @version 2021-10-14
+     * Acción que permite importar un libro desde un archivo CSV.
      */
     public function importar()
     {
         if (isset($_POST['submit'])) {
             // verificar que se haya podido subir el archivo con el libro
             if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
-                \sowerphp\core\Model_Datasource_Session::message('Ocurrió un error al subir el libro', 'error');
+                \sowerphp\core\Model_Datasource_Session::message('Ocurrió un error al subir el libro.', 'error');
                 return;
             }
             $mimetype = \sowerphp\general\Utility_File::mimetype($_FILES['archivo']['tmp_name']);
@@ -76,21 +74,28 @@ class Controller_DteCompras extends Controller_Base_Libros
                 try {
                     $DteRecibido = new Model_DteRecibido($emisor, $datos['dte'], $datos['folio'], $Receptor->enCertificacion());
                 } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-                    $noGuardado[] = 'Problema con fila '.$linea.': verificar código del documento en columna A y/o el número de folio en columna B';
+                    $noGuardado[] = 'Problema con fila '.$linea.': verificar código del documento en columna A y/o el número de folio en columna B.';
                     continue;
                 }
                 $DteRecibido->set($datos);
                 $DteRecibido->emisor = $emisor;
                 $DteRecibido->receptor = $Receptor->rut;
                 $DteRecibido->usuario = $this->Auth->User->id;
-                if ($_POST['periodo'] and \sowerphp\general\Utility_Date::format($DteRecibido->fecha, 'Ym')!=$_POST['periodo']) {
+                if (
+                    $_POST['periodo']
+                    && \sowerphp\general\Utility_Date::format($DteRecibido->fecha, 'Ym') != $_POST['periodo']
+                ) {
                     $DteRecibido->periodo = (int)$_POST['periodo'];
                 }
                 // si el DTE es de producción y es electrónico entonces se consultará su
                 // estado antes de poder guardar, esto evitará agregar documentos que no
                 // han sido recibidos en el SII o sus datos son incorrectos
                 $guardar = true;
-                if (!$DteRecibido->certificacion && $DteRecibido->getTipo()->electronico && !$Receptor->config_recepcion_omitir_verificacion_sii) {
+                if (
+                    !$DteRecibido->certificacion
+                    && $DteRecibido->getTipo()->electronico
+                    && !$Receptor->config_recepcion_omitir_verificacion_sii
+                ) {
                     // obtener firma
                     $Firma = $Receptor->getFirma($this->Auth->User->id);
                     if (!$Firma) {
@@ -126,16 +131,15 @@ class Controller_DteCompras extends Controller_Base_Libros
             if ($noGuardado) {
                 \sowerphp\core\Model_Datasource_Session::message('Los siguientes documentos no se agregaron:<br/>- '.implode('<br/>- ', $noGuardado), 'error');
             } else {
-                \sowerphp\core\Model_Datasource_Session::message('Se importó el libro de compras', 'ok');
+                \sowerphp\core\Model_Datasource_Session::message('Se importó el libro de compras.', 'ok');
                 $this->redirect('/dte/dte_compras');
             }
         }
     }
 
     /**
-     * Acción que envía el archivo XML del libro de compras al SII
-     * Si no hay documentos en el período se enviará sin movimientos
-         * @version 2017-09-01
+     * Acción que envía el archivo XML del libro de compras al SII.
+     * Si no hay documentos en el período se enviará sin movimientos.
      */
     public function enviar_sii($periodo)
     {
@@ -166,9 +170,15 @@ class Controller_DteCompras extends Controller_Base_Libros
         $caratula = [
             'RutEmisorLibro' => $Emisor->rut.'-'.$Emisor->dv,
             'RutEnvia' => $Firma->getID(),
-            'PeriodoTributario' => substr($periodo, 0, 4).'-'.substr($periodo, 4),
-            'FchResol' => $Emisor->enCertificacion() ? $Emisor->config_ambiente_certificacion_fecha : $Emisor->config_ambiente_produccion_fecha,
-            'NroResol' =>  $Emisor->enCertificacion() ? 0 : $Emisor->config_ambiente_produccion_numero,
+            'PeriodoTributario' => substr($periodo, 0, 4) . '-' . substr($periodo, 4),
+            'FchResol' => $Emisor->enCertificacion()
+                ? $Emisor->config_ambiente_certificacion_fecha
+                : $Emisor->config_ambiente_produccion_fecha
+            ,
+            'NroResol' =>  $Emisor->enCertificacion()
+                ? 0
+                : $Emisor->config_ambiente_produccion_numero
+            ,
             'TipoOperacion' => 'COMPRA',
             'TipoLibro' => 'MENSUAL',
             'TipoEnvio' => 'TOTAL',
@@ -213,9 +223,8 @@ class Controller_DteCompras extends Controller_Base_Libros
     }
 
     /**
-     * Acción que genera el archivo CSV con el registro de compras
-     * En realidad esto descarga los datos que están localmente y no los del RC del SII
-         * @version 2019-07-18
+     * Acción que genera el archivo CSV con el registro de compras.
+     * En realidad esto descarga los datos que están localmente y no los del RC del SII.
      */
     public function descargar_registro_compra($periodo, $electronico = null)
     {
@@ -223,7 +232,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         $compras = $Emisor->getCompras($periodo, is_numeric($electronico) ? $electronico : null);
         if (!$compras) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No hay documentos de compra del período '.$periodo, 'warning'
+                'No hay documentos de compra del período '.$periodo.'.', 'warning'
             );
             $this->redirect('/dte/dte_compras/ver/'.$periodo);
         }
@@ -239,8 +248,7 @@ class Controller_DteCompras extends Controller_Base_Libros
     }
 
     /**
-     * Acción que genera el archivo CSV con los resúmenes de ventas (ingresados manualmente)
-         * @version 2019-07-18
+     * Acción que genera el archivo CSV con los resúmenes de ventas (ingresados manualmente).
      */
     public function descargar_tipo_transacciones($periodo)
     {
@@ -249,7 +257,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         $datos = $DteCompra->getTiposTransacciones();
         if (!$datos) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No hay compras caracterizadas para el período '.$periodo, 'warning'
+                'No hay compras caracterizadas para el período '.$periodo.'.', 'warning'
             );
             $this->redirect(str_replace('descargar_tipo_transacciones', 'ver', $this->request->request));
         }
@@ -259,8 +267,7 @@ class Controller_DteCompras extends Controller_Base_Libros
     }
 
     /**
-     * Acción que permite seleccionar el período para explorar el resumen del registro de compras del SII
-         * @version 2018-04-25
+     * Acción que permite seleccionar el período para explorar el resumen del registro de compras del SII.
      */
     public function registro_compras()
     {
@@ -270,14 +277,18 @@ class Controller_DteCompras extends Controller_Base_Libros
     }
 
     /**
-     * Acción que permite obtener el resumen del registro de compra para un período y estado
-         * @version 2017-09-07
+     * Acción que permite obtener el resumen del registro de compra para un período y estado.
      */
     public function rcv_resumen($periodo, $estado = 'REGISTRO')
     {
         $Emisor = $this->getContribuyente();
         try {
-            $resumen = $Emisor->getRCV(['operacion' => 'COMPRA', 'periodo' => $periodo, 'estado' => $estado, 'detalle'=>false]);
+            $resumen = $Emisor->getRCV([
+                'operacion' => 'COMPRA',
+                'periodo' => $periodo, 
+                'estado' => $estado, 
+                'detalle' => false,
+            ]);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
             $this->redirect('/dte/dte_compras/ver/'.$periodo);
@@ -291,20 +302,24 @@ class Controller_DteCompras extends Controller_Base_Libros
     }
 
     /**
-     * Acción que permite obtener el detalle del registro de compra para un período y estado
-         * @version 2017-09-10
+     * Acción que permite obtener el detalle del registro de compra para un período y estado.
      */
     public function rcv_detalle($periodo, $dte, $estado = 'REGISTRO')
     {
         $Emisor = $this->getContribuyente();
         try {
-            $detalle = $Emisor->getRCV(['operacion' => 'COMPRA', 'periodo' => $periodo, 'dte' => $dte, 'estado' => $estado]);
+            $detalle = $Emisor->getRCV([
+                'operacion' => 'COMPRA', 
+                'periodo' => $periodo, 
+                'dte' => $dte, 
+                'estado' => $estado,
+            ]);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
             $this->redirect('/dte/dte_compras/ver/'.$periodo);
         }
         if (!$detalle) {
-            \sowerphp\core\Model_Datasource_Session::message('No hay detalle para el período y estado solicitados', 'warning');
+            \sowerphp\core\Model_Datasource_Session::message('No hay detalle para el período y estado solicitados.', 'warning');
             $this->redirect('/dte/dte_compras/ver/'.$periodo);
         }
         $this->set([
@@ -317,8 +332,7 @@ class Controller_DteCompras extends Controller_Base_Libros
     }
 
     /**
-     * Acción que permite obtener las diferencias entre el registro de compras y lo que está en LibreDTE
-         * @version 2017-09-10
+     * Acción que permite obtener las diferencias entre el registro de compras y lo que está en LibreDTE.
      */
     public function rcv_diferencias($periodo, $dte)
     {
@@ -326,13 +340,18 @@ class Controller_DteCompras extends Controller_Base_Libros
         $documentos_libredte_todos = $Emisor->getCompras($periodo, [$dte]);
         // obtener documentos en el registro de compra del SII con estado REGISTRO
         try {
-            $documentos_rc_todos = $Emisor->getRCV(['operacion' => 'COMPRA', 'periodo' => $periodo, 'dte' => $dte, 'estado' => 'REGISTRO']);
+            $documentos_rc_todos = $Emisor->getRCV([
+                'operacion' => 'COMPRA', 
+                'periodo' => $periodo, 
+                'dte' => $dte, 
+                'estado' => 'REGISTRO',
+            ]);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
             $this->redirect('/dte/dte_compras/ver/'.$periodo);
         }
         if (!$documentos_rc_todos) {
-            \sowerphp\core\Model_Datasource_Session::message('No hay detalle para el período y estado solicitados', 'warning');
+            \sowerphp\core\Model_Datasource_Session::message('No hay detalle para el período y estado solicitados.', 'warning');
             $this->redirect('/dte/dte_compras/ver/'.$periodo);
         }
         // crear documentos rc
@@ -340,7 +359,10 @@ class Controller_DteCompras extends Controller_Base_Libros
         foreach ($documentos_rc_todos as $dte_rc) {
             $existe = false;
             foreach ($documentos_libredte_todos as $dte_libredte) {
-                if ($dte_rc['detRutDoc']==explode('-', $dte_libredte['rut'])[0] && $dte_rc['detNroDoc']==$dte_libredte['folio']) {
+                if (
+                    $dte_rc['detRutDoc'] == explode('-', $dte_libredte['rut'])[0]
+                    && $dte_rc['detNroDoc'] == $dte_libredte['folio']
+                ) {
                     $existe = true;
                     break;
                 }
@@ -354,7 +376,10 @@ class Controller_DteCompras extends Controller_Base_Libros
         foreach ($documentos_libredte_todos as $dte_libredte) {
             $existe = false;
             foreach ($documentos_rc_todos as $dte_rc) {
-                if ($dte_rc['detRutDoc']==explode('-', $dte_libredte['rut'])[0] && $dte_rc['detNroDoc']==$dte_libredte['folio']) {
+                if (
+                    $dte_rc['detRutDoc'] == explode('-', $dte_libredte['rut'])[0]
+                    && $dte_rc['detNroDoc'] == $dte_libredte['folio']
+                ) {
                     $existe = true;
                     break;
                 }
@@ -373,9 +398,8 @@ class Controller_DteCompras extends Controller_Base_Libros
     }
 
     /**
-     * Acción que permite sincronizar los tipos de transacciones locales con el SII
-     * Sube masivamente los tipos de transacciones al registro de compras
-         * @version 2017-09-12
+     * Acción que permite sincronizar los tipos de transacciones locales con el SII.
+     * Sube masivamente los tipos de transacciones al registro de compras.
      */
     public function rcv_sincronizar_tipo_transacciones($periodo)
     {
@@ -415,8 +439,7 @@ class Controller_DteCompras extends Controller_Base_Libros
     }
 
     /**
-     * Acción que permite asignar masivamente el tipo de transacción
-         * @version 2017-09-12
+     * Acción que permite asignar masivamente el tipo de transacción.
      */
     public function tipo_transacciones_asignar($periodo)
     {
@@ -425,7 +448,7 @@ class Controller_DteCompras extends Controller_Base_Libros
             'periodo' => $periodo,
         ]);
         if (isset($_POST['submit'])) {
-            $documentos = $Emisor->getDocumentosRecibidos($_POST + ['periodo'=>$periodo, 'dte'=>[33, 34, 43, 46, 56, 61]]);
+            $documentos = $Emisor->getDocumentosRecibidos($_POST + ['periodo' => $periodo, 'dte' => [33, 34, 43, 46, 56, 61]]);
             if (!$documentos) {
                 \sowerphp\core\Model_Datasource_Session::message('No hay resultados en la búsqueda para el período '.$periodo.'.', 'warning');
                 return;
@@ -439,8 +462,7 @@ class Controller_DteCompras extends Controller_Base_Libros
     /**
      * Acción que permite descargar todo el registro de compras del SII pero
      * eligiendo el tipo de formato, ya sea por defecto en formato RCV o en
-     * formato IECV (esto permite importar el archivo en LibreDTE u otra app)
-         * @version 2020-02-19
+     * formato IECV (esto permite importar el archivo en LibreDTE u otra app).
      */
     public function rcv_csv($periodo, $estado = 'REGISTRO', $tipo = 'rcv')
     {
@@ -471,8 +493,7 @@ class Controller_DteCompras extends Controller_Base_Libros
     }
 
     /**
-     * Acción que genera un resumen de las compras de un año completo
-         * @version 2020-02-20
+     * Acción que genera un resumen de las compras de un año completo.
      */
     public function resumen($anio = null)
     {
@@ -500,8 +521,7 @@ class Controller_DteCompras extends Controller_Base_Libros
     }
 
     /**
-     * Servicio web que entrega un resumen de compras por cada tipo de documento
-         * @version 2020-05-29
+     * Servicio web que entrega un resumen de compras por cada tipo de documento.
      */
     public function _api_resumen_POST($receptor)
     {

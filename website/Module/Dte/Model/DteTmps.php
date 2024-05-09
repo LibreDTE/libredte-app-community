@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_tmp de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla dte_tmp
- * @author SowerPHP Code Generator
- * @version 2015-09-22 01:01:43
+ * Clase para mapear la tabla dte_tmp de la base de datos.
  */
 class Model_DteTmps extends \Model_Plural_App
 {
@@ -39,12 +35,14 @@ class Model_DteTmps extends \Model_Plural_App
     protected $_table = 'dte_tmp'; ///< Tabla del modelo
 
     /**
-     * Método que elimina todos los documentos temporales del contribuyente
-         * @version 2022-06-07
+     * Método que elimina todos los documentos temporales del contribuyente.
      */
     public function eliminar()
     {
-        $this->setWhereStatement(['emisor = :emisor'], [':emisor'=>$this->getContribuyente()->rut]);
+        $this->setWhereStatement(
+            ['emisor = :emisor'],
+            [':emisor' => $this->getContribuyente()->rut]
+        );
         $borradores = $this->getObjects();
         foreach ($borradores as $borrador) {
             $borrador->delete();

@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla contribuyente_config de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla contribuyente_config
- * @author SowerPHP Code Generator
- * @version 2016-01-27 20:58:17
+ * Clase para mapear la tabla contribuyente_config de la base de datos.
  */
 class Model_ContribuyenteConfig extends \Model_App
 {

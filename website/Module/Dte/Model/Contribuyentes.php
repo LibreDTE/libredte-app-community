@@ -64,7 +64,7 @@ class Model_Contribuyentes extends \Model_Plural_App
      */
     public function getByEmail($email, $onlyOne = false)
     {
-        $contribuyentes = (new Model_Contribuyentes())->setWhereStatement(['email = :email'], [':email'=>$email])->getObjects();
+        $contribuyentes = (new Model_Contribuyentes())->setWhereStatement(['email = :email'], [':email' => $email])->getObjects();
         if (!$contribuyentes) {
             return false;
         }
@@ -109,11 +109,11 @@ class Model_Contribuyentes extends \Model_Plural_App
                     AND a.variable = \'en_certificacion\'
             )
             ORDER BY certificacion, administrador DESC, razon_social
-        ', [':usuario'=>$usuario]);
+        ', [':usuario' => $usuario]);
         if ($omitir) {
             $n_empresas = count($empresas);
             for ($i=0; $i<$n_empresas; $i++) {
-                if ($empresas[$i]['rut']==$omitir) {
+                if ($empresas[$i]['rut'] == $omitir) {
                     unset($empresas[$i]);
                 }
             }
@@ -148,7 +148,7 @@ class Model_Contribuyentes extends \Model_Plural_App
             $vars[':hasta'] = $hasta;
         }
         // filtro certificación
-        if ($certificacion!==null) {
+        if ($certificacion !== null) {
             $where[] = 'd.certificacion = :certificacion';
             $vars[':certificacion'] = (int)$certificacion;
         }
@@ -209,7 +209,7 @@ class Model_Contribuyentes extends \Model_Plural_App
      */
     public function countRegistrados($certificacion = null)
     {
-        if ($certificacion===null) {
+        if ($certificacion === null) {
             return $this->db->getValue(
                 'SELECT COUNT(*) FROM contribuyente WHERE usuario IS NOT NULL'
             );
@@ -254,7 +254,7 @@ class Model_Contribuyentes extends \Model_Plural_App
                 AND c.comuna = co.codigo
                 AND u.ultimo_ingreso_fecha_hora BETWEEN :desde AND :hasta
             ORDER BY u.usuario, c.razon_social
-        ', [':desde'=>$desde, ':hasta'=>$hasta.' 23:59:59']);
+        ', [':desde' => $desde, ':hasta' => $hasta.' 23:59:59']);
     }
 
     /**

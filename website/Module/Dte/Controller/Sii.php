@@ -25,15 +25,13 @@
 namespace website\Dte;
 
 /**
- * Controlador para acciones del SII
- * @version 2018-05-09
+ * Controlador para acciones del SII.
  */
 class Controller_Sii extends \Controller_App
 {
 
     /**
-     * Acción que permite obtener los datos de la empresa desde el SII
-         * @version 2020-01-26
+     * Acción que permite obtener los datos de la empresa desde el SII.
      */
     public function contribuyente_datos($rut)
     {
@@ -41,7 +39,7 @@ class Controller_Sii extends \Controller_App
         try {
             $Emisor = (new Model_Contribuyentes())->get($rut);
             if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-                \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada', 'error');
+                \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada.', 'error');
                 $this->redirect('/dte/contribuyentes/seleccionar');
             }
             $Firma = $Emisor->getFirma($this->Auth->User->id);
@@ -66,8 +64,7 @@ class Controller_Sii extends \Controller_App
     }
 
     /**
-     * Acción que permite obtener los usuarios de la empresa desde el SII
-         * @version 2020-01-26
+     * Acción que permite obtener los usuarios de la empresa desde el SII.
      */
     public function contribuyente_usuarios($rut)
     {
@@ -75,12 +72,12 @@ class Controller_Sii extends \Controller_App
         try {
             $Emisor = (new Model_Contribuyentes())->get($rut);
             if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-                \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada', 'error');
+                \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada.', 'error');
                 $this->redirect('/dte/contribuyentes/seleccionar');
             }
             $Firma = $Emisor->getFirma($this->Auth->User->id);
             if (!$Firma) {
-                die('No hay firma electrónica asociada al usuario');
+                die('No hay firma electrónica asociada al usuario.');
             }
             $certificacion = $Emisor->enCertificacion();
             $response = apigateway_consume(
@@ -103,13 +100,12 @@ class Controller_Sii extends \Controller_App
     }
 
     /**
-     * Acción que permite obtener si la empresa está o no autorizada para usar facturación electrónica
-         * @version 2020-01-26
+     * Acción que permite obtener si la empresa está o no autorizada para usar facturación electrónica.
      */
     public function contribuyente_autorizado($rut)
     {
         extract($this->getQuery([
-            'certificacion'=>\sasco\LibreDTE\Sii::PRODUCCION,
+            'certificacion' => \sasco\LibreDTE\Sii::PRODUCCION,
         ]));
         // si existe el proveedor libredte se consulta al servicio web de LibreDTE oficial
         try {
@@ -125,8 +121,7 @@ class Controller_Sii extends \Controller_App
     }
 
     /**
-     * Acción que permite obtener la situación tributaria de la empresa desde el SII
-         * @version 2020-01-26
+     * Acción que permite obtener la situación tributaria de la empresa desde el SII.
      */
     public function contribuyente_situacion_tributaria($rut)
     {
@@ -144,8 +139,7 @@ class Controller_Sii extends \Controller_App
     }
 
     /**
-     * Acción que permite consultar el estado de un envío en el SII a partir del Track ID del DTE
-         * @version 2020-01-26
+     * Acción que permite consultar el estado de un envío en el SII a partir del Track ID del DTE.
      */
     public function estado_envio($track_id)
     {
@@ -154,7 +148,7 @@ class Controller_Sii extends \Controller_App
             $Emisor = $this->getContribuyente();
             $Firma = $Emisor->getFirma($this->Auth->User->id);
             if (!$Firma) {
-                die('No hay firma electrónica asociada al usuario');
+                die('No hay firma electrónica asociada al usuario.');
             }
             $certificacion = $Emisor->enCertificacion();
             $response = apigateway_consume(
@@ -177,8 +171,7 @@ class Controller_Sii extends \Controller_App
     }
 
     /**
-     * Acción que permite verificar los datos de un DTE en el SII a partir de los datos generales del DTE
-         * @version 2016-10-12
+     * Acción que permite verificar los datos de un DTE en el SII a partir de los datos generales del DTE.
      */
     public function verificar_datos($receptor, $dte, $folio, $fecha, $total, $emisor = null)
     {
@@ -197,8 +190,7 @@ class Controller_Sii extends \Controller_App
     }
 
     /**
-     * Método que realiza la consulta al SII
-         * @version 2016-10-12
+     * Método que realiza la consulta al SII.
      */
     private function query($query, $params)
     {
@@ -206,7 +198,7 @@ class Controller_Sii extends \Controller_App
         $Firma = $Emisor->getFirma($this->Auth->User->id);
         if (!$Firma) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe firma asociada', 'error'
+                'No existe firma asociada.', 'error'
             );
             $this->redirect('/dte/dte_emitidos/listar');
         }
@@ -228,8 +220,7 @@ class Controller_Sii extends \Controller_App
     }
 
     /**
-     * Método que muestra el estado de un DTE en el registro de compras y ventas
-         * @version 2018-10-22
+     * Método que muestra el estado de un DTE en el registro de compras y ventas.
      */
     public function dte_rcv($emisor, $dte, $folio)
     {
@@ -238,7 +229,7 @@ class Controller_Sii extends \Controller_App
         $Firma = $Contribuyente->getFirma($this->Auth->User->id);
         if (!$Firma) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe firma asociada', 'error'
+                'No existe firma asociada.', 'error'
             );
             $this->redirect('/dte');
         }
@@ -254,9 +245,9 @@ class Controller_Sii extends \Controller_App
             $cedible = $RCV->consultarDocDteCedible($emisor_rut, $emisor_dv, $dte, $folio);
             $fecha_recepcion = $RCV->consultarFechaRecepcionSii($emisor_rut, $emisor_dv, $dte, $folio);
             $this->set([
-                'eventos' => $eventos!==false ? $eventos : null,
-                'cedible' => $cedible!==false ? $cedible : null,
-                'fecha_recepcion' => $fecha_recepcion!==false ? $fecha_recepcion : null,
+                'eventos' => $eventos !== false ? $eventos : null,
+                'cedible' => $cedible !== false ? $cedible : null,
+                'fecha_recepcion' => $fecha_recepcion !== false ? $fecha_recepcion : null,
             ]);
         } catch (\Exception $e) {
             $this->set('error', $e->getMessage());
@@ -266,8 +257,7 @@ class Controller_Sii extends \Controller_App
     }
 
     /**
-     * Acción que permite consultar el estado de un envío en el SII a partir del Track ID del AEC
-         * @version 2019-01-26
+     * Acción que permite consultar el estado de un envío en el SII a partir del Track ID del AEC.
      */
     public function cesion_estado_envio($track_id)
     {
@@ -276,7 +266,7 @@ class Controller_Sii extends \Controller_App
             $Emisor = $this->getContribuyente();
             $Firma = $Emisor->getFirma($this->Auth->User->id);
             if (!$Firma) {
-                die('No hay firma electrónica asociada al usuario');
+                die('No hay firma electrónica asociada al usuario.');
             }
             $certificacion = $Emisor->enCertificacion();
             $response = apigateway_consume(
@@ -299,8 +289,7 @@ class Controller_Sii extends \Controller_App
     }
 
     /**
-     * Acción que permite consultar el certificado de cesión de un DTE
-         * @version 2019-01-26
+     * Acción que permite consultar el certificado de cesión de un DTE.
      */
     public function cesion_certificado($dte, $folio, $fecha)
     {
@@ -309,7 +298,7 @@ class Controller_Sii extends \Controller_App
             $Emisor = $this->getContribuyente();
             $Firma = $Emisor->getFirma($this->Auth->User->id);
             if (!$Firma) {
-                die('No hay firma electrónica asociada al usuario');
+                die('No hay firma electrónica asociada al usuario.');
             }
             $certificacion = $Emisor->enCertificacion();
             $response = apigateway_consume(

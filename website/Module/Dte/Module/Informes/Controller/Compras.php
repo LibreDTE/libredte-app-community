@@ -25,15 +25,13 @@
 namespace website\Dte\Informes;
 
 /**
- * Clase para informes de las compras
- * @version 2017-01-03
+ * Clase para informes de las compras.
  */
 class Controller_Compras extends \Controller_App
 {
 
     /**
-     * Acción para listar las compras de activos fijos
-         * @version 2022-02-21
+     * Acción para listar las compras de activos fijos.
      */
     public function activos_fijos()
     {
@@ -45,14 +43,16 @@ class Controller_Compras extends \Controller_App
         ]);
         if (!empty($_POST['periodo'])) {
             $this->set([
-                'compras' => (new \website\Dte\Model_DteRecibidos())->setContribuyente($Emisor)->getActivosFijos($_POST),
+                'compras' => (new \website\Dte\Model_DteRecibidos())
+                    ->setContribuyente($Emisor)
+                    ->getActivosFijos($_POST)
+                ,
             ]);
         }
     }
 
     /**
-     * Acción para listar las compra de supermercado
-         * @version 2022-02-21
+     * Acción para listar las compra de supermercado.
      */
     public function supermercado()
     {
@@ -64,7 +64,10 @@ class Controller_Compras extends \Controller_App
         ]);
         if (!empty($_POST['periodo'])) {
             $this->set([
-                'compras' => (new \website\Dte\Model_DteRecibidos())->setContribuyente($Emisor)->getSupermercado($_POST),
+                'compras' => (new \website\Dte\Model_DteRecibidos())
+                    ->setContribuyente($Emisor)
+                    ->getSupermercado($_POST)
+                ,
             ]);
         }
     }

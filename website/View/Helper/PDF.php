@@ -24,8 +24,7 @@
 namespace website;
 
 /**
- * Helper para la generación de PDFs personalizados para LibreDTE
- * @version 2017-02-02
+ * Helper para la generación de PDFs personalizados para LibreDTE.
  */
 class View_Helper_PDF extends \sowerphp\general\View_Helper_PDF
 {
@@ -36,8 +35,7 @@ class View_Helper_PDF extends \sowerphp\general\View_Helper_PDF
 
     /**
      * Método que sobreescribe la cabecera del PDF para tener una personalizada
-     * para los informes del contribuyente
-         * @version 2018-06-15
+     * para los informes del contribuyente.
      */
     public function Header()
     {

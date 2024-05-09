@@ -25,8 +25,7 @@
 namespace website\Dte\Informes;
 
 /**
- * Modelo para obtener los datos del formulrio 29
- * @version 2016-02-01
+ * Modelo para obtener los datos del formulrio 29.
  */
 class Model_F29
 {
@@ -34,16 +33,15 @@ class Model_F29
     private $datos; ///< Arreglo con código y valores del formulario 29
 
     /**
-     * Constructor del modelo F29
-         * @version 2017-03-09
+     * Constructor del modelo F29.
      */
     public function __construct($Emisor, $periodo)
     {
         $this->Emisor = $Emisor;
         $this->periodo = (int)$periodo;
         // si hay libro de ventas se sacan de ahí las boletas y pagos electrónicos
-        $boletas = ['cantidad'=>0, 'exento'=>0, 'neto'=>0, 'iva'=>0];
-        $pagos_electronicos = ['cantidad'=>0, 'exento'=>0, 'neto'=>0, 'iva'=>0];
+        $boletas = ['cantidad' => 0, 'exento' => 0, 'neto' => 0, 'iva' => 0];
+        $pagos_electronicos = ['cantidad' => 0, 'exento' => 0, 'neto' => 0, 'iva' => 0];
         $DteVenta = new \website\Dte\Model_DteVenta($Emisor->rut, $periodo, $Emisor->enCertificacion());
         if ($DteVenta->exists()) {
             $Libro = new \sasco\LibreDTE\Sii\LibroCompraVenta();
@@ -97,8 +95,12 @@ class Model_F29
             'pagos_electronicos_neto' => $pagos_electronicos['neto'],
         ];
         if (\sowerphp\core\Module::loaded('Lce')) {
-            $this->datos['48'] = (new \libredte\enterprise\Lce\Model_LceCuenta($this->Emisor->rut, $this->Emisor->config_contabilidad_f29_48))->getHaber($this->periodo);
-            $this->datos['151'] = (new \libredte\enterprise\Lce\Model_LceCuenta($this->Emisor->rut, $this->Emisor->config_contabilidad_f29_151))->getHaber($this->periodo);
+            $this->datos['48'] = (new \libredte\enterprise\Lce\Model_LceCuenta(
+                $this->Emisor->rut, $this->Emisor->config_contabilidad_f29_48
+            ))->getHaber($this->periodo);
+            $this->datos['151'] = (new \libredte\enterprise\Lce\Model_LceCuenta(
+                $this->Emisor->rut, $this->Emisor->config_contabilidad_f29_151
+            ))->getHaber($this->periodo);
         }
     }
 
@@ -111,8 +113,7 @@ class Model_F29
     }
 
     /**
-     * Método que entrega un arreglo con los códigos del F29 y sus valores
-         * @version 2016-02-01
+     * Método que entrega un arreglo con los códigos del F29 y sus valores.
      */
     public function getDatos()
     {

@@ -21,10 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-/**
- * Configuración de la aplicación web de LibreDTE
- */
-
 // directorio para datos estáticos (debe tener permisos de escritura)
 define('DIR_STATIC', DIR_PROJECT . '/data/static');
 
@@ -58,8 +54,8 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
 
 // Menú principal del sitio web
 \sowerphp\core\Configure::write('nav.website', [
-    '/dte' => ['name'=>'Módulo de Facturación', 'desc'=>'Accede al módulo de facturación electrónica', 'icon'=>'fa fa-file-invoice'],
-    'https://www.libredte.cl/local' => ['name'=>'Servicio Local', 'desc'=>'Revisa los servicios que tenemos asociados al Servicio Local de LibreDTE', 'icon'=>'far fa-question-circle'],
+    '/dte' => ['name' => 'Módulo de Facturación', 'desc' => 'Accede al módulo de facturación electrónica', 'icon' => 'fa fa-file-invoice'],
+    'https://www.libredte.cl/local' => ['name' => 'Servicio Local', 'desc' => 'Revisa los servicios que tenemos asociados al Servicio Local de LibreDTE', 'icon' => 'far fa-question-circle'],
 ]);
 
 // Menú principal de la aplicación web
@@ -211,14 +207,14 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
 \sowerphp\core\Module::uses([
     'Dev',
     'Dte',
-    'Dte.Informes',
     'Dte.Admin',
     'Dte.Admin.Mantenedores',
+    'Dte.Informes',
     'Dte.Pdf',
     'Honorarios',
-    'Utilidades',
     'Sistema.General',
     'Sistema.General.DivisionGeopolitica',
+    'Utilidades',
 ]);
 
 // configuración de permisos de la empresa en la aplicación
@@ -244,7 +240,7 @@ ini_set('max_execution_time', (int)env('LIBREDTE_APP_EXECUTION_TIMEOUT', 600));
         'width' => (int)env('LIBREDTE_APP_DTE_LOGOS_WIDTH', 150),
         'height' => (int)env('LIBREDTE_APP_DTE_LOGOS_HEIGHT', 100),
     ],
-    // DTEs autorizados por defecto para ser usados por las nuevas empresas
+    // DTE autorizados por defecto para ser usados por las nuevas empresas
     'dtes' => array_map('trim', explode(',', env('LIBREDTE_APP_DTE_DTES', '33,56,61'))),
     // opciones para los PDF
     'pdf' => [

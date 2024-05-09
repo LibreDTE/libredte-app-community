@@ -1,8 +1,8 @@
 <?php
 
 /**
- * SowerPHP
- * Copyright (C) SowerPHP (http://sowerphp.org)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,12 +26,7 @@ namespace website\Sistema\General;
 
 /**
  * Clase para el controlador asociado a la tabla banco de la base de
- * datos
- * Comentario de la tabla: Tabla para bancos
- * Esta clase permite controlar las acciones entre el modelo y vista para la
- * tabla banco
- * @author SowerPHP Code Generator
- * @version 2014-10-19 10:08:32
+ * datos.
  */
 class Controller_Bancos extends \Controller_Maintainer
 {

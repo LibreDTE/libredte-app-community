@@ -25,8 +25,7 @@
 namespace website\Dte\Pdf;
 
 /**
- * Utilidad para trabajar con el formato de PDF Estándar de LibreDTE
- * @version 2020-08-02
+ * Utilidad para trabajar con el formato de PDF Estándar de LibreDTE.
  */
 class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
 {
@@ -37,8 +36,7 @@ class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
     protected $logo = 'https://libredte.cl/img/logo.png';
 
     /**
-     * Método que entrega el código HTML de la página de configuración de la aplicación
-         * @version 2023-10-10
+     * Método que entrega el código HTML de la página de configuración de la aplicación.
      */
     public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form)
     {
@@ -55,7 +53,10 @@ class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
                 'Arriba de los datos del emisor',
                 'Membrete que reemplaza los datos del emisor',
             ],
-            'value' => !empty($this->getConfig()->carta->logo->posicion) ? $this->getConfig()->carta->logo->posicion : 0,
+            'value' => !empty($this->getConfig()->carta->logo->posicion)
+                ? $this->getConfig()->carta->logo->posicion
+                : 0
+            ,
             'help' => 'Si se usa el logo como membrete debe tener todos los datos obligatorios exigidos por SII para el DTE.',
         ]);
         $buffer .= $form->input([
@@ -63,7 +64,10 @@ class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
             'name' => 'dtepdf_'.$this->getCodigo().'_carta_detalle_fuente',
             'label' => 'Tamaño de items',
             'options' => [11=>11, 10=>10, 9=>9, 8=>8],
-            'value' => !empty($this->getConfig()->carta->detalle->fuente) ? $this->getConfig()->carta->detalle->fuente : 10,
+            'value' => !empty($this->getConfig()->carta->detalle->fuente)
+                ? $this->getConfig()->carta->detalle->fuente
+                : 10
+            ,
             'help' => 'Tamaño de la fuente a utilizar en la tabla con el listado de productos y/o servicios.',
         ]);
         $buffer .= $form->input([
@@ -74,7 +78,10 @@ class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
                 'Abajo del nombre del item',
                 'A la derecha del nombre del item',
             ],
-            'value' => !empty($this->getConfig()->carta->detalle->posicion) ? $this->getConfig()->carta->detalle->posicion : 0,
+            'value' => !empty($this->getConfig()->carta->detalle->posicion)
+                ? $this->getConfig()->carta->detalle->posicion
+                : 0
+            ,
             'help' => 'Para ahorrar espacio en el papel usar la opción que coloca el detalle a la derecha del nombre del item.',
         ]);
         $buffer .= $form->input([
@@ -85,7 +92,10 @@ class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
                 'Al pie de la página (puede existir espacio en blanco entre items y timbre)',
                 'Inmediatamente bajo los items (deja espacios en blanco al final de la hoja)',
             ],
-            'value' => !empty($this->getConfig()->carta->timbre->posicion) ? $this->getConfig()->carta->timbre->posicion : 0,
+            'value' => !empty($this->getConfig()->carta->timbre->posicion)
+                ? $this->getConfig()->carta->timbre->posicion
+                : 0
+            ,
             'help' => 'Esta opción permite definir la posición del timbre, acuse de recibo y totales.',
         ]);
         $buffer .= '<p class="">Ancho de las columnas de los items en el PDF de hoja carta:</p>';
@@ -97,38 +107,56 @@ class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
                 $form->input([
                     'name' => 'dtepdf_'.$this->getCodigo().'_carta_detalle_ancho_CdgItem',
                     'placeholder' => 20,
-                    'value' => !empty($this->getConfig()->carta->detalle->ancho->CdgItem) ? $this->getConfig()->carta->detalle->ancho->CdgItem : 20,
-                    'check'=>'notempty integer',
+                    'value' => !empty($this->getConfig()->carta->detalle->ancho->CdgItem)
+                        ? $this->getConfig()->carta->detalle->ancho->CdgItem
+                        : 20
+                    ,
+                    'check' => 'notempty integer',
                 ]),
                 $form->input([
                     'name' => 'dtepdf_'.$this->getCodigo().'_carta_detalle_ancho_QtyItem',
                     'placeholder' => 15,
-                    'value' => !empty($this->getConfig()->carta->detalle->ancho->QtyItem) ? $this->getConfig()->carta->detalle->ancho->QtyItem : 15,
-                    'check'=>'notempty integer',
+                    'value' => !empty($this->getConfig()->carta->detalle->ancho->QtyItem)
+                        ? $this->getConfig()->carta->detalle->ancho->QtyItem
+                        : 15
+                    ,
+                    'check' => 'notempty integer',
                 ]),
                 $form->input([
                     'name' => 'dtepdf_'.$this->getCodigo().'_carta_detalle_ancho_PrcItem',
                     'placeholder' => 22,
-                    'value' => !empty($this->getConfig()->carta->detalle->ancho->PrcItem) ? $this->getConfig()->carta->detalle->ancho->PrcItem : 22,
-                    'check'=>'notempty integer',
+                    'value' => !empty($this->getConfig()->carta->detalle->ancho->PrcItem)
+                        ? $this->getConfig()->carta->detalle->ancho->PrcItem
+                        : 22
+                    ,
+                    'check' => 'notempty integer',
                 ]),
                 $form->input([
                     'name' => 'dtepdf_'.$this->getCodigo().'_carta_detalle_ancho_DescuentoMonto',
                     'placeholder' => 22,
-                    'value' => !empty($this->getConfig()->carta->detalle->ancho->DescuentoMonto) ? $this->getConfig()->carta->detalle->ancho->DescuentoMonto : 22,
-                    'check'=>'notempty integer',
+                    'value' => !empty($this->getConfig()->carta->detalle->ancho->DescuentoMonto)
+                        ? $this->getConfig()->carta->detalle->ancho->DescuentoMonto
+                        : 22
+                    ,
+                    'check' => 'notempty integer',
                 ]),
                 $form->input([
                     'name' => 'dtepdf_'.$this->getCodigo().'_carta_detalle_ancho_RecargoMonto',
                     'placeholder' => 22,
-                    'value' => !empty($this->getConfig()->carta->detalle->ancho->RecargoMonto) ? $this->getConfig()->carta->detalle->ancho->RecargoMonto : 22,
-                    'check'=>'notempty integer',
+                    'value' => !empty($this->getConfig()->carta->detalle->ancho->RecargoMonto)
+                        ? $this->getConfig()->carta->detalle->ancho->RecargoMonto
+                        : 22
+                    ,
+                    'check' => 'notempty integer',
                 ]),
                 $form->input([
                     'name' => 'dtepdf_'.$this->getCodigo().'_carta_detalle_ancho_MontoItem',
                     'placeholder' => 22,
-                    'value' => !empty($this->getConfig()->carta->detalle->ancho->MontoItem) ? $this->getConfig()->carta->detalle->ancho->MontoItem : 22,
-                    'check'=>'notempty integer',
+                    'value' => !empty($this->getConfig()->carta->detalle->ancho->MontoItem)
+                        ? $this->getConfig()->carta->detalle->ancho->MontoItem
+                        : 22
+                    ,
+                    'check' => 'notempty integer',
                 ]),
             ]
         ]);
@@ -141,7 +169,10 @@ class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
             'name' => 'dtepdf_'.$this->getCodigo().'_continuo_logo_posicion',
             'label' => 'Mostrar logo',
             'options' => ['No', 'Si'],
-            'value' => !empty($this->getConfig()->continuo->logo->posicion) ? $this->getConfig()->continuo->logo->posicion : 0,
+            'value' => !empty($this->getConfig()->continuo->logo->posicion)
+                ? $this->getConfig()->continuo->logo->posicion
+                : 0
+            ,
             'help' => 'Un logo grande podría ocupar mucho papel. No se recomienda usar el logo si se usará impresora térmica.',
         ]);
         $buffer .= $form->input([
@@ -152,7 +183,10 @@ class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
                 'Solo mostrar el nombre del item',
                 'Mostrar el nombre y el detalle del item',
             ],
-            'value' => !empty($this->getConfig()->continuo->item->detalle) ? $this->getConfig()->continuo->item->detalle : 0,
+            'value' => !empty($this->getConfig()->continuo->item->detalle)
+                ? $this->getConfig()->continuo->item->detalle
+                : 0
+            ,
             'help' => 'Ocultar el detalle del item permitirá ahorrar papel si el nombre es suficiente para la generación del DTE.',
         ]);
         // entregar buffer

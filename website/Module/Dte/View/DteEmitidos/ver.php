@@ -207,7 +207,7 @@ echo $t->generate([
 $links = $DteEmitido->getLinks();
 $pdf_publico = $links['pdf'];
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['action'=>$_base.'/dte/dte_emitidos/pdf/'.$DteEmitido->dte.'/'.$DteEmitido->folio, 'id'=>'pdfForm', 'onsubmit'=>'Form.check(\'pdfForm\')']);
+echo $f->begin(['action' => $_base.'/dte/dte_emitidos/pdf/'.$DteEmitido->dte.'/'.$DteEmitido->folio, 'id' => 'pdfForm', 'onsubmit' => 'Form.check(\'pdfForm\')']);
 $formatoPDF = $Emisor->getConfigPDF($DteEmitido);
 $formatos_pdf = (new \website\Dte\Pdf\Utility_Formatos())->setContribuyente($Emisor)->getFormatos();
 if (!empty($formatos_pdf)) {
@@ -234,8 +234,8 @@ echo $f->input([
     'value' => $formatoPDF['papelContinuo'],
     'check' => 'notempty',
 ]);
-echo $f->input(['name'=>'copias_tributarias', 'label'=>'Copias tributarias', 'value'=>(int)$Emisor->config_pdf_copias_tributarias, 'check'=>'notempty integer']);
-echo $f->input(['name'=>'copias_cedibles', 'label'=>'Copias cedibles', 'value'=>(int)$Emisor->config_pdf_copias_cedibles, 'check'=>'notempty integer']);
+echo $f->input(['name' => 'copias_tributarias', 'label' => 'Copias tributarias', 'value' => (int)$Emisor->config_pdf_copias_tributarias, 'check' => 'notempty integer']);
+echo $f->input(['name' => 'copias_cedibles', 'label' => 'Copias cedibles', 'value' => (int)$Emisor->config_pdf_copias_cedibles, 'check' => 'notempty integer']);
 echo $f->end('Descargar PDF');
 $share_telephone = $DteEmitido->getCelular();
 $share_message = '¡Hola! Soy de '.$Emisor->getNombre().'. Te adjunto el enlace al PDF de la '.$DteEmitido->getTipo()->tipo.' N° '.$DteEmitido->folio.': '.$pdf_publico;
@@ -296,9 +296,9 @@ if (!$email_html) {
     $mensaje .= $Emisor->direccion.', '.$Emisor->getComuna()->comuna."\n";
 } else $mensaje = '';
 echo $f->begin([
-    'action'=>$_base.'/dte/dte_emitidos/enviar_email/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
-    'id'=>'emailForm',
-    'onsubmit'=>'Form.check(\'emailForm\') && __.loading(\'Enviando correo electrónico...\')',
+    'action' => $_base.'/dte/dte_emitidos/enviar_email/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
+    'id' => 'emailForm',
+    'onsubmit' => 'Form.check(\'emailForm\') && __.loading(\'Enviando correo electrónico...\')',
 ]);
 if ($emails) {
     $table = [];
@@ -319,8 +319,8 @@ if ($emails) {
         'help' => 'Seleccionar emails a los que se enviará el documento',
     ]);
 }
-echo $f->input(['name'=>'para_extra', 'label'=>'Para (extra)', 'check'=>'emails', 'placeholder'=>'correo@empresa.cl, otro@empresa.cl']);
-echo $f->input(['name'=>'asunto', 'label'=>'Asunto', 'value'=>$asunto, 'check'=>'notempty']);
+echo $f->input(['name' => 'para_extra', 'label' => 'Para (extra)', 'check' => 'emails', 'placeholder' => 'correo@empresa.cl, otro@empresa.cl']);
+echo $f->input(['name' => 'asunto', 'label' => 'Asunto', 'value' => $asunto, 'check' => 'notempty']);
 echo $f->input([
     'type' => 'textarea',
     'name' => 'mensaje',
@@ -330,7 +330,7 @@ echo $f->input([
     'check' => !$email_html?'notempty':'',
     'help' => $email_html?('<a href="#" onclick="__.popup(\''.$_base.'/dte/dte_emitidos/email_html/'.$DteEmitido->dte.'/'.$DteEmitido->folio.'\', 750, 550); return false">Correo por defecto es HTML</a>, si agrega un mensaje acá será añadido al campo {msg_txt} del mensaje HTML'):'',
 ]);
-echo $f->input(['type'=>'checkbox', 'name'=>'cedible', 'label'=>'¿Copia cedible?', 'checked'=>$Emisor->config_pdf_dte_cedible]);
+echo $f->input(['type' => 'checkbox', 'name' => 'cedible', 'label' => '¿Copia cedible?', 'checked' => $Emisor->config_pdf_dte_cedible]);
 echo $f->end('Enviar PDF y XML por email');
 $email_enviados = $DteEmitido->getEmailEnviadosResumen();
 if ($email_enviados) {
@@ -361,7 +361,7 @@ $color = [
 ][$DteEmitido->receptor_evento];
 ?>
 <a href="#" onclick="__.popup('<?=$_base?>/dte/sii/dte_rcv/<?=$Emisor->rut?>-<?=$Emisor->dv?>/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>', 750, 550); return false" title="Ver datos del registro de compra/venta en el SII" class="btn btn-<?=$color?> btn-lg col-12">
-    <?=($DteEmitido->receptor_evento?\sasco\LibreDTE\Sii\RegistroCompraVenta::$eventos[$DteEmitido->receptor_evento]:'Sin evento registrado')?><br/>
+    <?=($DteEmitido->receptor_evento?\sasco\LibreDTE\Sii\RegistroCompraVenta::$eventos[$DteEmitido->receptor_evento] : 'Sin evento registrado')?><br/>
     <small>(ver datos en el Registro de Ventas del SII)</small>
 </a>
 <?php if ($DteEmitido->hasLocalXML()) : ?>
@@ -668,7 +668,7 @@ $f->setStyle(false);
 echo $f->begin([
     'action' => $_base.'/dte/dte_emitidos/cesion_email/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
     'id' => 'cesionEmailForm',
-    'onsubmit'=>'Form.check(\'cesionEmailForm\')',
+    'onsubmit' => 'Form.check(\'cesionEmailForm\')',
 ]);
 echo $f->input([
     'name' => 'emails',
@@ -873,7 +873,7 @@ echo $f->input([
     'name' => 'track_id',
     'label' => 'Track ID',
     'value' => $DteEmitido->track_id,
-    'check'=>'notempty integer',
+    'check' => 'notempty integer',
     'help' => 'Identificador de envío del XML del DTE al SII',
 ]);
 echo $f->end('Modificar Track ID');

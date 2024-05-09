@@ -77,7 +77,7 @@ new \sowerphp\general\View_Helper_Table([
 <div class="card mb-4">
     <div class="card-header"><?=$email_asunto?></div>
     <div class="card-body">
-        <p><?=$email_txt?$email_txt:'Sin mensaje, en texto plano, del emisor.'?></p>
+        <p><?=$email_txt ? $email_txt:'Sin mensaje, en texto plano, del emisor.'?></p>
     </div>
 </div>
 
@@ -137,8 +137,8 @@ new \sowerphp\general\View_Helper_Table([
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin([
-    'action'=>$_base.'/dte/dte_intercambios/responder/'.$DteIntercambio->codigo,
-    'onsubmit'=>'Form.check() && __.confirm(this, \'¿Está seguro de la respuesta de intercambio?\', \'Enviando respuesta al intercambio...\')',
+    'action' => $_base.'/dte/dte_intercambios/responder/'.$DteIntercambio->codigo,
+    'onsubmit' => 'Form.check() && __.confirm(this, \'¿Está seguro de la respuesta de intercambio?\', \'Enviando respuesta al intercambio...\')',
 ]);
 $f->setColsLabel(3);
 echo '<div class="row">',"\n";
@@ -173,7 +173,7 @@ echo $f->input([
     'value' => $DteIntercambio->getEmisor()->config_email_intercambio_user ? $DteIntercambio->getEmisor()->config_email_intercambio_user : $DteIntercambio->de,
     'check' => 'notempty email',
 ]);
-$estado_enviodte = $EnvioDte->getEstadoValidacion(['RutReceptor'=>$Emisor->rut.'-'.$Emisor->dv]);
+$estado_enviodte = $EnvioDte->getEstadoValidacion(['RutReceptor' => $Emisor->rut.'-'.$Emisor->dv]);
 echo $f->input([
     'name' => 'periodo',
     'label' => 'Período',
@@ -241,16 +241,16 @@ echo $f->input([
     'label' => 'Documentos',
     'titles' => ['DTE', 'Folio', 'Total', 'Estado', 'Glosa', '¿En IC?', 'Acciones'],
     'inputs' => [
-        ['name'=>'TipoDTE', 'attr'=>'readonly="readonly" size="3"'],
-        ['name'=>'Folio', 'attr'=>'readonly="readonly" size="10"'],
-        ['name'=>'FchEmis', 'type'=>'hidden'],
-        ['name'=>'RUTEmisor', 'type'=>'hidden'],
-        ['name'=>'RUTRecep', 'type'=>'hidden'],
-        ['name'=>'MntTotal', 'attr'=>'readonly="readonly" size="10"'],
-        ['name'=>'rcv_accion_codigo', 'type'=>'select', 'options'=>[''=>'']+\sasco\LibreDTE\Sii\RegistroCompraVenta::$acciones, 'check' => 'notempty', 'attr'=>'onchange="this.parentNode.parentNode.parentNode.childNodes[7].firstChild.firstChild.value=this.selectedOptions[0].textContent" style="width:200px"'],
-        ['name'=>'rcv_accion_glosa', 'check' => 'notempty'],
-        ['type'=>'div', 'name'=>'recibido'],
-        ['type'=>'div', 'name'=>'acciones'],
+        ['name' => 'TipoDTE', 'attr' => 'readonly="readonly" size="3"'],
+        ['name' => 'Folio', 'attr' => 'readonly="readonly" size="10"'],
+        ['name' => 'FchEmis', 'type' => 'hidden'],
+        ['name' => 'RUTEmisor', 'type' => 'hidden'],
+        ['name' => 'RUTRecep', 'type' => 'hidden'],
+        ['name' => 'MntTotal', 'attr' => 'readonly="readonly" size="10"'],
+        ['name' => 'rcv_accion_codigo', 'type' => 'select', 'options' => ['' => '']+\sasco\LibreDTE\Sii\RegistroCompraVenta::$acciones, 'check' => 'notempty', 'attr' => 'onchange="this.parentNode.parentNode.parentNode.childNodes[7].firstChild.firstChild.value=this.selectedOptions[0].textContent" style="width:200px"'],
+        ['name' => 'rcv_accion_glosa', 'check' => 'notempty'],
+        ['type' => 'div', 'name' => 'recibido'],
+        ['type' => 'div', 'name' => 'acciones'],
     ],
     'values' => $RecepcionDTE,
 ]);

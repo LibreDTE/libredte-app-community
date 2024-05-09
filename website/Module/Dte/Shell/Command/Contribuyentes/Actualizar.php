@@ -130,8 +130,7 @@ class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
 
     /**
      * Método que carga el listado de contribuyentes desde un archivo CSV y luego los pasa
-     * al método que los procesa y actualiza en la BD
-         * @version 2017-08-12
+     * al método que los procesa y actualiza en la BD.
      */
     private function csv($archivo)
     {
@@ -146,8 +145,7 @@ class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
     }
 
     /**
-     * Método que procesa los datos de los contribuyentes y los actualiza en la base de datos
-         * @version 2020-07-06
+     * Método que procesa los datos de los contribuyentes y los actualiza en la base de datos.
      */
     private function procesarContribuyentes($contribuyentes)
     {

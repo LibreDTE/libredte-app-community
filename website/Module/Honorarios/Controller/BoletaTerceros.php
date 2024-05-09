@@ -1,8 +1,8 @@
 <?php
 
 /**
- * SowerPHP
- * Copyright (C) SowerPHP (http://sowerphp.org)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -24,21 +24,17 @@
 // namespace del controlador
 namespace website\Honorarios;
 
+use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+
 /**
  * Clase para el controlador asociado a la tabla boleta_tercero de la base de
- * datos
- * Comentario de la tabla:
- * Esta clase permite controlar las acciones entre el modelo y vista para la
- * tabla boleta_tercero
- * @author SowerPHP Code Generator
- * @version 2019-08-09 15:59:48
+ * datos.
  */
 class Controller_BoletaTerceros extends \Controller_App
 {
 
     /**
-     * Acción que muestra un resumen por período donde hayan boletas emitidas
-         * @version 2019-08-10
+     * Acción que muestra un resumen por período donde hayan boletas emitidas.
      */
     public function index()
     {
@@ -48,8 +44,7 @@ class Controller_BoletaTerceros extends \Controller_App
     }
 
     /**
-     * Acción para el buscador de boletas de honorario electróncias
-         * @version 2019-08-23
+     * Acción para el buscador de boletas de honorario electróncias.
      */
     public function buscar()
     {
@@ -67,15 +62,14 @@ class Controller_BoletaTerceros extends \Controller_App
                 return;
             }
             if (empty($r['body'])) {
-                \sowerphp\core\Model_Datasource_Session::message('No se encontraron boletas para la búsqueda solicitada', 'warning');
+                \sowerphp\core\Model_Datasource_Session::message('No se encontraron boletas para la búsqueda solicitada.', 'warning');
             }
             $this->set('boletas', $r['body']);
         }
     }
 
     /**
-     * API que permite buscar boletas de honorario electrónicas recibidas en el SII
-         * @version 2021-06-29
+     * API que permite buscar boletas de honorario electrónicas recibidas en el SII.
      */
     public function _api_buscar_POST($emisor)
     {
@@ -87,10 +81,10 @@ class Controller_BoletaTerceros extends \Controller_App
         // crear emisor
         $Emisor = new \website\Dte\Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/honorarios/boleta_terceros/buscar')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // obtener boletas
         $filtros = [];
@@ -100,22 +94,24 @@ class Controller_BoletaTerceros extends \Controller_App
             }
         }
         if (empty($filtros)) {
-            $this->Api->send('Debe definir a lo menos un filtro para la búsqueda', 400);
+            $this->Api->send('Debe definir a lo menos un filtro para la búsqueda.', 400);
         }
-        $boletas = (new Model_BoletaTerceros())->setContribuyente($Emisor)->buscar($filtros, 'DESC');
+        $boletas = (new Model_BoletaTerceros())
+            ->setContribuyente($Emisor)
+            ->buscar($filtros, 'DESC')
+        ;
         $this->Api->send($boletas, 200);
     }
 
     /**
-     * Acción que permite descargar el HTML de una boleta de terceros electrónica
-         * @version 2019-08-13
+     * Acción que permite descargar el HTML de una boleta de terceros electrónica.
      */
     public function html($numero)
     {
         $Emisor = $this->getContribuyente();
         $BoletaTercero = new Model_BoletaTercero($Emisor->rut, $numero);
         if (!$BoletaTercero->exists()) {
-            \sowerphp\core\Model_Datasource_Session::message('No existe la boleta solicitada', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('No existe la boleta solicitada.', 'error');
             $this->redirect('/honorarios/boleta_terceros');
         }
         // obtener PDF desde servicio web
@@ -132,8 +128,7 @@ class Controller_BoletaTerceros extends \Controller_App
     }
 
     /**
-     * API que permite descargar el HTML de una boleta de terceros electrónica
-         * @version 2021-06-29
+     * API que permite descargar el HTML de una boleta de terceros electrónica.
      */
     public function _api_html_GET($numero, $emisor)
     {
@@ -145,15 +140,15 @@ class Controller_BoletaTerceros extends \Controller_App
         // crear emisor
         $Emisor = new \website\Dte\Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/honorarios/boleta_terceros/html')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // obtener boleta
         $BoletaTercero = new Model_BoletaTercero($emisor, $numero);
         if (!$BoletaTercero->exists()) {
-            $this->Api->send('No existe la boleta solicitada', 404);
+            $this->Api->send('No existe la boleta solicitada.', 404);
         }
         // obtener html
         try {
@@ -170,15 +165,14 @@ class Controller_BoletaTerceros extends \Controller_App
     }
 
     /**
-     * Acción para ver boletas de un período en particular
-         * @version 2019-08-10
+     * Acción para ver boletas de un período en particular.
      */
     public function ver($periodo)
     {
         $Emisor = $this->getContribuyente();
-        $boletas = (new Model_BoletaTerceros())->setContribuyente($Emisor)->buscar(['periodo'=>$periodo]);
+        $boletas = (new Model_BoletaTerceros())->setContribuyente($Emisor)->buscar(['periodo' => $periodo]);
         if (empty($boletas)) {
-            \sowerphp\core\Model_Datasource_Session::message('No existen boletas para el período solicitado', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('No existen boletas para el período solicitado.', 'error');
             $this->redirect('/honorarios/boleta_terceros');
         }
         $this->set([
@@ -189,15 +183,14 @@ class Controller_BoletaTerceros extends \Controller_App
     }
 
     /**
-     * Acción para descargar el CSV con las boletas de un periodo
-         * @version 2019-08-10
+     * Acción para descargar el CSV con las boletas de un periodo.
      */
     public function csv($periodo)
     {
         $Emisor = $this->getContribuyente();
-        $boletas = (new Model_BoletaTerceros())->setContribuyente($Emisor)->buscar(['periodo'=>$periodo]);
+        $boletas = (new Model_BoletaTerceros())->setContribuyente($Emisor)->buscar(['periodo' => $periodo]);
         if (empty($boletas)) {
-            \sowerphp\core\Model_Datasource_Session::message('No existen boletas para el período solicitado', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('No existen boletas para el período solicitado.', 'error');
             $this->redirect('/honorarios/boleta_terceros');
         }
         foreach ($boletas as &$b) {
@@ -209,8 +202,7 @@ class Controller_BoletaTerceros extends \Controller_App
     }
 
     /**
-     * Acción para actualizar el listado de boletas desde el SII
-         * @version 2019-08-13
+     * Acción para actualizar el listado de boletas desde el SII.
      */
     public function actualizar()
     {
@@ -218,7 +210,7 @@ class Controller_BoletaTerceros extends \Controller_App
         $Emisor = $this->getContribuyente();
         try {
             (new Model_BoletaTerceros())->setContribuyente($Emisor)->sincronizar($meses);
-            \sowerphp\core\Model_Datasource_Session::message('Boletas actualizadas', 'ok');
+            \sowerphp\core\Model_Datasource_Session::message('Boletas actualizadas.', 'ok');
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
         }
@@ -226,8 +218,7 @@ class Controller_BoletaTerceros extends \Controller_App
     }
 
     /**
-     * Acción para emitir una boleta de terceros electrónica
-         * @version 2020-01-26
+     * Acción para emitir una boleta de terceros electrónica.
      */
     public function emitir()
     {
@@ -235,7 +226,7 @@ class Controller_BoletaTerceros extends \Controller_App
         $this->set([
             'Emisor' => $Emisor,
             'sucursales' => $Emisor->getSucursales(),
-            'comunas' => (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->getList(),
+            'comunas' => (new Model_Comunas())->getList(),
             'tasas_retencion' => (new Model_BoletaTerceros())->getTasasRetencion(),
         ]);
         if (isset($_POST['submit'])) {
@@ -253,7 +244,7 @@ class Controller_BoletaTerceros extends \Controller_App
                         'RUTRecep' => str_replace('.', '', $_POST['RUTRecep']),
                         'RznSocRecep' => $_POST['RznSocRecep'],
                         'DirRecep' => $_POST['DirRecep'],
-                        'CmnaRecep' => (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->get($_POST['CmnaRecep'])->comuna,
+                        'CmnaRecep' => (new Model_Comunas())->get($_POST['CmnaRecep'])->comuna,
                     ],
                 ],
                 'Detalle' => [],
@@ -291,8 +282,7 @@ class Controller_BoletaTerceros extends \Controller_App
     }
 
     /**
-     * API para emitir una boleta de terceros electrónica
-         * @version 2021-06-29
+     * API para emitir una boleta de terceros electrónica.
      */
     public function _api_emitir_POST()
     {
@@ -304,18 +294,18 @@ class Controller_BoletaTerceros extends \Controller_App
         // verificar que venga RUTEmisor
         $boleta = $this->Api->data;
         if (is_string($boleta)) {
-            $this->Api->send('Se recibieron los datos de la boleta como un string (problema al codificar JSON)', 400);
+            $this->Api->send('Se recibieron los datos de la boleta como un string (problema al codificar JSON).', 400);
         }
         if (empty($boleta['Encabezado']['Emisor']['RUTEmisor'])) {
-            $this->Api->send('Debe indicar RUT del emisor de la BTE', 400);
+            $this->Api->send('Debe indicar RUT del emisor de la BTE.', 400);
         }
         // crear emisor
         $Emisor = new \website\Dte\Model_Contribuyente($boleta['Encabezado']['Emisor']['RUTEmisor']);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe', 404);
+            $this->Api->send('Emisor no existe.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/honorarios/boleta_terceros/emitir')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // emitir boleta
         try {

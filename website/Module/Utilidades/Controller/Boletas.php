@@ -25,15 +25,13 @@
 namespace website\Utilidades;
 
 /**
- * Controlador para utilidades asociadas a boletas electrónicas
- * @version 2018-11-04
+ * Controlador para utilidades asociadas a boletas electrónicas.
  */
 class Controller_Boletas extends \Controller_App
 {
 
     /**
-     * Acción que permite la generación del XML del RCOF
-         * @version 2019-10-17
+     * Acción que permite la generación del XML del RCOF.
      */
     public function rcof()
     {
@@ -42,17 +40,17 @@ class Controller_Boletas extends \Controller_App
             // objeto de la firma
             try {
                 $Firma = new \sasco\LibreDTE\FirmaElectronica([
-                    'file'=>$_FILES['firma']['tmp_name'],
-                    'pass'=>$_POST['contrasenia'],
+                    'file' => $_FILES['firma']['tmp_name'],
+                    'pass' => $_POST['contrasenia'],
                 ]);
             } catch (\Exception $e) {
-                \sowerphp\core\Model_Datasource_Session::message('No fue posible abrir la firma digital, quizás contraseña incorrecta', 'error');
+                \sowerphp\core\Model_Datasource_Session::message('No fue posible abrir la firma digital, quizás contraseña incorrecta.', 'error');
             }
             // cargar archivo
             $datos = \sowerphp\general\Utility_Spreadsheet_CSV::read($_FILES['detalle']['tmp_name']);
             unset($datos[0]);
             if (!$datos) {
-                \sowerphp\core\Model_Datasource_Session::message('Archivo sin detalle', 'error');
+                \sowerphp\core\Model_Datasource_Session::message('Archivo sin detalle.', 'error');
                 return;
             }
             // determinar tipos de documentos incluidos
@@ -73,7 +71,7 @@ class Controller_Boletas extends \Controller_App
                 \sasco\LibreDTE\File::rmdir($dir);
             }
             if (!mkdir($dir)) {
-                \sowerphp\core\Model_Datasource_Session::message('No fue posible crear directorio temporal para los consumos de folios', 'error');
+                \sowerphp\core\Model_Datasource_Session::message('No fue posible crear directorio temporal para los consumos de folios.', 'error');
                 return;
             }
             // crear rcof para cada día (si es un solo día o se pidió el total se hará en una pasada)
@@ -135,7 +133,7 @@ class Controller_Boletas extends \Controller_App
                 file_put_contents($dir.'/rcof_'.$RutEmisor.'_'.$dia.'.xml', $xml);
             }
             // descargar archivo comprimido
-            \sasco\LibreDTE\File::compress($dir, ['format'=>'zip', 'delete'=>true]);
+            \sasco\LibreDTE\File::compress($dir, ['format' => 'zip', 'delete' => true]);
         }
     }
 

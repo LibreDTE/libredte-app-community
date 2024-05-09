@@ -32,8 +32,8 @@ Configure::write('nav.module', array(
         'icon' => 'fa fa-upload',
     ],
     '/contribuyente_dtes/listar/1/contribuyente/A' => [
-        'name' => 'DTEs autorizados por contribuyente',
-        'desc' => 'DTEs que los contribuyentes de LibreDTE tienen autorizado emitir en la aplicación',
+        'name' => 'DTE autorizados por contribuyente',
+        'desc' => 'DTE que los contribuyentes de LibreDTE tienen autorizado emitir en la aplicación',
         'icon' => 'fa fa-list',
     ],
     '/dte_tipos/listar/1/codigo/A' => [

@@ -47,7 +47,7 @@ class Model_DteIntercambios extends \Model_Plural_App
             SELECT COUNT(*)
             FROM dte_intercambio
             WHERE receptor = :receptor AND certificacion = :certificacion AND usuario IS NULL
-        ', [':receptor'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion()]);
+        ', [':receptor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion()]);
     }
 
     /**
@@ -65,7 +65,7 @@ class Model_DteIntercambios extends \Model_Plural_App
             'p' => 0, // página de intercambios
         ], $filtros);
         $where = ['i.receptor = :receptor', 'i.certificacion = :certificacion'];
-        $vars = [':receptor'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion()];
+        $vars = [':receptor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion()];
         if (!empty($filtros['codigo'])) {
             $where[] = 'i.codigo = :codigo';
             $vars[':codigo'] = $filtros['codigo'];
@@ -282,8 +282,8 @@ class Model_DteIntercambios extends \Model_Plural_App
     }
 
     /**
-     * Método para actualizar la bandeja de intercambio. Guarda los DTEs
-     * recibidos por intercambio y guarda los acuses de recibos de DTEs
+     * Método para actualizar la bandeja de intercambio. Guarda los DTE
+     * recibidos por intercambio y guarda los acuses de recibos de DTE
      * enviados por otros contribuyentes
          * @version 2020-07-03
      */
@@ -293,7 +293,7 @@ class Model_DteIntercambios extends \Model_Plural_App
         $trigger_actualizar = \sowerphp\core\Trigger::run('dte_dte_intercambio_actualizar', $this->getContribuyente());
         // si el trigger entrega false la bandeja no se actualizará de manera silenciosa
         if ($trigger_actualizar === false) {
-            return ['n_uids'=>0, 'omitidos'=>0, 'n_EnvioDTE'=>0, 'n_EnvioRecibos'=>0, 'n_RecepcionEnvio'=>0, 'n_ResultadoDTE'=>0];
+            return ['n_uids' => 0, 'omitidos' => 0, 'n_EnvioDTE' => 0, 'n_EnvioRecibos' => 0, 'n_RecepcionEnvio' => 0, 'n_ResultadoDTE' => 0];
         }
         // si el trigger entrega un arreglo es el resultado de la actualización de la bandeja
         else if (is_array($trigger_actualizar)) {
@@ -330,7 +330,7 @@ class Model_DteIntercambios extends \Model_Plural_App
         $errores = [];
         foreach ($uids as &$uid) {
             try {
-                $m = $Imap->getMessage($uid, ['subtype'=>['PLAIN', 'HTML', 'XML'], 'extension'=>['xml']]);
+                $m = $Imap->getMessage($uid, ['subtype' => ['PLAIN', 'HTML', 'XML'], 'extension' => ['xml']]);
             } catch (\Exception $e) {
                 $errores[$uid] = $e->getMessage();
                 continue;
@@ -361,7 +361,7 @@ class Model_DteIntercambios extends \Model_Plural_App
                     } catch (\Exception $e) {
                         $procesarEnvioDTE = false;
                     }
-                    if ($procesarEnvioDTE!==null) {
+                    if ($procesarEnvioDTE !== null) {
                         if ($procesarEnvioDTE) {
                             $n_EnvioDTE++;
                         }
@@ -374,7 +374,7 @@ class Model_DteIntercambios extends \Model_Plural_App
                     } catch (\Exception $e) {
                         $procesarRecibo = false;
                     }
-                    if ($procesarRecibo!==null) {
+                    if ($procesarRecibo !== null) {
                         if ($procesarRecibo) {
                             $n_EnvioRecibos++;
                             if (!$acuseContado) {
@@ -391,7 +391,7 @@ class Model_DteIntercambios extends \Model_Plural_App
                     } catch (\Exception $e) {
                         $procesarRecepcion = false;
                     }
-                    if ($procesarRecepcion!==null) {
+                    if ($procesarRecepcion !== null) {
                         if ($procesarRecepcion) {
                             $n_RecepcionEnvio++;
                             if (!$acuseContado) {
@@ -408,7 +408,7 @@ class Model_DteIntercambios extends \Model_Plural_App
                     } catch (\Exception $e) {
                         $procesarResultado = false;
                     }
-                    if ($procesarResultado!==null) {
+                    if ($procesarResultado !== null) {
                         if ($procesarResultado) {
                             $n_ResultadoDTE++;
                             if (!$acuseContado) {
@@ -512,7 +512,7 @@ class Model_DteIntercambios extends \Model_Plural_App
             SELECT COUNT(*)
             FROM dte_intercambio
             WHERE receptor = :receptor AND '.$periodo_col.' = :periodo
-        ', [':receptor'=>$this->getContribuyente()->rut, ':periodo'=>$periodo]);
+        ', [':receptor' => $this->getContribuyente()->rut, ':periodo' => $periodo]);
     }
 
     /**
@@ -564,7 +564,7 @@ class Model_DteIntercambios extends \Model_Plural_App
     public function getUltimoCodigo()
     {
         $where = ['i.receptor = :receptor', 'i.certificacion = :certificacion'];
-        $vars = [':receptor'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion()];
+        $vars = [':receptor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion()];
         return (int)$this->db->getValue('
             SELECT MAX(codigo)
             FROM dte_intercambio AS i

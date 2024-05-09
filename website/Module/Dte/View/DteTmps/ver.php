@@ -141,12 +141,12 @@ function pdf_set_action(documento) {
 </script>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['action'=>$_base.'/dte/dte_tmps/cotizacion/'.$DteTmp->receptor.'/'.$DteTmp->dte.'/'.$DteTmp->codigo, 'id'=>'pdfForm', 'onsubmit'=>'Form.check(\'pdfForm\')']);
+echo $f->begin(['action' => $_base.'/dte/dte_tmps/cotizacion/'.$DteTmp->receptor.'/'.$DteTmp->dte.'/'.$DteTmp->codigo, 'id' => 'pdfForm', 'onsubmit' => 'Form.check(\'pdfForm\')']);
 echo $f->input([
     'type' => 'select',
     'name' => 'documento',
     'label' => 'Documento',
-    'options' => ['cotizacion'=>'Cotización', 'pdf'=>'Previsualización'],
+    'options' => ['cotizacion' => 'Cotización', 'pdf' => 'Previsualización'],
     'check' => 'notempty',
     'onblur' => 'pdf_set_action(this.value)',
 ]);
@@ -234,9 +234,9 @@ if (!$email_html) {
 } else $mensaje = '';
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin([
-    'action'=>$_base.'/dte/dte_tmps/enviar_email/'.$DteTmp->receptor.'/'.$DteTmp->dte.'/'.$DteTmp->codigo,
-    'id'=>'emailForm',
-    'onsubmit'=>'Form.check(\'emailForm\') && __.loading(\'Enviando correo electrónico...\')',
+    'action' => $_base.'/dte/dte_tmps/enviar_email/'.$DteTmp->receptor.'/'.$DteTmp->dte.'/'.$DteTmp->codigo,
+    'id' => 'emailForm',
+    'onsubmit' => 'Form.check(\'emailForm\') && __.loading(\'Enviando correo electrónico...\')',
 ]);
 if ($emails) {
     $table = [];
@@ -257,8 +257,8 @@ if ($emails) {
         'help' => 'Seleccionar emails a los que se enviará el documento',
     ]);
 }
-echo $f->input(['name'=>'para_extra', 'label'=>'Para (extra)', 'check'=>'emails', 'placeholder'=>'correo@empresa.cl, otro@empresa.cl']);
-echo $f->input(['name'=>'asunto', 'label'=>'Asunto', 'value'=>$asunto, 'check'=>'notempty']);
+echo $f->input(['name' => 'para_extra', 'label' => 'Para (extra)', 'check' => 'emails', 'placeholder' => 'correo@empresa.cl, otro@empresa.cl']);
+echo $f->input(['name' => 'asunto', 'label' => 'Asunto', 'value' => $asunto, 'check' => 'notempty']);
 echo $f->input([
     'type' => 'textarea',
     'name' => 'mensaje',
@@ -268,7 +268,7 @@ echo $f->input([
     'check' => !$email_html?'notempty':'',
     'help' => $email_html?('<a href="#" onclick="__.popup(\''.$_base.'/dte/dte_tmps/email_html/'.$DteTmp->receptor.'/'.$DteTmp->dte.'/'.$DteTmp->codigo.'\', 750, 550); return false">Correo por defecto es HTML</a>, si agrega un mensaje acá será añadido al campo {msg_txt} del mensaje HTML'):'',
 ]);
-echo $f->input(['type'=>'select', 'name'=>'cotizacion', 'label'=>'Enviar', 'options'=>['Previsualización', 'Cotización'], 'value'=>1]);
+echo $f->input(['type' => 'select', 'name' => 'cotizacion', 'label' => 'Enviar', 'options' => ['Previsualización', 'Cotización'], 'value' => 1]);
 echo $f->end('Enviar PDF por email');
 $email_enviados = $DteTmp->getEmailEnviadosResumen();
 if ($email_enviados) {
@@ -297,7 +297,7 @@ if ($email_enviados) {
         <div class="row">
             <div class="col-sm-6 mb-2">
                 <div class="btn-group w-100" role="group">
-                    <a class="btn btn-primary btn-lg col-12<?=!empty($links['pagar'])?'':' disabled'?>" href="<?=!empty($links['pagar'])?$links['pagar']:''?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=!empty($links['pagar'])?'':' disabled'?>" href="<?=!empty($links['pagar']) ? $links['pagar'] : ''?>" role="button">
                         Enlace público para pagar
                     </a>
 <?php if (!empty($links['pagar'])) : ?>

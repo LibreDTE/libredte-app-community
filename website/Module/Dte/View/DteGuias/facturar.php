@@ -9,7 +9,7 @@
 <div class="page-header"><h1>Facturación masiva de guías de despacho</h1></div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['id'=>'buscarForm', 'onsubmit'=>'Form.check(\'buscarForm\')']);
+echo $f->begin(['id' => 'buscarForm', 'onsubmit' => 'Form.check(\'buscarForm\')']);
 echo $f->input([
     'type' => 'date',
     'name' => 'desde',
@@ -48,13 +48,13 @@ if (isset($guias)) {
         $acciones .= ' <a href="'.$_base.'/dte/dte_emitidos/pdf/52/'.$g['folio'].'" class="btn btn-primary"><i class="far fa-file-pdf fa-fw"></i></a>';
         $g[] = $acciones;
     }
-    echo $f->begin(['id'=>'facturarForm', 'onsubmit'=>'Form.check(\'facturarForm\') && __.loading(\'Facturando...\')']);
+    echo $f->begin(['id' => 'facturarForm', 'onsubmit' => 'Form.check(\'facturarForm\') && __.loading(\'Facturando...\')']);
     echo $f->input([
-        'type'=>'tablecheck',
-        'name'=>'guias',
-        'label'=>'Guías',
-        'titles'=>['Guía', 'Receptor', 'Fecha', 'Total', 'Acciones'],
-        'table'=>$guias,
+        'type' => 'tablecheck',
+        'name' => 'guias',
+        'label' => 'Guías',
+        'titles' => ['Guía', 'Receptor', 'Fecha', 'Total', 'Acciones'],
+        'table' => $guias,
     ]);
     echo '<hr/>';
     echo $f->input([
@@ -92,8 +92,8 @@ if (isset($guias)) {
     echo '<hr/>';
     echo $f->input([
         'name' => 'MedioPago',
-        'type'=>'hidden',
-        'value'=>'PE',
+        'type' => 'hidden',
+        'value' => 'PE',
     ]);
     echo $f->input([
         'name' => 'BcoPago',
@@ -104,7 +104,7 @@ if (isset($guias)) {
         'name' => 'TpoCtaPago',
         'label' => 'Tipo cuenta',
         'type' => 'select',
-        'options' => [''=>'Sin cuenta bancaria', 'CORRIENTE'=>'Cuenta corriente', 'VISTA'=>'Cuenta vista', 'AHORRO'=>'Cuenta de ahorro'],
+        'options' => ['' => 'Sin cuenta bancaria', 'CORRIENTE' => 'Cuenta corriente', 'VISTA' => 'Cuenta vista', 'AHORRO' => 'Cuenta de ahorro'],
     ]);
     echo $f->input([
         'name' => 'NumCtaPago',

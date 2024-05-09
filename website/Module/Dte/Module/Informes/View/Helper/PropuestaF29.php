@@ -230,7 +230,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
         $subtotales = [];
         $datos = $this->crearGrupos($compras, $this->compras);
         foreach ($datos as $grupo => $documentos) {
-            $this->getActiveSheet()->getStyle('A'.$this->y)->applyFromArray(['font'=>['bold'=>true]]);
+            $this->getActiveSheet()->getStyle('A'.$this->y)->applyFromArray(['font' => ['bold' => true]]);
             $this->getActiveSheet()->mergeCells('A'.$this->y.':'.'D'.$this->y);
             $this->getActiveSheet()->setCellValue('A'.$this->y, $this->compras[$grupo]['nombre']);
             $this->y++;
@@ -280,7 +280,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
             $this->getActiveSheet()->setCellValue('L'.$this->y, '=SUM(L'.$y.':L'.($this->y-1).')');
             $this->getActiveSheet()->setCellValue('M'.$this->y, '=SUM(M'.$y.':M'.($this->y-1).')');
             // recorder subtotales
-            foreach (['E'=>'documentos', 'F'=>'neto', 'G'=>'exento', 'H'=>'impuesto_adicional', 'I'=>'iva', 'J'=>'total'] as $col => $monto) {
+            foreach (['E' => 'documentos', 'F' => 'neto', 'G' => 'exento', 'H' => 'impuesto_adicional', 'I' => 'iva', 'J' => 'total'] as $col => $monto) {
                 if (isset($this->compras[$grupo]['subtotal'][$monto])) {
                     if (empty($this->datos[$this->compras[$grupo]['subtotal'][$monto]])) {
                         $this->datos[$this->compras[$grupo]['subtotal'][$monto]] = '=\'Compras\'!'.$col.$this->y;
@@ -293,7 +293,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
             $this->y += 2;
         }
         // colocar totales
-        $this->getActiveSheet()->getStyle('A'.$this->y.':'.$this->getCol(count($titles)-1).$this->y)->applyFromArray(['font'=>['bold'=>true]]);
+        $this->getActiveSheet()->getStyle('A'.$this->y.':'.$this->getCol(count($titles)-1).$this->y)->applyFromArray(['font' => ['bold' => true]]);
         $this->setFormatBorder('A'.$this->y.':'.$this->getCol(count($titles)-1).$this->y);
         $this->getActiveSheet()->mergeCells('A'.$this->y.':'.'D'.$this->y);
         $this->getActiveSheet()->setCellValue('A'.$this->y, 'Totales');
@@ -347,7 +347,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
         $subtotales = [];
         $datos = $this->crearGrupos($ventas, $this->ventas);
         foreach ($datos as $grupo => $documentos) {
-            $this->getActiveSheet()->getStyle('A'.$this->y)->applyFromArray(['font'=>['bold'=>true]]);
+            $this->getActiveSheet()->getStyle('A'.$this->y)->applyFromArray(['font' => ['bold' => true]]);
             $this->getActiveSheet()->mergeCells('A'.$this->y.':'.'D'.$this->y);
             $this->getActiveSheet()->setCellValue('A'.$this->y, $this->ventas[$grupo]['nombre']);
             $this->y++;
@@ -389,7 +389,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
             $this->getActiveSheet()->setCellValue('H'.$this->y, '=SUM(H'.$y.':H'.($this->y-1).')');
             $this->getActiveSheet()->setCellValue('I'.$this->y, '=SUM(I'.$y.':I'.($this->y-1).')');
             // recorder subtotales
-            foreach (['E'=>'documentos', 'F'=>'neto', 'G'=>'exento', 'H'=>'iva', 'I'=>'total'] as $col => $monto) {
+            foreach (['E' => 'documentos', 'F' => 'neto', 'G' => 'exento', 'H' => 'iva', 'I' => 'total'] as $col => $monto) {
                 if (isset($this->ventas[$grupo]['subtotal'][$monto])) {
                     if (empty($this->datos[$this->ventas[$grupo]['subtotal'][$monto]])) {
                         $this->datos[$this->ventas[$grupo]['subtotal'][$monto]] = '=\'Ventas\'!'.$col.$this->y;
@@ -402,7 +402,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
             $this->y += 2;
         }
         // colocar totales
-        $this->getActiveSheet()->getStyle('A'.$this->y.':'.$this->getCol(count($titles)-1).$this->y)->applyFromArray(['font'=>['bold'=>true]]);
+        $this->getActiveSheet()->getStyle('A'.$this->y.':'.$this->getCol(count($titles)-1).$this->y)->applyFromArray(['font' => ['bold' => true]]);
         $this->setFormatBorder('A'.$this->y.':'.$this->getCol(count($titles)-1).$this->y);
         $this->getActiveSheet()->mergeCells('A'.$this->y.':'.'D'.$this->y);
         $this->getActiveSheet()->setCellValue('A'.$this->y, 'Totales');
@@ -458,7 +458,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
     {
         for ($i=$this->y; $i<($this->y+$cantidad); $i++) {
             $this->getActiveSheet()->getStyle('B'.$i)->applyFromArray(
-                ['alignment'=>['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]]
+                ['alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]]
             );
             $this->getActiveSheet()->setCellValue('B'.$i, $this->linea++);
         }
@@ -478,7 +478,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
         $this->getActiveSheet()->getStyle($titulo_start.$this->y)->getFont()->setSize(16);
         $this->getActiveSheet()->setCellValue($titulo_start.$this->y, 'Propuesta formulario 29'."\n".'(no enviar sin antes verificar contenido)');
         $this->getActiveSheet()->getStyle($info_start.$this->y.':'.$valor_col.($this->y+2))->applyFromArray(
-            ['alignment'=>['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]]
+            ['alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]]
         );
         $this->setFormatBorder($titulo_start.$this->y.':'.$valor_col.($this->y+2));
         $this->setFormatCenterBold($titulo_start.$this->y.':'.$info_end.($this->y+2));

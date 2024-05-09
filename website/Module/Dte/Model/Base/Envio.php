@@ -25,21 +25,19 @@
 namespace website\Dte;
 
 /**
- * Clase base para para el modelo singular de documentos que se envían al SII
- * @version 2016-06-14
+ * Clase base para para el modelo singular de documentos que se envían al SII.
  */
 abstract class Model_Base_Envio extends Model_Base_Documento
 {
 
     /**
-     * Método que solicita una nueva revisión por email del DTE enviado al SII
-         * @version 2016-06-14
+     * Método que solicita una nueva revisión por email del DTE enviado al SII.
      */
     public function solicitarRevision($user = null)
     {
         // si no tiene track id error
         if (!$this->track_id) {
-            throw new \Exception('Documento no tiene Track ID, primero debe enviarlo al SII');
+            throw new \Exception('Documento no tiene Track ID, primero debe enviarlo al SII.');
         }
         // obtener firma
         $Firma = $this->getContribuyente()->getFirma($user);

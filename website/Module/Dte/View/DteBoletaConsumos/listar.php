@@ -32,11 +32,11 @@ $data = array($titles);
 $row = array();
 $form = new \sowerphp\general\View_Helper_Form(false);
 $optionsBoolean = array(array('', 'Todos'), array('1', 'Si'), array('0', 'No'));
-$types_check = ['integer'=>'integer', 'real'=>'real'];
+$types_check = ['integer' => 'integer', 'real' => 'real'];
 foreach ($columns as $column => &$info) {
     // si es un tipo de dato de fecha o fecha con hora se muestra un input para fecha
     if (in_array($info['type'], ['date', 'timestamp', 'timestamp without time zone'])) {
-        $row[] = $form->input(array('type'=>'date', 'name'=>$column, 'value'=>(isset($search[$column])?$search[$column]:'')));
+        $row[] = $form->input(array('type' => 'date', 'name' => $column, 'value' => (isset($search[$column]) ? $search[$column] : '')));
     }
     // si es el estado se muestra un select
     else if ($column == 'revision_estado') {
@@ -44,20 +44,20 @@ foreach ($columns as $column => &$info) {
             'type' => 'select',
             'name' => $column,
             'options' => [
-                ''=> 'Todos',
+                '' =>  'Todos',
                 'null' => 'Sin estado',
                 'ERRONEO' => 'Rechazados',
                 'REPARO' => 'Con reparo',
                 'CORRECTO' => 'Correctos',
             ],
-            'value' => (isset($search[$column])?$search[$column]:''),
+            'value' => (isset($search[$column]) ? $search[$column] : ''),
         ]);
     }
     // si es cualquier otro tipo de datos
     else {
         $row[] = $form->input([
             'name' => $column,
-            'value' => (isset($search[$column])?$search[$column]:''),
+            'value' => (isset($search[$column]) ? $search[$column] : ''),
             'check' => !empty($types_check[$info['type']]) ? $types_check[$info['type']] : null,
         ]);
     }

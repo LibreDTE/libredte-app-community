@@ -27,8 +27,7 @@ namespace website\Dte;
  * Comando para enviar por correo automáticamente los DTE que son electrónicos si
  * el receptor es electrónico y no hay recepción del envío (basta la recepción
  * solamente, ya que aunque no haya acuse de recibo, si hay recepción después de
- * 8 días se asume con acuse de recibo)
- * @version 2019-08-20
+ * 8 días se asume con acuse de recibo).
  */
 class Shell_Command_DteEmitidos_Intercambio extends \Shell_App
 {
@@ -57,7 +56,7 @@ class Shell_Command_DteEmitidos_Intercambio extends \Shell_App
         $this->out('Enviando XML del DTE T'.$DteEmitido->dte.'F'.$DteEmitido->folio.' de '.$DteEmitido->getEmisor()->razon_social.' al correo '.$email);
         try {
             $status = $DteEmitido->email();
-            if ($status!==true) {
+            if ($status !== true) {
                 $this->out('  [error] '.$status['message']);
             }
         } catch (\Exception $e) {

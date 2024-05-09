@@ -25,15 +25,13 @@
 namespace website\Dte\Admin;
 
 /**
- * Clase exportar e importar datos de un contribuyente
- * @version 2019-07-13
+ * Clase exportar e importar datos de un contribuyente.
  */
 class Controller_Respaldos extends \Controller_App
 {
 
     /**
-     * Acción que permite exportar todos los datos de un contribuyente
-         * @version 2017-10-20
+     * Acción que permite exportar todos los datos de un contribuyente.
      */
     public function exportar($all = false)
     {
@@ -61,7 +59,7 @@ class Controller_Respaldos extends \Controller_App
             try {
                 $dir = $Respaldo->generar($Emisor->rut, $_POST['tablas']);
                 \sowerphp\general\Utility_File::compress(
-                    $dir, ['format'=>'zip', 'delete'=>true]
+                    $dir, ['format' => 'zip', 'delete' => true]
                 );
             } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message(

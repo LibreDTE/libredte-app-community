@@ -1,8 +1,8 @@
-<div class="page-header"><h1>DTEs emitidos sin enviar al receptor</h1></div>
+<div class="page-header"><h1>DTE emitidos sin enviar al receptor</h1></div>
 <p>Aquí podrá revisar el listado de documentos emitidos que no han sido enviados al correo de intercambio registrado del receptor.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Formcheck()']);
+echo $f->begin(['onsubmit' => 'Formcheck()']);
 echo $f->input([
     'type' => 'date',
     'name' => 'desde',

@@ -25,11 +25,7 @@
 namespace website\Dte\Admin\Mantenedores;
 
 /**
- * Clase para mapear la tabla iva_no_recuperable de la base de datos
- * Comentario de la tabla: Tipos de IVA no recuperable
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla iva_no_recuperable
- * @author SowerPHP Code Generator
- * @version 2015-09-27 18:24:13
+ * Clase para mapear la tabla iva_no_recuperable de la base de datos.
  */
 class Model_IvaNoRecuperables extends \Model_Plural_App
 {
@@ -39,8 +35,7 @@ class Model_IvaNoRecuperables extends \Model_Plural_App
     protected $_table = 'iva_no_recuperable'; ///< Tabla del modelo
 
     /**
-     * Método que entrega el listado de ivas no recuperables
-         * @version 2015-09-27
+     * Método que entrega el listado de ivas no recuperables.
      */
     public function getList()
     {

@@ -25,17 +25,22 @@
 namespace website;
 
 /**
- * Controlador para mostrar estadísticas públicas del sitio
- * @version 2017-09-10
+ * Controlador para mostrar estadísticas públicas del sitio.
  */
 class Controller_Estadisticas extends \Controller_App
 {
 
-    protected $allowedActions = ['index', 'produccion', 'certificacion', '_api_produccion_GET', '_api_certificacion_GET', '_api_version_GET'];
+    protected $allowedActions = [
+        'index',
+        'produccion',
+        'certificacion',
+        '_api_produccion_GET',
+        '_api_certificacion_GET',
+        '_api_version_GET',
+    ];
 
     /**
-     * Método para permitir acciones sin estar autenticado
-         * @version 2023-01-29
+     * Método para permitir acciones sin estar autenticado.
      */
     public function beforeFilter()
     {
@@ -43,11 +48,10 @@ class Controller_Estadisticas extends \Controller_App
     }
 
     /**
-     * Acción que muestra la página principal de estadísticas
-     * @param certificacion =true se generan estadísticas para el ambiente de certificación
-     * @param desde Desde cuando considerar la actividad de los contribuyentes
-     * @param hasta Hasta cuando considerar la actividad de los contribuyentes
-         * @version 2023-01-29
+     * Acción que muestra la página principal de estadísticas.
+     * @param certificacion =true se generan estadísticas para el ambiente de certificación.
+     * @param desde Desde cuando considerar la actividad de los contribuyentes.
+     * @param hasta Hasta cuando considerar la actividad de los contribuyentes.
      */
     public function index($certificacion = false, $desde = 1, $hasta = 0)
     {
@@ -63,10 +67,9 @@ class Controller_Estadisticas extends \Controller_App
 
     /**
      * Acción que muestra la página principal de estadísticas para ambiente de
-     * producción
-     * @param desde Desde cuando considerar la actividad de los contribuyentes
-     * @param hasta Hasta cuando considerar la actividad de los contribuyentes
-         * @version 2016-01-07
+     * producción.
+     * @param desde Desde cuando considerar la actividad de los contribuyentes.
+     * @param hasta Hasta cuando considerar la actividad de los contribuyentes.
      */
     public function produccion($desde = 1, $hasta = 0)
     {
@@ -75,10 +78,9 @@ class Controller_Estadisticas extends \Controller_App
 
     /**
      * Acción que muestra la página principal de estadísticas para ambiente de
-     * certificación
-     * @param desde Desde cuando considerar la actividad de los contribuyentes
-     * @param hasta Hasta cuando considerar la actividad de los contribuyentes
-         * @version 2016-01-07
+     * certificación.
+     * @param desde Desde cuando considerar la actividad de los contribuyentes.
+     * @param hasta Hasta cuando considerar la actividad de los contribuyentes.
      */
     public function certificacion($desde = 1, $hasta = 0)
     {
@@ -87,10 +89,9 @@ class Controller_Estadisticas extends \Controller_App
 
     /**
      * API que muestra la página principal de estadísticas para ambiente de
-     * producción
-     * @param desde Desde cuando considerar la actividad de los contribuyentes
-     * @param hasta Hasta cuando considerar la actividad de los contribuyentes
-         * @version 2016-02-07
+     * producción.
+     * @param desde Desde cuando considerar la actividad de los contribuyentes.
+     * @param hasta Hasta cuando considerar la actividad de los contribuyentes.
      */
     public function _api_produccion_GET($desde = 1, $hasta = 0)
     {
@@ -99,10 +100,9 @@ class Controller_Estadisticas extends \Controller_App
 
     /**
      * API que muestra la página principal de estadísticas para ambiente de
-     * certificación
-     * @param desde Desde cuando considerar la actividad de los contribuyentes
-     * @param hasta Hasta cuando considerar la actividad de los contribuyentes
-         * @version 2016-02-07
+     * certificación.
+     * @param desde Desde cuando considerar la actividad de los contribuyentes.
+     * @param hasta Hasta cuando considerar la actividad de los contribuyentes.
      */
     public function _api_certificacion_GET($desde = 1, $hasta = 0)
     {
@@ -111,11 +111,10 @@ class Controller_Estadisticas extends \Controller_App
 
     /**
      * Método que genera la estadística para las API de producción y
-     * certificación
-     * @param certificacion =true se generan estadísticas para el ambiente de certificación
-     * @param desde Desde cuando considerar la actividad de los contribuyentes
-     * @param hasta Hasta cuando considerar la actividad de los contribuyentes
-         * @version 2021-05-11
+     * certificación.
+     * @param certificacion =true se generan estadísticas para el ambiente de certificación.
+     * @param desde Desde cuando considerar la actividad de los contribuyentes.
+     * @param hasta Hasta cuando considerar la actividad de los contribuyentes.
      */
     protected function getEstadistica($certificacion, $desde, $hasta)
     {
@@ -133,12 +132,14 @@ class Controller_Estadisticas extends \Controller_App
         extract($this->getQuery([
             'contribuyentes_activos' => null,
         ]));
-        $oficial = $this->esVersionOficial();
-        if (!$oficial && $contribuyentes_activos) {
+        $enterprise = is_libredte_enterprise();
+        if (!$enterprise && $contribuyentes_activos) {
             try {
-                $contribuyentes_activos = $Contribuyentes->getConMovimientos($desde, $hasta, $certificacion, false);
+                $contribuyentes_activos = $Contribuyentes->getConMovimientos(
+                    $desde, $hasta, $certificacion, false
+                );
                 foreach($contribuyentes_activos as &$c) {
-                    if ($oficial) {
+                    if ($enterprise) {
                         $c['email'] = null;
                     }
                     unset($c['ambiente']);
@@ -164,8 +165,7 @@ class Controller_Estadisticas extends \Controller_App
     }
 
     /**
-     * Acción que entrega la versión de LibreDTE que se está ejecutando
-         * @version 2017-09-10
+     * Acción que entrega la versión de LibreDTE que se está ejecutando.
      */
     public function _api_version_GET()
     {
@@ -173,32 +173,21 @@ class Controller_Estadisticas extends \Controller_App
     }
 
     /**
-     * Método que indica si la versión de LibreDTE es o no la oficial
-         * @version 2017-09-10
-     */
-    protected function esVersionOficial()
-    {
-        return in_array($this->request->url, ['https://libredte.cl', 'https://desarrollo.libredte.cl']);
-    }
-
-    /**
-     * Método que determina la versión de LibreDTE que se está ejecutando
-         * @version 2021-10-29
+     * Método que determina la versión de LibreDTE que se está ejecutando.
      */
     protected function getVersion()
     {
-        $oficial = $this->esVersionOficial();
+        $enterprise = is_libredte_enterprise();
         return [
-            'linux' => (!$oficial and PHP_OS == 'Linux') ? $this->getLinuxInfo()['PRETTY_NAME'] : null,
-            'php' => !$oficial ? phpversion() : null,
+            'linux' => (!$enterprise and PHP_OS == 'Linux') ? $this->getLinuxInfo()['PRETTY_NAME'] : null,
+            'php' => !$enterprise ? phpversion() : null,
             'libredte' => $this->getVersionLibreDTE(),
         ];
     }
 
     /**
-     * Método que determina la información sobre la versión de Linux del sistema
+     * Método que determina la información sobre la versión de Linux del sistema.
      * @author https://stackoverflow.com/a/26863768
-     * @version 2018-05-22
      */
     protected function getLinuxInfo()
     {
@@ -221,8 +210,7 @@ class Controller_Estadisticas extends \Controller_App
     }
 
     /**
-     * Método que determina la versión de LibreDTE a partir del último commit del proyecto
-         * @version 2021-10-29
+     * Método que determina la versión de LibreDTE a partir del último commit del proyecto.
      */
     protected function getVersionLibreDTE()
     {

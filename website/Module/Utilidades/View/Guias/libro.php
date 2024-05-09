@@ -1,7 +1,7 @@
 <div class="page-header"><h1>Generar XML libro de guías de despacho</h1></div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check()']);
+echo $f->begin(['onsubmit' => 'Form.check()']);
 echo $f->input([
     'name' => 'RutEmisorLibro',
     'label' => 'RUT del emisor',
@@ -34,7 +34,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'TipoLibro',
     'label' => 'Tipo libro',
-    'options' => ['MENSUAL'=>'MENSUAL', 'ESPECIAL'=>'ESPECIAL'],
+    'options' => ['MENSUAL' => 'MENSUAL', 'ESPECIAL' => 'ESPECIAL'],
     'value' => 'ESPECIAL',
     'help' => 'En certificación debe ser: ESPECIAL.',
     'check' => 'notempty',
@@ -43,7 +43,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'TipoEnvio',
     'label' => 'Tipo envío',
-    'options' => ['TOTAL'=>'TOTAL'],
+    'options' => ['TOTAL' => 'TOTAL'],
     'help' => 'En certificación debe ser: TOTAL.',
     'check' => 'notempty',
 ]);

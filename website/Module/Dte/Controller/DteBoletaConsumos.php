@@ -25,22 +25,20 @@
 namespace website\Dte;
 
 /**
- * Clase para las acciones asociadas al libro de boletas electrónicas
- * @version 2018-11-11
+ * Clase para las acciones asociadas al libro de boletas electrónicas.
  */
 class Controller_DteBoletaConsumos extends \Controller_Maintainer
 {
 
     protected $namespace = __NAMESPACE__; ///< Namespace del controlador y modelos asociados
     protected $columnsView = [
-        'listar'=>['dia', 'secuencia', 'glosa', 'track_id', 'revision_estado', 'revision_detalle']
+        'listar' => ['dia', 'secuencia', 'glosa', 'track_id', 'revision_estado', 'revision_detalle']
     ]; ///< Columnas que se deben mostrar en las vistas
     protected $deleteRecord = false; ///< Indica si se permite o no borrar registros
     protected $actionsColsWidth = 90; ///< Ancho de columna para acciones en vista listar
 
     /**
-     * Acción principal que lista los períodos con boletas
-         * @version 2023-10-18
+     * Acción principal que lista los períodos con boletas.
      */
     public function listar($page = 1, $orderby = null, $order = 'A')
     {
@@ -52,13 +50,12 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
             //'rcof_rechazados' => $rcof_rechazados,
             //'rcof_reparos_secuencia' => $rcof_reparos_secuencia,
         ]);
-        $this->forceSearch(['emisor'=>$Emisor->rut, 'certificacion'=>$Emisor->enCertificacion()]);
+        $this->forceSearch(['emisor' => $Emisor->rut, 'certificacion' => $Emisor->enCertificacion()]);
         parent::listar($page, $orderby, $order);
     }
 
     /**
-     * Acción que permite enviar el reporte de consumo de folios
-         * @version 2016-02-14
+     * Acción que permite enviar el reporte de consumo de folios.
      */
     public function crear()
     {
@@ -71,20 +68,18 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
     }
 
     /**
-     * Acción para prevenir comportamiento por defecto del mantenedor
-         * @version 2016-02-14
+     * Acción para prevenir comportamiento por defecto del mantenedor.
      */
     public function editar($pk)
     {
         \sowerphp\core\Model_Datasource_Session::message(
-            'No se permite la edición de registros', 'error'
+            'No se permite la edición de registros.', 'error'
         );
         $this->redirect('/dte/dte_boleta_consumos/listar/1/dia/D');
     }
 
     /**
-     * Acción para descargar reporte de consumo de folios en XML
-         * @version 2019-07-17
+     * Acción para descargar reporte de consumo de folios en XML.
      */
     public function xml($dia)
     {
@@ -106,8 +101,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
     }
 
     /**
-     * Acción que permite enviar el consumo de folios al SII
-         * @version 2020-10-10
+     * Acción que permite enviar el consumo de folios al SII.
      */
     public function enviar_sii($dia)
     {
@@ -122,7 +116,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
                 );
             } else {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Reporte de consumo de folios del día '.$dia.' fue envíado al SII. Ahora debe consultar su estado con el Track ID '.$track_id, 'ok'
+                    'Reporte de consumo de folios del día '.$dia.' fue envíado al SII. Ahora debe consultar su estado con el Track ID '.$track_id.'.', 'ok'
                 );
         }
         } catch (\Exception $e) {
@@ -134,28 +128,27 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
     }
 
     /**
-     * Acción que actualiza el estado del envío del reporte de consumo de folios
-         * @version 2018-11-11
+     * Acción que actualiza el estado del envío del reporte de consumo de folios.
      */
     public function actualizar_estado($dia, $usarWebservice = null)
     {
         $filterListar = !empty($_GET['listar']) ? base64_decode($_GET['listar']) : '';
         $Emisor = $this->getContribuyente();
-        if ($usarWebservice===null) {
+        if ($usarWebservice === null) {
             $usarWebservice = $Emisor->config_sii_estado_dte_webservice;
         }
         // obtener reporte enviado
         $DteBoletaConsumo = new Model_DteBoletaConsumo($Emisor->rut, $dia, $Emisor->enCertificacion());
         if (!$DteBoletaConsumo->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el reporte de consumo de folios solicitado', 'error'
+                'No existe el reporte de consumo de folios solicitado.', 'error'
             );
             $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
         }
         // si no tiene track id error
         if (!$DteBoletaConsumo->track_id) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Reporte de consumo de folios no tiene Track ID, primero debe enviarlo al SII', 'error'
+                'Reporte de consumo de folios no tiene Track ID, primero debe enviarlo al SII.', 'error'
             );
             $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
         }
@@ -163,7 +156,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
         try {
             $DteBoletaConsumo->actualizarEstado($this->Auth->User->id, $usarWebservice);
             \sowerphp\core\Model_Datasource_Session::message(
-                'Se actualizó el estado del reporte de consumo de folios', 'ok'
+                'Se actualizó el estado del reporte de consumo de folios.', 'ok'
             );
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message(
@@ -175,8 +168,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
     }
 
     /**
-     * Acción que actualiza el estado del envío del reporte de consumo de folios
-         * @version 2016-02-14
+     * Acción que actualiza el estado del envío del reporte de consumo de folios.
      */
     public function solicitar_revision($dia)
     {
@@ -186,14 +178,14 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
         $DteBoletaConsumo = new Model_DteBoletaConsumo($Emisor->rut, $dia, $Emisor->enCertificacion());
         if (!$DteBoletaConsumo->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el reporte de consumo de folios solicitado', 'error'
+                'No existe el reporte de consumo de folios solicitado.', 'error'
             );
             $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
         }
         try {
             $DteBoletaConsumo->solicitarRevision($this->Auth->User->id);
             \sowerphp\core\Model_Datasource_Session::message(
-                'Se solicitó revisión del consumo de folios', 'ok'
+                'Se solicitó revisión del consumo de folios.', 'ok'
             );
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
@@ -203,8 +195,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
     }
 
     /**
-     * Acción que permite eliminar un RCOF
-         * @version 2020-07-14
+     * Acción que permite eliminar un RCOF.
      */
     public function eliminar($dia)
     {
@@ -219,7 +210,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
         $DteBoletaConsumo = new Model_DteBoletaConsumo($Emisor->rut, $dia, $Emisor->enCertificacion());
         if (!$DteBoletaConsumo->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el reporte de consumo de folios solicitado', 'error'
+                'No existe el reporte de consumo de folios solicitado.', 'error'
             );
             $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
         }
@@ -237,8 +228,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
 
     /**
      * Acción que entrega un listado con todos los reportes de consumos de
-     * folios pendientes de enviar al SII
-         * @version 2018-11-11
+     * folios pendientes de enviar al SII.
      */
     public function pendientes()
     {

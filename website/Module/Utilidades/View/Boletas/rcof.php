@@ -1,7 +1,7 @@
 <div class="page-header"><h1>Generar RVD (ex RCOF)</h1></div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['focus'=>'rutField', 'onsubmit'=>'Form.check()']);
+echo $f->begin(['focus' => 'rutField', 'onsubmit' => 'Form.check()']);
 echo $f->input([
     'name' => 'RutEmisor',
     'label' => 'RUT emisor',
@@ -51,6 +51,6 @@ echo $f->input([
     'type' => 'select',
     'name' => 'salida',
     'label' => '¿Generar?',
-    'options' => ['dia'=>'Un archivo por cada día', 'total'=>'Un archivo con el total de días'],
+    'options' => ['dia' => 'Un archivo por cada día', 'total' => 'Un archivo con el total de días'],
 ]);
 echo $f->end('Generar RCOF');

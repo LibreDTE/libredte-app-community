@@ -25,15 +25,13 @@
 namespace website\Utilidades;
 
 /**
- * Controlador para utilidades asociadas a archivos XML
- * @version 2016-09-12
+ * Controlador para utilidades asociadas a archivos XML.
  */
 class Controller_Xml extends \Controller_App
 {
 
     /**
-     * Acción para firmar un XML
-         * @version 2019-07-17
+     * Acción para firmar un XML.
      */
     public function firmar()
     {
@@ -52,7 +50,7 @@ class Controller_Xml extends \Controller_App
             // firmar
             $Firma = new \sasco\LibreDTE\FirmaElectronica([
                 'file' => $_FILES['firma']['tmp_name'],
-                'pass'=>$_POST['contrasenia']
+                'pass' => $_POST['contrasenia']
             ]);
             $xmlSigned = $Firma->signXML($xml, $id, $tag);
             // entregar datos

@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_venta de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla dte_venta
- * @author SowerPHP Code Generator
- * @version 2015-09-25 21:47:15
+ * Clase para mapear la tabla dte_venta de la base de datos.
  */
 class Model_DteVenta extends Model_Base_Libro
 {
@@ -275,7 +271,7 @@ class Model_DteVenta extends Model_Base_Libro
                 AND certificacion = :certificacion
             GROUP BY receptor_evento
             ORDER BY receptor_evento ASC
-        ', [':emisor'=>$this->emisor, ':periodo'=>$this->periodo, ':certificacion'=>(int)$this->certificacion]);
+        ', [':emisor' => $this->emisor, ':periodo' => $this->periodo, ':certificacion' => (int)$this->certificacion]);
         foreach ($aux as &$a) {
             if ($a['codigo']) {
                 $a['glosa'] = \sasco\LibreDTE\Sii\RegistroCompraVenta::$eventos[$a['codigo']];
@@ -367,7 +363,7 @@ class Model_DteVenta extends Model_Base_Libro
                 AND '.$periodo_col.' = :periodo
                 AND track_id != -1
                 AND revision_estado IS NULL
-        ', [':emisor'=>$this->emisor, ':periodo'=>$this->periodo, ':certificacion'=>(int)$this->certificacion]);
+        ', [':emisor' => $this->emisor, ':periodo' => $this->periodo, ':certificacion' => (int)$this->certificacion]);
     }
 
     /**
@@ -388,7 +384,7 @@ class Model_DteVenta extends Model_Base_Libro
                 AND '.$periodo_col.' = :periodo
                 AND track_id != -1
                 AND SUBSTRING(revision_estado FROM 1 FOR 3) IN (\''.implode('\', \'', Model_DteEmitidos::$revision_estados['rechazados']).'\')
-        ', [':emisor'=>$this->emisor, ':periodo'=>$this->periodo, ':certificacion'=>(int)$this->certificacion]);
+        ', [':emisor' => $this->emisor, ':periodo' => $this->periodo, ':certificacion' => (int)$this->certificacion]);
     }
 
 }

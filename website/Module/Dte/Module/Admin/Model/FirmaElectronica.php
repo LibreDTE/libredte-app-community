@@ -25,11 +25,7 @@
 namespace website\Dte\Admin;
 
 /**
- * Clase para mapear la tabla firma_electronica de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla firma_electronica
- * @author SowerPHP Code Generator
- * @version 2015-09-22 19:27:29
+ * Clase para mapear la tabla firma_electronica de la base de datos.
  */
 class Model_FirmaElectronica extends \Model_App
 {
@@ -161,8 +157,7 @@ class Model_FirmaElectronica extends \Model_App
     ); ///< Namespaces que utiliza esta clase
 
     /**
-     * Método para obtener la contraseña de la firma electrónica en texto plano
-         * @version 2019-07-19
+     * Método para obtener la contraseña de la firma electrónica en texto plano.
      */
     public function getContraseniaPlainText()
     {

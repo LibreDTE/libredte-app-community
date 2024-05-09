@@ -125,7 +125,7 @@ echo $t->generate([
 <div role="tabpanel" class="tab-pane" id="pdf" aria-labelledby="pdf-tab">
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['action'=>$_base.'/dte/dte_recibidos/pdf/'.$Emisor->rut.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio, 'id'=>'pdfForm', 'onsubmit'=>'Form.check(\'pdfForm\')']);
+echo $f->begin(['action' => $_base.'/dte/dte_recibidos/pdf/'.$Emisor->rut.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio, 'id' => 'pdfForm', 'onsubmit' => 'Form.check(\'pdfForm\')']);
 $formatoPDF = $Emisor->getConfigPDF($DteRecibido);
 $formatos_pdf = (new \website\Dte\Pdf\Utility_Formatos())->setContribuyente($Emisor)->getFormatos();
 if (!empty($formatos_pdf)) {
@@ -152,8 +152,8 @@ echo $f->input([
     'value' => $formatoPDF['papelContinuo'],
     'check' => 'notempty',
 ]);
-echo $f->input(['name'=>'copias_tributarias', 'label'=>'Copias tributarias', 'value'=>1, 'check'=>'notempty integer']);
-echo $f->input(['name'=>'copias_cedibles', 'label'=>'Copias cedibles', 'value'=>0, 'check'=>'notempty integer']);
+echo $f->input(['name' => 'copias_tributarias', 'label' => 'Copias tributarias', 'value' => 1, 'check' => 'notempty integer']);
+echo $f->input(['name' => 'copias_cedibles', 'label' => 'Copias cedibles', 'value' => 0, 'check' => 'notempty integer']);
 echo $f->end('Descargar PDF');
 ?>
 </div>

@@ -28,15 +28,12 @@ namespace website\Dte;
  * las funcionalidades extras de LibreDTE.
  * Se provee como una clase aparte, porque es una funcionalidad que por defecto
  * viene desactivada.
- *
- * @version 2020-10-31
  */
 class Utility_EnvioBoleta
 {
 
     /**
-     * Método que envía un XML de EnvioBoleta al SII y entrega el Track ID del envío
-         * @version 2020-10-31
+     * Método que envía un XML de EnvioBoleta al SII y entrega el Track ID del envío.
      */
     public static function enviar($usuario, $empresa, $xml, $Firma, $gzip = false, $retry = null)
     {
@@ -62,8 +59,7 @@ class Utility_EnvioBoleta
     }
 
     /**
-     * Método que entrega el estado normalizado del envío e la boleta al SII
-         * @version 2020-10-31
+     * Método que entrega el estado normalizado del envío e la boleta al SII.
      */
     public static function estado_normalizado($rut, $dv, $track_id, $Firma, $dte, $folio)
     {

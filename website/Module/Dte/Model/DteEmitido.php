@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_emitido de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla dte_emitido
- * @author SowerPHP Code Generator
- * @version 2015-09-23 11:44:17
+ * Clase para mapear la tabla dte_emitido de la base de datos.
  */
 class Model_DteEmitido extends Model_Base_Envio
 {
@@ -385,7 +381,7 @@ class Model_DteEmitido extends Model_Base_Envio
      */
     public function __construct($emisor = null, $dte = null, $folio = null, $certificacion = null)
     {
-        if ($emisor!==null && $dte!==null && $folio!==null && $certificacion!==null) {
+        if ($emisor !== null && $dte !== null && $folio !== null && $certificacion !== null) {
             if ($folio > 2147483647) { // FIX: DTE usando folio muy grande en referencias
                 $folio = 0;
             }
@@ -749,7 +745,7 @@ class Model_DteEmitido extends Model_Base_Envio
                 AND r.referencia_dte = :dte
                 AND r.referencia_folio = :folio
             ORDER BY fecha DESC, t.tipo ASC, r.folio DESC
-        ', [':rut'=>$this->emisor, ':dte'=>$this->dte, ':folio'=>$this->folio, ':certificacion'=>(int)$this->certificacion]);
+        ', [':rut' => $this->emisor, ':dte' => $this->dte, ':folio' => $this->folio, ':certificacion' => (int)$this->certificacion]);
     }
 
     /**
@@ -770,7 +766,7 @@ class Model_DteEmitido extends Model_Base_Envio
                 AND r.referencia_dte = :dte
                 AND r.referencia_folio = :folio
                 AND r.codigo = 1
-        ', [':rut'=>$this->emisor, ':dte'=>$this->dte, ':folio'=>$this->folio, ':certificacion'=>(int)$this->certificacion]);
+        ', [':rut' => $this->emisor, ':dte' => $this->dte, ':folio' => $this->folio, ':certificacion' => (int)$this->certificacion]);
         if ($anulado) {
             return false;
         }
@@ -848,7 +844,7 @@ class Model_DteEmitido extends Model_Base_Envio
                 AND c.folio = :folio
                 AND c.certificacion = :certificacion
             ORDER BY fecha
-        ', [':rut'=>$this->emisor, ':dte'=>$this->dte, ':folio'=>$this->folio, ':certificacion'=>(int)$this->certificacion]);
+        ', [':rut' => $this->emisor, ':dte' => $this->dte, ':folio' => $this->folio, ':certificacion' => (int)$this->certificacion]);
     }
 
     /**
@@ -1207,7 +1203,7 @@ class Model_DteEmitido extends Model_Base_Envio
         if (in_array($this->dte, [39, 41])) {
             $class = \sowerphp\core\Configure::read('dte.clase_boletas');
             if (!$class || !class_exists($class)) {
-                throw new \Exception('El envío de boletas al SII no está disponible en esta instancia de LibreDTE.');
+                throw new \Exception('El envío de boletas al SII no está disponible en este servidor de LibreDTE.');
             }
             $result = $class::enviar($Firma->getID(), $Emisor->rut.'-'.$Emisor->dv, $xml, $Firma, $gzip, $retry);
             if ($result === false) {
@@ -1278,7 +1274,7 @@ class Model_DteEmitido extends Model_Base_Envio
         if (in_array($this->dte, [39, 41])) {
             $class = \sowerphp\core\Configure::read('dte.clase_boletas');
             if (!$class || !class_exists($class)) {
-                throw new \Exception('Consulta de estado de envío de boletas al SII no está disponible en esta versión de LibreDTE');
+                throw new \Exception('Consulta de estado de envío de boletas al SII no está disponible en este servidor de LibreDTE.');
             }
             $estado_up = $class::estado_normalizado($this->getEmisor()->rut, $this->getEmisor()->dv, $this->track_id, $Firma, $this->dte, $this->folio);
             if ($estado_up === false) {

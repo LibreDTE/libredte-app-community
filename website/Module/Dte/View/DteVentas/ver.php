@@ -148,7 +148,7 @@ foreach ($resumen as &$r) {
         }
     }
     // verificar si IVA boleta cuadra para mostrar alerta con explicación si no lo hace
-    if ($r['TpoDoc']==39) {
+    if ($r['TpoDoc'] == 39) {
         $iva_boleta = $r['TotMntIVA'];
         $iva_boleta_segun_neto = round($r['TotMntNeto'] * 0.19);
         $iva_boleta_segun_total = round(round($r['TotMntTotal'] / 1.19) * 0.19);
@@ -165,7 +165,7 @@ foreach ($resumen as &$r) {
         }
     }
     // agregar alerta IVA boleta
-    if ($r['TpoDoc']==39 && $alerta_iva_boleta) {
+    if ($r['TpoDoc'] == 39 && $alerta_iva_boleta) {
         $r['TotMntIVA'] .= ' '.$alerta_iva_boleta;
     }
 }
@@ -235,28 +235,28 @@ if (!empty($alerta_iva_boleta)) :
 <?php
 $f = new \sowerphp\general\View_Helper_Form(false);
 echo $f->begin([
-    'id'=>'enviar_sii',
-    'action'=>$_base.'/dte/dte_ventas/enviar_sii/'.$Libro->periodo,
-    'onsubmit'=>'Form.check(\'enviar_sii\') && __.confirm(this)'
+    'id' => 'enviar_sii',
+    'action' => $_base.'/dte/dte_ventas/enviar_sii/'.$Libro->periodo,
+    'onsubmit' => 'Form.check(\'enviar_sii\') && __.confirm(this)'
 ]);
 echo $f->input([
     'type' => 'js',
     'id' => 'resumenes',
     'titles' => $titulos,
     'inputs' => [
-        ['type'=>'select', 'name'=>'TpoDoc', 'options'=>[35=>'Boleta', 38=>'Boleta exenta', 48=>'Pago electrónico'], 'attr'=>'style="width:10em"'],
-        ['name'=>'TotDoc', 'check'=>'notempty integer'],
-        ['name'=>'TotAnulado', 'check'=>'integer'],
-        ['name'=>'TotOpExe', 'check'=>'integer'],
-        ['name'=>'TotMntExe', 'check'=>'integer'],
-        ['name'=>'TotMntNeto', 'check'=>'integer'],
-        ['name'=>'TotMntIVA', 'check'=>'integer'],
-        ['name'=>'TotIVAPropio', 'check'=>'integer'],
-        ['name'=>'TotIVATerceros', 'check'=>'integer'],
-        ['name'=>'TotLey18211', 'check'=>'integer'],
-        ['name'=>'TotMntTotal', 'check'=>'notempty integer'],
-        ['name'=>'TotMntNoFact', 'check'=>'integer'],
-        ['name'=>'TotMntPeriodo', 'check'=>'integer'],
+        ['type' => 'select', 'name' => 'TpoDoc', 'options' => [35=>'Boleta', 38=>'Boleta exenta', 48=>'Pago electrónico'], 'attr' => 'style="width:10em"'],
+        ['name' => 'TotDoc', 'check' => 'notempty integer'],
+        ['name' => 'TotAnulado', 'check' => 'integer'],
+        ['name' => 'TotOpExe', 'check' => 'integer'],
+        ['name' => 'TotMntExe', 'check' => 'integer'],
+        ['name' => 'TotMntNeto', 'check' => 'integer'],
+        ['name' => 'TotMntIVA', 'check' => 'integer'],
+        ['name' => 'TotIVAPropio', 'check' => 'integer'],
+        ['name' => 'TotIVATerceros', 'check' => 'integer'],
+        ['name' => 'TotLey18211', 'check' => 'integer'],
+        ['name' => 'TotMntTotal', 'check' => 'notempty integer'],
+        ['name' => 'TotMntNoFact', 'check' => 'integer'],
+        ['name' => 'TotMntPeriodo', 'check' => 'integer'],
     ],
 ]);
 $f->setStyle('horizontal');
@@ -265,7 +265,7 @@ $f->setStyle('horizontal');
 <?php
 echo $f->input([
     'name' => 'CodAutRec',
-    'label'=>'Autorización rectificación',
+    'label' => 'Autorización rectificación',
     'help' => 'Código de autorización de rectificación obtenido desde el SII (solo si es rectificación). <a href="#" onclick="get_codigo_reemplazo()">Solicitar código aquí</a>',
     'check' => ($Libro->track_id && $Libro->getEstado() != 'LRH' && $Libro->track_id!=-1)?'notempty':'',
 ]);

@@ -25,22 +25,21 @@
 namespace website\Utilidades;
 
 /**
- * Controlador para utilidades asociadas a las guías de despacho
- * @version 2016-09-12
+ * Controlador para utilidades asociadas a las guías de despacho.
  */
 class Controller_Guias extends \Controller_App
 {
 
     /**
      * Método que permite generar un libro de guías de despacho a partir de un
-     * archivo CSV con el detalle del mismo
-         * @version 2015-12-24
+     * archivo CSV con el detalle del mismo.
      */
     public function libro()
     {
         // si no se viene por post terminar
-        if (!isset($_POST['submit']))
+        if (!isset($_POST['submit'])) {
             return;
+        }
         // verificar campos no estén vacíos
         $campos = [
             'RutEmisorLibro',
@@ -55,7 +54,7 @@ class Controller_Guias extends \Controller_App
         foreach ($campos as $campo) {
             if (!isset($_POST[$campo][0])) {
                  \sowerphp\core\Model_Datasource_Session::message(
-                    $campo.' no puede estar en blanco', 'error'
+                    $campo.' no puede estar en blanco.', 'error'
                 );
                 return;
             }
@@ -63,14 +62,14 @@ class Controller_Guias extends \Controller_App
         // si no se pasó el archivo error
         if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Debes enviar el archivo CSV con el detalle de las guías a la que deseas generar su XML', 'error'
+                'Debes enviar el archivo CSV con el detalle de las guías a la que deseas generar su XML.', 'error'
             );
             return;
         }
         // si no se pasó la firma error
         if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Debes enviar el archivo con la firma digital', 'error'
+                'Debes enviar el archivo con la firma digital.', 'error'
             );
             return;
         }
@@ -82,7 +81,7 @@ class Controller_Guias extends \Controller_App
             ]);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible abrir la firma digital, quizás contraseña incorrecta', 'error'
+                'No fue posible abrir la firma digital, quizás contraseña incorrecta.', 'error'
             );
             return;
         }
@@ -109,7 +108,7 @@ class Controller_Guias extends \Controller_App
         // descargar XML
         $file = TMP.'/'.$LibroGuia->getID().'.xml';
         file_put_contents($file, $xml);
-        \sasco\LibreDTE\File::compress($file, ['format'=>'zip', 'delete'=>true]);
+        \sasco\LibreDTE\File::compress($file, ['format' => 'zip', 'delete' => true]);
         exit; // TODO: enviar usando $this->response->send() / File::compress()
     }
 

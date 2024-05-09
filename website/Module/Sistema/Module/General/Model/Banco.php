@@ -1,8 +1,8 @@
 <?php
 
 /**
- * SowerPHP
- * Copyright (C) SowerPHP (http://sowerphp.org)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,10 +26,6 @@ namespace website\Sistema\General;
 
 /**
  * Clase para mapear la tabla banco de la base de datos
- * Comentario de la tabla: Tabla para bancos
- * Esta clase permite trabajar sobre un registro de la tabla banco
- * @author SowerPHP Code Generator
- * @version 2014-10-19 10:08:32
  */
 class Model_Banco extends \Model_App
 {

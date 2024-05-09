@@ -18,7 +18,7 @@
         <div class="card-body">
             <ul>
                 <li><strong>Recibido en SII</strong>: <?=$estado['RECIBIDO']?></li>
-                <li><strong>Track ID</strong>: <?=!empty($estado['TRACKID'])?$estado['TRACKID']:null?></li>
+                <li><strong>Track ID</strong>: <?=!empty($estado['TRACKID']) ? $estado['TRACKID'] : null?></li>
                 <li><strong>Estado</strong>: <?=$estado['ESTADO']?></li>
                 <li><strong>Glosa</strong>: <?=$estado['GLOSA']?></li>
                 <li><strong>N° atención SII</strong>: <?=$estado['NUMATENCION']?></li>

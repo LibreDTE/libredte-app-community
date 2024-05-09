@@ -25,11 +25,7 @@
 namespace website\Dte\Admin;
 
 /**
- * Clase para mapear la tabla item de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla item
- * @author SowerPHP Code Generator
- * @version 2016-02-24 15:27:16
+ * Clase para mapear la tabla item de la base de datos.
  */
 class Model_Itemes extends \Model_Plural_App
 {
@@ -39,8 +35,7 @@ class Model_Itemes extends \Model_Plural_App
     protected $_table = 'item'; ///< Tabla del modelo
 
     /**
-     * Método que busca un item en la base de datos
-         * @version 2016-03-19
+     * Método que busca un item en la base de datos.
      */
     public function get($contribuyente, $codigo = null, $tipo = null)
     {
@@ -54,12 +49,14 @@ class Model_Itemes extends \Model_Plural_App
             FROM item
             WHERE contribuyente = :contribuyente AND codigo = :codigo
             LIMIT 1
-        ', [':contribuyente'=>$contribuyente, ':codigo'=>$codigo]));
+        ', [
+            ':contribuyente' => $contribuyente,
+            ':codigo' => $codigo,
+        ]));
     }
 
     /**
-     * Método que entrega el listado de items del contribuyente
-         * @version 2019-07-25
+     * Método que entrega el listado de items del contribuyente.
      */
     public function getList()
     {
@@ -68,17 +65,16 @@ class Model_Itemes extends \Model_Plural_App
             FROM item
             WHERE contribuyente = :contribuyente
             ORDER BY item
-        ', [':contribuyente'=>$this->getContribuyente()->rut]);
+        ', [':contribuyente' => $this->getContribuyente()->rut]);
     }
 
     /**
-     * Método que busca los items del contribuyente
-         * @version 2019-06-04
+     * Método que busca los items del contribuyente.
      */
     public function getItems($filtros = [])
     {
         $where = ['contribuyente = :contribuyente', 'activo = true'];
-        $vars = [':contribuyente'=>$this->getContribuyente()->rut];
+        $vars = [':contribuyente' => $this->getContribuyente()->rut];
         if (!empty($filtros['tipo'])) {
             $where[] = 'codigo_tipo = :tipo';
             $vars[':tipo'] = $filtros['tipo'];
@@ -92,8 +88,7 @@ class Model_Itemes extends \Model_Plural_App
     }
 
     /**
-     * Método que exporta todos los items de un contribuyente
-         * @version 2020-09-17
+     * Método que exporta todos los items de un contribuyente.
      */
     public function exportar()
     {
@@ -102,7 +97,7 @@ class Model_Itemes extends \Model_Plural_App
             FROM item
             WHERE contribuyente = :contribuyente
             ORDER BY clasificacion, codigo_tipo, codigo
-        ', [':contribuyente'=>$this->getContribuyente()->rut]);
+        ', [':contribuyente' => $this->getContribuyente()->rut]);
     }
 
 }

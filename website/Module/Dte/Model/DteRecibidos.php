@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_recibido de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla dte_recibido
- * @author SowerPHP Code Generator
- * @version 2015-09-27 19:27:12
+ * Clase para mapear la tabla dte_recibido de la base de datos.
  */
 class Model_DteRecibidos extends \Model_Plural_App
 {
@@ -40,10 +36,9 @@ class Model_DteRecibidos extends \Model_Plural_App
 
     /**
      * Método que entrega el listado de documentos que tienen compras de
-     * activos fijos
-         * @version 2022-01-14
+     * activos fijos.
      */
-    public function getActivosFijos($filtros)
+    public function getActivosFijos(array $filtros): array
     {
         return $this->getByTipoTransaccion(array_merge($filtros, [
             'tipo_transaccion' => 4,
@@ -52,10 +47,9 @@ class Model_DteRecibidos extends \Model_Plural_App
 
     /**
      * Método que entrega el listado de documentos que tienen compras de
-     * supermercado
-         * @version 2022-01-14
+     * supermercado.
      */
-    public function getSupermercado($filtros)
+    public function getSupermercado(array $filtros): array
     {
         return $this->getByTipoTransaccion(array_merge($filtros, [
             'tipo_transaccion' => 2,
@@ -64,10 +58,9 @@ class Model_DteRecibidos extends \Model_Plural_App
 
     /**
      * Método que entrega el listado de documentos que tienen compras con
-     * cierto tipo de transacción
-         * @version 2022-02-21
+     * cierto tipo de transacción.
      */
-    private function getByTipoTransaccion($filtros)
+    private function getByTipoTransaccion(array $filtros): array
     {
         $where = ['r.tipo_transaccion = :tipo_transaccion'];
         $vars = [
@@ -165,10 +158,9 @@ class Model_DteRecibidos extends \Model_Plural_App
     }
 
     /**
-     * Método que busca en los documentos recibidos de un contribuyente
-         * @version 2017-01-11
+     * Método que busca en los documentos recibidos de un contribuyente.
      */
-    public function buscar($filtros)
+    public function buscar(array $filtros): array
     {
         // determinar receptor, fecha desde y hasta para la busqueda
         if (!empty($filtros['fecha'])) {
@@ -181,7 +173,11 @@ class Model_DteRecibidos extends \Model_Plural_App
             throw new \Exception('Debe indicar una fecha o un rango para la búsqueda');
         }
         $where = ['d.receptor = :receptor', 'd.fecha BETWEEN :fecha_desde AND :fecha_hasta'];
-        $vars = [':receptor'=>$this->getContribuyente()->rut, ':fecha_desde'=>$fecha_desde, ':fecha_hasta'=>$fecha_hasta];
+        $vars = [
+            ':receptor' => $this->getContribuyente()->rut, 
+            ':fecha_desde' => $fecha_desde, 
+            ':fecha_hasta' => $fecha_hasta,
+        ];
         // filtro emisor
         if (!empty($filtros['emisor'])) {
             $where[] = 'd.emisor = :emisor';
@@ -222,8 +218,7 @@ class Model_DteRecibidos extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega el detalle de las compras en un rango de tiempo
-         * @version 2021-05-17
+     * Método que entrega el detalle de las compras en un rango de tiempo.
      */
     public function getDetalle($desde, $hasta, $detalle)
     {
@@ -274,7 +269,12 @@ class Model_DteRecibidos extends \Model_Plural_App
                 AND r.certificacion = :certificacion
                 AND r.fecha BETWEEN :desde AND :hasta
             ORDER BY r.fecha, r.dte, r.folio
-        ', [':receptor'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion(), ':desde'=>$desde, ':hasta'=>$hasta]);
+        ', [
+            ':receptor' => $this->getContribuyente()->rut, 
+            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
+            ':desde' => $desde, 
+            ':hasta' => $hasta,
+        ]);
         foreach ($datos as &$dato) {
             $dato['id'] = 'T'.$dato['id'].'F'.$dato['folio'];
         }
@@ -298,7 +298,10 @@ class Model_DteRecibidos extends \Model_Plural_App
             if ($d['rcv_accion'] && !empty(\sasco\LibreDTE\Sii\RegistroCompraVenta::$acciones[$d['rcv_accion']])) {
                 $d['rcv_accion'] = \sasco\LibreDTE\Sii\RegistroCompraVenta::$acciones[$d['rcv_accion']];
             }
-            if ($d['tipo_transaccion'] && !empty(\sasco\LibreDTE\Sii\RegistroCompraVenta::$tipo_transacciones[$d['tipo_transaccion']])) {
+            if (
+                $d['tipo_transaccion']
+                && !empty(\sasco\LibreDTE\Sii\RegistroCompraVenta::$tipo_transacciones[$d['tipo_transaccion']])
+            ) {
                 $d['tipo_transaccion'] = \sasco\LibreDTE\Sii\RegistroCompraVenta::$tipo_transacciones[$d['tipo_transaccion']];
             }
         }
@@ -306,10 +309,9 @@ class Model_DteRecibidos extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por tipo de DTE
-         * @version 2016-09-24
+     * Método que entrega los totales de documentos emitidos por tipo de DTE.
      */
-    public function getPorTipo($desde, $hasta)
+    public function getPorTipo($desde, $hasta): array
     {
         return $this->db->getTable('
             SELECT t.tipo, COUNT(*) AS total
@@ -320,14 +322,18 @@ class Model_DteRecibidos extends \Model_Plural_App
                 AND r.fecha BETWEEN :desde AND :hasta
             GROUP BY t.tipo
             ORDER BY total DESC
-        ', [':receptor'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion(), ':desde'=>$desde, ':hasta'=>$hasta]);
+        ', [
+            ':receptor' => $this->getContribuyente()->rut, 
+            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
+            ':desde' => $desde, 
+            ':hasta' => $hasta,
+        ]);
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por día
-         * @version 2019-06-30
+     * Método que entrega los totales de documentos emitidos por día.
      */
-    public function getPorDia($desde, $hasta)
+    public function getPorDia($desde, $hasta): array
     {
         return $this->db->getTable('
             SELECT fecha AS dia, COUNT(*) AS total
@@ -338,14 +344,18 @@ class Model_DteRecibidos extends \Model_Plural_App
                 AND fecha BETWEEN :desde AND :hasta
             GROUP BY fecha
             ORDER BY fecha
-        ', [':receptor'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion(), ':desde'=>$desde, ':hasta'=>$hasta]);
+        ', [
+            ':receptor' => $this->getContribuyente()->rut, 
+            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
+            ':desde' => $desde, 
+            ':hasta' => $hasta,
+        ]);
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por sucursal
-         * @version 2019-06-30
+     * Método que entrega los totales de documentos emitidos por sucursal.
      */
-    public function getPorSucursal($desde, $hasta)
+    public function getPorSucursal($desde, $hasta): array
     {
         $datos = $this->db->getTable('
             SELECT COALESCE(sucursal_sii_receptor, 0) AS sucursal, COUNT(*) AS total
@@ -356,7 +366,12 @@ class Model_DteRecibidos extends \Model_Plural_App
                 AND fecha BETWEEN :desde AND :hasta
             GROUP BY sucursal
             ORDER BY total DESC
-        ', [':receptor'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion(), ':desde'=>$desde, ':hasta'=>$hasta]);
+        ', [
+            ':receptor' => $this->getContribuyente()->rut, 
+            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
+            ':desde' => $desde, 
+            ':hasta' => $hasta,
+        ]);
         foreach($datos as &$d) {
             $d['sucursal'] = $this->getContribuyente()->getSucursal($d['sucursal'])->sucursal;
         }
@@ -364,10 +379,9 @@ class Model_DteRecibidos extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por usuario
-         * @version 2019-06-30
+     * Método que entrega los totales de documentos emitidos por usuario.
      */
-    public function getPorUsuario($desde, $hasta)
+    public function getPorUsuario($desde, $hasta): array
     {
         return $this->db->getTable('
             SELECT u.usuario, COUNT(*) AS total
@@ -378,14 +392,18 @@ class Model_DteRecibidos extends \Model_Plural_App
                 AND r.fecha BETWEEN :desde AND :hasta
             GROUP BY u.usuario
             ORDER BY total DESC
-        ', [':receptor'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion(), ':desde'=>$desde, ':hasta'=>$hasta]);
+        ', [
+            ':receptor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
+            ':desde' => $desde, 
+            ':hasta' => $hasta,
+        ]);
     }
 
     /**
-     * Método que entrega los documentos sin XML asociado
-         * @version 2021-02-22
+     * Método que entrega los documentos sin XML asociado.
      */
-    public function getDocumentosSinXML($desde, $hasta)
+    public function getDocumentosSinXML($desde, $hasta): array
     {
         return $this->db->getTable('
             SELECT
@@ -420,7 +438,7 @@ class Model_DteRecibidos extends \Model_Plural_App
             ':receptor' => $this->getContribuyente()->rut,
             ':certificacion' => $this->getContribuyente()->enCertificacion(),
             ':desde' => $desde,
-            ':hasta'=>$hasta,
+            ':hasta' => $hasta,
         ]);
     }
 

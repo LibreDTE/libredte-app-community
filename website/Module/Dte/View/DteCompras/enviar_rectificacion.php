@@ -18,12 +18,12 @@ function get_codigo_reemplazo() {
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin([
     'action' => $_base.'/dte/dte_compras/enviar_sii/'.$periodo,
-    'onsubmit'=>'Form.check() && __.confirm(this, \'¿Está seguro de enviar la rectificación del libro?\')'
+    'onsubmit' => 'Form.check() && __.confirm(this, \'¿Está seguro de enviar la rectificación del libro?\')'
 ]);
 echo $f->input([
     'name' => 'CodAutRec',
-    'label'=>'Autorización rectificación',
+    'label' => 'Autorización rectificación',
     'help' => 'Código de autorización de rectificación obtenido desde el SII. <a href="#" onclick="get_codigo_reemplazo()">Solicitar código aquí</a>',
-    'check'=>'notempty',
+    'check' => 'notempty',
 ]);
 echo $f->end('Enviar rectificación');

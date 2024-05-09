@@ -26,12 +26,7 @@ namespace website\Dte\Admin;
 
 /**
  * Clase para el controlador asociado a la tabla dte_folio de la base de
- * datos
- * Comentario de la tabla:
- * Esta clase permite controlar las acciones entre el modelo y vista para la
- * tabla dte_folio
- * @author SowerPHP Code Generator
- * @version 2015-09-22 10:44:45
+ * datos.
  */
 class Controller_DteFolios extends \Controller_App
 {
@@ -717,7 +712,7 @@ class Controller_DteFolios extends \Controller_App
         if (!$DteFolio->exists()) {
             $this->Api->send('No existe el mantenedor de folios para el tipo de DTE '.$dte.'.', 404);
         }
-        extract($this->getQuery(['sinUso'=>false]));
+        extract($this->getQuery(['sinUso' => false]));
         if ($sinUso) {
             $DteFolio->sin_uso = $DteFolio->getSinUso();
         }
@@ -817,7 +812,7 @@ class Controller_DteFolios extends \Controller_App
      */
     public function _api_estado_GET($dte, $folio, $emisor)
     {
-        extract($this->getQuery(['formato'=>'json']));
+        extract($this->getQuery(['formato' => 'json']));
         // crear usuario, emisor y verificar permisos
         $User = $this->Api->getAuthUser();
         if (is_string($User)) {
@@ -868,7 +863,7 @@ class Controller_DteFolios extends \Controller_App
      */
     public function _api_anular_GET($dte, $folio, $emisor)
     {
-        extract($this->getQuery(['formato'=>'json']));
+        extract($this->getQuery(['formato' => 'json']));
         // crear usuario, emisor y verificar permisos
         $User = $this->Api->getAuthUser();
         if (is_string($User)) {

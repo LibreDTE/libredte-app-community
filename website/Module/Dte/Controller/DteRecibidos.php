@@ -92,7 +92,7 @@ class Controller_DteRecibidos extends \Controller_App
         $tipo_transacciones = \sasco\LibreDTE\Sii\RegistroCompraVenta::$tipo_transacciones;
         unset($tipo_transacciones[5], $tipo_transacciones[6]);
         $this->set([
-            '_header_extra' => ['js'=>['/dte/js/dte.js']],
+            '_header_extra' => ['js' => ['/dte/js/dte.js']],
             'Receptor' => $Receptor,
             'tipos_documentos' => (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->getList(true),
             'iva_no_recuperables' => (new \website\Dte\Admin\Mantenedores\Model_IvaNoRecuperables())->getList(),
@@ -128,7 +128,7 @@ class Controller_DteRecibidos extends \Controller_App
         $tipo_transacciones = \sasco\LibreDTE\Sii\RegistroCompraVenta::$tipo_transacciones;
         unset($tipo_transacciones[5], $tipo_transacciones[6]);
         $this->set([
-            '_header_extra' => ['js'=>['/dte/js/dte.js']],
+            '_header_extra' => ['js' => ['/dte/js/dte.js']],
             'Receptor' => $Receptor,
             'DteRecibido' => $DteRecibido,
             'tipos_documentos' => (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->getList(true),
@@ -163,7 +163,7 @@ class Controller_DteRecibidos extends \Controller_App
         }
         // agregar variables para la vista
         $this->set([
-            '_header_extra' => ['js'=>['/dte/js/dte.js']],
+            '_header_extra' => ['js' => ['/dte/js/dte.js']],
             'Receptor' => $Receptor,
             'Emisor' => $DteRecibido->getEmisor(),
             'DteRecibido' => $DteRecibido,
@@ -462,7 +462,7 @@ class Controller_DteRecibidos extends \Controller_App
             $this->Api->send('Receptor no existe', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/pdf')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
@@ -515,7 +515,7 @@ class Controller_DteRecibidos extends \Controller_App
             $this->Api->send('Receptor no está registrado en la aplicación', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/escpos')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
@@ -566,7 +566,7 @@ class Controller_DteRecibidos extends \Controller_App
             $this->Api->send('Receptor no existe', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/xml')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
@@ -581,7 +581,7 @@ class Controller_DteRecibidos extends \Controller_App
      */
     public function _api_estado_GET($emisor, $dte, $folio, $receptor)
     {
-        extract($this->getQuery(['avanzado'=>false]));
+        extract($this->getQuery(['avanzado' => false]));
         $User = $this->Api->getAuthUser();
         if (is_string($User)) {
             $this->Api->send($User, 401);
@@ -591,11 +591,11 @@ class Controller_DteRecibidos extends \Controller_App
             $this->Api->send('Receptor no existe', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/xml')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $Firma = $Receptor->getFirma($User->id);
         if (!$Firma) {
-            $this->Api->send('No existe firma asociada', 506);
+            $this->Api->send('No existe firma asociada.', 506);
         }
         $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
@@ -627,7 +627,7 @@ class Controller_DteRecibidos extends \Controller_App
             $this->Api->send('Receptor no existe', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/ver')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         if (strpos($emisor, '-')) {
             $emisor = \sowerphp\app\Utility_Rut::normalizar($emisor);
@@ -700,7 +700,7 @@ class Controller_DteRecibidos extends \Controller_App
 
     /**
      * Acción de la API que permite realizar una búsqueda avanzada dentro de los
-     * DTEs recibidos
+     * DTE recibidos
          * @version 2019-07-02
      */
     public function _api_buscar_POST($receptor)
@@ -716,7 +716,7 @@ class Controller_DteRecibidos extends \Controller_App
             $this->Api->send('Receptor no existe', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/buscar')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // buscar documentos
         $this->Api->send($Receptor->getDocumentosRecibidos($this->Api->data, true), 200);
@@ -739,7 +739,7 @@ class Controller_DteRecibidos extends \Controller_App
             $this->Api->send('Receptor no existe', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/listar')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // buscar documentos
         $filtros = $this->getQuery([

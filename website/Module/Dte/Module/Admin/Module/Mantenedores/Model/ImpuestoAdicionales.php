@@ -25,11 +25,7 @@
 namespace website\Dte\Admin\Mantenedores;
 
 /**
- * Clase para mapear la tabla impuesto_adicional de la base de datos
- * Comentario de la tabla: Impuestos adicionales (y retenciones)
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla impuesto_adicional
- * @author SowerPHP Code Generator
- * @version 2015-09-27 18:24:13
+ * Clase para mapear la tabla impuesto_adicional de la base de datos.
  */
 class Model_ImpuestoAdicionales extends \Model_Plural_App
 {
@@ -39,8 +35,7 @@ class Model_ImpuestoAdicionales extends \Model_Plural_App
     protected $_table = 'impuesto_adicional'; ///< Tabla del modelo
 
     /**
-     * Método que entrega el listado de impuesto adicionales
-         * @version 2016-02-27
+     * Método que entrega el listado de impuesto adicionales.
      */
     public function getList()
     {
@@ -52,8 +47,7 @@ class Model_ImpuestoAdicionales extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega el listado de impuesto adicionales que tienen tasa
-         * @version 2016-02-27
+     * Método que entrega el listado de impuesto adicionales que tienen tasa.
      */
     public function getListConTasa()
     {
@@ -66,8 +60,7 @@ class Model_ImpuestoAdicionales extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega un arreglo asociativo con los códigos y tasas disponibles
-         * @version 2016-02-27
+     * Método que entrega un arreglo asociativo con los códigos y tasas disponibles.
      */
     public function getTasas()
     {
@@ -81,13 +74,13 @@ class Model_ImpuestoAdicionales extends \Model_Plural_App
 
     /**
      * Método que entrega el listado de impuesto adicionales filtrados para un
-     * contribuyente
-         * @version 2016-02-27
+     * contribuyente.
      */
-    public function getListContribuyente($listado = [])
+    public function getListContribuyente(array $listado = []): array
     {
-        if (!$listado)
+        if (!$listado) {
             return [];
+        }
         $in = [];
         $vars = [];
         $i = 0;
@@ -105,13 +98,13 @@ class Model_ImpuestoAdicionales extends \Model_Plural_App
 
     /**
      * Método que entrega un arreglo con los objetos de impuesto adicionales
-     * para un contribuyente
-         * @version 2016-02-27
+     * para un contribuyente.
      */
-    public function getObjectsContribuyente($listado)
+    public function getObjectsContribuyente(array $listado = []): array
     {
-        if (!$listado)
+        if (!$listado) {
             return [];
+        }
         $in = [];
         $vars = [];
         $i = 0;

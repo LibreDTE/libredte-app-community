@@ -1,8 +1,8 @@
 <?php
 
 /**
- * SowerPHP
- * Copyright (C) SowerPHP (http://sowerphp.org)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -24,12 +24,10 @@
 // namespace del modelo
 namespace website\Honorarios;
 
+use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+
 /**
- * Clase para mapear la tabla boleta_tercero de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla boleta_tercero
- * @author SowerPHP Code Generator
- * @version 2019-08-09 15:59:48
+ * Clase para mapear la tabla boleta_tercero de la base de datos.
  */
 class Model_BoletaTerceros extends \Model_Plural_App
 {
@@ -53,8 +51,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
 
     /**
      * Método que sincroniza las boletas de terceros recibidas por la empresa
-     * en el SII con el registro local de boletas en LibreDTE
-         * @version 2021-06-29
+     * en el SII con el registro local de boletas en LibreDTE.
      */
     public function sincronizar($meses)
     {
@@ -89,8 +86,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
     }
 
     /**
-     * Método que obtiene las boletas emitidas desde el SII
-         * @version 2020-01-26
+     * Método que obtiene las boletas emitidas desde el SII.
      */
     public function getBoletas($periodo)
     {
@@ -103,7 +99,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
             ],
         ]);
         if ($r['status']['code'] != 200) {
-            if ($r['status']['code']==404) {
+            if ($r['status']['code'] == 404) {
                 return [];
             }
             throw new \Exception('Error al obtener boletas de terceros del período '.(int)$periodo.' desde el SII: '.$r['body'], $r['status']['code']);
@@ -113,14 +109,13 @@ class Model_BoletaTerceros extends \Model_Plural_App
 
     /**
      * Método que entrega un resumen por período de las boletas de terceros
-     * emitidas
-         * @version 2019-08-10
+     * emitidas.
      */
     public function getPeriodos($periodo = null)
     {
         $periodo_col = $this->db->date('Ym', 'fecha');
         $where = ['emisor = :emisor', 'anulada = false'];
-        $vars = [':emisor'=>$this->getContribuyente()->rut];
+        $vars = [':emisor' => $this->getContribuyente()->rut];
         if ($periodo) {
             $where[] = $periodo_col.' = :periodo';
             $vars[':periodo'] = $periodo;
@@ -142,8 +137,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega el resumen de cierto período
-         * @version 2019-08-10
+     * Método que entrega el resumen de cierto período.
      */
     public function getPeriodo($periodo)
     {
@@ -152,13 +146,12 @@ class Model_BoletaTerceros extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega las boletas de cierto período
-         * @version 2019-08-23
+     * Método que entrega las boletas de cierto período.
      */
     public function buscar(array $filtros = [], $order = 'ASC')
     {
         $where = ['b.emisor = :emisor'];
-        $vars = [':emisor'=>$this->getContribuyente()->rut];
+        $vars = [':emisor' => $this->getContribuyente()->rut];
         if (!empty($filtros['periodo'])) {
             $periodo_col = $this->db->date('Ym', 'b.fecha');
             $where[] = $periodo_col.' = :periodo';
@@ -232,8 +225,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
     }
 
     /**
-     * Método que emite una BTE en el SII y entrega el objeto local para trabajar
-         * @version 2021-07-29
+     * Método que emite una BTE en el SII y entrega el objeto local para trabajar.
      */
     public function emitir($boleta)
     {
@@ -261,7 +253,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
         }
         $boleta = $r['body'];
         if (empty($boleta['Encabezado']['IdDoc']['CodigoBarras'])) {
-            throw new \Exception('No fue posible emitir la boleta o bien no se pudo obtener el código de barras de la boleta emitida');
+            throw new \Exception('No fue posible emitir la boleta o bien no se pudo obtener el código de barras de la boleta emitida.');
         }
         // crear registro de la boleta en la base de datos
         $BoletaTercero = new Model_BoletaTercero();
@@ -284,7 +276,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
         if (!$Receptor->usuario) {
             $Receptor->razon_social = mb_substr($boleta['Encabezado']['Receptor']['RznSocRecep'],0,100);
             $Receptor->direccion = mb_substr($boleta['Encabezado']['Receptor']['DirRecep'],0,70);
-            $comuna = (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->getComunaByName($boleta['Encabezado']['Receptor']['CmnaRecep']);
+            $comuna = (new Model_Comunas())->getComunaByName($boleta['Encabezado']['Receptor']['CmnaRecep']);
             if ($comuna) {
                 $Receptor->comuna = $comuna;
             }
@@ -298,8 +290,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega las tasas de retencion para personas a honorarios
-         * @version 2020-01-26
+     * Método que entrega las tasas de retencion para personas a honorarios.
      */
     public function getTasasRetencion()
     {

@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_tmp de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla dte_tmp
- * @author SowerPHP Code Generator
- * @version 2015-09-22 01:01:43
+ * Clase para mapear la tabla dte_tmp de la base de datos.
  */
 class Model_DteTmp extends \Model_App
 {
@@ -531,7 +527,7 @@ class Model_DteTmp extends \Model_App
             );
             throw new \Exception($message, 409);
         }
-        $cols = ['tasa'=>'TasaImp', 'fecha'=>'FchDoc', 'sucursal_sii'=>'CdgSIISucur', 'receptor'=>'RUTDoc', 'exento'=>'MntExe', 'neto'=>'MntNeto', 'iva'=>'MntIVA', 'total'=>'MntTotal'];
+        $cols = ['tasa' => 'TasaImp', 'fecha' => 'FchDoc', 'sucursal_sii' => 'CdgSIISucur', 'receptor' => 'RUTDoc', 'exento' => 'MntExe', 'neto' => 'MntNeto', 'iva' => 'MntIVA', 'total' => 'MntTotal'];
         foreach ($cols as $attr => $col) {
             if ($r[$col] !== false) {
                 $DteEmitido->$attr = $r[$col];

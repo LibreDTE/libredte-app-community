@@ -2,7 +2,7 @@
 <p>Se listan los documentos de compras de activos fijos según fue informado en el libro de compras (IEC) del contribuyente <?=$Emisor->razon_social?>.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check()']);
+echo $f->begin(['onsubmit' => 'Form.check()']);
 echo $f->input([
     'name' => 'periodo',
     'label' => 'Período',

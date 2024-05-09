@@ -2,7 +2,7 @@
 <p>Aquí podrá generar el informe de documentos recibidos de la empresa <?=$Receptor->razon_social?> para un rango determinado de tiempo.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check()']);
+echo $f->begin(['onsubmit' => 'Form.check()']);
 echo $f->input([
     'type' => 'date',
     'name' => 'desde',

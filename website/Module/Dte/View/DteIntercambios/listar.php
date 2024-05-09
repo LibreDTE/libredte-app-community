@@ -77,8 +77,8 @@ foreach ($documentos as &$i) {
 $f = new \sowerphp\general\View_Helper_Form(false);
 array_unshift($documentos, [
     '',
-    $f->input(['name'=>'emisor', 'value'=>(isset($search['emisor'])?$search['emisor']:'')]),
-    $f->input(['name'=>'folio', 'value'=>(isset($search['folio'])?$search['folio']:''), 'check'=>'integer']),
+    $f->input(['name' => 'emisor', 'value' => (isset($search['emisor']) ? $search['emisor'] : '')]),
+    $f->input(['name' => 'folio', 'value' => (isset($search['folio']) ? $search['folio'] : ''), 'check' => 'integer']),
     '',
     '',
     '',

@@ -26,12 +26,7 @@ namespace website\Dte\Admin\Mantenedores;
 
 /**
  * Clase para el controlador asociado a la tabla iva_no_recuperable de la base de
- * datos
- * Comentario de la tabla: Tipos de IVA no recuperable
- * Esta clase permite controlar las acciones entre el modelo y vista para la
- * tabla iva_no_recuperable
- * @author SowerPHP Code Generator
- * @version 2015-09-27 18:24:13
+ * datos.
  */
 class Controller_IvaNoRecuperables extends \Controller_Maintainer
 {

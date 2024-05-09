@@ -25,10 +25,9 @@ namespace website\Dte;
 
 /**
  * Comando para enviar el reporte de consumo de folios de las boletas
- * electrónicas
+ * electrónicas.
  * Permite enviar el RCOF directamente al SII o a un servidor remoto.
  * Por el momento solo se soporta servidor remoto SSH (SFTP/SCP).
- * @version 2019-08-14
  */
 class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
 {
@@ -36,7 +35,6 @@ class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
     /**
      * Método principal del comando
      * @param uri Formato: sftp://usuario:clave@servidor:puerto/ubicacion/desde/raiz
-         * @version 2020-10-10
      */
     public function main($grupo = 'dte_plus', $dia = null, $certificacion = 0, $uri = null, $filename = 'rcof_{rut}_{dia}.xml')
     {
@@ -59,12 +57,14 @@ class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
             }
             if ($Contribuyente->enCertificacion() != $certificacion) {
                 if ($this->verbose) {
-                    $this->out('  Contribuyente no está en el ambiente del envío');
+                    $this->out('  Contribuyente no está en el ambiente del envío.');
                 }
                 continue;
             }
             // crear objeto con el consumo de folios del día y ambiente solicitados
-            $DteBoletaConsumo = new Model_DteBoletaConsumo($Contribuyente->rut, $dia, $Contribuyente->enCertificacion());
+            $DteBoletaConsumo = new Model_DteBoletaConsumo(
+                $Contribuyente->rut, $dia, $Contribuyente->enCertificacion()
+            );
             // si no se indicó URI entonces se debe enviar directamente al SII
             if (!$uri) {
                 $this->enviar_sii($DteBoletaConsumo);
@@ -75,7 +75,7 @@ class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
                 $xml = $DteBoletaConsumo->getXML();
                 if (!$xml) {
                     if ($this->verbose) {
-                        $this->out('  No fue posible generar el XML que se enviará');
+                        $this->out('  No fue posible generar el XML que se enviará.');
                     }
                     continue;
                 }
@@ -92,7 +92,7 @@ class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
                     $msg = $Contribuyente->getNombre().','."\n\n";
                     $msg .= 'El envío automático del reporte de consumo de folios (RCOF) falló para el día '.\sowerphp\general\Utility_Date::format($DteBoletaConsumo->dia).' a '.$uri.':'."\n\n";
                     $msg .= $e->getMessage()."\n\n";
-                    $Contribuyente->notificar('RCOF '.\sowerphp\general\Utility_Date::format($DteBoletaConsumo->dia).' falló la transferencia del archivo', $msg);
+                    $Contribuyente->notificar('RCOF '.\sowerphp\general\Utility_Date::format($DteBoletaConsumo->dia).' falló la transferencia del archivo.', $msg);
                 }
                 // eliminar archivo temporal con XML
                 unlink($tmpfile);
@@ -104,13 +104,12 @@ class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
     }
 
     /**
-     * Método que envía el RCOF al SII
-         * @version 2020-10-10
+     * Método que envía el RCOF al SII.
      */
     private function enviar_sii($DteBoletaConsumo, $retry = 10)
     {
         if (!$DteBoletaConsumo->seEnvia()) {
-            $this->out('  Día '.$DteBoletaConsumo->dia.' no se puede enviar por reglas de envío');
+            $this->out('  Día '.$DteBoletaConsumo->dia.' no se puede enviar por reglas de envío.');
             return;
         }
         // obtener contribuyente
@@ -134,7 +133,7 @@ class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
         // si no se pudo enviar entonces se genera error y se envía email avisando al usuario
         if (!$track_id) {
             if ($this->verbose) {
-                $this->out('  No fue posible enviar el reporte al SII');
+                $this->out('  No fue posible enviar el reporte al SII.');
             }
             $msg = $Contribuyente->getNombre().','."\n\n";
             $msg .= 'El envío automático del reporte de consumo de folios (RCOF) falló para el día '.$DteBoletaConsumo->dia.'.'."\n\n";
@@ -146,8 +145,7 @@ class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
     }
 
     /**
-     * Método que obtiene el listado de contribuyentes a los cuales se debe enviar el RCOF
-         * @version 2020-10-10
+     * Método que obtiene el listado de contribuyentes a los cuales se debe enviar el RCOF.
      */
     private function getContribuyentes($grupo, $dia, $certificacion)
     {
@@ -175,7 +173,12 @@ class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
                 AND f.certificacion = :certificacion
                 AND (desde.valor IS NULL OR :dia >= desde.valor)
                 AND (hasta.valor IS NULL OR :dia <= hasta.valor)
-        ', [':grupo' => $grupo, ':certificacion'=>(int)$certificacion, ':dia'=>$dia, ':certificacion_t'=>(int)$certificacion]);
+        ', [
+            ':grupo' => $grupo, 
+            ':certificacion' => (int)$certificacion, 
+            ':dia' => $dia, 
+            ':certificacion_t' => (int)$certificacion,
+        ]);
     }
 
 }

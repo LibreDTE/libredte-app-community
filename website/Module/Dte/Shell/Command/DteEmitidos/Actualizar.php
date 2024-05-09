@@ -25,9 +25,8 @@ namespace website\Dte;
 
 /**
  * Comando para:
- *   - Actualizar el estado de los DTE enviados al SII
- *   - Enviar lo que esté sin Track ID al SII
- * @version 2021-09-07
+ *   - Actualizar el estado de los DTE enviados al SII.
+ *   - Enviar lo que esté sin Track ID al SII.
  */
 class Shell_Command_DteEmitidos_Actualizar extends \Shell_App
 {
@@ -145,7 +144,7 @@ class Shell_Command_DteEmitidos_Actualizar extends \Shell_App
                             AND e.track_id > 0
                         )
                     )
-            ', [':certificacion'=>(int)$certificacion, ':grupo' => $grupo, ':envio_boleta'=>Model_DteEmitidos::ENVIO_BOLETA]);
+            ', [':certificacion' => (int)$certificacion, ':grupo' => $grupo, ':envio_boleta' => Model_DteEmitidos::ENVIO_BOLETA]);
         } else {
             return $this->db->getCol('
                 SELECT DISTINCT c.rut
@@ -169,7 +168,10 @@ class Shell_Command_DteEmitidos_Actualizar extends \Shell_App
                             AND e.track_id > 0
                         )
                     )
-            ', [':certificacion'=>(int)$certificacion, ':envio_boleta'=>Model_DteEmitidos::ENVIO_BOLETA]);
+            ', [
+                ':certificacion' => (int)$certificacion, 
+                ':envio_boleta' => Model_DteEmitidos::ENVIO_BOLETA,
+            ]);
         }
     }
 

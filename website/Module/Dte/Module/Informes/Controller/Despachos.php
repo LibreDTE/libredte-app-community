@@ -25,16 +25,14 @@
 namespace website\Dte\Informes;
 
 /**
- * Clase para informes de los despachos asociados al contribuyente
- * @version 2016-12-26
+ * Clase para informes de los despachos asociados al contribuyente.
  */
 class Controller_Despachos extends \Controller_App
 {
 
     /**
      * Acción principal que muestra el formulario para solcitar el reporte de
-     * despachos
-         * @version 2016-12-26
+     * despachos.
      */
     public function index()
     {
@@ -48,9 +46,15 @@ class Controller_Despachos extends \Controller_App
             'google_api_key' => \sowerphp\core\Configure::read('proveedores.api.google.client'),
         ]);
         if (!empty($_POST['fecha'])) {
-            list($latitud, $longitud) = !empty($_POST['mapa']) ? $Emisor->getCoordenadas($_POST['sucursal']) : [false, false];
+            list($latitud, $longitud) = !empty($_POST['mapa'])
+                ? $Emisor->getCoordenadas($_POST['sucursal'])
+                : [false, false]
+            ;
             $this->set([
-                'despachos' => (new \website\Dte\Model_DteGuias())->setContribuyente($Emisor)->getDespachos($_POST),
+                'despachos' => (new \website\Dte\Model_DteGuias())
+                    ->setContribuyente($Emisor)
+                    ->getDespachos($_POST)
+                ,
                 'latitud' => $latitud,
                 'longitud' => $longitud,
             ]);

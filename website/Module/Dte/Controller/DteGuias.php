@@ -25,8 +25,7 @@
 namespace website\Dte;
 
 /**
- * Controlador de libro de guías de despacho
- * @version 2016-12-26
+ * Controlador de libro de guías de despacho.
  */
 class Controller_DteGuias extends Controller_Base_Libros
 {
@@ -39,9 +38,8 @@ class Controller_DteGuias extends Controller_Base_Libros
     ]; ///< Configuración para las acciones del controlador
 
     /**
-     * Acción que envía el archivo XML del libro de guías al SII
-     * Si no hay documentos en el período se enviará sin movimientos
-         * @version 2016-09-15
+     * Acción que envía el archivo XML del libro de guías al SII.
+     * Si no hay documentos en el período se enviará sin movimientos.
      */
     public function enviar_sii($periodo)
     {
@@ -49,7 +47,7 @@ class Controller_DteGuias extends Controller_Base_Libros
         $DteGuia = new Model_DteGuia($Emisor->rut, $periodo, $Emisor->enCertificacion());
         // si el periodo es mayor o igual al actual no se puede enviar
         if ($periodo >= date('Ym')) {
-            \sowerphp\core\Model_Datasource_Session::message('No puede enviar el libro de guías del período '.$periodo.', debe esperar al mes siguiente del período', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('No puede enviar el libro de guías del período '.$periodo.', debe esperar al mes siguiente del período.', 'error');
             $this->redirect(str_replace('enviar_sii', 'ver', $this->request->request));
         }
         // obtener guías
@@ -73,7 +71,7 @@ class Controller_DteGuias extends Controller_Base_Libros
             // armar detalle para agregar al libro
             $d = [];
             foreach ($guia as $k => $v) {
-                if ($v!==null) {
+                if ($v !== null) {
                     $d[Model_DteGuia::$libro_cols[$k]] = $v;
                 }
             }
@@ -85,8 +83,14 @@ class Controller_DteGuias extends Controller_Base_Libros
         $Libro->setCaratula([
             'RutEmisorLibro' => $Emisor->rut.'-'.$Emisor->dv,
             'PeriodoTributario' => substr($periodo, 0, 4).'-'.substr($periodo, 4),
-            'FchResol' => $Emisor->enCertificacion() ? $Emisor->config_ambiente_certificacion_fecha : $Emisor->config_ambiente_produccion_fecha,
-            'NroResol' =>  $Emisor->enCertificacion() ? 0 : $Emisor->config_ambiente_produccion_numero,
+            'FchResol' => $Emisor->enCertificacion()
+                ? $Emisor->config_ambiente_certificacion_fecha
+                : $Emisor->config_ambiente_produccion_fecha
+            ,
+            'NroResol' =>  $Emisor->enCertificacion()
+                ? 0
+                : $Emisor->config_ambiente_produccion_numero
+            ,
             'TipoLibro' => 'ESPECIAL',
             'TipoEnvio' => 'TOTAL',
             'FolioNotificacion' => $DteGuia->getFolioNotificacion() + 1,
@@ -113,14 +117,13 @@ class Controller_DteGuias extends Controller_Base_Libros
         $DteGuia->revision_detalle = null;
         $DteGuia->save();
         \sowerphp\core\Model_Datasource_Session::message(
-            'Libro de guías período '.$periodo.' envíado', 'ok'
+            'Libro de guías período '.$periodo.' envíado.', 'ok'
         );
         $this->redirect(str_replace('enviar_sii', 'ver', $this->request->request));
     }
 
     /**
-     * Método que permite buscar las guías que se desean facturar masivamente
-         * @version 2020-10-25
+     * Método que permite buscar las guías que se desean facturar masivamente.
      */
     public function facturar()
     {
@@ -129,7 +132,15 @@ class Controller_DteGuias extends Controller_Base_Libros
         if (!empty($_POST['desde']) && !empty($_POST['hasta'])) {
             $this->set([
                 'Emisor' => $Emisor,
-                'guias' => (new Model_DteGuias())->setContribuyente($Emisor)->getSinFacturar($_POST['desde'], $_POST['hasta'], $_POST['receptor'], $_POST['con_referencia']),
+                'guias' => (new Model_DteGuias())
+                    ->setContribuyente($Emisor)
+                    ->getSinFacturar(
+                        $_POST['desde'], 
+                        $_POST['hasta'], 
+                        $_POST['receptor'], 
+                        $_POST['con_referencia']
+                    )
+                ,
             ]);
         }
         // facturar las guías seleccionadas
@@ -145,7 +156,10 @@ class Controller_DteGuias extends Controller_Base_Libros
                         'referencia_801' => !empty($_POST['referencia_801']) ? $_POST['referencia_801'] : null,
                         'referencia_hes' => !empty($_POST['referencia_hes']) ? $_POST['referencia_hes'] : null,
                         'ValorDR_global' => !empty($_POST['ValorDR_global']) ? $_POST['ValorDR_global'] : null,
-                        'MedioPago' => (!empty($_POST['MedioPago']) && !empty($_POST['NumCtaPago'])) ? $_POST['MedioPago'] : false,
+                        'MedioPago' => (!empty($_POST['MedioPago']) && !empty($_POST['NumCtaPago']))
+                            ? $_POST['MedioPago']
+                            : false
+                        ,
                         'TpoCtaPago' => !empty($_POST['TpoCtaPago']) ? $_POST['TpoCtaPago'] : false,
                         'BcoPago' => !empty($_POST['BcoPago']) ? $_POST['BcoPago'] : false,
                         'NumCtaPago' => !empty($_POST['NumCtaPago']) ? $_POST['NumCtaPago'] : false,

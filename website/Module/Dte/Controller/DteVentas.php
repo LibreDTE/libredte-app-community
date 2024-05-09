@@ -189,7 +189,7 @@ class Controller_DteVentas extends Controller_Base_Libros
                             $resumenes_errores[] = $r['body'];
                         }
                     } catch (\Exception $e) {
-                        $resumenes_errores[] = 'Esta versión de LibreDTE no puede enviar los resúmenes al SII de manera automática, debe copiarlos manualmente en el registro de ventas';
+                        $resumenes_errores[] = 'Este servidor de LibreDTE no puede enviar los resúmenes al SII de manera automática, debe copiarlos manualmente en el registro de ventas.';
                     }
                 }
             }
@@ -302,7 +302,7 @@ class Controller_DteVentas extends Controller_Base_Libros
     {
         $Emisor = $this->getContribuyente();
         try {
-            $resumen = $Emisor->getRCV(['operacion' => 'VENTA', 'periodo' => $periodo, 'estado' => 'REGISTRO', 'detalle'=>false]);
+            $resumen = $Emisor->getRCV(['operacion' => 'VENTA', 'periodo' => $periodo, 'estado' => 'REGISTRO', 'detalle' => false]);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
             $this->redirect('/dte/dte_ventas/ver/'.$periodo);
@@ -350,7 +350,7 @@ class Controller_DteVentas extends Controller_Base_Libros
         $this->set([
             'Emisor' => $Emisor,
             'periodo' => $periodo,
-            'Evento' => (object)['codigo'=>$evento, 'glosa'=>$evento?\sasco\LibreDTE\Sii\RegistroCompraVenta::$eventos[$evento]:'Sin evento registrado'],
+            'Evento' => (object)['codigo' => $evento, 'glosa' => $evento?\sasco\LibreDTE\Sii\RegistroCompraVenta::$eventos[$evento] : 'Sin evento registrado'],
             'documentos' => $DteVenta->getDocumentosConEventoReceptor($evento),
         ]);
     }
@@ -416,7 +416,7 @@ class Controller_DteVentas extends Controller_Base_Libros
         }
         if ($dte === null || $folio === null || $total === null) {
             if (!$Emisor->usuarioAutorizado($User, '/dte/dte_ventas/ver')) {
-                $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+                $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
             }
         }
         // obtener historial
@@ -486,7 +486,7 @@ class Controller_DteVentas extends Controller_Base_Libros
         // obtener historial
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_ventas')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         return (new Model_DteVentas())->setContribuyente($Emisor)->getResumen($this->Api->data);
     }

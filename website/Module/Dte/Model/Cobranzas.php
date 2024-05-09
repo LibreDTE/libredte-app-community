@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla cobranza de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla cobranza
- * @author SowerPHP Code Generator
- * @version 2016-02-28 18:10:55
+ * Clase para mapear la tabla cobranza de la base de datos.
  */
 class Model_Cobranzas extends \Model_Plural_App
 {
@@ -40,13 +36,15 @@ class Model_Cobranzas extends \Model_Plural_App
 
     /**
      * Método que entrega los pagos programados pendientes de pago (pagos por
-     * cobrar)
-         * @version 2021-10-12
+     * cobrar).
      */
-    public function getPendientes($filtros = [])
+    public function getPendientes(array $filtros = []): array
     {
         $where = [];
-        $vars = [':emisor'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion()];
+        $vars = [
+            ':emisor' => $this->getContribuyente()->rut, 
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+        ];
         // estado de vencimiento
         $hoy = date('Y-m-d');
         if (isset($filtros['vencidos'])) {
@@ -140,10 +138,9 @@ class Model_Cobranzas extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega un resumen con el estado de los pagos programados por ventas a crédito
-         * @version 2023-01-29
+     * Método que entrega un resumen con el estado de los pagos programados por ventas a crédito.
      */
-    public function getResumen($dia = null)
+    public function getResumen(?string $dia = null): array
     {
         if (!$dia) {
             $dia = date('Y-m-d');
@@ -162,7 +159,11 @@ class Model_Cobranzas extends \Model_Plural_App
                 FROM cobranza
                 WHERE emisor = :emisor AND certificacion = :certificacion AND (pagado IS NULL OR pagado < monto) AND fecha > :dia
             )
-        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion(), ':dia'=>$dia]);
+        ', [
+            ':emisor' => $this->getContribuyente()->rut, 
+            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
+            ':dia' => $dia,
+        ]);
     }
 
 }

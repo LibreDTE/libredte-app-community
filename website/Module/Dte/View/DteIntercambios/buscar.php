@@ -10,24 +10,24 @@
 <p>Aquí podrá buscar entre sus documentos de la bandeja de intercambio.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form(false);
-echo $f->begin(['onsubmit'=>'Form.check()']);
+echo $f->begin(['onsubmit' => 'Form.check()']);
 ?>
 <div class="card mb-4">
     <div class="card-body">
         <div class="row mb-3">
-            <div class="form-group col-md-6"><?=$f->input(['name'=>'emisor', 'placeholder'=>'Emisor: RUT o razón social'])?></div>
-            <div class="form-group col-md-3"><?=$f->input(['type'=>'select', 'name'=>'estado', 'options'=>['Pendientes y procesados', 'Solo pendientes', 'Solo procesados', 'Solo aceptados', 'Solo rechazados']])?></div>
-            <div class="form-group col-md-3"><?=$f->input(['type'=>'select', 'name'=>'usuario', 'options'=>[''=>'Todos los usuarios']+$usuarios])?></div>
+            <div class="form-group col-md-6"><?=$f->input(['name' => 'emisor', 'placeholder' => 'Emisor: RUT o razón social'])?></div>
+            <div class="form-group col-md-3"><?=$f->input(['type' => 'select', 'name' => 'estado', 'options' => ['Pendientes y procesados', 'Solo pendientes', 'Solo procesados', 'Solo aceptados', 'Solo rechazados']])?></div>
+            <div class="form-group col-md-3"><?=$f->input(['type' => 'select', 'name' => 'usuario', 'options' => ['' => 'Todos los usuarios']+$usuarios])?></div>
         </div>
         <div class="row mb-3">
-            <div class="form-group col-md-3"><?=$f->input(['type'=>'date', 'name'=>'recibido_desde', 'placeholder'=>'Fecha recepción desde', 'check'=>'date'])?></div>
-            <div class="form-group col-md-3"><?=$f->input(['type'=>'date', 'name'=>'recibido_hasta', 'placeholder'=>'Fecha recepción hasta', 'check'=>'date'])?></div>
-            <div class="form-group col-md-3"><?=$f->input(['type'=>'date', 'name'=>'firma_desde', 'placeholder'=>'Fecha firma desde', 'check'=>'date'])?></div>
-            <div class="form-group col-md-3"><?=$f->input(['type'=>'date', 'name'=>'firma_hasta', 'placeholder'=>'Fecha firma hasta', 'check'=>'date'])?></div>
+            <div class="form-group col-md-3"><?=$f->input(['type' => 'date', 'name' => 'recibido_desde', 'placeholder' => 'Fecha recepción desde', 'check' => 'date'])?></div>
+            <div class="form-group col-md-3"><?=$f->input(['type' => 'date', 'name' => 'recibido_hasta', 'placeholder' => 'Fecha recepción hasta', 'check' => 'date'])?></div>
+            <div class="form-group col-md-3"><?=$f->input(['type' => 'date', 'name' => 'firma_desde', 'placeholder' => 'Fecha firma desde', 'check' => 'date'])?></div>
+            <div class="form-group col-md-3"><?=$f->input(['type' => 'date', 'name' => 'firma_hasta', 'placeholder' => 'Fecha firma hasta', 'check' => 'date'])?></div>
         </div>
         <div class="row">
-            <div class="form-group col-md-6"><?=$f->input(['name'=>'de', 'placeholder'=>'Correo remitente', 'check'=>'email'])?></div>
-            <div class="form-group col-md-6"><?=$f->input(['name'=>'asunto', 'placeholder'=>'Asunto del correo'])?></div>
+            <div class="form-group col-md-6"><?=$f->input(['name' => 'de', 'placeholder' => 'Correo remitente', 'check' => 'email'])?></div>
+            <div class="form-group col-md-6"><?=$f->input(['name' => 'asunto', 'placeholder' => 'Asunto del correo'])?></div>
         </div>
     </div>
     <div class="card-footer small">Filtros al intercambio (sirven con cualquier intercambio)</div>
@@ -35,15 +35,15 @@ echo $f->begin(['onsubmit'=>'Form.check()']);
 <div class="card mb-4">
     <div class="card-body">
         <div class="row mb-3">
-            <div class="form-group col-md-3"><?=$f->input(['type'=>'date', 'name'=>'fecha_emision_desde', 'placeholder'=>'Fecha emisión desde', 'check'=>'date'])?></div>
-            <div class="form-group col-md-3"><?=$f->input(['type'=>'date', 'name'=>'fecha_emision_hasta', 'placeholder'=>'Fecha emisión hasta', 'check'=>'date'])?></div>
-            <div class="form-group col-md-3"><?=$f->input(['name'=>'total_desde', 'placeholder'=>'Total desde', 'check'=>'integer'])?></div>
-            <div class="form-group col-md-3"><?=$f->input(['name'=>'total_hasta', 'placeholder'=>'Total hasta', 'check'=>'integer'])?></div>
+            <div class="form-group col-md-3"><?=$f->input(['type' => 'date', 'name' => 'fecha_emision_desde', 'placeholder' => 'Fecha emisión desde', 'check' => 'date'])?></div>
+            <div class="form-group col-md-3"><?=$f->input(['type' => 'date', 'name' => 'fecha_emision_hasta', 'placeholder' => 'Fecha emisión hasta', 'check' => 'date'])?></div>
+            <div class="form-group col-md-3"><?=$f->input(['name' => 'total_desde', 'placeholder' => 'Total desde', 'check' => 'integer'])?></div>
+            <div class="form-group col-md-3"><?=$f->input(['name' => 'total_hasta', 'placeholder' => 'Total hasta', 'check' => 'integer'])?></div>
         </div>
         <div class="row mb-3">
-            <div class="form-group col-md-3"><?=$f->input(['type'=>'select', 'name'=>'dte', 'options'=>[''=>'Todos los tipos de documentos'] + $tipos_dte])?></div>
-            <div class="form-group col-md-3"><?=$f->input(['name'=>'folio', 'placeholder'=>'Folio del DTE', 'check'=>'folio'])?></div>
-            <div class="form-group col-md-6"><?=$f->input(['name'=>'item', 'placeholder'=>'Item (producto o servicio) que se compró'])?></div>
+            <div class="form-group col-md-3"><?=$f->input(['type' => 'select', 'name' => 'dte', 'options' => ['' => 'Todos los tipos de documentos'] + $tipos_dte])?></div>
+            <div class="form-group col-md-3"><?=$f->input(['name' => 'folio', 'placeholder' => 'Folio del DTE', 'check' => 'folio'])?></div>
+            <div class="form-group col-md-6"><?=$f->input(['name' => 'item', 'placeholder' => 'Item (producto o servicio) que se compró'])?></div>
         </div>
 <?php
 echo $f->input([
@@ -51,8 +51,8 @@ echo $f->input([
     'id' => 'xml',
     'titles' => ['Nodo', 'Valor'],
     'inputs' => [
-        ['name'=>'xml_nodo', 'check'=>'notempty'],
-        ['name'=>'xml_valor', 'check'=>'notempty'],
+        ['name' => 'xml_nodo', 'check' => 'notempty'],
+        ['name' => 'xml_valor', 'check' => 'notempty'],
     ],
     'values' => $values_xml,
 ]);
@@ -61,7 +61,7 @@ echo $f->input([
     </div>
     <div class="card-footer small">Filtros al documento (sirven con intercambios con un documento asociado, con más de uno asociado no se garantiza el correcto funcionamiento)</div>
 </div>
-<div class="text-center"><?=$f->input(['type'=>'submit', 'name'=>'submit', 'value'=>'Buscar documentos'])?></div>
+<div class="text-center"><?=$f->input(['type' => 'submit', 'name' => 'submit', 'value' => 'Buscar documentos'])?></div>
 <?php
 echo $f->end(false);
 // mostrar documentos

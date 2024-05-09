@@ -25,11 +25,7 @@
 namespace website\Dte\Admin\Mantenedores;
 
 /**
- * Clase para mapear la tabla impuesto_adicional de la base de datos
- * Comentario de la tabla: Impuestos adicionales (y retenciones)
- * Esta clase permite trabajar sobre un registro de la tabla impuesto_adicional
- * @author SowerPHP Code Generator
- * @version 2016-02-27 18:55:57
+ * Clase para mapear la tabla impuesto_adicional de la base de datos.
  */
 class Model_ImpuestoAdicional extends \Model_App
 {

@@ -25,25 +25,24 @@
 namespace website\Utilidades;
 
 /**
- * Controlador para utilides asociadas a los libros de compra y venta
- * @version 2016-09-12
+ * Controlador para utilides asociadas a los libros de compra y venta.
  */
 class Controller_Iecv extends \Controller_App
 {
 
     /**
      * Método que permite generar un libro de Compras o Ventas a partir de un
-     * archivo CSV con el detalle del mismo
-         * @version 2016-07-24
+     * archivo CSV con el detalle del mismo.
      */
     public function xml()
     {
         $this->set([
-            '_header_extra' => ['js'=>['/utilidades/js/utilidades.js']],
+            '_header_extra' => ['js' => ['/utilidades/js/utilidades.js']],
         ]);
         // si no se viene por post terminar
-        if (!isset($_POST['submit']))
+        if (!isset($_POST['submit'])) {
             return;
+        }
         // verificar campos no estén vacíos
         $campos = [
             'TipoOperacion',
@@ -58,7 +57,7 @@ class Controller_Iecv extends \Controller_App
         foreach ($campos as $campo) {
             if (!strlen($_POST[$campo])) {
                  \sowerphp\core\Model_Datasource_Session::message(
-                    $campo.' no puede estar en blanco', 'error'
+                    $campo.' no puede estar en blanco.', 'error'
                 );
                 return;
             }
@@ -66,14 +65,14 @@ class Controller_Iecv extends \Controller_App
         // si no se pasó el archivo error
         if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Debes enviar el archivo CSV con el detalle de las compras o ventas al que deseas generar su XML', 'error'
+                'Debes enviar el archivo CSV con el detalle de las compras o ventas al que deseas generar su XML.', 'error'
             );
             return;
         }
         // si no se pasó la firma error
         if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Debes enviar el archivo con la firma digital', 'error'
+                'Debes enviar el archivo con la firma digital.', 'error'
             );
             return;
         }
@@ -85,7 +84,7 @@ class Controller_Iecv extends \Controller_App
             ]);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible abrir la firma digital, quizás contraseña incorrecta', 'error'
+                'No fue posible abrir la firma digital, quizás contraseña incorrecta.', 'error'
             );
             return;
         }
@@ -123,17 +122,21 @@ class Controller_Iecv extends \Controller_App
         ];
         $certificacion = true;
         foreach ($caratula_certificacion[$caratula['TipoOperacion']] as $attr => $val) {
-            if ($caratula[$attr] != $val || ($attr == 'PeriodoTributario' and substr($caratula[$attr],0 ,4)!=$val)) {
+            if (
+                $caratula[$attr] != $val
+                || ($attr == 'PeriodoTributario' && substr($caratula[$attr], 0, 4) != $val)
+            ) {
                 $certificacion = false;
                 break;
             }
         }
         // crear libro de compras o venta
         $LibroCompraVenta = new \sasco\LibreDTE\Sii\LibroCompraVenta((bool)$_POST['simplificado']);
-        if ($caratula['TipoOperacion'] == 'COMPRA')
+        if ($caratula['TipoOperacion'] == 'COMPRA') {
             $LibroCompraVenta->agregarComprasCSV($_FILES['archivo']['tmp_name']);
-        else
+        } else {
             $LibroCompraVenta->agregarVentasCSV($_FILES['archivo']['tmp_name']);
+        }
         $LibroCompraVenta->setCaratula($caratula);
         $LibroCompraVenta->setFirma($Firma);
         // se setean resúmenes manuales enviados por post
@@ -171,7 +174,7 @@ class Controller_Iecv extends \Controller_App
             $xml = $LibroCompraVenta->generar();
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible generar el XML del libro, quizás hay caracteres especiales (ej: eñes o tildes)', 'error'
+                'No fue posible generar el XML del libro, quizás hay caracteres especiales (ej: eñes o tildes).', 'error'
             );
             return;
         }
@@ -182,13 +185,12 @@ class Controller_Iecv extends \Controller_App
         // descargar XML
         $file = TMP.'/'.$LibroCompraVenta->getID().'.xml';
         file_put_contents($file, $xml);
-        \sasco\LibreDTE\File::compress($file, ['format'=>'zip', 'delete'=>true]);
+        \sasco\LibreDTE\File::compress($file, ['format' => 'zip', 'delete' => true]);
         exit; // TODO: enviar usando $this->response->send() / File::compress()
     }
 
     /**
-     * Acción que permite la generación del PDF de un IECV
-         * @version 2016-07-28
+     * Acción que permite la generación del PDF de un IECV.
      */
     public function pdf()
     {

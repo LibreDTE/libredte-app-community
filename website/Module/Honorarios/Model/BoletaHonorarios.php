@@ -1,8 +1,8 @@
 <?php
 
 /**
- * SowerPHP
- * Copyright (C) SowerPHP (http://sowerphp.org)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,11 +25,7 @@
 namespace website\Honorarios;
 
 /**
- * Clase para mapear la tabla boleta_honorario de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla boleta_honorario
- * @author SowerPHP Code Generator
- * @version 2019-08-09 15:00:08
+ * Clase para mapear la tabla boleta_honorario de la base de datos.
  */
 class Model_BoletaHonorarios extends \Model_Plural_App
 {
@@ -40,8 +36,7 @@ class Model_BoletaHonorarios extends \Model_Plural_App
 
     /**
      * Método que sincroniza las boletas de honorarios recibidas por la empresa
-     * en el SII con el registro local de boletas en LibreDTE
-         * @version 2021-06-29
+     * en el SII con el registro local de boletas en LibreDTE.
      */
     public function sincronizar($meses)
     {
@@ -77,8 +72,7 @@ class Model_BoletaHonorarios extends \Model_Plural_App
     }
 
     /**
-     * Método que obtiene las boletas recibidas desde el SII
-         * @version 2020-01-26
+     * Método que obtiene las boletas recibidas desde el SII.
      */
     public function getBoletas($periodo)
     {
@@ -91,7 +85,7 @@ class Model_BoletaHonorarios extends \Model_Plural_App
             ],
         ]);
         if ($r['status']['code'] != 200) {
-            if ($r['status']['code']==404) {
+            if ($r['status']['code'] == 404) {
                 return [];
             }
             throw new \Exception('Error al obtener boletas de honorarios del período '.(int)$periodo.' desde el SII: '.$r['body'], $r['status']['code']);
@@ -101,14 +95,13 @@ class Model_BoletaHonorarios extends \Model_Plural_App
 
     /**
      * Método que entrega un resumen por período de las boletas de honorarios
-     * recibidas
-         * @version 2019-08-10
+     * recibidas.
      */
     public function getPeriodos($periodo = null)
     {
         $periodo_col = $this->db->date('Ym', 'fecha');
         $where = ['receptor = :receptor', 'anulada IS NULL'];
-        $vars = [':receptor'=>$this->getContribuyente()->rut];
+        $vars = [':receptor' => $this->getContribuyente()->rut];
         if ($periodo) {
             $where[] = $periodo_col.' = :periodo';
             $vars[':periodo'] = $periodo;
@@ -130,8 +123,7 @@ class Model_BoletaHonorarios extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega el resumen de cierto período
-         * @version 2019-08-10
+     * Método que entrega el resumen de cierto período.
      */
     public function getPeriodo($periodo)
     {
@@ -140,13 +132,12 @@ class Model_BoletaHonorarios extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega las boletas de cierto período
-         * @version 2019-08-15
+     * Método que entrega las boletas de cierto período.
      */
     public function buscar(array $filtros = [], $order = 'ASC')
     {
         $where = ['b.receptor = :receptor'];
-        $vars = [':receptor'=>$this->getContribuyente()->rut];
+        $vars = [':receptor' => $this->getContribuyente()->rut];
         if (!empty($filtros['periodo'])) {
             $periodo_col = $this->db->date('Ym', 'b.fecha');
             $where[] = $periodo_col.' = :periodo';

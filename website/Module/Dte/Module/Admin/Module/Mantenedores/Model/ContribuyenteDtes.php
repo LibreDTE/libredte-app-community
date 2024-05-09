@@ -25,11 +25,7 @@
 namespace website\Dte\Admin\Mantenedores;
 
 /**
- * Clase para mapear la tabla contribuyente_dte de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla contribuyente_dte
- * @author SowerPHP Code Generatornamespace website\Dte\Admin;
- * @version 2015-09-21 12:31:02
+ * Clase para mapear la tabla contribuyente_dte de la base de datos.
  */
 class Model_ContribuyenteDtes extends \Model_Plural_App
 {

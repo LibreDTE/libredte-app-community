@@ -37,7 +37,7 @@ function dte_recibido_tipo_transaccion() {
 <?php
 endif;
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check() && __.loading(\'Guardando DTE recibido...\')', 'focus'=>(!isset($DteRecibido)?'emisorField':false)]);
+echo $f->begin(['onsubmit' => 'Form.check() && __.loading(\'Guardando DTE recibido...\')', 'focus' => (!isset($DteRecibido)?'emisorField':false)]);
 $f->setColsLabel(5);
 echo '<div class="row">',"\n";
 echo '<div class="col-md-6">',"\n";
@@ -67,7 +67,7 @@ if (!isset($DteRecibido) || !$DteRecibido->intercambio) {
         'type' => 'select',
         'name' => 'dte',
         'label' => 'Documento',
-        'options' => [''=>'Seleccionar tipo de documento'] + $tipos_documentos,
+        'options' => ['' => 'Seleccionar tipo de documento'] + $tipos_documentos,
         'value' => isset($DteRecibido) ? $DteRecibido->dte : '',
         'check' => 'notempty',
         'attr' => 'onblur="dte_recibido_check()"',
@@ -148,7 +148,7 @@ echo '</div>',"\n";
 echo '<div class="col-md-6">',"\n";
 echo $f->input([
     'type' => 'select',
-    'options' => [''=>''] + $tipo_transacciones,
+    'options' => ['' => ''] + $tipo_transacciones,
     'name' => 'tipo_transaccion',
     'label' => 'Tipo transacción',
     'value' => isset($DteRecibido) ? $DteRecibido->tipo_transaccion : '',
@@ -242,7 +242,7 @@ echo $f->input([
         [
             'type' => 'select',
             'name' => 'impuesto_adicional_codigo',
-            'options' => [''=>'Seleccionar código'] + $impuesto_adicionales,
+            'options' => ['' => 'Seleccionar código'] + $impuesto_adicionales,
             'check' => 'notempty',
         ],
         [
@@ -266,7 +266,7 @@ echo $f->input([
         [
             'type' => 'select',
             'name' => 'iva_no_recuperable_codigo',
-            'options' => [''=>'Seleccionar código'] + $iva_no_recuperables,
+            'options' => ['' => 'Seleccionar código'] + $iva_no_recuperables,
             'check' => 'notempty',
         ],
         [

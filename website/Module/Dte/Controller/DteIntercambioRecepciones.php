@@ -26,19 +26,13 @@ namespace website\Dte;
 
 /**
  * Clase para el controlador asociado a la tabla dte_intercambio_recepcion de la base de
- * datos
- * Comentario de la tabla:
- * Esta clase permite controlar las acciones entre el modelo y vista para la
- * tabla dte_intercambio_recepcion
- * @author SowerPHP Code Generator
- * @version 2015-12-23 20:29:10
+ * datos.
  */
 class Controller_DteIntercambioRecepciones extends \Controller_App
 {
 
     /**
-     * Acción que descarga el XML de la recepción
-         * @version 2019-07-17
+     * Acción que descarga el XML de la recepción.
      */
     public function xml($responde, $codigo)
     {
@@ -47,7 +41,7 @@ class Controller_DteIntercambioRecepciones extends \Controller_App
         $DteIntercambioRecepcion = new Model_DteIntercambioRecepcion($responde, $Emisor->rut, $codigo);
         if (!$DteIntercambioRecepcion->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe la recepción solicitada', 'error'
+                'No existe la recepción solicitada.', 'error'
             );
             $this->redirect('/dte/dte_intercambios');
         }

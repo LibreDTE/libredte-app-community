@@ -1,8 +1,8 @@
 <?php
 
 /**
- * SowerPHP
- * Copyright (C) SowerPHP (http://sowerphp.org)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla contribuyente_usuario_dte de la base de datos
- * Comentario de la tabla: 
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla contribuyente_usuario_dte
- * @author SowerPHP Code Generator
- * @version 2017-06-25 23:30:25
+ * Clase para mapear la tabla contribuyente_usuario_dte de la base de datos.
  */
 class Model_ContribuyenteUsuarioDtes extends \Model_Plural_App
 {

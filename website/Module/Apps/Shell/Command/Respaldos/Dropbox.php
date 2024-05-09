@@ -25,8 +25,7 @@ namespace website\Apps;
 
 /**
  * Comando para respaldar los datos de los contribuyentes en la cuenta asociada
- * a la aplicación de Dropbox
- * @version 2022-07-07
+ * a la aplicación de Dropbox.
  */
 class Shell_Command_Respaldos_Dropbox extends \Shell_App
 {
@@ -52,12 +51,12 @@ class Shell_Command_Respaldos_Dropbox extends \Shell_App
             return false;
         }
         if (!$DropboxApp->isConnected()) {
-            $this->out('<error>La empresa '.$Contribuyente->getNombre().' no está conectada a Dropbox</error>');
+            $this->out('<error>La empresa '.$Contribuyente->getNombre().' no está conectada a Dropbox.</error>');
             return false;
         }
         $Dropbox = $DropboxApp->getDropboxClient();
         if (!$Dropbox) {
-            $this->out('<error>Dropbox no está habilitado en esta versión de LibreDTE</error>');
+            $this->out('<error>Dropbox no está habilitado en este servidor de LibreDTE.</error>');
             return false;
         }
         // crear respaldo para el contribuyente
@@ -67,12 +66,12 @@ class Shell_Command_Respaldos_Dropbox extends \Shell_App
         list($dir_uncompressed, $filename) = $this->crearRespaldo($Contribuyente, $fecha);
         if ($dir_uncompressed === false) {
             if ($this->verbose >= 2) {
-                $this->out('  No hay datos que respaldar');
+                $this->out('  No hay datos que respaldar.');
             }
             return;
         }
         \sowerphp\general\Utility_File::compress(
-            $dir_uncompressed, ['format'=>$compress, 'delete'=>true, 'download'=>false]
+            $dir_uncompressed, ['format' => $compress, 'delete' => true, 'download' => false]
         );
         $dir_compressed = $dir_uncompressed.'.'.$compress;
         // enviar respaldo a Dropbox

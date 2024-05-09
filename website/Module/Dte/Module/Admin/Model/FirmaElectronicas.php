@@ -25,11 +25,7 @@
 namespace website\Dte\Admin;
 
 /**
- * Clase para mapear la tabla firma_electronica de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla firma_electronica
- * @author SowerPHP Code Generator
- * @version 2015-09-22 19:27:29
+ * Clase para mapear la tabla firma_electronica de la base de datos.
  */
 class Model_FirmaElectronicas extends \Model_Plural_App
 {
@@ -39,14 +35,16 @@ class Model_FirmaElectronicas extends \Model_Plural_App
     protected $_table = 'firma_electronica'; ///< Tabla del modelo
 
     /**
-     * Método que entrega la firma electrónica de un usuario (si existe)
-     * @param user Código del usuarios que se necesita su firma electrónica
+     * Método que entrega la firma electrónica de un usuario (si existe).
+     * @param user Código del usuarios que se necesita su firma electrónica.
      * @return Model_FirmaElectronica
-         * @version 2015-09-22
      */
     public function getByUser($user)
     {
-        $this->setWhereStatement(['usuario = :user'], [':user'=>$user]);
+        $this->setWhereStatement(
+            ['usuario = :user'],
+            [':user' => $user]
+        );
         $firmas = $this->getObjects();
         $this->clear('where');
         return $firmas ? $firmas[0] : false;

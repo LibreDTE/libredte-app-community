@@ -26,23 +26,21 @@ namespace website\Utilidades;
 
 /**
  * Controlador para utilidades que permiten convertir de los formatos soportados
- * por LibreDTE a JSON
- * @version 2016-09-12
+ * por LibreDTE a JSON.
  */
 class Controller_Formatos extends \Controller_App
 {
 
     /**
      * Acción que convierte los datos en un formato de entrada soportado y crea
-     * un archivo JSON
-         * @version 2019-07-17
+     * un archivo JSON.
      */
     public function index($formato = null)
     {
         $formatos = $this->getFormatos();
         // si no es formato soportado error
         if ($formato && !in_array($formato, array_keys($formatos))) {
-            \sowerphp\core\Model_Datasource_Session::message('Formato '.$formato.' no está soportado', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('Formato '.$formato.' no está soportado.', 'error');
             $this->redirect('/utilidades/formatos');
         }
         // variables para la vista
@@ -70,8 +68,7 @@ class Controller_Formatos extends \Controller_App
     }
 
     /**
-     * Método que entrega los formatos soportados oficialmente (hay parser)
-         * @version 2016-09-12
+     * Método que entrega los formatos soportados oficialmente (hay parser).
      */
     private function getFormatos()
     {

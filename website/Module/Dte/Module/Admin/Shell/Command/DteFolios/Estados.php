@@ -24,8 +24,7 @@
 namespace website\Dte\Admin;
 
 /**
- * Comando que permite emitir masivamente DTE a partir de un archivo CSV
- * @version 2018-05-18
+ * Comando que permite emitir masivamente DTE a partir de un archivo CSV.
  */
 class Shell_Command_DteFolios_Estados extends \Shell_App
 {

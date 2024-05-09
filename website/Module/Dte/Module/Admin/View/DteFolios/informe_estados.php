@@ -12,7 +12,7 @@
         <?php
         $f = new \sowerphp\general\View_Helper_Form();
         $f->setStyle(false);
-        echo $f->begin(['onsubmit'=>'Form.check()']);
+        echo $f->begin(['onsubmit' => 'Form.check()']);
         echo $f->input([
             'type' => 'tablecheck',
             'name' => 'documentos',

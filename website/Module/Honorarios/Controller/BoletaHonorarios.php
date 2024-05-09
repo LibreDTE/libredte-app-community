@@ -1,8 +1,8 @@
 <?php
 
 /**
- * SowerPHP
- * Copyright (C) SowerPHP (http://sowerphp.org)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,19 +26,13 @@ namespace website\Honorarios;
 
 /**
  * Clase para el controlador asociado a la tabla boleta_honorario de la base de
- * datos
- * Comentario de la tabla:
- * Esta clase permite controlar las acciones entre el modelo y vista para la
- * tabla boleta_honorario
- * @author SowerPHP Code Generator
- * @version 2019-08-09 15:00:08
+ * datos.
  */
 class Controller_BoletaHonorarios extends \Controller_App
 {
 
     /**
-     * Acción que muestra un resumen por período donde hayan boletas recibidas
-         * @version 2019-08-09
+     * Acción que muestra un resumen por período donde hayan boletas recibidas.
      */
     public function index()
     {
@@ -48,8 +42,7 @@ class Controller_BoletaHonorarios extends \Controller_App
     }
 
     /**
-     * Acción para el buscador de boletas de honorario electróncias
-         * @version 2019-08-10
+     * Acción para el buscador de boletas de honorario electróncias.
      */
     public function buscar()
     {
@@ -63,15 +56,14 @@ class Controller_BoletaHonorarios extends \Controller_App
                 return;
             }
             if (empty($r['body'])) {
-                \sowerphp\core\Model_Datasource_Session::message('No se encontraron boletas para la búsqueda solicitada', 'warning');
+                \sowerphp\core\Model_Datasource_Session::message('No se encontraron boletas para la búsqueda solicitad.', 'warning');
             }
             $this->set('boletas', $r['body']);
         }
     }
 
     /**
-     * API que permite buscar boletas de honorario electrónicas recibidas en el SII
-         * @version 2021-06-29
+     * API que permite buscar boletas de honorario electrónicas recibidas en el SII.
      */
     public function _api_buscar_POST($receptor)
     {
@@ -86,7 +78,7 @@ class Controller_BoletaHonorarios extends \Controller_App
             $this->Api->send('Receptor no existe', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/honorarios/boleta_honorarios/buscar')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // obtener boletas
         $filtros = [];
@@ -96,22 +88,24 @@ class Controller_BoletaHonorarios extends \Controller_App
             }
         }
         if (empty($filtros)) {
-            $this->Api->send('Debe definir a lo menos un filtro para la búsqueda', 400);
+            $this->Api->send('Debe definir a lo menos un filtro para la búsqueda.', 400);
         }
-        $boletas = (new Model_BoletaHonorarios())->setContribuyente($Receptor)->buscar($filtros, 'DESC');
+        $boletas = (new Model_BoletaHonorarios())
+            ->setContribuyente($Receptor)
+            ->buscar($filtros, 'DESC')
+        ;
         $this->Api->send($boletas, 200);
     }
 
     /**
-     * Acción que permite descargar el PDF de una boleta de honorarios electrónica
-         * @version 2019-08-10
+     * Acción que permite descargar el PDF de una boleta de honorarios electrónica.
      */
     public function pdf($emisor, $numero)
     {
         $Receptor = $this->getContribuyente();
         $BoletaHonorario = new Model_BoletaHonorario($emisor, $numero);
         if (!$BoletaHonorario->exists() || $BoletaHonorario->receptor!=$Receptor->rut) {
-            \sowerphp\core\Model_Datasource_Session::message('No existe la boleta solicitada', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('No existe la boleta solicitada.', 'error');
             $this->redirect('/honorarios/boleta_honorarios');
         }
         // obtener PDF desde servicio web
@@ -128,8 +122,7 @@ class Controller_BoletaHonorarios extends \Controller_App
     }
 
     /**
-     * API que permite descargar el PDF de una boleta de honorarios electrónica
-         * @version 2019-08-10
+     * API que permite descargar el PDF de una boleta de honorarios electrónica.
      */
     public function _api_pdf_GET($emisor, $numero, $receptor)
     {
@@ -141,15 +134,15 @@ class Controller_BoletaHonorarios extends \Controller_App
         // crear receptor
         $Receptor = new \website\Dte\Model_Contribuyente($receptor);
         if (!$Receptor->exists()) {
-            $this->Api->send('Receptor no existe', 404);
+            $this->Api->send('Receptor no existe.', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/honorarios/boleta_honorarios/pdf')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
+            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // obtener boleta
         $BoletaHonorario = new Model_BoletaHonorario($emisor, $numero);
         if (!$BoletaHonorario->exists() || $BoletaHonorario->receptor!=$Receptor->rut) {
-            $this->Api->send('No existe la boleta solicitada', 404);
+            $this->Api->send('No existe la boleta solicitada.', 404);
         }
         // obtener pdf
         try {
@@ -166,15 +159,14 @@ class Controller_BoletaHonorarios extends \Controller_App
     }
 
     /**
-     * Acción para ver boletas de un período en particular
-         * @version 2019-08-09
+     * Acción para ver boletas de un período en particular.
      */
     public function ver($periodo)
     {
         $Receptor = $this->getContribuyente();
-        $boletas = (new Model_BoletaHonorarios())->setContribuyente($Receptor)->buscar(['periodo'=>$periodo]);
+        $boletas = (new Model_BoletaHonorarios())->setContribuyente($Receptor)->buscar(['periodo' => $periodo]);
         if (empty($boletas)) {
-            \sowerphp\core\Model_Datasource_Session::message('No existen boletas para el período solicitado', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('No existen boletas para el período solicitado.', 'error');
             $this->redirect('/honorarios/boleta_honorarios');
         }
         $this->set([
@@ -185,15 +177,14 @@ class Controller_BoletaHonorarios extends \Controller_App
     }
 
     /**
-     * Acción para descargar el CSV con las boletas de un periodo
-         * @version 2019-08-09
+     * Acción para descargar el CSV con las boletas de un periodo.
      */
     public function csv($periodo)
     {
         $Receptor = $this->getContribuyente();
-        $boletas = (new Model_BoletaHonorarios())->setContribuyente($Receptor)->buscar(['periodo'=>$periodo]);
+        $boletas = (new Model_BoletaHonorarios())->setContribuyente($Receptor)->buscar(['periodo' => $periodo]);
         if (empty($boletas)) {
-            \sowerphp\core\Model_Datasource_Session::message('No existen boletas para el período solicitado', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('No existen boletas para el período solicitado.', 'error');
             $this->redirect('/honorarios/boleta_honorarios');
         }
         foreach ($boletas as &$b) {
@@ -205,8 +196,7 @@ class Controller_BoletaHonorarios extends \Controller_App
     }
 
     /**
-     * Acción para actualizar el listado de boletas desde el SII
-         * @version 2019-08-13
+     * Acción para actualizar el listado de boletas desde el SII.
      */
     public function actualizar()
     {
@@ -214,7 +204,7 @@ class Controller_BoletaHonorarios extends \Controller_App
         $Receptor = $this->getContribuyente();
         try {
             (new Model_BoletaHonorarios())->setContribuyente($Receptor)->sincronizar($meses);
-            \sowerphp\core\Model_Datasource_Session::message('Boletas actualizadas', 'ok');
+            \sowerphp\core\Model_Datasource_Session::message('Boletas actualizadas.', 'ok');
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
         }

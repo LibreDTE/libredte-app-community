@@ -10,19 +10,19 @@
 <p>Aquí podrá buscar entre sus documentos temporales.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form(false);
-echo $f->begin(['onsubmit'=>'Form.check()']);
+echo $f->begin(['onsubmit' => 'Form.check()']);
 ?>
 <div class="row mb-3">
-    <div class="form-group col-md-6"><?=$f->input(['type'=>'select', 'name'=>'dte', 'options'=>[''=>'Buscar en todos los tipos de documentos'] + $tipos_dte])?></div>
-    <div class="form-group col-md-6"><?=$f->input(['name'=>'receptor', 'placeholder'=>'Receptor: RUT o razón social'])?></div>
+    <div class="form-group col-md-6"><?=$f->input(['type' => 'select', 'name' => 'dte', 'options' => ['' => 'Buscar en todos los tipos de documentos'] + $tipos_dte])?></div>
+    <div class="form-group col-md-6"><?=$f->input(['name' => 'receptor', 'placeholder' => 'Receptor: RUT o razón social'])?></div>
 </div>
 <div class="row">
-    <div class="form-group col-md-3"><?=$f->input(['type'=>'date', 'name'=>'fecha_desde', 'placeholder'=>'Fecha desde', 'check'=>'date'])?></div>
-    <div class="form-group col-md-3"><?=$f->input(['type'=>'date', 'name'=>'fecha_hasta', 'placeholder'=>'Fecha hasta', 'check'=>'date'])?></div>
-    <div class="form-group col-md-3"><?=$f->input(['name'=>'total_desde', 'placeholder'=>'Total desde', 'check'=>'integer', 'attr'=>'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"'])?></div>
-    <div class="form-group col-md-3"><?=$f->input(['name'=>'total_hasta', 'placeholder'=>'Total hasta', 'check'=>'integer', 'attr'=>'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"'])?></div>
+    <div class="form-group col-md-3"><?=$f->input(['type' => 'date', 'name' => 'fecha_desde', 'placeholder' => 'Fecha desde', 'check' => 'date'])?></div>
+    <div class="form-group col-md-3"><?=$f->input(['type' => 'date', 'name' => 'fecha_hasta', 'placeholder' => 'Fecha hasta', 'check' => 'date'])?></div>
+    <div class="form-group col-md-3"><?=$f->input(['name' => 'total_desde', 'placeholder' => 'Total desde', 'check' => 'integer', 'attr' => 'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"'])?></div>
+    <div class="form-group col-md-3"><?=$f->input(['name' => 'total_hasta', 'placeholder' => 'Total hasta', 'check' => 'integer', 'attr' => 'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"'])?></div>
 </div>
-<div class="text-center mt-3"><?=$f->input(['type'=>'submit', 'name'=>'submit', 'value'=>'Buscar documentos'])?></div>
+<div class="text-center mt-3"><?=$f->input(['type' => 'submit', 'name' => 'submit', 'value' => 'Buscar documentos'])?></div>
 <?php
 echo $f->end(false);
 // mostrar documentos

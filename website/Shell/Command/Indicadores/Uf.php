@@ -23,6 +23,8 @@
 
 namespace website;
 
+use \sowerphp\app\Sistema\General\Model_MonedaCambio;
+
 /**
  * Obtiene los valores de la UF para un año determinado.
  * Los valores disponibles en SII son desde 1990.
@@ -108,11 +110,10 @@ class Shell_Command_Indicadores_Uf extends \sowerphp\core\Shell_App
     }
 
     /**
-     * Método que guarda los valores de la UF en la base de datos
-     * @param $valores Arreglo con los valores de la UF de todos los meses de uno o varios años
-         * @version 2020-09-06
+     * Método que guarda los valores de la UF en la base de datos.
+     * @param array $valores Arreglo con los valores de la UF de todos los meses de uno o varios años.
      */
-    private function saveValores($valores)
+    private function saveValores(array $valores): void
     {
         foreach ($valores as $anio => $meses) {
             foreach ($meses as $mes => $dias) {
@@ -122,7 +123,7 @@ class Shell_Command_Indicadores_Uf extends \sowerphp\core\Shell_App
                         continue;
                     }
                     $fecha = $anio.'-'.$mes.'-'.$dia;
-                    $Moneda = new \sowerphp\app\Sistema\General\Model_MonedaCambio('CLF', 'CLP', $fecha);
+                    $Moneda = new Model_MonedaCambio('CLF', 'CLP', $fecha);
                     $Moneda->valor = $valor;
                     $Moneda->save();
                 }

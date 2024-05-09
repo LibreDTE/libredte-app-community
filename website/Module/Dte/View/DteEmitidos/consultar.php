@@ -31,7 +31,7 @@ $f = new \sowerphp\general\View_Helper_Form(false);
                             <label for="emisor" class="visually-hidden">RUT emisor</label>
                             <input type="text" name="emisor" id="emisor" class="form-control check rut" required="required" placeholder="RUT emisor">
                         </div>
-                        <div class="form-group mb-3"><?=$f->input(['type'=>'select', 'name' => 'dte', 'label'=>'Tipo DTE', 'options'=>$dtes, 'value'=>$dte])?></div>
+                        <div class="form-group mb-3"><?=$f->input(['type' => 'select', 'name' => 'dte', 'label' => 'Tipo DTE', 'options' => $dtes, 'value' => $dte])?></div>
                         <div class="form-group mb-3">
                             <label for="folio" class="visually-hidden">Folio del DTE</label>
                             <input type="number" name="folio" id="folio" class="form-control" required="required" placeholder="Folio del DTE">

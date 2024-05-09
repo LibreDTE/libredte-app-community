@@ -9,12 +9,12 @@
 <p>Aquí podrá reobtener un archivo XML de folios (CAF) previamente obtenido en el SII y que sea cargardo inmediatamente a LibreDTE.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check() && __.loading(\'Buscando folios en el SII...\')']);
+echo $f->begin(['onsubmit' => 'Form.check() && __.loading(\'Buscando folios en el SII...\')']);
 echo $f->input([
     'type' => 'select',
     'name' => 'dte',
     'label' => 'Tipo de documento',
-    'options' => [''=>'Seleccione un tipo de documento'] + $dte_tipos,
+    'options' => ['' => 'Seleccione un tipo de documento'] + $dte_tipos,
     'value' => $dte,
     'check' => 'notempty',
 ]);

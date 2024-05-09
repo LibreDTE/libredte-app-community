@@ -25,15 +25,13 @@
 namespace website\Utilidades;
 
 /**
- * Controlador para utilidades asociadas a contribuyentes
- * @version 2016-09-12
+ * Controlador para utilidades asociadas a contribuyentes.
  */
 class Controller_Contribuyentes extends \Controller_App
 {
 
     /**
-     * Acción que permite buscar los datos de un contribuyente
-         * @version 2015-09-24
+     * Acción que permite buscar los datos de un contribuyente.
      */
     public function buscar()
     {
@@ -43,7 +41,7 @@ class Controller_Contribuyentes extends \Controller_App
                 $this->set('Contribuyente', $Contribuyente);
             } else {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No se encontró contribuyente para el RUT indicado', 'info'
+                    'No se encontró información para el RUT indicado en LibreDTE.', 'warning'
                 );
             }
         }

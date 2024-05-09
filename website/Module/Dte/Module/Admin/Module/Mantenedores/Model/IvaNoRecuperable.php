@@ -25,11 +25,7 @@
 namespace website\Dte\Admin\Mantenedores;
 
 /**
- * Clase para mapear la tabla iva_no_recuperable de la base de datos
- * Comentario de la tabla: Tipos de IVA no recuperable
- * Esta clase permite trabajar sobre un registro de la tabla iva_no_recuperable
- * @author SowerPHP Code Generator
- * @version 2015-09-27 18:24:13
+ * Clase para mapear la tabla iva_no_recuperable de la base de datos.
  */
 class Model_IvaNoRecuperable extends \Model_App
 {

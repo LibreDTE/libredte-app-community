@@ -25,11 +25,7 @@
 namespace website\Dte\Admin\Mantenedores;
 
 /**
- * Clase para mapear la tabla dte_referencia_tipo de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla dte_referencia_tipo
- * @author SowerPHP Code Generator
- * @version 2015-09-25 15:27:00
+ * Clase para mapear la tabla dte_referencia_tipo de la base de datos.
  */
 class Model_DteReferenciaTipo extends \Model_App
 {

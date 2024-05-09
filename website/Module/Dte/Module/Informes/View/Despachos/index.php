@@ -2,7 +2,7 @@
 <p>Se listan los despachos programados para cierto día por el contribuyente <?=$Emisor->razon_social?>.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit'=>'Form.check()']);
+echo $f->begin(['onsubmit' => 'Form.check()']);
 $f->setColsLabel(4);
 echo '<div class="row">';
 echo '<div class="col-md-6">';
@@ -45,7 +45,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'usuario',
     'label' => 'Usuario',
-    'options' => [''=>'Todos los usuarios'] + $usuarios,
+    'options' => ['' => 'Todos los usuarios'] + $usuarios,
     'help' => 'Usuario que generó la guía',
 ]);
 echo $f->input([

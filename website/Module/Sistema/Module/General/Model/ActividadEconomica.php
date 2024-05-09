@@ -25,11 +25,7 @@
 namespace website\Sistema\General;
 
 /**
- * Clase para mapear la tabla actividad_economica de la base de datos
- * Comentario de la tabla: Actividades económicas del país
- * Esta clase permite trabajar sobre un registro de la tabla actividad_economica
- * @author SowerPHP Code Generator
- * @version 2014-04-26 01:34:18
+ * Clase para mapear la tabla actividad_economica de la base de datos.
  */
 class Model_ActividadEconomica extends \Model_App
 {

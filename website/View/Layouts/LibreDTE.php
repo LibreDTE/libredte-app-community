@@ -153,7 +153,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                                                 <?php $link = str_replace(['{anio}', '{dia}'], [$anio, $dia], $link); ?>
                                                 <?php if ($_Auth->check($nav['link'].$link)) : ?>
                                                 <li>
-                                                    <a href="<?=$_base.$nav['link'].$link?>" class="dropdown-item" title="<?=!empty($menu['desc'])?$menu['desc']:''?>">
+                                                    <a href="<?=$_base.$nav['link'].$link?>" class="dropdown-item" title="<?=!empty($menu['desc']) ? $menu['desc'] : ''?>">
                                                         <i class="<?=$menu['icon']?> fa-fw"></i>
                                                         <?=$menu['name']?>
                                                     </a>
@@ -219,10 +219,10 @@ echo $_content;
         <footer class="footer d-print-none">
             <div class="container">
                 <div class="float-start">
-                    <?=(is_array($_footer)?$_footer['left']:$_footer)."\n"?>
+                    <?=(is_array($_footer) ? $_footer['left']:$_footer)."\n"?>
                 </div>
                 <div class="float-end text-end">
-<?=!empty($_footer['right'])?$_footer['right'].'<br/>'."\n":''?>
+<?=!empty($_footer['right']) ? $_footer['right'].'<br/>'."\n":''?>
 <?php
 if (isset($_Auth) && $_Auth->logged()) {
     echo '<span class="small">';

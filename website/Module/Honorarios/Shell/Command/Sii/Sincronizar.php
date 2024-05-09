@@ -24,8 +24,7 @@
 namespace website\Honorarios;
 
 /**
- * Comando para sincronizar datos del SII en LibreDTE
- * @version 2021-06-29
+ * Comando para sincronizar datos del SII en LibreDTE.
  */
 class Shell_Command_Sii_Sincronizar extends \Shell_App
 {
@@ -73,11 +72,13 @@ class Shell_Command_Sii_Sincronizar extends \Shell_App
             SELECT DISTINCT c.rut
             FROM
                 contribuyente AS c
-                JOIN contribuyente_config AS cc ON cc.contribuyente = c.rut AND cc.configuracion = \'sii\' AND cc.variable = \'pass\'
+                JOIN contribuyente_config AS cc ON cc.contribuyente = c.rut
                 JOIN usuario_grupo AS ug ON ug.usuario = c.usuario
                 JOIN grupo AS g ON ug.grupo = g.id AND g.grupo = :grupo
             WHERE
                 g.grupo IS NOT NULL
+                AND cc.configuracion = \'sii\'
+                AND cc.variable = \'pass\'
                 AND cc.valor IS NOT NULL
         ', [':grupo' => $grupo]);
     }

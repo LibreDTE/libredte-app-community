@@ -24,8 +24,7 @@
 namespace website\Dte;
 
 /**
- * Comando para sincronizar datos del Portal MIPYME del SII en LibreDTE
- * @version 2020-02-22
+ * Comando para sincronizar datos del Portal MIPYME del SII en LibreDTE.
  */
 class Shell_Command_Sii_Mipyme extends \Shell_App
 {
@@ -49,9 +48,12 @@ class Shell_Command_Sii_Mipyme extends \Shell_App
             if (in_array('compras', $sincronizar)) {
                 // compras desde RC
                 try {
-                    $n = (new Model_DteCompras())->setContribuyente($Contribuyente)->sincronizarRegistroComprasSII($meses);
+                    $n = (new Model_DteCompras())
+                        ->setContribuyente($Contribuyente)
+                        ->sincronizarRegistroComprasSII($meses)
+                    ;
                     if ($this->verbose >= 2) {
-                        $this->out('  Se procesaron '.num($n).' documentos del registro de compras');
+                        $this->out('  Se procesaron '.num($n).' documentos del registro de compras.');
                     }
                 } catch (\Exception $e) {
                     if ($this->verbose) {
@@ -60,9 +62,12 @@ class Shell_Command_Sii_Mipyme extends \Shell_App
                 }
                 // compras desde MIPYME
                 try {
-                    $n = (new Model_DteCompras())->setContribuyente($Contribuyente)->sincronizarRecibidosPortalMipymeSII($meses);
+                    $n = (new Model_DteCompras())
+                        ->setContribuyente($Contribuyente)
+                        ->sincronizarRecibidosPortalMipymeSII($meses)
+                    ;
                     if ($this->verbose >= 2) {
-                        $this->out('  Se procesaron '.num($n).' documentos recibidos de MIPYME');
+                        $this->out('  Se procesaron '.num($n).' documentos recibidos de MIPYME.');
                     }
                 } catch (\Exception $e) {
                     if ($this->verbose) {
@@ -73,9 +78,12 @@ class Shell_Command_Sii_Mipyme extends \Shell_App
             if (in_array('ventas', $sincronizar)) {
                 // ventas desde RV
                 try {
-                    $n = (new Model_DteVentas())->setContribuyente($Contribuyente)->sincronizarRegistroVentasSII($meses);
+                    $n = (new Model_DteVentas())
+                        ->setContribuyente($Contribuyente)
+                        ->sincronizarRegistroVentasSII($meses)
+                    ;
                     if ($this->verbose >= 2) {
-                        $this->out('  Se procesaron '.num($n).' documentos del registro de ventas');
+                        $this->out('  Se procesaron '.num($n).' documentos del registro de ventas.');
                     }
                 } catch (\Exception $e) {
                     if ($this->verbose) {
@@ -84,9 +92,12 @@ class Shell_Command_Sii_Mipyme extends \Shell_App
                 }
                 // ventas desde MIPYME
                 try {
-                    $n = (new Model_DteVentas())->setContribuyente($Contribuyente)->sincronizarEmitidosPortalMipymeSII($meses);
+                    $n = (new Model_DteVentas())
+                        ->setContribuyente($Contribuyente)
+                        ->sincronizarEmitidosPortalMipymeSII($meses)
+                    ;
                     if ($this->verbose >= 2) {
-                        $this->out('  Se procesaron '.num($n).' documentos emitidos de MIPYME');
+                        $this->out('  Se procesaron '.num($n).' documentos emitidos de MIPYME.');
                     }
                 } catch (\Exception $e) {
                     if ($this->verbose) {
@@ -109,11 +120,15 @@ class Shell_Command_Sii_Mipyme extends \Shell_App
             SELECT DISTINCT c.rut
             FROM
                 contribuyente AS c
-                JOIN contribuyente_config AS cc ON cc.contribuyente = c.rut AND cc.configuracion = \'libredte\' AND cc.variable = \'facturador\'
+                JOIN contribuyente_config AS cc ON cc.contribuyente = c.rut
                 LEFT JOIN usuario_grupo AS ug ON ug.usuario = c.usuario
                 LEFT JOIN grupo AS g ON ug.grupo = g.id
             WHERE
-                g.grupo = :grupo AND cc.valor IS NOT NULL AND cc.valor != \'0\'
+                g.grupo = :grupo
+                AND cc.configuracion = \'libredte\'
+                AND cc.variable = \'facturador\'
+                AND cc.valor IS NOT NULL
+                AND cc.valor != \'0\'
         ', [':grupo' => $grupo]);
     }
 

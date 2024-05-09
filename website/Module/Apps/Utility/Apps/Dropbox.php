@@ -25,8 +25,7 @@
 namespace website\Apps;
 
 /**
- * Utilidad para trabajar con la aplicación de Dropbox
- * @version 2019-07-13
+ * Utilidad para trabajar con la aplicación de Dropbox.
  */
 class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
 {
@@ -38,14 +37,13 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
     protected $logo = 'https://i.imgur.com/B0pnCvz.png';
 
      /**
-     * Método que entrega el código HTML de la página de configuración de la aplicación
-         * @version 2019-07-13
+     * Método que entrega el código HTML de la página de configuración de la aplicación.
      */
     public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form)
     {
         $Dropbox = $this->getDropboxClient();
         if (!$Dropbox) {
-            return '<div class="alert alert-danger text-center lead">'.$this->getNombre().' no se encuentra disponible<br/><small>Esta versión de LibreDTE no tiene habilitada la conexión con '.$this->getNombre().'.<br/>No es posible generar respaldos automáticos.</small></div>';
+            return '<div class="alert alert-danger text-center lead">'.$this->getNombre().' no se encuentra disponible<br/><small>Este servidor de LibreDTE no tiene habilitada la conexión con '.$this->getNombre().'.<br/>No es posible generar respaldos automáticos.</small></div>';
         }
         $buffer = '';
         // si no está conectado mostrar opciones para conectar
@@ -90,17 +88,15 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
     }
 
     /**
-     * Método para evitar que se llame al método padre
-     * La configuración se activa o desactiva al parear/desparear Dropbox
-         * @version 2019-07-13
+     * Método para evitar que se llame al método padre.
+     * La configuración se activa o desactiva al parear/desparear Dropbox.
      */
     public function setConfigPOST()
     {
     }
 
     /**
-     * Método que obtiene el cliente de Dropbox (autenticado o aun no)
-         * @version 2019-07-13
+     * Método que obtiene el cliente de Dropbox (autenticado o aun no).
      */
     public function getDropboxClient($token = null)
     {
@@ -120,8 +116,7 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
     }
 
     /**
-     * Método que indica si está o no conectado a Dropbox
-         * @version 2019-07-13
+     * Método que indica si está o no conectado a Dropbox.
      */
     public function isConnected()
     {
@@ -130,8 +125,7 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
     }
 
     /**
-     * Método que entrega la URL de callback de Dropbox para la conexión
-         * @version 2019-07-13
+     * Método que entrega la URL de callback de Dropbox para la conexión.
      */
     public function getPairURL()
     {

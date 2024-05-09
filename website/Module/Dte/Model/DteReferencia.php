@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_referencia de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla dte_referencia
- * @author SowerPHP Code Generator
- * @version 2015-09-25 16:06:34
+ * Clase para mapear la tabla dte_referencia de la base de datos.
  */
 class Model_DteReferencia extends \Model_App
 {
@@ -151,12 +147,16 @@ class Model_DteReferencia extends \Model_App
     ); ///< Namespaces que utiliza esta clase
 
     /**
-     * Método que entrega el documento asociado a la referencia
-         * @version 2019-07-11
+     * Método que entrega el documento asociado a la referencia.
      */
     public function getDocumento()
     {
-        return (new Model_DteEmitidos())->get($this->emisor, $this->referencia_dte, $this->referencia_folio, (int)$this->certificacion);
+        return (new Model_DteEmitidos())->get(
+            $this->emisor, 
+            $this->referencia_dte, 
+            $this->referencia_folio, 
+            (int)$this->certificacion
+        );
     }
 
 }

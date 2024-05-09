@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_intercambio_recepcion de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla dte_intercambio_recepcion
- * @author SowerPHP Code Generator
- * @version 2015-12-23 21:47:25
+ * Clase para mapear la tabla dte_intercambio_recepcion de la base de datos.
  */
 class Model_DteIntercambioRecepcion extends \Model_App
 {
@@ -173,8 +169,7 @@ class Model_DteIntercambioRecepcion extends \Model_App
     ); ///< Namespaces que utiliza esta clase
 
     /**
-     * Método que guarda el XML de la Recepción de un intercambio
-         * @version 2020-07-03
+     * Método que guarda el XML de la Recepción de un intercambio.
      */
     public function saveXML($Emisor, $xml) {
 
@@ -190,7 +185,7 @@ class Model_DteIntercambioRecepcion extends \Model_App
         // el RUT no es válido
         $Resultado = $RespuestaEnvio->toArray()['RespuestaDTE']['Resultado'];
         if (explode('-', $Resultado['Caratula']['RutRecibe'])[0] != $Emisor->rut) {
-            throw new \Exception('El RUT del receptor no es válido');
+            throw new \Exception('El RUT del receptor no es válido.');
         }
         // guardar recepción
         $this->db->beginTransaction();
@@ -200,24 +195,39 @@ class Model_DteIntercambioRecepcion extends \Model_App
         }
         $this->recibe = $Emisor->rut;
         $this->codigo = md5($xml);
-        $this->contacto = !empty($Resultado['Caratula']['NmbContacto']) ? substr($Resultado['Caratula']['NmbContacto'], 0, 40) : null;
-        $this->telefono = !empty($Resultado['Caratula']['FonoContacto']) ? substr($Resultado['Caratula']['FonoContacto'], 0, 40) : null;
-        $this->email = !empty($Resultado['Caratula']['MailContacto']) ? substr($Resultado['Caratula']['MailContacto'], 0, 80) : null;
+        $this->contacto = !empty($Resultado['Caratula']['NmbContacto'])
+            ? substr($Resultado['Caratula']['NmbContacto'], 0, 40)
+            : null
+        ;
+        $this->telefono = !empty($Resultado['Caratula']['FonoContacto'])
+            ? substr($Resultado['Caratula']['FonoContacto'], 0, 40)
+            : null
+        ;
+        $this->email = !empty($Resultado['Caratula']['MailContacto'])
+            ? substr($Resultado['Caratula']['MailContacto'], 0, 80)
+            : null
+        ;
         $this->fecha_hora = str_replace('T', ' ', $Resultado['Caratula']['TmstFirmaResp']);
         $this->estado = $Resultado['RecepcionEnvio']['EstadoRecepEnv'];
-        $this->glosa = !empty($Resultado['RecepcionEnvio']['RecepEnvGlosa']) ? substr($Resultado['RecepcionEnvio']['RecepEnvGlosa'], 0, 256) : null;
+        $this->glosa = !empty($Resultado['RecepcionEnvio']['RecepEnvGlosa'])
+            ? substr($Resultado['RecepcionEnvio']['RecepEnvGlosa'], 0, 256)
+            : null
+        ;
         $this->xml = base64_encode($xml);
         if (!$this->save()) {
             $this->db->rollback();
-            throw new \Exception('No fue posible guardar la recepción del intercambio');
+            throw new \Exception('No fue posible guardar la recepción del intercambio.');
         }
         // procesar cada recepción
         foreach ($RespuestaEnvio->getRecepciones() as $Recepcion) {
             // si el RUT del emisor no corresponde con el del contribuyente el
             // acuse no es para este
-            if (!isset($Recepcion['RUTEmisor']) or explode('-', $Recepcion['RUTEmisor'])[0] != $Emisor->rut) {
+            if (
+                !isset($Recepcion['RUTEmisor'])
+                || explode('-', $Recepcion['RUTEmisor'])[0] != $Emisor->rut
+            ) {
                 $this->db->rollback();
-                throw new \Exception('El RUT del emisor del DTE informado no corresponde');
+                throw new \Exception('El RUT del emisor del DTE informado no corresponde.');
             }
             // buscar DTE emitido en el ambiente del emisor
             $DteEmitido = new Model_DteEmitido(
@@ -227,9 +237,14 @@ class Model_DteIntercambioRecepcion extends \Model_App
                 $Emisor->enCertificacion()
             );
             // si no existe o si los datos del DTE emitido no corresponden error
-            if (!$DteEmitido->exists() or explode('-', $Recepcion['RUTRecep'])[0] != $DteEmitido->receptor || $Recepcion['FchEmis'] != $DteEmitido->fecha || $Recepcion['MntTotal'] != $DteEmitido->total) {
+            if (
+                !$DteEmitido->exists()
+                || explode('-', $Recepcion['RUTRecep'])[0] != $DteEmitido->receptor
+                || $Recepcion['FchEmis'] != $DteEmitido->fecha
+                || $Recepcion['MntTotal'] != $DteEmitido->total
+            ) {
                 $this->db->rollback();
-                throw new \Exception('DTE informado no existe o sus datos no corresponden');
+                throw new \Exception('DTE informado no existe o sus datos no corresponden.');
             }
             // guardar recibo para el DTE
             $DteIntercambioRecepcionDte = new Model_DteIntercambioRecepcionDte(
@@ -241,11 +256,11 @@ class Model_DteIntercambioRecepcion extends \Model_App
                 $DteIntercambioRecepcionDte->estado = $Recepcion['EstadoRecepDTE'];
             }
             if (!empty($Recepcion['RecepDTEGlosa']) && is_string($Recepcion['RecepDTEGlosa'])) {
-                $DteIntercambioRecepcionDte->glosa = substr($Recepcion['RecepDTEGlosa'], 0, 256);
+                $DteIntercambioRecepcionDte->glosa = mb_substr($Recepcion['RecepDTEGlosa'], 0, 256);
             }
             if (!$DteIntercambioRecepcionDte->save()) {
                 $this->db->rollback();
-                throw new \Exception('No fue posible guardar el DTE de la recepción del intercambio');
+                throw new \Exception('No fue posible guardar el DTE de la recepción del intercambio.');
             }
         }
         // aceptar transacción

@@ -24,8 +24,7 @@
 namespace website;
 
 /**
- * Controlador para módulos
- * @version 2016-02-03
+ * Controlador para módulos.
  */
 class Controller_Module extends \sowerphp\general\Controller_Module
 {
@@ -33,14 +32,13 @@ class Controller_Module extends \sowerphp\general\Controller_Module
     /**
      * Método para capturar solicitudes de módulos, si existe un dashboard
      * asociado al módulo y el usuario está autorizado para verlo el usuario
-     * será redireccionado automáticamente al dashboard del módulo
-         * @version 2018-07-04
+     * será redireccionado automáticamente al dashboard del módulo.
      */
     public function display()
     {
         $modulo = $this->request->params['module'];
         $nombre = \sowerphp\core\Utility_Inflector::underscore($modulo);
-        $url = '/'.str_replace('.','/',$nombre).'/dashboard';
+        $url = '/' . str_replace('.', '/', $nombre) . '/dashboard';
         $class = \sowerphp\core\App::findClass('Controller_Dashboard', $modulo);
         if ($class != 'Controller_Dashboard') {
             if ($this->Auth->check($url)) {

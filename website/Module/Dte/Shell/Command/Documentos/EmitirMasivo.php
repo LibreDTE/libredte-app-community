@@ -24,8 +24,7 @@
 namespace website\Dte;
 
 /**
- * Comando que permite emitir masivamente DTE a partir de un archivo CSV
- * @version 2020-06-28
+ * Comando que permite emitir masivamente DTE a partir de un archivo CSV.
  */
 class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
 {
@@ -42,7 +41,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
     {
         $this->time_start = microtime(true);
         // crear emisor/usuario y verificar permisos
-        $Emisor = new \website\Dte\Model_Contribuyente($emisor);
+        $Emisor = new Model_Contribuyente($emisor);
         if (!$usuario) {
             $usuario = $Emisor->usuario;
         }
@@ -180,8 +179,11 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
                 // crear PDF del DTE temporal
                 if ($pdf) {
                     $response_pdf = $rest->get(url('/api/dte/dte_tmps/pdf/'.$response['body']['receptor'].'/'.$response['body']['dte'].'/'.$response['body']['codigo'].'/'.$response['body']['emisor'].'?cotizacion=1'));
-                    if ($response_pdf['status']['code']==200) {
-                        $filename = !empty($dte_config['pdf']['nombre']) ? $dte_config['pdf']['nombre'] : 'LibreDTE_{rut}_{folio}';
+                    if ($response_pdf['status']['code'] == 200) {
+                        $filename = !empty($dte_config['pdf']['nombre'])
+                            ? $dte_config['pdf']['nombre']
+                            : 'LibreDTE_{rut}_{folio}'
+                        ;
                         $file_pdf = $dir.'/'.str_replace(
                             ['{rut}', '{dv}', '{dte}', '{folio}'],
                             [$Emisor->rut, $Emisor->dv, $response['body']['dte'], $response['body']['dte'].'-'.strtoupper(substr($response['body']['codigo'],0,7))],
@@ -192,7 +194,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
                 }
                 // enviar DTE temporal por correo al receptor
                 if ($email) {
-                    $DteTmp = new \website\Dte\Model_DteTmp(
+                    $DteTmp = new Model_DteTmp(
                         $response['body']['emisor'],
                         $response['body']['receptor'],
                         $response['body']['dte'],
@@ -236,8 +238,11 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
                 // crear PDF del DTE real
                 if ($pdf === true) {
                     $response_pdf = $rest->get(url('/api/dte/dte_emitidos/pdf/'.$response['body']['dte'].'/'.$response['body']['folio'].'/'.$response['body']['emisor']));
-                    if ($response_pdf['status']['code']==200) {
-                        $filename = !empty($dte_config['pdf']['nombre']) ? $dte_config['pdf']['nombre'] : 'LibreDTE_{rut}_T{dte}F{folio}';
+                    if ($response_pdf['status']['code'] == 200) {
+                        $filename = !empty($dte_config['pdf']['nombre'])
+                            ? $dte_config['pdf']['nombre']
+                            : 'LibreDTE_{rut}_T{dte}F{folio}'
+                        ;
                         $file_pdf = $dir.'/'.str_replace(
                             ['{rut}', '{dv}', '{dte}', '{folio}'],
                             [$Emisor->rut, $Emisor->dv, $response['body']['dte'], $response['body']['folio']],
@@ -248,7 +253,12 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
                 }
                 // enviar DTE real por correo al receptor
                 if ($email) {
-                    $DteEmitido = new \website\Dte\Model_DteEmitido($response['body']['emisor'], $response['body']['dte'], $response['body']['folio'], $Emisor->enCertificacion());
+                    $DteEmitido = new Model_DteEmitido(
+                        $response['body']['emisor'], 
+                        $response['body']['dte'], 
+                        $response['body']['folio'], 
+                        $Emisor->enCertificacion()
+                    );
                     try {
                         // enviar el correo indicado en el archivo
                         if (!empty($dte['Encabezado']['Receptor']['CorreoRecep'])) {
@@ -275,14 +285,14 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
         if ($pdf) {
             $compress = 'zip';
             \sowerphp\general\Utility_File::compress(
-                $dir, ['format'=>$compress, 'delete'=>true, 'download'=>false]
+                $dir, ['format' => $compress, 'delete' => true, 'download' => false]
             );
             $output = $dir.'.'.$compress;
             $filename = DIR_STATIC.'/emision_masiva_pdf/'.basename($output);
             if (!rename($output, $filename)) {
-                $pdf = 'Error al mover el archivo comprimido al directorio de descarga';
+                $pdf = 'Error al mover el archivo comprimido al directorio de descarga.';
             } else {
-                $pdf = url('/static/emision_masiva_pdf/'.basename($filename)).' (enlace válido por 24 horas)';
+                $pdf = url('/static/emision_masiva_pdf/'.basename($filename)).' (enlace válido por 24 horas).';
             }
         }
         // notificar al usuario que solicitó la emisión masiva
@@ -296,27 +306,27 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
     {
         // verificar datos mínimos
         if (empty($datos[0])) {
-            throw new \Exception('Falta tipo de documento');
+            throw new \Exception('Falta tipo de documento.');
         }
         if (empty($datos[1])) {
-            throw new \Exception('Falta folio del documento');
+            throw new \Exception('Falta folio del documento.');
         }
         if (empty($datos[4])) {
-            throw new \Exception('Falta RUT del receptor');
+            throw new \Exception('Falta RUT del receptor.');
         }
         // verificar datos si no es boleta
         if (!in_array($datos[0], [39, 41])) {
             if (empty($datos[5])) {
-                throw new \Exception('Falta razón social del receptor');
+                throw new \Exception('Falta razón social del receptor.');
             }
             if (empty($datos[6])) {
-                throw new \Exception('Falta giro del receptor');
+                throw new \Exception('Falta giro del receptor.');
             }
             if (empty($datos[9])) {
-                throw new \Exception('Falta dirección del receptor');
+                throw new \Exception('Falta dirección del receptor.');
             }
             if (empty($datos[10])) {
-                throw new \Exception('Falta comuna del receptor');
+                throw new \Exception('Falta comuna del receptor.');
             }
         }
         // armar dte
@@ -334,13 +344,13 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
         ];
         if (!empty($datos[2])) {
             if (!\sowerphp\general\Utility_Date::check($datos[2])) {
-                throw new \Exception('Fecha emisión '.$datos[2].' es incorrecta, debe ser formato AAAA-MM-DD');
+                throw new \Exception('Fecha emisión '.$datos[2].' es incorrecta, debe ser formato AAAA-MM-DD.');
             }
             $documento['Encabezado']['IdDoc']['FchEmis'] = $datos[2];
         }
         if (!empty($datos[3])) {
             if (!\sowerphp\general\Utility_Date::check($datos[3])) {
-                throw new \Exception('Fecha vencimiento '.$datos[3].' es incorrecta, debe ser formato AAAA-MM-DD');
+                throw new \Exception('Fecha vencimiento '.$datos[3].' es incorrecta, debe ser formato AAAA-MM-DD.');
             }
             $documento['Encabezado']['IdDoc']['FchVenc'] = $datos[3];
         }
@@ -355,7 +365,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
         }
         if (!empty($datos[8])) {
             if (!filter_var($datos[8], FILTER_VALIDATE_EMAIL)) {
-                throw new \Exception('Correo electrónico '.$datos[8].' no es válido');
+                throw new \Exception('Correo electrónico '.$datos[8].' no es válido.');
             }
             $documento['Encabezado']['Receptor']['CorreoRecep'] = mb_substr(trim($datos[8]), 0, 80);
         }
@@ -370,13 +380,13 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
         }
         if (!empty($datos[20])) {
             if (!\sowerphp\general\Utility_Date::check($datos[20])) {
-                throw new \Exception('Fecha período desde '.$datos[20].' es incorrecta, debe ser formato AAAA-MM-DD');
+                throw new \Exception('Fecha período desde '.$datos[20].' es incorrecta, debe ser formato AAAA-MM-DD.');
             }
             $documento['Encabezado']['IdDoc']['PeriodoDesde'] = $datos[20];
         }
         if (!empty($datos[21])) {
             if (!\sowerphp\general\Utility_Date::check($datos[21])) {
-                throw new \Exception('Fecha período hasta '.$datos[21].' es incorrecta, debe ser formato AAAA-MM-DD');
+                throw new \Exception('Fecha período hasta '.$datos[21].' es incorrecta, debe ser formato AAAA-MM-DD.');
             }
             $documento['Encabezado']['IdDoc']['PeriodoHasta'] = $datos[21];
         }
@@ -386,7 +396,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
                 $datos[33] = 'USD';
             }
             if (empty($this->monedas[$datos[33]])) {
-                throw new \Exception('El tipo de moneda '.$datos[33].' no está permitido, solo: USD, EUR y CLP');
+                throw new \Exception('El tipo de moneda '.$datos[33].' no está permitido, solo: USD, EUR y CLP.');
             }
             $documento['Encabezado']['Totales']['TpoMoneda'] = $this->monedas[$datos[33]];
             // agregar ID del receptor
@@ -438,13 +448,13 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
     {
         // verificar datos mínimos
         if (empty($item[2])) {
-            throw new \Exception('Falta nombre del item');
+            throw new \Exception('Falta nombre del item.');
         }
         if (empty($item[4])) {
-            throw new \Exception('Falta cantidad del item');
+            throw new \Exception('Falta cantidad del item.');
         }
         if (empty($item[6])) {
-            throw new \Exception('Falta precio del item');
+            throw new \Exception('Falta precio del item.');
         }
         // crear detalle
         $detalle = [
@@ -523,22 +533,22 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
             return;
         }
         if (empty($referencia[0])) {
-            throw new \Exception('Tipo del documento de referencia no puede estar vacío');
+            throw new \Exception('Tipo del documento de referencia no puede estar vacío.');
         }
         $Referencia['TpoDocRef'] = mb_substr(trim($referencia[0]),0,3);
         if (empty($referencia[1])) {
-            throw new \Exception('Folio del documento de referencia no puede estar vacío');
+            throw new \Exception('Folio del documento de referencia no puede estar vacío.');
         }
         $Referencia['FolioRef'] = mb_substr(trim($referencia[1]),0,18);
         if (empty($referencia[2]) || !\sowerphp\general\Utility_Date::check($referencia[2])) {
-            throw new \Exception('Fecha del documento de referencia debe ser en formato AAAA-MM-DD');
+            throw new \Exception('Fecha del documento de referencia debe ser en formato AAAA-MM-DD.');
         }
         $Referencia['FchRef'] = $referencia[2];
         if (!empty($referencia[3])) {
                 $Referencia['CodRef'] = (int)$referencia[3];
         }
         if (!empty($referencia[4])) {
-                $Referencia['RazonRef'] = mb_substr(trim($referencia[4]),0,90);
+                $Referencia['RazonRef'] = mb_substr(trim($referencia[4]), 0, 90);
         }
         $documento['Referencia'][] = $Referencia;
     }
@@ -546,7 +556,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
     private function documentoAgregarResultado(&$datos, $tipo_dte, $folio, $resultado_codigo, $resultado_glosa)
     {
         foreach ($datos as &$d) {
-            if ($d[0]==$tipo_dte && $d[1]==$folio) {
+            if ($d[0] == $tipo_dte && $d[1] == $folio) {
                 $d[] = $resultado_codigo;
                 $d[] = $resultado_glosa;
                 break;
@@ -577,7 +587,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
         }
         $msg .= '- Generar DTE real: '.($dte_real?'Si':'No')."\n";
         $msg .= '- Enviar DTE por correo: '.($email?'Si':'No')."\n";
-        $msg .= '- Descarga de PDF: '.($pdf?(is_string($pdf)?$pdf:'Si'):'No')."\n";
+        $msg .= '- Descarga de PDF: '.($pdf?(is_string($pdf) ? $pdf:'Si'):'No')."\n";
         $msg .= '- Tiempo ejecución: '.num($tiempo).' segundos'."\n";
         // mensaje por consola con el resultado (mismo que se envía por email)
         $this->out("\n".$msg."\n");

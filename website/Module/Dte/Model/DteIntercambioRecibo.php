@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_intercambio_recibo de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla dte_intercambio_recibo
- * @author SowerPHP Code Generator
- * @version 2015-12-23 19:23:53
+ * Clase para mapear la tabla dte_intercambio_recibo de la base de datos.
  */
 class Model_DteIntercambioRecibo extends \Model_App
 {
@@ -149,8 +145,7 @@ class Model_DteIntercambioRecibo extends \Model_App
     ); ///< Namespaces que utiliza esta clase
 
     /**
-     * Método que guarda el XML del Recibo de un intercambio
-         * @version 2020-07-03
+     * Método que guarda el XML del Recibo de un intercambio.
      */
     public function saveXML($Emisor, $xml) {
         // crear recibo
@@ -166,21 +161,21 @@ class Model_DteIntercambioRecibo extends \Model_App
         // el RUT no es válido
         $Caratula = $EnvioRecibos->toArray()['EnvioRecibos']['SetRecibos']['Caratula'];
         if (explode('-', $Caratula['RutRecibe'])[0] != $Emisor->rut || empty($Caratula['TmstFirmaEnv'])) {
-            throw new \Exception('El RUT del receptor no es válido');
+            throw new \Exception('El RUT del receptor no es válido.');
         }
         // guardar recibo
         $this->db->beginTransaction();
         $this->responde = explode('-', $Caratula['RutResponde'])[0];
         $this->recibe = $Emisor->rut;
         $this->codigo = md5($xml);
-        $this->contacto = !empty($Caratula['NmbContacto']) ? substr($Caratula['NmbContacto'], 0, 40) : null;
-        $this->telefono = !empty($Caratula['FonoContacto']) ? substr($Caratula['FonoContacto'], 0, 40) : null;
+        $this->contacto = !empty($Caratula['NmbContacto']) ? mb_substr($Caratula['NmbContacto'], 0, 40) : null;
+        $this->telefono = !empty($Caratula['FonoContacto']) ? mb_substr($Caratula['FonoContacto'], 0, 40) : null;
         $this->email = !empty($Caratula['MailContacto']) ? substr($Caratula['MailContacto'], 0, 80) : null;
         $this->fecha_hora = str_replace('T', ' ', $Caratula['TmstFirmaEnv']);
         $this->xml = base64_encode($xml);
         if (!$this->save()) {
             $this->db->rollback();
-            throw new \Exception('No fue posible guardar el recibo del intercambio');
+            throw new \Exception('No fue posible guardar el recibo del intercambio.');
         }
         // procesar cada recibo
         foreach ($EnvioRecibos->getRecibos() as $Recibo) {
@@ -188,7 +183,7 @@ class Model_DteIntercambioRecibo extends \Model_App
             // acuse no es para este
             if (explode('-', $Recibo['DocumentoRecibo']['RUTEmisor'])[0] != $Emisor->rut) {
                 $this->db->rollback();
-                throw new \Exception('El RUT del emisor del DTE informado no corresponde');
+                throw new \Exception('El RUT del emisor del DTE informado no corresponde.');
             }
             // buscar DTE emitido en el ambiente del emisor
             $DteEmitido = new Model_DteEmitido(
@@ -198,9 +193,14 @@ class Model_DteIntercambioRecibo extends \Model_App
                 $Emisor->enCertificacion()
             );
             // si no existe o si los datos del DTE emitido no corresponden error
-            if (!$DteEmitido->exists() or explode('-', $Recibo['DocumentoRecibo']['RUTRecep'])[0] != $DteEmitido->receptor || $Recibo['DocumentoRecibo']['FchEmis'] != $DteEmitido->fecha || $Recibo['DocumentoRecibo']['MntTotal'] != $DteEmitido->total) {
+            if (
+                !$DteEmitido->exists()
+                || explode('-', $Recibo['DocumentoRecibo']['RUTRecep'])[0] != $DteEmitido->receptor
+                || $Recibo['DocumentoRecibo']['FchEmis'] != $DteEmitido->fecha
+                || $Recibo['DocumentoRecibo']['MntTotal'] != $DteEmitido->total
+            ) {
                 $this->db->rollback();
-                throw new \Exception('DTE informado no existe o sus datos no corresponden');
+                throw new \Exception('DTE informado no existe o sus datos no corresponden.');
             }
             // guardar recibo para el DTE
             $DteIntercambioReciboDte = new Model_DteIntercambioReciboDte(
@@ -209,19 +209,21 @@ class Model_DteIntercambioRecibo extends \Model_App
             $DteIntercambioReciboDte->responde = $this->responde;
             $DteIntercambioReciboDte->codigo = $this->codigo;
             if (!empty($Recibo['DocumentoRecibo']['Recinto'])) {
-                $DteIntercambioReciboDte->recinto = substr($Recibo['DocumentoRecibo']['Recinto'], 0, 80);
+                $DteIntercambioReciboDte->recinto = mb_substr($Recibo['DocumentoRecibo']['Recinto'], 0, 80);
             } else {
                 $DteIntercambioReciboDte->recinto = 'Sin recinto informado';
             }
             if (!empty($Recibo['DocumentoRecibo']['RutFirma'])) {
-                $DteIntercambioReciboDte->firma = substr($Recibo['DocumentoRecibo']['RutFirma'], 0, 10);
+                $DteIntercambioReciboDte->firma = mb_substr($Recibo['DocumentoRecibo']['RutFirma'], 0, 10);
             }
             if (!empty($Recibo['DocumentoRecibo']['TmstFirmaRecibo'])) {
-                $DteIntercambioReciboDte->fecha_hora = str_replace('T', ' ', $Recibo['DocumentoRecibo']['TmstFirmaRecibo']);
+                $DteIntercambioReciboDte->fecha_hora = str_replace(
+                    'T', ' ', $Recibo['DocumentoRecibo']['TmstFirmaRecibo']
+                );
             }
             if (!$DteIntercambioReciboDte->save()) {
                 $this->db->rollback();
-                throw new \Exception('No fue posible guardar el DTE del recibo del intercambio');
+                throw new \Exception('No fue posible guardar el DTE del recibo del intercambio.');
             }
         }
         // aceptar transacción

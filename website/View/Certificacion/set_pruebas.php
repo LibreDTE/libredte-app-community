@@ -35,7 +35,7 @@ $(function() { __.tabs(); });
 <div role="tabpanel" class="tab-pane active" id="dte" aria-labelledby="dte-tab">
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['action'=>$_base.'/certificacion/set_pruebas_dte', 'id'=>'form_dte', 'onsubmit'=>'Form.check(\'form_dte\')']);
+echo $f->begin(['action' => $_base.'/certificacion/set_pruebas_dte', 'id' => 'form_dte', 'onsubmit' => 'Form.check(\'form_dte\')']);
 echo $f->input([
     'type' => 'file',
     'name' => 'archivo',
@@ -50,8 +50,8 @@ echo $f->input([
     'label' => 'Folios a usar',
     'titles' => ['Código del tipo de documento', 'Folio inicial presente en el CAF que se cargará'],
     'inputs' => [
-        ['name'=>'folios', 'placeholder'=>'Ejemplo: 33 (para factura afecta)'],
-        ['name'=>'desde', 'placeholder'=>'Ejemplo: 123 (para partir con el folio 123)']
+        ['name' => 'folios', 'placeholder' => 'Ejemplo: 33 (para factura afecta)'],
+        ['name' => 'desde', 'placeholder' => 'Ejemplo: 123 (para partir con el folio 123)']
     ],
     'check' => 'notempty',
     'help' => 'Por defecto los folios que se asignarán partirán en 1. Si se desea asignar un folio inicial diferente indicar acá el tipo de documento y el folio inicial a usar.',
@@ -65,7 +65,7 @@ echo $f->end('Procesar casos y preparar JSON para generar XML EnvioDTE');
 <div role="tabpanel" class="tab-pane" id="ventas" aria-labelledby="ventas-tab">
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['action'=>$_base.'/certificacion/set_pruebas_ventas', 'id'=>'form_ventas', 'onsubmit'=>'Form.check(\'form_ventas\')']);
+echo $f->begin(['action' => $_base.'/certificacion/set_pruebas_ventas', 'id' => 'form_ventas', 'onsubmit' => 'Form.check(\'form_ventas\')']);
 echo $f->input([
     'type' => 'file',
     'name' => 'archivo',
@@ -144,7 +144,7 @@ echo $f->end('Generar XML libro de ventas');
     </div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['action'=>$_base.'/certificacion/set_pruebas_boletas', 'id'=>'form_boletas', 'onsubmit'=>'Form.check(\'form_boletas\')']);
+echo $f->begin(['action' => $_base.'/certificacion/set_pruebas_boletas', 'id' => 'form_boletas', 'onsubmit' => 'Form.check(\'form_boletas\')']);
 echo $f->input([
     'name' => 'RUTEmisor',
     'label' => 'RUT del emisor',
@@ -167,7 +167,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'Acteco',
     'label' => 'Actividad económica',
-    'options' => [''=>'Actividad económica del emisor'] + $actividades_economicas,
+    'options' => ['' => 'Actividad económica del emisor'] + $actividades_economicas,
     'check' => 'notempty',
 ]);
 echo $f->input([
@@ -180,7 +180,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'CmnaOrigen',
     'label' => 'Comuna',
-    'options' => [''=>'Comuna del emisor'] + $comunas,
+    'options' => ['' => 'Comuna del emisor'] + $comunas,
     'check' => 'notempty',
 ]);
 echo $f->input([
@@ -217,13 +217,13 @@ echo $f->input([
     'label' => 'Folios a usar',
     'titles' => ['Código del tipo de documento', 'Folio inicial presente en el CAF que se cargará', 'Archivo XML del CAF'],
     'inputs' => [
-        ['name'=>'folios', 'check'=>'notempty integer'],
-        ['name'=>'desde', 'check'=>'notempty integer'],
-        ['type'=>'file', 'name'=>'caf', 'check'=>'notempty', 'attr' => 'accept=".xml"'],
+        ['name' => 'folios', 'check' => 'notempty integer'],
+        ['name' => 'desde', 'check' => 'notempty integer'],
+        ['type' => 'file', 'name' => 'caf', 'check' => 'notempty', 'attr' => 'accept=".xml"'],
     ],
     'values' => [
-        ['folios'=>39, 'desde'=>1],
-        ['folios'=>61, 'desde'=>1],
+        ['folios' => 39, 'desde' => 1],
+        ['folios' => 61, 'desde' => 1],
     ],
     'check' => 'notempty',
     'help' => 'Se debe indicar el código del tipo de documento, el folio desde el cual se generarán los documentos y el XML del CAF para cada tipo de documento.',

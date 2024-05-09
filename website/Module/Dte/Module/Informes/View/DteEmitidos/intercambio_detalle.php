@@ -1,4 +1,4 @@
-<div class="page-header"><h1>Resultado intercambio DTEs emitidos <small>recibo: <?=$recibo?>, recepción: <?=$recepcion?> y resultado: <?=$resultado?></small></h1></div>
+<div class="page-header"><h1>Resultado intercambio DTE emitidos <small>recibo: <?=$recibo?>, recepción: <?=$recepcion?> y resultado: <?=$resultado?></small></h1></div>
 <p>Aquí podrá ver los estados de intercambio de documentos emitidos que tienen el recibo: <?=$recibo?>, recepción: <?=$recepcion?> y resultado: <?=$resultado?> de la empresa <?=$Emisor->razon_social?> que tienen fecha de emisión del DTE entre el <?=$desde?> y el <?=$hasta?>.</p>
 <?php
 foreach ($documentos as &$d) {

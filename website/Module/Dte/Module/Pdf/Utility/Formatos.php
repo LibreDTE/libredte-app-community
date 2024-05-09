@@ -25,8 +25,7 @@
 namespace website\Dte\Pdf;
 
 /**
- * Utilidad base para obtener los formato de PDF disponibles
- * @version 2020-08-02
+ * Utilidad base para obtener los formato de PDF disponibles.
  */
 class Utility_Formatos
 {
@@ -35,8 +34,7 @@ class Utility_Formatos
     private $formatos;
 
     /**
-     * Método que permite asignar el contribuyente que se usará en la utilidad
-         * @version 2020-06-12
+     * Método que permite asignar el contribuyente que se usará en la utilidad.
      */
     public function setContribuyente($Contribuyente)
     {
@@ -45,20 +43,18 @@ class Utility_Formatos
     }
 
     /**
-     * Método que permite obtener el contribuyente que se usará en la utilidad
-         * @version 2020-06-12
+     * Método que permite obtener el contribuyente que se usará en la utilidad.
      */
     private function getContribuyente()
     {
         if (!isset($this->Contribuyente)) {
-            throw new \Exception('No se ha asignado el contribuyente en la utilidad de formatos de PDF');
+            throw new \Exception('No se ha asignado el contribuyente en la utilidad de formatos de PDF.');
         }
         return $this->Contribuyente;
     }
 
     /**
-     * Método que entrega todos los proveedores de correo activos del contribuyuente
-         * @version 2020-08-02
+     * Método que entrega todos los proveedores de correo activos del contribuyuente.
      */
     public function getFormatos()
     {

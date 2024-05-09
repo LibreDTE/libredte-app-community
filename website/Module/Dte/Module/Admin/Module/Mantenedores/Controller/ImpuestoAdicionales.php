@@ -26,19 +26,14 @@ namespace website\Dte\Admin\Mantenedores;
 
 /**
  * Clase para el controlador asociado a la tabla impuesto_adicional de la base de
- * datos
- * Comentario de la tabla: Impuestos adicionales (y retenciones)
- * Esta clase permite controlar las acciones entre el modelo y vista para la
- * tabla impuesto_adicional
- * @author SowerPHP Code Generator
- * @version 2015-09-27 18:24:13
+ * datos.
  */
 class Controller_ImpuestoAdicionales extends \Controller_Maintainer
 {
 
     protected $namespace = __NAMESPACE__; ///< Namespace del controlador y modelos asociados
     protected $columnsView = [
-        'listar'=>['codigo', 'nombre', 'tipo', 'tasa']
+        'listar' => ['codigo', 'nombre', 'tipo', 'tasa']
     ]; ///< Columnas que se deben mostrar en las vistas
 
 }

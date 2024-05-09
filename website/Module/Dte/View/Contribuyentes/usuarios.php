@@ -35,11 +35,11 @@ $(function() { __.tabs(); });
 <p>El usuario se debe <a href="<?=$_base?>/usuarios/registrar">registrar aquí</a> (cierre su sesión primero si desea registrar usted mismo al usuario).</p>
 <?php
 // inputs y ayuda
-$inputs = [['name'=>'usuario', 'check'=>'notempty']];
+$inputs = [['name' => 'usuario', 'check' => 'notempty']];
 $permisos_ayuda = '<ul>';
 foreach ($permisos_usuarios as $permiso => $info) {
     $permisos_ayuda .= '<li><strong>'.$permiso.'</strong>: '.$info['nombre'].' <small>('.$info['descripcion'].')</small>'.'</li>';
-    $inputs[] = ['type'=>'select', 'name'=>'permiso_'.$permiso, 'options'=>['No', 'Si']];
+    $inputs[] = ['type' => 'select', 'name' => 'permiso_'.$permiso, 'options' => ['No', 'Si']];
 }
 $permisos_ayuda .= '</ul>';
 // usuarios y sus permisos
@@ -49,7 +49,7 @@ foreach ($Contribuyente->getUsuarios() as $u => $p) {
     foreach ($permisos_usuarios as $permiso => $info) {
         $permisos['permiso_'.$permiso] = (int)in_array($permiso, $p);
     }
-    $usuarios[] = array_merge(['usuario'=>$u], $permisos);
+    $usuarios[] = array_merge(['usuario' => $u], $permisos);
 }
 // mantenedor usuarios
 $f = new \sowerphp\general\View_Helper_Form();
@@ -102,9 +102,9 @@ $documentos_autorizados = [];
 foreach ($aux as $d) {
     $documentos_autorizados[$d['codigo']] = $d['tipo'];
 }
-$inputs = [['name'=>'usuario', 'check'=>'notempty', 'attr'=>'readonly="readonly"']];
+$inputs = [['name' => 'usuario', 'check' => 'notempty', 'attr' => 'readonly="readonly"']];
 foreach ($documentos_autorizados as $codigo => $tipo) {
-    $inputs[] = ['type'=>'select', 'name'=>'dte_'.$codigo, 'options'=>['No', 'Si']];
+    $inputs[] = ['type' => 'select', 'name' => 'dte_'.$codigo, 'options' => ['No', 'Si']];
 }
 $autorizados = $Contribuyente->getDocumentosAutorizadosPorUsuario();
 foreach ($Contribuyente->getUsuarios() as $u => $p) {
@@ -116,7 +116,7 @@ foreach ($Contribuyente->getUsuarios() as $u => $p) {
             $documentos['dte_'.$codigo] = 0;
         }
     }
-    $usuarios_dtes[] = array_merge(['usuario'=>$u], $documentos);
+    $usuarios_dtes[] = array_merge(['usuario' => $u], $documentos);
 }
 $f = new \sowerphp\general\View_Helper_Form();
 $f->setStyle(false);
@@ -157,14 +157,14 @@ echo $f->begin([
 $sucursales = $Contribuyente->getSucursales();
 $sucursales[0] = 'Sin sucursal por defecto ('.$sucursales[0].')';
 $inputs = [
-    ['name'=>'usuario', 'check'=>'notempty', 'attr'=>'readonly="readonly"'],
-    ['type'=>'select', 'name'=>'sucursal', 'options'=>$sucursales],
+    ['name' => 'usuario', 'check' => 'notempty', 'attr' => 'readonly="readonly"'],
+    ['type' => 'select', 'name' => 'sucursal', 'options' => $sucursales],
 ];
 $usuarios_sucursales = [];
 $sucursales_por_usuario = $Contribuyente->getSucursalesPorUsuario();
 $usuarios = [$Contribuyente->getUsuario()->usuario => ['admin']] + $Contribuyente->getUsuarios();
 foreach ($usuarios as $u => $p) {
-    $usuarios_sucursales[] = ['usuario'=>$u, 'sucursal'=>!empty($sucursales_por_usuario[$u])?$sucursales_por_usuario[$u]:null];
+    $usuarios_sucursales[] = ['usuario' => $u, 'sucursal' => !empty($sucursales_por_usuario[$u]) ? $sucursales_por_usuario[$u] : null];
 }
 $f = new \sowerphp\general\View_Helper_Form();
 $f->setStyle(false);

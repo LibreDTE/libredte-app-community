@@ -26,19 +26,13 @@ namespace website\Dte;
 
 /**
  * Clase para el controlador asociado a la tabla cobranza de la base de
- * datos
- * Comentario de la tabla:
- * Esta clase permite controlar las acciones entre el modelo y vista para la
- * tabla cobranza
- * @author SowerPHP Code Generator
- * @version 2016-02-28 18:10:55
+ * datos.
  */
 class Controller_Cobranzas extends \Controller_App
 {
 
     /**
-     * Acción que permite buscar los pagos pendientes
-         * @version 2017-09-28
+     * Acción que permite buscar los pagos pendientes.
      */
     public function buscar()
     {
@@ -65,8 +59,7 @@ class Controller_Cobranzas extends \Controller_App
     }
 
     /**
-     * Acción que permite editar los pagos para marcarlos como pagados
-         * @version 2016-02-28
+     * Acción que permite editar los pagos para marcarlos como pagados.
      */
     public function ver($dte, $folio, $fecha)
     {
@@ -74,12 +67,12 @@ class Controller_Cobranzas extends \Controller_App
         $Pago = new Model_Cobranza($Emisor->rut, $dte, $folio, $Emisor->enCertificacion(), $fecha);
         if (!$Pago->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Pago programado solicitado no existe', 'error'
+                'Pago programado solicitado no existe.', 'error'
             );
             $this->redirect('/dte/cobranzas/buscar');
         }
         $this->set([
-            '_header_extra' => ['js'=>['/dte/js/cobranzas.js']],
+            '_header_extra' => ['js' => ['/dte/js/cobranzas.js']],
             'Emisor' => $Emisor,
             'Pago' => $Pago
         ]);
@@ -90,20 +83,19 @@ class Controller_Cobranzas extends \Controller_App
             $Pago->modificado = $_POST['modificado'];
             if ($Pago->save()) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Pago registrado exitosamente', 'ok'
+                    'Pago registrado exitosamente.', 'ok'
                 );
                 $this->redirect('/dte/dte_emitidos/ver/'.$Pago->dte.'/'.$Pago->folio.'#pagos');
             } else {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No fue posible guardar el pago', 'error'
+                    'No fue posible guardar el pago.', 'error'
                 );
             }
         }
     }
 
     /**
-     * Acción que permite eliminar un cobro programado
-         * @version 2019-07-10
+     * Acción que permite eliminar un cobro programado.
      */
     public function eliminar($dte, $folio, $fecha)
     {
@@ -111,26 +103,26 @@ class Controller_Cobranzas extends \Controller_App
         $Pago = new Model_Cobranza($Emisor->rut, $dte, $folio, $Emisor->enCertificacion(), $fecha);
         if (!$Pago->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Pago programado solicitado no existe', 'error'
+                'Pago programado solicitado no existe.', 'error'
             );
             $this->redirect('/dte/cobranzas/buscar');
         }
         if ($Pago->pagado == $Pago->monto) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'El pago programado se encuentra pagado totalmente, no se puede eliminar', 'error'
+                'El pago programado se encuentra pagado totalmente, no se puede eliminar.', 'error'
             );
             $this->redirect(str_replace('/eliminar/', '/ver/', $this->request->request));
         }
         if ($Pago->pagado) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'El pago programado tiene un abono, no se puede eliminar', 'error'
+                'El pago programado tiene un abono, no se puede eliminar.', 'error'
             );
             $this->redirect(str_replace('/eliminar/', '/ver/', $this->request->request));
         }
         try {
             $Pago->delete();
             \sowerphp\core\Model_Datasource_Session::message(
-                'Cobro programado eliminado', 'ok'
+                'Cobro programado eliminado.', 'ok'
             );
             $this->redirect('/dte/dte_emitidos/ver/'.$Pago->dte.'/'.$Pago->folio.'#pagos');
         } catch (\Exception $e) {

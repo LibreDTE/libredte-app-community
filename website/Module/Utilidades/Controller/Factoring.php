@@ -25,15 +25,13 @@
 namespace website\Utilidades;
 
 /**
- * Controlador para utilidades asociadas a la cesión electrónica (factoring)
- * @version 2016-12-10
+ * Controlador para utilidades asociadas a la cesión electrónica (factoring).
  */
 class Controller_Factoring extends \Controller_App
 {
 
     /**
-     * Acción para crear el AEC
-         * @version 2023-10-26
+     * Acción para crear el AEC.
      */
     public function ceder()
     {

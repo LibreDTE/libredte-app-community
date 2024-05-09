@@ -26,17 +26,15 @@ namespace website\Dte;
 
 /**
  * Clase para el controlador asociado a la tabla contribuyente de la base de
- * datos
- * @version 2023-10-08
+ * datos.
  */
 class Controller_Contribuyentes extends \Controller_App
 {
 
     /**
-     * Método que selecciona la empresa con la que se trabajará en el módulo DTE
-     * @param rut Si se pasa un RUT se tratará de seleccionar
-     * @param url URL a la que redirigir después de seleccionar el contribuyente
-         * @version 2021-10-16
+     * Método que selecciona la empresa con la que se trabajará en el módulo DTE.
+     * @param rut Si se pasa un RUT se tratará de seleccionar.
+     * @param url URL a la que redirigir después de seleccionar el contribuyente.
      */
     public function seleccionar($rut = null, $url = null)
     {
@@ -59,11 +57,17 @@ class Controller_Contribuyentes extends \Controller_App
                 $auth2_enabled = (bool)$this->Auth->User->getAuth2();
                 if (!$auth2_enabled) {
                     $auth2_required = (
-                        ($Emisor->config_usuarios_auth2 == 1 && $Emisor->usuarioAutorizado($this->Auth->User, 'admin')) // admin obligados a usar auth2
-                        || $Emisor->config_usuarios_auth2 == 2 // todos obligados a usar auth2
+                        // todos obligados a usar auth2
+                        $Emisor->config_usuarios_auth2 == 2
+                        // admin obligados a usar auth2
+                        || (
+                            $Emisor->config_usuarios_auth2 == 1
+                            && $Emisor->usuarioAutorizado($this->Auth->User, 'admin')
+                        )
+                        
                     );
                     if ($auth2_required) {
-                        \sowerphp\core\Model_Datasource_Session::message('Debe habilitar algún mecanismo de autenticación secundaria antes de poder operar con esta empresa.', 'error');
+                        \sowerphp\core\Model_Datasource_Session::message(__('Debe [habilitar el mecanismo de autenticación secundaria (2FA) en su perfil de usuario](%s) antes de poder ingresar a esta empresa.', url('/usuarios/perfil#auth:2fa')), 'error');
                         $this->redirect('/dte/contribuyentes/seleccionar');
                     }
                 }
@@ -83,7 +87,9 @@ class Controller_Contribuyentes extends \Controller_App
                 $redirect = base64_decode($url);
             }
             else {
-                $trigger_referer = \sowerphp\core\Trigger::run('contribuyente_seleccionar_redirect', $Emisor, $redirect, $this->Auth);
+                $trigger_referer = \sowerphp\core\Trigger::run(
+                    'contribuyente_seleccionar_redirect', $Emisor, $redirect, $this->Auth
+                );
                 if ($trigger_referer) {
                     $redirect = $trigger_referer;
                 } else {
@@ -102,13 +108,12 @@ class Controller_Contribuyentes extends \Controller_App
     }
 
     /**
-     * Método que permite registrar un nuevo contribuyente y asociarlo a un usuario
-         * @version 2017-10-23
+     * Método que permite registrar un nuevo contribuyente y asociarlo a un usuario.
      */
     public function registrar()
     {
         // verificar si el usuario puede registrar más empresas (solo si está definido el valor
-        if ($this->Auth->User->config_contribuyentes_autorizados!==null) {
+        if ($this->Auth->User->config_contribuyentes_autorizados !== null) {
             $n_empresas = count((new Model_Contribuyentes())->getByUsuario($this->Auth->User->id));
             if ($n_empresas >= $this->Auth->User->config_contribuyentes_autorizados) {
                 \sowerphp\core\Model_Datasource_Session::message(
@@ -123,7 +128,7 @@ class Controller_Contribuyentes extends \Controller_App
         $impuestos_adicionales_tasa = $ImpuestosAdicionales->getTasas();
         $impuestos_adicionales_todos = $ImpuestosAdicionales->getList();
         $this->set([
-            '_header_extra' => ['js'=>['/dte/js/dte.js', '/dte/js/contribuyente.js']],
+            '_header_extra' => ['js' => ['/dte/js/dte.js', '/dte/js/contribuyente.js']],
             'actividades_economicas' => (new \website\Sistema\General\Model_ActividadEconomicas())->getList(),
             'comunas' => (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->getList(),
             'impuestos_adicionales' => $impuestos_adicionales,
@@ -142,9 +147,9 @@ class Controller_Contribuyentes extends \Controller_App
             $class = $this->Contribuyente_class;
             $Contribuyente = new $class($rut);
             if ($Contribuyente->usuario) {
-                if ($Contribuyente->usuario==$this->Auth->User->id) {
+                if ($Contribuyente->usuario == $this->Auth->User->id) {
                     \sowerphp\core\Model_Datasource_Session::message(
-                        'Ya tiene asociada la empresa a su usuario'
+                        'Ya tiene asociada la empresa a su usuario.'
                     );
                 } else {
                     \sowerphp\core\Model_Datasource_Session::message(
@@ -179,7 +184,7 @@ class Controller_Contribuyentes extends \Controller_App
                     } catch (\sowerphp\core\Exception_Model_Datasource_Database $e){}
                 }
                 // redireccionar
-                \sowerphp\core\Model_Datasource_Session::message('Empresa '.$Contribuyente->razon_social.' registrada y asociada a su usuario', 'ok');
+                \sowerphp\core\Model_Datasource_Session::message('Empresa '.$Contribuyente->razon_social.' registrada y asociada a su usuario.', 'ok');
                 $this->redirect('/dte/contribuyentes/seleccionar');
             } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message('No fue posible registrar la empresa:<br/>'.$e->getMessage(), 'error');
@@ -191,8 +196,7 @@ class Controller_Contribuyentes extends \Controller_App
     }
 
     /**
-     * Método que permite modificar contribuyente previamente registrado
-         * @version 2023-10-08
+     * Método que permite modificar contribuyente previamente registrado.
      */
     public function modificar()
     {
@@ -208,7 +212,7 @@ class Controller_Contribuyentes extends \Controller_App
         $impuestos_adicionales_tasa = $ImpuestosAdicionales->getTasas();
         $impuestos_adicionales_todos = $ImpuestosAdicionales->getList();
         $this->set([
-            '_header_extra' => ['js'=>['/dte/js/contribuyente.js']],
+            '_header_extra' => ['js' => ['/dte/js/contribuyente.js']],
             'Contribuyente' => $Contribuyente,
             'actividades_economicas' => (new \website\Sistema\General\Model_ActividadEconomicas())->getList(),
             'comunas' => (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->getList(),
@@ -253,8 +257,7 @@ class Controller_Contribuyentes extends \Controller_App
 
     /**
      * Método que prepara los datos de configuraciones del contribuyente para
-     * ser guardados
-         * @version 2020-08-03
+     * ser guardados.
      */
     protected function prepararDatosContribuyente(&$Contribuyente)
     {
@@ -288,7 +291,12 @@ class Controller_Contribuyentes extends \Controller_App
             $_POST['config_extra_sucursales'] = [];
             $n_codigos = count($_POST['config_extra_sucursales_codigo']);
             for ($i=0; $i<$n_codigos; $i++) {
-                if (!empty($_POST['config_extra_sucursales_codigo'][$i]) && !empty($_POST['config_extra_sucursales_sucursal'][$i]) && !empty($_POST['config_extra_sucursales_direccion'][$i]) && !empty($_POST['config_extra_sucursales_comuna'][$i])) {
+                if (
+                    !empty($_POST['config_extra_sucursales_codigo'][$i])
+                    && !empty($_POST['config_extra_sucursales_sucursal'][$i])
+                    && !empty($_POST['config_extra_sucursales_direccion'][$i])
+                    && !empty($_POST['config_extra_sucursales_comuna'][$i])
+                ) {
                     $_POST['config_extra_sucursales'][] = [
                         'codigo' => (int)$_POST['config_extra_sucursales_codigo'][$i],
                         'sucursal' => $_POST['config_extra_sucursales_sucursal'][$i],
@@ -311,7 +319,10 @@ class Controller_Contribuyentes extends \Controller_App
             $_POST['config_extra_impuestos_adicionales'] = [];
             $n_codigos = count($_POST['config_extra_impuestos_adicionales_codigo']);
             for ($i=0; $i<$n_codigos; $i++) {
-                if (!empty($_POST['config_extra_impuestos_adicionales_codigo'][$i]) && !empty($_POST['config_extra_impuestos_adicionales_tasa'][$i])) {
+                if (
+                    !empty($_POST['config_extra_impuestos_adicionales_codigo'][$i])
+                    && !empty($_POST['config_extra_impuestos_adicionales_tasa'][$i])
+                ) {
                     $_POST['config_extra_impuestos_adicionales'][] = [
                         'codigo' => (int)$_POST['config_extra_impuestos_adicionales_codigo'][$i],
                         'tasa' => $_POST['config_extra_impuestos_adicionales_tasa'][$i],
@@ -328,7 +339,10 @@ class Controller_Contribuyentes extends \Controller_App
             $_POST['config_emision_observaciones'] = [];
             $n_codigos = count($_POST['config_emision_observaciones_dte']);
             for ($i=0; $i<$n_codigos; $i++) {
-                if (!empty($_POST['config_emision_observaciones_dte'][$i]) && !empty($_POST['config_emision_observaciones_glosa'][$i])) {
+                if (
+                    !empty($_POST['config_emision_observaciones_dte'][$i])
+                    && !empty($_POST['config_emision_observaciones_glosa'][$i])
+                ) {
                     $dte = (int)$_POST['config_emision_observaciones_dte'][$i];
                     $glosa = $_POST['config_emision_observaciones_glosa'][$i];
                     $_POST['config_emision_observaciones'][$dte] = $glosa;
@@ -359,13 +373,23 @@ class Controller_Contribuyentes extends \Controller_App
             $_POST['config_pdf_mapeo'] = [];
             $n_codigos = count($_POST['config_pdf_mapeo_documento']);
             for ($i=0; $i<$n_codigos; $i++) {
-                if (!empty($_POST['config_pdf_mapeo_documento'][$i]) && !empty($_POST['config_pdf_mapeo_actividad'][$i]) && !empty($_POST['config_pdf_mapeo_formato'][$i])) {
+                if (
+                    !empty($_POST['config_pdf_mapeo_documento'][$i])
+                    && !empty($_POST['config_pdf_mapeo_actividad'][$i])
+                    && !empty($_POST['config_pdf_mapeo_formato'][$i])
+                ) {
                     $_POST['config_pdf_mapeo'][] = [
                         'documento' => $_POST['config_pdf_mapeo_documento'][$i],
                         'actividad' => $_POST['config_pdf_mapeo_actividad'][$i],
-                        'sucursal' => !empty($_POST['config_pdf_mapeo_sucursal'][$i]) ? $_POST['config_pdf_mapeo_sucursal'][$i] : 0,
+                        'sucursal' => !empty($_POST['config_pdf_mapeo_sucursal'][$i])
+                            ? $_POST['config_pdf_mapeo_sucursal'][$i]
+                            : 0
+                        ,
                         'formato' => $_POST['config_pdf_mapeo_formato'][$i],
-                        'papel' => !empty($_POST['config_pdf_mapeo_papel'][$i]) ? $_POST['config_pdf_mapeo_papel'][$i] : 0,
+                        'papel' => !empty($_POST['config_pdf_mapeo_papel'][$i])
+                            ? $_POST['config_pdf_mapeo_papel'][$i]
+                            : 0
+                        ,
                     ];
                 }
             }
@@ -457,8 +481,7 @@ class Controller_Contribuyentes extends \Controller_App
     }
 
     /**
-     * Método que permite cambiar el ambiente durante la sesión del usuario
-         * @version 2023-10-08
+     * Método que permite cambiar el ambiente durante la sesión del usuario.
      */
     public function ambiente($ambiente)
     {
@@ -490,8 +513,7 @@ class Controller_Contribuyentes extends \Controller_App
     }
 
     /**
-     * Método que permite editar los usuarios autorizados de un contribuyente
-         * @version 2023-10-08
+     * Método que permite editar los usuarios autorizados de un contribuyente.
      */
     public function usuarios()
     {
@@ -554,8 +576,7 @@ class Controller_Contribuyentes extends \Controller_App
     }
 
     /**
-     * Método que permite editar los documentos autorizados por usuario
-         * @version 2023-10-08
+     * Método que permite editar los documentos autorizados por usuario.
      */
     public function usuarios_dtes()
     {
@@ -610,8 +631,7 @@ class Controller_Contribuyentes extends \Controller_App
     }
 
     /**
-     * Método que permite editar los documentos autorizados por usuario
-         * @version 2023-10-08
+     * Método que permite editar los documentos autorizados por usuario.
      */
     public function usuarios_sucursales()
     {
@@ -655,8 +675,7 @@ class Controller_Contribuyentes extends \Controller_App
     }
 
     /**
-     * Método que permite modificar la configuración general de usuarios de la empresa
-         * @version 2023-10-08
+     * Método que permite modificar la configuración general de usuarios de la empresa.
      */
     public function usuarios_general()
     {
@@ -668,10 +687,10 @@ class Controller_Contribuyentes extends \Controller_App
         }
         // editar configuración de usuarios
         if (isset($_POST['submit'])) {
-            // si hay cualquier campo que empiece por 'config_libredte_' se quita ya que son
+            // Si hay cualquier campo que empiece por 'config_libredte_' se quita ya que son
             // configuraciones reservadas para los administradores de LibreDTE y no pueden
             // ser asignadas por los usuarios (esto evita que envién "a la mala" una
-            // configuración del sistema)
+            // configuración del sistema).
             foreach ($_POST as $var => $val) {
                 if (strpos($var, 'config_libredte_') === 0) {
                     unset($_POST[$var]);
@@ -695,8 +714,7 @@ class Controller_Contribuyentes extends \Controller_App
     }
 
     /**
-     * Método que permite transferir una empresa a un nuevo usuario administrador
-         * @version 2023-10-08
+     * Método que permite transferir una empresa a un nuevo usuario administrador.
      */
     public function transferir()
     {
@@ -740,8 +758,7 @@ class Controller_Contribuyentes extends \Controller_App
     }
 
     /**
-     * Acción que entrega el logo del contribuyente
-         * @version 2023-10-08
+     * Acción que entrega el logo del contribuyente.
      */
     public function logo($rut)
     {
@@ -758,8 +775,7 @@ class Controller_Contribuyentes extends \Controller_App
     }
 
     /**
-     * Acción que permite probar la configuración de los correos electrónicos
-         * @version 2023-10-08
+     * Acción que permite probar la configuración de los correos electrónicos.
      */
     public function config_email_test($email, $protocol = 'smtp')
     {
@@ -814,8 +830,7 @@ class Controller_Contribuyentes extends \Controller_App
     }
 
     /**
-     * Método de la API que permite obtener los datos de un contribuyente
-         * @version 2023-10-08
+     * Método de la API que permite obtener los datos de un contribuyente.
      */
     public function _api_info_GET($rut, $emisor = null)
     {
@@ -864,11 +879,11 @@ class Controller_Contribuyentes extends \Controller_App
             }
             // si no hay emisor con búsqueda de receptor error
             else if ($tipo == 'receptor') {
-                $this->Api->send('Debe indicar emisor para hacer una búsqueda de tipo receptor', 400);
+                $this->Api->send('Debe indicar emisor para hacer una búsqueda de tipo receptor.', 400);
             }
         } else {
             if ($tipo == 'emisor' && $emisor != $rut) {
-                $this->Api->send('Debe indicar el mismo emisor y rut para una búsqueda de tipo emisor (o dejar el emisor en blanco)', 400);
+                $this->Api->send('Debe indicar el mismo emisor y rut para una búsqueda de tipo emisor (o dejar el emisor en blanco).', 400);
             }
         }
         // se agregan datos vía trigger del contribuyente solo si existe un emisor
@@ -876,7 +891,7 @@ class Controller_Contribuyentes extends \Controller_App
         if ($emisor) {
             $Emisor = (new Model_Contribuyentes())->get($emisor);
             if (!$Emisor->usuarioAutorizado($User)) {
-                $this->Api->send('No está autorizado a operar con el emisor seleccionado para el tipo de búsqueda '.$tipo, 404);
+                $this->Api->send('No está autorizado a operar con el emisor seleccionado para el tipo de búsqueda '.$tipo.'.', 404);
             }
             $datos_trigger = \sowerphp\core\Trigger::run(
                 'contribuyente_info', $Contribuyente, $tipo, $Emisor, $User, $datos
@@ -892,8 +907,7 @@ class Controller_Contribuyentes extends \Controller_App
     }
 
     /**
-     * Método de la API que permite obtener la configuración de un contribuyente
-         * @version 2018-06-05
+     * Método de la API que permite obtener la configuración de un contribuyente.
      */
     public function _api_config_GET($rut)
     {
@@ -909,7 +923,7 @@ class Controller_Contribuyentes extends \Controller_App
             $this->Api->send('Usted no es el administrador de la empresa solicitada.', 401);
         }
         $config = [
-            'ambiente_en_certificacion' => (int)$Contribuyente->config_ambiente_en_certificacion,
+            'ambiente_en_certificacion' => $Contribuyente->enCertificacion(),
             'documentos_autorizados' => $Contribuyente->getDocumentosAutorizados(),
         ];
         $this->Api->send($config, 200);

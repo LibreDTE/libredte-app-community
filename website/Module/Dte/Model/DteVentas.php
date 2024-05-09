@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_venta de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla dte_venta
- * @author SowerPHP Code Generator
- * @version 2015-09-25 20:05:11
+ * Clase para mapear la tabla dte_venta de la base de datos.
  */
 class Model_DteVentas extends \Model_Plural_App
 {
@@ -48,7 +44,7 @@ class Model_DteVentas extends \Model_Plural_App
             SELECT COUNT(*)
             FROM dte_venta
             WHERE emisor = :emisor AND periodo = :periodo AND certificacion = :certificacion AND track_id IS NOT NULL
-        ', [':emisor'=>$this->getContribuyente()->rut, ':periodo'=>$periodo, ':certificacion'=>$this->getContribuyente()->enCertificacion()]);
+        ', [':emisor' => $this->getContribuyente()->rut, ':periodo' => $periodo, ':certificacion' => $this->getContribuyente()->enCertificacion()]);
     }
 
     /**
@@ -65,7 +61,7 @@ class Model_DteVentas extends \Model_Plural_App
                 break;
             }
             $totales_mensuales[$periodo] = array_merge(
-                ['periodo'=>$periodo],
+                ['periodo' => $periodo],
                 (new Model_DteVenta($this->getContribuyente()->rut, $periodo, $this->getContribuyente()->enCertificacion()))->getTotales()
             );
             $periodo = \sowerphp\general\Utility_Date::nextPeriod($periodo);
@@ -217,7 +213,7 @@ class Model_DteVentas extends \Model_Plural_App
         sort($periodos);
         // sincronizar periodos
         foreach ($periodos as $periodo) {
-            $config = ['periodo'=>$periodo];
+            $config = ['periodo' => $periodo];
             $documentos = $this->getContribuyente()->getRCV([
                 'operacion' => 'VENTA',
                 'periodo' => $periodo,

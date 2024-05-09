@@ -25,8 +25,7 @@ namespace website\Dte;
 
 /**
  * Comando para migrar los documentos emitidos desde un servidor de LibreDTE a
- * otro
- * @version 2016-07-01
+ * otro.
  */
 class Shell_Command_DteEmitidos_Migrar extends \Shell_App
 {
@@ -34,8 +33,9 @@ class Shell_Command_DteEmitidos_Migrar extends \Shell_App
     public function main($servidor, $dia = null, $certificacion = 0)
     {
         $this->db = \sowerphp\core\Model_Datasource_Database::get();
-        if (!$dia)
+        if (!$dia) {
             $dia = date('Y-m-d');
+        }
         $documentos = $this->getDocumentos($dia, $certificacion);
         if (isset($documentos[0])) {
             foreach ($documentos as $dte) {
@@ -72,7 +72,10 @@ class Shell_Command_DteEmitidos_Migrar extends \Shell_App
                 JOIN contribuyente AS c ON e.emisor = c.rut
                 JOIN usuario AS u ON c.usuario = u.id
             WHERE e.fecha = :dia AND e.certificacion = :certificacion
-        ', [':dia'=>$dia, ':certificacion'=>(int)$certificacion]);
+        ', [
+            ':dia' => $dia,
+            ':certificacion' => (int)$certificacion,
+        ]);
     }
 
 }

@@ -41,8 +41,7 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
     ];
 
     /**
-     * Método que entrega el código HTML de la página de configuración de la aplicación
-         * @version 2023-10-10
+     * Método que entrega el código HTML de la página de configuración de la aplicación.
      */
     public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form)
     {
@@ -54,7 +53,10 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
             'name' => 'dtepdf_'.$this->getCodigo().'_emisor_razonsocial',
             'label' => 'Razón social',
             'placeholder' => $this->vars['Contribuyente']->razon_social,
-            'value' => !empty($this->getConfig()->emisor->razonsocial) ? $this->getConfig()->emisor->razonsocial : null,
+            'value' => !empty($this->getConfig()->emisor->razonsocial)
+                ? $this->getConfig()->emisor->razonsocial
+                : null
+            ,
             'help' => 'Obligatoria si se usa un logo y en este no está la razón social.',
             'attr' => 'maxlength="200"',
         ]);
@@ -62,7 +64,10 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
             'name' => 'dtepdf_'.$this->getCodigo().'_emisor_giro',
             'label' => 'Giro',
             'placeholder' => $this->vars['Contribuyente']->giro,
-            'value' => !empty($this->getConfig()->emisor->giro) ? $this->getConfig()->emisor->giro : null,
+            'value' => !empty($this->getConfig()->emisor->giro)
+                ? $this->getConfig()->emisor->giro
+                : null
+            ,
             'attr' => 'maxlength="200"',
             'help' => 'Puede agregar un giro de hasta 200 caracteres.',
         ]);
@@ -70,7 +75,10 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
             'name' => 'dtepdf_'.$this->getCodigo().'_emisor_direccion',
             'label' => 'Dirección',
             'placeholder' => $this->vars['Contribuyente']->direccion.', '.$this->vars['Contribuyente']->getComuna()->comuna,
-            'value' => !empty($this->getConfig()->emisor->direccion) ? $this->getConfig()->emisor->direccion : null,
+            'value' => !empty($this->getConfig()->emisor->direccion)
+                ? $this->getConfig()->emisor->direccion
+                : null
+            ,
             'attr' => 'maxlength="200"',
             'help' => 'Puede agregar múltiples direcciones.',
         ]);
@@ -78,7 +86,10 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
             'name' => 'dtepdf_'.$this->getCodigo().'_emisor_telefono',
             'label' => 'Teléfono',
             'placeholder' => $this->vars['Contribuyente']->telefono,
-            'value' => !empty($this->getConfig()->emisor->telefono) ? $this->getConfig()->emisor->telefono : null,
+            'value' => !empty($this->getConfig()->emisor->telefono)
+                ? $this->getConfig()->emisor->telefono
+                : null
+            ,
             'attr' => 'maxlength="100"',
             'help' => 'Puede agregar más de un teléfono.',
         ]);
@@ -86,7 +97,10 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
             'name' => 'dtepdf_'.$this->getCodigo().'_emisor_web',
             'label' => 'Sitio web',
             'placeholder' => $this->vars['Contribuyente']->config_extra_web,
-            'value' => !empty($this->getConfig()->emisor->web) ? $this->getConfig()->emisor->web : null,
+            'value' => !empty($this->getConfig()->emisor->web)
+                ? $this->getConfig()->emisor->web 
+                : null
+            ,
             'attr' => 'maxlength="100"',
             'help' => 'Puede agregar más de un sitio web.',
         ]);
@@ -94,7 +108,10 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
             'name' => 'dtepdf_'.$this->getCodigo().'_emisor_email',
             'label' => 'Email',
             'placeholder' => $this->vars['Contribuyente']->email,
-            'value' => !empty($this->getConfig()->emisor->email) ? $this->getConfig()->emisor->email : null,
+            'value' => !empty($this->getConfig()->emisor->email)
+                ? $this->getConfig()->emisor->email
+                : null
+            ,
             'attr' => 'maxlength="200"',
             'help' => 'Puede agregar más de un correo electrónico.',
         ]);
@@ -102,28 +119,40 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
         $buffer .= $form->input([
             'name' => 'dtepdf_'.$this->getCodigo().'_img_logo',
             'label' => 'Logo',
-            'value' => !empty($this->getConfig()->img->logo) ? $this->getConfig()->img->logo : null,
+            'value' => !empty($this->getConfig()->img->logo)
+                ? $this->getConfig()->img->logo
+                : null
+            ,
             'help' => 'URL con el logo en formato PNG y tamaño máximo de 450x100 pixeles.<br/><a href="#" onclick="document.getElementById(\'dtepdf_'.$this->getCodigo().'_img_logoField\').value = \''.url('/static/contribuyentes/'.$this->vars['Contribuyente']->rut.'/logo.png').'\'; return false;" class="small">Usar URL del logo cargado en LibreDTE</a>',
             'attr' => 'maxlength="200"',
         ]);
         $buffer .= $form->input([
             'name' => 'dtepdf_'.$this->getCodigo().'_img_cotizacion',
             'label' => 'Cotización',
-            'value' => !empty($this->getConfig()->img->cotizacion) ? $this->getConfig()->img->cotizacion : null,
+            'value' => !empty($this->getConfig()->img->cotizacion)
+                ? $this->getConfig()->img->cotizacion
+                : null
+            ,
             'help' => 'URL con la imagen que reemplaza el timbre en una cotización en formato PNG y tamaño 300x200 pixeles.',
             'attr' => 'maxlength="200"',
         ]);
         $buffer .= $form->input([
             'name' => 'dtepdf_'.$this->getCodigo().'_img_historial',
             'label' => 'Historial',
-            'value' => !empty($this->getConfig()->img->historial) ? $this->getConfig()->img->historial : null,
+            'value' => !empty($this->getConfig()->img->historial)
+                ? $this->getConfig()->img->historial
+                : null
+            ,
             'help' => 'URL con la imagen del historial en formato PNG y tamaño 250x195 pixeles.<br/>Se pueden usar las variables <code>{emisor}</code>, <code>{receptor}</code>, <code>{fecha}</code>, <code>{dte}</code>, <code>{folio}</code> y <code>{total}</code>.<br/><a href="#" onclick="document.getElementById(\'dtepdf_'.$this->getCodigo().'_img_historialField\').value = \''.$this->vars['url'].'/api/dte/dte_ventas/historial/{receptor}/{fecha}/{emisor}/{dte}/{folio}/{total}?formato=png\'; return false;" class="small">Usar URL del historial de ventas de LibreDTE</a>',
             'attr' => 'maxlength="200"',
         ]);
         $buffer .= $form->input([
             'name' => 'dtepdf_'.$this->getCodigo().'_img_pie',
             'label' => 'Pie de página',
-            'value' => !empty($this->getConfig()->img->pie) ? $this->getConfig()->img->pie : null,
+            'value' => !empty($this->getConfig()->img->pie)
+                ? $this->getConfig()->img->pie
+                : null
+            ,
             'help' => 'URL con la imagen del pie de página en formato PNG y tamaño 750x110 pixeles.',
             'attr' => 'maxlength="200"',
         ]);
@@ -133,7 +162,10 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
             'name' => 'dtepdf_'.$this->getCodigo().'_detalle_fuente',
             'label' => 'Tamaño de items',
             'options' => [11=>11, 10=>10, 9=>9, 8=>8],
-            'value' => !empty($this->getConfig()->detalle->fuente) ? $this->getConfig()->detalle->fuente : 10,
+            'value' => !empty($this->getConfig()->detalle->fuente)
+                ? $this->getConfig()->detalle->fuente
+                : 10
+            ,
             'help' => 'Tamaño de la fuente a utilizar en la tabla con el listado de productos y/o servicios.',
         ]);
         $buffer .= $form->input([
@@ -144,7 +176,10 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
                 'Abajo del nombre del item',
                 'A la derecha del nombre del item',
             ],
-            'value' => !empty($this->getConfig()->detalle->posicion) ? $this->getConfig()->detalle->posicion : 0,
+            'value' => !empty($this->getConfig()->detalle->posicion)
+                ? $this->getConfig()->detalle->posicion
+                : 0
+            ,
             'help' => 'Para ahorrar espacio en el papel usar la opción que coloca el detalle a la derecha del nombre del item.',
         ]);
         $buffer .= '<p class="">Ancho de las columnas de los items en el PDF de hoja carta:</p>';
@@ -156,38 +191,56 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
                 $form->input([
                     'name' => 'dtepdf_'.$this->getCodigo().'_detalle_ancho_CdgItem',
                     'placeholder' => 20,
-                    'value' => !empty($this->getConfig()->detalle->ancho->CdgItem) ? $this->getConfig()->detalle->ancho->CdgItem : 20,
-                    'check'=>'notempty integer',
+                    'value' => !empty($this->getConfig()->detalle->ancho->CdgItem)
+                        ? $this->getConfig()->detalle->ancho->CdgItem
+                        : 20
+                    ,
+                    'check' => 'notempty integer',
                 ]),
                 $form->input([
                     'name' => 'dtepdf_'.$this->getCodigo().'_detalle_ancho_QtyItem',
                     'placeholder' => 15,
-                    'value' => !empty($this->getConfig()->detalle->ancho->QtyItem) ? $this->getConfig()->detalle->ancho->QtyItem : 15,
-                    'check'=>'notempty integer',
+                    'value' => !empty($this->getConfig()->detalle->ancho->QtyItem)
+                        ? $this->getConfig()->detalle->ancho->QtyItem
+                        : 15
+                    ,
+                    'check' => 'notempty integer',
                 ]),
                 $form->input([
                     'name' => 'dtepdf_'.$this->getCodigo().'_detalle_ancho_PrcItem',
                     'placeholder' => 22,
-                    'value' => !empty($this->getConfig()->detalle->ancho->PrcItem) ? $this->getConfig()->detalle->ancho->PrcItem : 22,
-                    'check'=>'notempty integer',
+                    'value' => !empty($this->getConfig()->detalle->ancho->PrcItem)
+                        ? $this->getConfig()->detalle->ancho->PrcItem
+                        : 22
+                    ,
+                    'check' => 'notempty integer',
                 ]),
                 $form->input([
                     'name' => 'dtepdf_'.$this->getCodigo().'_detalle_ancho_DescuentoMonto',
                     'placeholder' => 22,
-                    'value' => !empty($this->getConfig()->detalle->ancho->DescuentoMonto) ? $this->getConfig()->detalle->ancho->DescuentoMonto : 22,
-                    'check'=>'notempty integer',
+                    'value' => !empty($this->getConfig()->detalle->ancho->DescuentoMonto)
+                        ? $this->getConfig()->detalle->ancho->DescuentoMonto
+                        : 22
+                    ,
+                    'check' => 'notempty integer',
                 ]),
                 $form->input([
                     'name' => 'dtepdf_'.$this->getCodigo().'_detalle_ancho_RecargoMonto',
                     'placeholder' => 22,
-                    'value' => !empty($this->getConfig()->detalle->ancho->RecargoMonto) ? $this->getConfig()->detalle->ancho->RecargoMonto : 22,
-                    'check'=>'notempty integer',
+                    'value' => !empty($this->getConfig()->detalle->ancho->RecargoMonto)
+                        ? $this->getConfig()->detalle->ancho->RecargoMonto
+                        : 22
+                    ,
+                    'check' => 'notempty integer',
                 ]),
                 $form->input([
                     'name' => 'dtepdf_'.$this->getCodigo().'_detalle_ancho_MontoItem',
                     'placeholder' => 22,
-                    'value' => !empty($this->getConfig()->detalle->ancho->MontoItem) ? $this->getConfig()->detalle->ancho->MontoItem : 22,
-                    'check'=>'notempty integer',
+                    'value' => !empty($this->getConfig()->detalle->ancho->MontoItem)
+                        ? $this->getConfig()->detalle->ancho->MontoItem
+                        : 22
+                    ,
+                    'check' => 'notempty integer',
                 ]),
             ]
         ]);
@@ -197,7 +250,10 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
         $buffer .= $form->input([
             'name' => 'dtepdf_'.$this->getCodigo().'_etiquetas_CdgVendedor',
             'label' => 'Vendedor',
-            'value' => !empty($this->getConfig()->etiquetas->CdgVendedor) ? $this->getConfig()->etiquetas->CdgVendedor : null,
+            'value' => !empty($this->getConfig()->etiquetas->CdgVendedor)
+                ? $this->getConfig()->etiquetas->CdgVendedor
+                : null
+            ,
             'placeholder' => 'Vendedor',
             'attr' => 'maxlength="30"',
         ]);

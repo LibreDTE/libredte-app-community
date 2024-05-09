@@ -26,19 +26,13 @@ namespace website\Dte\Admin;
 
 /**
  * Clase para el controlador asociado a la tabla firma_electronica de la base de
- * datos
- * Comentario de la tabla:
- * Esta clase permite controlar las acciones entre el modelo y vista para la
- * tabla firma_electronica
- * @author SowerPHP Code Generator
- * @version 2015-09-22 19:27:29
+ * datos.
  */
 class Controller_FirmaElectronicas extends \Controller_App
 {
 
     /**
-     * Acción que muestra el mantenedor de firmas electrónicas
-         * @version 2015-09-22
+     * Acción que muestra el mantenedor de firmas electrónicas.
      */
     public function index()
     {
@@ -50,8 +44,7 @@ class Controller_FirmaElectronicas extends \Controller_App
     }
 
     /**
-     * Acción que permite al usuario agregar una nueva firma electrónica
-         * @version 2023-08-25
+     * Acción que permite al usuario agregar una nueva firma electrónica.
      */
     public function agregar()
     {
@@ -119,8 +112,7 @@ class Controller_FirmaElectronicas extends \Controller_App
     }
 
     /**
-     * Acción que permite eliminar la firma electrónica de un usuario
-         * @version 2015-09-22
+     * Acción que permite eliminar la firma electrónica de un usuario.
      */
     public function eliminar()
     {
@@ -148,8 +140,7 @@ class Controller_FirmaElectronicas extends \Controller_App
     }
 
     /**
-     * Acción que descarga la firma electrónica de un usuario
-         * @version 2019-07-17
+     * Acción que descarga la firma electrónica de un usuario.
      */
     public function descargar()
     {

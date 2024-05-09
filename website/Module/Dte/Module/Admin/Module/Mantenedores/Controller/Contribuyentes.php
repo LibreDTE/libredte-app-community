@@ -32,7 +32,7 @@ class Controller_Contribuyentes extends \Controller_Maintainer
 
     protected $namespace = 'website\Dte'; ///< Namespace del controlador y modelos asociados
     protected $columnsView = [
-        'listar'=>['rut', 'razon_social', 'telefono', 'email', 'comuna', 'usuario']
+        'listar' => ['rut', 'razon_social', 'telefono', 'email', 'comuna', 'usuario']
     ]; ///< Columnas que se deben mostrar en las vistas
 
     /**

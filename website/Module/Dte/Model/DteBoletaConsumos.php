@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_boleta_consumo de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla dte_boleta_consumo
- * @author SowerPHP Code Generator
- * @version 2016-02-14 05:05:56
+ * Clase para mapear la tabla dte_boleta_consumo de la base de datos.
  */
 class Model_DteBoletaConsumos extends \Model_Plural_App
 {
@@ -52,7 +48,7 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
         } else {
             $desde = $this->db->getValue(
                 'SELECT MIN(dia) FROM dte_boleta_consumo WHERE emisor = :emisor AND certificacion = :certificacion',
-                [':emisor'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion()]
+                [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion()]
             );
         }
         if (empty($desde)) {
@@ -73,7 +69,7 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
         // consultar los dias que si están en el RCOF
         $dias_enviados = $this->db->getCol(
             'SELECT dia FROM dte_boleta_consumo WHERE emisor = :emisor AND certificacion = :certificacion AND track_id IS NOT NULL',
-            [':emisor'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion()]
+            [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion()]
         );
         // calcular la diferencia entre los enviados y los que se solicitaron
         return array_diff($dias, $dias_enviados);
@@ -128,8 +124,8 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
             '(revision_estado = \'ERRONEO\' OR SUBSTRING(revision_estado FROM 1 FOR 3) = \'106\')'
         ];
         $vars = [
-            ':emisor'=>$this->getContribuyente()->rut,
-            ':certificacion'=>$this->getContribuyente()->enCertificacion()
+            ':emisor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion()
         ];
         if ($desde) {
             $where[] = 'dia >= :desde';
@@ -154,7 +150,7 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
             WHERE emisor = :emisor AND certificacion = :certificacion AND dia BETWEEN :desde AND :hasta AND track_id > 0
             GROUP BY revision_estado
             ORDER BY total DESC
-        ', [':emisor'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion(), ':desde'=>$desde, ':hasta'=>$hasta]);
+        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta]);
     }
 
     /**
@@ -170,7 +166,7 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
                 emisor = :emisor
                 AND certificacion = :certificacion
                 AND revision_estado = \'ERRONEO\'
-        ', [':emisor'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion()]);
+        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion()]);
         return !empty($aux['total']) ? $aux : null;
     }
 
@@ -188,7 +184,7 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
                 AND certificacion = :certificacion
                 AND revision_estado = \'REPARO\'
                 AND SUBSTRING(revision_detalle, 1, 27) = \'Secuencia de Envio Invalida\'
-        ', [':emisor'=>$this->getContribuyente()->rut, ':certificacion'=>$this->getContribuyente()->enCertificacion()]);
+        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion()]);
         return !empty($aux['total']) ? $aux : null;
     }
 

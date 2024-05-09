@@ -25,11 +25,7 @@
 namespace website\Dte\Admin;
 
 /**
- * Clase para mapear la tabla dte_folio de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla dte_folio
- * @author SowerPHP Code Generator
- * @version 2015-09-22 10:44:45
+ * Clase para mapear la tabla dte_folio de la base de datos.
  */
 class Model_DteFolio extends \Model_App
 {
@@ -174,7 +170,7 @@ class Model_DteFolio extends \Model_App
                         AND certificacion = :certificacion
                         AND :folio BETWEEN desde AND hasta
                 )
-        ', [':emisor' => $this->emisor, ':dte'=>$this->dte, 'certificacion' => (int)$this->certificacion, ':folio'=>$this->siguiente]);
+        ', [':emisor' => $this->emisor, ':dte' => $this->dte, 'certificacion' => (int)$this->certificacion, ':folio' => $this->siguiente]);
         $n_cafs = count($cafs);
         if (!$n_cafs)
             return false;
@@ -209,7 +205,7 @@ class Model_DteFolio extends \Model_App
             FROM dte_caf
             WHERE emisor = :rut AND dte = :dte AND certificacion = :certificacion
             ORDER BY desde '.($order == 'ASC'?'ASC':'DESC').'
-        ', [':rut'=>$this->emisor, ':dte'=>$this->dte, ':certificacion'=>$this->certificacion]);
+        ', [':rut' => $this->emisor, ':dte' => $this->dte, ':certificacion' => $this->certificacion]);
         foreach ($cafs as &$caf) {
             try {
                 $xml = \website\Dte\Utility_Data::decrypt($caf['xml']);
@@ -388,7 +384,7 @@ class Model_DteFolio extends \Model_App
                 ORDER BY '.$periodo_col.' DESC
                 LIMIT '.(int)$limit.'
             ) AS t ORDER BY mes '.($order == 'ASC'?'ASC':'DESC').'
-        ', [':rut'=>$this->emisor, ':dte'=>$this->dte, ':certificacion'=>$this->certificacion]);
+        ', [':rut' => $this->emisor, ':dte' => $this->dte, ':certificacion' => $this->certificacion]);
     }
 
     /**
@@ -399,7 +395,7 @@ class Model_DteFolio extends \Model_App
     {
         return $this->db->getValue(
             'SELECT MIN(folio) FROM dte_emitido WHERE emisor = :rut AND dte = :dte AND certificacion = :certificacion',
-            [':rut'=>$this->emisor, ':dte'=>$this->dte, ':certificacion'=>$this->certificacion]
+            [':rut' => $this->emisor, ':dte' => $this->dte, ':certificacion' => $this->certificacion]
         );
     }
 
@@ -425,7 +421,7 @@ class Model_DteFolio extends \Model_App
             FROM dte_caf
             WHERE emisor = :rut AND dte = :dte AND certificacion = :certificacion
             ORDER BY desde
-        ', [':rut'=>$this->emisor, ':dte'=>$this->dte, ':certificacion'=>$this->certificacion]);
+        ', [':rut' => $this->emisor, ':dte' => $this->dte, ':certificacion' => $this->certificacion]);
         $folios = [];
         foreach ($rangos_aux as $r) {
             for ($folio=$r['desde']; $folio<=$r['hasta']; $folio++) {
@@ -442,7 +438,7 @@ class Model_DteFolio extends \Model_App
                 AND folio > :primer_folio
                 AND folio < (SELECT siguiente FROM dte_folio WHERE emisor = :rut AND dte = :dte AND certificacion = :certificacion)
             ORDER BY folio
-        ', [':rut'=>$this->emisor, ':dte'=>$this->dte, ':certificacion'=>$this->certificacion, ':primer_folio'=>$primer_folio]);
+        ', [':rut' => $this->emisor, ':dte' => $this->dte, ':certificacion' => $this->certificacion, ':primer_folio' => $primer_folio]);
     }
 
     /**
@@ -467,7 +463,7 @@ class Model_DteFolio extends \Model_App
         // obtener todos los cafs existentes
         $cafs = (new Model_DteCafs())->setWhereStatement(
             ['emisor = :emisor', 'dte = :dte', 'certificacion = :certificacion'],
-            [':emisor'=>$this->emisor, ':dte'=>$this->dte, ':certificacion'=>(int)$this->certificacion]
+            [':emisor' => $this->emisor, ':dte' => $this->dte, ':certificacion' => (int)$this->certificacion]
         )->setOrderByStatement('desde')->getObjects();
         // recorrer cada caf e ir extrayendo los campos
         foreach($cafs as $DteCaf) {

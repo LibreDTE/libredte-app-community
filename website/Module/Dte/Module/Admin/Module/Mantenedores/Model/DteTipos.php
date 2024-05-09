@@ -25,11 +25,7 @@
 namespace website\Dte\Admin\Mantenedores;
 
 /**
- * Clase para mapear la tabla dte_tipo de la base de datos
- * Comentario de la tabla: Tipos de documentos (electrónicos y no electrónicos)
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla dte_tipo
- * @author SowerPHP Code Generator
- * @version 2015-09-21 12:31:02
+ * Clase para mapear la tabla dte_tipo de la base de datos.
  */
 class Model_DteTipos extends \Model_Plural_App
 {
@@ -48,8 +44,7 @@ class Model_DteTipos extends \Model_Plural_App
     ]; ///< Tipos de documentos internos de LibreDTE (sin código oficial del SII)
 
     /**
-     * Método que entrega el listado de tipos de documentos tributarios
-         * @version 2018-05-16
+     * Método que entrega el listado de tipos de documentos tributarios.
      */
     public function getList($all = false)
     {
@@ -81,8 +76,7 @@ class Model_DteTipos extends \Model_Plural_App
 
     /**
      * Método que entrega el listado de todos los tipos de documentos que se
-     * pueden usar como referencias
-         * @version 2016-11-18
+     * pueden usar como referencias.
      */
     public function getListReferencias()
     {

@@ -25,18 +25,15 @@ namespace website\Dte;
 
 /**
  * Clase que permite encriptar/desencriptar datos que son almacenados en la base
- * de datos
- *
- * @version 2016-01-26
+ * de datos.
  */
 class Utility_Data
 {
 
     /**
-     * Método que encripta un texto plano
-     * @param plaintext Texto plano a encriptar
-     * @return Texto encriptado en base64
-         * @version 2021-07-20
+     * Método que encripta un texto plano.
+     * @param string $plaintext Texto plano a encriptar.
+     * @return string Texto encriptado en base64.
      */
     public static function encrypt($plaintext)
     {
@@ -46,10 +43,9 @@ class Utility_Data
     }
 
     /**
-     * Método que desencripta un texto encriptado
-     * @param $ciphertext_base64 Texto encriptado en base64 a desencriptar
-     * @return Texto plano
-         * @version 2021-07-20
+     * Método que desencripta un texto encriptado.
+     * @param string $ciphertext_base64 Texto encriptado en base64 a desencriptar.
+     * @return string Texto plano.
      */
     public static function decrypt($ciphertext_base64)
     {

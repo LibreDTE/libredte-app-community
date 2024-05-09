@@ -1,4 +1,4 @@
-<div class="page-header"><h1>DTEs emitidos sin enviar al SII</h1></div>
+<div class="page-header"><h1>DTE emitidos sin enviar al SII</h1></div>
 <p>Aquí podrá ver los documentos emitidos que aun no han sido enviados al SII por la empresa <?=$Emisor->razon_social?>.</p>
 <?php
 foreach ($documentos as &$d) {

@@ -24,8 +24,7 @@
 namespace website\Apps;
 
 /**
- * Controlador para aplicación de Dropbox
- * @version 2019-07-13
+ * Controlador para aplicación de Dropbox.
  */
 class Controller_Dropbox extends \Controller_App
 {
@@ -40,14 +39,14 @@ class Controller_Dropbox extends \Controller_App
             // cargar dropbox
             $DropboxApp = $Contribuyente->getApp('apps.dropbox');
             if (!$DropboxApp) {
-                throw new \Exception('No existe la aplicación Dropbox');
+                throw new \Exception('No existe la aplicación Dropbox.');
             }
             if ($DropboxApp->isConnected()) {
-                throw new \Exception('La empresa '.$Contribuyente->getNombre().' ya está conectada a Dropbox');
+                throw new \Exception('La empresa '.$Contribuyente->getNombre().' ya está conectada a Dropbox.');
             }
             $Dropbox = $DropboxApp->getDropboxClient();
             if (!$Dropbox) {
-                throw new \Exception('Dropbox no está habilitado en esta versión de LibreDTE');
+                throw new \Exception('Dropbox no está habilitado en este servidor de LibreDTE.');
             }
             // procesar codigo y estado de Dropbox para obtener token
             try {
@@ -58,7 +57,7 @@ class Controller_Dropbox extends \Controller_App
                 $account = $Dropbox->getCurrentAccount();
                 $Contribuyente->set([
                     'config_apps_dropbox' => (object)[
-                        'uid'=> $account->getAccountId(),
+                        'uid' =>  $account->getAccountId(),
                         'display_name' => $account->getDisplayName(),
                         'email' => $account->getEmail(),
                         'token' => $token,
@@ -66,7 +65,7 @@ class Controller_Dropbox extends \Controller_App
                 ]);
                 $Contribuyente->save();
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Dropbox se ha conectado correctamente con LibreDTE', 'ok'
+                    'Dropbox se ha conectado correctamente con LibreDTE.', 'ok'
                 );
             } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
@@ -86,14 +85,14 @@ class Controller_Dropbox extends \Controller_App
         // cargar dropbox
         $DropboxApp = $Contribuyente->getApp('apps.dropbox');
         if (!$DropboxApp) {
-            throw new \Exception('No existe la aplicación Dropbox');
+            throw new \Exception('No existe la aplicación Dropbox.');
         }
         if (!$DropboxApp->isConnected()) {
-            throw new \Exception('La empresa '.$Contribuyente->getNombre().' no tiene conectada su cuenta a Dropbox');
+            throw new \Exception('La empresa '.$Contribuyente->getNombre().' no tiene conectada su cuenta a Dropbox.');
         }
         $Dropbox = $DropboxApp->getDropboxClient();
         if (!$Dropbox) {
-            throw new \Exception('Dropbox no está habilitado en esta versión de LibreDTE');
+            throw new \Exception('Dropbox no está habilitado en este servidor de LibreDTE.');
         }
         // desconectar LibreDTE de Dropbox
         $borrado = false;
@@ -113,7 +112,7 @@ class Controller_Dropbox extends \Controller_App
             $Contribuyente->set(['config_apps_dropbox' => null]);
             $Contribuyente->save();
             \sowerphp\core\Model_Datasource_Session::message(
-                'Dropbox se ha desconectado correctamente de LibreDTE', 'ok'
+                'Dropbox se ha desconectado correctamente de LibreDTE.', 'ok'
             );
         } else {
             \sowerphp\core\Model_Datasource_Session::message(
@@ -139,7 +138,7 @@ class Controller_Dropbox extends \Controller_App
         }
         $Dropbox = $DropboxApp->getDropboxClient();
         if (!$Dropbox) {
-            throw new \Exception('Dropbox no está habilitado en esta instancia de LibreDTE.');
+            throw new \Exception('Dropbox no está habilitado en este servidor de LibreDTE.');
         }
         // asignar variables y mostrar vista
         try {

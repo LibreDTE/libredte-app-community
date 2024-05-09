@@ -25,11 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_guia de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla dte_guia
- * @author SowerPHP Code Generator
- * @version 2015-12-25 16:49:12
+ * Clase para mapear la tabla dte_guia de la base de datos.
  */
 class Model_DteGuia extends Model_Base_Libro
 {
@@ -168,32 +164,30 @@ class Model_DteGuia extends Model_Base_Libro
 
     /**
      * Método que entrega el resumen real (de los detalles registrados) del
-     * libro
-     * @todo Programar método (por ahora no se está usando)
-         * @version 2016-02-12
+     * libro.
+     * @todo Programar método (por ahora no se está usando).
      */
-    public function getResumen()
+    public function getResumen(): array
     {
         return [];
     }
 
     /**
      * Método que entrega el folio de notificación del libro (si existe) o 0
-     * si el XML del libro no existe
-         * @version 2016-09-15
+     * si el XML del libro no existe.
      */
     public function getFolioNotificacion()
     {
-        if (!$this->xml)
+        if (!$this->xml) {
             return 0;
+        }
         $Libro = new \sasco\LibreDTE\Sii\LibroGuia();
         $Libro->loadXML(base64_decode($this->xml));
         return $Libro->getFolioNotificacion();
     }
 
     /**
-     * Método que entrega los documentos por día del libro
-         * @version 2018-05-17
+     * Método que entrega los documentos por día del libro.
      */
     public function getDocumentosPorDia()
     {
