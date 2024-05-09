@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,7 +25,6 @@ namespace website\Dte;
 
 /**
  * Comando para sincronizar datos del Portal MIPYME del SII en LibreDTE
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2020-02-22
  */
 class Shell_Command_Sii_Mipyme extends \Shell_App
@@ -39,7 +38,7 @@ class Shell_Command_Sii_Mipyme extends \Shell_App
         foreach ($contribuyentes as $rut) {
             // crear objeto del contribuyente
             $Contribuyente = $Contribuyentes->get($rut);
-            if (!$Contribuyente->exists() or !$Contribuyente->getFirma()) {
+            if (!$Contribuyente->exists() || !$Contribuyente->getFirma()) {
                 continue;
             }
             // sincronizar

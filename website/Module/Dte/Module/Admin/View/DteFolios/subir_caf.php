@@ -63,7 +63,7 @@ echo $f->end('Subir archivo CAF');
             <div class="card-body">
                 <i class="fa-solid fa-question-circle fa-fw text-warning mb-4"></i>
                 <strong>¿Cómo reobtengo folios en SII?</strong><br/>
-                Ingresar a la <a href="https://<?=$servidor_sii?>.sii.cl/cvc_cgi/dte/rf_reobtencion1_folios" target="_blank">web del SII</a> con la firma electrónica, ingresar el RUT <?=$Emisor->rut?>-<?=$Emisor->dv?> y clic en los folios que desea reobtener. Sólo podrá reobtener folios que haya solicitado previamente con su usuario, o cualquiera si es administrador en la empresa en SII.
+                Ingresar a la <a href="https://<?=$servidor_sii?>.sii.cl/cvc_cgi/dte/rf_reobtencion1_folios" target="_blank">web del SII</a> con la firma electrónica, ingresar el RUT <?=$Emisor->rut?>-<?=$Emisor->dv?> y clic en los folios que desea reobtener. Solo podrá reobtener folios que haya solicitado previamente con su usuario, o cualquiera si es administrador en la empresa en SII.
                 <br/><br/>
                 También puede <a href="<?=$_base?>/dte/admin/dte_folios/reobtener_caf">reobtener folios directo desde LibreDTE</a>.
             </div>

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte\Admin;
 
 /**
  * Clase exportar e importar datos de un contribuyente
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2019-07-13
  */
 class Controller_Respaldos extends \Controller_App
@@ -34,15 +33,14 @@ class Controller_Respaldos extends \Controller_App
 
     /**
      * Acción que permite exportar todos los datos de un contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-10-20
+         * @version 2017-10-20
      */
     public function exportar($all = false)
     {
         $Emisor = $this->getContribuyente();
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Sólo el administrador de la empresa puede descargar un respaldo.', 'error'
+                'Solo el administrador de la empresa puede descargar un respaldo.', 'error'
             );
             $this->redirect('/dte/admin');
         }

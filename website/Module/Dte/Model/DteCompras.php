@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -40,8 +40,7 @@ class Model_DteCompras extends \Model_Plural_App
 
     /**
      * Método que indica si el libro para cierto periodo está o no generado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-06-14
+         * @version 2018-06-14
      */
     public function libroGenerado($periodo)
     {
@@ -54,8 +53,7 @@ class Model_DteCompras extends \Model_Plural_App
 
     /**
      * Método que entrega el total mensual del libro de compras
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-20
+         * @version 2020-02-20
      */
     public function getTotalesMensuales($anio)
     {
@@ -77,8 +75,7 @@ class Model_DteCompras extends \Model_Plural_App
 
     /**
      * Método que entrega el resumen anual de compras
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-20
+         * @version 2020-02-20
      */
     public function getResumenAnual($anio)
     {
@@ -118,8 +115,7 @@ class Model_DteCompras extends \Model_Plural_App
      * Método que entrega el resumen de los documentos de compras
      * totalizado según ciertos filtros y por tipo de documento.
      * @todo Agregar las facturas de compras al resumen (tipo 46)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-06-16
+         * @version 2022-06-16
      */
     public function getResumen(array $filtros = [])
     {
@@ -143,7 +139,7 @@ class Model_DteCompras extends \Model_Plural_App
                     }
                     $where[] = 'd.dte IN ('.implode(', ', $where_dte).')';
                 }
-                else if ($filtros['dte'][0]=='!') {
+                else if ($filtros['dte'][0] == '!') {
                     $where[] = 'd.dte != :dte';
                     $vars[':dte'] = substr($filtros['dte'],1);
                 }
@@ -233,8 +229,7 @@ class Model_DteCompras extends \Model_Plural_App
      * Método que sincroniza el libro de compras local con el registro de compras del SII
      * - Se agregan documentos "registrados" en el registro de compras del SII
      * - Se eliminan documentos que están en el SII marcados como "no incluir" o "reclamados"
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-19
+         * @version 2020-02-19
      */
     public function sincronizarRegistroComprasSII($meses = 2)
     {
@@ -279,8 +274,7 @@ class Model_DteCompras extends \Model_Plural_App
 
     /**
      * Método que agrega masivamente documentos recibidos y acepta los intercambios asociados al DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-19
+         * @version 2020-02-19
      */
     private function agregarMasivo($documentos, array $config = [])
     {
@@ -299,7 +293,7 @@ class Model_DteCompras extends \Model_Plural_App
             $intercambios = $DteIntercambios->buscarIntercambiosDte(substr($doc['rut'],0,-2), $doc['dte'], $doc['folio']);
             if ($intercambios) {
                 foreach ($intercambios as $DteIntercambio) {
-                    if (!$DteIntercambio->usuario and $DteIntercambio->documentos == 1) {
+                    if (!$DteIntercambio->usuario && $DteIntercambio->documentos == 1) {
                         $DteIntercambio->responder(true, $config);
                     }
                 }
@@ -307,7 +301,7 @@ class Model_DteCompras extends \Model_Plural_App
             // agregar el documento recibido si no existe
             $Emisor = $Emisores->get(substr($doc['rut'],0,-2));
             $DteRecibido = new Model_DteRecibido($Emisor->rut, $doc['dte'], $doc['folio'], $this->getContribuyente()->enCertificacion());
-            if (!$DteRecibido->usuario or $DteRecibido->mipyme) {
+            if (!$DteRecibido->usuario || $DteRecibido->mipyme) {
                 $DteRecibido->tasa = (float)$doc['tasa'];
                 $DteRecibido->fecha = $doc['fecha'];
                 $DteRecibido->sucursal_sii = $doc['sucursal_sii'];
@@ -354,8 +348,7 @@ class Model_DteCompras extends \Model_Plural_App
 
     /**
      * Método que elimina masivamente documentos recibidos y los intercambios asociados al DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-20
+         * @version 2018-05-20
      */
     private function eliminarMasivo($documentos)
     {
@@ -383,8 +376,7 @@ class Model_DteCompras extends \Model_Plural_App
     /**
      * Método que sincroniza los documentos recibidos del Portal MIPYME con
      * LibreDTE, cargando los datos que estén en el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+         * @version 2020-02-22
      */
     public function sincronizarRecibidosPortalMipymeSII($meses = 2)
     {

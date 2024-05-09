@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -27,8 +27,7 @@ namespace website\Dte;
  * Comando para enviar el reporte de consumo de folios de las boletas
  * electrónicas
  * Permite enviar el RCOF directamente al SII o a un servidor remoto.
- * Por el momento sólo se soporta servidor remoto SSH (SFTP/SCP).
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
+ * Por el momento solo se soporta servidor remoto SSH (SFTP/SCP).
  * @version 2019-08-14
  */
 class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
@@ -37,8 +36,7 @@ class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
     /**
      * Método principal del comando
      * @param uri Formato: sftp://usuario:clave@servidor:puerto/ubicacion/desde/raiz
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-10
+         * @version 2020-10-10
      */
     public function main($grupo = 'dte_plus', $dia = null, $certificacion = 0, $uri = null, $filename = 'rcof_{rut}_{dia}.xml')
     {
@@ -107,8 +105,7 @@ class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
 
     /**
      * Método que envía el RCOF al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-10
+         * @version 2020-10-10
      */
     private function enviar_sii($DteBoletaConsumo, $retry = 10)
     {
@@ -150,8 +147,7 @@ class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
 
     /**
      * Método que obtiene el listado de contribuyentes a los cuales se debe enviar el RCOF
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-10
+         * @version 2020-10-10
      */
     private function getContribuyentes($grupo, $dia, $certificacion)
     {

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -40,8 +40,7 @@ class Model_Itemes extends \Model_Plural_App
 
     /**
      * Método que busca un item en la base de datos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-03-19
+         * @version 2016-03-19
      */
     public function get($contribuyente, $codigo = null, $tipo = null)
     {
@@ -60,8 +59,7 @@ class Model_Itemes extends \Model_Plural_App
 
     /**
      * Método que entrega el listado de items del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-25
+         * @version 2019-07-25
      */
     public function getList()
     {
@@ -75,8 +73,7 @@ class Model_Itemes extends \Model_Plural_App
 
     /**
      * Método que busca los items del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-06-04
+         * @version 2019-06-04
      */
     public function getItems($filtros = [])
     {
@@ -96,8 +93,7 @@ class Model_Itemes extends \Model_Plural_App
 
     /**
      * Método que exporta todos los items de un contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-09-17
+         * @version 2020-09-17
      */
     public function exportar()
     {

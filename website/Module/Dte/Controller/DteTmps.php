@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte;
 
 /**
  * Controlador de dte temporales
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2021-10-12
  */
 class Controller_DteTmps extends \Controller_App
@@ -34,8 +33,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Se permite descargar las cotizaciones sin estar logueado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-12-13
+         * @version 2016-12-13
      */
     public function beforeFilter()
     {
@@ -45,8 +43,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Método que muestra los documentos temporales disponibles
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+         * @version 2021-10-12
      */
     public function listar($pagina = 1)
     {
@@ -98,8 +95,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Acción que muestra la página del documento temporal
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-09
+         * @version 2019-07-09
      */
     public function ver($receptor, $dte, $codigo)
     {
@@ -125,8 +121,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Método que genera la cotización en PDF del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-04
+         * @version 2020-08-04
      */
     public function cotizacion($receptor, $dte, $codigo, $emisor = null)
     {
@@ -148,11 +143,11 @@ class Controller_DteTmps extends \Controller_App
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($Emisor->getUsuario()->hash);
         $response = $rest->get($this->request->url.'/api/dte/dte_tmps/pdf/'.$receptor.'/'.$dte.'/'.$codigo.'/'.$Emisor->rut.'?cotizacion=1&formato='.$formato.'&papelContinuo='.$papelContinuo.'&compress='.$compress);
-        if ($response===false) {
+        if ($response === false) {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
             $this->redirect('/dte/dte_tmps/listar');
         }
-        if ($response['status']['code']!=200) {
+        if ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             $this->redirect('/dte/dte_tmps/listar');
         }
@@ -168,8 +163,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Método que genera la previsualización del PDF del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-04
+         * @version 2020-08-04
      */
     public function pdf($receptor, $dte, $codigo, $disposition = 'attachment')
     {
@@ -191,11 +185,11 @@ class Controller_DteTmps extends \Controller_App
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($this->Auth->User->hash);
         $response = $rest->get($this->request->url.'/api/dte/dte_tmps/pdf/'.$receptor.'/'.$dte.'/'.$codigo.'/'.$Emisor->rut.'?formato='.$formato.'&papelContinuo='.$papelContinuo.'&compress='.$compress);
-        if ($response===false) {
+        if ($response === false) {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
             $this->redirect('/dte/dte_tmps/listar');
         }
-        if ($response['status']['code']!=200) {
+        if ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             $this->redirect('/dte/dte_tmps/listar');
         }
@@ -206,14 +200,13 @@ class Controller_DteTmps extends \Controller_App
                 $this->response->header($header, $response['header'][$header]);
             }
         }
-        $this->response->header('Content-Disposition', ($disposition=='inline'?'inline':(!empty($response['header']['Content-Disposition'])?$response['header']['Content-Disposition']:'inline')));
+        $this->response->header('Content-Disposition', ($disposition == 'inline'?'inline':(!empty($response['header']['Content-Disposition'])?$response['header']['Content-Disposition']:'inline')));
         $this->response->send($response['body']);
     }
 
     /**
      * Acción que permite ver una vista previa del correo en HTML
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+         * @version 2019-07-17
      */
     public function email_html($receptor, $dte, $codigo)
     {
@@ -237,8 +230,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Acción que envía por email el PDF de la cotización del documento temporal
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-04-29
+         * @version 2018-04-29
      */
     public function enviar_email($receptor, $dte, $codigo)
     {
@@ -264,10 +256,10 @@ class Controller_DteTmps extends \Controller_App
                     'cotizacion' => $_POST['cotizacion'],
                 ]
             );
-            if ($response===false) {
+            if ($response === false) {
                 \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
             }
-            else if ($response['status']['code']!=200) {
+            else if ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             }
             else {
@@ -281,8 +273,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Acción de la API que permite enviar el documento temporal por correo electrónico
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-02-15
+         * @version 2023-02-15
      */
     public function _api_enviar_email_POST($receptor, $dte, $codigo, $emisor)
     {
@@ -324,8 +315,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Recurso de la API que genera el PDF del documento temporal (cotización o previsualización)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-01
+         * @version 2020-08-01
      */
     public function _api_pdf_GET($receptor, $dte, $codigo, $emisor)
     {
@@ -335,8 +325,7 @@ class Controller_DteTmps extends \Controller_App
     /**
      * Recurso de la API que genera el PDF del documento temporal (cotización o previsualización)
      * Permite pasar datos extras al PDF por POST
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-04
+         * @version 2020-08-04
      */
     public function _api_pdf_POST($receptor, $dte, $codigo, $emisor)
     {
@@ -389,8 +378,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Recurso de la API que descarga el código ESCPOS del documento temporal
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-05-15
+         * @version 2020-05-15
      */
     public function _api_escpos_GET($receptor, $dte, $codigo, $emisor)
     {
@@ -452,8 +440,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Método que genera la previsualización del XML del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+         * @version 2019-07-17
      */
     public function xml($receptor, $dte, $codigo)
     {
@@ -483,8 +470,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Recurso que entrega la previsualización del XML del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-11-24
+         * @version 2020-11-24
      */
     public function _api_xml_GET($receptor, $dte, $codigo, $emisor)
     {
@@ -504,8 +490,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Método que entrega el JSON del documento temporal
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+         * @version 2019-07-17
      */
     public function json($receptor, $dte, $codigo)
     {
@@ -528,16 +513,15 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Método que elimina todos los documentos temporales del emisor
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-13
+         * @version 2021-10-13
      */
     public function eliminar_masivo()
     {
         $Emisor = $this->getContribuyente();
-        // sólo administrador puede eliminar masivamente los temporales
+        // solo administrador puede eliminar masivamente los temporales
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Sólo el administrador de la empresa está autorizado a eliminar masivamente los documentos temporales', 'error'
+                'Solo el administrador de la empresa está autorizado a eliminar masivamente los documentos temporales', 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
@@ -561,8 +545,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Método que elimina un documento temporal
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-11
+         * @version 2020-02-11
      */
     public function eliminar($receptor, $dte, $codigo)
     {
@@ -599,8 +582,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Servicio web que elimina un documento temporal
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-11
+         * @version 2020-02-11
      */
     public function _api_eliminar_GET($receptor, $dte, $codigo, $emisor)
     {
@@ -632,8 +614,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Método que actualiza un documento temporal
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-24
+         * @version 2021-08-24
      */
     public function actualizar($receptor, $dte, $codigo, $fecha = null, $actualizar_precios = true)
     {
@@ -660,10 +641,10 @@ class Controller_DteTmps extends \Controller_App
                 'actualizar_precios' => (bool)(isset($_POST['actualizar_precios']) ? $_POST['actualizar_precios'] : $actualizar_precios),
             ]
         );
-        if ($response===false) {
+        if ($response === false) {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
         }
-        else if ($response['status']['code']!=200) {
+        else if ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
         }
         else {
@@ -676,8 +657,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Recurso para actualizar el documento temporal
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-06-20
+         * @version 2022-06-20
      */
     public function _api_actualizar_POST($receptor, $dte, $codigo, $emisor)
     {
@@ -734,7 +714,7 @@ class Controller_DteTmps extends \Controller_App
                 );
                 if ($Item->exists()) {
                     $precio = $Item->getPrecio($fecha_calculo);
-                    if ($precio and $d['PrcItem']!=$precio) {
+                    if ($precio && $d['PrcItem'] != $precio) {
                         $precios_actualizados = true;
                         $d['PrcItem'] = $precio;
                         if ($d['DescuentoPct']) {
@@ -786,7 +766,7 @@ class Controller_DteTmps extends \Controller_App
                         $datos['Encabezado']['OtraMoneda'] = [$dte['Encabezado']['OtraMoneda']];
                     }
                     foreach ($datos['Encabezado']['OtraMoneda'] as $OtraMoneda) {
-                        if ($OtraMoneda['TpoMoneda'] == 'PESO CL' and !empty($OtraMoneda['MntTotOtrMnda'])) {
+                        if ($OtraMoneda['TpoMoneda'] == 'PESO CL' && !empty($OtraMoneda['MntTotOtrMnda'])) {
                             $total = $OtraMoneda['MntTotOtrMnda'];
                             break;
                         }
@@ -828,8 +808,7 @@ class Controller_DteTmps extends \Controller_App
     /**
      * Acción que permite generar un vale para imprimir con la identificación
      * del documento temporal
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-10-22
+         * @version 2018-10-22
      */
     public function vale($receptor, $dte, $codigo)
     {
@@ -850,8 +829,7 @@ class Controller_DteTmps extends \Controller_App
     /**
      * Acción que permite editar el documento temporal
      * @todo Programar funcionalidad
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-03-31
+         * @version 2017-03-31
      */
     public function editar($receptor, $dte, $codigo)
     {
@@ -873,8 +851,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Acción que permite editar el JSON del documento temporal
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-01
+         * @version 2020-08-01
      */
     public function editar_json($receptor, $dte, $codigo)
     {
@@ -887,10 +864,10 @@ class Controller_DteTmps extends \Controller_App
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
-        // sólo administrador puede editar el JSON
+        // solo administrador puede editar el JSON
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Sólo el administrador de la empresa está autorizado a editar el JSON del documento temporal', 'error'
+                'Solo el administrador de la empresa está autorizado a editar el JSON del documento temporal', 'error'
             );
             $this->redirect(str_replace('/editar_json/', '/ver/', $this->request->request));
         }
@@ -921,8 +898,7 @@ class Controller_DteTmps extends \Controller_App
     /**
      * Acción que permite realizar una búsqueda avanzada dentro de los DTE
      * temporales
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-03
+         * @version 2018-05-03
      */
     public function buscar()
     {
@@ -941,10 +917,10 @@ class Controller_DteTmps extends \Controller_App
                 'total_desde' => $_POST['total_desde'],
                 'total_hasta' => $_POST['total_hasta'],
             ]);
-            if ($response===false) {
+            if ($response === false) {
                 \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
             }
-            else if ($response['status']['code']!=200) {
+            else if ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             }
             else {
@@ -959,8 +935,7 @@ class Controller_DteTmps extends \Controller_App
     /**
      * Acción de la API que permite realizar una búsqueda avanzada dentro de los
      * DTEs temporales
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-03
+         * @version 2018-05-03
      */
     public function _api_buscar_POST($emisor)
     {
@@ -983,8 +958,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Acción de la API que permite obtener la información de un documento temporal
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-24
+         * @version 2021-08-24
      */
     public function _api_info_GET($receptor, $dte, $codigo, $emisor)
     {
@@ -1032,7 +1006,7 @@ class Controller_DteTmps extends \Controller_App
         if ($getSucursal) {
             $DteTmp->sucursal_sii = $DteTmp->getSucursal();
         }
-        if (!empty($DteTmp->usuario) and $getUsuario) {
+        if (!empty($DteTmp->usuario) && $getUsuario) {
             $Usuario = $DteTmp->getUsuario();
             $DteTmp->usuario = [
                 'id' => $Usuario->id,

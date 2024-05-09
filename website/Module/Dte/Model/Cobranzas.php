@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -41,8 +41,7 @@ class Model_Cobranzas extends \Model_Plural_App
     /**
      * Método que entrega los pagos programados pendientes de pago (pagos por
      * cobrar)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+         * @version 2021-10-12
      */
     public function getPendientes($filtros = [])
     {
@@ -90,7 +89,7 @@ class Model_Cobranzas extends \Model_Plural_App
             }
             // armar consulta dependiendo si se desea incluir o excluir al receptor
             if (!empty($filtros['receptor'])) {
-                if ($filtros['receptor'][0]=='!') {
+                if ($filtros['receptor'][0] == '!') {
                     $where[] = 'd.receptor != :receptor';
                     $vars[':receptor'] = substr($filtros['receptor'],1);
                 }
@@ -142,8 +141,7 @@ class Model_Cobranzas extends \Model_Plural_App
 
     /**
      * Método que entrega un resumen con el estado de los pagos programados por ventas a crédito
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-01-29
+         * @version 2023-01-29
      */
     public function getResumen($dia = null)
     {

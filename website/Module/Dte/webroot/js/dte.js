@@ -312,7 +312,7 @@ DTE.setItem = function (contribuyente, codigo) {
                 if (cols.length == 12) {
                     cols[9].childNodes[0].childNodes[0].value = (item.CodImpAdic !== undefined && item.CodImpAdic>0) ? item.CodImpAdic : '';
                 }
-                // foco en cantidad sólo si se logró obtener el código
+                // foco en cantidad solo si se logró obtener el código
                 if (item.VlrCodigo !== undefined) {
                     cols[4].childNodes[0].childNodes[0].focus();
                     cols[4].childNodes[0].childNodes[0].select();
@@ -491,7 +491,7 @@ DTE.check = function (formulario) {
         }
         // si el documento es 34 o 41 forzar que todos los detalles sean exentos
         if (TpoDoc==34 || TpoDoc==41 || TpoDoc==110 || TpoDoc==111 || TpoDoc==112) {
-            // sólo se asigna a monto exento si el item no es un monto no facturable
+            // solo se asigna a monto exento si el item no es un monto no facturable
             if ($('select[name="IndExe[]"]').get(i).value != 2) {
                 $('select[name="IndExe[]"]').get(i).value = 1;
             }
@@ -635,7 +635,7 @@ function dte_imprimir(formato, documento, id) {
                         __.alert(response.message);
                     }
                 }
-                socket.onerror=function(event){
+                socket.onerror = function(event) {
                     __.alert('<p>No fue posible enviar a imprimir desde LibreDTE porque no se logró conectar con el servidor de impresión.</p><p>Para imprimir desde LibreDTE se debe descargar y ejecutar en el computador el software Websocketd Printer que permitirá imprimir directo desde LibreDTE sin tener que descargar el documento.</p><div class="row"><div class="col-md-4"><a href="https://www.sasco.cl/shop/websocketd-printer-windows-65?category=17" target="_blank" class="btn btn-primary d-block mb-2"><i class="fa-brands fa-windows fa-fw fa-3x"></i><br/>Obtener Websocketd Printer para Windows</a></div><div class="col-md-4"><a href="https://www.sasco.cl/shop/websocketd-printer-mac-71?category=17" target="_blank" class="btn btn-primary d-block mb-2"><i class="fa-brands fa-apple fa-fw fa-3x"></i><br/>Obtener Websocketd Printer para macOS</a></div><div class="col-md-4"><a href="https://www.sasco.cl/shop/websocketd-printer-linux-67?category=17" target="_blank" class="btn btn-primary d-block mb-2"><i class="fa-brands fa-linux fa-fw fa-3x"></i><br/>Obtener Websocketd Printer para GNU/Linux</a></div></div>');
                 }
             } catch(e) {

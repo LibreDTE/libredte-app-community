@@ -16,7 +16,7 @@ echo $f->begin(['onsubmit'=>'Form.check()']);
     <div class="card-body">
         <div class="row mb-3">
             <div class="form-group col-md-6"><?=$f->input(['name'=>'emisor', 'placeholder'=>'Emisor: RUT o razón social'])?></div>
-            <div class="form-group col-md-3"><?=$f->input(['type'=>'select', 'name'=>'estado', 'options'=>['Pendientes y procesados', 'Sólo pendientes', 'Sólo procesados', 'Sólo aceptados', 'Sólo rechazados']])?></div>
+            <div class="form-group col-md-3"><?=$f->input(['type'=>'select', 'name'=>'estado', 'options'=>['Pendientes y procesados', 'Solo pendientes', 'Solo procesados', 'Solo aceptados', 'Solo rechazados']])?></div>
             <div class="form-group col-md-3"><?=$f->input(['type'=>'select', 'name'=>'usuario', 'options'=>[''=>'Todos los usuarios']+$usuarios])?></div>
         </div>
         <div class="row mb-3">

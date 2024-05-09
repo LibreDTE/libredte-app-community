@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -27,7 +27,6 @@ namespace website\Dte;
  * Comando para:
  *   - Actualizar el estado de los DTE enviados al SII
  *   - Enviar lo que esté sin Track ID al SII
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2021-09-07
  */
 class Shell_Command_DteEmitidos_Actualizar extends \Shell_App
@@ -66,7 +65,7 @@ class Shell_Command_DteEmitidos_Actualizar extends \Shell_App
             $DteEmitido = new Model_DteEmitido($Contribuyente->rut, $d['dte'], $d['folio'], $Contribuyente->enCertificacion());
             try {
                 $DteEmitido->actualizarEstado();
-                if ($DteEmitido->getEstado()=='R') {
+                if ($DteEmitido->getEstado() == 'R') {
                     $documentos_rechazados[] = [
                         'dte' => $DteEmitido->dte,
                         'folio' => $DteEmitido->folio,
@@ -83,7 +82,7 @@ class Shell_Command_DteEmitidos_Actualizar extends \Shell_App
                 }
             }
         }
-        // se envía un sólo correo con todos los documentos rechazados
+        // se envía un solo correo con todos los documentos rechazados
         if (!empty($documentos_rechazados)) {
             $n_documentos = num(count($documentos_rechazados));
             $msg = $Contribuyente->razon_social.','."\n\n";

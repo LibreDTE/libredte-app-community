@@ -53,7 +53,7 @@ foreach ($columns as $column => &$info) {
         ]);
     }
     // si es de tipo boolean se muestra lista desplegable
-    else if ($info['type']=='boolean' || $info['type']=='tinyint') {
+    else if ($info['type'] == 'boolean' || $info['type'] == 'tinyint') {
         $row[] = $form->input(array('type'=>'select', 'name'=>$column, 'options' => $optionsBoolean, 'value' => (isset($search[$column])?$search[$column]:'')));
     }
     // si es llave foránea
@@ -90,15 +90,15 @@ foreach ($Objs as &$obj) {
     $row = array();
     foreach ($columns as $column => &$info) {
         // si es un archivo
-        if ($info['type']=='file') {
+        if ($info['type'] == 'file') {
             if ($obj->{$column.'_size'})
                 $row[] = '<a href="'.$_base.$module_url.$controller.'/d/'.$column.'/'.urlencode($obj->id).'" class="btn btn-primary"><i class="fa fa-download"></i></a>';
             else
                 $row[] = '';
         }
         // si es boolean se usa Si o No según corresponda
-        else if ($info['type']=='boolean' || $info['type']=='tinyint') {
-            $row[] = $obj->{$column}=='t' || $obj->{$column}=='1' ? 'Si' : 'No';
+        else if ($info['type'] == 'boolean' || $info['type'] == 'tinyint') {
+            $row[] = $obj->{$column} == 't' || $obj->{$column} == '1' ? 'Si' : 'No';
         }
         // si es llave foránea
         else if ($info['fk']) {
@@ -112,7 +112,7 @@ foreach ($Objs as &$obj) {
         }
         // si es cualquier otro tipo de datos
         else {
-            $row[] = $info['type']=='real' ? (float)$obj->{$column} : $obj->{$column};
+            $row[] = $info['type'] == 'real' ? (float)$obj->{$column} : $obj->{$column};
         }
     }
     $pkValues = $obj->getPkValues();

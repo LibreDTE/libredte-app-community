@@ -8,7 +8,7 @@ if ($documentos_rc) {
     }
     $keys = array_keys($documentos_rc[0]);
     foreach ($keys as &$k) {
-        if (substr($k,0,3)=='det') {
+        if (substr($k,0,3) == 'det') {
             $k = substr($k, 3);
         }
     }

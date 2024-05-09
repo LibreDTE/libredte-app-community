@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte\Admin;
 
 /**
  * Clase para las acciones asociadas a items
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2016-10-25
  */
 class Controller_Itemes extends \Controller_Maintainer
@@ -39,8 +38,7 @@ class Controller_Itemes extends \Controller_Maintainer
 
     /**
      * Acción para listar los items del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-24
+         * @version 2016-02-24
      */
     public function listar($page = 1, $orderby = null, $order = 'A')
     {
@@ -51,8 +49,7 @@ class Controller_Itemes extends \Controller_Maintainer
 
     /**
      * Acción para crear un nuevo item
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-25
+         * @version 2019-07-25
      */
     public function crear()
     {
@@ -68,8 +65,7 @@ class Controller_Itemes extends \Controller_Maintainer
 
     /**
      * Acción para editar un item
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-09-14
+         * @version 2019-09-14
      */
     public function editar($codigo, $tipo = 'INT1')
     {
@@ -85,8 +81,7 @@ class Controller_Itemes extends \Controller_Maintainer
 
     /**
      * Acción para eliminar un item
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-09-14
+         * @version 2020-09-14
      */
     public function eliminar($codigo, $tipo = 'INT1')
     {
@@ -98,8 +93,7 @@ class Controller_Itemes extends \Controller_Maintainer
      * Recurso de la API que permite obtener los datos de un item a partir de su
      * código (puede ser el código de 'libredte', el que se usa en el mantenedor de productos)
      * o bien puede ser por 'sku', 'upc' o 'ean'
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-06-07
+         * @version 2020-06-07
      */
     public function _api_info_GET($empresa, $codigo)
     {
@@ -141,9 +135,9 @@ class Controller_Itemes extends \Controller_Maintainer
             if ($campo == 'libredte') {
                 $Item = (new Model_Itemes())->get($Empresa->rut, $codigo, $tipo);
             } else {
-                $Item = (new \libredte\oficial\Inventario\Model_InventarioItemes())->setContribuyente($Empresa)->getItemFacturacion($codigo, $tipo, $campo);
+                $Item = (new \libredte\enterprise\Inventario\Model_InventarioItemes())->setContribuyente($Empresa)->getItemFacturacion($codigo, $tipo, $campo);
             }
-            if (!$Item or !$Item->exists() or !$Item->activo) {
+            if (!$Item || !$Item->exists() || !$Item->activo) {
                 $this->Api->send('Item solicitado no existe o está inactivo', 404);
             }
             try {
@@ -174,8 +168,7 @@ class Controller_Itemes extends \Controller_Maintainer
 
     /**
      * Recurso de la API que permite obtener el listado de items completo con, todos sus datos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-03-15
+         * @version 2020-03-15
      */
     public function _api_raw_GET($empresa)
     {
@@ -201,14 +194,13 @@ class Controller_Itemes extends \Controller_Maintainer
 
     /**
      * Acción que permite importar los items desde un archivo CSV
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-11-22
+         * @version 2022-11-22
      */
     public function importar()
     {
         if (isset($_POST['submit'])) {
             // verificar que se haya podido subir el archivo con el libro
-            if (!isset($_FILES['archivo']) or $_FILES['archivo']['error']) {
+            if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
                 \sowerphp\core\Model_Datasource_Session::message(
                     'Ocurrió un error al subir el archivo con los items.', 'error'
                 );
@@ -252,7 +244,7 @@ class Controller_Itemes extends \Controller_Maintainer
                     continue;
                 }
                 // verificar que el precio sea mayor a 0
-                if (empty($Item->precio) or $Item->precio<=0) {
+                if (empty($Item->precio) || $Item->precio<=0) {
                     $resumen['error']++;
                     $item[] = 'No';
                     $item[] = 'Precio del item debe ser mayor a 0';
@@ -306,8 +298,7 @@ class Controller_Itemes extends \Controller_Maintainer
 
     /**
      * Acción que permite exportar todos los items a un archivo CSV
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-18
+         * @version 2019-07-18
      */
     public function exportar()
     {

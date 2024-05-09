@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -40,8 +40,7 @@ class Model_ImpuestoAdicionales extends \Model_Plural_App
 
     /**
      * Método que entrega el listado de impuesto adicionales
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-27
+         * @version 2016-02-27
      */
     public function getList()
     {
@@ -54,8 +53,7 @@ class Model_ImpuestoAdicionales extends \Model_Plural_App
 
     /**
      * Método que entrega el listado de impuesto adicionales que tienen tasa
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-27
+         * @version 2016-02-27
      */
     public function getListConTasa()
     {
@@ -69,8 +67,7 @@ class Model_ImpuestoAdicionales extends \Model_Plural_App
 
     /**
      * Método que entrega un arreglo asociativo con los códigos y tasas disponibles
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-27
+         * @version 2016-02-27
      */
     public function getTasas()
     {
@@ -85,8 +82,7 @@ class Model_ImpuestoAdicionales extends \Model_Plural_App
     /**
      * Método que entrega el listado de impuesto adicionales filtrados para un
      * contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-27
+         * @version 2016-02-27
      */
     public function getListContribuyente($listado = [])
     {
@@ -110,8 +106,7 @@ class Model_ImpuestoAdicionales extends \Model_Plural_App
     /**
      * Método que entrega un arreglo con los objetos de impuesto adicionales
      * para un contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-27
+         * @version 2016-02-27
      */
     public function getObjectsContribuyente($listado)
     {

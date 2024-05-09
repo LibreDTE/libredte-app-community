@@ -5,12 +5,12 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="<?=$_base?>/dte/admin/firma_electronicas/descargar" onclick="return __.confirm(this, 'Sólo puede descargar su propia firma electrónica, no la de otros usuarios. Adicionalmente, sólo descargará el archivo de la firma electrónica, la contraseña debe conocerla previamente.')">
+        <a class="nav-link" href="<?=$_base?>/dte/admin/firma_electronicas/descargar" onclick="return __.confirm(this, 'Solo puede descargar su propia firma electrónica, no la de otros usuarios. Adicionalmente, solo descargará el archivo de la firma electrónica, la contraseña debe conocerla previamente.')">
             <span class="fas fa-download"></span> Descargar firma
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="<?=$_base?>/dte/admin/firma_electronicas/eliminar" onclick="return __.confirm(this, 'Sólo puede eliminar su propia firma electrónica, no la de otros usuarios. Adicionalmente, esta acción es irreversible y podría impedir que emita nuevos documentos tributarios si no sube una nueva firma.')">
+        <a class="nav-link" href="<?=$_base?>/dte/admin/firma_electronicas/eliminar" onclick="return __.confirm(this, 'Solo puede eliminar su propia firma electrónica, no la de otros usuarios. Adicionalmente, esta acción es irreversible y podría impedir que emita nuevos documentos tributarios si no sube una nueva firma.')">
             <span class="fas fa-times"></span> Eliminar firma
         </a>
     </li>

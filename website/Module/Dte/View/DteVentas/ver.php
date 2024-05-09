@@ -87,7 +87,7 @@ new \sowerphp\general\View_Helper_Table([
                 <div class="card-body text-center">
                     <p><strong><?=$Libro->revision_estado?></strong></p>
                     <p><?=str_replace("\n", '<br/>', $Libro->revision_detalle)?></p>
-<?php if ($Libro->track_id and $Libro->getEstado()!='LRH') : ?>
+<?php if ($Libro->track_id && $Libro->getEstado() != 'LRH') : ?>
                     <p>
 <?php if ($Libro->track_id!=-1) : ?>
                         <a class="btn btn-primary" href="<?=$_base?>/dte/dte_ventas/actualizar_estado/<?=$Libro->periodo?>" role="button" onclick="return __.loading('Actualizando estado del envío...')">Actualizar estado</a><br/>
@@ -141,9 +141,9 @@ foreach ($resumen as &$r) {
     }
     // sumar o restar campos segun operación
     foreach (['TotMntExe', 'TotMntNeto', 'TotMntIVA', 'TotIVAPropio', 'TotIVATerceros', 'TotLey18211', 'TotMntTotal', 'TotMntNoFact', 'TotMntPeriodo'] as $c) {
-        if ($operaciones[$r['TpoDoc']]=='S') {
+        if ($operaciones[$r['TpoDoc']] == 'S') {
             $total[$c] += $r[$c];
-        } else if ($operaciones[$r['TpoDoc']]=='R') {
+        } else if ($operaciones[$r['TpoDoc']] == 'R') {
             $total[$c] -= $r[$c];
         }
     }
@@ -152,7 +152,7 @@ foreach ($resumen as &$r) {
         $iva_boleta = $r['TotMntIVA'];
         $iva_boleta_segun_neto = round($r['TotMntNeto'] * 0.19);
         $iva_boleta_segun_total = round(round($r['TotMntTotal'] / 1.19) * 0.19);
-        if ($iva_boleta != $iva_boleta_segun_neto or $iva_boleta != $iva_boleta_segun_total) {
+        if ($iva_boleta != $iva_boleta_segun_neto || $iva_boleta != $iva_boleta_segun_total) {
             $alerta_iva_boleta = '<sup><i class="fa fa-exclamation-triangle fa-fw text-warning"></i></sup>';
         } else {
             $alerta_iva_boleta = '';
@@ -165,7 +165,7 @@ foreach ($resumen as &$r) {
         }
     }
     // agregar alerta IVA boleta
-    if ($r['TpoDoc']==39 and $alerta_iva_boleta) {
+    if ($r['TpoDoc']==39 && $alerta_iva_boleta) {
         $r['TotMntIVA'] .= ' '.$alerta_iva_boleta;
     }
 }
@@ -266,8 +266,8 @@ $f->setStyle('horizontal');
 echo $f->input([
     'name' => 'CodAutRec',
     'label'=>'Autorización rectificación',
-    'help' => 'Código de autorización de rectificación obtenido desde el SII (sólo si es rectificación). <a href="#" onclick="get_codigo_reemplazo()">Solicitar código aquí</a>',
-    'check' => ($Libro->track_id and $Libro->getEstado()!='LRH' and $Libro->track_id!=-1)?'notempty':'',
+    'help' => 'Código de autorización de rectificación obtenido desde el SII (solo si es rectificación). <a href="#" onclick="get_codigo_reemplazo()">Solicitar código aquí</a>',
+    'check' => ($Libro->track_id && $Libro->getEstado() != 'LRH' && $Libro->track_id!=-1)?'notempty':'',
 ]);
 ?>
             <div class="row">
@@ -435,7 +435,7 @@ printCharts()
 
 $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
     var target = $(e.target).attr("href");
-    if (target=='#estadisticas') {
+    if (target == '#estadisticas') {
         $("canvas#grafico-documentos_por_dia").remove();
         $("#documentos_por_dia").append('<canvas id="grafico-documentos_por_dia"></canvas>');
         $("canvas#grafico-documentos_por_tipo").remove();

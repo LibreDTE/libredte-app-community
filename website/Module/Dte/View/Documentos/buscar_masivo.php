@@ -22,6 +22,6 @@ echo $f->input([
     'type' => 'select',
     'name' => 'buscar',
     'label' => 'Buscar en',
-    'options' => ['Todos (documentos temporales y reales)', 'Sólo documentos temporales', 'Sólo documentos reales'],
+    'options' => ['Todos (documentos temporales y reales)', 'Solo documentos temporales', 'Solo documentos reales'],
 ]);
 echo $f->end('Buscar DTE masivamente');

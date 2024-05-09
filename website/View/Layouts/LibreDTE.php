@@ -62,7 +62,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                         $dropdown_id_count = 1;
                         foreach ($_nav_website as $link=>$name) {
                             $active = $_page == $link ? ' active' : '';
-                            if ($link[0]=='/') $link = $_base.$link;
+                            if ($link[0] == '/') $link = $_base.$link;
                             if (isset($name['nav'])) {
                                 $dropdown_id = 'dropdown_'.$dropdown_id_count++;
                                 $title = isset($name['desc']) ? $name['desc'] : (isset($name['title']) ? $name['title'] : '');
@@ -71,7 +71,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                                 echo '<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" id="',$dropdown_id,'" title="',$title,'">',$icon,$name['name'],'</a>',"\n";
                                 echo '<div class="dropdown-menu" aria-labelledby="',$dropdown_id,'">',"\n";
                                 foreach($name['nav'] as $l=>$n) {
-                                    if ($l[0]=='/') $l = $link.$l;
+                                    if ($l[0] == '/') $l = $link.$l;
                                     echo '<a href="',$l,'" class="dropdown-item">',$n,'</a>',"\n";
                                 }
                                 echo '</div>',"\n";
@@ -113,7 +113,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                                                 }
                                                 $n_links = 0;
                                             } else {
-                                                if ($l->enlace[0]=='/') {
+                                                if ($l->enlace[0] == '/') {
                                                     if ($_Auth->check($l->enlace)) {
                                                         $n_links++;
                                                         echo '<a href="',$_base,$l->enlace,'" class="dropdown-item"><i class="'.$l->icono.' fa-fw"></i> '.$l->nombre.'</a>',"\n";
@@ -190,7 +190,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
 <!-- BEGIN MAIN CONTENT -->
 <?php
 // mensaje si la empresa está en certificación
-if ($Contribuyente and $Contribuyente->enCertificacion()) {
+if ($Contribuyente && $Contribuyente->enCertificacion()) {
     echo '<div class="bg-info text-white text-center lead mt-2 mb-2" style="padding:0.5em"><strong>AMBIENTE DE CERTIFICACIÓN / PRUEBAS: '.$Contribuyente->razon_social.'</strong></div>',"\n";
 }
 // mensaje de sesión
@@ -224,7 +224,7 @@ echo $_content;
                 <div class="float-end text-end">
 <?=!empty($_footer['right'])?$_footer['right'].'<br/>'."\n":''?>
 <?php
-if (isset($_Auth) and $_Auth->logged()) {
+if (isset($_Auth) && $_Auth->logged()) {
     echo '<span class="small">';
     echo 'time: ',round(microtime(true)-TIME_START, 2),' [s] - ';
     echo 'memory: ',round(memory_get_usage()/1024/1024,2),' [MiB] - ';

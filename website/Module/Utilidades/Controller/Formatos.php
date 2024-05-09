@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -27,7 +27,6 @@ namespace website\Utilidades;
 /**
  * Controlador para utilidades que permiten convertir de los formatos soportados
  * por LibreDTE a JSON
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2016-09-12
  */
 class Controller_Formatos extends \Controller_App
@@ -36,14 +35,13 @@ class Controller_Formatos extends \Controller_App
     /**
      * Acción que convierte los datos en un formato de entrada soportado y crea
      * un archivo JSON
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+         * @version 2019-07-17
      */
     public function index($formato = null)
     {
         $formatos = $this->getFormatos();
         // si no es formato soportado error
-        if ($formato and !in_array($formato, array_keys($formatos))) {
+        if ($formato && !in_array($formato, array_keys($formatos))) {
             \sowerphp\core\Model_Datasource_Session::message('Formato '.$formato.' no está soportado', 'error');
             $this->redirect('/utilidades/formatos');
         }
@@ -53,7 +51,7 @@ class Controller_Formatos extends \Controller_App
             'formato' => $formato,
         ]);
         // procesar archivo de entrada y descargar
-        if (isset($_POST['submit']) and !$_FILES['archivo']['error']) {
+        if (isset($_POST['submit']) && !$_FILES['archivo']['error']) {
             // convertir datos de entrada a JSON
             try {
                 $json = \sasco\LibreDTE\Sii\Dte\Formatos::toJSON(
@@ -73,8 +71,7 @@ class Controller_Formatos extends \Controller_App
 
     /**
      * Método que entrega los formatos soportados oficialmente (hay parser)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-09-12
+         * @version 2016-09-12
      */
     private function getFormatos()
     {

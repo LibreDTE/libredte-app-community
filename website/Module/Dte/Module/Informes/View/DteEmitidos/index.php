@@ -74,7 +74,7 @@ echo $f->end('Generar informe de documentos emitidos');
     <div class="col-sm-6">
         <div class="card mb-4">
             <div class="card-header">
-                <i class="far fa-chart-bar fa-fw"></i> Emitidos por nacionalidad (sólo exportación)
+                <i class="far fa-chart-bar fa-fw"></i> Emitidos por nacionalidad (solo exportación)
             </div>
             <div class="card-body">
                 <canvas id="por_nacionalidad_grafico"></canvas>
@@ -84,7 +84,7 @@ echo $f->end('Generar informe de documentos emitidos');
     <div class="col-sm-6">
         <div class="card mb-4">
             <div class="card-header">
-                <i class="far fa-chart-bar fa-fw"></i> Emitidos por moneda (sólo exportación)
+                <i class="far fa-chart-bar fa-fw"></i> Emitidos por moneda (solo exportación)
             </div>
             <div class="card-body">
                 <canvas id="por_moneda_grafico"></canvas>

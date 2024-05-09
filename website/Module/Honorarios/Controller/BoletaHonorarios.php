@@ -38,8 +38,7 @@ class Controller_BoletaHonorarios extends \Controller_App
 
     /**
      * Acción que muestra un resumen por período donde hayan boletas recibidas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-09
+         * @version 2019-08-09
      */
     public function index()
     {
@@ -50,8 +49,7 @@ class Controller_BoletaHonorarios extends \Controller_App
 
     /**
      * Acción para el buscador de boletas de honorario electróncias
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-10
+         * @version 2019-08-10
      */
     public function buscar()
     {
@@ -60,7 +58,7 @@ class Controller_BoletaHonorarios extends \Controller_App
             unset($_POST['submit']);
             // obtener PDF desde servicio web
             $r = $this->consume('/api/honorarios/boleta_honorarios/buscar/'.$Receptor->rut, $_POST);
-            if ($r['status']['code']!=200) {
+            if ($r['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($r['body'], 'error');
                 return;
             }
@@ -73,8 +71,7 @@ class Controller_BoletaHonorarios extends \Controller_App
 
     /**
      * API que permite buscar boletas de honorario electrónicas recibidas en el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-06-29
+         * @version 2021-06-29
      */
     public function _api_buscar_POST($receptor)
     {
@@ -107,20 +104,19 @@ class Controller_BoletaHonorarios extends \Controller_App
 
     /**
      * Acción que permite descargar el PDF de una boleta de honorarios electrónica
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-10
+         * @version 2019-08-10
      */
     public function pdf($emisor, $numero)
     {
         $Receptor = $this->getContribuyente();
         $BoletaHonorario = new Model_BoletaHonorario($emisor, $numero);
-        if (!$BoletaHonorario->exists() or $BoletaHonorario->receptor!=$Receptor->rut) {
+        if (!$BoletaHonorario->exists() || $BoletaHonorario->receptor!=$Receptor->rut) {
             \sowerphp\core\Model_Datasource_Session::message('No existe la boleta solicitada', 'error');
             $this->redirect('/honorarios/boleta_honorarios');
         }
         // obtener PDF desde servicio web
         $r = $this->consume('/api/honorarios/boleta_honorarios/pdf/'.$BoletaHonorario->emisor.'/'.$BoletaHonorario->numero.'/'.$Receptor->rut);
-        if ($r['status']['code']!=200) {
+        if ($r['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message($r['body'], 'error');
             $this->redirect('/honorarios/boleta_honorarios');
         }
@@ -133,8 +129,7 @@ class Controller_BoletaHonorarios extends \Controller_App
 
     /**
      * API que permite descargar el PDF de una boleta de honorarios electrónica
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-10
+         * @version 2019-08-10
      */
     public function _api_pdf_GET($emisor, $numero, $receptor)
     {
@@ -153,7 +148,7 @@ class Controller_BoletaHonorarios extends \Controller_App
         }
         // obtener boleta
         $BoletaHonorario = new Model_BoletaHonorario($emisor, $numero);
-        if (!$BoletaHonorario->exists() or $BoletaHonorario->receptor!=$Receptor->rut) {
+        if (!$BoletaHonorario->exists() || $BoletaHonorario->receptor!=$Receptor->rut) {
             $this->Api->send('No existe la boleta solicitada', 404);
         }
         // obtener pdf
@@ -172,8 +167,7 @@ class Controller_BoletaHonorarios extends \Controller_App
 
     /**
      * Acción para ver boletas de un período en particular
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-09
+         * @version 2019-08-09
      */
     public function ver($periodo)
     {
@@ -192,8 +186,7 @@ class Controller_BoletaHonorarios extends \Controller_App
 
     /**
      * Acción para descargar el CSV con las boletas de un periodo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-09
+         * @version 2019-08-09
      */
     public function csv($periodo)
     {
@@ -213,8 +206,7 @@ class Controller_BoletaHonorarios extends \Controller_App
 
     /**
      * Acción para actualizar el listado de boletas desde el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-13
+         * @version 2019-08-13
      */
     public function actualizar()
     {

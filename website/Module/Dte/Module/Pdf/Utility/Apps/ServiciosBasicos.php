@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte\Pdf;
 
 /**
  * Utilidad para trabajar con el formato de PDF para Servicios Básicos
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2021-05-04
  */
 class Utility_Apps_ServiciosBasicos extends Utility_Apps_Base_Formato
@@ -39,13 +38,12 @@ class Utility_Apps_ServiciosBasicos extends Utility_Apps_Base_Formato
 
     /**
      * Método que entrega el código HTML de la página de configuración de la aplicación
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-10
+         * @version 2023-10-10
      */
     public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form)
     {
         $buffer = '';
-        $buffer .= '<div class="alert alert-info mb-4"><i class="fas fa-exclamation-circle text-info"></i> Este formato sólo genera el PDF en tamaño media hoja carta.</div>';
+        $buffer .= '<div class="alert alert-info mb-4"><i class="fas fa-exclamation-circle text-info"></i> Este formato solo genera el PDF en tamaño media hoja carta.</div>';
         $buffer .= parent::getConfigPageHTML($form);
         $buffer .= $form->input([
             'type' => 'select',
@@ -132,8 +130,7 @@ class Utility_Apps_ServiciosBasicos extends Utility_Apps_Base_Formato
 
     /**
      * Método para entregar el logo al PDF de formato Servicios Básicos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-04
+         * @version 2021-05-04
      */
     protected function getConfigPDF($config)
     {

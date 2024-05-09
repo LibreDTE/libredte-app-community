@@ -24,7 +24,7 @@ echo $f->end('Descargar propuesta');
         <div class="card mb-4">
             <div class="card-header"><i class="fa fa-exclamation-circle text-warning"></i> Propuesta IVA SII</div>
             <div class="card-body">
-                <p>Con la entrada en vigencia en agosto de 2017 del registro de compras y ventas el SII es capaz de generar una propuesta de IVA. Si sólo utiliza esta propuesta para las ventas y compras se recomienda usar la oficial del SII.</p>
+                <p>Con la entrada en vigencia en agosto de 2017 del registro de compras y ventas el SII es capaz de generar una propuesta de IVA. Si solo utiliza esta propuesta para las ventas y compras se recomienda usar la oficial del SII.</p>
                 <p>Recuerde que siempre los datos ingresados al formulario 29 deben ser verificados y validados por su contador.</p>
             </div>
         </div>

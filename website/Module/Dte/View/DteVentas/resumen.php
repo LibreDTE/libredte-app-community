@@ -41,9 +41,9 @@ if (isset($resumen)) :
         }
         // sumar o restar campos segun operación
         foreach (['TotMntExe', 'TotMntNeto', 'TotMntIVA', 'TotIVAPropio', 'TotIVATerceros', 'TotLey18211', 'TotMntTotal', 'TotMntNoFact', 'TotMntPeriodo'] as $c) {
-            if ($operaciones[$r['TpoDoc']]=='S') {
+            if ($operaciones[$r['TpoDoc']] == 'S') {
                 $total[$c] += $r[$c];
-            } else if ($operaciones[$r['TpoDoc']]=='R') {
+            } else if ($operaciones[$r['TpoDoc']] == 'R') {
                 $total[$c] -= $r[$c];
             }
         }
@@ -93,7 +93,7 @@ foreach ($totales_mensuales as &$r) {
     $r['TotBaseImponible'] = (int)$r['TotMntExe']+(float)$r['TotMntIVA']/(\sasco\LibreDTE\Sii::getIVA()/100);
     // procesar cada columna
     foreach ($r as $k => &$v) {
-        if ($k != 'periodo' and is_numeric($v)) {
+        if ($k != 'periodo' && is_numeric($v)) {
             // sumar campos al total
             $total[$k] += $v;
             // dar formato de número

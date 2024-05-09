@@ -38,8 +38,7 @@ class Controller_BoletaTerceros extends \Controller_App
 
     /**
      * Acción que muestra un resumen por período donde hayan boletas emitidas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-10
+         * @version 2019-08-10
      */
     public function index()
     {
@@ -50,8 +49,7 @@ class Controller_BoletaTerceros extends \Controller_App
 
     /**
      * Acción para el buscador de boletas de honorario electróncias
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-23
+         * @version 2019-08-23
      */
     public function buscar()
     {
@@ -64,7 +62,7 @@ class Controller_BoletaTerceros extends \Controller_App
             unset($_POST['submit']);
             // obtener PDF desde servicio web
             $r = $this->consume('/api/honorarios/boleta_terceros/buscar/'.$Emisor->rut, $_POST);
-            if ($r['status']['code']!=200) {
+            if ($r['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($r['body'], 'error');
                 return;
             }
@@ -77,8 +75,7 @@ class Controller_BoletaTerceros extends \Controller_App
 
     /**
      * API que permite buscar boletas de honorario electrónicas recibidas en el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-06-29
+         * @version 2021-06-29
      */
     public function _api_buscar_POST($emisor)
     {
@@ -111,8 +108,7 @@ class Controller_BoletaTerceros extends \Controller_App
 
     /**
      * Acción que permite descargar el HTML de una boleta de terceros electrónica
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-13
+         * @version 2019-08-13
      */
     public function html($numero)
     {
@@ -124,7 +120,7 @@ class Controller_BoletaTerceros extends \Controller_App
         }
         // obtener PDF desde servicio web
         $r = $this->consume('/api/honorarios/boleta_terceros/html/'.$BoletaTercero->numero.'/'.$BoletaTercero->emisor);
-        if ($r['status']['code']!=200) {
+        if ($r['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message($r['body'], 'error');
             $this->redirect('/honorarios/boleta_terceros');
         }
@@ -137,8 +133,7 @@ class Controller_BoletaTerceros extends \Controller_App
 
     /**
      * API que permite descargar el HTML de una boleta de terceros electrónica
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-06-29
+         * @version 2021-06-29
      */
     public function _api_html_GET($numero, $emisor)
     {
@@ -176,8 +171,7 @@ class Controller_BoletaTerceros extends \Controller_App
 
     /**
      * Acción para ver boletas de un período en particular
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-10
+         * @version 2019-08-10
      */
     public function ver($periodo)
     {
@@ -196,8 +190,7 @@ class Controller_BoletaTerceros extends \Controller_App
 
     /**
      * Acción para descargar el CSV con las boletas de un periodo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-10
+         * @version 2019-08-10
      */
     public function csv($periodo)
     {
@@ -217,8 +210,7 @@ class Controller_BoletaTerceros extends \Controller_App
 
     /**
      * Acción para actualizar el listado de boletas desde el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-13
+         * @version 2019-08-13
      */
     public function actualizar()
     {
@@ -235,8 +227,7 @@ class Controller_BoletaTerceros extends \Controller_App
 
     /**
      * Acción para emitir una boleta de terceros electrónica
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     public function emitir()
     {
@@ -269,7 +260,7 @@ class Controller_BoletaTerceros extends \Controller_App
             ];
             $n_detalle = count($_POST['NmbItem']);
             for ($i=0; $i<$n_detalle; $i++) {
-                if (!empty($_POST['NmbItem'][$i]) and !empty($_POST['MontoItem'][$i])) {
+                if (!empty($_POST['NmbItem'][$i]) && !empty($_POST['MontoItem'][$i])) {
                     $boleta['Detalle'][] = [
                         'NmbItem' => $_POST['NmbItem'][$i],
                         'MontoItem' => $_POST['MontoItem'][$i],
@@ -278,7 +269,7 @@ class Controller_BoletaTerceros extends \Controller_App
             }
             // emitir boleta y bajar HTML de boleta
             $r = $this->consume('/api/honorarios/boleta_terceros/emitir', $boleta);
-            if ($r['status']['code']!=200) {
+            if ($r['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($r['body'], 'error');
                 $this->redirect('/honorarios/boleta_terceros/emitir');
             }
@@ -301,8 +292,7 @@ class Controller_BoletaTerceros extends \Controller_App
 
     /**
      * API para emitir una boleta de terceros electrónica
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-06-29
+         * @version 2021-06-29
      */
     public function _api_emitir_POST()
     {

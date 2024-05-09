@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -49,8 +49,7 @@ class Model_DteTipos extends \Model_Plural_App
 
     /**
      * Método que entrega el listado de tipos de documentos tributarios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-16
+         * @version 2018-05-16
      */
     public function getList($all = false)
     {
@@ -83,8 +82,7 @@ class Model_DteTipos extends \Model_Plural_App
     /**
      * Método que entrega el listado de todos los tipos de documentos que se
      * pueden usar como referencias
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-11-18
+         * @version 2016-11-18
      */
     public function getListReferencias()
     {

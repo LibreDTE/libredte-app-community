@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte;
 
 /**
  * Controlador para intercambio entre contribuyentes
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2018-05-19
  */
 class Controller_DteIntercambios extends \Controller_App
@@ -34,8 +33,7 @@ class Controller_DteIntercambios extends \Controller_App
 
     /**
      * Acción para mostrar la bandeja de intercambio de DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-04-05
+         * @version 2017-04-05
      */
     public function listar($pagina = 1, $soloPendientes = false)
     {
@@ -88,8 +86,7 @@ class Controller_DteIntercambios extends \Controller_App
 
     /**
      * Acción que muestra la página de un intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-11-16
+         * @version 2022-11-16
      */
     public function ver($codigo)
     {
@@ -128,8 +125,7 @@ class Controller_DteIntercambios extends \Controller_App
 
     /**
      * Acción que permite eliminar un intercambio desde la bandeja
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-21
+         * @version 2018-05-21
      */
     public function eliminar($codigo)
     {
@@ -159,8 +155,7 @@ class Controller_DteIntercambios extends \Controller_App
 
     /**
      * Acción que muestra el mensaje del email de intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+         * @version 2021-10-12
      */
     public function html($codigo)
     {
@@ -183,8 +178,7 @@ class Controller_DteIntercambios extends \Controller_App
      * Acción para actualizar la bandeja de intercambio. Guarda los DTEs
      * recibidos por intercambio y guarda los acuses de recibos de DTEs
      * enviados por otros contribuyentes
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-04-17
+         * @version 2020-04-17
      */
     public function actualizar($dias = 7)
     {
@@ -216,8 +210,7 @@ class Controller_DteIntercambios extends \Controller_App
 
     /**
      * Recurso para mostrar el PDF de un EnvioDTE de un intercambio de DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-09
+         * @version 2021-10-09
      */
     public function _api_pdf_GET($codigo, $contribuyente, $cedible = false, $emisor = null, $dte = null, $folio = null)
     {
@@ -267,8 +260,8 @@ class Controller_DteIntercambios extends \Controller_App
         }
         // entregar PDF
         $disposition = $Receptor->config_pdf_disposition ? 'inline' : 'attachement';
-        $ext = ($DteIntercambio->documentos > 1 and empty($folio)) ? 'zip' : 'pdf';
-        if ($emisor and $dte and $folio) {
+        $ext = ($DteIntercambio->documentos > 1 && empty($folio)) ? 'zip' : 'pdf';
+        if ($emisor && $dte && $folio) {
             $file_name = 'LibreDTE_'.$emisor.'_T'.$dte.'F'.$folio.'.'.$ext;
         } else {
             $file_name = 'LibreDTE_'.$Receptor->rut.'_intercambio_'.$codigo.'.'.$ext;
@@ -281,8 +274,7 @@ class Controller_DteIntercambios extends \Controller_App
 
     /**
      * Acción para mostrar el PDF de un EnvioDTE de un intercambio de DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-09
+         * @version 2021-10-09
      */
     public function pdf($codigo, $cedible = false, $emisor = null, $dte = null, $folio = null)
     {
@@ -292,7 +284,7 @@ class Controller_DteIntercambios extends \Controller_App
         $Receptor = $this->getContribuyente();
         $url = '/api/dte/dte_intercambios/pdf/'.$codigo.'/'.$Receptor->rut.'/'.(int)$cedible.'/'.(int)$emisor.'/'.(int)$dte.'/'.(int)$folio.'?'.$get_query;
         $response = $this->consume($url);
-        if ($response['status']['code']!=200) {
+        if ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message(
                 $response['body'], 'error'
             );
@@ -314,8 +306,7 @@ class Controller_DteIntercambios extends \Controller_App
 
     /**
      * Recurso que descarga el XML del documento intercambiado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+         * @version 2019-07-17
      */
     public function _api_xml_GET($codigo, $contribuyente)
     {
@@ -344,14 +335,13 @@ class Controller_DteIntercambios extends \Controller_App
 
     /**
      * Acción que descarga el XML del documento intercambiado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+         * @version 2019-07-17
      */
     public function xml($codigo)
     {
         $Receptor = $this->getContribuyente();
         $response = $this->consume('/api/dte/dte_intercambios/xml/'.$codigo.'/'.$Receptor->rut);
-        if ($response['status']['code']!=200) {
+        if ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message(
                 $response['body'], 'error'
             );
@@ -369,8 +359,7 @@ class Controller_DteIntercambios extends \Controller_App
 
     /**
      * Recurso que entrega los XML del resultado de la revisión del intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-02-07
+         * @version 2019-02-07
      */
     public function _api_resultados_xml_GET($codigo, $contribuyente)
     {
@@ -390,7 +379,7 @@ class Controller_DteIntercambios extends \Controller_App
             $this->Api->send('No existe el intercambio solicitado', 404);
         }
         // si no hay XML error
-        if (!$DteIntercambio->recepcion_xml and !$DteIntercambio->recibos_xml and !$DteIntercambio->resultado_xml) {
+        if (!$DteIntercambio->recepcion_xml && !$DteIntercambio->recibos_xml && !$DteIntercambio->resultado_xml) {
             $this->Api->send('No existen archivos de resultado generados, no se ha procesado aun el intercambio', 400);
         }
         // agregar a archivo comprimido y entregar
@@ -416,14 +405,13 @@ class Controller_DteIntercambios extends \Controller_App
 
     /**
      * Acción que entrega los XML del resultado de la revisión del intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+         * @version 2019-07-17
      */
     public function resultados_xml($codigo)
     {
         $Emisor = $this->getContribuyente();
         $response = $this->consume('/api/dte/dte_intercambios/resultados_xml/'.$codigo.'/'.$Emisor->rut);
-        if ($response['status']['code']!=200) {
+        if ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message(
                 $response['body'], 'error'
             );
@@ -445,8 +433,7 @@ class Controller_DteIntercambios extends \Controller_App
 
     /**
      * Acción que procesa y responde al intercambio recibido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-20
+         * @version 2018-05-20
      */
     public function responder($codigo)
     {
@@ -494,7 +481,7 @@ class Controller_DteIntercambios extends \Controller_App
         // generar respuesta
         try {
             $resultado = $DteIntercambio->responder($documentos, $config);
-            if ($resultado['email']===true) {
+            if ($resultado['email'] === true) {
                 $msg = 'Se procesaron DTEs de intercambio y se envió la respuesta a: '.$config['responder_a'];
                 if ($resultado['rc']['estado']) {
                     $msg .= '<br/><br/>- '.implode('<br/> -', $resultado['rc']['estado']);
@@ -517,8 +504,7 @@ class Controller_DteIntercambios extends \Controller_App
     /**
      * Acción que permite realizar una búsqueda avanzada dentro de los
      * documentos de intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-18
+         * @version 2021-08-18
      */
     public function buscar()
     {
@@ -536,7 +522,7 @@ class Controller_DteIntercambios extends \Controller_App
             if (!empty($_POST['xml_nodo'])) {
                 $n_xml = count($_POST['xml_nodo']);
                 for ($i=0; $i<$n_xml; $i++) {
-                    if (!empty($_POST['xml_nodo'][$i]) and !empty($_POST['xml_valor'][$i])) {
+                    if (!empty($_POST['xml_nodo'][$i]) && !empty($_POST['xml_valor'][$i])) {
                         $_POST['xml'][$_POST['xml_nodo'][$i]] = $_POST['xml_valor'][$i];
                         $values_xml[] = [
                             'xml_nodo' => $_POST['xml_nodo'][$i],
@@ -555,10 +541,10 @@ class Controller_DteIntercambios extends \Controller_App
                 $this->request->url.'/api/dte/dte_intercambios/buscar/'.$Receptor->rut.'?_contribuyente_certificacion='.$Receptor->enCertificacion(),
                 $_POST
             );
-            if ($response===false) {
+            if ($response === false) {
                 \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
             }
-            else if ($response['status']['code']!=200) {
+            else if ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             }
             else {
@@ -572,8 +558,7 @@ class Controller_DteIntercambios extends \Controller_App
     /**
      * Acción de la API que permite realizar una búsqueda avanzada dentro de los
      * documentos de intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-15
+         * @version 2021-10-15
      */
     public function _api_buscar_POST($receptor)
     {
@@ -596,8 +581,7 @@ class Controller_DteIntercambios extends \Controller_App
 
     /**
      * Acción de la API que permite buscar dentro de la bandeja de intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-15
+         * @version 2021-10-15
      */
     public function _api_buscar_GET($receptor)
     {
@@ -631,8 +615,7 @@ class Controller_DteIntercambios extends \Controller_App
      * Esta acción principalmente sirve para procesar y validar una respuesta
      * que no ha sido procesada de manera automática por la actualización
      * de la bandeja de intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-08-24
+         * @version 2022-08-24
      */
     public function probar_xml()
     {
@@ -650,7 +633,7 @@ class Controller_DteIntercambios extends \Controller_App
                     'type' => $_FILES['archivo']['type'][$i],
                     'data' => file_get_contents($_FILES['archivo']['tmp_name'][$i]),
                 ];
-                if ($file['error'] or !$file['size'] or $file['type'] != 'text/xml') {
+                if ($file['error'] || !$file['size'] || $file['type'] != 'text/xml') {
                     continue;
                 }
                 $archivo = [

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -43,8 +43,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
 
     /**
      * Acción para listar las clasificaciones de items del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-24
+         * @version 2016-02-24
      */
     public function listar($page = 1, $orderby = null, $order = 'A')
     {
@@ -55,8 +54,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
 
     /**
      * Acción para crear una clasificación de items
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-25
+         * @version 2019-07-25
      */
     public function crear()
     {
@@ -70,8 +68,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
 
     /**
      * Acción para editar una clasificación de items
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-25
+         * @version 2019-07-25
      */
     public function editar($codigo)
     {
@@ -85,8 +82,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
 
     /**
      * Acción para eliminar una clasificacion de items
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-24
+         * @version 2016-02-24
      */
     public function eliminar($codigo)
     {
@@ -107,14 +103,13 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
     /**
      * Acción que permite importar las casificaciones de items desde un archivo
      * CSV
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-26
+         * @version 2016-02-26
      */
     public function importar()
     {
         if (isset($_POST['submit'])) {
             // verificar que se haya podido subir el archivo con el libro
-            if (!isset($_FILES['archivo']) or $_FILES['archivo']['error']) {
+            if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
                 \sowerphp\core\Model_Datasource_Session::message(
                     'Ocurrió un error al subir el plan de cuentas', 'error'
                 );
@@ -155,7 +150,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
                     'No se pudieron guardar todas las clasificaciones:<br/>- nuevas: '.implode(', ', $resumen['nuevas']).
                         '<br/>- editadas: '.implode(', ', $resumen['editadas']).
                         '<br/>- con error: '.implode(', ', $resumen['error']),
-                    ((empty($resumen['nuevas']) and empty($resumen['editadas'])) ? 'error' : 'warning')
+                    ((empty($resumen['nuevas']) && empty($resumen['editadas'])) ? 'error' : 'warning')
                 );
             } else {
                 \sowerphp\core\Model_Datasource_Session::message(
@@ -168,8 +163,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
 
     /**
      * Acción que permite exportar todas las clasificaciones de items a un archivo CSV
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-18
+         * @version 2019-07-18
      */
     public function exportar()
     {
@@ -188,8 +182,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
 
     /**
      * Recurso de la API que permite obtener el listado de clasificaciones de items completo, con todos sus datos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-03-15
+         * @version 2020-03-15
      */
     public function _api_raw_GET($empresa)
     {

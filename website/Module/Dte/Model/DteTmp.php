@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -180,8 +180,7 @@ class Model_DteTmp extends \Model_App
     /**
      * Método que genera el XML de EnvioDTE a partir de los datos ya
      * normalizados de un DTE temporal
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-06-20
+         * @version 2022-06-20
      */
     public function getEnvioDte($folio = 0, \sasco\LibreDTE\Sii\Folios $Folios = null, \sasco\LibreDTE\FirmaElectronica $Firma = null, $RutReceptor = null, $fecha_emision = null)
     {
@@ -219,7 +218,7 @@ class Model_DteTmp extends \Model_App
                                 $dte['Encabezado']['OtraMoneda'] = [$dte['Encabezado']['OtraMoneda']];
                             }
                             foreach ($dte['Encabezado']['OtraMoneda'] as $OtraMoneda) {
-                                if ($OtraMoneda['TpoMoneda'] == 'PESO CL' and !empty($OtraMoneda['MntTotOtrMnda'])) {
+                                if ($OtraMoneda['TpoMoneda'] == 'PESO CL' && !empty($OtraMoneda['MntTotOtrMnda'])) {
                                     $total = $OtraMoneda['MntTotOtrMnda'];
                                     break;
                                 }
@@ -252,10 +251,10 @@ class Model_DteTmp extends \Model_App
             }
         }
         $Dte = new \sasco\LibreDTE\Sii\Dte($dte, false); // se crea el documento sin normalizar (ya está normalizado en el borrador)
-        if ($Folios and !$Dte->timbrar($Folios)) {
+        if ($Folios && !$Dte->timbrar($Folios)) {
             return false;
         }
-        if ($Firma and !$Dte->firmar($Firma)) {
+        if ($Firma && !$Dte->firmar($Firma)) {
             return false;
         }
         $EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
@@ -275,8 +274,7 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que entrega el objeto de receptor
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-24
+         * @version 2021-08-24
      */
     public function getReceptor()
     {
@@ -319,8 +317,7 @@ class Model_DteTmp extends \Model_App
     /**
      * Método que entrega el objeto del tipo de dte
      * @return \website\Dte\Admin\Mantenedores\Model_DteTipo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-02-04
+         * @version 2019-02-04
      */
     public function getTipo()
     {
@@ -329,8 +326,7 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que entrega el objeto del emisor
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-01-02
+         * @version 2016-01-02
      */
     public function getEmisor()
     {
@@ -339,8 +335,7 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que entrega el folio del documento temporal
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-06-13
+         * @version 2016-06-13
      */
     public function getFolio()
     {
@@ -349,8 +344,7 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que entrega la sucursal asociada al documento temporal
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-20
+         * @version 2021-08-20
      */
     public function getSucursal()
     {
@@ -360,8 +354,7 @@ class Model_DteTmp extends \Model_App
     /**
      * Método que crea el DTE real asociado al DTE temporal
      * Permite usar el facturador local de LibreDTE o el del Portal MIPYME del SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+         * @version 2020-02-22
      */
     public function generar($user_id = null, $fecha_emision = null, $retry = null, $gzip = null)
     {
@@ -388,8 +381,7 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que crea el DTE real asociado al DTE temporal usando LibreDTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-04
+         * @version 2023-11-04
      */
     private function generarConFacturadorLocal($user_id = null, $fecha_emision = null, $retry = null, $gzip = null)
     {
@@ -473,7 +465,7 @@ class Model_DteTmp extends \Model_App
                 }
             }
             // notificar al usuario administrador
-            if (!$timbrado and !$FolioInfo->DteFolio->alertado) {
+            if (!$timbrado && !$FolioInfo->DteFolio->alertado) {
                 $asunto = 'Alerta de folios de '.mb_strtolower($this->getTipo()->tipo);
                 $msg = 'Se ha alcanzado el límite de folios del tipo de DTE '.mb_strtolower($this->getTipo()->tipo).' para el contribuyente '.$Emisor->razon_social.', quedan '.$FolioInfo->DteFolio->disponibles.' folios de acuerdo al folio siguiente actual. Por favor, solicite un nuevo archivo CAF y súbalo a LibreDTE en '.url('/dte/admin/dte_folios/subir_caf');
                 if ($Emisor->notificar($asunto, $msg)) {
@@ -502,7 +494,7 @@ class Model_DteTmp extends \Model_App
             throw new \Exception($message, 510);
         }
         $xml = $EnvioDte->generar();
-        if (!$xml or !$EnvioDte->schemaValidate()) {
+        if (!$xml || !$EnvioDte->schemaValidate()) {
             $doc_sii = $EnvioDte->esBoleta()
                 ? 'https://www.sii.cl/factura_electronica/factura_mercado/boletas_elec_0720_3.pdf'
                 : 'https://www.sii.cl/factura_electronica/factura_mercado/formato_dte_201911.pdf'
@@ -541,7 +533,7 @@ class Model_DteTmp extends \Model_App
         }
         $cols = ['tasa'=>'TasaImp', 'fecha'=>'FchDoc', 'sucursal_sii'=>'CdgSIISucur', 'receptor'=>'RUTDoc', 'exento'=>'MntExe', 'neto'=>'MntNeto', 'iva'=>'MntIVA', 'total'=>'MntTotal'];
         foreach ($cols as $attr => $col) {
-            if ($r[$col]!==false) {
+            if ($r[$col] !== false) {
                 $DteEmitido->$attr = $r[$col];
             }
         }
@@ -565,7 +557,7 @@ class Model_DteTmp extends \Model_App
                 $datos['Referencia'] = [$datos['Referencia']];
             }
             foreach ($datos['Referencia'] as $referencia) {
-                if (!empty($referencia['TpoDocRef']) and is_numeric($referencia['TpoDocRef']) and $referencia['TpoDocRef']<200) {
+                if (!empty($referencia['TpoDocRef']) && is_numeric($referencia['TpoDocRef']) && $referencia['TpoDocRef']<200) {
                     // guardar referencia
                     $DteReferencia = new Model_DteReferencia();
                     $DteReferencia->emisor = $DteEmitido->emisor;
@@ -578,11 +570,11 @@ class Model_DteTmp extends \Model_App
                     $DteReferencia->razon = !empty($referencia['RazonRef']) ? $referencia['RazonRef'] : null;
                     $DteReferencia->save();
                     // si es nota de crédito asociada a boleta se recuerda por si se debe invalidar RCOF
-                    if ($DteEmitido->dte==61 and in_array($referencia['TpoDocRef'], [39, 41])) {
+                    if ($DteEmitido->dte==61 && in_array($referencia['TpoDocRef'], [39, 41])) {
                         $nc_referencia_boleta = true;
                     }
                     // si es nota de crédito que anula un DTE con cobro programado se borra el cobro programado
-                    if (in_array($DteEmitido->dte, [61,112]) and $DteReferencia->codigo==1) {
+                    if (in_array($DteEmitido->dte, [61,112]) && $DteReferencia->codigo==1) {
                         $DteEmitidoReferencia = $DteReferencia->getDocumento();
                         if ($DteEmitidoReferencia->exists()) {
                             $pagos = $DteEmitidoReferencia->getPagosProgramados();
@@ -624,7 +616,7 @@ class Model_DteTmp extends \Model_App
         // invalidar RCOF si es una boleta o referencia de boleta y la fecha de
         // emisión es anterior al día actual
         if ($DteEmitido->fecha < date('Y-m-d')) {
-            if (in_array($DteEmitido->dte, [39, 41]) or $nc_referencia_boleta) {
+            if (in_array($DteEmitido->dte, [39, 41]) || $nc_referencia_boleta) {
                 $DteBoletaConsumo = new Model_DteBoletaConsumo($DteEmitido->emisor, $DteEmitido->fecha, (int)$DteEmitido->certificacion);
                 if ($DteBoletaConsumo->track_id) {
                     $DteBoletaConsumo->track_id = null;
@@ -649,8 +641,7 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que crea el DTE real asociado al DTE temporal usando el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+         * @version 2020-02-22
      */
     private function generarConFacturadorSii($user_id = null, $fecha_emision = null)
     {
@@ -659,15 +650,14 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que realiza verificaciones a campos antes de guardar
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-01
+         * @version 2020-08-01
      */
     public function save()
     {
         // trigger al guardar el DTE temporal
         \sowerphp\core\Trigger::run('dte_dte_tmp_guardar', $this);
         // si los datos extras existen y son un arreglo se convierte antes de guardar
-        if (!empty($this->extra) and is_array($this->extra)) {
+        if (!empty($this->extra) && is_array($this->extra)) {
             $this->extra = json_encode($this->extra);
         }
         // guardar DTE temporal
@@ -676,15 +666,14 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que borra el DTE temporal y su cobro asociado si existe
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-12-16
+         * @version 2016-12-16
      */
     public function delete($borrarCobro = true)
     {
         $this->db->beginTransaction();
-        if ($borrarCobro and $this->getEmisor()->config_pagos_habilitado) {
+        if ($borrarCobro && $this->getEmisor()->config_pagos_habilitado) {
             $Cobro = $this->getCobro(false);
-            if ($Cobro->exists() and !$Cobro->pagado) {
+            if ($Cobro->exists() && !$Cobro->pagado) {
                 if (!$Cobro->delete(false)) {
                     $this->db->rollback();
                     return false;
@@ -702,8 +691,7 @@ class Model_DteTmp extends \Model_App
     /**
      * Método que entrega el listado de correos a los que se podría enviar el documento
      * temporal (correo receptor, correo del dte y contacto comercial)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-08
+         * @version 2023-10-08
      */
     public function getEmails()
     {
@@ -711,7 +699,7 @@ class Model_DteTmp extends \Model_App
         $emails = [];
         $datos = $this->getDatos();
         if (!in_array($this->dte, [39, 41])) {
-            if (in_array($origen, [0, 1, 2]) and !empty($datos['Encabezado']['Receptor']['CorreoRecep'])) {
+            if (in_array($origen, [0, 1, 2]) && !empty($datos['Encabezado']['Receptor']['CorreoRecep'])) {
                 $emails['Documento'] = strtolower($datos['Encabezado']['Receptor']['CorreoRecep']);
             }
         } else if (!empty($datos['Referencia'])) {
@@ -719,11 +707,11 @@ class Model_DteTmp extends \Model_App
                 $datos['Referencia'] = [$datos['Referencia']];
             }
             foreach ($datos['Referencia'] as $r) {
-                if (strpos($r['RazonRef'], 'Email receptor:')===0) {
+                if (strpos($r['RazonRef'], 'Email receptor:') === 0) {
                     $aux = explode('Email receptor:', $r['RazonRef']);
                     if (!empty($aux[1])) {
                         $email_dte = strtolower(trim($aux[1]));
-                        if (in_array($origen, [0, 1, 2]) and $email_dte) {
+                        if (in_array($origen, [0, 1, 2]) && $email_dte) {
                             $emails['Documento'] = $email_dte;
                         }
                     }
@@ -731,10 +719,10 @@ class Model_DteTmp extends \Model_App
                 }
             }
         }
-        if (in_array($origen, [0]) and $this->getReceptor()->email and !in_array($this->getReceptor()->email, $emails)) {
+        if (in_array($origen, [0]) && $this->getReceptor()->email && !in_array($this->getReceptor()->email, $emails)) {
             $emails['Compartido LibreDTE'] = strtolower($this->getReceptor()->email);
         }
-        if (in_array($origen, [0, 1]) and $this->getReceptor()->usuario and $this->getReceptor()->getUsuario()->email and !in_array(strtolower($this->getReceptor()->getUsuario()->email), $emails)) {
+        if (in_array($origen, [0, 1]) && $this->getReceptor()->usuario && $this->getReceptor()->getUsuario()->email && !in_array(strtolower($this->getReceptor()->getUsuario()->email), $emails)) {
             $emails['Usuario LibreDTE'] = strtolower($this->getReceptor()->getUsuario()->email);
         }
         $emails_trigger = \sowerphp\core\Trigger::run('dte_dte_tmp_emails', $this, $emails);
@@ -743,8 +731,7 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que envía el DTE temporal por correo electrónico
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-02-15
+         * @version 2023-02-15
      */
     public function email($to = null, $subject = null, $msg = null, $cotizacion = true, $use_template = true)
     {
@@ -763,7 +750,7 @@ class Model_DteTmp extends \Model_App
         }
         // armar cuerpo del correo
         $msg_html = $use_template ? $this->getEmisor()->getEmailFromTemplate('dte', $this, $msg) : false;
-        if (!$use_template and $msg) {
+        if (!$use_template && $msg) {
             $msg = ['html' => $msg];
         }
         if (!$msg) {
@@ -798,7 +785,7 @@ class Model_DteTmp extends \Model_App
         } else {
             $response = $rest->get(url('/api/dte/dte_tmps/pdf/'.$this->receptor.'/'.$this->dte.'/'.$this->codigo.'/'.$this->emisor));
         }
-        if ($response['status']['code']!=200) {
+        if ($response['status']['code'] != 200) {
             throw new \Exception($response['body']);
         }
         $email->attach([
@@ -808,7 +795,7 @@ class Model_DteTmp extends \Model_App
         ]);
         // enviar email
         $status = $email->send($msg);
-        if ($status===true) {
+        if ($status === true) {
             // registrar envío del email
             $fecha_hora = date('Y-m-d H:i:s');
             foreach ($to as $dest) {
@@ -836,8 +823,7 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que entrega el resumen de los correos enviados
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-09
+         * @version 2019-07-09
      */
     public function getEmailEnviadosResumen()
     {
@@ -857,12 +843,11 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que entrega el arreglo con los datos del documento
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-01
+         * @version 2023-11-01
      */
     public function getDatos($force_reload = false)
     {
-        if (!isset($this->cache_datos) or $force_reload) {
+        if (!isset($this->cache_datos) || $force_reload) {
             $this->cache_datos = json_decode($this->datos, true);
             $extra = (array)$this->getExtra($force_reload);
             if (!empty($extra['dte'])) {
@@ -876,21 +861,19 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que entrega el cobro asociado al DTE temporal
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-02
+         * @version 2023-11-02
      */
     public function getCobro($crearSiNoExiste = true)
     {
         /*if (!$this->getTipo()->permiteCobro()) {
             return false;
         }*/
-        return (new \libredte\oficial\Pagos\Model_Cobro())->setDocumento($this, $crearSiNoExiste);
+        return (new \libredte\enterprise\Pagos\Model_Cobro())->setDocumento($this, $crearSiNoExiste);
     }
 
     /**
      * Método que entrega el vencimiento del documento si es que existe
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-12-15
+         * @version 2016-12-15
      */
     public function getVencimiento()
     {
@@ -900,8 +883,7 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que entrega el detalle del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-07-20
+         * @version 2017-07-20
      */
     public function getDetalle()
     {
@@ -911,8 +893,7 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que entrega los enlaces públicos del documento
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-06-16
+         * @version 2019-06-16
      */
     public function getLinks()
     {
@@ -925,16 +906,15 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que entrega el teléfono asociado al DTE, ya sea porque existe en el DTE o asociado directamente al receptor
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-03-24
+         * @version 2020-03-24
      */
     public function getTelefono()
     {
         if (!isset($this->_telefono)) {
             $this->_telefono = null;
-            if (!empty($this->getDatos()['Encabezado']['Receptor']['Contacto']) and $this->getDatos()['Encabezado']['Receptor']['Contacto'][0]=='+') {
+            if (!empty($this->getDatos()['Encabezado']['Receptor']['Contacto']) && $this->getDatos()['Encabezado']['Receptor']['Contacto'][0] == '+') {
                 $this->_telefono = $this->getDatos()['Encabezado']['Receptor']['Contacto'];
-            } else if (!empty($this->getReceptor()->telefono) and $this->getReceptor()->telefono[0]=='+') {
+            } else if (!empty($this->getReceptor()->telefono) && $this->getReceptor()->telefono[0] == '+') {
                 $this->_telefono = $this->getReceptor()->telefono;
             }
         }
@@ -943,15 +923,14 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que entrega el celular asociado al DTE si existe
-     * @warning Sólo detecta como celular un número chileno (+56 9)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-03-24
+     * @warning Solo detecta como celular un número chileno (+56 9)
+         * @version 2020-03-24
      */
     public function getCelular()
     {
         if (!isset($this->_celular)) {
             $this->_celular = null;
-            if ($this->getTelefono() and strpos($this->getTelefono(), '+56 9')===0) {
+            if ($this->getTelefono() and strpos($this->getTelefono(), '+56 9') === 0) {
                 $this->_celular = $this->getTelefono();
             }
         }
@@ -960,8 +939,7 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que entrega los datos extras del documento
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-01
+         * @version 2023-11-01
      */
     public function getExtra($force_reload = false)
     {
@@ -976,8 +954,7 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que entrega la actividad económica asociada al documento
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-04
+         * @version 2020-08-04
      */
     public function getActividad($default = null)
     {
@@ -1025,8 +1002,7 @@ class Model_DteTmp extends \Model_App
      * Método que entrega el PDF del documento temporal.
      * Entrega el PDF que se ha generado con LibreDTE a partir del JSON del DTE
      * temporal.
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-07
+         * @version 2020-08-07
      */
     public function getPDF(array $config = [])
     {
@@ -1056,7 +1032,7 @@ class Model_DteTmp extends \Model_App
         // crear a partir de formato de PDF no estándar
         else if ($config['formato'] != 'estandar') {
             $apps = $this->getEmisor()->getApps('dtepdfs');
-            if (empty($apps[$config['formato']]) or empty($apps[$config['formato']]->getConfig()->disponible)) {
+            if (empty($apps[$config['formato']]) || empty($apps[$config['formato']]->getConfig()->disponible)) {
                 throw new \Exception('Formato de PDF '.$config['formato'].' no se encuentra disponible', 400);
             }
             $response = $apps[$config['formato']]->generar($config);
@@ -1067,12 +1043,12 @@ class Model_DteTmp extends \Model_App
             $rest->setAuth($config['hash']);
             unset($config['hash']);
             $response = $rest->post(url('/api/utilidades/documentos/generar_pdf'), $config);
-            if ($response===false) {
+            if ($response === false) {
                 throw new \Exception(implode("\n", $rest->getErrors()), 500);
             }
         }
         // procesar respuesta
-        if ($response['status']['code']!=200) {
+        if ($response['status']['code'] != 200) {
             throw new \Exception($response['body'], $response['status']['code']);
         }
         // si dió código 200 se entrega la respuesta del servicio web
@@ -1081,8 +1057,7 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que entrega el código ESCPOS del documento temporal.
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-02-28
+         * @version 2021-02-28
      */
     public function getESCPOS(array $config = [])
     {
@@ -1118,7 +1093,7 @@ class Model_DteTmp extends \Model_App
         $config['xml'] = base64_encode($xml);
         // logo
         $formatoEstandar = $this->getEmisor()->getApp('dtepdfs.estandar');
-        if (!empty($formatoEstandar) and !empty($formatoEstandar->getConfig()->continuo->logo->posicion)) {
+        if (!empty($formatoEstandar) && !empty($formatoEstandar->getConfig()->continuo->logo->posicion)) {
             $logo_file = DIR_STATIC.'/contribuyentes/'.$this->getEmisor()->rut.'/logo.png';
             if (is_readable($logo_file)) {
                 $config['logo'] = base64_encode(file_get_contents($logo_file));
@@ -1132,7 +1107,7 @@ class Model_DteTmp extends \Model_App
         }
         // consultar aplicación de ESCPOS según el formato solicitado
         else if ($apps = $this->getEmisor()->getApps('dteescpos')) {
-            if (empty($apps[$config['formato']]) or empty($apps[$config['formato']]->getConfig()->disponible)) {
+            if (empty($apps[$config['formato']]) || empty($apps[$config['formato']]->getConfig()->disponible)) {
                 throw new \Exception('Formato de ESCPOS '.$config['formato'].' no se encuentra disponible.', 400);
             }
             $response = $apps[$config['formato']]->generar($config);
@@ -1142,7 +1117,7 @@ class Model_DteTmp extends \Model_App
             unset($config['hash']);
             $response = apigateway_consume('/libredte/dte/documentos/escpos', $config);
         }
-        if ($response['status']['code']!=200) {
+        if ($response['status']['code'] != 200) {
             throw new \Exception($response['body'], 500);
         }
         // si dió código 200 se entrega la respuesta del servicio web

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Utilidades;
 
 /**
  * Controlador para utilidades asociadas a boletas electrónicas
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2018-11-04
  */
 class Controller_Boletas extends \Controller_App
@@ -34,8 +33,7 @@ class Controller_Boletas extends \Controller_App
 
     /**
      * Acción que permite la generación del XML del RCOF
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-10-17
+         * @version 2019-10-17
      */
     public function rcof()
     {
@@ -66,7 +64,7 @@ class Controller_Boletas extends \Controller_App
                     $dtes[] = $documento[0];
                 }
                 // ir armando el día
-                $dias[$_POST['salida']=='dia' ? $documento[4] : 'total'][] = $documento;
+                $dias[$_POST['salida'] == 'dia' ? $documento[4] : 'total'][] = $documento;
             }
             unset($datos);
             // directorio para ir guardando los consumos de folios
@@ -78,9 +76,9 @@ class Controller_Boletas extends \Controller_App
                 \sowerphp\core\Model_Datasource_Session::message('No fue posible crear directorio temporal para los consumos de folios', 'error');
                 return;
             }
-            // crear rcof para cada día (si es un sólo día o se pidió el total se hará en una pasada)
+            // crear rcof para cada día (si es un solo día o se pidió el total se hará en una pasada)
             // $dia contendrá el día que se está creand osi se solicitó generar por día
-            // o si es un sólo día contendrá 'total' y se ejecutará una sola vez el foreach
+            // o si es un solo día contendrá 'total' y se ejecutará una sola vez el foreach
             $consumos = [];
             foreach ($dias as $dia => $documentos) {
                 // crear objeto del consumo de folios
@@ -123,7 +121,7 @@ class Controller_Boletas extends \Controller_App
                     'NroResol' =>  $_POST['NroResol'],
                     'SecEnvio' => $_POST['SecEnvio'],
                 ];
-                if (!$detalle_boletas and $dia != 'total') {
+                if (!$detalle_boletas && $dia != 'total') {
                     $caratula['FchInicio'] = $caratula['FchFinal'] = $dia;
                 }
                 $ConsumoFolio->setCaratula($caratula);

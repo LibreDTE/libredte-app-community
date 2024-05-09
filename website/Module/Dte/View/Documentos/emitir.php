@@ -45,7 +45,7 @@ $(function() {
 $f = new \sowerphp\general\View_Helper_Form(false);
 echo $f->begin(['id'=>'emitir_dte', 'action'=>$_base.'/dte/documentos/previsualizacion', 'onsubmit'=>'DTE.check(this)']);
 // si es un documento temporal que se reemplaza se asignan los datos del documento
-if (!empty($reemplazar_receptor) and !empty($reemplazar_dte) and !empty($reemplazar_codigo)) {
+if (!empty($reemplazar_receptor) && !empty($reemplazar_dte) && !empty($reemplazar_codigo)) {
     echo $f->input([
         'type' => 'hidden',
         'name' => 'reemplazar_receptor',
@@ -101,7 +101,7 @@ echo $f->input(['type'=>'hidden', 'name'=>'lista_precios', 'value'=>0]);
             <div class="col-md-2 mb-2"><?=$f->input(['name'=>'CdgVendedor', 'placeholder' => 'Código vendedor', 'popover' => 'Código del usuario emisor asociado a la creación del documento. Este valor será informado al SII y registrado en el XML y PDF del documento.', 'value'=>!empty($datos['Encabezado']['Emisor']['CdgVendedor'])?$datos['Encabezado']['Emisor']['CdgVendedor']:$_Auth->User->usuario, 'check' => 'notempty', 'attr' => 'maxlength="60"'])?></div>
             <div class="col-md-4 mb-2"><?=$f->input(['type' => 'select', 'name' => 'CdgSIISucur', 'value' => (!empty($datos['Encabezado']['Emisor']['CdgSIISucur'])?$datos['Encabezado']['Emisor']['CdgSIISucur']:$sucursal), 'options' => $sucursales, 'attr'=>'onchange="emisor_set_actividad()"'])?></div>
             <div class="col-md-3 mb-2"><?=$f->input(['type' => 'select', 'name' => 'Acteco', 'options' => $actividades_economicas, 'value'=>!empty($datos['Encabezado']['Emisor']['Acteco'])?$datos['Encabezado']['Emisor']['Acteco']:$Emisor->actividad_economica, 'check' => 'notempty', 'attr'=>'onchange="emisor_set_giro()"'])?></div>
-            <div class="col-md-3 mb-2"><?=$f->input(['name'=>'GiroEmis', 'placeholder' => 'Giro del emisor', 'popover' => 'Modificar el giro y/o actividad económica del emisor sólo afectará a la emisión de este documento, no se guardarán estos cambios.', 'value'=>isset($datos)?(!empty($datos['Encabezado']['Emisor']['GiroEmis'])?$datos['Encabezado']['Emisor']['GiroEmis']:$datos['Encabezado']['Emisor']['GiroEmisor']):$Emisor->giro, 'check' => 'notempty', 'attr' => 'maxlength="80"'])?></div>
+            <div class="col-md-3 mb-2"><?=$f->input(['name'=>'GiroEmis', 'placeholder' => 'Giro del emisor', 'popover' => 'Modificar el giro y/o actividad económica del emisor solo afectará a la emisión de este documento, no se guardarán estos cambios.', 'value'=>isset($datos)?(!empty($datos['Encabezado']['Emisor']['GiroEmis'])?$datos['Encabezado']['Emisor']['GiroEmis']:$datos['Encabezado']['Emisor']['GiroEmisor']):$Emisor->giro, 'check' => 'notempty', 'attr' => 'maxlength="80"'])?></div>
         </div>
     </div>
     <div class="card-footer text-muted small">
@@ -117,13 +117,13 @@ echo $f->input(['type'=>'hidden', 'name'=>'lista_precios', 'value'=>0]);
     <div class="card-body">
         <div class="row">
             <div class="col-md-3 mb-2">
-                <?php if (!isset($datos) or $datos['Encabezado']['Receptor']['RUTRecep']=='66666666-6' or $referencia == 'copia') : ?>
+                <?php if (!isset($datos) || $datos['Encabezado']['Receptor']['RUTRecep'] == '66666666-6' || $referencia == 'copia') : ?>
                     <div class="input-group">
                         <a href="#" class="btn btn-primary" type="button" title="Buscar RUT del receptor [B]" data-bs-toggle="modal" data-bs-target=".modal-buscar-receptor" accesskey="B" id="modalBuscar"><i class="fas fa-search"></i></a>
                         <input type="text" name="RUTRecep" id="RUTRecepField" class="check notempty rut form-control" placeholder="RUT del receptor" maxlength="12" onblur="Receptor.setDatos('emitir_dte')" value="<?=!empty($datos['Encabezado']['Receptor']['RUTRecep'])?$datos['Encabezado']['Receptor']['RUTRecep']:$RUTRecep?>" />
                     </div>
                     <input type="hidden" name="dte_referencia_defecto" id="dte_referencia_defecto" value="0" />
-                    <?php if (!(!empty($referencia) and $referencia == 'copia')) : ?>
+                    <?php if (!(!empty($referencia) && $referencia == 'copia')) : ?>
                         <script>$(function(){$('#RUTRecepField').focus()});</script>
                     <?php endif; ?>
                     <?php else: ?>
@@ -243,7 +243,7 @@ if (isset($datos)) {
     }
     $detalle = [];
     foreach ($Detalle as $d) {
-        if ($datos['Encabezado']['IdDoc']['TipoDTE']==39 and (!isset($d['IndExe']) or !$d['IndExe'])) {
+        if ($datos['Encabezado']['IdDoc']['TipoDTE']==39 && (!isset($d['IndExe']) || !$d['IndExe'])) {
             $d['PrcItem'] = round($d['PrcItem']/(1+(\sasco\LibreDTE\Sii::getIVA())/100), (int)$Emisor->config_items_decimales);
             if (!empty($d['DescuentoMonto'])) {
                 $d['DescuentoMonto'] = round($d['DescuentoMonto']/(1+(\sasco\LibreDTE\Sii::getIVA())/100));
@@ -309,10 +309,10 @@ new \sowerphp\general\View_Helper_Table($impuestos);
 <?php
 $referencias_values = [];
 if (isset($datos)) {
-    // si es un DTE que referencia a otro se agrega sólo la referencia al DTE
+    // si es un DTE que referencia a otro se agrega solo la referencia al DTE
     // cualquier otra referencia que tenga el DTE no se copiará ya que se puede
     // ver en el mismo DTE referenciado
-    if ($referencia=='referencia') {
+    if ($referencia == 'referencia') {
         array_unshift($referencias_values, [
             'FchRef' => $datos['Encabezado']['IdDoc']['FchEmis'],
             'TpoDocRef' => $datos['Encabezado']['IdDoc']['TipoDTE'],
@@ -321,7 +321,7 @@ if (isset($datos)) {
             'RazonRef' => $referencia_razon,
         ]);
     }
-    // se agregan las referencias del DTE original sólo si no es una referencia de DTE
+    // se agregan las referencias del DTE original solo si no es una referencia de DTE
     else {
         // se agrega las referencias de todos los documentos, excepto de de boletas,
         // ya que no tienen todos los campos requeridos en la vista
@@ -331,9 +331,9 @@ if (isset($datos)) {
                     $datos['Referencia'] = [$datos['Referencia']];
                 }
                 foreach ($datos['Referencia'] as $r) {
-                    // se copia la referencia sólo si:
+                    // se copia la referencia solo si:
                     //  - no es es una NC o ND que tiene código de referencia (anulación, corrige texto o monto)
-                    if (!(in_array($datos['Encabezado']['IdDoc']['TipoDTE'], [61, 56, 111, 112]) and !empty($r['CodRef']))) {
+                    if (!(in_array($datos['Encabezado']['IdDoc']['TipoDTE'], [61, 56, 111, 112]) && !empty($r['CodRef']))) {
                         $referencias_values[] = $r;
                     }
                 }
@@ -349,7 +349,7 @@ echo $f->input([
         'Fecha referencia',
         ['Documento referenciado', '18em'],
         ['Folio o N° doc. ref.', '10em'],
-        ['Código ref. <i class="fa fa-question-circle fa-fw text-muted" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="Sólo se debe usar cuando se está emitiendo una nota de crédito o débito" onmouseover="$(this).popover(\'show\')" onmouseout="$(this).popover(\'hide\')"></i>', '12em'],
+        ['Código ref. <i class="fa fa-question-circle fa-fw text-muted" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="Solo se debe usar cuando se está emitiendo una nota de crédito o débito" onmouseover="$(this).popover(\'show\')" onmouseout="$(this).popover(\'hide\')"></i>', '12em'],
         'Razón referencia'.$popover_growup,
     ],
     'inputs'=>[
@@ -374,13 +374,13 @@ echo $f->input([
     </div>
     <div class="card-body">
 <?php
-if (isset($datos) and !empty($datos['DscRcgGlobal'])) {
+if (isset($datos) && !empty($datos['DscRcgGlobal'])) {
     if (!isset($datos['DscRcgGlobal'][0])) {
         $datos['DscRcgGlobal'] = [$datos['DscRcgGlobal']];
     }
     $ValorDR_global = (float)$datos['DscRcgGlobal'][0]['ValorDR'];
     $TpoValor_global = $datos['DscRcgGlobal'][0]['TpoValor'];
-    if ($ValorDR_global and $datos['Encabezado']['IdDoc']['TipoDTE']==39 and $TpoValor_global=='$') {
+    if ($ValorDR_global && $datos['Encabezado']['IdDoc']['TipoDTE']==39 && $TpoValor_global == '$') {
         $ValorDR_global = round($ValorDR_global/(1+(\sasco\LibreDTE\Sii::getIVA())/100));
     }
 } else {
@@ -572,7 +572,7 @@ foreach($clientes as &$c) {
     if (!empty($c['comuna'])) {
         $c['direccion'] .= ', '.$c['comuna'];
     }
-    if (!empty($c['telefono']) or !empty($c['email'])) {
+    if (!empty($c['telefono']) || !empty($c['email'])) {
         if (!empty($c['direccion'])) {
             $c['direccion'] .= '<br/>';
         }
@@ -610,7 +610,7 @@ try {
 }
 ?>
 <script>
-<?php if ($TransferenciaApp and $TransferenciaApp->getConfig()->disponible and  $TransferenciaApp->getConfig()->rut == $Emisor->getRUT()) : ?>
+<?php if ($TransferenciaApp && $TransferenciaApp->getConfig()->disponible and  $TransferenciaApp->getConfig()->rut == $Emisor->getRUT()) : ?>
     var BcoPago = "<?=mb_substr((new \website\Sistema\General\Model_Bancos())->get($TransferenciaApp->getConfig()->banco)->banco,0,40)?>";
     var TpoCtaPago = "<?=['C'=>'CORRIENTE', 'V'=>'VISTA', 'A'=>'AHORRO'][$TransferenciaApp->getConfig()->tipo]?>";
     var NumCtaPago = "<?=mb_substr($TransferenciaApp->getConfig()->numero,0,20)?>";

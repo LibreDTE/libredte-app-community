@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -45,11 +45,6 @@
         'name' => 'Exportar datos',
         'desc' => 'Exportar datos del sistema para respaldo o migración',
         'icon' => 'fa fa-download',
-    ],
-    '/informes' => [
-        'name' => 'Informes',
-        'desc' => 'Informes de los usuarios y contribuyentes',
-        'icon' => 'fa fa-file',
     ],
     '/mantenedores' => [
         'name' => 'Mantenedores',

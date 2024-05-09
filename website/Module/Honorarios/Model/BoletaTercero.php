@@ -186,8 +186,7 @@ class Model_BoletaTercero extends \Model_App
 
     /**
      * Método que entrega el objeto del emisor de la boleta
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-07-29
+         * @version 2021-07-29
      */
     public function getEmisor()
     {
@@ -196,8 +195,7 @@ class Model_BoletaTercero extends \Model_App
 
     /**
      * Método que entrega el objeto del receptor de la boleta
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-07-29
+         * @version 2021-07-29
      */
     public function getReceptor()
     {
@@ -206,8 +204,7 @@ class Model_BoletaTercero extends \Model_App
 
     /**
      * Método que obtiene el HTML de la boleta de terceros desde el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     public function getHTML()
     {
@@ -219,7 +216,7 @@ class Model_BoletaTercero extends \Model_App
                 ],
             ],
         ]);
-        if ($r['status']['code']!=200 or empty($r['body'])) {
+        if ($r['status']['code'] != 200 || empty($r['body'])) {
             $message = 'No fue posible descargar el HTML de la boleta de terceros desde el SII';
             if (!empty($r['body'])) {
                 $message .= ': '.$r['body'];

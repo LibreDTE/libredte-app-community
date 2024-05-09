@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte\Informes;
 
 /**
  * Modelo para obtener los datos del formulrio 29
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2016-02-01
  */
 class Model_F29
@@ -36,8 +35,7 @@ class Model_F29
 
     /**
      * Constructor del modelo F29
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-03-09
+         * @version 2017-03-09
      */
     public function __construct($Emisor, $periodo)
     {
@@ -99,8 +97,8 @@ class Model_F29
             'pagos_electronicos_neto' => $pagos_electronicos['neto'],
         ];
         if (\sowerphp\core\Module::loaded('Lce')) {
-            $this->datos['48'] = (new \libredte\oficial\Lce\Model_LceCuenta($this->Emisor->rut, $this->Emisor->config_contabilidad_f29_48))->getHaber($this->periodo);
-            $this->datos['151'] = (new \libredte\oficial\Lce\Model_LceCuenta($this->Emisor->rut, $this->Emisor->config_contabilidad_f29_151))->getHaber($this->periodo);
+            $this->datos['48'] = (new \libredte\enterprise\Lce\Model_LceCuenta($this->Emisor->rut, $this->Emisor->config_contabilidad_f29_48))->getHaber($this->periodo);
+            $this->datos['151'] = (new \libredte\enterprise\Lce\Model_LceCuenta($this->Emisor->rut, $this->Emisor->config_contabilidad_f29_151))->getHaber($this->periodo);
         }
     }
 
@@ -114,8 +112,7 @@ class Model_F29
 
     /**
      * Método que entrega un arreglo con los códigos del F29 y sus valores
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-01
+         * @version 2016-02-01
      */
     public function getDatos()
     {

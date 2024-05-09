@@ -45,8 +45,7 @@ class Model_RegistroCompras extends \Model_Plural_App
     /**
      * Método que sincroniza los registros en estado PENDIENTE del registro de
      * compras del SII con un registro local para notificaciones en el sistema
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-09
+         * @version 2019-08-09
      */
     public function sincronizar($estado = 'PENDIENTE', $meses = 2)
     {
@@ -85,8 +84,7 @@ class Model_RegistroCompras extends \Model_Plural_App
 
     /**
      * Método entrega el código de un estado a partir de su glosa
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-09
+         * @version 2019-08-09
      */
     private function getEstadoCodigo($estado)
     {
@@ -98,8 +96,7 @@ class Model_RegistroCompras extends \Model_Plural_App
      * Método que recibe un registro con el formato del SII (registro de compras)
      * y lo modifica para poder ser usado en el registro local de LibreDTE
      * (normalizándolo para el uso en la base de datos)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-09
+         * @version 2019-08-09
      */
     private function normalizar($datos)
     {
@@ -115,7 +112,7 @@ class Model_RegistroCompras extends \Model_Plural_App
                     $val .= ' '.$aux[1];
                 }
             }
-            if (!$val and !in_array($key, ['detMntTotal', 'detTpoImp'])) {
+            if (!$val && !in_array($key, ['detMntTotal', 'detTpoImp'])) {
                 $val = null;
             }
             $registro[strtolower($key)] = $val;
@@ -125,8 +122,7 @@ class Model_RegistroCompras extends \Model_Plural_App
 
     /**
      * Método que entrega los documentos de compras pendientes de ser procesados
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+         * @version 2021-10-12
      */
     public function buscar(array $filtros = [], $detalle = false)
     {
@@ -232,8 +228,7 @@ class Model_RegistroCompras extends \Model_Plural_App
     /**
      * Método que entrega los documentos de compras pendientes de ser procesados
      * con su detalle completo del registro de compras
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-09
+         * @version 2019-08-09
      */
     public function getDetalle(array $filtros = [])
     {
@@ -243,8 +238,7 @@ class Model_RegistroCompras extends \Model_Plural_App
     /**
      * Método que entrega las cantidad de documentos de compras pendientes de
      * ser procesados
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-11
+         * @version 2019-08-11
      */
     public function getResumenPendientes()
     {
@@ -271,8 +265,7 @@ class Model_RegistroCompras extends \Model_Plural_App
     /**
      * Método que entrega las cantidad de documentos de compras pendientes de
      * ser procesados agrupados por días
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-31
+         * @version 2019-08-31
      */
     public function getByDias($dias = 8)
     {
@@ -311,8 +304,7 @@ class Model_RegistroCompras extends \Model_Plural_App
     /**
      * Método que entrega la cantidad de pendientes agrupados por rango de montos
      * y el monto total
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-31
+         * @version 2019-08-31
      */
     public function getByRangoMontos()
     {

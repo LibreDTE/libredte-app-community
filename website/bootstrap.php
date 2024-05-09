@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// no validar SSL de sitios del SII (sólo en caso de problemas de certificado)
+// no validar SSL de sitios del SII (solo en caso de problemas de certificado)
 if (\sowerphp\core\Configure::read('dte.verificar_ssl') === false) {
     \sasco\LibreDTE\Sii::setVerificarSSL(false);
 }

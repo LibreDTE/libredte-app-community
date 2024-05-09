@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,7 +25,6 @@ namespace website;
 
 /**
  * Controlador base de la aplicación
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2017-10-10
  */
 abstract class Controller_App extends \sowerphp\app\Controller_App
@@ -62,31 +61,30 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
     /**
      * Método que fuerza la selección de un contribuyente si estamos en alguno
      * de los módulos que requieren uno para poder funcionar
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-08
+         * @version 2023-10-08
      */
     public function beforeFilter()
     {
         parent::beforeFilter();
         // si la acción solicitada es de la API no se hace nada para forzar
         // contribuyente, ya que deberá ser validado en cada recurso de la API
-        if ($this->request->params['action']=='api') {
+        if ($this->request->params['action'] == 'api') {
             return;
         }
         // forzar obtener contribuyente
-        $dte = (strpos($this->request->params['module'], 'Dte')===0 and $this->request->params['controller']!='contribuyentes' and !$this->Auth->allowedWithoutLogin());
+        $dte = (strpos($this->request->params['module'], 'Dte') === 0 && $this->request->params['controller'] != 'contribuyentes' && !$this->Auth->allowedWithoutLogin());
         $otros = false;
         foreach ((array)\sowerphp\core\Configure::read('app.modulos_empresa') as $modulo) {
-            if (strpos($this->request->params['module'], $modulo)===0) {
+            if (strpos($this->request->params['module'], $modulo) === 0) {
                 $otros = true;
                 break;
             }
         }
-        if ($dte or $otros) {
+        if ($dte || $otros) {
             $this->getContribuyente();
         }
         // redireccionar al dashboard general de la aplicación
-        if (class_exists('Controller_Dashboard') and $this->Auth->logged()) {
+        if (class_exists('Controller_Dashboard') && $this->Auth->logged()) {
             if (in_array($this->request->request, ['/dte/contribuyentes/seleccionar'])) {
                 $this->redirect('/dashboard#empresas');
             }
@@ -95,8 +93,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
 
     /**
      * Método que asigna el objeto del contribuyente para ser "recordado"
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-27
+         * @version 2021-05-27
      */
     protected function setContribuyente($Contribuyente)
     {
@@ -111,8 +108,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
      * para ser usado en la sesión. Si no hay uno seleccionado se fuerza a
      * seleccionar.
      * @return Object Objeto con el contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-08
+         * @version 2023-10-08
      */
     protected function getContribuyente($obligar = true)
     {

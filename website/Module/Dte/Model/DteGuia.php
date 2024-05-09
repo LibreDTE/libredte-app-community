@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -170,8 +170,7 @@ class Model_DteGuia extends Model_Base_Libro
      * Método que entrega el resumen real (de los detalles registrados) del
      * libro
      * @todo Programar método (por ahora no se está usando)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-12
+         * @version 2016-02-12
      */
     public function getResumen()
     {
@@ -181,8 +180,7 @@ class Model_DteGuia extends Model_Base_Libro
     /**
      * Método que entrega el folio de notificación del libro (si existe) o 0
      * si el XML del libro no existe
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-09-15
+         * @version 2016-09-15
      */
     public function getFolioNotificacion()
     {
@@ -195,8 +193,7 @@ class Model_DteGuia extends Model_Base_Libro
 
     /**
      * Método que entrega los documentos por día del libro
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-17
+         * @version 2018-05-17
      */
     public function getDocumentosPorDia()
     {

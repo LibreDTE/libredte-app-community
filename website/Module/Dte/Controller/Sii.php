@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte;
 
 /**
  * Controlador para acciones del SII
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2018-05-09
  */
 class Controller_Sii extends \Controller_App
@@ -34,8 +33,7 @@ class Controller_Sii extends \Controller_App
 
     /**
      * Acción que permite obtener los datos de la empresa desde el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     public function contribuyente_datos($rut)
     {
@@ -69,8 +67,7 @@ class Controller_Sii extends \Controller_App
 
     /**
      * Acción que permite obtener los usuarios de la empresa desde el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     public function contribuyente_usuarios($rut)
     {
@@ -107,8 +104,7 @@ class Controller_Sii extends \Controller_App
 
     /**
      * Acción que permite obtener si la empresa está o no autorizada para usar facturación electrónica
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     public function contribuyente_autorizado($rut)
     {
@@ -130,8 +126,7 @@ class Controller_Sii extends \Controller_App
 
     /**
      * Acción que permite obtener la situación tributaria de la empresa desde el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     public function contribuyente_situacion_tributaria($rut)
     {
@@ -150,8 +145,7 @@ class Controller_Sii extends \Controller_App
 
     /**
      * Acción que permite consultar el estado de un envío en el SII a partir del Track ID del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     public function estado_envio($track_id)
     {
@@ -184,8 +178,7 @@ class Controller_Sii extends \Controller_App
 
     /**
      * Acción que permite verificar los datos de un DTE en el SII a partir de los datos generales del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-12
+         * @version 2016-10-12
      */
     public function verificar_datos($receptor, $dte, $folio, $fecha, $total, $emisor = null)
     {
@@ -205,8 +198,7 @@ class Controller_Sii extends \Controller_App
 
     /**
      * Método que realiza la consulta al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-12
+         * @version 2016-10-12
      */
     private function query($query, $params)
     {
@@ -237,8 +229,7 @@ class Controller_Sii extends \Controller_App
 
     /**
      * Método que muestra el estado de un DTE en el registro de compras y ventas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-10-22
+         * @version 2018-10-22
      */
     public function dte_rcv($emisor, $dte, $folio)
     {
@@ -276,8 +267,7 @@ class Controller_Sii extends \Controller_App
 
     /**
      * Acción que permite consultar el estado de un envío en el SII a partir del Track ID del AEC
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-01-26
+         * @version 2019-01-26
      */
     public function cesion_estado_envio($track_id)
     {
@@ -310,8 +300,7 @@ class Controller_Sii extends \Controller_App
 
     /**
      * Acción que permite consultar el certificado de cesión de un DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-01-26
+         * @version 2019-01-26
      */
     public function cesion_certificado($dte, $folio, $fecha)
     {

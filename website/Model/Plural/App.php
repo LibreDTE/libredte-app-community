@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,7 +25,6 @@ namespace website;
 
 /**
  * Clase abstracta para todos los modelos  (clase sobreescribible)
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2018-07-04
  */
 class Model_Plural_App extends \sowerphp\app\Model_Plural
@@ -35,8 +34,7 @@ class Model_Plural_App extends \sowerphp\app\Model_Plural
 
     /**
      * Método que asigna el contribuyente que se utilizará en las consultas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-09-27
+         * @version 2016-09-27
      */
     public function setContribuyente($Contribuyente)
     {
@@ -48,12 +46,11 @@ class Model_Plural_App extends \sowerphp\app\Model_Plural
      * Método que entrega el contribuyente previamente seteado en el modelo o bien el
      * de la sesión si no existe seteado
      * @return \website\Dte\Model_Contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-07-04
+         * @version 2018-07-04
      */
     public function getContribuyente($readSession = true)
     {
-        if (!isset($this->Contribuyente) and $readSession) {
+        if (!isset($this->Contribuyente) && $readSession) {
             $this->Contribuyente = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente');
         }
         return $this->Contribuyente;

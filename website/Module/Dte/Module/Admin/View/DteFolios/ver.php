@@ -104,7 +104,7 @@ foreach ($cafs as &$caf) {
         $caf['fecha_vencimiento'] = '<span class="badge bg-warning">No disponible</span>';
     }
     $caf['fecha_autorizacion'] = \sowerphp\general\Utility_Date::format($caf['fecha_autorizacion']);
-    $caf['en_uso'] = ($DteFolio->siguiente >= $caf['desde'] and $DteFolio->siguiente <= $caf['hasta']) ? '<i class="far fa-circle-check text-primary"></i>' : '';
+    $caf['en_uso'] = ($DteFolio->siguiente >= $caf['desde'] && $DteFolio->siguiente <= $caf['hasta']) ? '<i class="far fa-circle-check text-primary"></i>' : '';
     // definir acciones
     $actions = '<div class="btn-group">';
     $actions .= '<a href="'.$_base.'/dte/admin/dte_folios/xml/'.$DteFolio->dte.'/'.$caf['desde'].'" title="Descargar archivo XML del CAF que inicia en '.$caf['desde'].'" class="btn btn-primary"><i class="fas fa-code fa-fw"></i></a>';

@@ -42,7 +42,7 @@ if (isset($cobranza)) {
         $c['fecha_pago'] = \sowerphp\general\Utility_Date::format($c['fecha_pago']);
         $c['total'] = num($c['total']);
         $c['monto_pago'] = num($c['monto_pago']);
-        if ($c['pagado']!==null) {
+        if ($c['pagado'] !== null) {
             $c['pagado'] = num($c['pagado']);
         }
         unset($c['dte'], $c['rut']);

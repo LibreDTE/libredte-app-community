@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -187,8 +187,7 @@ class Model_Cobranza extends \Model_App
 
     /**
      * Método que entrega el DTE emitido asociado al pago que
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-14
+         * @version 2021-10-14
      */
     public function getDocumento()
     {
@@ -197,8 +196,7 @@ class Model_Cobranza extends \Model_App
 
     /**
      * Método que entrega los otros pagos asociados al documento
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-28
+         * @version 2016-02-28
      */
     public function otrosPagos()
     {

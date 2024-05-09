@@ -112,7 +112,7 @@ new \sowerphp\general\View_Helper_Table([
                 <div class="card-body text-center">
                     <p><strong><?=$Libro->revision_estado?></strong></p>
                     <p><?=str_replace("\n", '<br/>', $Libro->revision_detalle)?></p>
-<?php if ($Libro->track_id and $Libro->getEstado()!='LRH') : ?>
+<?php if ($Libro->track_id && $Libro->getEstado() != 'LRH') : ?>
                     <p>
 <?php if ($Libro->track_id!=-1) : ?>
                         <a class="btn btn-primary" href="<?=$_base?>/dte/dte_compras/actualizar_estado/<?=$Libro->periodo?>" role="button" onclick="return __.loading('Actualizando estado del envío...')">Actualizar estado</a><br/>
@@ -165,20 +165,20 @@ foreach ($resumen as &$r) {
         }
         if (is_array($r[$c])) {
             $valor = 0;
-            if ($c=='TotOtrosImp') {
+            if ($c == 'TotOtrosImp') {
                 foreach ($r[$c] as $monto) {
                     $valor += $monto['TotMntImp'];
                 }
-            } else if ($c=='TotIVANoRec') {
+            } else if ($c == 'TotIVANoRec') {
                 foreach ($r[$c] as $monto) {
                     $valor += $monto['TotMntIVANoRec'];
                 }
             }
             $r[$c] = $valor;
         }
-        if ($operaciones[$r['TpoDoc']]=='S' or $r['TpoDoc'] == 46) {
+        if ($operaciones[$r['TpoDoc']] == 'S' || $r['TpoDoc'] == 46) {
             $total[$c] += $r[$c];
-        } else if ($operaciones[$r['TpoDoc']]=='R') {
+        } else if ($operaciones[$r['TpoDoc']] == 'R') {
             $total[$c] -= $r[$c];
         }
     }

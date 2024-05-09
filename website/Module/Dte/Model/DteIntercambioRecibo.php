@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -150,8 +150,7 @@ class Model_DteIntercambioRecibo extends \Model_App
 
     /**
      * Método que guarda el XML del Recibo de un intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-03
+         * @version 2020-07-03
      */
     public function saveXML($Emisor, $xml) {
         // crear recibo
@@ -166,7 +165,7 @@ class Model_DteIntercambioRecibo extends \Model_App
         }
         // el RUT no es válido
         $Caratula = $EnvioRecibos->toArray()['EnvioRecibos']['SetRecibos']['Caratula'];
-        if (explode('-', $Caratula['RutRecibe'])[0] != $Emisor->rut or empty($Caratula['TmstFirmaEnv'])) {
+        if (explode('-', $Caratula['RutRecibe'])[0] != $Emisor->rut || empty($Caratula['TmstFirmaEnv'])) {
             throw new \Exception('El RUT del receptor no es válido');
         }
         // guardar recibo
@@ -199,7 +198,7 @@ class Model_DteIntercambioRecibo extends \Model_App
                 $Emisor->enCertificacion()
             );
             // si no existe o si los datos del DTE emitido no corresponden error
-            if (!$DteEmitido->exists() or explode('-', $Recibo['DocumentoRecibo']['RUTRecep'])[0]!=$DteEmitido->receptor or $Recibo['DocumentoRecibo']['FchEmis']!=$DteEmitido->fecha or $Recibo['DocumentoRecibo']['MntTotal']!=$DteEmitido->total) {
+            if (!$DteEmitido->exists() or explode('-', $Recibo['DocumentoRecibo']['RUTRecep'])[0] != $DteEmitido->receptor || $Recibo['DocumentoRecibo']['FchEmis'] != $DteEmitido->fecha || $Recibo['DocumentoRecibo']['MntTotal'] != $DteEmitido->total) {
                 $this->db->rollback();
                 throw new \Exception('DTE informado no existe o sus datos no corresponden');
             }

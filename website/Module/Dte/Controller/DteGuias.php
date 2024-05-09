@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte;
 
 /**
  * Controlador de libro de guías de despacho
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2016-12-26
  */
 class Controller_DteGuias extends Controller_Base_Libros
@@ -42,8 +41,7 @@ class Controller_DteGuias extends Controller_Base_Libros
     /**
      * Acción que envía el archivo XML del libro de guías al SII
      * Si no hay documentos en el período se enviará sin movimientos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-09-15
+         * @version 2016-09-15
      */
     public function enviar_sii($periodo)
     {
@@ -122,14 +120,13 @@ class Controller_DteGuias extends Controller_Base_Libros
 
     /**
      * Método que permite buscar las guías que se desean facturar masivamente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-25
+         * @version 2020-10-25
      */
     public function facturar()
     {
         $Emisor = $this->getContribuyente();
         // buscar guías a facturar
-        if (!empty($_POST['desde']) and !empty($_POST['hasta'])) {
+        if (!empty($_POST['desde']) && !empty($_POST['hasta'])) {
             $this->set([
                 'Emisor' => $Emisor,
                 'guias' => (new Model_DteGuias())->setContribuyente($Emisor)->getSinFacturar($_POST['desde'], $_POST['hasta'], $_POST['receptor'], $_POST['con_referencia']),
@@ -148,7 +145,7 @@ class Controller_DteGuias extends Controller_Base_Libros
                         'referencia_801' => !empty($_POST['referencia_801']) ? $_POST['referencia_801'] : null,
                         'referencia_hes' => !empty($_POST['referencia_hes']) ? $_POST['referencia_hes'] : null,
                         'ValorDR_global' => !empty($_POST['ValorDR_global']) ? $_POST['ValorDR_global'] : null,
-                        'MedioPago' => (!empty($_POST['MedioPago']) and !empty($_POST['NumCtaPago'])) ? $_POST['MedioPago'] : false,
+                        'MedioPago' => (!empty($_POST['MedioPago']) && !empty($_POST['NumCtaPago'])) ? $_POST['MedioPago'] : false,
                         'TpoCtaPago' => !empty($_POST['TpoCtaPago']) ? $_POST['TpoCtaPago'] : false,
                         'BcoPago' => !empty($_POST['BcoPago']) ? $_POST['BcoPago'] : false,
                         'NumCtaPago' => !empty($_POST['NumCtaPago']) ? $_POST['NumCtaPago'] : false,

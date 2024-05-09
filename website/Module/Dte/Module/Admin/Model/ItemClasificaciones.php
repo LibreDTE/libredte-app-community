@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -40,8 +40,7 @@ class Model_ItemClasificaciones extends \Model_Plural_App
 
     /**
      * Método que entrega el listado de clasificaciones
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-04-29
+         * @version 2020-04-29
      */
     public function getList()
     {
@@ -53,8 +52,7 @@ class Model_ItemClasificaciones extends \Model_Plural_App
 
     /**
      * Método que entrega el listado de clasificaciones con sus items y valores brutos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-25
+         * @version 2019-07-25
      */
     public function getListItems()
     {
@@ -66,8 +64,7 @@ class Model_ItemClasificaciones extends \Model_Plural_App
     /**
      * Método que entrega el árbol de clasificaciones de items con los items y
      * sus precios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-10
+         * @version 2020-02-10
      */
     public function getArbolItems()
     {
@@ -100,8 +97,7 @@ class Model_ItemClasificaciones extends \Model_Plural_App
 
     /**
      * Método que exporta todas las clasificaciones de items de un contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-07-23
+         * @version 2017-07-23
      */
     public function exportar()
     {

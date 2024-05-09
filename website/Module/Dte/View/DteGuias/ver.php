@@ -76,7 +76,7 @@ new \sowerphp\general\View_Helper_Table([
      <div class="card">
             <div class="card-header"><i class="fa fa-exclamation-circle text-warning"></i> No existe obligación de enviar libro</div>
             <div class="card-body">
-                <p>Si bien existe la posibilidad de enviar al SII el libro de guías. Sólo debe hacerlo si el SII lo solicita para alguna fiscalización.</p>
+                <p>Si bien existe la posibilidad de enviar al SII el libro de guías. Solo debe hacerlo si el SII lo solicita para alguna fiscalización.</p>
                 <p>En una situación normal, este libro no se envía al SII.</p>
             </div>
             <div class="card-footer small text-end">Fuente: <a href="http://www.sii.cl/preguntas_frecuentes/catastro/001_012_3770.htm">SII</a></div>
@@ -160,7 +160,7 @@ printCharts();
 
 $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
     var target = $(e.target).attr("href");
-    if (target=='#estadisticas') {
+    if (target == '#estadisticas') {
         $("canvas#grafico-documentos_por_dia").remove();
         $("#documentos_por_dia").append('<canvas id="grafico-documentos_por_dia"></canvas>');
         printCharts();

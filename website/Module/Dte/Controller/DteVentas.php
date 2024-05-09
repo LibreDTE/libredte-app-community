@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte;
 
 /**
  * Controlador de ventas
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2018-03-27
  */
 class Controller_DteVentas extends Controller_Base_Libros
@@ -41,8 +40,7 @@ class Controller_DteVentas extends Controller_Base_Libros
 
     /**
      * Método para permitir acciones sin estar autenticado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-06
+         * @version 2020-08-06
      */
     public function beforeFilter()
     {
@@ -53,16 +51,15 @@ class Controller_DteVentas extends Controller_Base_Libros
     /**
      * Acción que envía el archivo XML del libro de ventas al SII
      * Si no hay documentos en el período se enviará sin movimientos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     public function enviar_sii($periodo)
     {
         $Emisor = $this->getContribuyente();
         // si el libro fue enviado y no es rectifica error
         $DteVenta = new Model_DteVenta($Emisor->rut, $periodo, $Emisor->enCertificacion());
-        if ($DteVenta->track_id and empty($_POST['CodAutRec']) and $DteVenta->getEstado()!='LRH' and $DteVenta->track_id!=-1) {
-            \sowerphp\core\Model_Datasource_Session::message('Libro del período '.$periodo.' ya fue enviado, ahora sólo puede hacer rectificaciones', 'error');
+        if ($DteVenta->track_id && empty($_POST['CodAutRec']) && $DteVenta->getEstado() != 'LRH' && $DteVenta->track_id!=-1) {
+            \sowerphp\core\Model_Datasource_Session::message('Libro del período '.$periodo.' ya fue enviado, ahora solo puede hacer rectificaciones', 'error');
             $this->redirect(str_replace('enviar_sii', 'ver', $this->request->request));
         }
         // si el periodo es mayor o igual al actual no se puede enviar
@@ -150,7 +147,7 @@ class Controller_DteVentas extends Controller_Base_Libros
             \sowerphp\core\Model_Datasource_Session::message('No fue posible generar el libro de ventas<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
             $this->redirect(str_replace('enviar_sii', 'ver', $this->request->request));
         }
-        // enviar al SII sólo si el libro es de un período menor o igual al 201707
+        // enviar al SII solo si el libro es de un período menor o igual al 201707
         // esto ya que desde 201708 se reemplaza por RCV
         if ($periodo <= 201707) {
             $track_id = $Libro->enviar();
@@ -188,7 +185,7 @@ class Controller_DteVentas extends Controller_Base_Libros
                                 ],
                             ],
                         ]);
-                        if ($r['status']['code']!=200) {
+                        if ($r['status']['code'] != 200) {
                             $resumenes_errores[] = $r['body'];
                         }
                     } catch (\Exception $e) {
@@ -219,8 +216,7 @@ class Controller_DteVentas extends Controller_Base_Libros
     /**
      * Acción que genera el archivo CSV con el registro de ventas
      * En realidad esto descarga los datos que están localmente y no los del RV del SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-18
+         * @version 2019-07-18
      */
     public function descargar_registro_venta($periodo)
     {
@@ -245,8 +241,7 @@ class Controller_DteVentas extends Controller_Base_Libros
 
     /**
      * Acción que genera el archivo CSV con los resúmenes de ventas (ingresados manualmente)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-18
+         * @version 2019-07-18
      */
     public function descargar_resumenes($periodo)
     {
@@ -290,8 +285,7 @@ class Controller_DteVentas extends Controller_Base_Libros
 
     /**
      * Acción que permite seleccionar el período para explorar el resumen del registro de ventas del SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-04-25
+         * @version 2018-04-25
      */
     public function registro_ventas()
     {
@@ -302,8 +296,7 @@ class Controller_DteVentas extends Controller_Base_Libros
 
     /**
      * Acción que permite obtener el resumen del registro de venta para un período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-10
+         * @version 2017-09-10
      */
     public function rcv_resumen($periodo)
     {
@@ -323,8 +316,7 @@ class Controller_DteVentas extends Controller_Base_Libros
 
     /**
      * Acción que permite obtener el detalle del registro de venta para un período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-10
+         * @version 2017-09-10
      */
     public function rcv_detalle($periodo, $dte)
     {
@@ -349,8 +341,7 @@ class Controller_DteVentas extends Controller_Base_Libros
 
     /**
      * Acción que permite obtener el detalle de documentos emitidos con cierto evento del receptor
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-12
+         * @version 2017-09-12
      */
     public function eventos_receptor($periodo, $evento)
     {
@@ -366,8 +357,7 @@ class Controller_DteVentas extends Controller_Base_Libros
 
     /**
      * Acción que genera un resumen de las ventas de un año completo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-04-25
+         * @version 2018-04-25
      */
     public function resumen($anio = null)
     {
@@ -396,8 +386,7 @@ class Controller_DteVentas extends Controller_Base_Libros
 
     /**
      * Servicio web que entrega el historial de montos agrupados por mes de un receptor
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-06
+         * @version 2020-08-06
      */
     public function _api_historial_GET($receptor, $fecha, $emisor, $dte = null, $folio = null, $total = null)
     {
@@ -410,7 +399,7 @@ class Controller_DteVentas extends Controller_Base_Libros
         $Emisor = new Model_Contribuyente((int)$emisor);
         $User = $this->Api->getAuthUser();
         if (is_string($User)) {
-            if ($dte === null or $folio === null or $total === null) {
+            if ($dte === null || $folio === null || $total === null) {
                 $this->Api->send($User, 401);
             }
             if (is_numeric($folio)) {
@@ -421,11 +410,11 @@ class Controller_DteVentas extends Controller_Base_Libros
             if (!$Documento->exists()) {
                 $this->Api->send($User, 401);
             }
-            if ($Documento->fecha != $fecha or $Documento->total != $total or $Documento->receptor != $receptor) {
+            if ($Documento->fecha != $fecha || $Documento->total != $total || $Documento->receptor != $receptor) {
                 $this->Api->send($User, 401);
             }
         }
-        if ($dte === null or $folio === null or $total === null) {
+        if ($dte === null || $folio === null || $total === null) {
             if (!$Emisor->usuarioAutorizado($User, '/dte/dte_ventas/ver')) {
                 $this->Api->send('No está autorizado a operar con la empresa solicitada', 403);
             }
@@ -485,8 +474,7 @@ class Controller_DteVentas extends Controller_Base_Libros
 
     /**
      * Servicio web que entrega un resumen de ventas por cada tipo de documento
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-28
+         * @version 2020-02-28
      */
     public function _api_resumen_POST($emisor)
     {
@@ -507,8 +495,7 @@ class Controller_DteVentas extends Controller_Base_Libros
      * Acción que permite descargar todo el registro de compras del SII pero
      * eligiendo el tipo de formato, ya sea por defecto en formato RCV o en
      * formato IECV (esto permite importar el archivo en LibreDTE u otra app)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-19
+         * @version 2020-02-19
      */
     public function rcv_csv($periodo, $tipo = 'rcv')
     {

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -34,17 +34,12 @@ namespace website\Dte;
  *     $ ./shell.php Dte.Contribuyentes_Actualizar apigateway
  *  2) Actualizar cargando un archivo CSV descargado desde SII
  *     $ ./shell.php Dte.Contribuyentes_Actualizar csv archivo.csv
- *
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2023-09-13
  */
 class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
 {
 
     /**
-     * Método principal del comando
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-23
+     * Método principal del comando.
      */
     public function main($opcion = 'apigateway', $ambiente = \sasco\LibreDTE\Sii::PRODUCCION, $dia = null, $autocompletar = false)
     {
@@ -65,9 +60,7 @@ class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
     }
 
     /**
-     * Método que convierte el string de datos CSV del archivo a un arreglo PHP
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-08-12
+     * Método que convierte el string de datos CSV del archivo a un arreglo PHP.
      */
     private function csv2array(&$csv)
     {
@@ -89,9 +82,7 @@ class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
     }
 
     /**
-     * Método que descarga el listado de contribuyentes desde el servicio web de API Gateway
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-16
+     * Método que descarga el listado de contribuyentes desde el servicio web de API Gateway.
      */
     private function apigateway($ambiente, $dia)
     {
@@ -126,7 +117,7 @@ class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
                 ],
             ]
         );
-        if ($response['status']['code']!=200 or empty($response['body'])) {
+        if ($response['status']['code'] != 200 || empty($response['body'])) {
             $msg = 'No fue posible obtener los contribuyentes desde el SII';
             if ($response['body']) {
                 $msg .= ': '.$response['body'];
@@ -140,8 +131,7 @@ class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
     /**
      * Método que carga el listado de contribuyentes desde un archivo CSV y luego los pasa
      * al método que los procesa y actualiza en la BD
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-08-12
+         * @version 2017-08-12
      */
     private function csv($archivo)
     {
@@ -157,8 +147,7 @@ class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
 
     /**
      * Método que procesa los datos de los contribuyentes y los actualiza en la base de datos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-06
+         * @version 2020-07-06
      */
     private function procesarContribuyentes($contribuyentes)
     {
@@ -182,7 +171,7 @@ class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
                 // modificar razón social
                 $Contribuyente->razon_social = mb_substr($c[1], 0, 100);
                 // asignar número de resolución en producción
-                if (is_numeric($c[2]) and $c[2]) {
+                if (is_numeric($c[2]) && $c[2]) {
                     $resolucion_numero = (int)$c[2];
                     $Contribuyente->__set('config_ambiente_produccion_numero', $resolucion_numero);
                 }

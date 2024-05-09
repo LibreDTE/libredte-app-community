@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte;
 
 /**
  * Controlador de cesiones
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2019-07-06
  */
 class Controller_Cesiones extends \Controller_App
@@ -35,8 +34,7 @@ class Controller_Cesiones extends \Controller_App
     /**
      * Acción que permite mostrar las cesiones de documentos emitidos por el
      * contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-06
+         * @version 2019-07-06
      */
     public function listar($pagina = 1)
     {
@@ -89,8 +87,7 @@ class Controller_Cesiones extends \Controller_App
 
     /**
      * Acción que permite buscar en las cesiones de documentos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-06
+         * @version 2023-10-06
      */
     public function buscar($consulta = null)
     {
@@ -129,7 +126,7 @@ class Controller_Cesiones extends \Controller_App
                 \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
                 return;
             }
-            if ($response['status']['code']!=200) {
+            if ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
                 return;
             }

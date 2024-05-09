@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte;
 
 /**
  * Clase base para para el modelo singular de documentos del SII
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2016-06-14
  */
 abstract class Model_Base_Documento extends \Model_App
@@ -36,19 +35,17 @@ abstract class Model_Base_Documento extends \Model_App
      * Método que entrega el objeto del emisor o receptor del dte según
      * corresponda (si es compra es receptor, otro caso es emisor)
      * @return \website\Dte\Model_Contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-06-14
+         * @version 2016-06-14
      */
     public function getContribuyente()
     {
-        return $this->_table=='dte_compra' ? $this->getReceptor() : $this->getEmisor();
+        return $this->_table == 'dte_compra' ? $this->getReceptor() : $this->getEmisor();
     }
 
     /**
      * Método que entrega el objeto del emisor del dte
      * @return \website\Dte\Model_Contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-06-14
+         * @version 2016-06-14
      */
     public function getEmisor()
     {
@@ -58,8 +55,7 @@ abstract class Model_Base_Documento extends \Model_App
     /**
      * Método que entrega el objeto del receptor del dte
      * @return \website\Dte\Model_Contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-06-14
+         * @version 2016-06-14
      */
     public function getReceptor()
     {

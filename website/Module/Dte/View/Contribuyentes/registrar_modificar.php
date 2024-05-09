@@ -1,7 +1,7 @@
 <?php if (isset($Contribuyente)) : ?>
 <?php
 if ($Contribuyente->enCertificacion() == $Contribuyente->config_ambiente_en_certificacion) {
-    $ambiente_onclick = 'onclick="return __.confirm(this, \'Cambiará a un ambiente que no es el que tiene configurado. Al hacer esto, use la sesión sólo pare revisar datos, <strong>no emita documentos</strong>.<br/><br/>Si desea emitir documentos, realice el cambio de sesión de manera global en la sección del ambiente de la pestaña <em>Facturación</em>.\')"';
+    $ambiente_onclick = 'onclick="return __.confirm(this, \'Cambiará a un ambiente que no es el que tiene configurado. Al hacer esto, use la sesión solo pare revisar datos, <strong>no emita documentos</strong>.<br/><br/>Si desea emitir documentos, realice el cambio de sesión de manera global en la sección del ambiente de la pestaña <em>Facturación</em>.\')"';
 } else {
     $ambiente_onclick = '';
 }
@@ -57,7 +57,7 @@ $(function() { __.tabs(); });
         </div>
         <div class="card-body">
 <?php
-if ($form_id=='registrarContribuyente') {
+if ($form_id == 'registrarContribuyente') {
     echo $f->input([
         'name' => 'rut',
         'label' => 'RUT',
@@ -118,7 +118,7 @@ echo $f->input([
         <div class="card-body">
 <?php
 $config_extra_otras_actividades = [];
-if (isset($Contribuyente) and $Contribuyente->config_extra_otras_actividades) {
+if (isset($Contribuyente) && $Contribuyente->config_extra_otras_actividades) {
     foreach ($Contribuyente->config_extra_otras_actividades as $a) {
         $config_extra_otras_actividades[] = [
             'config_extra_otras_actividades_actividad' => is_object($a) ? $a->actividad : $a,
@@ -148,7 +148,7 @@ echo $f->input([
     'help' => 'Indique las actividades económicas secundarias de la empresa y los giros (si son diferentes al principal)',
 ]);
 $config_extra_sucursales = [];
-if (isset($Contribuyente) and $Contribuyente->config_extra_sucursales) {
+if (isset($Contribuyente) && $Contribuyente->config_extra_sucursales) {
     foreach ($Contribuyente->config_extra_sucursales as $sucursal) {
         $config_extra_sucursales[] = [
             'config_extra_sucursales_codigo' => $sucursal->codigo,
@@ -308,7 +308,7 @@ echo $f->input([
 <!-- INICIO EMAILS -->
 <div role="tabpanel" class="tab-pane" id="correos" aria-labelledby="correos-tab">
     <p>Aquí debe configurar las dos casillas de correo para operar con facturación electrónica.</p>
-    <?php if (isset($Contribuyente) and $Contribuyente->getFirma()) : ?>
+    <?php if (isset($Contribuyente) && $Contribuyente->getFirma()) : ?>
         <p>Los correos deben coincidir con los registrados en el SII, los debe verificar en <a href="#" onclick="__.popup('<?=$_base?>/dte/sii/contribuyente_datos/<?=$Contribuyente->rut?>-<?=$Contribuyente->dv?>', 750, 550); return false" title="Ver datos del contribuyente en el SII">el sitio del web de impuestos internos</a>.</p>
     <?php endif; ?>
     <div class="row">
@@ -428,10 +428,10 @@ if (!empty($tipos_dte)) {
 echo $f->input([
     'type' => 'select',
     'name' => 'config_emision_solo_items_codificados',
-    'label' => 'Sólo items codificados',
+    'label' => 'Solo items codificados',
     'options' => ['No', 'Si'],
     'value' => isset($Contribuyente) ? $Contribuyente->config_emision_solo_items_codificados : 0,
-    'help' => '¿Restringir la creación de documentos sólo a items de productos o servicios que estén codificados?',
+    'help' => '¿Restringir la creación de documentos solo a items de productos o servicios que estén codificados?',
 ]);
 echo $f->input([
     'type' => 'select',
@@ -462,7 +462,7 @@ echo $f->input([
     'label' => 'Folio manual',
     'options' => [
         'Ningún usuario puede asignar manualmente el folio',
-        'Sólo administradores pueden asignar manualmente el folio',
+        'Solo administradores pueden asignar manualmente el folio',
         'Cualquier usuario con rol \'dte\' puede asignar manualmente el folio',
     ],
     'value' => isset($Contribuyente) ? $Contribuyente->config_emision_asignar_folio : 0,
@@ -480,7 +480,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'config_boletas_eliminar',
     'label' => 'Eliminar Boletas',
-    'options' => [''=>'No (recomendado)', 1=>'Sólo las del día actual', 2=>'Sólo las del mes actual', 3=>'Las del mes actual y mes anterior (no recomendado)', 4=>'Cualquier boleta (no recomendado)'],
+    'options' => [''=>'No (recomendado)', 1=>'Solo las del día actual', 2=>'Solo las del mes actual', 3=>'Las del mes actual y mes anterior (no recomendado)', 4=>'Cualquier boleta (no recomendado)'],
     'value' => isset($Contribuyente) ? $Contribuyente->config_boletas_eliminar : 0,
     'help' => '¿Administradores pueden eliminar boletas emitidas?',
 ]);
@@ -542,7 +542,7 @@ echo $f->input([
     'label' => 'Intercambio automático',
     'options' => ['No', 'Si'],
     'value' => isset($Contribuyente) ? $Contribuyente->config_emision_intercambio_automatico : 0,
-    'help' => '¿Enviar automáticamente al correo de intercambio el DTE emitido que no tiene recepción registrada? (no envía boletas, sólo DTEs aceptados por el SII)',
+    'help' => '¿Enviar automáticamente al correo de intercambio el DTE emitido que no tiene recepción registrada? (no envía boletas, solo DTEs aceptados por el SII)',
 ]);
 echo $f->input([
     'type' => 'select',
@@ -558,7 +558,7 @@ echo $f->input([
 <?php
 $f->setColsLabel();
 $config_extra_impuestos_adicionales = [];
-if (isset($Contribuyente) and $Contribuyente->config_extra_impuestos_adicionales) {
+if (isset($Contribuyente) && $Contribuyente->config_extra_impuestos_adicionales) {
     foreach ($Contribuyente->config_extra_impuestos_adicionales as $impuesto) {
         $config_extra_impuestos_adicionales[] = [
             'config_extra_impuestos_adicionales_codigo' => $impuesto->codigo,
@@ -589,7 +589,7 @@ echo $f->input([
 ]);
 if (!empty($tipos_dte)) {
     $config_emision_observaciones = [];
-    if (isset($Contribuyente) and $Contribuyente->config_emision_observaciones) {
+    if (isset($Contribuyente) && $Contribuyente->config_emision_observaciones) {
         foreach ($Contribuyente->config_emision_observaciones as $dte => $glosa) {
             $config_emision_observaciones[] = [
                 'config_emision_observaciones_dte' => $dte,
@@ -620,7 +620,7 @@ if (!empty($tipos_dte)) {
     ]);
 }
 $config_extra_impuestos_sin_credito = [];
-if (isset($Contribuyente) and $Contribuyente->config_extra_impuestos_sin_credito) {
+if (isset($Contribuyente) && $Contribuyente->config_extra_impuestos_sin_credito) {
     foreach ($Contribuyente->config_extra_impuestos_sin_credito as $impuesto) {
         $config_extra_impuestos_sin_credito[] = [
             'config_extra_impuestos_sin_credito_codigo' => $impuesto,
@@ -667,7 +667,7 @@ echo $f->input([
     'label' => 'Verificar DTE',
     'options' => ['Verificar documento recibido contra el SII (recomendado)', 'Permitir ingresar documentos sin verificar (no recomendado)'],
     'value' => isset($Contribuyente) ? $Contribuyente->config_recepcion_omitir_verificacion_sii : 0,
-    'help' => 'Permite omitir la verificación de un DTE contra el SII al ser agregado manualmente. Se recomienda nunca activar esta opción, ya que de acuerdo a la legislación sólo se deben incluir en los documentos recibidos aquellos que el SII tiene aceptados.',
+    'help' => 'Permite omitir la verificación de un DTE contra el SII al ser agregado manualmente. Se recomienda nunca activar esta opción, ya que de acuerdo a la legislación solo se deben incluir en los documentos recibidos aquellos que el SII tiene aceptados.',
 ]);
 ?>
         </div>
@@ -942,7 +942,7 @@ foreach($dtepdfs as $App) {
 $api_servicios_disponibles = (array)\sowerphp\core\Configure::read('api_contribuyentes');
 $api = [];
 foreach ($api_servicios_disponibles as $api_codigo => $api_servicio) {
-    if (!empty($api_servicio['uses']) and !\sowerphp\core\Module::loaded($api_servicio['uses'])) {
+    if (!empty($api_servicio['uses']) && !\sowerphp\core\Module::loaded($api_servicio['uses'])) {
         continue;
     }
     $api[] = [

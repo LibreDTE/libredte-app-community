@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,7 +25,6 @@ namespace website\Honorarios;
 
 /**
  * Comando para sincronizar datos del SII en LibreDTE
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2021-06-29
  */
 class Shell_Command_Sii_Sincronizar extends \Shell_App
@@ -40,7 +39,7 @@ class Shell_Command_Sii_Sincronizar extends \Shell_App
             // crear objeto del contribuyente
             $Contribuyente = $Contribuyentes->get($rut);
             // verificar que el contribuyente exista y tenga clave de SII
-            if (!$Contribuyente->exists() or !$Contribuyente->config_sii_pass) {
+            if (!$Contribuyente->exists() || !$Contribuyente->config_sii_pass) {
                 continue;
             }
             // sincronizar

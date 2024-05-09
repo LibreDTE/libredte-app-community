@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -40,8 +40,7 @@ class Model_DteVentas extends \Model_Plural_App
 
     /**
      * Método que indica si el libro para cierto periodo está o no generado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-05
+         * @version 2019-07-05
      */
     public function libroGenerado($periodo)
     {
@@ -54,8 +53,7 @@ class Model_DteVentas extends \Model_Plural_App
 
     /**
      * Método que entrega el total mensual del libro de ventas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-04-25
+         * @version 2018-04-25
      */
     public function getTotalesMensuales($anio)
     {
@@ -77,8 +75,7 @@ class Model_DteVentas extends \Model_Plural_App
 
     /**
      * Método que entrega el resumen anual de ventas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-01-16
+         * @version 2019-01-16
      */
     public function getResumenAnual($anio)
     {
@@ -117,8 +114,7 @@ class Model_DteVentas extends \Model_Plural_App
     /**
      * Método que entrega el resumen de los documentos de ventas
      * totalizado según ciertos filtros y por tipo de documento.
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-06-16
+         * @version 2022-06-16
      */
     public function getResumen(array $filtros = [])
     {
@@ -140,7 +136,7 @@ class Model_DteVentas extends \Model_Plural_App
                     }
                     $where[] = 'd.dte IN ('.implode(', ', $where_dte).')';
                 }
-                else if ($filtros['dte'][0]=='!') {
+                else if ($filtros['dte'][0] == '!') {
                     $where[] = 'd.dte != :dte';
                     $vars[':dte'] = substr($filtros['dte'],1);
                 }
@@ -207,8 +203,7 @@ class Model_DteVentas extends \Model_Plural_App
     /**
      * Método que sincroniza el libro de ventas local con el registro de ventas del SII
      * - Se agregan documentos "registrados" en el registro de ventas del SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-19
+         * @version 2020-02-19
      */
     public function sincronizarRegistroVentasSII($meses = 2)
     {
@@ -236,8 +231,7 @@ class Model_DteVentas extends \Model_Plural_App
 
     /**
      * Método que agrega masivamente documentos emitidos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-21
+         * @version 2020-02-21
      */
     private function agregarMasivo($documentos, array $config = [])
     {
@@ -258,7 +252,7 @@ class Model_DteVentas extends \Model_Plural_App
             // agregar el documento emitido si no existe
             $Receptor = $Receptores->get(substr($doc['rut'],0,-2));
             $DteEmitido = new Model_DteEmitido($this->getContribuyente()->rut, $doc['dte'], $doc['folio'], $this->getContribuyente()->enCertificacion());
-            if (!$DteEmitido->usuario or $DteEmitido->mipyme) {
+            if (!$DteEmitido->usuario || $DteEmitido->mipyme) {
                 $DteEmitido->tasa = $doc['tasa'] ? $doc['tasa'] : 0;
                 $DteEmitido->fecha = $doc['fecha'];
                 $DteEmitido->sucursal_sii = $doc['sucursal_sii'] ? $doc['sucursal_sii'] : null;
@@ -277,8 +271,7 @@ class Model_DteVentas extends \Model_Plural_App
     /**
      * Método que sincroniza los documentos emitidos del Portal MIPYME con
      * LibreDTE, cargando los datos que estén en el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+         * @version 2020-02-22
      */
     public function sincronizarEmitidosPortalMipymeSII($meses = 2)
     {
@@ -318,7 +311,7 @@ class Model_DteVentas extends \Model_Plural_App
             foreach($documentos as $dte) {
                 $Receptor = $Receptores->get($dte['rut']);
                 $DteEmitido = new Model_DteEmitido($this->getContribuyente()->rut, $dte['dte'], $dte['folio'], 0);
-                if ($DteEmitido->mipyme and $DteEmitido->revision_detalle == $dte['estado']) {
+                if ($DteEmitido->mipyme && $DteEmitido->revision_detalle == $dte['estado']) {
                     continue;
                 }
                 $DteEmitido->receptor = $Receptor->rut;

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte\Informes;
 
 /**
  * Clase para informes de impuestos
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2016-02-01
  */
 class Controller_Impuestos extends \Controller_App
@@ -35,8 +34,7 @@ class Controller_Impuestos extends \Controller_App
     /**
      * Acción que permite generar una propuesta del formulario 29 según las
      * compras y ventas del contribuyente para cierto período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-03
+         * @version 2016-02-03
      */
     public function propuesta_f29($periodo = null)
     {

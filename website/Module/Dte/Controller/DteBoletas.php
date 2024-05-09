@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte;
 
 /**
  * Clase para las acciones asociadas al libro de boletas electrónicas
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2023-10-10
  */
 class Controller_DteBoletas extends \Controller_App
@@ -34,8 +33,7 @@ class Controller_DteBoletas extends \Controller_App
 
     /**
      * Acción principal que lista los períodos con boletas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-10
+         * @version 2023-10-10
      */
     public function index()
     {
@@ -48,8 +46,7 @@ class Controller_DteBoletas extends \Controller_App
 
     /**
      * Acción para descargar libro de boletas en XML
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-09-10
+         * @version 2022-09-10
      */
     public function xml($periodo, $FolioNotificacion = 1)
     {
@@ -100,8 +97,7 @@ class Controller_DteBoletas extends \Controller_App
 
     /**
      * Acción para descargar libro de boletas en CSV
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-09-10
+         * @version 2022-09-10
      */
     public function csv($periodo)
     {

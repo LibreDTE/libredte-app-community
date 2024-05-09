@@ -1,7 +1,7 @@
 <?php
 
 /**
- * LibreDTE: Edición Comunidad - Aplicación Web.
+ * LibreDTE: Aplicación Web - Edición Comunidad.
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
@@ -68,7 +68,7 @@ function apigateway_consume(string $recurso, $datos = []): array
         // hasta que se pueda volver a consultar (hasta que se reestablezca la cuota)
         // en estricto rigor 423 es bloqueo de la cuenta, pero se procesa como si
         // fuese un 429 porque en teoría no se debería llegar a un error 423
-        // sólo si se usa la misma cuenta para hacer consultas por fuera de libredte
+        // solo si se usa la misma cuenta para hacer consultas por fuera de libredte
         // o si se usa en más de un servidor o si se comparte IP en planes que no lo
         // permiten
         if (in_array($e->getCode(), [423, 429])) {
@@ -96,7 +96,7 @@ function apigateway_consume(string $recurso, $datos = []): array
 }
 
 /**
- * Función que entrega el tipo de DTE y folio de un documento a partir de su ID
+ * Función que entrega el tipo de DTE y folio de un documento a partir de su ID.
  */
 function dte_id_unpack(string $dte_id): array
 {

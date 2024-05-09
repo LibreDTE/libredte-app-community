@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte;
 /**
  * Comando para migrar los documentos emitidos desde un servidor de LibreDTE a
  * otro
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2016-07-01
  */
 class Shell_Command_DteEmitidos_Migrar extends \Shell_App
@@ -53,10 +52,10 @@ class Shell_Command_DteEmitidos_Migrar extends \Shell_App
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($dte['hash']);
         $response = $rest->post($servidor.'/api/dte/dte_emitidos/cargar_xml?track_id='.$dte['track_id'], '"'.$dte['xml'].'"');
-        if ($response===false) {
+        if ($response === false) {
             $this->out(implode('<br/>', $rest->getErrors()));
         }
-        else if ($response['status']['code']!=200) {
+        else if ($response['status']['code'] != 200) {
             $this->out($response['body']);
         }
         else {

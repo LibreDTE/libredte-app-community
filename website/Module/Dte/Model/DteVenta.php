@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -194,8 +194,7 @@ class Model_DteVenta extends Model_Base_Libro
     /**
      * Método que entrega el resumen real (de los detalles registrados) del
      * libro
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-06
+         * @version 2016-10-06
      */
     public function getResumen()
     {
@@ -230,12 +229,11 @@ class Model_DteVenta extends Model_Base_Libro
     /**
      * Método que entrega el resumen manual, de los totales registrados al
      * enviar el libro al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-09-13
+         * @version 2016-09-13
      */
     public function getResumenManual()
     {
-        if ($this->_table=='dte_venta' and $this->xml) {
+        if ($this->_table == 'dte_venta' && $this->xml) {
             $Libro = new \sasco\LibreDTE\Sii\LibroCompraVenta();
             $Libro->loadXML(base64_decode($this->xml));
             return $Libro->getResumenManual();
@@ -245,8 +243,7 @@ class Model_DteVenta extends Model_Base_Libro
 
     /**
      * Método que entrega los documentos por día del libro
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-11
+         * @version 2017-09-11
      */
     public function getDocumentosPorDia()
     {
@@ -255,8 +252,7 @@ class Model_DteVenta extends Model_Base_Libro
 
     /**
      * Método que entrega las compras por tipo del período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-11
+         * @version 2017-09-11
      */
     public function getDocumentosPorTipo()
     {
@@ -265,8 +261,7 @@ class Model_DteVenta extends Model_Base_Libro
 
     /**
      * Método que entrega los documentos por evento del receptor
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-11
+         * @version 2017-09-11
      */
     public function getDocumentosPorEventoReceptor()
     {
@@ -294,8 +289,7 @@ class Model_DteVenta extends Model_Base_Libro
 
     /**
      * Método que entrega los documentos por evento del receptor
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-12
+         * @version 2017-09-12
      */
     public function getDocumentosConEventoReceptor($evento)
     {
@@ -308,8 +302,7 @@ class Model_DteVenta extends Model_Base_Libro
 
     /**
      * Método que entrega los totales del período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-04-25
+         * @version 2018-04-25
      */
     public function getTotales()
     {
@@ -336,9 +329,9 @@ class Model_DteVenta extends Model_Base_Libro
             // sumar o restar campos segun operación
             $operacion = (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->get($r['TpoDoc'])->operacion;
             foreach (['TotMntExe', 'TotMntNeto', 'TotMntIVA', 'TotIVAPropio', 'TotIVATerceros', 'TotLey18211', 'TotMntTotal', 'TotMntNoFact', 'TotMntPeriodo'] as $c) {
-                if ($operacion=='S') {
+                if ($operacion == 'S') {
                     $total[$c] += $r[$c];
-                } else if ($operacion=='R') {
+                } else if ($operacion == 'R') {
                     $total[$c] -= $r[$c];
                 }
             }
@@ -348,8 +341,7 @@ class Model_DteVenta extends Model_Base_Libro
 
     /**
      * Método que entrega el total del neto + exento del período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-04-25
+         * @version 2018-04-25
      */
     public function getTotalExentoNeto()
     {
@@ -360,8 +352,7 @@ class Model_DteVenta extends Model_Base_Libro
     /**
      * Método que entrega la cantidad de documentos que se envían al SII pero que no tienen
      * estado asociado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-11-11
+         * @version 2018-11-11
      */
     public function countDteSinEstadoEnvioSII()
     {
@@ -382,8 +373,7 @@ class Model_DteVenta extends Model_Base_Libro
     /**
      * Método que entrega la cantidad de documentos que están rechazados por el SII
      * en el período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-11-11
+         * @version 2018-11-11
      */
     public function countDteRechazadosSII()
     {

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -150,8 +150,7 @@ class Model_DteIntercambioResultado extends \Model_App
 
     /**
      * Método que guarda el XML del Resultado de un intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-03
+         * @version 2020-07-03
      */
     public function saveXML($Emisor, $xml) {
         // crear respuesta
@@ -199,7 +198,7 @@ class Model_DteIntercambioResultado extends \Model_App
                 $Emisor->enCertificacion()
             );
             // si no existe o si los datos del DTE emitido no corresponden error
-            if (!$DteEmitido->exists() or explode('-', $Resultado['RUTRecep'])[0]!=$DteEmitido->receptor or $Resultado['FchEmis']!=$DteEmitido->fecha or $Resultado['MntTotal']!=$DteEmitido->total) {
+            if (!$DteEmitido->exists() or explode('-', $Resultado['RUTRecep'])[0] != $DteEmitido->receptor || $Resultado['FchEmis'] != $DteEmitido->fecha || $Resultado['MntTotal'] != $DteEmitido->total) {
                 $this->db->rollback();
                 throw new \Exception('DTE informado no existe o sus datos no corresponden');
             }

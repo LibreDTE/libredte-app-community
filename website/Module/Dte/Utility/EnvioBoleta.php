@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -29,7 +29,6 @@ namespace website\Dte;
  * Se provee como una clase aparte, porque es una funcionalidad que por defecto
  * viene desactivada.
  *
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2020-10-31
  */
 class Utility_EnvioBoleta
@@ -37,8 +36,7 @@ class Utility_EnvioBoleta
 
     /**
      * Método que envía un XML de EnvioBoleta al SII y entrega el Track ID del envío
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-31
+         * @version 2020-10-31
      */
     public static function enviar($usuario, $empresa, $xml, $Firma, $gzip = false, $retry = null)
     {
@@ -56,7 +54,7 @@ class Utility_EnvioBoleta
                 'xml' => base64_encode($xml),
             ]
         );
-        if ($r['status']['code']!=200) {
+        if ($r['status']['code'] != 200) {
             \sasco\LibreDTE\Log::write(\sasco\LibreDTE\Estado::REQUEST_ERROR_BODY, $r['body']);
             return false;
         }
@@ -65,8 +63,7 @@ class Utility_EnvioBoleta
 
     /**
      * Método que entrega el estado normalizado del envío e la boleta al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-31
+         * @version 2020-10-31
      */
     public static function estado_normalizado($rut, $dv, $track_id, $Firma, $dte, $folio)
     {
@@ -86,7 +83,7 @@ class Utility_EnvioBoleta
                 'folio' => $folio,
             ]
         );
-        if ($r['status']['code']!=200) {
+        if ($r['status']['code'] != 200) {
             \sasco\LibreDTE\Log::write(\sasco\LibreDTE\Estado::REQUEST_ERROR_BODY, $r['body']);
             return false;
         }

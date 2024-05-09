@@ -1,5 +1,5 @@
 <ul class="nav nav-pills float-end">
-<?php if (!$Emisor->config_pdf_imprimir or $Emisor->config_pdf_imprimir == 'pdf_escpos') : ?>
+<?php if (!$Emisor->config_pdf_imprimir || $Emisor->config_pdf_imprimir == 'pdf_escpos') : ?>
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-print"></i>
@@ -57,7 +57,7 @@ $(function() { __.tabs(); });
 <?php if ($DteEmitido->getTipo()->permiteIntercambio()): ?>
         <li class="nav-item"><a href="#intercambio" aria-controls="intercambio" role="tab" data-bs-toggle="tab" id="intercambio-tab" class="nav-link">Proceso intercambio</a></li>
 <?php endif; ?>
-<?php if ($DteEmitido->getTipo()->operacion=='S'): ?>
+<?php if ($DteEmitido->getTipo()->operacion == 'S'): ?>
         <li class="nav-item"><a href="#pagos" aria-controls="pagos" role="tab" data-bs-toggle="tab" id="pagos-tab" class="nav-link">Pagos</a></li>
 <?php endif; ?>
         <li class="nav-item"><a href="#referencias" aria-controls="referencias" role="tab" data-bs-toggle="tab" id="referencias-tab" class="nav-link">Referencias</a></li>
@@ -139,7 +139,7 @@ echo $t->generate([
 <?php endif; ?>
                     </p>
                     <p><?=$DteEmitido->revision_detalle?></p>
-<?php if ($DteEmitido->getEstado()=='R') : ?>
+<?php if ($DteEmitido->getEstado() == 'R') : ?>
                     <p class="small text-danger"><?=$DteEmitido->getAyudaEstadoEnvioSII()?></p>
 <?php endif; ?>
 <?php endif; ?>
@@ -148,7 +148,7 @@ echo $t->generate([
                         <a class="btn btn-primary<?=$DteEmitido->track_id < 0 ?' disabled':''?>" href="<?=$_base?>/dte/dte_emitidos/actualizar_estado/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button" onclick="return __.loading('Actualizando estado del DTE...')">Actualizar estado</a><br/>
                         <span style="font-size:0.8em">
 <?php if (!$DteEmitido->getTipo()->esBoleta()) : ?>
-<?php if (!$Emisor->config_sii_estado_dte_webservice and $DteEmitido->track_id > 0) : ?>
+<?php if (!$Emisor->config_sii_estado_dte_webservice && $DteEmitido->track_id > 0) : ?>
                             <a href="<?=$_base?>/dte/dte_emitidos/solicitar_revision/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" title="Solicitar nueva revisión del documento por correo electrónico al SII" onclick="return __.loading('Solicitando revisión del envío al SII...')">solicitar revisión del envío</a>
                             <br/>
 <?php endif; ?>
@@ -168,7 +168,7 @@ echo $t->generate([
                             <a href="https://www4.sii.cl/bolcoreinternetui/#!/home" target="_blank" title="Verificar datos del documento en la web del SII">verificar documento en SII</a>
 <?php endif; ?>
 <?php endif; ?>
-<?php if (substr($DteEmitido->revision_estado,0,3)=='RFR') : ?>
+<?php if (substr($DteEmitido->revision_estado,0,3) == 'RFR') : ?>
                             <br/>
                             <a href="<?=$_base?>/dte/dte_emitidos/enviar_sii/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" onclick="return __.confirm(this, '¿Confirmar el reenvío del DTE al SII?', 'Reenviando DTE al SII...')">reenviar DTE al SII</a>
 <?php endif; ?>
@@ -183,7 +183,7 @@ echo $t->generate([
                         <a class="btn btn-primary<?=(!$DteEmitido->hasLocalXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_emitidos/enviar_sii/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button" onclick="return __.loading('Enviando DTE al SII...')">Enviar documento al SII</a>
                         <br/>
                         <span style="font-size:0.8em">
-<?php if (!$DteEmitido->getTipo()->esBoleta() and $DteEmitido->getTotal(false) !== false) : ?>
+<?php if (!$DteEmitido->getTipo()->esBoleta() && $DteEmitido->getTotal(false) !== false) : ?>
                             <a href="#" onclick="__.popup('<?=$_base?>/dte/sii/verificar_datos/<?=$DteEmitido->getReceptor()->getRUT()?>/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>/<?=$DteEmitido->fecha?>/<?=$DteEmitido->getTotal(false)?>', 750, 550)" title="Verificar datos del documento en la web del SII">verificar documento en SII</a>
 <?php endif; ?>
 <?php if ($DteEmitido->eliminable()) : ?>
@@ -305,7 +305,7 @@ if ($emails) {
     $checked = [];
     foreach ($emails as $k => $e) {
         $table[] = [$e, $k];
-        if ($k=='Email intercambio') {
+        if ($k == 'Email intercambio') {
             $checked = [$e];
         }
     }
@@ -457,7 +457,7 @@ if ($Resultado) {
 <!-- FIN INTERCAMBIO -->
 <?php endif; ?>
 
-<?php if ($DteEmitido->getTipo()->operacion=='S'): ?>
+<?php if ($DteEmitido->getTipo()->operacion == 'S'): ?>
 <!-- INICIO PAGOS -->
 <div role="tabpanel" class="tab-pane" id="pagos" aria-labelledby="pagos-tab">
 <?php if ($DteEmitido->getTipo()->permiteCobro()): ?>
@@ -528,7 +528,7 @@ if ($cobranza) {
         $c[] = '<a href="'.$_base.'/dte/cobranzas/ver/'.$DteEmitido->dte.'/'.$DteEmitido->folio.'/'.$c['fecha'].'" title="Ver pago" class="btn btn-primary"><i class="fa fa-search fa-fw"></i></a>';
         $c['fecha'] = \sowerphp\general\Utility_Date::format($c['fecha']);
         $c['monto'] = num($c['monto']);
-        if ($c['pagado']!==null) {
+        if ($c['pagado'] !== null) {
             $c['pagado'] = num($c['pagado']);
         }
         if ($c['modificado']) {
@@ -562,11 +562,11 @@ if ($referenciados) {
             $referenciado['FchRef'] = \sowerphp\general\Utility_Date::format($referenciado['FchRef']);
         }
         $acciones = '';
-        if (!empty($referenciado['TpoDocRef']) and !empty($referenciado['FolioRef']) and in_array($referenciado['TpoDocRef'], $tipos_dte)) {
+        if (!empty($referenciado['TpoDocRef']) && !empty($referenciado['FolioRef']) && in_array($referenciado['TpoDocRef'], $tipos_dte)) {
             $DteReferencia = new \website\Dte\Model_DteEmitido($Emisor->rut, $referenciado['TpoDocRef'], $referenciado['FolioRef'], $Emisor->enCertificacion());
             if ($DteReferencia->fecha) {
                 $acciones = '<a href="'.$_base.'/dte/dte_emitidos/ver/'.$DteReferencia->dte.'/'.$DteReferencia->folio.'" title="Ver documento" class="btn btn-primary mb-2"><i class="fas fa-search fa-fw"></i></a>';
-                $acciones .= ' <a href="'.$_base.'/dte/dte_emitidos/pdf/'.$DteReferencia->dte.'/'.$DteReferencia->folio.'/'.(int)$Emisor->config_pdf_dte_cedible.'" title="Descargar PDF del documento" class="btn btn-primary mb-2'.((!$DteReferencia->xml and !$DteReferencia->mipyme)?' disabled':'').'"><i class="far fa-file-pdf fa-fw"></i></a>';
+                $acciones .= ' <a href="'.$_base.'/dte/dte_emitidos/pdf/'.$DteReferencia->dte.'/'.$DteReferencia->folio.'/'.(int)$Emisor->config_pdf_dte_cedible.'" title="Descargar PDF del documento" class="btn btn-primary mb-2'.((!$DteReferencia->xml && !$DteReferencia->mipyme)?' disabled':'').'"><i class="far fa-file-pdf fa-fw"></i></a>';
             }
             unset($DteReferencia);
         }
@@ -620,7 +620,7 @@ if ($referencias) {
 </div>
 <!-- FIN REFERENCIAS -->
 
-<?php if ($DteEmitido->getTipo()->cedible and $DteEmitido->hasLocalXML()) : ?>
+<?php if ($DteEmitido->getTipo()->cedible && $DteEmitido->hasLocalXML()) : ?>
 <!-- INICIO CESIÓN -->
 <div role="tabpanel" class="tab-pane" id="cesion" aria-labelledby="cesion-tab">
 <?php if ($DteEmitido->cesion_track_id) : ?>
@@ -829,8 +829,8 @@ echo $f->end('Guardar');
 </div>
 <?php endif; ?>
 <?php
-// si es exportación permitir cambiar tipo de cambio (sólo si es usuario administrador)
-if ($Emisor->usuarioAutorizado($_Auth->User, 'admin') and $DteEmitido->getTipo()->esExportacion() and $DteEmitido->hasLocalXML()) :
+// si es exportación permitir cambiar tipo de cambio (solo si es usuario administrador)
+if ($Emisor->usuarioAutorizado($_Auth->User, 'admin') && $DteEmitido->getTipo()->esExportacion() && $DteEmitido->hasLocalXML()) :
 ?>
 <div class="card mt-4" id="avanzado_tipo-cambio-card">
     <div class="card-header">
@@ -899,7 +899,7 @@ echo $f->input([
     'label' => 'Sucursal',
     'options' => $sucursales,
     'value' => $DteEmitido->sucursal_sii,
-    'help' => 'El cambio de sucursal sólo afecta al registro de LibreDTE, el DTE (XML y PDF) seguirán con la sucursal originalmente asignada. Si desea un cambio en la sucursal del DTE deberá anular el documento y emitir uno nuevo.',
+    'help' => 'El cambio de sucursal solo afecta al registro de LibreDTE, el DTE (XML y PDF) seguirán con la sucursal originalmente asignada. Si desea un cambio en la sucursal del DTE deberá anular el documento y emitir uno nuevo.',
 ]);
 echo $f->end('Modificar sucursal');
 ?>

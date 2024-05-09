@@ -21,11 +21,11 @@ echo $f->end('Buscar');
 
 if ($documentos) {
     foreach ($documentos as &$d) {
-        $d[] = '<a href="'.$_base.'/dte/informes/dte_emitidos/intercambio_detalle/'.$desde.'/'.$hasta.'/'.(int)$d['recibo'].'/'.($d['recepcion']!==null?$d['recepcion']:-1).'/'.($d['resultado']!==null?$d['resultado']:-1).'" class="btn btn-primary"><i class="fa fa-search fa-fw"></i></a>';
+        $d[] = '<a href="'.$_base.'/dte/informes/dte_emitidos/intercambio_detalle/'.$desde.'/'.$hasta.'/'.(int)$d['recibo'].'/'.($d['recepcion'] !== null?$d['recepcion']:-1).'/'.($d['resultado'] !== null?$d['resultado']:-1).'" class="btn btn-primary"><i class="fa fa-search fa-fw"></i></a>';
         $d['recibo'] = $d['recibo'] ? 'Si' : 'No';
-        if ($d['recepcion']!==null)
+        if ($d['recepcion'] !== null)
             $d['recepcion'] = isset(\sasco\LibreDTE\Sii\RespuestaEnvio::$estados['envio'][$d['recepcion']]) ? \sasco\LibreDTE\Sii\RespuestaEnvio::$estados['envio'][$d['recepcion']] : $d['recepcion'];
-        if ($d['resultado']!==null)
+        if ($d['resultado'] !== null)
             $d['resultado'] = isset(\sasco\LibreDTE\Sii\RespuestaEnvio::$estados['respuesta_documento'][$d['resultado']]) ? \sasco\LibreDTE\Sii\RespuestaEnvio::$estados['respuesta_documento'][$d['resultado']] : $d['resultado'];
         $d['total'] = num($d['total']);
     }

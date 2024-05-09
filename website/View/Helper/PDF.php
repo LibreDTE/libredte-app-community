@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,7 +25,6 @@ namespace website;
 
 /**
  * Helper para la generación de PDFs personalizados para LibreDTE
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2017-02-02
  */
 class View_Helper_PDF extends \sowerphp\general\View_Helper_PDF
@@ -38,8 +37,7 @@ class View_Helper_PDF extends \sowerphp\general\View_Helper_PDF
     /**
      * Método que sobreescribe la cabecera del PDF para tener una personalizada
      * para los informes del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-06-15
+         * @version 2018-06-15
      */
     public function Header()
     {
@@ -65,9 +63,7 @@ class View_Helper_PDF extends \sowerphp\general\View_Helper_PDF
     }
 
     /**
-     * Método que sobreescribe el pie de página del PDF
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]delaf.cl)
-     * @version 2017-03-18
+     * Método que sobreescribe el pie de página del PDF.
      */
     public function Footer()
     {

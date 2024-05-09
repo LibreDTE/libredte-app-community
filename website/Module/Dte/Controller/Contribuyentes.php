@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -27,7 +27,6 @@ namespace website\Dte;
 /**
  * Clase para el controlador asociado a la tabla contribuyente de la base de
  * datos
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2023-10-08
  */
 class Controller_Contribuyentes extends \Controller_App
@@ -37,8 +36,7 @@ class Controller_Contribuyentes extends \Controller_App
      * Método que selecciona la empresa con la que se trabajará en el módulo DTE
      * @param rut Si se pasa un RUT se tratará de seleccionar
      * @param url URL a la que redirigir después de seleccionar el contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-16
+         * @version 2021-10-16
      */
     public function seleccionar($rut = null, $url = null)
     {
@@ -105,12 +103,11 @@ class Controller_Contribuyentes extends \Controller_App
 
     /**
      * Método que permite registrar un nuevo contribuyente y asociarlo a un usuario
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-10-23
+         * @version 2017-10-23
      */
     public function registrar()
     {
-        // verificar si el usuario puede registrar más empresas (sólo si está definido el valor
+        // verificar si el usuario puede registrar más empresas (solo si está definido el valor
         if ($this->Auth->User->config_contribuyentes_autorizados!==null) {
             $n_empresas = count((new Model_Contribuyentes())->getByUsuario($this->Auth->User->id));
             if ($n_empresas >= $this->Auth->User->config_contribuyentes_autorizados) {
@@ -195,8 +192,7 @@ class Controller_Contribuyentes extends \Controller_App
 
     /**
      * Método que permite modificar contribuyente previamente registrado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-08
+         * @version 2023-10-08
      */
     public function modificar()
     {
@@ -241,7 +237,7 @@ class Controller_Contribuyentes extends \Controller_App
                 $Contribuyente->save(true);
                 \sowerphp\core\Model_Datasource_Session::message('Empresa '.$Contribuyente->razon_social.' ha sido modificada.', 'ok');
                 $ContribuyenteSeleccionado = $this->getContribuyente(false);
-                if ($ContribuyenteSeleccionado and $ContribuyenteSeleccionado->rut == $Contribuyente->rut) {
+                if ($ContribuyenteSeleccionado && $ContribuyenteSeleccionado->rut == $Contribuyente->rut) {
                     $this->redirect('/dte/contribuyentes/seleccionar/'.$Contribuyente->rut);
                 } else {
                     $this->redirect('/dte/contribuyentes/seleccionar');
@@ -258,8 +254,7 @@ class Controller_Contribuyentes extends \Controller_App
     /**
      * Método que prepara los datos de configuraciones del contribuyente para
      * ser guardados
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-03
+         * @version 2020-08-03
      */
     protected function prepararDatosContribuyente(&$Contribuyente)
     {
@@ -268,7 +263,7 @@ class Controller_Contribuyentes extends \Controller_App
         // ser asignadas por los usuarios (esto evita que envién "a la mala" una
         // configuración del sistema)
         foreach ($_POST as $var => $val) {
-            if (strpos($var, 'config_libredte_')===0) {
+            if (strpos($var, 'config_libredte_') === 0) {
                 unset($_POST[$var]);
             }
         }
@@ -293,7 +288,7 @@ class Controller_Contribuyentes extends \Controller_App
             $_POST['config_extra_sucursales'] = [];
             $n_codigos = count($_POST['config_extra_sucursales_codigo']);
             for ($i=0; $i<$n_codigos; $i++) {
-                if (!empty($_POST['config_extra_sucursales_codigo'][$i]) and !empty($_POST['config_extra_sucursales_sucursal'][$i]) and !empty($_POST['config_extra_sucursales_direccion'][$i]) and !empty($_POST['config_extra_sucursales_comuna'][$i])) {
+                if (!empty($_POST['config_extra_sucursales_codigo'][$i]) && !empty($_POST['config_extra_sucursales_sucursal'][$i]) && !empty($_POST['config_extra_sucursales_direccion'][$i]) && !empty($_POST['config_extra_sucursales_comuna'][$i])) {
                     $_POST['config_extra_sucursales'][] = [
                         'codigo' => (int)$_POST['config_extra_sucursales_codigo'][$i],
                         'sucursal' => $_POST['config_extra_sucursales_sucursal'][$i],
@@ -316,7 +311,7 @@ class Controller_Contribuyentes extends \Controller_App
             $_POST['config_extra_impuestos_adicionales'] = [];
             $n_codigos = count($_POST['config_extra_impuestos_adicionales_codigo']);
             for ($i=0; $i<$n_codigos; $i++) {
-                if (!empty($_POST['config_extra_impuestos_adicionales_codigo'][$i]) and !empty($_POST['config_extra_impuestos_adicionales_tasa'][$i])) {
+                if (!empty($_POST['config_extra_impuestos_adicionales_codigo'][$i]) && !empty($_POST['config_extra_impuestos_adicionales_tasa'][$i])) {
                     $_POST['config_extra_impuestos_adicionales'][] = [
                         'codigo' => (int)$_POST['config_extra_impuestos_adicionales_codigo'][$i],
                         'tasa' => $_POST['config_extra_impuestos_adicionales_tasa'][$i],
@@ -333,7 +328,7 @@ class Controller_Contribuyentes extends \Controller_App
             $_POST['config_emision_observaciones'] = [];
             $n_codigos = count($_POST['config_emision_observaciones_dte']);
             for ($i=0; $i<$n_codigos; $i++) {
-                if (!empty($_POST['config_emision_observaciones_dte'][$i]) and !empty($_POST['config_emision_observaciones_glosa'][$i])) {
+                if (!empty($_POST['config_emision_observaciones_dte'][$i]) && !empty($_POST['config_emision_observaciones_glosa'][$i])) {
                     $dte = (int)$_POST['config_emision_observaciones_dte'][$i];
                     $glosa = $_POST['config_emision_observaciones_glosa'][$i];
                     $_POST['config_emision_observaciones'][$dte] = $glosa;
@@ -364,7 +359,7 @@ class Controller_Contribuyentes extends \Controller_App
             $_POST['config_pdf_mapeo'] = [];
             $n_codigos = count($_POST['config_pdf_mapeo_documento']);
             for ($i=0; $i<$n_codigos; $i++) {
-                if (!empty($_POST['config_pdf_mapeo_documento'][$i]) and !empty($_POST['config_pdf_mapeo_actividad'][$i]) and !empty($_POST['config_pdf_mapeo_formato'][$i])) {
+                if (!empty($_POST['config_pdf_mapeo_documento'][$i]) && !empty($_POST['config_pdf_mapeo_actividad'][$i]) && !empty($_POST['config_pdf_mapeo_formato'][$i])) {
                     $_POST['config_pdf_mapeo'][] = [
                         'documento' => $_POST['config_pdf_mapeo_documento'][$i],
                         'actividad' => $_POST['config_pdf_mapeo_actividad'][$i],
@@ -383,7 +378,7 @@ class Controller_Contribuyentes extends \Controller_App
             $_POST['config_pdf_mapeo'] = null;
         }
         // subir archivo de plantilla de correo de envío de dte
-        if (!empty($_FILES['template_email_dte']) and !$_FILES['template_email_dte']['error']) {
+        if (!empty($_FILES['template_email_dte']) && !$_FILES['template_email_dte']['error']) {
             $dir = DIR_PROJECT.'/data/static/contribuyentes/'.(int)$Contribuyente->rut.'/email';
             if (!is_dir($dir)) {
                 mkdir($dir, 0777, true);
@@ -463,8 +458,7 @@ class Controller_Contribuyentes extends \Controller_App
 
     /**
      * Método que permite cambiar el ambiente durante la sesión del usuario
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-08
+         * @version 2023-10-08
      */
     public function ambiente($ambiente)
     {
@@ -497,8 +491,7 @@ class Controller_Contribuyentes extends \Controller_App
 
     /**
      * Método que permite editar los usuarios autorizados de un contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-08
+         * @version 2023-10-08
      */
     public function usuarios()
     {
@@ -562,8 +555,7 @@ class Controller_Contribuyentes extends \Controller_App
 
     /**
      * Método que permite editar los documentos autorizados por usuario
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-08
+         * @version 2023-10-08
      */
     public function usuarios_dtes()
     {
@@ -619,8 +611,7 @@ class Controller_Contribuyentes extends \Controller_App
 
     /**
      * Método que permite editar los documentos autorizados por usuario
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-08
+         * @version 2023-10-08
      */
     public function usuarios_sucursales()
     {
@@ -636,7 +627,7 @@ class Controller_Contribuyentes extends \Controller_App
             if (isset($_POST['usuario'])) {
                 $n_usuarios = count($_POST['usuario']);
                 for ($i=0; $i<$n_usuarios; $i++) {
-                    if (!empty($_POST['usuario'][$i]) and !empty($_POST['sucursal'][$i])) {
+                    if (!empty($_POST['usuario'][$i]) && !empty($_POST['sucursal'][$i])) {
                         $usuarios[$_POST['usuario'][$i]] = $_POST['sucursal'][$i];
                     }
                 }
@@ -665,8 +656,7 @@ class Controller_Contribuyentes extends \Controller_App
 
     /**
      * Método que permite modificar la configuración general de usuarios de la empresa
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-08
+         * @version 2023-10-08
      */
     public function usuarios_general()
     {
@@ -683,7 +673,7 @@ class Controller_Contribuyentes extends \Controller_App
             // ser asignadas por los usuarios (esto evita que envién "a la mala" una
             // configuración del sistema)
             foreach ($_POST as $var => $val) {
-                if (strpos($var, 'config_libredte_')===0) {
+                if (strpos($var, 'config_libredte_') === 0) {
                     unset($_POST[$var]);
                 }
             }
@@ -706,8 +696,7 @@ class Controller_Contribuyentes extends \Controller_App
 
     /**
      * Método que permite transferir una empresa a un nuevo usuario administrador
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-08
+         * @version 2023-10-08
      */
     public function transferir()
     {
@@ -724,7 +713,7 @@ class Controller_Contribuyentes extends \Controller_App
         }
         // verificar que el usuario sea el administrador
         if ($Contribuyente->usuario != $this->Auth->User->id) {
-            \sowerphp\core\Model_Datasource_Session::message('Sólo el usuario que tiene la empresa registrada puede cambiar el administrador.', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('Solo el usuario que tiene la empresa registrada puede cambiar el administrador.', 'error');
             $this->redirect('/dte/contribuyentes/usuarios#general');
         }
         // transferir al nuevo usuario administrador
@@ -752,8 +741,7 @@ class Controller_Contribuyentes extends \Controller_App
 
     /**
      * Acción que entrega el logo del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-08
+         * @version 2023-10-08
      */
     public function logo($rut)
     {
@@ -771,8 +759,7 @@ class Controller_Contribuyentes extends \Controller_App
 
     /**
      * Acción que permite probar la configuración de los correos electrónicos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-08
+         * @version 2023-10-08
      */
     public function config_email_test($email, $protocol = 'smtp')
     {
@@ -828,8 +815,7 @@ class Controller_Contribuyentes extends \Controller_App
 
     /**
      * Método de la API que permite obtener los datos de un contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-08
+         * @version 2023-10-08
      */
     public function _api_info_GET($rut, $emisor = null)
     {
@@ -857,7 +843,7 @@ class Controller_Contribuyentes extends \Controller_App
             $Contribuyente = (new Model_Contribuyentes())->get($rut);
         }
         // si el contribuyente no existe error
-        if (!$Contribuyente or !$Contribuyente->exists()) {
+        if (!$Contribuyente || !$Contribuyente->exists()) {
             $this->Api->send('Contribuyente solicitado no existe.', 404);
         }
         // asignar ciertos valores de la configuración al objeto del contribuyente
@@ -881,11 +867,11 @@ class Controller_Contribuyentes extends \Controller_App
                 $this->Api->send('Debe indicar emisor para hacer una búsqueda de tipo receptor', 400);
             }
         } else {
-            if ($tipo == 'emisor' and $emisor != $rut) {
+            if ($tipo == 'emisor' && $emisor != $rut) {
                 $this->Api->send('Debe indicar el mismo emisor y rut para una búsqueda de tipo emisor (o dejar el emisor en blanco)', 400);
             }
         }
-        // se agregan datos vía trigger del contribuyente sólo si existe un emisor
+        // se agregan datos vía trigger del contribuyente solo si existe un emisor
         // esto indica que se está buscando uno receptor (cliente) o emisor (proveedor)
         if ($emisor) {
             $Emisor = (new Model_Contribuyentes())->get($emisor);
@@ -907,8 +893,7 @@ class Controller_Contribuyentes extends \Controller_App
 
     /**
      * Método de la API que permite obtener la configuración de un contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-06-05
+         * @version 2018-06-05
      */
     public function _api_config_GET($rut)
     {

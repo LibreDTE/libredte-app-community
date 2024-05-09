@@ -54,8 +54,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
     /**
      * Método que sincroniza las boletas de terceros recibidas por la empresa
      * en el SII con el registro local de boletas en LibreDTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-06-29
+         * @version 2021-06-29
      */
     public function sincronizar($meses)
     {
@@ -91,8 +90,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
 
     /**
      * Método que obtiene las boletas emitidas desde el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     public function getBoletas($periodo)
     {
@@ -104,7 +102,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
                 ],
             ],
         ]);
-        if ($r['status']['code']!=200) {
+        if ($r['status']['code'] != 200) {
             if ($r['status']['code']==404) {
                 return [];
             }
@@ -116,8 +114,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
     /**
      * Método que entrega un resumen por período de las boletas de terceros
      * emitidas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-10
+         * @version 2019-08-10
      */
     public function getPeriodos($periodo = null)
     {
@@ -146,8 +143,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
 
     /**
      * Método que entrega el resumen de cierto período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-10
+         * @version 2019-08-10
      */
     public function getPeriodo($periodo)
     {
@@ -157,8 +153,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
 
     /**
      * Método que entrega las boletas de cierto período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-23
+         * @version 2019-08-23
      */
     public function buscar(array $filtros = [], $order = 'ASC')
     {
@@ -201,7 +196,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
                 $where[] = 'b.anulada = false';
             }
         }
-        if (isset($filtros['sucursal_sii']) and is_numeric($filtros['sucursal_sii'])) {
+        if (isset($filtros['sucursal_sii']) && is_numeric($filtros['sucursal_sii'])) {
             if ($filtros['sucursal_sii']) {
                 $where[] = 'b.sucursal_sii = :sucursal_sii';
                 $vars[':sucursal_sii'] = $filtros['sucursal_sii'];
@@ -238,8 +233,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
 
     /**
      * Método que emite una BTE en el SII y entrega el objeto local para trabajar
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-07-29
+         * @version 2021-07-29
      */
     public function emitir($boleta)
     {
@@ -262,7 +256,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
             ],
             'boleta' => $boleta,
         ]);
-        if ($r['status']['code']!=200) {
+        if ($r['status']['code'] != 200) {
             throw new \Exception('Error al emitir boleta: '.$r['body'], $r['status']['code']);
         }
         $boleta = $r['body'];
@@ -305,8 +299,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
 
     /**
      * Método que entrega las tasas de retencion para personas a honorarios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     public function getTasasRetencion()
     {

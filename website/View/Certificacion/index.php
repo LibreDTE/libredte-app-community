@@ -32,7 +32,7 @@
                     <p>Si ya tienes un software de mercado para emitir documentos tributarios electrónicos, pero falta que tu empresa tenga la autorización del SII, con este servicio quedará habilitada. Desde 30.000 pesos según los documentos que requieras certificar.</p>
                     <p>
                         <a class="btn btn-primary col-12 btn-lg" href="https://www.libredte.cl/shop/category/libredte-certificacion-dte-1" role="button">
-                            Solicitar Certificación de DTE a SASCO SpA
+                            Solicitar Certificación de DTE
                         </a>
                     </p>
                 </div>

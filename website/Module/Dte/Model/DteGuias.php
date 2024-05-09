@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -40,8 +40,7 @@ class Model_DteGuias extends \Model_Plural_App
 
     /**
      * Método que entrega los despachos de un contribuyente para cierta fecha
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+         * @version 2021-10-12
      */
     public function getDespachos(array $filtros = [])
     {
@@ -67,7 +66,7 @@ class Model_DteGuias extends \Model_Plural_App
             }
             // armar consulta dependiendo si se desea incluir o excluir al receptor
             if (!empty($filtros['receptor'])) {
-                if ($filtros['receptor'][0]=='!') {
+                if ($filtros['receptor'][0] == '!') {
                     $where[] = 'e.receptor != :receptor';
                     $vars[':receptor'] = substr($filtros['receptor'],1);
                 }
@@ -142,8 +141,7 @@ class Model_DteGuias extends \Model_Plural_App
      * Método que entrega las guías de despacho que no se han facturado, esto
      * es aquellas que tienen indicador de traslado "operación constituye venta"
      * y no poseen una referencia desde una factura electrónica
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-02-03
+         * @version 2019-02-03
      */
     public function getSinFacturar($desde, $hasta, $receptor = null, $con_referencia = false)
     {
@@ -179,8 +177,7 @@ class Model_DteGuias extends \Model_Plural_App
     /**
      * Método que realiza la facturación masiva de las guías de despacho
      * Creará una factura para cada RUT que se esté facturando
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-08
+         * @version 2020-10-08
      */
     public function facturar(array $folios, array $datos = [])
     {
@@ -206,8 +203,7 @@ class Model_DteGuias extends \Model_Plural_App
     /**
      * Método que crea el DTE temporal de una factura para un grupo de guías de
      * despacho
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-08
+         * @version 2020-10-08
      */
     private function crearDteTmp($guias, array $datos = [], $guias_max = 10)
     {
@@ -334,7 +330,7 @@ class Model_DteGuias extends \Model_Plural_App
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($this->getContribuyente()->getUsuario()->hash);
         $response = $rest->post(url('/api/dte/documentos/emitir'), $dte);
-        if ($response['status']['code']!=200) {
+        if ($response['status']['code'] != 200) {
             throw new \Exception($response['body']);
         }
         return new \website\Dte\Model_DteTmp($response['body']['emisor'], $response['body']['receptor'], $response['body']['dte'], $response['body']['codigo']);

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Utilidades;
 
 /**
  * Controlador para utilidades asociadas a documentos tributarios electrónicos (DTE)
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2016-09-12
  */
 class Controller_Documentos extends \Controller_App
@@ -35,8 +34,7 @@ class Controller_Documentos extends \Controller_App
     /**
      * Acción que permite la generación del XML del EnvioDTE a partir de los
      * datos en JSON
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-16
+         * @version 2021-08-16
      */
     public function xml()
     {
@@ -114,7 +112,7 @@ class Controller_Documentos extends \Controller_App
                 return;
             }
             // firma
-            if (!isset($_FILES['firma']) or $_FILES['firma']['error']) {
+            if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
                 \sowerphp\core\Model_Datasource_Session::message(
                     'Hubo algún problema al subir la firma electrónica', 'error'
                 );
@@ -141,7 +139,7 @@ class Controller_Documentos extends \Controller_App
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($this->Auth->User->hash);
             $response = $rest->post($this->request->url.'/api/utilidades/documentos/generar_xml', $data);
-            if ($response['status']['code']!=200) {
+            if ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message(
                     str_replace("\n", '<br/>', $response['body']), 'error'
                 );
@@ -161,14 +159,13 @@ class Controller_Documentos extends \Controller_App
     /**
      * Acción que permite la generación del PDF con los DTEs contenidos en un
      * XML de EnvioDTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+         * @version 2019-07-17
      */
     public function pdf()
     {
         if (isset($_POST['submit'])) {
             // si hubo problemas al subir el archivo error
-            if (!isset($_FILES['xml']) or $_FILES['xml']['error']) {
+            if (!isset($_FILES['xml']) || $_FILES['xml']['error']) {
                 \sowerphp\core\Model_Datasource_Session::message('Hubo algún problema al recibir el archivo XML con el EnvioDTE', 'error');
                 return;
             }
@@ -180,14 +177,14 @@ class Controller_Documentos extends \Controller_App
                 'webVerificacion' => $_POST['webVerificacion'],
             ];
             // si se pasó un logo se agrega el archivo a los datos que se enviarán
-            if (isset($_FILES['logo']) and !$_FILES['logo']['error']) {
+            if (isset($_FILES['logo']) && !$_FILES['logo']['error']) {
                 $data['logo'] = base64_encode(file_get_contents($_FILES['logo']['tmp_name']));
             }
             // realizar consulta a la API
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($this->Auth->User->hash);
             $response = $rest->post($this->request->url.'/api/utilidades/documentos/generar_pdf', $data);
-            if ($response['status']['code']!=200) {
+            if ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
                 return;
             }
@@ -203,12 +200,11 @@ class Controller_Documentos extends \Controller_App
 
     /**
      * Acción para verificar la firma de un XML EnvioDTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     public function verificar()
     {
-        if (isset($_FILES['xml']) and !$_FILES['xml']['error']) {
+        if (isset($_FILES['xml']) && !$_FILES['xml']['error']) {
             $EnvioDTE = new \sasco\LibreDTE\Sii\EnvioDte();
             $EnvioDTE->loadXML(file_get_contents($_FILES['xml']['tmp_name']));
             if ($EnvioDTE->esBoleta()===null) {
@@ -217,7 +213,7 @@ class Controller_Documentos extends \Controller_App
             }
             $certificacion = (int)(bool)!$EnvioDTE->getCaratula()['NroResol'];
             // verificar la firma de cada documento
-            if (!isset($_FILES['firma']) or $_FILES['firma']['error']) {
+            if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
                 \sowerphp\core\Model_Datasource_Session::message(
                     'Hubo algún problema al subir la firma electrónica', 'error'
                 );
@@ -257,18 +253,18 @@ class Controller_Documentos extends \Controller_App
                             ]
                         ]
                     );
-                    if ($r['status']['code']!=200) {
+                    if ($r['status']['code'] != 200) {
                         $firma = '-';
                         $verificacion = $r['body'];
                     } else {
-                        $firma = $r['body']['datos']['firma'] ? 'Ok' : ($r['body']['datos']['firma']===false?':-(':'-');
+                        $firma = $r['body']['datos']['firma'] ? 'Ok' : ($r['body']['datos']['firma'] === false?':-(':'-');
                         $verificacion =
                             '- '.$r['body']['datos']['detalle'].'<br/>'.
                             '- '.$r['body']['cedible']['glosa']
                         ;
                     }
                 }
-                // consultar estado sólo con datos del timbre
+                // consultar estado solo con datos del timbre
                 catch (\Exception $e) {
                     $rest = new \sowerphp\core\Network_Http_Rest();
                     $rest->setAuth($this->Auth->User->hash);
@@ -276,7 +272,7 @@ class Controller_Documentos extends \Controller_App
                         $this->request->url.'/api/utilidades/documentos/verificar_ted',
                         json_encode(base64_encode($DTE->getTED()))
                     );
-                    if ($response['status']['code']!=200) {
+                    if ($response['status']['code'] != 200) {
                         $firma = '-';
                         $verificacion = $response['body'];
                     } else {
@@ -310,8 +306,7 @@ class Controller_Documentos extends \Controller_App
 
     /**
      * Acción para convertir un XML de DTEs a JSONs
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-09-12
+         * @version 2016-09-12
      */
     public function xml2json()
     {
@@ -327,7 +322,7 @@ class Controller_Documentos extends \Controller_App
                     $dtes[] = $datos;
                 }
             }
-            // se trata de cargar cómo un sólo DTE
+            // se trata de cargar cómo un solo DTE
             else {
                 $Dte = new \sasco\LibreDTE\Sii\Dte($xml);
                 $datos = $Dte->getDatos();
@@ -341,7 +336,7 @@ class Controller_Documentos extends \Controller_App
                 );
                 $this->redirect($this->request->request);
             }
-            // si hay sólo un DTE se entrega directamente
+            // si hay solo un DTE se entrega directamente
             if (!isset($dtes[1])) {
                 $name = $dtes[0]['Encabezado']['Emisor']['RUTEmisor'].'_T'.$dtes[0]['Encabezado']['IdDoc']['TipoDTE'].'F'.$dtes[0]['Encabezado']['IdDoc']['Folio'].'.json';
                 $json = json_encode($dtes[0], JSON_PRETTY_PRINT);
@@ -377,8 +372,7 @@ class Controller_Documentos extends \Controller_App
 
     /**
      * Recurso de la API que genera el XML de los DTEs solicitados
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-12-21
+         * @version 2016-12-21
      */
     public function _api_generar_xml_POST()
     {
@@ -431,14 +425,14 @@ class Controller_Documentos extends \Controller_App
             if (!isset($folios[$DTE->getTipo()])) {
                 return $this->Api->send('Falta el CAF para el tipo de DTE '.$DTE->getTipo().': '.implode('. ', \sasco\LibreDTE\Log::readAll()), 508);
             }
-            if (!$DTE->timbrar($folios[$DTE->getTipo()]) or !$DTE->firmar($Firma) or !$DTE->schemaValidate()) {
+            if (!$DTE->timbrar($folios[$DTE->getTipo()]) || !$DTE->firmar($Firma) || !$DTE->schemaValidate()) {
                 return $this->Api->send(implode("\n", \sasco\LibreDTE\Log::readAll()), 508);
             }
             // agregar el DTE al listado
             $Documentos[] = $DTE;
         }
         // armar EnvioDTE si se pasó fecha de resolución y número de resolución
-        if (isset($this->Api->data['resolucion']) and !empty($this->Api->data['resolucion']['FchResol']) and isset($this->Api->data['resolucion']['NroResol'])) {
+        if (isset($this->Api->data['resolucion']) && !empty($this->Api->data['resolucion']['FchResol']) && isset($this->Api->data['resolucion']['NroResol'])) {
             $EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
             foreach ($Documentos as $DTE) {
                 $EnvioDte->agregar($DTE);
@@ -482,8 +476,7 @@ class Controller_Documentos extends \Controller_App
 
     /**
      * Recurso de la API que genera el PDF de los DTEs contenidos en un EnvioDTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-21
+         * @version 2020-08-21
      */
     public function _api_generar_pdf_POST()
     {
@@ -495,7 +488,7 @@ class Controller_Documentos extends \Controller_App
             $this->Api->send($User, 401);
         }
         // si hubo problemas al subir el archivo error
-        if (!isset($this->Api->data['xml']) and (!isset($_FILES['xml']) or $_FILES['xml']['error'])) {
+        if (!isset($this->Api->data['xml']) && (!isset($_FILES['xml']) || $_FILES['xml']['error'])) {
             $this->Api->send('Hubo algún problema al recibir el archivo XML con el EnvioDTE', 400);
         }
         // recuperar contenido del archivo xml
@@ -526,7 +519,7 @@ class Controller_Documentos extends \Controller_App
         // recuperar contenido del logo (si existe)
         if (isset($this->Api->data['logo'])) {
             $logo = base64_decode($this->Api->data['logo']);
-        } else if (isset($_FILES['logo']) and !$_FILES['logo']['error']) {
+        } else if (isset($_FILES['logo']) && !$_FILES['logo']['error']) {
             $logo = file_get_contents($_FILES['logo']['tmp_name']);
         } else {
             $logo_file = DIR_STATIC.'/contribuyentes/'.mb_substr($Caratula['RutEmisor'], 0, -2).'/logo.png';
@@ -543,7 +536,7 @@ class Controller_Documentos extends \Controller_App
         } else {
             $extra_emisor = [];
         }
-        if (!empty($Emisor->direccion) and !empty($Emisor->comuna)) {
+        if (!empty($Emisor->direccion) && !empty($Emisor->comuna)) {
             $extra_emisor['casa_matriz'] = $Emisor->direccion.', '.$Emisor->getComuna()->comuna;
         }
         $extra_api = !empty($this->Api->data['extra']) ? $this->Api->data['extra'] : [];
@@ -575,19 +568,19 @@ class Controller_Documentos extends \Controller_App
             // generar PDF
             $pdf = new \sasco\LibreDTE\Sii\Dte\PDF\Dte($papelContinuo);
             $pdf->setFooterText(\sowerphp\core\Configure::read('dte.pdf.footer'));
-            if (!empty($Caratula['FchResol']) and isset($Caratula['NroResol'])) {
+            if (!empty($Caratula['FchResol']) && isset($Caratula['NroResol'])) {
                 $pdf->setResolucion(['FchResol'=>$Caratula['FchResol'], 'NroResol'=>(int)$Caratula['NroResol']]);
             }
             if ($webVerificacion) {
                 $pdf->setWebVerificacion($webVerificacion);
             }
-            if (!empty($datos['Encabezado']['Emisor']['Sucursal']) or !empty($datos['Encabezado']['Emisor']['CdgSIISucur'])) {
+            if (!empty($datos['Encabezado']['Emisor']['Sucursal']) || !empty($datos['Encabezado']['Emisor']['CdgSIISucur'])) {
                 if (!empty($extra['casa_matriz'])) {
                     $pdf->setCasaMatriz($extra['casa_matriz']);
                 }
             }
             // logo se agrega siempre que exista, sea hoja carta o esté pedido por el emisor
-            if (isset($logo) and (!$papelContinuo or !empty($extra['continuo']['logo']['posicion']))) {
+            if (isset($logo) && (!$papelContinuo || !empty($extra['continuo']['logo']['posicion']))) {
                 $pdf->setLogo('@'.$logo, !empty($extra['carta']['logo']['posicion']) ? $extra['carta']['logo']['posicion'] : 0);
             }
             // configuración especifica del formato del PDF si es hoja carta, no se
@@ -618,7 +611,7 @@ class Controller_Documentos extends \Controller_App
             if ($cedible!=2) {
                 for ($i=0; $i<$copias_tributarias; $i++)
                     $pdf->agregar($datos, $TED);
-                if ($cedible and $DTE->esCedible()) {
+                if ($cedible && $DTE->esCedible()) {
                     $pdf->setCedible(true);
                     for ($i=0; $i<$copias_cedibles; $i++) {
                         $pdf->agregar($datos, $TED);
@@ -642,7 +635,7 @@ class Controller_Documentos extends \Controller_App
             }
         }
         // si solo es un archivo y se pidió no comprimir se entrega directamente
-        if (empty($this->Api->data['compress']) and !isset($Documentos[1]) and $cedible!=2) {
+        if (empty($this->Api->data['compress']) && !isset($Documentos[1]) && $cedible!=2) {
             $disposition = !$Emisor->config_pdf_disposition ? 'attachement' : 'inline';
             $this->response->sendFile($file, ['disposition'=>$disposition, 'exit'=>false]);
             \sowerphp\general\Utility_File::rmdir($dir);
@@ -656,8 +649,7 @@ class Controller_Documentos extends \Controller_App
 
     /**
      * Recurso de la API que permite validar el TED (timbre electrónico)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-02-23
+         * @version 2017-02-23
      */
     public function _api_verificar_ted_POST()
     {
@@ -681,19 +673,19 @@ class Controller_Documentos extends \Controller_App
         $ok = true;
         if (
             !isset($datos['TED']['FRMT'])
-            or !isset($datos['TED']['DD']['CAF']['DA']['RSAPK']['M'])
-            or !isset($datos['TED']['DD']['CAF']['DA']['RSAPK']['E'])
-            or !isset($datos['TED']['DD']['RE'])
-            or !isset($datos['TED']['DD']['CAF']['DA']['RE'])
-            or !isset($datos['TED']['DD']['TD'])
-            or !isset($datos['TED']['DD']['CAF']['DA']['TD'])
-            or !isset($datos['TED']['DD']['F'])
-            or !isset($datos['TED']['DD']['CAF']['DA']['RNG']['D'])
-            or !isset($datos['TED']['DD']['CAF']['DA']['RNG']['H'])
-            or !isset($datos['TED']['DD']['CAF']['DA']['IDK'])
-            or !isset($datos['TED']['DD']['RR'])
-            or !isset($datos['TED']['DD']['FE'])
-            or !isset($datos['TED']['DD']['MNT'])
+            || !isset($datos['TED']['DD']['CAF']['DA']['RSAPK']['M'])
+            || !isset($datos['TED']['DD']['CAF']['DA']['RSAPK']['E'])
+            || !isset($datos['TED']['DD']['RE'])
+            || !isset($datos['TED']['DD']['CAF']['DA']['RE'])
+            || !isset($datos['TED']['DD']['TD'])
+            || !isset($datos['TED']['DD']['CAF']['DA']['TD'])
+            || !isset($datos['TED']['DD']['F'])
+            || !isset($datos['TED']['DD']['CAF']['DA']['RNG']['D'])
+            || !isset($datos['TED']['DD']['CAF']['DA']['RNG']['H'])
+            || !isset($datos['TED']['DD']['CAF']['DA']['IDK'])
+            || !isset($datos['TED']['DD']['RR'])
+            || !isset($datos['TED']['DD']['FE'])
+            || !isset($datos['TED']['DD']['MNT'])
         ) {
             $ok = false;
         }
@@ -703,7 +695,7 @@ class Controller_Documentos extends \Controller_App
         // verificar firma del ted
         $DD = $xml->getFlattened('/TED/DD');
         $FRMT = $datos['TED']['FRMT'];
-        if (is_array($FRMT) and isset($FRMT['@value'])) {
+        if (is_array($FRMT) && isset($FRMT['@value'])) {
             $FRMT = $FRMT['@value'];
         }
         $pub_key = \sasco\LibreDTE\FirmaElectronica::getFromModulusExponent(
@@ -714,13 +706,13 @@ class Controller_Documentos extends \Controller_App
             $this->Api->send('Firma del timbre incorrecta', 500);
         }
         // verificar que datos del timbre correspondan con datos del CAF
-        if ($datos['TED']['DD']['RE']!=$datos['TED']['DD']['CAF']['DA']['RE']) {
+        if ($datos['TED']['DD']['RE'] != $datos['TED']['DD']['CAF']['DA']['RE']) {
             $this->Api->send('RUT del timbre no corresponde con RUT del CAF', 500);
         }
-        if ($datos['TED']['DD']['TD']!=$datos['TED']['DD']['CAF']['DA']['TD']) {
+        if ($datos['TED']['DD']['TD'] != $datos['TED']['DD']['CAF']['DA']['TD']) {
             $this->Api->send('Tipo de DTE del timbre no corresponde con tipo de DTE del CAF', 500);
         }
-        if ($datos['TED']['DD']['F']<$datos['TED']['DD']['CAF']['DA']['RNG']['D'] or $datos['TED']['DD']['F']>$datos['TED']['DD']['CAF']['DA']['RNG']['H']) {
+        if ($datos['TED']['DD']['F']<$datos['TED']['DD']['CAF']['DA']['RNG']['D'] || $datos['TED']['DD']['F']>$datos['TED']['DD']['CAF']['DA']['RNG']['H']) {
             $this->Api->send('Folio del DTE del timbre fuera del rango del CAF', 500);
         }
         // si es boleta no se consulta su estado ya que no son envíadas al SII
@@ -754,7 +746,7 @@ class Controller_Documentos extends \Controller_App
             'MontoDte'          => $datos['TED']['DD']['MNT'],
             'token'             => $token,
         ]);
-        if ($xml===false) {
+        if ($xml === false) {
             return $this->Api->send(\sasco\LibreDTE\Log::readAll(), 500);
         }
         return (array)$xml->xpath('/SII:RESPUESTA/SII:RESP_HDR')[0];
@@ -762,8 +754,7 @@ class Controller_Documentos extends \Controller_App
 
     /**
      * Método que guarda los datos del Emisor
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-12
+         * @version 2019-08-12
      */
     private function guardarEmisor($datos)
     {
@@ -805,8 +796,7 @@ class Controller_Documentos extends \Controller_App
 
     /**
      * Método que guarda un Receptor
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-12
+         * @version 2019-08-12
      */
     private function guardarReceptor($datos)
     {

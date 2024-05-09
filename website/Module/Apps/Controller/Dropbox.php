@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,20 +25,17 @@ namespace website\Apps;
 
 /**
  * Controlador para aplicación de Dropbox
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2019-07-13
  */
 class Controller_Dropbox extends \Controller_App
 {
 
     /**
-     * Acción para vincular LibreDTE con Dropbox
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]delaf.cl)
-     * @version 2019-07-13
+     * Acción para vincular LibreDTE con Dropbox.
      */
     public function pair()
     {
-        if (isset($_GET['code']) and isset($_GET['state'])) {
+        if (isset($_GET['code']) && isset($_GET['state'])) {
             $Contribuyente = $this->getContribuyente();
             // cargar dropbox
             $DropboxApp = $Contribuyente->getApp('apps.dropbox');
@@ -81,9 +78,7 @@ class Controller_Dropbox extends \Controller_App
     }
 
     /**
-     * Acción para desvincular LibreDTE de Dropbox
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]delaf.cl)
-     * @version 2019-07-13
+     * Acción para desvincular LibreDTE de Dropbox.
      */
     public function unpair()
     {
@@ -108,7 +103,7 @@ class Controller_Dropbox extends \Controller_App
             $borrado = true;
         } catch (\Kunnu\Dropbox\Exceptions\DropboxClientException $e) {
             $response = json_decode($e->getMessage(),true);
-            if (!empty($response['error']['.tag']) and $response['error']['.tag']=='invalid_access_token') {
+            if (!empty($response['error']['.tag']) && $response['error']['.tag'] == 'invalid_access_token') {
                 $borrado = true;
             } else {
                 $borrado = $e->getMessage();
@@ -129,9 +124,7 @@ class Controller_Dropbox extends \Controller_App
     }
 
     /**
-     * Acción para mostrar la información de la cuenta de Dropbox configurada
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]delaf.cl)
-     * @version 2023-10-08
+     * Acción para mostrar la información de la cuenta de Dropbox configurada.
      */
     public function info()
     {

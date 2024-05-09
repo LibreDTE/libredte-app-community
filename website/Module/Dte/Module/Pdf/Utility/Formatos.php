@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte\Pdf;
 
 /**
  * Utilidad base para obtener los formato de PDF disponibles
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2020-08-02
  */
 class Utility_Formatos
@@ -37,8 +36,7 @@ class Utility_Formatos
 
     /**
      * Método que permite asignar el contribuyente que se usará en la utilidad
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-06-12
+         * @version 2020-06-12
      */
     public function setContribuyente($Contribuyente)
     {
@@ -48,8 +46,7 @@ class Utility_Formatos
 
     /**
      * Método que permite obtener el contribuyente que se usará en la utilidad
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-06-12
+         * @version 2020-06-12
      */
     private function getContribuyente()
     {
@@ -61,8 +58,7 @@ class Utility_Formatos
 
     /**
      * Método que entrega todos los proveedores de correo activos del contribuyuente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-02
+         * @version 2020-08-02
      */
     public function getFormatos()
     {

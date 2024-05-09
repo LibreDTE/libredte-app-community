@@ -152,7 +152,7 @@ echo View_Helper_Dashboard::cards([
             </div>
             <!-- fin alertas rcof con reparo por secuencia -->
         <?php endif; ?>
-        <?php if ($Firma and $Firma->getExpirationDays()<=20) : ?>
+        <?php if ($Firma && $Firma->getExpirationDays()<=20) : ?>
             <!-- alerta vencimiento firma electrónica -->
             <div class="row">
                 <div class="col-sm-12">
@@ -182,7 +182,7 @@ echo View_Helper_Dashboard::cards([
             </div>
             <!-- fin alerta vencimiento folios -->
         <?php endif; ?>
-        <?php if ($ventas_periodo or $compras_periodo) : ?>
+        <?php if ($ventas_periodo || $compras_periodo) : ?>
             <!-- graficos ventas y compras -->
             <div class="row row-cols">
                 <?php if ($ventas_periodo) : ?>

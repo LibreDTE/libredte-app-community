@@ -1,16 +1,16 @@
-LibreDTE: Aplicación Web Edición Comunidad
-==========================================
+LibreDTE: Aplicación Web - Edición Comunidad
+============================================
 
-LibreDTE es un proyecto de [SASCO SpA](https://www.sasco.cl) que tiene por objetivo
+LibreDTE es un proyecto que tiene por objetivo
 proveer Facturación Electrónica Libre para Chile.
 
-Aquí encontrarás el código fuente de la Edición Comunidad de LibreDTE, la cual
-es la base de la Edición Enterprise disponible sólo a través de
+Aquí encontrarás el código fuente de la Edición Comunidad de LibreDTE,
+el cual es la base de la Edición Enterprise, disponible solo a través de
 [www.libredte.cl](https://www.libredte.cl).
 
 Esta aplicación web utiliza como núcleo para el sistema de facturación la
 [Biblioteca de LibreDTE en PHP](https://github.com/LibreDTE/libredte-lib) y el
-[framework SowerPHP](https://github.com/SowerPHP/sowerphp) para la plataforma web.
+[framework SowerPHP](https://www.sowerphp.org) para la plataforma web.
 
 Instalación
 -----------
@@ -23,7 +23,7 @@ Términos y condiciones de uso
 Al utilizar este proyecto, total o parcialmente, automáticamente se acepta
 cumplir con los [términos y condiciones de uso](https://www.libredte.cl/legal)
 que rigen a LibreDTE. La [Licencia Pública General Affero de GNU (AGPL)](https://raw.githubusercontent.com/LibreDTE/libredte-webapp/master/COPYING)
-sólo aplica para quienes respeten los términos y condiciones de uso. No existe
+solo aplica para quienes respeten los términos y condiciones de uso. No existe
 una licencia comercial de LibreDTE, por lo cual no es posible usar el proyecto
 si no aceptas cumplir dichos términos y condiciones.
 

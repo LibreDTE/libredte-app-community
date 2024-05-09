@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,7 +25,6 @@ namespace website;
 
 /**
  * Controlador para módulos
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2016-02-03
  */
 class Controller_Module extends \sowerphp\general\Controller_Module
@@ -35,8 +34,7 @@ class Controller_Module extends \sowerphp\general\Controller_Module
      * Método para capturar solicitudes de módulos, si existe un dashboard
      * asociado al módulo y el usuario está autorizado para verlo el usuario
      * será redireccionado automáticamente al dashboard del módulo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-07-04
+         * @version 2018-07-04
      */
     public function display()
     {

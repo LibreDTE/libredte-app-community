@@ -31,7 +31,7 @@ echo $f->end('Enviar libro sin movimientos');
         <div class="card">
             <div class="card-header"><i class="fa fa-exclamation-circle text-warning"></i> No existe obligación de enviar libro</div>
             <div class="card-body">
-                <p>Si bien existe la posibilidad de enviar al SII el libro de guías sin movimiento. Sólo debe hacerlo si el SII lo solicita para alguna fiscalización.</p>
+                <p>Si bien existe la posibilidad de enviar al SII el libro de guías sin movimiento. Solo debe hacerlo si el SII lo solicita para alguna fiscalización.</p>
                 <p>Normalmente, este libro no se envía al SII.</p>
             </div>
             <div class="card-footer small text-end">Fuente: <a href="http://www.sii.cl/preguntas_frecuentes/catastro/001_012_3770.htm">SII</a></div>

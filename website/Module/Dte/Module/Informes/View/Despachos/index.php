@@ -78,7 +78,7 @@ if (isset($despachos)) {
         $d['total'] = num($d['total']);
         $d['items'] = implode(' / ', $d['items']);
         // datos para el mapa
-        if (!empty($_POST['mapa']) and $d['latitud'] and $d['longitud']) {
+        if (!empty($_POST['mapa']) && $d['latitud'] && $d['longitud']) {
             $despachos_mapa[] = [
                 'folio' => $d['folio'],
                 'direccion' => $d['direccion'],
@@ -92,9 +92,9 @@ if (isset($despachos)) {
     array_unshift($despachos, ['Guía', 'Receptor', 'Dirección', 'Mercadería', 'Total', 'Acciones']);
     new \sowerphp\general\View_Helper_Table($despachos, 'despachos_'.$Emisor->rut.'_'.$_POST['fecha'], true);
 ?>
-<?php if (!empty($_POST['mapa']) and !empty($despachos_mapa) and $google_api_key): ?>
+<?php if (!empty($_POST['mapa']) && !empty($despachos_mapa) && $google_api_key): ?>
 <?php
-if (!$latitud or !$longitud) {
+if (!$latitud || !$longitud) {
     $latitud = $despachos_mapa[0]['latitud'];
     $longitud = $despachos_mapa[0]['longitud'];
 }

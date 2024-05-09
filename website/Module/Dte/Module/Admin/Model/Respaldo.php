@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte\Admin;
 
 /**
  * Modelo para generar respaldo de datos de un contribuyente
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2017-01-19
  */
 class Model_Respaldo
@@ -126,8 +125,7 @@ class Model_Respaldo
 
     /**
      * Constructor del modelo de respaldos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-01-19
+         * @version 2017-01-19
      */
     public function __construct()
     {
@@ -140,8 +138,7 @@ class Model_Respaldo
 
     /**
      * Método que entrega el listado de tablas que se podrán respaldar
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-01-29
+         * @version 2016-01-29
      */
     public function getTablas()
     {
@@ -157,8 +154,7 @@ class Model_Respaldo
      * @param rut RUT del contribuyente que se desea respaldar
      * @param tablas Arreglo con las tablas a respaldar
      * @return Ruta del directorio donde se dejó el respaldo recién creado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-04-10
+         * @version 2019-04-10
      */
     public function generar($rut, $tablas = [])
     {
@@ -186,7 +182,7 @@ class Model_Respaldo
             $registros[$tabla] = count($datos);
             // si la tabla es la de configuraciones extras del contribuyente se
             // desencriptan las columnas que corresponden
-            if ($tabla=='contribuyente_config') {
+            if ($tabla == 'contribuyente_config') {
                 foreach ($datos as &$config) {
                     $key = $config['configuracion'].'_'.$config['variable'];
                     if (in_array($key, \website\Dte\Model_Contribuyente::$encriptar)) {
@@ -206,7 +202,7 @@ class Model_Respaldo
             foreach ($datos as &$row) {
                 foreach ($row as &$value) {
                     if (is_bool($value)) {
-                        $value = $value===true ? 1 : 0;
+                        $value = $value === true ? 1 : 0;
                     }
                 }
             }
@@ -223,7 +219,7 @@ class Model_Respaldo
                             $file_meta = ['ext'=>$file_meta, 'base64'=>true];
                         }
                         // recuperar el archivo si está en base64 (o sea no está encriptado)
-                        if ($file_meta['base64'] and (!isset($info['encriptar']) or !in_array($col, $info['encriptar']))) {
+                        if ($file_meta['base64'] && (!isset($info['encriptar']) || !in_array($col, $info['encriptar']))) {
                             $row[$col] = base64_decode($row[$col]);
                         }
                         if (!empty($row[$col])) {
@@ -255,7 +251,7 @@ class Model_Respaldo
         }
         // colocar información del respaldo realizado
         $msg = 'Respaldo de datos de LibreDTE'."\n";
-        $msg .= '============================='."\n\n";
+        $msg .= '========================== == '."\n\n";
         $msg .= '- Contribuyente: '.$rut."\n";
         $msg .= '- Fecha y hora del respaldo: '.date('Y-m-d H:i:s')."\n\n";
         $msg .= 'Registros'."\n";
@@ -274,8 +270,7 @@ class Model_Respaldo
 
     /**
      * Método que crea el directorio temporal para el respaldo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-09-26
+         * @version 2021-09-26
      */
     private function mkdirRespaldo($rut, $prefix = 'libredte_contribuyente')
     {
@@ -292,8 +287,7 @@ class Model_Respaldo
 
     /**
      * Método que entrega las PKs de una tabla
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-04-10
+         * @version 2019-04-10
      */
     private function getPKs($tabla)
     {
@@ -308,8 +302,7 @@ class Model_Respaldo
 
     /**
      * Método que realiza el respaldo asociado a Boletas Electrónicas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-09-26
+         * @version 2021-09-26
      */
     public function boletas($Contribuyente, $fecha_creacion)
     {

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte;
 
 /**
  * Controlador registro de ventas
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2020-06-26
  */
 class Controller_RegistroVentas extends \Controller_App
@@ -35,8 +34,7 @@ class Controller_RegistroVentas extends \Controller_App
     /**
      * API que permite obtener un resumen de los documentos emitidos
      * en el Registro de Ventas del SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-06-26
+         * @version 2020-06-26
      */
     public function _api_resumen_GET($emisor, $periodo)
     {

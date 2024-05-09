@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -24,25 +24,21 @@
 namespace website;
 
 /**
- * Obtiene los valores de la UF para un año determinado
- * Los valores disponibles en SII son desde 1990
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2020-02-15
+ * Obtiene los valores de la UF para un año determinado.
+ * Los valores disponibles en SII son desde 1990.
  */
 class Shell_Command_Indicadores_Uf extends \sowerphp\core\Shell_App
 {
 
     /**
-     * Método principal del comando
-     * @param anio Año para el cual se desea obtener la UF o null para año actual
-     * @return =0 si todo fue ok, !=0 si hubo algún error
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-15
+     * Método principal del comando.
+     * @param anio Año para el cual se desea obtener la UF o null para año actual.
+     * @return int =0 si todo fue ok, !=0 si hubo algún error.
      */
-    public function main($anio = null, $save = null)
+    public function main($anio = null, $save = null): int
     {
         if ($anio !== null && !is_numeric($anio)) {
-            $this->out('<error>Año debe ser un número entero</error>');
+            $this->out('<error>Año debe ser un número entero.</error>');
             return 1;
         }
         if ($save !== null && $save != '--save') {
@@ -54,7 +50,7 @@ class Shell_Command_Indicadores_Uf extends \sowerphp\core\Shell_App
         }
         $this->out('Obteniendo valor de la UF para el año '.$anio);
         $response = apigateway_consume('/sii/indicadores/uf/anual/'.$anio);
-        if ($response['status']['code']!=200 or empty($response['body'])) {
+        if ($response['status']['code'] != 200 || empty($response['body'])) {
             $msg = 'No fue posible obtener los valores de la UF para el año '.$anio;
             if ($response['body']) {
                 $msg .= ': '.$response['body'];
@@ -73,8 +69,6 @@ class Shell_Command_Indicadores_Uf extends \sowerphp\core\Shell_App
     /**
      * Método que muestra los valores de un año de UF
      * @param $valores Arreglo con los valores de la UF de todos los meses de uno o varios años
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-15
      */
     private function showValores($valores)
     {
@@ -116,8 +110,7 @@ class Shell_Command_Indicadores_Uf extends \sowerphp\core\Shell_App
     /**
      * Método que guarda los valores de la UF en la base de datos
      * @param $valores Arreglo con los valores de la UF de todos los meses de uno o varios años
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-09-06
+         * @version 2020-09-06
      */
     private function saveValores($valores)
     {

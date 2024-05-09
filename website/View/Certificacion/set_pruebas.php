@@ -104,7 +104,7 @@ echo $f->input([
     'type' => 'file',
     'name' => 'firma',
     'label' => 'Firma electrónica',
-    'help' => 'Obligatoria sólo si el libro es normal. Certificado digital con extensión .p12 o .pfx',
+    'help' => 'Obligatoria solo si el libro es normal. Certificado digital con extensión .p12 o .pfx',
     'attr' => 'accept=".p12,.pfx"',
 ]);
 echo $f->input([
@@ -140,7 +140,7 @@ echo $f->end('Generar XML libro de ventas');
 <div role="tabpanel" class="tab-pane" id="boletas" aria-labelledby="boletas-tab">
     <div class="alert alert-warning" role="alert">
         <i class="fa-solid fa-exclamation-triangle fa-fw text-warning"></i>
-        Esta funcionalidad debe considerarse obsoleta, se puede seguir usando, pero no se garantiza su funcionamiento ni recibirá actualizaciones. Si el SII cambia algo respecto a este proceso podría dejar de funcionar. En SASCO SpA actualmente utilizamos otro método que no está disponible en LibreDTE pero puedes <a href="https://www.libredte.cl/shop/dte-cert-39-certificacion-boleta-electronica-29?category=1" class="alert-link">comprar el servicio aquí</a>.
+        Esta funcionalidad debe considerarse obsoleta, se puede seguir usando, pero no se garantiza su funcionamiento ni recibirá actualizaciones. Si el SII cambia algo respecto a este proceso podría dejar de funcionar. El método de certificación de boletas electrónicas actualizado no está disponible en estas utilidades de LibreDTE, pero pero puedes <a href="https://www.libredte.cl/shop/dte-cert-39-certificacion-boleta-electronica-29?category=1" class="alert-link">comprar el servicio aquí</a>.
     </div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
@@ -148,21 +148,18 @@ echo $f->begin(['action'=>$_base.'/certificacion/set_pruebas_boletas', 'id'=>'fo
 echo $f->input([
     'name' => 'RUTEmisor',
     'label' => 'RUT del emisor',
-    'placeholder' => '76192083-9',
     'check' => 'notempty rut',
     'attr' => 'maxlength="12" onblur="Emisor.setDatos(\'form_boletas\')"',
 ]);
 echo $f->input([
     'name' => 'RznSoc',
     'label' => 'Razón social',
-    'placeholder' => 'SASCO SpA',
     'check' => 'notempty',
     'attr' => 'maxlength="100"',
 ]);
 echo $f->input([
     'name' => 'GiroEmis',
     'label' => 'Giro',
-    'placeholder' => 'Servicios integrales de informática',
     'check' => 'notempty',
     'attr' => 'maxlength="80"',
 ]);
@@ -171,13 +168,11 @@ echo $f->input([
     'name' => 'Acteco',
     'label' => 'Actividad económica',
     'options' => [''=>'Actividad económica del emisor'] + $actividades_economicas,
-    'value' => '620200',
     'check' => 'notempty',
 ]);
 echo $f->input([
     'name' => 'DirOrigen',
     'label' => 'Dirección',
-    'placeholder' => 'Santa Cruz',
     'check' => 'notempty',
     'attr' => 'maxlength="70"',
 ]);
@@ -186,7 +181,6 @@ echo $f->input([
     'name' => 'CmnaOrigen',
     'label' => 'Comuna',
     'options' => [''=>'Comuna del emisor'] + $comunas,
-    'value' => '06310',
     'check' => 'notempty',
 ]);
 echo $f->input([

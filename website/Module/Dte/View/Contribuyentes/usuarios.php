@@ -221,7 +221,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'config_usuarios_auth2',
     'label' => '¿Requerir Auth2?',
-    'options' => ['No es obligatorio', 'Sólo usuarios administradores', 'Todos los usuarios autorizados'],
+    'options' => ['No es obligatorio', 'Solo usuarios administradores', 'Todos los usuarios autorizados'],
     'value' => $Contribuyente->config_usuarios_auth2,
     'help' => 'Esto mejora la seguridad exigiendo que usuarios autorizados usen doble factor de autenticación',
 ]);

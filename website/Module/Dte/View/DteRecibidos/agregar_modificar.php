@@ -47,12 +47,12 @@ echo $f->input([
     'value' => $Receptor->rut,
 ]);
 echo $f->input([
-    'type' => (isset($DteRecibido) and $DteRecibido->intercambio) ? 'text' : 'date',
+    'type' => (isset($DteRecibido) && $DteRecibido->intercambio) ? 'text' : 'date',
     'name' => 'fecha',
     'label' => 'Fecha documento',
     'value' => isset($DteRecibido) ? $DteRecibido->fecha : (!empty($_POST['fecha']) ? $_POST['fecha'] : date('Y-m-d')),
     'check' => 'notempty date',
-    'attr' => (isset($DteRecibido) and $DteRecibido->intercambio) ? 'readonly="readonly"' : '',
+    'attr' => (isset($DteRecibido) && $DteRecibido->intercambio) ? 'readonly="readonly"' : '',
 ]);
 echo $f->input([
     'name' => 'emisor',
@@ -60,9 +60,9 @@ echo $f->input([
     'value' => isset($DteRecibido) ? \sowerphp\app\Utility_Rut::addDV($DteRecibido->emisor) : '',
     'placeholder' => '60.805.000-0',
     'check' => 'notempty rut',
-    'attr' => (isset($DteRecibido) and $DteRecibido->intercambio) ? 'readonly="readonly"' : 'onblur="dte_recibido_check()"',
+    'attr' => (isset($DteRecibido) && $DteRecibido->intercambio) ? 'readonly="readonly"' : 'onblur="dte_recibido_check()"',
 ]);
-if (!isset($DteRecibido) or !$DteRecibido->intercambio) {
+if (!isset($DteRecibido) || !$DteRecibido->intercambio) {
     echo $f->input([
         'type' => 'select',
         'name' => 'dte',
@@ -86,21 +86,21 @@ echo $f->input([
     'label' => 'Folio',
     'value' => isset($DteRecibido) ? $DteRecibido->folio : '',
     'check' => 'notempty integer',
-    'attr' => 'maxlength="10" '.((isset($DteRecibido) and $DteRecibido->intercambio) ? 'readonly="readonly"' : 'onblur="dte_recibido_check()"'),
+    'attr' => 'maxlength="10" '.((isset($DteRecibido) && $DteRecibido->intercambio) ? 'readonly="readonly"' : 'onblur="dte_recibido_check()"'),
 ]);
 echo $f->input([
     'name' => 'exento',
     'label' => 'Monto exento',
     'value' => isset($DteRecibido) ? $DteRecibido->exento : '',
     'check' => 'integer',
-    //'attr' => (isset($DteRecibido) and $DteRecibido->intercambio) ? 'readonly="readonly"' : '',
+    //'attr' => (isset($DteRecibido) && $DteRecibido->intercambio) ? 'readonly="readonly"' : '',
 ]);
 echo $f->input([
     'name' => 'neto',
     'label' => 'Neto',
     'value' => isset($DteRecibido) ? $DteRecibido->neto : '',
     'check' => 'integer',
-    //'attr' => (isset($DteRecibido) and $DteRecibido->intercambio) ? 'readonly="readonly"' : '',
+    //'attr' => (isset($DteRecibido) && $DteRecibido->intercambio) ? 'readonly="readonly"' : '',
 ]);
 echo $f->input([
     'type' => 'select',
@@ -114,14 +114,14 @@ echo $f->input([
     'label' => 'Tasa impuesto',
     'value' => isset($DteRecibido) ? $DteRecibido->tasa : $iva_tasa,
     'check' => 'real',
-    //'attr' => (isset($DteRecibido) and $DteRecibido->intercambio) ? 'readonly="readonly"' : '',
+    //'attr' => (isset($DteRecibido) && $DteRecibido->intercambio) ? 'readonly="readonly"' : '',
 ]);
 echo $f->input([
     'name' => 'iva',
     'label' => 'Impuesto',
     'value' => isset($DteRecibido) ? $DteRecibido->iva : '',
     'check' => 'integer',
-    //'attr' => (isset($DteRecibido) and $DteRecibido->intercambio) ? 'readonly="readonly"' : '',
+    //'attr' => (isset($DteRecibido) && $DteRecibido->intercambio) ? 'readonly="readonly"' : '',
 ]);
 echo $f->input([
     'type' => 'select',
@@ -137,7 +137,7 @@ echo $f->input([
     'label' => 'Período',
     'value' => isset($DteRecibido) ? $DteRecibido->periodo : '',
     'check' => 'integer',
-    'help' => 'Período en el que registrar el documento, sólo si es diferente al mes de la fecha de emisión.',
+    'help' => 'Período en el que registrar el documento, solo si es diferente al mes de la fecha de emisión.',
     'datepicker' => [
         'format' => 'yyyymm',
         'viewMode' => 'months',
@@ -218,14 +218,14 @@ echo $f->input([
 echo $f->input([
     'type' => 'checkbox',
     'name' => 'emisor_nc_nd_fc',
-    'checked' => (isset($DteRecibido) and $DteRecibido->emisor_nc_nd_fc) ? true : false,
+    'checked' => (isset($DteRecibido) && $DteRecibido->emisor_nc_nd_fc) ? true : false,
     'label' => '¿NC/ND de FC?',
     'help' => 'Corresponde a una nota de crédito o débito de una factura de compra',
 ]);
 /*echo $f->input([
     'type' => 'checkbox',
     'name' => 'anulado',
-    'checked' => (isset($DteRecibido) and $DteRecibido->anulado == 'A') ? true : false,
+    'checked' => (isset($DteRecibido) && $DteRecibido->anulado == 'A') ? true : false,
     'label' => '¿Anulado?',
 ]);*/
 echo '</div>',"\n";

@@ -15,8 +15,8 @@
             <li>Giro: giro principal del contribuyente (opcional)</li>
             <li>Dirección: dirección principal del contribuyente (opcional)</li>
             <li>Comuna: código de comuna (iniciando con 0 si corresponde) o bien nombre comuna principal del contribuyente</li>
-            <li>Correo electrónico: correo electrónico principal del contribuyente, uno sólo (opcional)</li>
-            <li>Teléfono: teléfono principal del contribuyente, uno sólo (opcional). Ejemplos: celular +56 9 88776655 / Santiago +56 2 22334455 / Santa Cruz +56 72 2821122</li>
+            <li>Correo electrónico: correo electrónico principal del contribuyente, uno solo (opcional)</li>
+            <li>Teléfono: teléfono principal del contribuyente, uno solo (opcional). Ejemplos: celular +56 9 88776655 / Santiago +56 2 22334455 / Santa Cruz +56 72 2821122</li>
             <li>Código de actividad económica: código de actividad económica principal según el SII (opcional)</li>
         </ul>
         <hr/>
@@ -37,8 +37,8 @@ echo $f->end('Importar datos de contribuyentes');
         <div class="card">
             <div class="card-header"><i class="fa fa-exclamation-circle text-warning"></i> ¿Qué datos puedo cargar?</div>
             <div class="card-body">
-                <p>Sólo se pueden cargar datos de contribuyentes que no estén registrados por un usuario en el sistema. Si se incluye un contribuyente ya registrado, se omitirá en la actualización.</p>
-                <p>Sólo se actualizarán datos que no estén previamente asignados al contribuyente. Por ejemplo, si un contribuyente ya tiene un correo electrónico, usando esta opción no podrá actualizar dicho correo. Sólo podrá agregar el correo si el contribuyente no tiene uno.</p>
+                <p>Solo se pueden cargar datos de contribuyentes que no estén registrados por un usuario en el sistema. Si se incluye un contribuyente ya registrado, se omitirá en la actualización.</p>
+                <p>Solo se actualizarán datos que no estén previamente asignados al contribuyente. Por ejemplo, si un contribuyente ya tiene un correo electrónico, usando esta opción no podrá actualizar dicho correo. Solo podrá agregar el correo si el contribuyente no tiene uno.</p>
             </div>
         </div>
     </div>

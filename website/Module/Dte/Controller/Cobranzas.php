@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -38,8 +38,7 @@ class Controller_Cobranzas extends \Controller_App
 
     /**
      * Acción que permite buscar los pagos pendientes
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-28
+         * @version 2017-09-28
      */
     public function buscar()
     {
@@ -67,8 +66,7 @@ class Controller_Cobranzas extends \Controller_App
 
     /**
      * Acción que permite editar los pagos para marcarlos como pagados
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-28
+         * @version 2016-02-28
      */
     public function ver($dte, $folio, $fecha)
     {
@@ -105,8 +103,7 @@ class Controller_Cobranzas extends \Controller_App
 
     /**
      * Acción que permite eliminar un cobro programado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-10
+         * @version 2019-07-10
      */
     public function eliminar($dte, $folio, $fecha)
     {

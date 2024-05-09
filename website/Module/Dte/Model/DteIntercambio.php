@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -307,8 +307,7 @@ class Model_DteIntercambio extends \Model_App
 
     /**
      * Método que indica si ya existe previamente el documento (mismo archivo)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-20
+         * @version 2018-05-20
      */
     private function existeArchivo()
     {
@@ -330,8 +329,7 @@ class Model_DteIntercambio extends \Model_App
 
     /**
      * Método que guarda el enviodte que se ha recibido desde otro contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-20
+         * @version 2018-05-20
      */
     public function save()
     {
@@ -366,8 +364,7 @@ class Model_DteIntercambio extends \Model_App
     /**
      * Método que entrega el objeto EnvioDte
      * @return \sasco\LibreDTE\Sii\EnvioDte
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-28
+         * @version 2015-09-28
      */
     public function getEnvioDte()
     {
@@ -381,8 +378,7 @@ class Model_DteIntercambio extends \Model_App
     /**
      * Método que entrega un arreglo con los objetos Dte con los documentos
      * @return Arreglo de \sasco\LibreDTE\Sii\Dte
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-11-21
+         * @version 2016-11-21
      */
     public function getDocumentos()
     {
@@ -395,8 +391,7 @@ class Model_DteIntercambio extends \Model_App
     /**
      * Método que entrega un objetos Dte con el documento solicitado o false si no se encontró
      * @return \sasco\LibreDTE\Sii\Dte
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-11-21
+         * @version 2016-11-21
      */
     public function getDocumento($emisor, $dte, $folio)
     {
@@ -405,8 +400,7 @@ class Model_DteIntercambio extends \Model_App
 
     /**
      * Método que entrega el objeto del receptor del intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-20
+         * @version 2018-05-20
      */
     public function getReceptor()
     {
@@ -418,8 +412,7 @@ class Model_DteIntercambio extends \Model_App
 
     /**
      * Método que entrega el objeto del emisor del intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-28
+         * @version 2015-09-28
      */
     public function getEmisor()
     {
@@ -436,8 +429,7 @@ class Model_DteIntercambio extends \Model_App
 
     /**
      * Método que entrega el objeto del estado del intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-27
+         * @version 2015-09-27
      */
     public function getEstado()
     {
@@ -450,8 +442,7 @@ class Model_DteIntercambio extends \Model_App
     /**
      * Método que entrega el asunto del correo del intercambio
      * Se recomienda usar este método para tratar de obtener el texto en la codificación correcta
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+         * @version 2021-10-12
      */
     public function getEmailAsunto()
     {
@@ -464,8 +455,7 @@ class Model_DteIntercambio extends \Model_App
     /**
      * Método que entrega el contenido del correo del intercambio en TXT
      * Se recomienda usar este método para tratar de obtener el texto en la codificación correcta
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-14
+         * @version 2021-10-14
      */
     public function getEmailTxt()
     {
@@ -482,8 +472,7 @@ class Model_DteIntercambio extends \Model_App
     /**
      * Método que entrega el contenido del correo del intercambio en HTML
      * Se recomienda usar este método para tratar de obtener el texto en la codificación correcta
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+         * @version 2021-10-12
      */
     public function getEmailHtml()
     {
@@ -499,8 +488,7 @@ class Model_DteIntercambio extends \Model_App
 
     /**
      * Método que indica si intercambio se encuentra asociado a un DTE recibido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-21
+         * @version 2018-05-21
      */
     public function recibido()
     {
@@ -513,8 +501,7 @@ class Model_DteIntercambio extends \Model_App
 
     /**
      * Método que busca si los documentos del intercambio ya están en otro intercambio previamente recibido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-20
+         * @version 2018-05-20
      */
     public function recibidoPreviamente()
     {
@@ -544,8 +531,7 @@ class Model_DteIntercambio extends \Model_App
     /**
      * Método para procesar el intercambio de manera automática si es que así
      * está configurado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-21
+         * @version 2018-05-21
      */
     public function procesarRespuestaAutomatica($silenciosa = true)
     {
@@ -562,9 +548,9 @@ class Model_DteIntercambio extends \Model_App
                     $ApiDteIntercambioResponder->url,
                     ['xml'=>$this->archivo_xml]
                 );
-                if ($response['status']['code']==200 and !is_string($response['body'])) {
+                if ($response['status']['code']==200 && !is_string($response['body'])) {
                     if (is_array($response['body'])) {
-                        if (!empty($response['body']['recibir']) or !empty($response['body']['reclamar'])) {
+                        if (!empty($response['body']['recibir']) || !empty($response['body']['reclamar'])) {
                             $accion = $response['body'];
                         }
                     } else {
@@ -575,14 +561,14 @@ class Model_DteIntercambio extends \Model_App
             // llamar al trigger de aceptación/rechazo de los intercambios, y si corresponde aceptar o reclamar el DTE
             // si el trigger entrega 'null' (no existe handler para el trigger o bien el trigger retornó 'null') se deja
             // sin procesar la acción.
-            // se llama sólo si no se logró determinar la acción usando el servicio web del contribuyente
+            // se llama solo si no se logró determinar la acción usando el servicio web del contribuyente
             if ($accion===null) {
                 $accion = \sowerphp\core\Trigger::run('dte_dte_intercambio_responder', $this);
             }
             // ejecutar acción según se haya indicado
             if ($accion!==null) {
                 try {
-                    if (is_array($accion) and isset($accion['accion']) and isset($accion['config'])) {
+                    if (is_array($accion) && isset($accion['accion']) && isset($accion['config'])) {
                         $config = $accion['config'];
                         $accion = $accion['accion'];
                     } else {
@@ -606,8 +592,7 @@ class Model_DteIntercambio extends \Model_App
      * Método que genera y envía la respuesta del intercambio
      * @param accion =true recibir todo el intercambio, =false reclama todo el intercambio, =array procesa los documentos indicados, debe tener índice recibir y/o reclamar o bien indíce númerico y se asume es el listado de documentos
      * @param config Configuración global para la respuesta con índices: user_id, NmbContacto, MailContacto, sucursal, Recinto, responder_a, periodo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-25
+         * @version 2021-08-25
      */
     public function responder($accion, array $config = [])
     {
@@ -631,7 +616,7 @@ class Model_DteIntercambio extends \Model_App
             throw new \Exception($message);
         }
         // si es un booleano se acepta o reclaman todos los documentos del intercambio
-        if (is_bool($accion) or is_numeric($accion)) {
+        if (is_bool($accion) || is_numeric($accion)) {
             $docs = $this->getDocumentos();
             $recibir = [];
             $reclamar = [];
@@ -653,11 +638,11 @@ class Model_DteIntercambio extends \Model_App
             $accion = ['recibir'=>$recibir, 'reclamar'=>$reclamar];
         }
         // si es un arreglo con un índice númerico entonces se pasó el arreglo con los documentos directamente
-        else if (is_array($accion) and isset($accion[0])) {
+        else if (is_array($accion) && isset($accion[0])) {
             $documentos = $accion;
         }
         // si no es arreglo o faltan ambos índices aceptar o reclamar -> error
-        else if (!is_array($accion) or (empty($accion['recibir']) and empty($accion['reclamar']))) {
+        else if (!is_array($accion) || (empty($accion['recibir']) && empty($accion['reclamar']))) {
             throw new \Exception('Acción no válida para responder el intercambio');
         }
         // armar un único arreglo con los documentos a procesar
@@ -690,7 +675,7 @@ class Model_DteIntercambio extends \Model_App
         $guardar_dte = [];
         foreach ($documentos as &$dte) {
             // validar datos requeridos
-            if (empty($dte['TipoDTE']) or empty($dte['Folio'])) {
+            if (empty($dte['TipoDTE']) || empty($dte['Folio'])) {
                 throw new \Exception('Falta tipo o folio del DTE');
             }
             // si no están los ruts se agregan
@@ -712,7 +697,7 @@ class Model_DteIntercambio extends \Model_App
                 throw new \Exception('DTE T'.$dte['TipoDTE'].'F'.$dte['Folio'].' no existe en el intercambio');
             }
             // agregar datos que no están pero que se pueden buscar en el documento de intercambio
-            if (empty($dte['FchEmis']) or !isset($dte['MntTotal'])) {
+            if (empty($dte['FchEmis']) || !isset($dte['MntTotal'])) {
                 if (empty($dte['FchEmis'])) {
                     $dte['FchEmis'] = $Dte->getFechaEmision();
                 }
@@ -720,8 +705,8 @@ class Model_DteIntercambio extends \Model_App
                     $dte['MntTotal'] = $Dte->getMontoTotal();
                 }
             }
-            // asignar si se debe o no hacer acuse de recibo del DTE (sólo estado ERM)
-            $dte['acuse'] = (int)($dte['EstadoRecepDTE']=='ERM');
+            // asignar si se debe o no hacer acuse de recibo del DTE (solo estado ERM)
+            $dte['acuse'] = (int)($dte['EstadoRecepDTE'] == 'ERM');
             // si tiene acuse de recibo, el DTE se marca para ser guardado
             if ($dte['acuse']) {
                 $guardar_dte[] = 'T'.$dte['TipoDTE'].'F'.$dte['Folio'];
@@ -757,8 +742,7 @@ class Model_DteIntercambio extends \Model_App
 
     /**
      * Método que crea el XML RecepcionDTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-06
+         * @version 2020-08-06
      */
     private function crearXmlRecepcionDte($documentos, $config, $Firma)
     {
@@ -821,8 +805,7 @@ class Model_DteIntercambio extends \Model_App
 
     /**
      * Método que crea el XML EnvioRecibos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-06
+         * @version 2020-08-06
      */
     private function crearXmlEnvioRecibos($documentos, $config, $Firma)
     {
@@ -868,8 +851,7 @@ class Model_DteIntercambio extends \Model_App
 
     /**
      * Método que crea el XML ResultadoDTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-06
+         * @version 2020-08-06
      */
     private function crearXmlResultadoDte($documentos, $config, $Firma)
     {
@@ -914,8 +896,7 @@ class Model_DteIntercambio extends \Model_App
 
     /**
      * Método que envía los 3 XML (si existen) por correo electrónico al emisor del intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-20
+         * @version 2018-05-20
      */
     private function enviarEmailRespuestaXML($responder_a, $xmlRecepcionDte, $xmlEnvioRecibos, $xmlResultadoDte)
     {
@@ -936,8 +917,7 @@ class Model_DteIntercambio extends \Model_App
 
     /**
      * Método que permite ingresar las acciones (respuestas) al registro de compras del SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-20
+         * @version 2018-05-20
      */
     private function enviarRespuestaSII($documentos, $Firma)
     {
@@ -962,8 +942,7 @@ class Model_DteIntercambio extends \Model_App
 
     /**
      * Método que guarda los documentos que han sido aceptados (con acuse de recibo)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-02
+         * @version 2020-10-02
      */
     private function guardarDocumentosRecibidos(array $guardar_dte, array $rc_accion, array $config)
     {
@@ -1026,14 +1005,14 @@ class Model_DteIntercambio extends \Model_App
                         $DteRecibido->intercambio = $this->codigo;
                         $DteRecibido->impuesto_tipo = 1; // se asume siempre que es IVA
                         $periodo_dte = (int)substr(str_replace('-', '', $DteRecibido->fecha), 0, 6);
-                        if (!empty($config['periodo']) and $config['periodo']>$periodo_dte) {
+                        if (!empty($config['periodo']) && $config['periodo']>$periodo_dte) {
                             $DteRecibido->periodo = $config['periodo'];
                         }
                         if (!empty($config['sucursal'])) {
                             $DteRecibido->sucursal_sii_receptor = $config['sucursal'];
                         }
                         // si hay IVA y esta fuera de plazo se marca como no recuperable
-                        if ($DteRecibido->iva and $DteRecibido->periodo) {
+                        if ($DteRecibido->iva && $DteRecibido->periodo) {
                             $meses = \sowerphp\general\Utility_Date::countMonths($periodo_dte, $DteRecibido->periodo);
                             if ($meses > 2) {
                                 $DteRecibido->iva_no_recuperable = json_encode([
@@ -1050,7 +1029,7 @@ class Model_DteIntercambio extends \Model_App
                             $DteRecibido->impuesto_adicional = [];
                             $impuesto_sin_credito = 0;
                             foreach ($datos['Encabezado']['Totales']['ImptoReten'] as $ia) {
-                                if ($this->getReceptor()->config_extra_impuestos_sin_credito and in_array($ia['TipoImp'], $this->getReceptor()->config_extra_impuestos_sin_credito)) {
+                                if ($this->getReceptor()->config_extra_impuestos_sin_credito && in_array($ia['TipoImp'], $this->getReceptor()->config_extra_impuestos_sin_credito)) {
                                     $impuesto_sin_credito += $ia['MontoImp'];
                                 } else {
                                     $DteRecibido->impuesto_adicional[] = [
@@ -1068,7 +1047,7 @@ class Model_DteIntercambio extends \Model_App
                             }
                         }
                         // si es empresa exenta el IVA es no recuperable
-                        if ($DteRecibido->iva and $this->getReceptor()->config_extra_exenta) {
+                        if ($DteRecibido->iva && $this->getReceptor()->config_extra_exenta) {
                             $DteRecibido->iva_no_recuperable = json_encode([
                                 ['codigo'=>1, 'monto'=>$DteRecibido->iva]
                             ]);
@@ -1089,18 +1068,17 @@ class Model_DteIntercambio extends \Model_App
      * Método que entrega el PDF del intercambio.
      * Entrega un PDF con todos los documentos del intercambio o bien puede
      * entregar el PDF de un DTE específico que venga en el intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-07
+         * @version 2021-05-07
      */
     public function getPDF(array $config = [])
     {
         // obtener XML que se debe usar y opciones del DTE para buscar configuración del PDF
         $get_1_documento = (
             !empty($config['documento']['emisor'])
-            and !empty($config['documento']['dte'])
-            and !empty($config['documento']['folio'])
+            && !empty($config['documento']['dte'])
+            && !empty($config['documento']['folio'])
         );
-        if ($get_1_documento or $this->documentos == 1) {
+        if ($get_1_documento || $this->documentos == 1) {
             // obtener documento
             if ($get_1_documento) {
                 $Documento = $this->getDocumento(
@@ -1143,7 +1121,7 @@ class Model_DteIntercambio extends \Model_App
         $config_emisor = $this->getEmisor()->getConfigPDF($options, $config);
         $default_config = [
             'cedible' => false,
-            'compress' => !($get_1_documento or $this->documentos == 1),
+            'compress' => !($get_1_documento || $this->documentos == 1),
             'copias_tributarias' => 1,
             'copias_cedibles' => 1,
             'xml' => $xml,
@@ -1164,7 +1142,7 @@ class Model_DteIntercambio extends \Model_App
         // crear a partir de formato de PDF no estándar
         else if ($config['formato'] != 'estandar') {
             $apps = $this->getEmisor()->getApps('dtepdfs');
-            if (empty($apps[$config['formato']]) or empty($apps[$config['formato']]->getConfig()->disponible)) {
+            if (empty($apps[$config['formato']]) || empty($apps[$config['formato']]->getConfig()->disponible)) {
                 throw new \Exception('Formato de PDF '.$config['formato'].' no se encuentra disponible', 400);
             }
             $response = $apps[$config['formato']]->generar($config);
@@ -1177,10 +1155,10 @@ class Model_DteIntercambio extends \Model_App
             $response = $rest->post(url('/api/utilidades/documentos/generar_pdf'), $config);
         }
         // procesar respuesta
-        if ($response===false) {
+        if ($response === false) {
             throw new \Exception(implode("\n", $rest->getErrors(), 500));
         }
-        if ($response['status']['code']!=200) {
+        if ($response['status']['code'] != 200) {
             throw new \Exception($response['body'], $response['status']['code']);
         }
         // si dió código 200 se entrega la respuesta del servicio web
@@ -1190,8 +1168,7 @@ class Model_DteIntercambio extends \Model_App
     /**
      * Método que prueba el XML para corroborar eventual problema por archivo
      * con codificación errónea
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-11-16
+         * @version 2022-11-16
      */
     public function testXML()
     {
@@ -1206,8 +1183,7 @@ class Model_DteIntercambio extends \Model_App
 
     /**
      * Método que indica si el intercambio es el último (según código)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-11-16
+         * @version 2022-11-16
      */
     public function esUltimoIntercambio()
     {

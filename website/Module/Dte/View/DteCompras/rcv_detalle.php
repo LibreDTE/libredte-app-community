@@ -1,5 +1,5 @@
 <ul class="nav nav-pills float-end">
-<?php if ($estado=='REGISTRO') : ?>
+<?php if ($estado == 'REGISTRO') : ?>
     <li class="nav-item">
         <a href="<?=$_base?>/dte/dte_compras/rcv_diferencias/<?=$periodo?>/<?=$DteTipo->codigo?>" title="Descargar diferencias del período <?=$periodo?> entre el RC del SII y el IEC de LibreDTE" class="nav-link">
             <span class="fa fa-download"></span> Diferencias
@@ -35,7 +35,7 @@ foreach ($detalle as &$d) {
 }
 $keys = array_keys($detalle[0]);
 foreach ($keys as &$k) {
-    if (substr($k,0,3)=='det') {
+    if (substr($k,0,3) == 'det') {
         $k = substr($k, 3);
     }
 }

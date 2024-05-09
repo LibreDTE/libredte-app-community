@@ -834,8 +834,7 @@ class Model_RegistroCompra extends \Model_App
 
     /**
      * Método que se ejecuta al insertar un nuevo registro en la base de datos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-11
+         * @version 2019-08-11
      */
     protected function insert()
     {

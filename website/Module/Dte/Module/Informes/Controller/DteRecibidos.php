@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte\Informes;
 
 /**
  * Clase para informes de los documentos recibidos
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2019-06-30
  */
 class Controller_DteRecibidos extends \Controller_App
@@ -34,8 +33,7 @@ class Controller_DteRecibidos extends \Controller_App
 
     /**
      * Acción principal del informe de compras
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-06-30
+         * @version 2019-06-30
      */
     public function index()
     {
@@ -60,8 +58,7 @@ class Controller_DteRecibidos extends \Controller_App
 
     /**
      * Acción que entrega el informe de compras en CSV
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-08-22
+         * @version 2022-08-22
      */
     public function csv($desde, $hasta)
     {
@@ -105,11 +102,11 @@ class Controller_DteRecibidos extends \Controller_App
         $cols[] = 'Saldo anterior';
         $cols[] = 'Valor a pagar';
         $aux = (new \website\Dte\Model_DteRecibidos())->setContribuyente($Emisor)->getDetalle($desde, $hasta, $detalle);
-        if ($aux and $detalle) {
+        if ($aux && $detalle) {
             $recibidos = [];
             foreach($aux as $r) {
                 foreach ($r['items'] as $item) {
-                    if ($item[0]==1 or $detalle == 2) {
+                    if ($item[0]==1 || $detalle == 2) {
                         $recibido = array_slice($r, 0, 15);
                     } else {
                         $recibido = array_fill(0, 15, '');
@@ -129,8 +126,7 @@ class Controller_DteRecibidos extends \Controller_App
 
     /**
      * Acción que
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-02-22
+         * @version 2021-02-22
      */
     public function sin_xml()
     {

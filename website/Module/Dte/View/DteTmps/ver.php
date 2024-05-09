@@ -6,7 +6,7 @@
             Imprimir
         </a>
         <div class="dropdown-menu">
-<?php if (!$Emisor->config_pdf_imprimir or $Emisor->config_pdf_imprimir == 'pdf_escpos') : ?>
+<?php if (!$Emisor->config_pdf_imprimir || $Emisor->config_pdf_imprimir == 'pdf_escpos') : ?>
             <a href="#" onclick="dte_imprimir('pdf', 'cotizacion', {emisor: <?=$DteTmp->emisor?>, dte: <?=$DteTmp->dte?>, codigo: '<?=$DteTmp->codigo?>', receptor: <?=$DteTmp->receptor?>}); return false" class="dropdown-item">PDF Cotización</a>
             <a href="#" onclick="dte_imprimir('escpos', 'cotizacion', {emisor: <?=$DteTmp->emisor?>, dte: <?=$DteTmp->dte?>, codigo: '<?=$DteTmp->codigo?>', receptor: <?=$DteTmp->receptor?>}); return false" accesskey="P" class="dropdown-item">ESCPOS Cotización</a>
             <div class="dropdown-divider"></div>
@@ -243,7 +243,7 @@ if ($emails) {
     $checked = [];
     foreach ($emails as $k => $e) {
         $table[] = [$e, $k];
-        if (strpos($k, 'Contacto comercial')===0) {
+        if (strpos($k, 'Contacto comercial') === 0) {
             $checked[] = $e;
         }
     }

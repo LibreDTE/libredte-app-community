@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,7 +25,6 @@ namespace website\Dte;
 
 /**
  * Comando que permite emitir masivamente DTE a partir de un archivo CSV
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2020-06-28
  */
 class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
@@ -60,13 +59,13 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
         // verificar archivo sea UTF-8
         exec('file -i '.$archivo, $output);
         $aux = explode('charset=', $output[0]);
-        if (!isset($aux[1]) or !in_array($aux[1], ['us-ascii', 'utf-8'])) {
+        if (!isset($aux[1]) || !in_array($aux[1], ['us-ascii', 'utf-8'])) {
             $this->notificarResultado($Emisor, $Usuario, 'Codificación del archivo es '.$aux[1].' y debe ser utf-8', $dte_real, $email, $pdf);
             return 1;
         }
         // cargar archivo y crear documentos
         $datos = \sowerphp\general\Utility_Spreadsheet_CSV::read($archivo);
-        if (strpos($archivo, '/tmp')===0) {
+        if (strpos($archivo, '/tmp') === 0) {
             unlink($archivo);
         }
         $datos[0][] = 'resultado_codigo';
@@ -92,7 +91,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
                         $datos[$i][] = 'No está autorizado a emitir el tipo de documento '.$documento['Encabezado']['IdDoc']['TipoDTE'];
                     }
                     // si se quiere enviar por correo, verificar que exista correo
-                    else if ($email and empty($documento['Encabezado']['Receptor']['CorreoRecep'])) {
+                    else if ($email && empty($documento['Encabezado']['Receptor']['CorreoRecep'])) {
                         $error_formato = true;
                         $datos[$i][] = 3;
                         $datos[$i][] = 'Debe indicar correo del receptor';
@@ -146,7 +145,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
                 mkdir($dir);
             }
         }
-        if ($pdf and is_string($pdf)) {
+        if ($pdf && is_string($pdf)) {
             $this->notificarResultado($Emisor, $Usuario, $datos, $dte_real, $email, $pdf);
             return 1;
         }
@@ -166,7 +165,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
             }
             // emitir DTE temporal
             $response = $rest->post(url('/api/dte/documentos/emitir'), $dte);
-            if ($response['status']['code']!=200) {
+            if ($response['status']['code'] != 200) {
                 $this->documentoAgregarResultado(
                     $datos,
                     $dte['Encabezado']['IdDoc']['TipoDTE'],
@@ -224,7 +223,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
             else {
                 // consumir servicio web
                 $response = $rest->post(url('/api/dte/documentos/generar'), $response['body']);
-                if ($response['status']['code']!=200) {
+                if ($response['status']['code'] != 200) {
                     $this->documentoAgregarResultado(
                         $datos,
                         $dte['Encabezado']['IdDoc']['TipoDTE'],
@@ -235,7 +234,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
                     continue;
                 }
                 // crear PDF del DTE real
-                if ($pdf===true) {
+                if ($pdf === true) {
                     $response_pdf = $rest->get(url('/api/dte/dte_emitidos/pdf/'.$response['body']['dte'].'/'.$response['body']['folio'].'/'.$response['body']['emisor']));
                     if ($response_pdf['status']['code']==200) {
                         $filename = !empty($dte_config['pdf']['nombre']) ? $dte_config['pdf']['nombre'] : 'LibreDTE_{rut}_T{dte}F{folio}';
@@ -387,7 +386,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
                 $datos[33] = 'USD';
             }
             if (empty($this->monedas[$datos[33]])) {
-                throw new \Exception('El tipo de moneda '.$datos[33].' no está permitido, sólo: USD, EUR y CLP');
+                throw new \Exception('El tipo de moneda '.$datos[33].' no está permitido, solo: USD, EUR y CLP');
             }
             $documento['Encabezado']['Totales']['TpoMoneda'] = $this->monedas[$datos[33]];
             // agregar ID del receptor
@@ -499,7 +498,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
         if ($transporte[1]) {
             $documento['Encabezado']['Transporte']['RUTTrans'] = mb_substr(str_replace('.','',trim($transporte[1])),0,10);
         }
-        if ($transporte[2] and $transporte[3]) {
+        if ($transporte[2] && $transporte[3]) {
             $documento['Encabezado']['Transporte']['Chofer']['RUTChofer'] = mb_substr(str_replace('.','',trim($transporte[2])),0,10);
             $documento['Encabezado']['Transporte']['Chofer']['NombreChofer'] = mb_substr(trim($transporte[3]),0,30);
         }
@@ -531,7 +530,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
             throw new \Exception('Folio del documento de referencia no puede estar vacío');
         }
         $Referencia['FolioRef'] = mb_substr(trim($referencia[1]),0,18);
-        if (empty($referencia[2]) or !\sowerphp\general\Utility_Date::check($referencia[2])) {
+        if (empty($referencia[2]) || !\sowerphp\general\Utility_Date::check($referencia[2])) {
             throw new \Exception('Fecha del documento de referencia debe ser en formato AAAA-MM-DD');
         }
         $Referencia['FchRef'] = $referencia[2];
@@ -547,7 +546,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
     private function documentoAgregarResultado(&$datos, $tipo_dte, $folio, $resultado_codigo, $resultado_glosa)
     {
         foreach ($datos as &$d) {
-            if ($d[0]==$tipo_dte and $d[1]==$folio) {
+            if ($d[0]==$tipo_dte && $d[1]==$folio) {
                 $d[] = $resultado_codigo;
                 $d[] = $resultado_glosa;
                 break;

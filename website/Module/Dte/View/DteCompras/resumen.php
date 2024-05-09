@@ -68,9 +68,9 @@ if (isset($resumen)) {
             'TotTabElaborado', 'TotImpVehiculo',
         ];
         foreach ($cols as $c) {
-            if ($operaciones[$r['TpoDoc']]=='S') {
+            if ($operaciones[$r['TpoDoc']] == 'S') {
                 $total[$c] += $r[$c];
-            } else if ($operaciones[$r['TpoDoc']]=='R') {
+            } else if ($operaciones[$r['TpoDoc']] == 'R') {
                 $total[$c] -= $r[$c];
             }
         }
@@ -111,7 +111,7 @@ if (isset($resumen)) {
     foreach ($totales_mensuales as &$r) {
         // dar formato de número
         foreach ($r as $k => &$v) {
-            if ($k != 'periodo' and is_numeric($v)) {
+            if ($k != 'periodo' && is_numeric($v)) {
                 $v = $v>0 ? num($v) : null;
             }
         }

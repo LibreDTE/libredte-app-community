@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Utilidades;
 
 /**
  * Controlador para utilidades asociadas a contribuyentes
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2016-09-12
  */
 class Controller_Contribuyentes extends \Controller_App
@@ -34,8 +33,7 @@ class Controller_Contribuyentes extends \Controller_App
 
     /**
      * Acción que permite buscar los datos de un contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-24
+         * @version 2015-09-24
      */
     public function buscar()
     {

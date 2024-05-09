@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -27,7 +27,6 @@ namespace website\Dte;
  * Clase que permite encriptar/desencriptar datos que son almacenados en la base
  * de datos
  *
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2016-01-26
  */
 class Utility_Data
@@ -37,8 +36,7 @@ class Utility_Data
      * Método que encripta un texto plano
      * @param plaintext Texto plano a encriptar
      * @return Texto encriptado en base64
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-07-20
+         * @version 2021-07-20
      */
     public static function encrypt($plaintext)
     {
@@ -51,8 +49,7 @@ class Utility_Data
      * Método que desencripta un texto encriptado
      * @param $ciphertext_base64 Texto encriptado en base64 a desencriptar
      * @return Texto plano
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-07-20
+         * @version 2021-07-20
      */
     public static function decrypt($ciphertext_base64)
     {

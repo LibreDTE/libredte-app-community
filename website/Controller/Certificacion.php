@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website;
 
 /**
  * Controlador para el proceso de certificación ante el SII
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2018-10-15
  */
 class Controller_Certificacion extends \Controller_App
@@ -57,8 +56,7 @@ class Controller_Certificacion extends \Controller_App
 
     /**
      * Método para permitir acciones sin estar autenticado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-08-24
+         * @version 2016-08-24
      */
     public function beforeFilter()
     {
@@ -68,8 +66,7 @@ class Controller_Certificacion extends \Controller_App
 
     /**
      * Acción que muestra la página principal de certificación
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-12-26
+         * @version 2015-12-26
      */
     public function index()
     {
@@ -83,8 +80,7 @@ class Controller_Certificacion extends \Controller_App
     /**
      * Acción para la etapa de certificación de generación de DTEs del set de
      * pruebas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-15
+         * @version 2016-02-15
      */
     public function set_pruebas()
     {
@@ -99,13 +95,12 @@ class Controller_Certificacion extends \Controller_App
     /**
      * Acción que genera el JSON a partir del archivo de pruebas y lo pasa a la
      * utilidad que genera el XML EnvioDTE a partir de dicho JSON
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-09-12
+         * @version 2016-09-12
      */
     public function set_pruebas_dte()
     {
         // si no se pasó el archivo error
-        if (!isset($_FILES['archivo']) or $_FILES['archivo']['error']) {
+        if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'Debes enviar el archivo del set de pruebas entregado por el SII.', 'error'
             );
@@ -116,7 +111,7 @@ class Controller_Certificacion extends \Controller_App
         if (isset($_POST['folios'])) {
             $n_folios = count($_POST['folios']);
             for ($i=0; $i<$n_folios; $i++) {
-                if (!empty($_POST['folios'][$i]) and !empty($_POST['desde'][$i])) {
+                if (!empty($_POST['folios'][$i]) && !empty($_POST['desde'][$i])) {
                     $folios[$_POST['folios'][$i]] = $_POST['desde'][$i];
                 }
             }
@@ -137,13 +132,12 @@ class Controller_Certificacion extends \Controller_App
     /**
      * Acción que genera el libro de ventas a partir del XML de EnvioDTE creado
      * para la certificación
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-03-11
+         * @version 2016-03-11
      */
     public function set_pruebas_ventas()
     {
         // si no se pasó el archivo error
-        if (!isset($_FILES['archivo']) or $_FILES['archivo']['error']) {
+        if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'Debes enviar el archivo XML del EnvioDTE al que quieres generar su Libro de Ventas.', 'error'
             );
@@ -205,14 +199,12 @@ class Controller_Certificacion extends \Controller_App
 
     /**
      * Acción que genera EnvioBOLETA, consumo de folios, libro de boletas y las
-     * muestras impresas a partir de un set de pruebas de boleta electrónica
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-01-11
+     * muestras impresas a partir de un set de pruebas de boleta electrónica.
      */
     public function set_pruebas_boletas()
     {
         // si no se pasó el archivo error
-        if (!isset($_FILES['archivo']) or $_FILES['archivo']['error']) {
+        if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'Debes enviar la planilla con el set de pruebas de las boletas electrónicas.', 'error'
             );
@@ -294,13 +286,25 @@ class Controller_Certificacion extends \Controller_App
             'DirOrigen' => $_POST['DirOrigen'],
             'CmnaOrigen' => (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna($_POST['CmnaOrigen']))->comuna,
         ];
-        $SASCO = new \website\Dte\Model_Contribuyente(76192083);
-        $Receptor = [
-            'RUTRecep' => $SASCO->rut.'-'.$SASCO->dv,
-            'RznSocRecep' => $SASCO->razon_social,
-            'DirRecep' => $SASCO->direccion,
-            'CmnaRecep' => $SASCO->getComuna()->comuna,
-        ];
+        $receptor_rut = \sowerphp\core\Configure::read('libredte.proveedor.rut');
+        if ($receptor_rut) {
+            $ContribuyenteReceptor = new \website\Dte\Model_Contribuyente(
+                $receptor_rut
+            );
+            $Receptor = [
+                'RUTRecep' => $ContribuyenteReceptor->rut.'-'.$ContribuyenteReceptor->dv,
+                'RznSocRecep' => $ContribuyenteReceptor->razon_social,
+                'DirRecep' => $ContribuyenteReceptor->direccion,
+                'CmnaRecep' => $ContribuyenteReceptor->getComuna()->comuna,
+            ];
+        } else {
+            $Receptor = [
+                'RUTRecep' => '66666666-6',
+                'RznSocRecep' => 'Cliente genérico',
+                'DirRecep' => 'Santa Cruz',
+                'CmnaRecep' => 'Santa Cruz',
+            ];
+        }
         try {
             $Firma = new \sasco\LibreDTE\FirmaElectronica([
                 'file' => $_FILES['firma']['tmp_name'],
@@ -506,7 +510,7 @@ class Controller_Certificacion extends \Controller_App
             'compress' => true,
         ];
         $response = $rest->post($this->request->url.'/api/utilidades/documentos/generar_pdf', $data);
-        if ($response['status']['code']!=200) {
+        if ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message('No fue posible crear PDF boletas: '.$response['body'], 'error');
             $this->redirect('/certificacion/set_pruebas#boletas');
         }
@@ -518,7 +522,7 @@ class Controller_Certificacion extends \Controller_App
                 'compress' => true,
             ];
             $response = $rest->post($this->request->url.'/api/utilidades/documentos/generar_pdf', $data);
-            if ($response['status']['code']!=200) {
+            if ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message('No fue posible crear PDF notas de crédito: '.$response['body'], 'error');
                 $this->redirect('/certificacion/set_pruebas#boletas');
             }
@@ -532,8 +536,7 @@ class Controller_Certificacion extends \Controller_App
     /**
      * Acción para la etapa de certificación de generación de DTEs de la
      * actividad real de la empresa
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-10
+         * @version 2015-09-10
      */
     public function simulacion()
     {
@@ -544,8 +547,7 @@ class Controller_Certificacion extends \Controller_App
 
     /**
      * Acción para la etapa de certificación de intercambio de DTEs
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-17
+         * @version 2016-02-17
      */
     public function intercambio()
     {
@@ -556,7 +558,7 @@ class Controller_Certificacion extends \Controller_App
             return;
         }
         // verificar que se hayan pasado los datos requeridos
-        if (!isset($_FILES['xml']) or $_FILES['xml']['error']) {
+        if (!isset($_FILES['xml']) || $_FILES['xml']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'Hubo algún problema al subir el XML EnvioDTE.', 'error'
             );
@@ -574,7 +576,7 @@ class Controller_Certificacion extends \Controller_App
             );
             return;
         }
-        if (!isset($_FILES['firma']) or $_FILES['firma']['error']) {
+        if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'Hubo algún problema al subir la firma electrónica.', 'error'
             );
@@ -671,8 +673,7 @@ class Controller_Certificacion extends \Controller_App
 
     /**
      * Acción que genera los datos del archivo RecepcionDTE del intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-11
+         * @version 2015-09-11
      */
     private function intercambio_RecepcionDTE($EnvioDte, $emisor, $receptor, $caratula, $Firma)
     {
@@ -721,8 +722,7 @@ class Controller_Certificacion extends \Controller_App
 
     /**
      * Acción que genera los datos del archivo EnvioRecibos del intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-11
+         * @version 2015-09-11
      */
     private function intercambio_EnvioRecibos($EnvioDTE, $caratula, $Firma)
     {
@@ -755,8 +755,7 @@ class Controller_Certificacion extends \Controller_App
 
     /**
      * Acción que genera los datos del archivo ResultadoDTE del intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-11
+         * @version 2015-09-11
      */
     private function intercambio_ResultadoDTE($EnvioDte, $emisor, $receptor, $caratula, $Firma)
     {
@@ -794,8 +793,7 @@ class Controller_Certificacion extends \Controller_App
     /**
      * Acción para la etapa de certificación de generación de las muestras
      * impresas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-10-15
+         * @version 2018-10-15
      */
     public function muestras_pdf()
     {

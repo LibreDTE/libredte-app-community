@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -184,8 +184,7 @@ class Model_DteCompra extends Model_Base_Libro
     /**
      * Método que entrega el resumen real (de los detalles registrados) del
      * libro
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-06
+         * @version 2016-10-06
      */
     public function getResumen()
     {
@@ -194,8 +193,7 @@ class Model_DteCompra extends Model_Base_Libro
 
     /**
      * Método que entrega los documentos por día del libro
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-11
+         * @version 2017-09-11
      */
     public function getDocumentosPorDia()
     {
@@ -204,8 +202,7 @@ class Model_DteCompra extends Model_Base_Libro
 
     /**
      * Método que entrega las compras por tipo del período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-11
+         * @version 2017-09-11
      */
     public function getDocumentosPorTipo()
     {
@@ -214,15 +211,14 @@ class Model_DteCompra extends Model_Base_Libro
 
     /**
      * Método que entrega los tipos de transacciones de las compras del período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     public function getTiposTransacciones()
     {
         $compras = $this->getReceptor()->getCompras($this->periodo, [33, 34, 43, 46, 56, 61]);
         $datos = [];
         foreach ($compras as $c) {
-            if (!$c['tipo_transaccion'] and !$c['iva_uso_comun'] and !$c['iva_no_recuperable_codigo']) {
+            if (!$c['tipo_transaccion'] && !$c['iva_uso_comun'] && !$c['iva_no_recuperable_codigo']) {
                 continue;
             }
             $codigo_impuesto = 1;
@@ -249,8 +245,7 @@ class Model_DteCompra extends Model_Base_Libro
 
     /**
      * Método que entrega los totales del período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-01
+         * @version 2018-05-01
      */
     public function getTotales()
     {
@@ -284,7 +279,7 @@ class Model_DteCompra extends Model_Base_Libro
             foreach ($total as $c => $v) {
                 if (!in_array($c, $columnas_siempre_suma)) {
                     // si es iva no recuperable se extrae (pueden ser varios) // TODO podría haber otro caso que requiera esto
-                    if ($c=='TotIVANoRec' and $r[$c]) {
+                    if ($c == 'TotIVANoRec' && $r[$c]) {
                         $TotIVANoRec = $r[$c];
                         $r[$c] = 0;
                         foreach ($TotIVANoRec as $tinr) {
@@ -292,9 +287,9 @@ class Model_DteCompra extends Model_Base_Libro
                         }
                     }
                     // sumar o restar según operación
-                    if ($operacion=='S') {
+                    if ($operacion == 'S') {
                         $total[$c] += $r[$c];
-                    } else if ($operacion=='R') {
+                    } else if ($operacion == 'R') {
                         $total[$c] -= $r[$c];
                     }
                 }
@@ -305,8 +300,7 @@ class Model_DteCompra extends Model_Base_Libro
 
     /**
      * Método que entrega el total del neto + exento del período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-04-25
+         * @version 2018-04-25
      */
     public function getTotalExentoNeto()
     {
@@ -316,8 +310,7 @@ class Model_DteCompra extends Model_Base_Libro
 
     /**
      * Método que entrega la cantidad de documentos que tienen montos exentos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-09-14
+         * @version 2021-09-14
      */
     public function countDocumentosConMontosExentos()
     {

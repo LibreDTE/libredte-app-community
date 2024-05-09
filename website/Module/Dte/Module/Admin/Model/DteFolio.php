@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -140,12 +140,11 @@ class Model_DteFolio extends \Model_App
     /**
      * Método para guardar el mantenedor del folio usando una transacción
      * serializable
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-22
+         * @version 2015-09-22
      */
     public function save($exitOnFailTransaction = true)
     {
-        if (!$this->db->beginTransaction(true) and $exitOnFailTransaction) {
+        if (!$this->db->beginTransaction(true) && $exitOnFailTransaction) {
             return false;
         }
         parent::save();
@@ -154,8 +153,7 @@ class Model_DteFolio extends \Model_App
 
     /**
      * Método que calcula la cantidad de folios que quedan disponibles y guarda
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-01-27
+         * @version 2016-01-27
      */
     public function calcularDisponibles()
     {
@@ -185,7 +183,7 @@ class Model_DteFolio extends \Model_App
         }
         else {
             for ($i=1; $i<$n_cafs; $i++) {
-                if ($cafs[$i]['desde']!=($cafs[$i-1]['hasta']+1))
+                if ($cafs[$i]['desde'] != ($cafs[$i-1]['hasta']+1))
                     break;
             }
             $this->disponibles = $cafs[$i-1]['hasta'] - $this->siguiente + 1;
@@ -202,8 +200,7 @@ class Model_DteFolio extends \Model_App
     /**
      * Método que entrega el listado de archivos CAF que existen cargados para
      * el tipo de DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-08-25
+         * @version 2023-08-25
      */
     public function getCafs($order = 'ASC')
     {
@@ -211,7 +208,7 @@ class Model_DteFolio extends \Model_App
             SELECT desde, hasta, (hasta - desde + 1) AS cantidad, xml
             FROM dte_caf
             WHERE emisor = :rut AND dte = :dte AND certificacion = :certificacion
-            ORDER BY desde '.($order=='ASC'?'ASC':'DESC').'
+            ORDER BY desde '.($order == 'ASC'?'ASC':'DESC').'
         ', [':rut'=>$this->emisor, ':dte'=>$this->dte, ':certificacion'=>$this->certificacion]);
         foreach ($cafs as &$caf) {
             try {
@@ -237,8 +234,7 @@ class Model_DteFolio extends \Model_App
      * @param dte Tipo de documento para el cual se quiere su CAF
      * @param folio Folio del CAF del DTE que se busca
      * @return \sasco\LibreDTE\Sii\Folios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-16
+         * @version 2021-08-16
      */
     public function getCaf($folio = null)
     {
@@ -272,8 +268,7 @@ class Model_DteFolio extends \Model_App
 
     /**
      * Método que entrega el objeto del tipo de DTE asociado al folio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-07-19
+         * @version 2017-07-19
      */
     public function getTipo()
     {
@@ -282,8 +277,7 @@ class Model_DteFolio extends \Model_App
 
     /**
      * Método que entrega el objeto del contribuyente asociado al mantenedor de folios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-18
+         * @version 2018-05-18
      */
     public function getEmisor()
     {
@@ -292,8 +286,7 @@ class Model_DteFolio extends \Model_App
 
     /**
      * Método que permite realizar el timbraje de manera automática
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     public function timbrar($cantidad = null)
     {
@@ -322,7 +315,7 @@ class Model_DteFolio extends \Model_App
                 ],
             ]
         );
-        if ($r['status']['code']!=200) {
+        if ($r['status']['code'] != 200) {
             throw new \Exception('No se pudo obtener el CAF desde el SII: '.$r['body']);
         }
         // entregar XML
@@ -331,8 +324,7 @@ class Model_DteFolio extends \Model_App
 
     /**
      * Método que guardar un archivo de folios en la base de datos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-11-05
+         * @version 2017-11-05
      */
     public function guardarFolios($xml)
     {
@@ -382,8 +374,7 @@ class Model_DteFolio extends \Model_App
 
     /**
      * Método que entrega el uso mensual de los folios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-10-20
+         * @version 2018-10-20
      */
     public function getUsoMensual($limit = 12, $order = 'ASC')
     {
@@ -396,14 +387,13 @@ class Model_DteFolio extends \Model_App
                 GROUP BY '.$periodo_col.'
                 ORDER BY '.$periodo_col.' DESC
                 LIMIT '.(int)$limit.'
-            ) AS t ORDER BY mes '.($order=='ASC'?'ASC':'DESC').'
+            ) AS t ORDER BY mes '.($order == 'ASC'?'ASC':'DESC').'
         ', [':rut'=>$this->emisor, ':dte'=>$this->dte, ':certificacion'=>$this->certificacion]);
     }
 
     /**
      * Método que entrega el primer folio usado del mantenedor
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-11
+         * @version 2017-09-11
      */
     public function getPrimerFolio()
     {
@@ -416,8 +406,7 @@ class Model_DteFolio extends \Model_App
     /**
      * Método que entrega los folios que están antes del folio siguiente, para
      * los cuales hay CAF y no se han usado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-11
+         * @version 2017-09-11
      */
     public function getSinUso()
     {
@@ -425,7 +414,7 @@ class Model_DteFolio extends \Model_App
         if (!$this->getCafs()) {
             return [];
         }
-        // buscar primer folio usado del CAF (se busca sólo desde este en adelante)
+        // buscar primer folio usado del CAF (se busca solo desde este en adelante)
         $primer_folio = $this->getPrimerFolio();
         if (!$primer_folio) {
             return [];
@@ -459,8 +448,7 @@ class Model_DteFolio extends \Model_App
     /**
      * Método que entrega el estado de todos los folios asociados a todos los
      * CAFs del mantenedor de folios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-18
+         * @version 2018-05-18
      */
     public function getEstadoFolios($estados = 'recibidos,anulados,pendientes', $retry = 100)
     {

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -174,8 +174,7 @@ class Model_DteIntercambioRecepcion extends \Model_App
 
     /**
      * Método que guarda el XML de la Recepción de un intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-03
+         * @version 2020-07-03
      */
     public function saveXML($Emisor, $xml) {
 
@@ -228,7 +227,7 @@ class Model_DteIntercambioRecepcion extends \Model_App
                 $Emisor->enCertificacion()
             );
             // si no existe o si los datos del DTE emitido no corresponden error
-            if (!$DteEmitido->exists() or explode('-', $Recepcion['RUTRecep'])[0]!=$DteEmitido->receptor or $Recepcion['FchEmis']!=$DteEmitido->fecha or $Recepcion['MntTotal']!=$DteEmitido->total) {
+            if (!$DteEmitido->exists() or explode('-', $Recepcion['RUTRecep'])[0] != $DteEmitido->receptor || $Recepcion['FchEmis'] != $DteEmitido->fecha || $Recepcion['MntTotal'] != $DteEmitido->total) {
                 $this->db->rollback();
                 throw new \Exception('DTE informado no existe o sus datos no corresponden');
             }
@@ -238,10 +237,10 @@ class Model_DteIntercambioRecepcion extends \Model_App
             );
             $DteIntercambioRecepcionDte->responde = $this->responde;
             $DteIntercambioRecepcionDte->codigo = $this->codigo;
-            if (!empty($Recepcion['EstadoRecepDTE']) or is_numeric($Recepcion['EstadoRecepDTE'])) {
+            if (!empty($Recepcion['EstadoRecepDTE']) || is_numeric($Recepcion['EstadoRecepDTE'])) {
                 $DteIntercambioRecepcionDte->estado = $Recepcion['EstadoRecepDTE'];
             }
-            if (!empty($Recepcion['RecepDTEGlosa']) and is_string($Recepcion['RecepDTEGlosa'])) {
+            if (!empty($Recepcion['RecepDTEGlosa']) && is_string($Recepcion['RecepDTEGlosa'])) {
                 $DteIntercambioRecepcionDte->glosa = substr($Recepcion['RecepDTEGlosa'], 0, 256);
             }
             if (!$DteIntercambioRecepcionDte->save()) {

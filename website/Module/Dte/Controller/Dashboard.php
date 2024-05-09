@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte;
 
 /**
  * Clase para el Dashboard del módulo de facturación
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2016-02-02
  */
 class Controller_Dashboard extends \Controller_App
@@ -34,8 +33,7 @@ class Controller_Dashboard extends \Controller_App
 
     /**
      * Acción principal que muestra el dashboard
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-13
+         * @version 2021-10-13
      */
     public function index()
     {
@@ -93,7 +91,7 @@ class Controller_Dashboard extends \Controller_App
             }
             $folios[$f['tipo']] = $f['disponibles'] ? round((1-($f['alerta']/$f['disponibles']))*100) : 0;
             // alerta vencimiento
-            if ($f['fecha_vencimiento'] and $f['meses_autorizacion']>=5) {
+            if ($f['fecha_vencimiento'] && $f['meses_autorizacion']>=5) {
                 $folios_meses_alerta[] = $f;
             }
         }
@@ -109,7 +107,7 @@ class Controller_Dashboard extends \Controller_App
         foreach ($emitidos_eventos as &$evento) {
             if (!$evento['evento']) {
                 $evento['evento'] = 'Sin evento';
-            } else if ($evento['evento']=='R') {
+            } else if ($evento['evento'] == 'R') {
                 $n_emitidos_reclamados = $evento['total'];
             }
         }
@@ -143,7 +141,7 @@ class Controller_Dashboard extends \Controller_App
             'n_intercambios' => $n_intercambios,
             'libro_ventas_existe' => $libro_ventas_existe,
             'libro_compras_existe' => $libro_compras_existe,
-            'propuesta_f29' => ($libro_ventas_existe and $libro_compras_existe and (date('d')<=20 or ($periodo < $periodo_actual))),
+            'propuesta_f29' => ($libro_ventas_existe && $libro_compras_existe && (date('d')<=20 || ($periodo < $periodo_actual))),
             'ventas_periodo' => $ventas_periodo,
             'compras_periodo' => $compras_periodo,
             'folios' => $folios,

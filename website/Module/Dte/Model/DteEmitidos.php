@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -48,8 +48,7 @@ class Model_DteEmitidos extends \Model_Plural_App
 
     /**
      * Método que entrega el detalle de las ventas en un rango de tiempo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-11-11
+         * @version 2022-11-11
      */
     public function getDetalle($desde, $hasta, $detalle)
     {
@@ -169,10 +168,10 @@ class Model_DteEmitidos extends \Model_Plural_App
             $d['sucursal'] = $this->getContribuyente()->getSucursal($d['sucursal'])->sucursal;
             if (!empty($d['extra'])) {
                 $extra = json_decode($d['extra'], true);
-                if (empty($d['vendedor']) and !empty($extra['dte']['Encabezado']['Emisor']['CdgVendedor'])) {
+                if (empty($d['vendedor']) && !empty($extra['dte']['Encabezado']['Emisor']['CdgVendedor'])) {
                     $d['vendedor'] = $extra['dte']['Encabezado']['Emisor']['CdgVendedor'];
                 }
-                if (empty($d['observacion']) and !empty($extra['dte']['Encabezado']['IdDoc']['TermPagoGlosa'])) {
+                if (empty($d['observacion']) && !empty($extra['dte']['Encabezado']['IdDoc']['TermPagoGlosa'])) {
                     $d['observacion'] = $extra['dte']['Encabezado']['IdDoc']['TermPagoGlosa'];
                 }
             }
@@ -183,8 +182,7 @@ class Model_DteEmitidos extends \Model_Plural_App
 
     /**
      * Método que entrega los totales de documentos emitidos por tipo de DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-09-24
+         * @version 2016-09-24
      */
     public function getPorTipo($desde, $hasta)
     {
@@ -203,8 +201,7 @@ class Model_DteEmitidos extends \Model_Plural_App
 
     /**
      * Método que entrega los totales de documentos emitidos por día
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-09-24
+         * @version 2016-09-24
      */
     public function getPorDia($desde, $hasta)
     {
@@ -223,8 +220,7 @@ class Model_DteEmitidos extends \Model_Plural_App
 
     /**
      * Método que entrega los totales de documentos emitidos por hora
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-09
+         * @version 2019-07-09
      */
     public function getPorHora($desde, $hasta)
     {
@@ -244,8 +240,7 @@ class Model_DteEmitidos extends \Model_Plural_App
 
     /**
      * Método que entrega los totales de documentos emitidos por sucursal
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-09-24
+         * @version 2016-09-24
      */
     public function getPorSucursal($desde, $hasta)
     {
@@ -268,8 +263,7 @@ class Model_DteEmitidos extends \Model_Plural_App
 
     /**
      * Método que entrega los totales de documentos emitidos por usuario
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-09-24
+         * @version 2016-09-24
      */
     public function getPorUsuario($desde, $hasta)
     {
@@ -288,8 +282,7 @@ class Model_DteEmitidos extends \Model_Plural_App
 
     /**
      * Método que entrega los totales de documentos emitidos por nacionalidad
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-12
+         * @version 2016-10-12
      */
     public function getPorNacionalidad($desde, $hasta)
     {
@@ -314,8 +307,7 @@ class Model_DteEmitidos extends \Model_Plural_App
 
     /**
      * Método que entrega los totales de documentos emitidos por moneda
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-12
+         * @version 2016-10-12
      */
     public function getPorMoneda($desde, $hasta)
     {
@@ -336,8 +328,7 @@ class Model_DteEmitidos extends \Model_Plural_App
 
     /**
      * Método que entrega los totales de documentos emitidos por día de todos los contribuyentes
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-27
+         * @version 2016-10-27
      */
     public function countDiarios($desde, $hasta, $certificacion)
     {
@@ -360,8 +351,7 @@ class Model_DteEmitidos extends \Model_Plural_App
     /**
      * Método que entrega el listado de documentos rechazados
      * Puede ser el de un emisor en específico o bien de todos los emisores
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-08-09
+         * @version 2022-08-09
      */
     public function getRechazados($desde, $hasta, $certificacion = false)
     {
@@ -390,8 +380,7 @@ class Model_DteEmitidos extends \Model_Plural_App
 
     /**
      * Método que entrega el total de documentos rechazados y el rango de fechas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-26
+         * @version 2020-10-26
      */
     public function getTotalRechazados()
     {
@@ -410,8 +399,7 @@ class Model_DteEmitidos extends \Model_Plural_App
 
     /**
      * Método que actualiza el estado del evento del receptor (si está aceptado o no el DTE)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-12
+         * @version 2017-09-12
      */
     public function actualizarEstadoReceptor($periodo = null)
     {
@@ -436,7 +424,7 @@ class Model_DteEmitidos extends \Model_Plural_App
                     continue;
                 }
                 $DteEmitido = new Model_DteEmitido($this->getContribuyente()->rut, $dte, $d['detNroDoc'], $this->getContribuyente()->enCertificacion());
-                if (!$DteEmitido->usuario or $DteEmitido->receptor_evento) {
+                if (!$DteEmitido->usuario || $DteEmitido->receptor_evento) {
                     continue; // DTE no está emitido en LibreDTE o ya tiene evento registrado
                 }
                 $DteEmitido->receptor_evento = $d['detEventoReceptor'];
@@ -448,8 +436,7 @@ class Model_DteEmitidos extends \Model_Plural_App
     /**
      * Método que entrega el listado de documentos en cierto rango de fecha que
      * no han sido enviados al correo de intercambio del receptor
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-16
+         * @version 2021-05-16
      */
     public function getSinEnvioIntercambio($desde, $hasta)
     {
@@ -492,8 +479,7 @@ class Model_DteEmitidos extends \Model_Plural_App
     /**
      * Método que entrega el listado de boletas en cierto rango de fecha que
      * no han sido enviados al correo electrónico del receptor
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-16
+         * @version 2021-05-16
      */
     public function getBoletasSinEnvioEmail($desde, $hasta)
     {

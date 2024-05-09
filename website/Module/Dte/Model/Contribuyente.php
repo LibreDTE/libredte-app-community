@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,9 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla contribuyente de la base de datos
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
- * @version 2020-08-02
+ * Clase para mapear la tabla contribuyente de la base de datos.
  */
 class Model_Contribuyente extends \Model_App
 {
@@ -213,8 +211,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Constructor del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-23
+         * @version 2020-07-23
      */
     public function __construct($rut = null)
     {
@@ -225,7 +222,7 @@ class Model_Contribuyente extends \Model_App
             $rut = explode('-', str_replace('.', '', $rut))[0];
         }
         parent::__construct((int)$rut);
-        if ($this->rut and !$this->exists()) {
+        if ($this->rut && !$this->exists()) {
             $this->dv = \sowerphp\app\Utility_Rut::dv($this->rut);
             if (self::$autocompletar) {
                 try {
@@ -267,12 +264,11 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega las configuraciones y parámetros extras para el
      * contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-01-05
+         * @version 2023-01-05
      */
     public function getConfig()
     {
-        if ($this->config===false or !$this->rut)
+        if ($this->config === false || !$this->rut)
             return null;
         if ($this->config===null) {
             $config = $this->db->getAssociativeArray('
@@ -309,12 +305,11 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método mágico para obtener configuraciones del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-01-31
+         * @version 2016-01-31
      */
     public function __get($name)
     {
-        if (strpos($name, 'config_')===0) {
+        if (strpos($name, 'config_') === 0) {
             $this->getConfig();
             $key = str_replace('config_', '', $name);
             $c = substr($key, 0, strpos($key, '_'));
@@ -334,16 +329,15 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método mágico asignar una configuración del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-04
+         * @version 2016-02-04
      */
     public function __set($name, $value)
     {
-        if (strpos($name, 'config_')===0) {
+        if (strpos($name, 'config_') === 0) {
             $key = str_replace('config_', '', $name);
             $c = substr($key, 0, strpos($key, '_'));
             $v = substr($key, strpos($key, '_')+1);
-            $value = ($value===false or $value===0) ? '0' : ((!is_array($value) and !is_object($value)) ? (string)$value : ((is_array($value) and empty($value))?null:$value));
+            $value = ($value === false || $value === 0) ? '0' : ((!is_array($value) && !is_object($value)) ? (string)$value : ((is_array($value) && empty($value))?null:$value));
             $this->config[$c][$v] = (!is_string($value) or isset($value[0])) ? $value : null;
             $this->$name = $this->config[$c][$v];
         } else {
@@ -356,14 +350,13 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método para setear los atributos del contribuyente
      * @param array Arreglo con los datos que se deben asignar
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-01-29
+         * @version 2016-01-29
      */
     public function set($array)
     {
         parent::set($array);
         foreach($array as $name => $value) {
-            if (strpos($name, 'config_')===0) {
+            if (strpos($name, 'config_') === 0) {
                 $this->__set($name, $value);
             }
         }
@@ -372,8 +365,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método permite desactivar la autocompletación de datos de los contribuyentes
      * nuevos que se instanciarán
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-23
+         * @version 2020-07-23
      */
     public static function noAutocompletarNuevosContribuyentes()
     {
@@ -385,13 +377,12 @@ class Model_Contribuyente extends \Model_App
      * configuración y parámetros adicionales
      * @param registrado Se usa para indicar que el contribuyente que se esta guardando es uno registrado por un usuario (se validan otros datos)
      * @param no_modificar =true Evita que se modifiquen ciertos contribuyentes reservados
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-11-27
+         * @version 2019-11-27
      */
     public function save($registrado = false, $no_modificar = true)
     {
         // si no se debe guardar se entrega true (se hace creer que se guardó)
-        if ($no_modificar and in_array($this->rut, self::$reservados)) {
+        if ($no_modificar && in_array($this->rut, self::$reservados)) {
             return true;
         }
         // si es contribuyente registrado se hacen algunas verificaciones
@@ -403,8 +394,8 @@ class Model_Contribuyente extends \Model_App
                 }
             }
             // si se pasó un logo se guarda
-            if (isset($_FILES['logo']) and !$_FILES['logo']['error']) {
-                if (\sowerphp\general\Utility_File::mimetype($_FILES['logo']['tmp_name'])!='image/png') {
+            if (isset($_FILES['logo']) && !$_FILES['logo']['error']) {
+                if (\sowerphp\general\Utility_File::mimetype($_FILES['logo']['tmp_name']) != 'image/png') {
                     throw new \Exception('Formato del logo debe ser PNG');
                 }
                 $config = \sowerphp\core\Configure::read('dte.logos');
@@ -432,14 +423,14 @@ class Model_Contribuyente extends \Model_App
             foreach ($this->config as $configuracion => $datos) {
                 foreach ($datos as $variable => $valor) {
                     $Config = new Model_ContribuyenteConfig($this->rut, $configuracion, $variable);
-                    if (!is_array($valor) and !is_object($valor)) {
+                    if (!is_array($valor) && !is_object($valor)) {
                         $Config->json = 0;
                     } else {
                         $valor = json_encode($valor);
                         $Config->json = 1;
                     }
                     $class = get_called_class();
-                    if (in_array($configuracion.'_'.$variable, $class::$encriptar) and $valor!==null) {
+                    if (in_array($configuracion.'_'.$variable, $class::$encriptar) && $valor!==null) {
                         $valor = Utility_Data::encrypt($valor);
                     }
                     $Config->valor = $valor;
@@ -459,10 +450,8 @@ class Model_Contribuyente extends \Model_App
      * usuario administrador.
      * Los datos del contribuyente de documentos emitidos, recibidos, config
      * extra, etc no se eliminan por defecto, se debe solicitar específicamente.
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-06
      */
-    public function delete($all = false)
+    public function delete(bool $all = false)
     {
         $this->db->beginTransaction();
         // desasociar contribuyente del usuario
@@ -517,8 +506,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el nombre del contribuyente: nombre de fantasía si existe o razón social
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-04-24
+         * @version 2017-04-24
      */
     public function getNombre()
     {
@@ -527,8 +515,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que envía un correo electrónico al contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-02-11
+         * @version 2021-02-11
      */
     public function notificar($asunto, $mensaje, $para = null, $responder_a = null, $attach = null)
     {
@@ -549,8 +536,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el RUT formateado del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-20
+         * @version 2015-09-20
      */
     public function getRUT()
     {
@@ -560,8 +546,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega la glosa del ambiente en el que se encuentra el
      * contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-23
+         * @version 2015-09-23
      */
     public function getAmbiente()
     {
@@ -570,8 +555,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega las actividades económicas del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-08-08
+         * @version 2016-08-08
      */
     public function getListActividades()
     {
@@ -598,8 +582,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el listado de giros del contribuyente por cada
      * actividad económmica que tiene registrada
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-08-08
+         * @version 2016-08-08
      */
     public function getListGiros()
     {
@@ -615,8 +598,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que asigna los usuarios autorizados a operar con el contribuyente
      * @param usuarios Arreglo con índice nombre de usuario y valores un arreglo con los permisos a asignar
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-06-11
+         * @version 2017-06-11
      */
     public function setUsuarios(array $usuarios) {
         $this->db->beginTransaction();
@@ -647,8 +629,7 @@ class Model_Contribuyente extends \Model_App
      * Método que entrega los correos electrónicos asociados a cierto permiso
      * Por defecto se entregan los correos de los usuarios administradores
      * @return Arreglo con los correos electrónicos solicitados
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-12-09
+         * @version 2018-12-09
      */
     public function getUsuariosEmail($permiso = 'admin')
     {
@@ -669,8 +650,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el listado de usuarios autorizados y sus permisos
      * @return array Tabla con los usuarios y sus permisos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-14
+         * @version 2021-10-14
      */
     public function getUsuarios()
     {
@@ -691,8 +671,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el listado de usuarios para los campos select
      * @return Listado de usuarios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-10-20
+         * @version 2017-10-20
      */
     public function getListUsuarios()
     {
@@ -716,8 +695,7 @@ class Model_Contribuyente extends \Model_App
      * @param Usuario Objeto \sowerphp\app\Sistema\Usuarios\Model_Usuario con el usuario a verificar
      * @param permisos Permisos que se desean verificar que tenga el usuario
      * @return =true si está autorizado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-02-16
+         * @version 2018-02-16
      */
     public function usuarioAutorizado($Usuario, $permisos = [])
     {
@@ -729,7 +707,7 @@ class Model_Contribuyente extends \Model_App
         if (!is_array($permisos)) {
             $permisos = [$permisos];
         }
-        // si la aplicación sólo tiene configurada una empresa se verifican los
+        // si la aplicación solo tiene configurada una empresa se verifican los
         // permisos normales (basados en grupos) de sowerphp
         if (\sowerphp\core\Configure::read('dte.empresa')) {
             foreach ($permisos as $permiso) {
@@ -740,7 +718,7 @@ class Model_Contribuyente extends \Model_App
             return false;
         }
         // ver si el usuario es del grupo de soporte
-        if ($this->config_app_soporte and $Usuario->inGroup(['soporte'])) {
+        if ($this->config_app_soporte && $Usuario->inGroup(['soporte'])) {
             return true;
         }
         // ver si el usuario tiene acceso a la empresa
@@ -754,7 +732,7 @@ class Model_Contribuyente extends \Model_App
         }
         // si se está buscando por un recurso en particular entonces se
         // valida contra los permisos del sistema
-        if (isset($permisos[0]) and $permisos[0][0]=='/') {
+        if (isset($permisos[0]) && $permisos[0][0] == '/') {
             // actualizar permisos del usuario (útil cuando la llamada es vía API)
             $this->setPermisos($Usuario);
             // verificar permisos
@@ -766,7 +744,7 @@ class Model_Contribuyente extends \Model_App
         }
         // se está pidiendo un permiso por tipo de permiso (agrupación, se verifica si pertenece)
         else {
-            // si no se está pidiendo ningún permiso en particular, sólo se
+            // si no se está pidiendo ningún permiso en particular, solo se
             // quiere saber si el usuario tiene acceso a la empresa
             if (!$permisos) {
                 if ($usuario_permisos) {
@@ -790,8 +768,7 @@ class Model_Contribuyente extends \Model_App
      * Método que asigna los permisos al usuario
      * @param Usuario Objeto \sowerphp\app\Sistema\Usuarios\Model_Usuario al que se asignarán permisos
      * @return =true si está autorizado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2024-01-01
+         * @version 2024-01-01
      */
     public function setPermisos(&$Usuario)
     {
@@ -801,7 +778,7 @@ class Model_Contribuyente extends \Model_App
             $usuario_grupos_sesion = $usuario_grupos_reales;
         }
         // si el usuario es de soporte se colocan los permisos completos del usuario principal de la empresa
-        else if ($this->config_app_soporte and in_array('soporte', $usuario_grupos_reales)) {
+        else if ($this->config_app_soporte && in_array('soporte', $usuario_grupos_reales)) {
             $usuario_grupos_sesion = $this->getUsuario()->groups(true);
         }
         // si es un usuario autorizado, entonces se copian los permisos asignados de los disponibles en el
@@ -822,7 +799,7 @@ class Model_Contribuyente extends \Model_App
             $admin_grupos = $this->getUsuario()->getGroups();
             foreach ($usuario_permisos as $p) {
                 foreach ($permisos[$p]['grupos'] as $g) {
-                    if (!in_array($g, $usuario_grupos_sesion) and in_array($g, $admin_grupos)) {
+                    if (!in_array($g, $usuario_grupos_sesion) && in_array($g, $admin_grupos)) {
                         $usuario_grupos_sesion[] = $g;
                     }
                 }
@@ -854,8 +831,7 @@ class Model_Contribuyente extends \Model_App
      * Método que determina si el usuario está o no autorizado a asignar manualmente el Folio de un DTE
      * @param Usuario Objeto \sowerphp\app\Sistema\Usuarios\Model_Usuario con el usuario a verificar
      * @return =true si está autorizado a cambiar el folio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-11-07
+         * @version 2017-11-07
      */
     public function puedeAsignarFolio($Usuario)
     {
@@ -875,8 +851,7 @@ class Model_Contribuyente extends \Model_App
      * Método que entrega los documentos que el contribuyente tiene autorizados
      * a emitir en la aplicación
      * @return Listado de documentos autorizados
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-22
+         * @version 2020-08-22
      */
     public function getDocumentosAutorizados($onlyPK = false, $User = null)
     {
@@ -903,10 +878,10 @@ class Model_Contribuyente extends \Model_App
             ', [':rut'=>$this->rut, ':activo'=>1]);
         }
         // entregar todos los documentos si no se pidió filtrar por usuario o el usuario es administrador o el usuario es de soporte
-        if (!$User or $User->id == $this->usuario or $User->inGroup(['soporte'])) {
+        if (!$User || $User->id == $this->usuario || $User->inGroup(['soporte'])) {
             return $documentos;
         }
-        // obtener sólo los documentos autorizados si se pidió por usuario
+        // obtener solo los documentos autorizados si se pidió por usuario
         $documentos_autorizados = [];
         foreach ($documentos as $d) {
             if (is_array($d)) {
@@ -926,8 +901,7 @@ class Model_Contribuyente extends \Model_App
      * Método que entrega los documentos que el contribuyente tiene autorizados
      * a emitir en la aplicación por cada usuario autorizado que tiene
      * @return Listado de documentos autorizados por usuario
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-06-25
+         * @version 2017-06-25
      */
     public function getDocumentosAutorizadosPorUsuario()
     {
@@ -947,8 +921,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que asigna los documentos autorizados por cada usuario del contribuyente
      * @param usuarios Arreglo con índice nombre de usuario y valores un arreglo con los documentos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-06-25
+         * @version 2017-06-25
      */
     public function setDocumentosAutorizadosPorUsuario(array $usuarios) {
         $this->db->beginTransaction();
@@ -980,8 +953,7 @@ class Model_Contribuyente extends \Model_App
      * @param dte Código del DTE que se quiere saber si está autorizado
      * @param Usuario Permite determinar el permiso para un usuario autorizado
      * @return =true si está autorizado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-19
+         * @version 2018-05-19
      */
     public function documentoAutorizado($dte, $Usuario = null)
     {
@@ -994,7 +966,7 @@ class Model_Contribuyente extends \Model_App
             return false;
         }
         if ($Usuario) {
-            if ($Usuario->id == $this->usuario or $Usuario->inGroup(['soporte'])) {
+            if ($Usuario->id == $this->usuario || $Usuario->inGroup(['soporte'])) {
                 return true;
             }
             $dtes = $this->db->getCol(
@@ -1013,8 +985,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el listado de folios que el Contribuyente dispone
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-01-05
+         * @version 2023-01-05
      */
     public function getFolios()
     {
@@ -1058,8 +1029,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega los datos del folio del documento solicitado
      * @param dte Tipo de documento para el cual se quiere su folio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-16
+         * @version 2021-08-16
      */
     public function getFolio($dte, $folio_manual = 0)
     {
@@ -1067,7 +1037,7 @@ class Model_Contribuyente extends \Model_App
             return false;
         }
         $DteFolio = new \website\Dte\Admin\Model_DteFolio($this->rut, $dte, $this->enCertificacion());
-        if (!$DteFolio->disponibles and $this->config_sii_timbraje_automatico) {
+        if (!$DteFolio->disponibles && $this->config_sii_timbraje_automatico) {
             try {
                 $DteFolio->timbrar($DteFolio->alerta*$this->config_sii_timbraje_multiplicador);
                 $DteFolio = new \website\Dte\Admin\Model_DteFolio($this->rut, $dte, $this->enCertificacion()); // actualiza info del mantenedor de folios
@@ -1075,7 +1045,7 @@ class Model_Contribuyente extends \Model_App
                 // fallar silenciosamente
             }
         }
-        if (!$DteFolio->exists() or !$DteFolio->disponibles) {
+        if (!$DteFolio->exists() || !$DteFolio->disponibles) {
             $this->db->rollback();
             return false;
         }
@@ -1115,8 +1085,7 @@ class Model_Contribuyente extends \Model_App
      * Método que entrega una tabla con los datos de las firmas electrónicas de
      * los usuarios que están autorizados a trabajar con el contribuyente
      * @param dte Tipo de documento para el cual se quiere su folio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-12-21
+         * @version 2018-12-21
      */
     public function getFirmas()
     {
@@ -1142,8 +1111,7 @@ class Model_Contribuyente extends \Model_App
      * administrador del contribuyente.
      * @param user ID del usuario que desea obtener la firma
      * @return \sasco\LibreDTE\FirmaElectronica
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-08-25
+         * @version 2023-08-25
      */
     public function getFirma($user_id = null)
     {
@@ -1155,7 +1123,7 @@ class Model_Contribuyente extends \Model_App
                 WHERE f.usuario = c.usuario AND c.rut = :rut
             ', [':rut' => $this->rut]);
             // buscar firma del usuario que está haciendo la solicitud
-            if (empty($datos) and $user_id and $user_id!=$this->usuario) {
+            if (empty($datos) && $user_id && $user_id!=$this->usuario) {
                 $datos = $this->db->getRow('
                     SELECT archivo, contrasenia
                     FROM firma_electronica
@@ -1309,8 +1277,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el total de documentos temporales por el contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+         * @version 2021-10-12
      */
     public function countDocumentosTemporales($filtros = [])
     {
@@ -1510,15 +1477,15 @@ class Model_Contribuyente extends \Model_App
         }
         // filtrar por estado del DTE
         if (!empty($filtros['estado_sii'])) {
-            // sólo documentos sin track id (falta enviar al sii)
+            // solo documentos sin track id (falta enviar al sii)
             if ($filtros['estado_sii'] == 'sin_track_id') {
                 $where[] = 'd.track_id IS NULL';
             }
-            // sólo documentos sin estado (falta actualizar)
+            // solo documentos sin estado (falta actualizar)
             else if ($filtros['estado_sii'] == 'null') {
                 $where[] = '(d.track_id IS NOT NULL AND d.revision_estado IS NULL)';
             }
-            // sólo documentos sin estado final (falta actualizar)
+            // solo documentos sin estado final (falta actualizar)
             else if ($filtros['estado_sii'] == 'no_final') {
                 $where[] = '(
                     (
@@ -1535,7 +1502,7 @@ class Model_Contribuyente extends \Model_App
                     )
                 )';
             }
-            // sólo documentos con estado rechazado (eliminar y, quizás, volver a emitir)
+            // solo documentos con estado rechazado (eliminar y, quizás, volver a emitir)
             else if ($filtros['estado_sii'] == 'rechazados') {
                 $where[] = '(
                     d.revision_estado IS NOT NULL
@@ -1567,8 +1534,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el total de documentos emitidos por el contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+         * @version 2021-10-12
      */
     public function countDocumentosEmitidos($filtros = [])
     {
@@ -1590,8 +1556,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el listado de documentos emitidos por el contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-04-03
+         * @version 2023-04-03
      */
     public function getDocumentosEmitidos($filtros = [])
     {
@@ -1610,7 +1575,7 @@ class Model_Contribuyente extends \Model_App
         if (isset($filtros['limit'])) {
             $query = $this->db->setLimit($query, $filtros['limit'], !empty($filtros['offset']) ? $filtros['offset'] : 0);
         }
-        // entregar consulta verdadera (esta si obtiene razón social verdadera en DTE exportación, pero sólo para las filas del límite consultado)
+        // entregar consulta verdadera (esta si obtiene razón social verdadera en DTE exportación, pero solo para las filas del límite consultado)
         $razon_social_xpath = $this->db->xml(
             'd.xml',
             '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep',
@@ -1645,8 +1610,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que crea el objeto para enviar correo
      * @param email Email que se quiere obtener: intercambio o sii
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-07-20
+         * @version 2021-07-20
      */
     public function getEmailSender($email = 'intercambio', $debug = false)
     {
@@ -1660,8 +1624,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que crea el objeto para recibir correo
      * @param email Email que se quiere obtener: intercambio o sii
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-07-20
+         * @version 2021-07-20
      */
     public function getEmailReceiver($email = 'intercambio')
     {
@@ -1676,8 +1639,7 @@ class Model_Contribuyente extends \Model_App
      * Método que crea el objeto email para enviar por SMTP y lo entrega
      * @param email Email que se quiere obteber: intercambio o sii
      * @return \sowerphp\core\Network_Email
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-06-12
+         * @version 2020-06-12
      */
     private function getEmailSenderSmtp($email = 'intercambio', $debug = false)
     {
@@ -1709,8 +1671,7 @@ class Model_Contribuyente extends \Model_App
      * Método que crea el objeto Imap para recibir correo por IMAP
      * @param email Email que se quiere obteber: intercambio o sii
      * @return \sowerphp\core\Network_Email_Imap
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-06-12
+         * @version 2020-06-12
      */
     private function getEmailReceiverImap($email = 'intercambio')
     {
@@ -1739,8 +1700,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que indica si el correo de recepción configurado en el
      * contribuyente es el correo genérico de LibreDTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-18
+         * @version 2021-08-18
      */
     public function isEmailReceiverLibredte($email = 'intercambio')
     {
@@ -1750,7 +1710,7 @@ class Model_Contribuyente extends \Model_App
         // está configurado el correo de LibreDTE como "usable" en el contribuyente
         if (!empty($this->config_emails_libredte->disponible)) {
             $config = 'config_email_'.$email.'_receiver';
-            if (!empty($this->$config->type) and $this->$config->type == 'libredte') {
+            if (!empty($this->$config->type) && $this->$config->type == 'libredte') {
                 return true;
             }
         }
@@ -1760,8 +1720,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el resumen de las boletas por períodos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-05-21
+         * @version 2020-05-21
      */
     public function getResumenBoletasPeriodos()
     {
@@ -1786,8 +1745,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega las boletas de un período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-11-07
+         * @version 2018-11-07
      */
     public function getBoletas($periodo)
     {
@@ -1830,8 +1788,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega los documentos para el reporte de consumo de folios de
      * las boletas electrónicas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-14
+         * @version 2016-02-14
      */
     public function getDocumentosConsumoFolios($desde, $hasta = null)
     {
@@ -1890,8 +1847,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el resumen de las ventas por períodos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-12
+         * @version 2016-10-12
      */
     public function getResumenVentasPeriodos()
     {
@@ -1913,8 +1869,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el total de ventas de un período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-02-06
+         * @version 2023-02-06
      */
     public function countVentas($periodo)
     {
@@ -1950,8 +1905,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega las ventas de un período
      * @todo Corregir ID en Extranjero y asignar los NULL por los valores que corresponden (quizás haya que modificar tabla dte_emitido)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-06-13
+         * @version 2022-06-13
      */
     public function getVentas($periodo)
     {
@@ -2046,8 +2000,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el historial de ventas con el monto total por período para un determinado receptor
      * @param periodo Período para el cual se está construyendo el libro
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-04-21
+         * @version 2021-04-21
      */
     public function getHistorialVentas($receptor, $fecha = null, $periodos = 12)
     {
@@ -2102,8 +2055,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el objeto del libro de ventas a partir de las ventas registradas en la aplicación
      * @param periodo Período para el cual se está construyendo el libro
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-12-21
+         * @version 2016-12-21
      */
     public function getLibroVentas($periodo)
     {
@@ -2120,7 +2072,7 @@ class Model_Contribuyente extends \Model_App
                 }
             }
             // agregar datos si es extranjero
-            if (!empty($venta['extranjero_id']) or !empty($venta['extranjero_nacionalidad'])) {
+            if (!empty($venta['extranjero_id']) || !empty($venta['extranjero_nacionalidad'])) {
                 $d['Extranjero'] = [
                     'NumId' => !empty($venta['extranjero_id']) ? $venta['extranjero_id'] : false,
                     'Nacionalidad' => !empty($venta['extranjero_nacionalidad']) ? $venta['extranjero_nacionalidad'] : false,
@@ -2142,8 +2094,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el resumen de las ventas diarias de un período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-11
+         * @version 2017-09-11
      */
     public function getVentasDiarias($periodo)
     {
@@ -2161,8 +2112,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el resumen de ventas por tipo de un período
      * @return Arreglo asociativo con las ventas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-11
+         * @version 2017-09-11
      */
     public function getVentasPorTipo($periodo)
     {
@@ -2177,8 +2127,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el resumen de las guías por períodos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-12
+         * @version 2016-10-12
      */
     public function getResumenGuiasPeriodos()
     {
@@ -2201,8 +2150,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el resumen de las guías de un período
      * @todo Extraer IndTraslado en MariaDB
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-12
+         * @version 2016-10-12
      */
     public function countGuias($periodo)
     {
@@ -2220,8 +2168,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el resumen de las guías de un período
      * @todo Extraer IndTraslado en MariaDB
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-12
+         * @version 2016-10-12
      */
     public function getGuias($periodo)
     {
@@ -2256,8 +2203,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el resumen de las guías diarias de un período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-17
+         * @version 2018-05-17
      */
     public function getGuiasDiarias($periodo)
     {
@@ -2274,8 +2220,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que cuenta los casos de intercambio del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+         * @version 2021-10-12
      */
     public function countDocumentosIntercambios(array $filter = [])
     {
@@ -2284,8 +2229,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega la tabla con los casos de intercambio del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+         * @version 2021-10-12
      */
     public function getDocumentosIntercambios(array $filter = [])
     {
@@ -2294,8 +2238,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método para actualizar la bandeja de intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-19
+         * @version 2018-05-19
      */
     public function actualizarBandejaIntercambio($dias = 7)
     {
@@ -2304,8 +2247,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que crea los filtros para ser usados en las consultas de documentos recibidos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-02-10
+         * @version 2023-02-10
      */
     private function crearFiltrosDocumentosRecibidos($filtros)
     {
@@ -2391,8 +2333,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el total de documentos recibidos por el contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+         * @version 2021-10-12
      */
     public function countDocumentosRecibidos($filtros = [])
     {
@@ -2412,8 +2353,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el listado de documentos recibidos por el contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-12
+         * @version 2021-10-12
      */
     public function getDocumentosRecibidos($filtros = [])
     {
@@ -2450,12 +2390,11 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el resumen de las compras por períodos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-21
+         * @version 2020-07-21
      */
     public function getResumenComprasPeriodos()
     {
-        if ($this->db->config['type']!='PostgreSQL') {
+        if ($this->db->config['type'] != 'PostgreSQL') {
             return $this->getResumenComprasPeriodosMySQL();
         }
         $periodo_col = $this->db->date('Ym', 'r.fecha', 'INTEGER');
@@ -2525,8 +2464,7 @@ class Model_Contribuyente extends \Model_App
      * Método que entrega el resumen de las compras por períodos
      * @warning Versión del método para MySQL, no soporta facturas de compra (se hace en método aparte porque no hay FULL JOIN en MySQL)
      * @todo Emular FULL JOIN para obtener el soporte para facturas de compra
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-12
+         * @version 2016-10-12
      */
     private function getResumenComprasPeriodosMySQL()
     {
@@ -2548,8 +2486,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el total de las compras de un período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-02-06
+         * @version 2023-02-06
      */
     public function countCompras($periodo)
     {
@@ -2610,8 +2547,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el resumen de las compras de un período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-06-20
+         * @version 2022-06-20
      */
     public function getCompras($periodo, $tipo_dte = null)
     {
@@ -2783,8 +2719,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el objeto del libro de compras a partir de las compras registradas en la aplicación
      * @param periodo Período para el cual se está construyendo el libro
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-03
+         * @version 2017-09-03
      */
     public function getLibroCompras($periodo)
     {
@@ -2795,7 +2730,7 @@ class Model_Contribuyente extends \Model_App
             $d = [];
             foreach ($compra as $k => $v) {
                 if (strpos($k, 'impuesto_adicional')!==0 and strpos($k, 'iva_no_recuperable')!==0) {
-                    if ($v!==null and isset(Model_DteCompra::$libro_cols[$k])) {
+                    if ($v!==null && isset(Model_DteCompra::$libro_cols[$k])) {
                         $d[Model_DteCompra::$libro_cols[$k]] = $v;
                     }
                 }
@@ -2823,12 +2758,11 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el resumen de las compras diarias de un período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-21
+         * @version 2020-07-21
      */
     public function getComprasDiarias($periodo)
     {
-        if ($this->db->config['type']!='PostgreSQL') {
+        if ($this->db->config['type'] != 'PostgreSQL') {
             return $this->getComprasDiariasMySQL($periodo);
         }
         $periodo_col = $this->db->date('Ym', 'r.fecha');
@@ -2884,8 +2818,7 @@ class Model_Contribuyente extends \Model_App
      * Método que entrega el resumen de las compras diarias de un período
      * @warning Versión del método para MySQL, no soporta facturas de compra (se hace en método aparte porque no hay FULL JOIN en MySQL)
      * @todo Emular FULL JOIN para obtener el soporte para facturas de compra
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-11
+         * @version 2017-09-11
      */
     private function getComprasDiariasMySQL($periodo)
     {
@@ -2903,8 +2836,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el resumen de compras por tipo de un período
      * @return Arreglo asociativo con las compras
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-21
+         * @version 2020-07-21
      */
     public function getComprasPorTipo($periodo)
     {
@@ -2935,8 +2867,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el listado de documentos electrónicos que han sido
      * generados pero no se han enviado al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-12
+         * @version 2021-08-12
      */
     public function getDteEmitidosSinEnviar($certificacion = null, $creados_hace_horas = 0)
     {
@@ -2961,8 +2892,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el listado de documentos electrónicos que han sido
      * generados y enviados al SII pero aun no se ha actualizado su estado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-22
+         * @version 2020-08-22
      */
     public function getDteEmitidosSinEstado($certificacion = null)
     {
@@ -2986,8 +2916,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el listado de sucursales del contribuyente con los
      * codigos de actividad económica asociados a cada una (uno por sucursal)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-08-08
+         * @version 2016-08-08
      */
     public function getSucursalesActividades()
     {
@@ -3003,8 +2932,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el listado de sucursales del contribuyente (se incluye
      * la casa matriz)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-07-13
+         * @version 2016-07-13
      */
     public function getSucursales()
     {
@@ -3021,14 +2949,13 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el objeto de la sucursal del contribuyente a partir
      * del código de la sucursal (por defecto casa matriz)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-31
+         * @version 2021-10-31
      */
     public function getSucursal($codigo = null)
     {
         $encontrada = false;
         // si se pasó código se busca sucursal
-        if ($codigo and $this->config_extra_sucursales) {
+        if ($codigo && $this->config_extra_sucursales) {
             foreach ($this->config_extra_sucursales as $Sucursal) {
                 if ($Sucursal->codigo == $codigo) {
                     $encontrada = true;
@@ -3055,8 +2982,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega la sucursal del usuario indicado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-14
+         * @version 2021-10-14
      */
     public function getSucursalUsuario($Usuario)
     {
@@ -3075,13 +3001,12 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que asigna las sucursales por defecto de los usuarios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-14
+         * @version 2021-10-14
      */
     public function setSucursalesPorUsuario(array $usuarios = [])
     {
         $this->db->beginTransaction();
-        // se eliminan todas las sucursales (para dejar sólo lo que viene en el arreglo)
+        // se eliminan todas las sucursales (para dejar solo lo que viene en el arreglo)
         $this->db->query('DELETE FROM contribuyente_usuario_sucursal WHERE contribuyente = :rut', [':rut'=>$this->rut]);
         // se agregan las sucursales por defecto
         foreach ($usuarios as $usuario => $sucursal) {
@@ -3105,8 +3030,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que obtiene las sucursales por defecto de los usuarios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-14
+         * @version 2021-10-14
      */
     public function getSucursalesPorUsuario()
     {
@@ -3119,8 +3043,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega las coordenadas geográficas del emisor según su dirección
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-12-26
+         * @version 2016-12-26
      */
     public function getCoordenadas($sucursal = null)
     {
@@ -3131,8 +3054,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el listado de clientes del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-06-08
+         * @version 2021-06-08
      */
     public function getClientes(array $filtros = [])
     {
@@ -3162,14 +3084,13 @@ class Model_Contribuyente extends \Model_App
         }
         // si hay módulo CRM se sacan los clientes desde el módulo
         else {
-            return (new \libredte\oficial\Crm\Model_Clientes())->setContribuyente($this)->getListado($filtros);
+            return (new \libredte\enterprise\Crm\Model_Clientes())->setContribuyente($this)->getListado($filtros);
         }
     }
 
     /**
      * Método que entrega la cuota de documentos asignada al contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-19
+         * @version 2019-08-19
      */
     public function getCuota()
     {
@@ -3179,8 +3100,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega los documentos usados por el contribuyente. Ya sea en
      * todos los períodos o en uno en específico.
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-01
+         * @version 2020-01-01
      */
     public function getDocumentosUsados($periodo = null)
     {
@@ -3303,8 +3223,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el total de documentos usados por el contribuyente en
      * un periodo en particular
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-01
+         * @version 2020-01-01
      */
     public function getTotalDocumentosUsadosPeriodo($periodo = null)
     {
@@ -3316,8 +3235,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el resumen de los estados de los DTE para un periodo de tiempo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-09-23
+         * @version 2016-09-23
      */
     public function getDocumentosEmitidosResumenEstados($desde, $hasta)
     {
@@ -3332,8 +3250,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el resumen diario de los documentos emitidos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-09-15
+         * @version 2022-09-15
      */
     public function getDocumentosEmitidosResumenDiario(array $filtros)
     {
@@ -3371,8 +3288,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el detalle de los documentos emitidos con cierto
      * estado en un rango de tiempo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-02-03
+         * @version 2021-02-03
      */
     public function getDocumentosEmitidosEstado($desde, $hasta, $estado = null)
     {
@@ -3423,8 +3339,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el resumen de los eventos asignados por los receptores para un periodo de tiempo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-04-25
+         * @version 2018-04-25
      */
     public function getDocumentosEmitidosResumenEventos($desde, $hasta)
     {
@@ -3440,8 +3355,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el detalle de los documentos emitidos con cierto
      * evento en un rango de tiempo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-22
+         * @version 2020-08-22
      */
     public function getDocumentosEmitidosEvento($desde, $hasta, $evento = null)
     {
@@ -3492,8 +3406,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el detalle de los documentos emitidos que aun no han
      * sido enviado al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-07-30
+         * @version 2021-07-30
      */
     public function getDocumentosEmitidosSinEnviar()
     {
@@ -3533,8 +3446,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el resumen de los estados de los DTE para un periodo de tiempo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-09-23
+         * @version 2016-09-23
      */
     public function getDocumentosEmitidosResumenEstadoIntercambio($desde, $hasta)
     {
@@ -3562,21 +3474,20 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega los estados de los DTE para un periodo de tiempo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-22
+         * @version 2020-08-22
      */
     public function getDocumentosEmitidosEstadoIntercambio($desde, $hasta, $recibo, $recepcion, $resultado)
     {
         // filtros
         $vars = [':rut'=>$this->rut, ':certificacion'=>$this->enCertificacion(), ':desde'=>$desde, ':hasta'=>$hasta];
         $where = [$recibo ? 'recibo.responde IS NOT NULL' : 'recibo.responde IS NULL'];
-        if ($recepcion!==null and $recepcion!=-1) {
+        if ($recepcion!==null && $recepcion!=-1) {
             $where[] = 'recepcion.estado = :recepcion';
             $vars[':recepcion'] = $recepcion;
         } else {
             $where[] = 'recepcion.estado IS NULL';
         }
-        if ($resultado!==null and $resultado!=-1) {
+        if ($resultado!==null && $resultado!=-1) {
             $where[] = 'resultado.estado = :resultado';
             $vars[':resultado'] = $resultado;
         } else {
@@ -3619,8 +3530,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega la información del registro de compra y venta del SII
      * del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+         * @version 2020-02-22
      */
     public function getRCV(array $filtros = [])
     {
@@ -3641,7 +3551,7 @@ class Model_Contribuyente extends \Model_App
             'formato' => 'json', // formato en el que se debe entregar la respuesta, siempre debería ser json, excepto si es rcv_csv que podría ser csv
         ], $filtros);
         // si se pide el detalle pero no se indicó el tipo de documento se buscan todos los posible
-        if ($filtros['detalle']===true) {
+        if ($filtros['detalle'] === true) {
             // si no se indicó dte se colocan todos los posibles
             if (!$filtros['dte']) {
                 // si se solicita el ripo rcv_csv no se indican los DTE; se obtiene todo por defecto
@@ -3665,7 +3575,7 @@ class Model_Contribuyente extends \Model_App
                     $filtros['dte'] = $dtes;
                 }
             }
-            // si el dte es sólo uno se coloca como arreglo
+            // si el dte es solo uno se coloca como arreglo
             else if (!is_array($filtros['dte'])) {
                 $filtros['dte'] = [$filtros['dte']];
             }
@@ -3679,7 +3589,7 @@ class Model_Contribuyente extends \Model_App
         ];
         // consumir servicio web de resumen
         if (!$filtros['detalle']) {
-            if ($filtros['operacion']=='COMPRA') {
+            if ($filtros['operacion'] == 'COMPRA') {
                 $url = sprintf(
                     '/sii/rcv/compras/resumen/%d-%s/%d/%s?formato=json&certificacion=%d',
                     $this->rut, $this->dv, $filtros['periodo'], $filtros['estado'], $this->enCertificacion()
@@ -3691,7 +3601,7 @@ class Model_Contribuyente extends \Model_App
                 );
             }
             $r = apigateway_consume($url, ['auth'=>$auth]);
-            if ($r['status']['code']!=200) {
+            if ($r['status']['code'] != 200) {
                 throw new \Exception('Error al obtener el resumen del RCV: '.$r['body']);
             }
             if ($r['body']['respEstado']['codRespuesta']) {
@@ -3707,7 +3617,7 @@ class Model_Contribuyente extends \Model_App
         else {
             $detalle = [];
             foreach ($filtros['dte'] as $dte) {
-                if ($filtros['operacion']=='COMPRA') {
+                if ($filtros['operacion'] == 'COMPRA') {
                     $url = sprintf(
                         '/sii/rcv/compras/detalle/%d-%s/%d/%d/%s?formato='.$filtros['formato'].'&certificacion=%d&tipo=%s',
                         $this->rut, $this->dv, $filtros['periodo'], $dte, $filtros['estado'], $this->enCertificacion(), $filtros['tipo']
@@ -3719,7 +3629,7 @@ class Model_Contribuyente extends \Model_App
                     );
                 }
                 $r = apigateway_consume($url, ['auth'=>$auth]);
-                if ($r['status']['code']!=200) {
+                if ($r['status']['code'] != 200) {
                     throw new \Exception('Error al obtener el detalle del RCV: '.$r['body']);
                 }
                 if ($filtros['tipo'] == 'rcv_csv') {
@@ -3738,18 +3648,16 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega la configuración de cierta API (servicio web) del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-10-06
+         * @version 2017-10-06
      */
     public function getAPI($api)
     {
-        return ($this->config_api_servicios and isset($this->config_api_servicios->$api)) ? $this->config_api_servicios->$api : false;
+        return ($this->config_api_servicios && isset($this->config_api_servicios->$api)) ? $this->config_api_servicios->$api : false;
     }
 
     /**
      * Método que entrega el cliente para la API (servicio web) del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-10-06
+         * @version 2017-10-06
      */
     public function getApiClient($api)
     {
@@ -3760,7 +3668,7 @@ class Model_Contribuyente extends \Model_App
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->url = $Api->url;
         if (!empty($Api->credenciales)) {
-            if ($Api->auth=='http_auth_basic') {
+            if ($Api->auth == 'http_auth_basic') {
                 $aux = explode(':', $Api->credenciales);
                 if (isset($aux[1])) {
                     $rest->setAuth($aux[0], $aux[1]);
@@ -3775,8 +3683,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega los enlaces normalizados para ser usados en el layout
      * de la aplicación
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-02-08
+         * @version 2023-02-08
      */
     public function getLinks()
     {
@@ -3791,8 +3698,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega la plantilla de un correo ya armada con los datos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-17
+         * @version 2023-11-17
      */
     public function getEmailFromTemplate($template, $params = null)
     {
@@ -3803,7 +3709,7 @@ class Model_Contribuyente extends \Model_App
         }
         // buscar parámetros pasados
         $params = array_slice(func_get_args(), 1);
-        // si no se pasó ningún parámetro sólo se quiere saber si la plantilla existe o no
+        // si no se pasó ningún parámetro solo se quiere saber si la plantilla existe o no
         if (!$params) {
             return true;
         }
@@ -3817,7 +3723,7 @@ class Model_Contribuyente extends \Model_App
             $class = get_class($Documento);
             $mostrar_pagado = false;
             $mostrar_pagar = false;
-            if ($this->config_pagos_habilitado and $Documento->getTipo()->operacion=='S') {
+            if ($this->config_pagos_habilitado && $Documento->getTipo()->operacion == 'S') {
                 $Cobro = $Documento->getCobro(false);
                 if ($Cobro->total) {
                     if (!$Cobro->pagado) {
@@ -3894,13 +3800,12 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega la URL del sitio web
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-02-18
+         * @version 2019-02-18
      */
     public function getURL()
     {
         if ($this->config_extra_web) {
-            if (strpos($this->config_extra_web, 'http://')===0 or strpos($this->config_extra_web, 'https://')) {
+            if (strpos($this->config_extra_web, 'http://') === 0 or strpos($this->config_extra_web, 'https://')) {
                 return $this->config_extra_web;
             } else {
                 return 'http://'.$this->config_extra_web;
@@ -3910,8 +3815,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega la aplicación de tercero del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-06-14
+         * @version 2019-06-14
      */
     public function getApp($app)
     {
@@ -3939,8 +3843,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega todas los aplicaciones disponibles para el contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-06-15
+         * @version 2019-06-15
      */
     public function getApps($filtros = [])
     {
@@ -3979,7 +3882,7 @@ class Model_Contribuyente extends \Model_App
             // cargar la configuración de cada aplicación
             foreach ($apps as $App) {
                 $App->setConfig($config_obj->{$config_prefix.$App->getCodigo()});
-                // si se solicitó sólo disponibles o sólo no disponibles verificar
+                // si se solicitó solo disponibles o solo no disponibles verificar
                 if (isset($filtros['disponible'])) {
                     if ($App->getConfig()->disponible != $filtros['disponible']) {
                         unset($apps[$App->getCodigo()]);
@@ -3993,8 +3896,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el contador asociado al contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-09
+         * @version 2019-08-09
      */
     public function getContador()
     {
@@ -4007,8 +3909,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega las credenciales de empresa para autenticación en el
      * SII.
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+         * @version 2020-02-22
      */
     public function getSiiAuth()
     {
@@ -4027,8 +3928,7 @@ class Model_Contribuyente extends \Model_App
      * Método que entrega las credenciales de usuario para autenticación en el
      * SII. Se puede entregar las credenciales rut/clave del usuario o en
      * segunda instancia la firma electrónica del usuario
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+         * @version 2020-02-22
      */
     public function getSiiAuthUser($user_id = null)
     {
@@ -4038,7 +3938,7 @@ class Model_Contribuyente extends \Model_App
         }
         // mediante rut/clave del usuario
         $Usuario = $user_id == $this->usuario ? $this->getUsuario() : (new \sowerphp\app\Sistema\Usuarios\Model_Usuarios())->get($user_id);
-        if ($Usuario->config_sii_rut and $Usuario->config_sii_pass) {
+        if ($Usuario->config_sii_rut && $Usuario->config_sii_pass) {
             return [
                 'pass' => [
                     'rut' => str_replace('.', '', $Usuario->config_sii_rut),
@@ -4053,8 +3953,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega las credenciales de usuario para autenticación en el
      * SII usando firma electrónica
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+         * @version 2020-02-22
      */
     public function getSiiAuthCert($user_id = null)
     {
@@ -4073,8 +3972,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que indica si el contribuyente está o no en ambiente de certificación
      * @return =0 ambiente de producción, =1 ambiente de certificación
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-27
+         * @version 2021-05-27
      */
     public function enCertificacion(): int
     {
@@ -4093,8 +3991,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega la configuración para el PDF de los DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-09
+         * @version 2021-10-09
      */
     public function getConfigPDF($options, $default_config = [])
     {
@@ -4106,7 +4003,7 @@ class Model_Contribuyente extends \Model_App
                 'sucursal' => $Documento->sucursal_sii,
             ];
         }
-        if (empty($default_config['formato']) or !isset($default_config['papelContinuo'])) {
+        if (empty($default_config['formato']) || !isset($default_config['papelContinuo'])) {
             foreach (['documento', 'actividad', 'sucursal'] as $col) {
                 if (!isset($options[$col])) {
                     $options[$col] = '*';
@@ -4126,7 +4023,7 @@ class Model_Contribuyente extends \Model_App
             }
         }
         // agregar siempre que se pueda la dirección de la casa matriz como dato "extra"
-        if (!empty($this->direccion) and !empty($this->comuna)) {
+        if (!empty($this->direccion) && !empty($this->comuna)) {
             $config['extra']['casa_matriz'] = $this->direccion.', '.$this->getComuna()->comuna;
         }
         // agregar opciones del documento si se indicó
@@ -4146,19 +4043,18 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega la configuración de formato y papel para los PDF
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-04
+         * @version 2020-08-04
      */
     private function _getConfigPDF($options, $firstQuery = true)
     {
         // buscar si existe configuración creada según los filtros
         foreach ((array)$this->config_pdf_mapeo as $m) {
-            if ($options['documento'] == $m->documento and $options['actividad'] == $m->actividad and $options['sucursal'] == $m->sucursal) {
+            if ($options['documento'] == $m->documento && $options['actividad'] == $m->actividad && $options['sucursal'] == $m->sucursal) {
                 return ['formato' => $m->formato, 'papelContinuo' => $m->papel];
             }
         }
         // no se encontró la configuración buscada y la buscada no es la por defecto
-        if ($options['documento'] == '*' and $options['actividad'] == '*' and $options['sucursal'] == '*') {
+        if ($options['documento'] == '*' && $options['actividad'] == '*' && $options['sucursal'] == '*') {
             return ['formato' => 'estandar', 'papelContinuo' => 0];
         }
         // buscar con permutaciones

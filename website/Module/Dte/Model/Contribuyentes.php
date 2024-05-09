@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte;
 
 /**
  * Clase para mapear la tabla contribuyente de la base de datos
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2017-09-03
  */
 class Model_Contribuyentes extends \Model_Plural_App
@@ -38,8 +37,7 @@ class Model_Contribuyentes extends \Model_Plural_App
 
     /**
      * Método que entrega el listado de contribuyentes
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-21
+         * @version 2015-09-21
      */
     public function getList($all = false)
     {
@@ -62,8 +60,7 @@ class Model_Contribuyentes extends \Model_Plural_App
     /**
      * Método que busca el objeto de un contribuyente (o varios) a partir
      * del correo electrónico registrado del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-01-30
+         * @version 2019-01-30
      */
     public function getByEmail($email, $onlyOne = false)
     {
@@ -71,7 +68,7 @@ class Model_Contribuyentes extends \Model_Plural_App
         if (!$contribuyentes) {
             return false;
         }
-        if ($onlyOne and isset($contribuyentes[1])) {
+        if ($onlyOne && isset($contribuyentes[1])) {
             throw new \Exception('Se encontraron '.num(count($contribuyentes)).' contribuyentes que tienen asociado el email '.$email);
         }
         return !isset($contribuyentes[1]) ? $contribuyentes[0] : $contribuyentes;
@@ -83,8 +80,7 @@ class Model_Contribuyentes extends \Model_Plural_App
      * @param usuario ID del usuario que se quiere obtener el listado de contribuyentes con los que está autorizado a operar
      * @param omitir Se puede indicar el RUT de una empresa que no se quiere que aparezca en el listado
      * @return Tabla con las empresas que se están buscando
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-12-13
+         * @version 2018-12-13
      */
     public function getByUsuario($usuario, $omitir = null)
     {
@@ -134,8 +130,7 @@ class Model_Contribuyentes extends \Model_Plural_App
      * @param dte Filtrar por un DTE específico
      * @param rut Filtrar por el RUT de un contribuyente específico
      * @return Tabla con los contribuyentes y sus movimientos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-19
+         * @version 2019-08-19
      */
     public function getConMovimientos($desde = 1, $hasta = null, $certificacion = false, $dte = null, $rut = null)
     {
@@ -209,9 +204,8 @@ class Model_Contribuyentes extends \Model_Plural_App
 
     /**
      * Método que entrega la cantidad de contribuyentes registrados
-     * @param certificacion =true sólo certificación, =false sólo producción, =null todos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-01-07
+     * @param certificacion =true solo certificación, =false solo producción, =null todos
+         * @version 2016-01-07
      */
     public function countRegistrados($certificacion = null)
     {
@@ -232,8 +226,7 @@ class Model_Contribuyentes extends \Model_Plural_App
      * Método que entrega el listado de contribuyentes registrados
      * @param desde Fecha desde último ingreso que se buscará
      * @param hasta Fecha hasta el último ingreso que se buscará
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-26
+         * @version 2016-02-26
      */
     public function getRegistrados($desde = null, $hasta = null)
     {
@@ -266,9 +259,8 @@ class Model_Contribuyentes extends \Model_Plural_App
 
     /**
      * Método que entrega la cantidad de contribuyentes registrados por comuna
-     * @param certificacion =true sólo certificación, =false sólo producción, =null todos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-03
+     * @param certificacion =true solo certificación, =false solo producción, =null todos
+         * @version 2017-09-03
      */
     public function countByComuna($certificacion = null)
     {
@@ -291,9 +283,8 @@ class Model_Contribuyentes extends \Model_Plural_App
 
     /**
      * Método que entrega la cantidad de contribuyentes registrados por actividad económica
-     * @param certificacion =true sólo certificación, =false sólo producción, =null todos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-11-14
+     * @param certificacion =true solo certificación, =false solo producción, =null todos
+         * @version 2017-11-14
      */
     public function countByActividadEconomica($certificacion = null)
     {

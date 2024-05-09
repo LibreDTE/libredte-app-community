@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -38,8 +38,7 @@ class Controller_FirmaElectronicas extends \Controller_App
 
     /**
      * Acción que muestra el mantenedor de firmas electrónicas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-22
+         * @version 2015-09-22
      */
     public function index()
     {
@@ -52,14 +51,13 @@ class Controller_FirmaElectronicas extends \Controller_App
 
     /**
      * Acción que permite al usuario agregar una nueva firma electrónica
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-08-25
+         * @version 2023-08-25
      */
     public function agregar()
     {
         if (isset($_POST['submit'])) {
             // verificar que se haya podido subir el archivo con la firma
-            if (!isset($_FILES['firma']) or $_FILES['firma']['error']) {
+            if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
                 \sowerphp\core\Model_Datasource_Session::message(
                     'Ocurrió un error al subir la firma.', 'error'
                 );
@@ -81,7 +79,7 @@ class Controller_FirmaElectronicas extends \Controller_App
             }
             // verificar que la firma no esté cargada en otro usuario
             $FirmaElectronica = new Model_FirmaElectronica(trim($Firma->getID()));
-            if ($FirmaElectronica->usuario and $FirmaElectronica->usuario != $this->Auth->User->id) {
+            if ($FirmaElectronica->usuario && $FirmaElectronica->usuario != $this->Auth->User->id) {
                 \sowerphp\core\Model_Datasource_Session::message(
                     'La firma electrónica de '.$Firma->getID().' ya está asociada al usuario '.$FirmaElectronica->getUsuario()->usuario.', no es posible asignarla a su usuario '.$this->Auth->User->usuario.'. Si 2 empresas usan la misma firma, deberán tener ambas el mismo administrador principal en LibreDTE. En el caso que no desee tener el mismo administrador principal, deberá subir la firma de un usuario diferente, y que esté autorizada en SII.', 'error'
                 );
@@ -89,7 +87,7 @@ class Controller_FirmaElectronicas extends \Controller_App
             }
             // si el usuario tiene una firma asociada se borra antes de agregar la nueva
             // esto es necesario porque la PK de la firma es el RUN de la misma y no el ID
-            // del usuario, además un usuario puede tener sólo una firma. Entonces si un
+            // del usuario, además un usuario puede tener solo una firma. Entonces si un
             // usuario ya tiene firma y trata de subir una nueva con un RUN diferente el
             // guardado de la firma falla. Para evitar este problema, se borra si existe una
             $FirmaElectronicaAntigua = (new Model_FirmaElectronicas())->getByUser($this->Auth->User->id);
@@ -122,8 +120,7 @@ class Controller_FirmaElectronicas extends \Controller_App
 
     /**
      * Acción que permite eliminar la firma electrónica de un usuario
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-22
+         * @version 2015-09-22
      */
     public function eliminar()
     {
@@ -131,7 +128,7 @@ class Controller_FirmaElectronicas extends \Controller_App
         // si el usuario no tiene firma electrónica no se elimina :-)
         if (!$FirmaElectronica) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Usted no tiene una firma electrónica registrada en el sistema. Sólo puede eliminar su firma previamente cargada.'
+                'Usted no tiene una firma electrónica registrada en el sistema. Solo puede eliminar su firma previamente cargada.'
             );
             $this->redirect('/dte/admin/firma_electronicas');
         }
@@ -152,8 +149,7 @@ class Controller_FirmaElectronicas extends \Controller_App
 
     /**
      * Acción que descarga la firma electrónica de un usuario
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+         * @version 2019-07-17
      */
     public function descargar()
     {
@@ -161,7 +157,7 @@ class Controller_FirmaElectronicas extends \Controller_App
         // si el usuario no tiene firma electrónica no hay algo que descargar
         if (!$FirmaElectronica) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Usted no tiene una firma electrónica registrada en el sistema, sólo puede descargar su firma previamente cargada.',
+                'Usted no tiene una firma electrónica registrada en el sistema, solo puede descargar su firma previamente cargada.',
             );
             $this->redirect('/dte/admin/firma_electronicas');
         }

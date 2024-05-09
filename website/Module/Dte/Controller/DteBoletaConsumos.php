@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte;
 
 /**
  * Clase para las acciones asociadas al libro de boletas electrónicas
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2018-11-11
  */
 class Controller_DteBoletaConsumos extends \Controller_Maintainer
@@ -41,8 +40,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
 
     /**
      * Acción principal que lista los períodos con boletas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-18
+         * @version 2023-10-18
      */
     public function listar($page = 1, $orderby = null, $order = 'A')
     {
@@ -60,8 +58,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
 
     /**
      * Acción que permite enviar el reporte de consumo de folios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-14
+         * @version 2016-02-14
      */
     public function crear()
     {
@@ -75,8 +72,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
 
     /**
      * Acción para prevenir comportamiento por defecto del mantenedor
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-14
+         * @version 2016-02-14
      */
     public function editar($pk)
     {
@@ -88,8 +84,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
 
     /**
      * Acción para descargar reporte de consumo de folios en XML
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+         * @version 2019-07-17
      */
     public function xml($dia)
     {
@@ -112,8 +107,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
 
     /**
      * Acción que permite enviar el consumo de folios al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-10
+         * @version 2020-10-10
      */
     public function enviar_sii($dia)
     {
@@ -141,8 +135,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
 
     /**
      * Acción que actualiza el estado del envío del reporte de consumo de folios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-11-11
+         * @version 2018-11-11
      */
     public function actualizar_estado($dia, $usarWebservice = null)
     {
@@ -183,8 +176,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
 
     /**
      * Acción que actualiza el estado del envío del reporte de consumo de folios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-14
+         * @version 2016-02-14
      */
     public function solicitar_revision($dia)
     {
@@ -212,16 +204,15 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
 
     /**
      * Acción que permite eliminar un RCOF
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-14
+         * @version 2020-07-14
      */
     public function eliminar($dia)
     {
         $filterListar = !empty($_GET['listar']) ? base64_decode($_GET['listar']) : '';
         $Emisor = $this->getContribuyente();
-        // sólo administrador pueden borrar el rcof
+        // solo administrador pueden borrar el rcof
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Sólo el administrador de la empresa puede eliminar el RCOF.', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('Solo el administrador de la empresa puede eliminar el RCOF.', 'error');
             $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
         }
         // obtener reporte enviado
@@ -247,8 +238,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
     /**
      * Acción que entrega un listado con todos los reportes de consumos de
      * folios pendientes de enviar al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-11-11
+         * @version 2018-11-11
      */
     public function pendientes()
     {

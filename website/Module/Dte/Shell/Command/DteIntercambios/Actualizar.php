@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,7 +25,6 @@ namespace website\Dte;
 
 /**
  * Comando para actualizar la bandeja de intercambio de los contribuyentes
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2018-05-20
  */
 class Shell_Command_DteIntercambios_Actualizar extends \Shell_App
@@ -82,7 +81,7 @@ class Shell_Command_DteIntercambios_Actualizar extends \Shell_App
     private function sincronizarConRegistroComprasSII($rut, $meses)
     {
         $Contribuyente = (new Model_Contribuyentes())->get($rut);
-        if (!$Contribuyente->exists() or !$Contribuyente->config_sii_pass) {
+        if (!$Contribuyente->exists() || !$Contribuyente->config_sii_pass) {
             return false;
         }
         if ($this->verbose) {

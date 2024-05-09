@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -30,7 +30,6 @@ use stdClass;
  * Clase para mapear la tabla dte_recibido de la base de datos
  * Comentario de la tabla:
  * Esta clase permite trabajar sobre un registro de la tabla dte_recibido
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2015-12-28
  */
 class Model_DteRecibido extends \Model_App
@@ -489,8 +488,7 @@ class Model_DteRecibido extends \Model_App
     /**
      * Método que asigna los campos iva_no_recuperable e impuesto_adicional si
      * se pasaron separados en varios campos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-06
+         * @version 2016-10-06
      */
     public function set($datos)
     {
@@ -529,8 +527,7 @@ class Model_DteRecibido extends \Model_App
 
     /**
      * Método para guardar el documento recibido, se hacen algunas validaciones previo a guardar
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-06
+         * @version 2017-09-06
      */
     public function save()
     {
@@ -646,8 +643,7 @@ class Model_DteRecibido extends \Model_App
     /**
      * Método que entrega el objeto del tipo del dte
      * @return \website\Dte\Admin\Mantenedores\Model_DteTipo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-27
+         * @version 2015-09-27
      */
     public function getTipo()
     {
@@ -657,8 +653,7 @@ class Model_DteRecibido extends \Model_App
     /**
      * Método que entrega el objeto del Dte
      * @return \sasco\LibreDTE\Sii\Dte
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-05-16
+         * @version 2020-05-16
      */
     public function getDte()
     {
@@ -680,8 +675,7 @@ class Model_DteRecibido extends \Model_App
 
     /**
      * Método que entrega el objeto del emisor del dte recibido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-28
+         * @version 2015-09-28
      */
     public function getEmisor()
     {
@@ -698,8 +692,7 @@ class Model_DteRecibido extends \Model_App
 
     /**
      * Método que entrega el objeto del receptor del dte recibido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-28
+         * @version 2015-09-28
      */
     public function getReceptor()
     {
@@ -708,8 +701,7 @@ class Model_DteRecibido extends \Model_App
 
     /**
      * Método que consulta al estado al SII del dte recibido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-06-17
+         * @version 2016-06-17
      */
     public function getEstado(\sasco\LibreDTE\FirmaElectronica $Firma)
     {
@@ -734,15 +726,14 @@ class Model_DteRecibido extends \Model_App
             'token'             => $token,
         ]);
         // si hubo error con el estado se muestra que no se pudo obtener
-        if ($xml===false)
+        if ($xml === false)
             return false;
         return (array)$xml->xpath('/SII:RESPUESTA/SII:RESP_HDR')[0];
     }
 
     /**
      * Método que entrega los impuestos adicionales del documento
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-08-09
+         * @version 2016-08-09
      */
     public function getImpuestosAdicionales($prefix = '')
     {
@@ -761,8 +752,7 @@ class Model_DteRecibido extends \Model_App
 
     /**
      * Método que entrega los valores de IVA no recuperable
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-08-09
+         * @version 2016-08-09
      */
     public function getIVANoRecuperable($prefix = '')
     {
@@ -781,12 +771,11 @@ class Model_DteRecibido extends \Model_App
 
     /**
      * Método que entrega el objeto del DTE de intercambio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-06-21
+         * @version 2017-06-21
      */
     public function getDteIntercambio()
     {
-        if (!isset($this->DteIntercambio) and $this->intercambio) {
+        if (!isset($this->DteIntercambio) && $this->intercambio) {
             $this->DteIntercambio = (new Model_DteIntercambios())->get($this->receptor, $this->intercambio, $this->certificacion);
         }
         return $this->DteIntercambio;
@@ -794,8 +783,7 @@ class Model_DteRecibido extends \Model_App
 
     /**
      * Método que entrega los datos del DTE (el XML como arreglo)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+         * @version 2020-02-22
      */
     public function getDatos()
     {
@@ -828,21 +816,20 @@ class Model_DteRecibido extends \Model_App
 
     /**
      * Método que entrega el detalle del documento recibido si existe intercambio asociado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+         * @version 2020-02-22
      */
     public function getDetalle()
     {
         // si no está asignado el Detalle se busca
         if (!isset($this->detalle)) {
             // no hay documento XML asociado (ni por intercambio, ni por MIPYME)
-            if (!$this->intercambio and !$this->mipyme) {
+            if (!$this->intercambio && !$this->mipyme) {
                 $this->detalle = false;
             }
             // hay documento intercambio
             else {
                 $this->detalle = $this->getDatos()['Detalle'];
-                if ($this->detalle and !isset($this->detalle[0])) {
+                if ($this->detalle && !isset($this->detalle[0])) {
                     $this->detalle = [$this->detalle];
                 }
             }
@@ -853,8 +840,7 @@ class Model_DteRecibido extends \Model_App
 
     /**
      * Método que entrega las referencias que este DTE hace a otros documentos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-17
+         * @version 2023-11-17
      */
     public function getReferenciados()
     {
@@ -898,18 +884,16 @@ class Model_DteRecibido extends \Model_App
     /**
      * Método que indica si el DTE recibido tiene un XML asociado (LibreDTE o
      * MIPYME)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-05-16
+         * @version 2020-05-16
      */
     public function hasXML()
     {
-        return $this->hasLocalXML() or $this->mipyme;
+        return $this->hasLocalXML() || $this->mipyme;
     }
 
     /**
      * Método que indica si el DTE recibido tiene un XML en LibreDTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-05-16
+         * @version 2020-05-16
      */
     public function hasLocalXML()
     {
@@ -920,8 +904,7 @@ class Model_DteRecibido extends \Model_App
      * Método que entrega el XML del documento recibido.
      * Entrega el XML asociado a un intercambio en LibreDTE o bien recibido con
      * el Portal MIPYME del SII.
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+         * @version 2020-02-22
      */
     public function getXML()
     {
@@ -972,8 +955,7 @@ class Model_DteRecibido extends \Model_App
 
     /**
      * Método que entrega la actividad económica asociada al documento
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-04
+         * @version 2020-08-04
      */
     public function getActividad($default = null)
     {
@@ -985,8 +967,7 @@ class Model_DteRecibido extends \Model_App
      * Método que entrega el PDF del documento recibido.
      * Entrega el PDF que se ha generado con LibreDTE a partir del XML del DTE
      * recibido o bien el PDF generado con el PortalMIPYME del SII.
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-07
+         * @version 2020-08-07
      */
     public function getPDF(array $config = [])
     {
@@ -1035,7 +1016,7 @@ class Model_DteRecibido extends \Model_App
             // crear a partir de formato de PDF no estándar
             else if ($config['formato'] != 'estandar') {
                 $apps = $this->getEmisor()->getApps('dtepdfs');
-                if (empty($apps[$config['formato']]) or empty($apps[$config['formato']]->getConfig()->disponible)) {
+                if (empty($apps[$config['formato']]) || empty($apps[$config['formato']]->getConfig()->disponible)) {
                     throw new \Exception('Formato de PDF '.$config['formato'].' no se encuentra disponible', 400);
                 }
                 $response = $apps[$config['formato']]->generar($config);
@@ -1048,10 +1029,10 @@ class Model_DteRecibido extends \Model_App
                 $response = $rest->post(url('/api/utilidades/documentos/generar_pdf'), $config);
             }
             // procesar respuesta
-            if ($response===false) {
+            if ($response === false) {
                 throw new \Exception(implode("\n", $rest->getErrors(), 500));
             }
-            if ($response['status']['code']!=200) {
+            if ($response['status']['code'] != 200) {
                 throw new \Exception($response['body'], $response['status']['code']);
             }
             // si dió código 200 se entrega la respuesta del servicio web
@@ -1065,8 +1046,7 @@ class Model_DteRecibido extends \Model_App
 
     /**
      * Método que entrega el código ESCPOS del documento emitido.
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-02-28
+         * @version 2021-02-28
      */
     public function getESCPOS(array $config = [])
     {
@@ -1097,7 +1077,7 @@ class Model_DteRecibido extends \Model_App
         ], $config);
         // logo
         $formatoEstandar = $this->getEmisor()->getApp('dtepdfs.estandar');
-        if (!empty($formatoEstandar) and !empty($formatoEstandar->getConfig()->continuo->logo->posicion)) {
+        if (!empty($formatoEstandar) && !empty($formatoEstandar->getConfig()->continuo->logo->posicion)) {
             $logo_file = DIR_STATIC.'/contribuyentes/'.$this->getEmisor()->rut.'/logo.png';
             if (is_readable($logo_file)) {
                 $config['logo'] = base64_encode(file_get_contents($logo_file));
@@ -1111,7 +1091,7 @@ class Model_DteRecibido extends \Model_App
         }
         // consultar aplicación de ESCPOS según el formato solicitado
         else if ($apps = $this->getEmisor()->getApps('dteescpos')) {
-            if (empty($apps[$config['formato']]) or empty($apps[$config['formato']]->getConfig()->disponible)) {
+            if (empty($apps[$config['formato']]) || empty($apps[$config['formato']]->getConfig()->disponible)) {
                 throw new \Exception('Formato de ESCPOS '.$config['formato'].' no se encuentra disponible', 400);
             }
             $response = $apps[$config['formato']]->generar($config);
@@ -1121,7 +1101,7 @@ class Model_DteRecibido extends \Model_App
             unset($config['hash']);
             $response = apigateway_consume('/libredte/dte/documentos/escpos', $config);
         }
-        if ($response['status']['code']!=200) {
+        if ($response['status']['code'] != 200) {
             throw new \Exception($response['body'], 500);
         }
         // si dió código 200 se entrega la respuesta del servicio web

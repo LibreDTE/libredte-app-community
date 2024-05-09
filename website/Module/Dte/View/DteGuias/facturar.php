@@ -34,8 +34,8 @@ echo $f->input([
     'type' => 'select',
     'name' => 'con_referencia',
     'label' => '¿Con referencia?',
-    'options' => ['Sólo guías sin referencia (sin facturar)', 'Incluir guías que tengan una referencia (podrían estar facturadas)'],
-    'help' => 'Por defecto sólo se buscan guías que no tengan una referencia asociada (se asumen sin facturar)',
+    'options' => ['Solo guías sin referencia (sin facturar)', 'Incluir guías que tengan una referencia (podrían estar facturadas)'],
+    'help' => 'Por defecto solo se buscan guías que no tengan una referencia asociada (se asumen sin facturar)',
 ]);
 echo $f->end('Buscar guías a facturar');
 // mostrar guías
@@ -86,7 +86,7 @@ if (isset($guias)) {
         'type' => 'select',
         'name' => 'agrupar',
         'label' => '¿Agrupar?',
-        'options' => ['Se agruparán sólo si son más de 10 guías, tanto en referencias como en detalle', 'Se agruparán siempre en el detalle, en referencias irán una a una'],
+        'options' => ['Se agruparán solo si son más de 10 guías, tanto en referencias como en detalle', 'Se agruparán siempre en el detalle, en referencias irán una a una'],
         'help' => '¿Cómo se deben agrupar las guías al generar la factura?',
     ]);
     echo '<hr/>';

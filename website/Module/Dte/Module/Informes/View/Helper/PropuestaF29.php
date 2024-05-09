@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,7 +25,6 @@ namespace website\Dte\Informes;
 
 /**
  * Helper para generar la propuesta del formulario 29
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2017-11-03
  */
 class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
@@ -168,8 +167,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
 
     /**
      * Constructor de la planilla con la propuesta del formulario 29
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-01
+         * @version 2016-02-01
      */
     public function __construct($periodo)
     {
@@ -181,8 +179,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
 
     /**
      * Método que separa los documentos y crea los grupos para compras y ventas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-02
+         * @version 2016-02-02
      */
     private function crearGrupos($documentos, $grupos)
     {
@@ -203,8 +200,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
 
     /**
      * Método que crea la hoja con las compras del período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-06-10
+         * @version 2016-06-10
      */
     public function setCompras($compras)
     {
@@ -306,7 +302,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
             foreach ($subtotales as $s)
                 $suma[] = $col.$s;
             $this->getActiveSheet()->getStyle($col.$this->y)->getNumberFormat()->setFormatCode('#,##0');
-            if ($col=='E') {
+            if ($col == 'E') {
                 $this->getActiveSheet()->setCellValue($col.$this->y, '='.implode('+', $suma));
             } else {
                 $this->getActiveSheet()->setCellValue($col.$this->y, '='.implode('+', array_slice($suma, 0, count($suma)-1)).'-'.$suma[count($suma)-1]);
@@ -320,8 +316,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
 
     /**
      * Método que crea la hoja con las ventas del período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-02
+         * @version 2016-02-02
      */
     public function setVentas($ventas)
     {
@@ -416,7 +411,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
             foreach ($subtotales as $s)
                 $suma[] = $col.$s;
             $this->getActiveSheet()->getStyle($col.$this->y)->getNumberFormat()->setFormatCode('#,##0');
-            if ($col=='E') {
+            if ($col == 'E') {
                 $this->getActiveSheet()->setCellValue($col.$this->y, '='.implode('+', $suma));
             } else {
                 $this->getActiveSheet()->setCellValue($col.$this->y, '='.implode('+', array_slice($suma, 0, count($suma)-1)).'-'.$suma[count($suma)-1]);
@@ -429,8 +424,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
 
     /**
      * Método que crea la hoja de resumen con la propuesta del formulario 29
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-02
+         * @version 2016-02-02
      */
     public function setResumen(array $f29)
     {
@@ -860,8 +854,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
      * Método que asigna un dato a una celda, se usa este método para poder ir
      * recordando las celdas donde se dejaron los datos y así poder usar en las
      * fórmulas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-02
+         * @version 2016-02-02
      */
     private function setDato($celda, $codigo, $formato = '#,##0')
     {
@@ -873,8 +866,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
     /**
      * Método que obtiene un dato del arreglo con los códigos y datos del
      * formulario
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-03-09
+         * @version 2017-03-09
      */
     private function getDato($codigo)
     {

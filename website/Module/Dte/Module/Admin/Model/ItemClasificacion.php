@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -115,8 +115,7 @@ class Model_ItemClasificacion extends \Model_App
 
     /**
      * Constructor de la clasificación del item
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-24
+         * @version 2016-02-24
      */
     public function __construct($contribuyente = null, $codigo = null)
     {
@@ -126,8 +125,7 @@ class Model_ItemClasificacion extends \Model_App
 
     /**
      * Método que guarda la clasificación del item
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-09-14
+         * @version 2018-09-14
      */
     public function save()
     {
@@ -137,8 +135,7 @@ class Model_ItemClasificacion extends \Model_App
 
     /**
      * Método que entrega la clasificación superior de la clasificación
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-24
+         * @version 2016-02-24
      */
     public function getSuperior()
     {
@@ -147,8 +144,7 @@ class Model_ItemClasificacion extends \Model_App
 
     /**
      * Método que entrega la clasificación superior de la clasificación
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-24
+         * @version 2016-02-24
      */
     public function getItemClasificacion()
     {
@@ -157,8 +153,7 @@ class Model_ItemClasificacion extends \Model_App
 
     /**
      * Método que indica si la clasificación está o no en uso
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-24
+         * @version 2016-02-24
      */
     public function enUso()
     {
@@ -171,8 +166,7 @@ class Model_ItemClasificacion extends \Model_App
 
     /**
      * Método que entrega el listado de items de la clasificación
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-03-23
+         * @version 2017-03-23
      */
     public function getItems()
     {

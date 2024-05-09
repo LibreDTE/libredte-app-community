@@ -105,7 +105,7 @@ foreach ($Objs as &$obj) {
             $row[] = \sowerphp\general\Utility_Date::format($obj->{$column});
         }
         // si es la columna de detalle dependerá del estado
-        else if ($column == 'revision_detalle' and $obj->revision_estado == 'CORRECTO') {
+        else if ($column == 'revision_detalle' && $obj->revision_estado == 'CORRECTO') {
             $row[] = resumen2string($obj->getResumen());
         }
         // si es cualquier otro tipo de datos

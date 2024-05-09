@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Apps;
 
 /**
  * Utilidad para trabajar con la aplicación de Dropbox
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2019-07-13
  */
 class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
@@ -40,8 +39,7 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
 
      /**
      * Método que entrega el código HTML de la página de configuración de la aplicación
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-13
+         * @version 2019-07-13
      */
     public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form)
     {
@@ -94,8 +92,7 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
     /**
      * Método para evitar que se llame al método padre
      * La configuración se activa o desactiva al parear/desparear Dropbox
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-13
+         * @version 2019-07-13
      */
     public function setConfigPOST()
     {
@@ -103,14 +100,13 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
 
     /**
      * Método que obtiene el cliente de Dropbox (autenticado o aun no)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-13
+         * @version 2019-07-13
      */
     public function getDropboxClient($token = null)
     {
         // verificar si hay soporte para dropbox
         $config = \sowerphp\core\Configure::read('module.Apps.Dropbox');
-        if (!$config or !class_exists('\Kunnu\Dropbox\DropboxApp')) {
+        if (!$config || !class_exists('\Kunnu\Dropbox\DropboxApp')) {
             return false;
         }
         // determinar token a usar
@@ -125,19 +121,17 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
 
     /**
      * Método que indica si está o no conectado a Dropbox
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-13
+         * @version 2019-07-13
      */
     public function isConnected()
     {
         $config = $this->getConfig();
-        return !empty($config->uid) and !empty($config->token);
+        return !empty($config->uid) && !empty($config->token);
     }
 
     /**
      * Método que entrega la URL de callback de Dropbox para la conexión
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-13
+         * @version 2019-07-13
      */
     public function getPairURL()
     {

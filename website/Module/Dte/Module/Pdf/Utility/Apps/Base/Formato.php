@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte\Pdf;
 
 /**
  * Clase abstracta para las aplicaciones de formatos de PDF
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2020-08-02
  */
 abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base_Apps
@@ -36,8 +35,7 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
 
     /**
      * Método que entrega el código HTML de la página de configuración de la aplicación
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-10
+         * @version 2020-08-10
      */
     public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form)
     {
@@ -69,8 +67,7 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
 
     /**
      * Método que asigna la configuración de la aplicación procesando el formulario enviado por POST
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-02
+         * @version 2020-08-02
      */
     public function setConfigPOST()
     {
@@ -89,8 +86,7 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
 
     /**
      * Método que crea la configuración de manera automágica :)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-10
+         * @version 2020-08-10
      */
     private function createConfig(string $id): array
     {
@@ -133,8 +129,7 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
      * Método que entrega la configuración de los flags del formato que
      * permiten activar o desactivar opciones (de un flag o de todos)
      * @param flag Flag que se quiere obtener o null para obtenerlos todos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-10
+         * @version 2020-08-10
      */
     public function getConfigFlags($flag = null)
     {
@@ -148,8 +143,7 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
      * Método que entrega los datos con la configuración para el PDF que se generará
      * Permite sobreescribir en clase de aplicación de PDF para pasar datos específicos
      * de cierta aplicación que no son configurables por el usuario
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-04-04
+         * @version 2021-04-04
      */
     protected function getConfigPDF($config)
     {
@@ -158,8 +152,7 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
 
     /**
      * Método que genera el PDF consumiendo el servicio web de la API de LibreDTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-04
+         * @version 2020-08-04
      */
     public function generar($config)
     {

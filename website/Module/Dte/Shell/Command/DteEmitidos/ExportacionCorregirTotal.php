@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,7 +25,6 @@ namespace website\Dte;
 
 /**
  * Comando para actualizar la bandeja de intercambio de los contribuyentes
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2016-09-20
  */
 class Shell_Command_DteEmitidos_ExportacionCorregirTotal extends \Shell_App
@@ -49,7 +48,7 @@ class Shell_Command_DteEmitidos_ExportacionCorregirTotal extends \Shell_App
             $this->out('Corrigiendo DTE T'.$dte.'F'.$folio.' de '.$DteEmitido->getEmisor()->razon_social);
         }
         $clp = $DteEmitido->calcularCLP();
-        if ($clp and $clp!=-1) {
+        if ($clp && $clp!=-1) {
             $DteEmitido->exento = $DteEmitido->total = $clp;
             $DteEmitido->save();
             if ($this->verbose) {
@@ -82,4 +81,3 @@ class Shell_Command_DteEmitidos_ExportacionCorregirTotal extends \Shell_App
     }
 
 }
-

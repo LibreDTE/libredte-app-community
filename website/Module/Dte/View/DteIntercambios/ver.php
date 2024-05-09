@@ -198,7 +198,7 @@ foreach ($Documentos as $Dte) {
     $DteRecibido = new \website\Dte\Model_DteRecibido(substr($Dte->getEmisor(), 0, -2), $Dte->getTipo(), $Dte->getFolio(), (int)$Dte->getCertificacion());
     $dte_existe = $DteRecibido->exists();
     //$evento = $Dte->getUltimaAccionRCV($Firma);
-    //$accion = ($evento and isset(\sasco\LibreDTE\Sii\RegistroCompraVenta::$acciones[$evento['codigo']]))? $evento['codigo'] : '';
+    //$accion = ($evento && isset(\sasco\LibreDTE\Sii\RegistroCompraVenta::$acciones[$evento['codigo']]))? $evento['codigo'] : '';
     $accion = '';
     $acciones = '';
     if ($dte_existe) {
@@ -259,7 +259,7 @@ echo $f->input([
 <div class="card mb-4">
     <div class="card-header"><i class="fas fa-exclamation-circle text-warning"></i> ¿Recibir, aceptar o reclamar un DTE?</div>
     <div class="card-body">
-        <p>Sólo aquellos documentos <strong>con acuse de recibo serán agregados</strong> a los documentos recibidos de <?=$Emisor->getNombre()?>. Documentos <strong>aceptados no serán agregados</strong> a los documentos recibidos, pero podrán ser agregados en el futuro si se hace el recibo de mercaderías o servicios. Documentos <strong>con reclamo no serán agregados</strong> a los documentos recibidos y no podrán ser agregados en el futuro ya que serán informados como rechazados al SII.</p>
+        <p>Solo aquellos documentos <strong>con acuse de recibo serán agregados</strong> a los documentos recibidos de <?=$Emisor->getNombre()?>. Documentos <strong>aceptados no serán agregados</strong> a los documentos recibidos, pero podrán ser agregados en el futuro si se hace el recibo de mercaderías o servicios. Documentos <strong>con reclamo no serán agregados</strong> a los documentos recibidos y no podrán ser agregados en el futuro ya que serán informados como rechazados al SII.</p>
         <p>LibreDTE no permite marcar como <strong>no incluir</strong> un DTE, si requiere dicha opción, deberá hacerlo directamente en el SII.</p>
     </div>
 </div>

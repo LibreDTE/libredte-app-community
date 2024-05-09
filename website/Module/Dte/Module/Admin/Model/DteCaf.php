@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -128,8 +128,7 @@ class Model_DteCaf extends \Model_App
 
     /**
      * Método que entrega el objeto del contribuyente asociado al mantenedor de folios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-18
+         * @version 2018-05-18
      */
     public function getEmisor()
     {
@@ -138,8 +137,7 @@ class Model_DteCaf extends \Model_App
 
     /**
      * Método que entrega el objeto del CAF
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-08-25
+         * @version 2023-08-25
      */
     public function getCAF()
     {
@@ -160,8 +158,7 @@ class Model_DteCaf extends \Model_App
 
     /**
      * Método que entrega el XML del archivo CAF desencriptado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-08-24
+         * @version 2016-08-24
      */
     public function getXML()
     {
@@ -172,8 +169,7 @@ class Model_DteCaf extends \Model_App
     /**
      * Método que entrega los folios en SII con cierto estado
      * @param estado String recibidos, anulados o pendientes
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     private function getFoliosByEstadoSII($estado)
     {
@@ -195,7 +191,7 @@ class Model_DteCaf extends \Model_App
                 ],
             ]
         );
-        if ($r['status']['code']!=200) {
+        if ($r['status']['code'] != 200) {
             throw new \Exception($r['body']);
         }
         return $r['body'];
@@ -203,8 +199,7 @@ class Model_DteCaf extends \Model_App
 
     /**
      * Método que entrega los folios en SII con estado recibidos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-18
+         * @version 2018-05-18
      */
     public function getFoliosRecibidos()
     {
@@ -213,8 +208,7 @@ class Model_DteCaf extends \Model_App
 
     /**
      * Método que entrega los folios en SII con estado anulados
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-18
+         * @version 2018-05-18
      */
     public function getFoliosAnulados()
     {
@@ -223,8 +217,7 @@ class Model_DteCaf extends \Model_App
 
     /**
      * Método que entrega los folios en SII con estado pendientes
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-18
+         * @version 2018-05-18
      */
     public function getFoliosPendientes()
     {
@@ -234,8 +227,7 @@ class Model_DteCaf extends \Model_App
     /**
      * Método que indica si alguno de los folios de este CAF han sido o no usados
      * para emitir algún DTE en LibreDTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-18
+         * @version 2021-05-18
      */
     public function usado()
     {
@@ -258,8 +250,7 @@ class Model_DteCaf extends \Model_App
 
     /**
      * Método que entrega el objeto del tipo de DTE asociado al folio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-18
+         * @version 2021-05-18
      */
     public function getTipo()
     {

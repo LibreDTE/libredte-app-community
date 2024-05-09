@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -41,8 +41,7 @@ class Model_DteRecibidos extends \Model_Plural_App
     /**
      * Método que entrega el listado de documentos que tienen compras de
      * activos fijos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-01-14
+         * @version 2022-01-14
      */
     public function getActivosFijos($filtros)
     {
@@ -54,8 +53,7 @@ class Model_DteRecibidos extends \Model_Plural_App
     /**
      * Método que entrega el listado de documentos que tienen compras de
      * supermercado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-01-14
+         * @version 2022-01-14
      */
     public function getSupermercado($filtros)
     {
@@ -67,8 +65,7 @@ class Model_DteRecibidos extends \Model_Plural_App
     /**
      * Método que entrega el listado de documentos que tienen compras con
      * cierto tipo de transacción
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-02-21
+         * @version 2022-02-21
      */
     private function getByTipoTransaccion($filtros)
     {
@@ -79,7 +76,7 @@ class Model_DteRecibidos extends \Model_Plural_App
             ':tipo_transaccion' => $filtros['tipo_transaccion'],
         ];
         // filtros por "desde y hasta"
-        if (!empty($filtros['desde']) and !empty($filtros['hasta'])) {
+        if (!empty($filtros['desde']) && !empty($filtros['hasta'])) {
             $where[] = '(
                 (r.periodo IS NULL AND r.fecha BETWEEN :desde AND :hasta)
                 OR (r.periodo IS NOT NULL AND r.periodo >= :periodo_desde AND r.periodo <= :periodo_hasta)
@@ -93,7 +90,7 @@ class Model_DteRecibidos extends \Model_Plural_App
         if (!empty($filtros['periodo'])) {
             $filtros['periodo'] = (string)$filtros['periodo'];
             $periodo_len = strlen($filtros['periodo']);
-            if ($periodo_len == 4 or $periodo_len == 6) {
+            if ($periodo_len == 4 || $periodo_len == 6) {
                 $where[] = '(
                     (r.periodo IS NULL AND r.fecha BETWEEN :desde AND :hasta)
                     OR (r.periodo IS NOT NULL AND r.periodo >= :periodo_desde AND r.periodo <= :periodo_hasta)
@@ -169,19 +166,18 @@ class Model_DteRecibidos extends \Model_Plural_App
 
     /**
      * Método que busca en los documentos recibidos de un contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-01-11
+         * @version 2017-01-11
      */
     public function buscar($filtros)
     {
         // determinar receptor, fecha desde y hasta para la busqueda
         if (!empty($filtros['fecha'])) {
             $fecha_desde = $fecha_hasta = $filtros['fecha'];
-        } else if (!empty($filtros['fecha_desde']) and !empty($filtros['fecha_hasta'])) {
+        } else if (!empty($filtros['fecha_desde']) && !empty($filtros['fecha_hasta'])) {
             $fecha_desde = $filtros['fecha_desde'];
             $fecha_hasta = $filtros['fecha_hasta'];
         }
-        if (empty($fecha_desde) or empty($fecha_hasta)) {
+        if (empty($fecha_desde) || empty($fecha_hasta)) {
             throw new \Exception('Debe indicar una fecha o un rango para la búsqueda');
         }
         $where = ['d.receptor = :receptor', 'd.fecha BETWEEN :fecha_desde AND :fecha_hasta'];
@@ -200,7 +196,7 @@ class Model_DteRecibidos extends \Model_Plural_App
         if (!empty($filtros['total'])) {
             $where[] = 'd.total = :total';
             $vars[':total'] = $filtros['total'];
-        } else if (!empty($filtros['total_desde']) and !empty($filtros['total_hasta'])) {
+        } else if (!empty($filtros['total_desde']) && !empty($filtros['total_hasta'])) {
             $where[] = 'd.total BETWEEN :total_desde AND :total_hasta';
             $vars[':total_desde'] = $filtros['total_desde'];
             $vars[':total_hasta'] = $filtros['total_hasta'];
@@ -227,8 +223,7 @@ class Model_DteRecibidos extends \Model_Plural_App
 
     /**
      * Método que entrega el detalle de las compras en un rango de tiempo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-17
+         * @version 2021-05-17
      */
     public function getDetalle($desde, $hasta, $detalle)
     {
@@ -300,10 +295,10 @@ class Model_DteRecibidos extends \Model_Plural_App
                 $d['items'] = $items;
             }
             $d['sucursal'] = $this->getContribuyente()->getSucursal($d['sucursal'])->sucursal;
-            if ($d['rcv_accion'] and !empty(\sasco\LibreDTE\Sii\RegistroCompraVenta::$acciones[$d['rcv_accion']])) {
+            if ($d['rcv_accion'] && !empty(\sasco\LibreDTE\Sii\RegistroCompraVenta::$acciones[$d['rcv_accion']])) {
                 $d['rcv_accion'] = \sasco\LibreDTE\Sii\RegistroCompraVenta::$acciones[$d['rcv_accion']];
             }
-            if ($d['tipo_transaccion'] and !empty(\sasco\LibreDTE\Sii\RegistroCompraVenta::$tipo_transacciones[$d['tipo_transaccion']])) {
+            if ($d['tipo_transaccion'] && !empty(\sasco\LibreDTE\Sii\RegistroCompraVenta::$tipo_transacciones[$d['tipo_transaccion']])) {
                 $d['tipo_transaccion'] = \sasco\LibreDTE\Sii\RegistroCompraVenta::$tipo_transacciones[$d['tipo_transaccion']];
             }
         }
@@ -312,8 +307,7 @@ class Model_DteRecibidos extends \Model_Plural_App
 
     /**
      * Método que entrega los totales de documentos emitidos por tipo de DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-09-24
+         * @version 2016-09-24
      */
     public function getPorTipo($desde, $hasta)
     {
@@ -331,8 +325,7 @@ class Model_DteRecibidos extends \Model_Plural_App
 
     /**
      * Método que entrega los totales de documentos emitidos por día
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-06-30
+         * @version 2019-06-30
      */
     public function getPorDia($desde, $hasta)
     {
@@ -350,8 +343,7 @@ class Model_DteRecibidos extends \Model_Plural_App
 
     /**
      * Método que entrega los totales de documentos emitidos por sucursal
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-06-30
+         * @version 2019-06-30
      */
     public function getPorSucursal($desde, $hasta)
     {
@@ -373,8 +365,7 @@ class Model_DteRecibidos extends \Model_Plural_App
 
     /**
      * Método que entrega los totales de documentos emitidos por usuario
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-06-30
+         * @version 2019-06-30
      */
     public function getPorUsuario($desde, $hasta)
     {
@@ -392,8 +383,7 @@ class Model_DteRecibidos extends \Model_Plural_App
 
     /**
      * Método que entrega los documentos sin XML asociado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-02-22
+         * @version 2021-02-22
      */
     public function getDocumentosSinXML($desde, $hasta)
     {

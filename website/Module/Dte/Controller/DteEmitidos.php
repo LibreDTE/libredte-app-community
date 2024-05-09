@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte;
 
 /**
  * Controlador de dte emitidos
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2019-02-22
  */
 class Controller_DteEmitidos extends \Controller_App
@@ -34,8 +33,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Método para permitir acciones sin estar autenticado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-02-23
+         * @version 2017-02-23
      */
     public function beforeFilter()
     {
@@ -45,8 +43,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que permite mostrar los documentos emitidos por el contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-10-06
+         * @version 2016-10-06
      */
     public function listar($pagina = 1)
     {
@@ -98,8 +95,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que permite eliminar un DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-18
+         * @version 2021-08-18
      */
     public function eliminar($dte, $folio)
     {
@@ -107,10 +103,10 @@ class Controller_DteEmitidos extends \Controller_App
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($this->Auth->User->hash);
         $response = $rest->get($this->request->url.'/api/dte/dte_emitidos/eliminar/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?_contribuyente_certificacion='.$Emisor->enCertificacion());
-        if ($response===false) {
+        if ($response === false) {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
         }
-        else if ($response['status']['code']!=200) {
+        else if ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
         }
         else {
@@ -121,8 +117,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que permite eliminar el XML de un DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-18
+         * @version 2021-08-18
      */
     public function eliminar_xml($dte, $folio)
     {
@@ -130,10 +125,10 @@ class Controller_DteEmitidos extends \Controller_App
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($this->Auth->User->hash);
         $response = $rest->get($this->request->url.'/api/dte/dte_emitidos/eliminar_xml/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?_contribuyente_certificacion='.$Emisor->enCertificacion());
-        if ($response===false) {
+        if ($response === false) {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
         }
-        else if ($response['status']['code']!=200) {
+        else if ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
         }
         else {
@@ -144,8 +139,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que muestra la página de un DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-06
+         * @version 2021-08-06
      */
     public function ver($dte, $folio)
     {
@@ -159,7 +153,7 @@ class Controller_DteEmitidos extends \Controller_App
             $this->redirect('/dte/dte_emitidos/listar');
         }
         // si el documento es cedible se buscan factoring recomendados
-        $cedible = ($DteEmitido->getTipo()->cedible and $DteEmitido->hasLocalXML());
+        $cedible = ($DteEmitido->getTipo()->cedible && $DteEmitido->hasLocalXML());
         // asignar variables para la vista
         $this->set([
             '_header_extra' => ['js'=>['/dte/js/dte.js']],
@@ -188,8 +182,7 @@ class Controller_DteEmitidos extends \Controller_App
      * aceptados con reparos (flag generar no tendrá efecto si no se cumple esto)
      * @param dte Tipo de DTE
      * @param folio Folio del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-18
+         * @version 2021-08-18
      */
     public function enviar_sii($dte, $folio, $retry = 1)
     {
@@ -197,10 +190,10 @@ class Controller_DteEmitidos extends \Controller_App
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($this->Auth->User->hash);
         $response = $rest->get($this->request->url.'/api/dte/dte_emitidos/enviar_sii/'.$dte.'/'.$folio.'/'.$Emisor->rut.'/'.$retry.'?_contribuyente_certificacion='.$Emisor->enCertificacion());
-        if ($response===false) {
+        if ($response === false) {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
         }
-        else if ($response['status']['code']!=200) {
+        else if ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
         }
         else {
@@ -211,8 +204,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que solicita se envíe una nueva revisión del DTE al email
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-06-11
+         * @version 2016-06-11
      */
     public function solicitar_revision($dte, $folio)
     {
@@ -228,7 +220,7 @@ class Controller_DteEmitidos extends \Controller_App
         // solicitar revision
         try {
             $estado = $DteEmitido->solicitarRevision($this->Auth->User->id);
-            if ($estado===false) {
+            if ($estado === false) {
                 \sowerphp\core\Model_Datasource_Session::message(
                     'No fue posible solicitar una nueva revisión del DTE.<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
                 );
@@ -250,8 +242,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que actualiza el estado del envío del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-12
+         * @version 2021-08-12
      */
     public function actualizar_estado($dte, $folio, $usarWebservice = null)
     {
@@ -262,10 +253,10 @@ class Controller_DteEmitidos extends \Controller_App
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($this->Auth->User->hash);
         $response = $rest->get($this->request->url.'/api/dte/dte_emitidos/actualizar_estado/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?usarWebservice='.(int)$usarWebservice.'&_contribuyente_certificacion='.$Emisor->enCertificacion());
-        if ($response===false) {
+        if ($response === false) {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
         }
-        else if ($response['status']['code']!=200) {
+        else if ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
         }
         else {
@@ -276,8 +267,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que descarga el PDF del documento emitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-14
+         * @version 2021-10-14
      */
     public function pdf($dte, $folio, $cedible = false, $emisor = null, $fecha = null, $total = null)
     {
@@ -289,7 +279,7 @@ class Controller_DteEmitidos extends \Controller_App
         else {
             // verificar si el emisor existe
             $Emisor = new Model_Contribuyente($emisor);
-            if (!$Emisor->exists() or !$Emisor->usuario) {
+            if (!$Emisor->exists() || !$Emisor->usuario) {
                 \sowerphp\core\Model_Datasource_Session::message(
                     'Emisor no está registrado en la aplicación', 'error'
                 );
@@ -313,7 +303,7 @@ class Controller_DteEmitidos extends \Controller_App
         }
         // si se está pidiendo con un emisor por parámetro se debe verificar
         // fecha de emisión y monto total del dte
-        if ($emisor and ($DteEmitido->fecha!=$fecha or $DteEmitido->total!=$total)) {
+        if ($emisor && ($DteEmitido->fecha!=$fecha || $DteEmitido->total!=$total)) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'DTE existe, pero fecha y/o monto no coinciden con los registrados', 'error'
             );
@@ -358,8 +348,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que descarga el XML del documento emitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-14
+         * @version 2021-10-14
      */
     public function xml($dte, $folio, $emisor = null, $fecha = null, $total = null)
     {
@@ -371,7 +360,7 @@ class Controller_DteEmitidos extends \Controller_App
         else {
             // verificar si el emisor existe
             $Emisor = new Model_Contribuyente($emisor);
-            if (!$Emisor->exists() or !$Emisor->usuario) {
+            if (!$Emisor->exists() || !$Emisor->usuario) {
                 \sowerphp\core\Model_Datasource_Session::message(
                     'Emisor no está registrado en la aplicación', 'error'
                 );
@@ -395,7 +384,7 @@ class Controller_DteEmitidos extends \Controller_App
         }
         // si se está pidiendo con un emisor por parámetro se debe verificar
         // fecha de emisión y monto total del dte
-        if ($emisor and ($DteEmitido->fecha!=$fecha or $DteEmitido->total!=$total)) {
+        if ($emisor && ($DteEmitido->fecha!=$fecha || $DteEmitido->total!=$total)) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'DTE existe, pero fecha y/o monto no coinciden con los registrados', 'error'
             );
@@ -412,8 +401,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que descarga el JSON del documento emitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+         * @version 2020-02-22
      */
     public function json($dte, $folio)
     {
@@ -446,8 +434,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Recurso de la API que descarga el código ESCPOS del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-02-28
+         * @version 2021-02-28
      */
     public function _api_escpos_GET($dte, $folio, $contribuyente)
     {
@@ -510,8 +497,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que permite ver una vista previa del correo en HTML
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+         * @version 2019-07-17
      */
     public function email_html($dte, $folio)
     {
@@ -535,8 +521,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que envía por email el PDF y el XML del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-18
+         * @version 2021-08-18
      */
     public function enviar_email($dte, $folio)
     {
@@ -563,10 +548,10 @@ class Controller_DteEmitidos extends \Controller_App
                     'cedible' => (int)isset($_POST['cedible']),
                 ]
             );
-            if ($response===false) {
+            if ($response === false) {
                 \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
             }
-            else if ($response['status']['code']!=200) {
+            else if ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             }
             else {
@@ -580,8 +565,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que permite ceder el documento emitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-05
+         * @version 2023-10-05
      */
     public function ceder($dte, $folio)
     {
@@ -672,8 +656,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que permite receder el DTE emitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-28
+         * @version 2020-07-28
      */
     public function receder($dte, $folio)
     {
@@ -706,7 +689,7 @@ class Controller_DteEmitidos extends \Controller_App
             'DteEmitido' => $DteEmitido,
         ]);
         // procesar formulario
-        if (isset($_POST['submit']) and !empty($_FILES['cesion_xml']) and !$_FILES['cesion_xml']['error']) {
+        if (isset($_POST['submit']) && !empty($_FILES['cesion_xml']) && !$_FILES['cesion_xml']['error']) {
             // verificar que no se esté cediendo al mismo rut del emisor del DTE
             if ($DteEmitido->getEmisor()->getRUT() == $_POST['cesionario_rut']) {
                 \sowerphp\core\Model_Datasource_Session::message(
@@ -773,12 +756,11 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que permite enviar el XML de la cesión por correo elecrtrónico
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-27
+         * @version 2020-07-27
      */
     public function cesion_email($dte, $folio)
     {
-        if (!isset($_POST['submit']) or empty($_POST['emails'])) {
+        if (!isset($_POST['submit']) || empty($_POST['emails'])) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'Debe enviar el formulario para poder realizar en envío del a cesión', 'error'
             );
@@ -824,8 +806,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que descarga el XML de la cesión del documento emitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+         * @version 2019-07-17
      */
     public function cesion_xml($dte, $folio)
     {
@@ -856,8 +837,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que permite eliminar la cesión de un DTE desde LibreDTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-03-11
+         * @version 2019-03-11
      */
     public function cesion_eliminar($dte, $folio)
     {
@@ -895,8 +875,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que permite marcar el IVA como fuera de plazo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-12-01
+         * @version 2016-12-01
      */
     public function avanzado_iva_fuera_plazo($dte, $folio)
     {
@@ -912,7 +891,7 @@ class Controller_DteEmitidos extends \Controller_App
         // verificar que sea documento que se puede marcar como fuera de plazo
         if ($DteEmitido->dte!=61) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Sólo es posible marcar IVA fuera de plazo en notas de crédito', 'error'
+                'Solo es posible marcar IVA fuera de plazo en notas de crédito', 'error'
             );
             $this->redirect(str_replace('avanzado_iva_fuera_plazo', 'ver', $this->request->request));
         }
@@ -926,14 +905,13 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que permite anular un DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-02-20
+         * @version 2018-02-20
      */
     public function avanzado_anular($dte, $folio)
     {
         $Emisor = $this->getContribuyente();
         $r = $this->consume('/api/dte/dte_emitidos/avanzado_anular/'.$dte.'/'.$folio.'/'.$Emisor->rut, $_POST);
-        if ($r['status']['code']!=200) {
+        if ($r['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message(
                 str_replace("\n", '<br/>', $r['body']), 'error'
             );
@@ -950,8 +928,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Recurso de la API que permite anular un DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-18
+         * @version 2020-02-18
      */
     public function _api_avanzado_anular_POST($dte, $folio, $emisor)
     {
@@ -968,7 +945,7 @@ class Controller_DteEmitidos extends \Controller_App
         }
         // verificar que sea documento que se puede anular
         if ($DteEmitido->dte!=52) {
-            $this->Api->send('Sólo es posible anular guias de despacho con la opción avanzada', 400);
+            $this->Api->send('Solo es posible anular guias de despacho con la opción avanzada', 400);
         }
         // cambiar estado anulado del documento
         $DteEmitido->anulado = isset($this->Api->data['anulado']) ? (int)$this->Api->data['anulado'] : 1;
@@ -978,14 +955,13 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que permite cambiar la sucursal de un DTE emitido (pero no del XML)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-22
+         * @version 2018-05-22
      */
     public function avanzado_sucursal($dte, $folio)
     {
         $Emisor = $this->getContribuyente();
         $r = $this->consume('/api/dte/dte_emitidos/avanzado_sucursal/'.$dte.'/'.$folio.'/'.$Emisor->rut, $_POST);
-        if ($r['status']['code']!=200) {
+        if ($r['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message(
                 str_replace("\n", '<br/>', $r['body']), 'error'
             );
@@ -1001,8 +977,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Recurso de la API que permite cambiar la sucursal de un DTE (pero no del XML)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-22
+         * @version 2018-05-22
      */
     public function _api_avanzado_sucursal_POST($dte, $folio, $emisor)
     {
@@ -1030,8 +1005,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que permite actualizar el tipo de cambio de un documento de exportación
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-21
+         * @version 2020-02-21
      */
     public function avanzado_tipo_cambio($dte, $folio)
     {
@@ -1058,9 +1032,9 @@ class Controller_DteEmitidos extends \Controller_App
             );
             $this->redirect(str_replace('avanzado_tipo_cambio', 'ver', $this->request->request));
         }
-        // sólo administrador puede cambiar el tipo de cambio
+        // solo administrador puede cambiar el tipo de cambio
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Sólo el administrador de la empresa puede cambiar el tipo de cambio', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('Solo el administrador de la empresa puede cambiar el tipo de cambio', 'error');
             $this->redirect(str_replace('avanzado_tipo_cambio', 'ver', $this->request->request));
         }
         // cambiar monto total
@@ -1072,8 +1046,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que permite actualizar el track_id del DteEmitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-05-24
+         * @version 2022-05-24
      */
     public function avanzado_track_id($dte, $folio)
     {
@@ -1082,7 +1055,7 @@ class Controller_DteEmitidos extends \Controller_App
             '/api/dte/dte_emitidos/avanzado_track_id/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?certificacion='.(int)$Emisor->enCertificacion(),
             $_POST
         );
-        if ($r['status']['code']!=200) {
+        if ($r['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message(
                 str_replace("\n", '<br/>', $r['body']), 'error'
             );
@@ -1098,8 +1071,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Recurso que permite actualizar el track_id del DteEmitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-05-24
+         * @version 2022-05-24
      */
     public function _api_avanzado_track_id_POST($dte, $folio, $emisor)
     {
@@ -1117,13 +1089,13 @@ class Controller_DteEmitidos extends \Controller_App
         if (!$DteEmitido->exists()) {
             $this->Api->send('No existe el DTE solicitado', 404);
         }
-        // sólo administrador puede cambiar track id
+        // solo administrador puede cambiar track id
         if (!$Emisor->usuarioAutorizado($User, 'admin')) {
-            $this->Api->send('Sólo el administrador de la empresa puede cambiar el Track ID', 401);
+            $this->Api->send('Solo el administrador de la empresa puede cambiar el Track ID', 401);
         }
         // verificar que track id sea mayor o igual a -2
         $track_id = isset($this->Api->data['track_id']) ? (int)trim($this->Api->data['track_id']) : null;
-        if ($track_id !== null and $track_id < -2) {
+        if ($track_id !== null && $track_id < -2) {
             $this->Api->send('Track ID debe ser igual o superior a -2', 400);
         }
         // cambiar track id
@@ -1142,8 +1114,7 @@ class Controller_DteEmitidos extends \Controller_App
     /**
      * Acción que permite usar la verificación avanzada de datos del DTE
      * Permite validar firma con la enviada al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-05-24
+         * @version 2022-05-24
      */
     public function verificar_datos_avanzado($dte, $folio)
     {
@@ -1155,7 +1126,7 @@ class Controller_DteEmitidos extends \Controller_App
             die('No existe el documento solicitado.');
         }
         $r = $this->consume('/api/dte/dte_emitidos/estado/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?avanzado=1&certificacion='.$certificacion);
-        if ($r['status']['code']!=200) {
+        if ($r['status']['code'] != 200) {
             die('Error al obtener el estado: '.$r['body']);
         }
         $this->layout .= '.min';
@@ -1170,23 +1141,22 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que permite cargar un archivo XML como DTE emitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-18
+         * @version 2021-08-18
      */
     public function cargar_xml()
     {
         $Emisor = $this->getContribuyente();
-        if (isset($_POST['submit']) and !$_FILES['xml']['error']) {
+        if (isset($_POST['submit']) && !$_FILES['xml']['error']) {
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($this->Auth->User->hash);
             $response = $rest->post(
                 $this->request->url.'/api/dte/dte_emitidos/cargar_xml?track_id='.(int)$_POST['track_id'].'&_contribuyente_certificacion='.$Emisor->enCertificacion(),
                 json_encode(base64_encode(file_get_contents($_FILES['xml']['tmp_name'])))
             );
-            if ($response===false) {
+            if ($response === false) {
                 \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
             }
-            else if ($response['status']['code']!=200) {
+            else if ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             }
             else {
@@ -1199,8 +1169,7 @@ class Controller_DteEmitidos extends \Controller_App
     /**
      * Acción que permite realizar una búsqueda avanzada dentro de los DTE
      * emitidos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-08
+         * @version 2023-11-08
      */
     public function buscar()
     {
@@ -1216,7 +1185,7 @@ class Controller_DteEmitidos extends \Controller_App
             if (!empty($_POST['xml_nodo'])) {
                 $n_xml = count($_POST['xml_nodo']);
                 for ($i=0; $i<$n_xml; $i++) {
-                    if (!empty($_POST['xml_nodo'][$i]) and !empty($_POST['xml_valor'][$i])) {
+                    if (!empty($_POST['xml_nodo'][$i]) && !empty($_POST['xml_valor'][$i])) {
                         $_POST['xml'][$_POST['xml_nodo'][$i]] = $_POST['xml_valor'][$i];
                         $values_xml[] = [
                             'xml_nodo' => $_POST['xml_nodo'][$i],
@@ -1235,10 +1204,10 @@ class Controller_DteEmitidos extends \Controller_App
                 $this->request->url.'/api/dte/dte_emitidos/buscar/'.$Emisor->rut.'?_contribuyente_certificacion='.$Emisor->enCertificacion(),
                 $_POST
             );
-            if ($response===false) {
+            if ($response === false) {
                 \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
             }
-            else if ($response['status']['code']!=200) {
+            else if ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             }
             else {
@@ -1251,8 +1220,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción de la API que permite obtener la información de un DTE emitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-20
+         * @version 2021-08-20
      */
     public function _api_info_GET($dte, $folio, $emisor)
     {
@@ -1349,8 +1317,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción de la API que permite obtener el PDF de un DTE emitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-01
+         * @version 2020-08-01
      */
     public function _api_pdf_GET($dte, $folio, $emisor)
     {
@@ -1360,8 +1327,7 @@ class Controller_DteEmitidos extends \Controller_App
     /**
      * Acción de la API que permite obtener el PDF de un DTE emitido
      * Permite pasar datos extras al PDF por POST
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-04
+         * @version 2020-08-04
      */
     public function _api_pdf_POST($dte, $folio, $emisor)
     {
@@ -1425,8 +1391,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción de la API que permite obtener el XML de un DTE emitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-16
+         * @version 2020-02-16
      */
     public function _api_xml_GET($dte, $folio, $emisor)
     {
@@ -1454,8 +1419,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción de la API que permite obtener el timbre de un DTE emitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-03-01
+         * @version 2020-03-01
      */
     public function _api_ted_GET($dte, $folio, $emisor)
     {
@@ -1506,8 +1470,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción de la API que permite consultar el estado del envío del DTE al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-05-24
+         * @version 2022-05-24
      */
     public function _api_estado_GET($dte, $folio, $emisor)
     {
@@ -1550,8 +1513,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción de la API que permite actualizar el estado de envio del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-22
+         * @version 2020-08-22
      */
     public function _api_actualizar_estado_GET($dte, $folio, $emisor)
     {
@@ -1594,8 +1556,7 @@ class Controller_DteEmitidos extends \Controller_App
      * aceptados con reparos (flag generar no tendrá efecto si no se cumple esto)
      * @param dte Tipo de DTE
      * @param folio Folio del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-22
+         * @version 2020-08-22
      */
     public function _api_enviar_sii_GET($dte, $folio, $emisor, $retry = 1)
     {
@@ -1629,8 +1590,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción de la API para obtener los documentos rechazados en un rango de fechas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-08-09
+         * @version 2022-08-09
      */
     public function _api_rechazados_GET($desde, $hasta, $emisor)
     {
@@ -1652,8 +1612,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción de la API que permite enviar el DTE emitido por correo electrónico
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-02-15
+         * @version 2023-02-15
      */
     public function _api_enviar_email_POST($dte, $folio, $emisor)
     {
@@ -1675,7 +1634,7 @@ class Controller_DteEmitidos extends \Controller_App
         }
         // guardar correo si receptor no tiene
         $Receptor = $DteEmitido->getReceptor();
-        if (empty($Receptor->email) and !empty($this->Api->data['emails'])) {
+        if (empty($Receptor->email) && !empty($this->Api->data['emails'])) {
             $email = is_array($this->Api->data['emails']) ? $this->Api->data['emails'][0] : $this->Api->data['emails'];
             if (\sowerphp\core\Utility_Data_Validation::check($email, 'email') === true) {
                 $Receptor->email = $email;
@@ -1704,8 +1663,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Recurso de la API que permite eliminar un DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-05-21
+         * @version 2020-05-21
      */
     public function _api_eliminar_GET($dte, $folio, $emisor)
     {
@@ -1738,8 +1696,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Recurso de la API que permite eliminar el XML de un DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-05-21
+         * @version 2020-05-21
      */
     public function _api_eliminar_xml_GET($dte, $folio, $emisor)
     {
@@ -1773,8 +1730,7 @@ class Controller_DteEmitidos extends \Controller_App
     /**
      * Acción de la API que permite cargar el XML de un DTE como documento
      * emitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-05-24
+         * @version 2022-05-24
      */
     public function _api_cargar_xml_POST()
     {
@@ -1787,7 +1743,7 @@ class Controller_DteEmitidos extends \Controller_App
         if (empty($this->Api->data)) {
             $this->Api->send('Debe enviar el XML del DTE emitido', 400);
         }
-        if ($this->Api->data[0]!='"') {
+        if ($this->Api->data[0] != '"') {
             $this->Api->data = '"'.$this->Api->data.'"';
         }
         $xml = base64_decode(json_decode($this->Api->data));
@@ -1801,7 +1757,7 @@ class Controller_DteEmitidos extends \Controller_App
         $Documentos = $EnvioDte->getDocumentos();
         $n_docs = count($Documentos);
         if ($n_docs!=1) {
-            $this->Api->send('Sólo puede cargar XML que contengan un DTE, envío '.num($n_docs), 400);
+            $this->Api->send('Solo puede cargar XML que contengan un DTE, envío '.num($n_docs), 400);
         }
         $Caratula = $EnvioDte->getCaratula();
         // verificar permisos del usuario autenticado sobre el emisor del DTE
@@ -1814,7 +1770,7 @@ class Controller_DteEmitidos extends \Controller_App
         }
         // verificar RUT carátula con RUT documento
         $datos = $Documentos[0]->getDatos();
-        if ($Caratula['RutReceptor']!=$datos['Encabezado']['Receptor']['RUTRecep']) {
+        if ($Caratula['RutReceptor'] != $datos['Encabezado']['Receptor']['RUTRecep']) {
             $this->Api->send('RUT del receptor en la carátula no coincide con el RUT del receptor del documento', 400);
         }
         // si el receptor no existe, se crea con los datos del XML
@@ -1860,7 +1816,7 @@ class Controller_DteEmitidos extends \Controller_App
         $r = $Dte->getResumen();
         $cols = ['tasa'=>'TasaImp', 'fecha'=>'FchDoc', 'receptor'=>'RUTDoc', 'exento'=>'MntExe', 'neto'=>'MntNeto', 'iva'=>'MntIVA', 'total'=>'MntTotal'];
         foreach ($cols as $attr => $col) {
-            if ($r[$col]!==false) {
+            if ($r[$col] !== false) {
                 $DteEmitido->$attr = $r[$col];
             }
         }
@@ -1880,7 +1836,7 @@ class Controller_DteEmitidos extends \Controller_App
             $this->Api->send('No fue posible guardar el DTE: '.$e->getMessage(), 507);
         }
         // actualizar estado
-        if ($DteEmitido->track_id and $DteEmitido->track_id!=-1) {
+        if ($DteEmitido->track_id && $DteEmitido->track_id!=-1) {
             $DteEmitido->actualizarEstado();
         }
         // si no viene con estado para actualizar se podría requerir el envío al SII
@@ -1899,8 +1855,7 @@ class Controller_DteEmitidos extends \Controller_App
     /**
      * Acción de la API que permite realizar una búsqueda avanzada dentro de los
      * DTEs emitidos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-23
+         * @version 2021-08-23
      */
     public function _api_buscar_POST($emisor)
     {
@@ -1927,8 +1882,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Acción que permite buscar y consultar un DTE emitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-08-14
+         * @version 2022-08-14
      */
     public function consultar($dte = null)
     {
@@ -1952,7 +1906,7 @@ class Controller_DteEmitidos extends \Controller_App
             }
             // buscar datos del DTE
             $r = $this->consume('/api/dte/dte_emitidos/consultar?getXML=1', $_POST);
-            if ($r['status']['code']!=200) {
+            if ($r['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message(
                     str_replace("\n", '<br/>', $r['body']), 'error'
                 );
@@ -1965,8 +1919,7 @@ class Controller_DteEmitidos extends \Controller_App
 
     /**
      * Función de la API para consultar por un DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-16
+         * @version 2020-02-16
      */
     public function _api_consultar_POST()
     {
@@ -1986,7 +1939,7 @@ class Controller_DteEmitidos extends \Controller_App
         }
         // verificar si el emisor existe
         $Emisor = new Model_Contribuyente($this->Api->data['emisor']);
-        if (!$Emisor->exists() or !$Emisor->usuario) {
+        if (!$Emisor->exists() || !$Emisor->usuario) {
             $this->Api->send('Emisor no está registrado en la aplicación', 404);
         }
         // buscar si existe el DTE en el ambiente que el emisor esté usando
@@ -1995,7 +1948,7 @@ class Controller_DteEmitidos extends \Controller_App
             $this->Api->send($Emisor->razon_social.' no tiene emitido el DTE solicitado en el ambiente de '.$Emisor->getAmbiente(), 404);
         }
         // verificar que coincida fecha de emisión y monto total del DTE
-        if ($DteEmitido->fecha!=$this->Api->data['fecha'] or $DteEmitido->total!=$this->Api->data['total']) {
+        if ($DteEmitido->fecha!=$this->Api->data['fecha'] || $DteEmitido->total!=$this->Api->data['total']) {
             $this->Api->send('DTE existe, pero fecha y/o monto no coinciden con los registrados', 409);
         }
         // quitar XML si no se pidió explícitamente

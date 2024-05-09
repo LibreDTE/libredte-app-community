@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte\Informes;
 
 /**
  * Clase para informes de los documentos usados
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2016-09-23
  */
 class Controller_DocumentosUsados extends \Controller_App
@@ -34,8 +33,7 @@ class Controller_DocumentosUsados extends \Controller_App
 
     /**
      * Acción principal que muestra el resumen del uso de documentos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-09-23
+         * @version 2016-09-23
      */
     public function index()
     {

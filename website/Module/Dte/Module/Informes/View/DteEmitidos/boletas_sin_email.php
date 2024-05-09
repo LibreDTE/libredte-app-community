@@ -1,6 +1,6 @@
 <div class="page-header"><h1>Boletas sin email enviado al receptor</h1></div>
 <p>Aquí podrá revisar el listado de boletas emitidas que no han sido enviadas por correo electrónico al receptor.</p>
-<p>Sólo se buscarán boletas nominativas donde el receptor tiene un email registrado en LibreDTE.</p>
+<p>Solo se buscarán boletas nominativas donde el receptor tiene un email registrado en LibreDTE.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin(['onsubmit'=>'Formcheck()']);

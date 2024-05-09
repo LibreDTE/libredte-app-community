@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -42,8 +42,7 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
      * Método que entrega los días pendientes de enviar RCOF
      * Por defecto, se busca entre el primer día enviado y el día de ayer
      * Si está configurado el desde y/o hasta se usan esos para el rango
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-03-17
+         * @version 2021-03-17
      */
     public function getPendientes()
     {
@@ -82,8 +81,7 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
 
     /**
      * Método que entrega los días con RCOF enviados y que se considera que ya no tuvieron respuesta
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-09-22
+         * @version 2020-09-22
      */
     public function getSinRespuesta($multiplicador_dias = 5, $secuencia_maxima = 5)
     {
@@ -120,8 +118,7 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
 
     /**
      * Método que entrega los RCOF rechazados (opcionalmente en un período de tiempo)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-04-29
+         * @version 2020-04-29
      */
     public function getRechazados($desde = null, $hasta = null)
     {
@@ -147,8 +144,7 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
 
     /**
      * Método que entrega un resumen de los estados del envío del RCOF al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-11-11
+         * @version 2018-11-11
      */
     public function getResumenEstados($desde, $hasta)
     {
@@ -163,8 +159,7 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
 
     /**
      * Método que entrega el total de RCOF rechazados y el rango de fechas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-02-18
+         * @version 2019-02-18
      */
     public function getTotalRechazados()
     {
@@ -181,8 +176,7 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
 
     /**
      * Método que entrega el total de RCOF con reparo por secuencia y el rango de fechas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-07-19
+         * @version 2021-07-19
      */
     public function getTotalReparosSecuencia()
     {

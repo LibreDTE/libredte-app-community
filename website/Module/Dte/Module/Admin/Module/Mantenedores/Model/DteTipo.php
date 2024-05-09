@@ -160,8 +160,7 @@ class Model_DteTipo extends \Model_App
 
     /**
      * Constructor del tipo de dte
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-21
+         * @version 2015-09-21
      */
     public function __construct($codigo = null)
     {
@@ -171,28 +170,25 @@ class Model_DteTipo extends \Model_App
 
     /**
      * Método que indica si se puede generar cotización al DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-01-10
+         * @version 2017-01-10
      */
     public function permiteCotizacion()
     {
-        return $this->operacion=='S';
+        return $this->operacion == 'S';
     }
 
     /**
      * Método que indica si se puede generar un cobro al DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-01-10
+         * @version 2016-01-10
      */
     public function permiteCobro()
     {
-        return \sowerphp\core\Module::loaded('Pagos') and $this->operacion=='S';
+        return \sowerphp\core\Module::loaded('Pagos') && $this->operacion == 'S';
     }
 
     /**
      * Método que indica si se genera o no intercambio con el tipo de DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-11-20
+         * @version 2018-11-20
      */
     public function permiteIntercambio()
     {
@@ -202,8 +198,7 @@ class Model_DteTipo extends \Model_App
     /**
      * Método que indica si el documento es o no cedible
      * @return =true si el documento es cedible
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-10
+         * @version 2015-09-10
      */
     public function esCedible()
     {
@@ -213,8 +208,7 @@ class Model_DteTipo extends \Model_App
     /**
      * Método que indica si el documento es o no una boleta electrónica
      * @return =true si el documento es una boleta electrónica
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-12-11
+         * @version 2015-12-11
      */
     public function esBoleta()
     {
@@ -224,8 +218,7 @@ class Model_DteTipo extends \Model_App
     /**
      * Método que indica si el documento es o no una exportación
      * @return =true si el documento es una exportación
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-04-05
+         * @version 2016-04-05
      */
     public function esExportacion()
     {

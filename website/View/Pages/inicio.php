@@ -5,7 +5,7 @@
         <div class="bg-primary text-white rounded p-4 text-center">
             <h2 class="display-4">LibreDTE Edición Comunidad</h2>
             <p class="lead">
-                <a href="https://www.libredte.cl" class="text-white">LibreDTE</a><sup>&reg;</sup> es un proyecto de <a href="https://www.sasco.cl" class="text-white"><u>SASCO SpA</u></a> que tiene por objetivo proveer facturación electrónica libre para Chile
+                <a href="https://www.libredte.cl" class="text-white">LibreDTE</a><sup>&reg;</sup> es un proyecto que tiene por objetivo proveer facturación electrónica libre para Chile.
             </p>
         </div>
     </div>
@@ -59,7 +59,7 @@
                 <h2 class="text-center mb-4">Centro de Ayuda</h2>
                 <hr/>
                 <p class="text-center text-dark lead">
-                    Revisa los <a href="https://www.sasco.cl/help" target="_blank">tipos de asistencia</a> que tenemos disponibles en SASCO SpA.
+                    Revisa los <a href="https://www.libredte.cl/local" target="_blank">tipos de asistencia</a> que tenemos disponibles.
                 </p>
                 <p class="text-center text-muted">
                     Personalización, soporte, entrenamiento e integración.
@@ -70,7 +70,7 @@
 </div>
 
 <div class="alert alert-info text-center mb-4">
-    El soporte de esta aplicación web <strong>no</strong> es entregado de manera directa por SASCO SpA.
+    El soporte de esta aplicación web <strong>no</strong> es entregado de manera oficial por LibreDTE.
 </div>
 
 <div class="row row-cols-6 g-3 lead text-center text-primary">

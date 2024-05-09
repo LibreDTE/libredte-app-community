@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte\Pdf;
 
 /**
  * Utilidad para trabajar con el formato de PDF Estándar de LibreDTE
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2020-08-02
  */
 class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
@@ -39,8 +38,7 @@ class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
 
     /**
      * Método que entrega el código HTML de la página de configuración de la aplicación
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-10
+         * @version 2023-10-10
      */
     public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form)
     {
@@ -151,7 +149,7 @@ class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
             'name' => 'dtepdf_'.$this->getCodigo().'_continuo_item_detalle',
             'label' => 'Mostrar detalle',
             'options' => [
-                'Sólo mostrar el nombre del item',
+                'Solo mostrar el nombre del item',
                 'Mostrar el nombre y el detalle del item',
             ],
             'value' => !empty($this->getConfig()->continuo->item->detalle) ? $this->getConfig()->continuo->item->detalle : 0,

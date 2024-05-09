@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -28,7 +28,6 @@ namespace website\Dte;
  * el receptor es electrónico y no hay recepción del envío (basta la recepción
  * solamente, ya que aunque no haya acuse de recibo, si hay recepción después de
  * 8 días se asume con acuse de recibo)
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2019-08-20
  */
 class Shell_Command_DteEmitidos_Intercambio extends \Shell_App
@@ -48,7 +47,7 @@ class Shell_Command_DteEmitidos_Intercambio extends \Shell_App
     private function enviarDTE($d, $certificacion)
     {
         $DteEmitido = new Model_DteEmitido($d['emisor'], $d['dte'], $d['folio'], (int)$certificacion);
-        if ($DteEmitido->getEstado()=='R') {
+        if ($DteEmitido->getEstado() == 'R') {
             return;
         }
         $email = $DteEmitido->getReceptor()->config_email_intercambio_user;

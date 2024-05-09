@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -32,7 +32,7 @@ namespace website\Dte;
  *  - Intercambios donde el emisor es igual al receptor
  *  - Intercambios no procesados recibidos hace más de 4 meses
  *  - Intercambios marcados como rechazados/reclamados mayores a 2 meses
- * Sólo se eliminan intercambios que NO estén asociados a un DTE recibido,
+ * Solo se eliminan intercambios que NO estén asociados a un DTE recibido,
  * esto se asegura con una restricción en la base de datos, en la tabla dte_recibido
  * debe estar la regla de llave foránea con RESTRICT para los DELETE. Así:
  *  ALTER TABLE dte_recibido ADD CONSTRAINT
@@ -40,7 +40,6 @@ namespace website\Dte;
  *    FOREIGN KEY (receptor, intercambio, certificacion)
  *    REFERENCES dte_intercambio(receptor, codigo, certificacion)
  *    ON UPDATE CASCADE ON DELETE RESTRICT;
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2018-05-21
  */
 class Shell_Command_DteIntercambios_Limpiar extends \Shell_App
@@ -70,7 +69,7 @@ class Shell_Command_DteIntercambios_Limpiar extends \Shell_App
                 $this->out($name.': '.num($rows));
             }
         }
-        // guardar transacción sólo si se pidió explícitamente
+        // guardar transacción solo si se pidió explícitamente
         if (!empty($commit)) {
             $this->db->commit();
         } else {

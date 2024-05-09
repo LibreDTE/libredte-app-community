@@ -1,7 +1,7 @@
 <?php
 
 /**
- * LibreDTE: Edición Comunidad - Aplicación Web.
+ * LibreDTE: Aplicación Web - Edición Comunidad.
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
@@ -294,7 +294,7 @@ class Controller_Documentos extends \Controller_App
                 $dte['Encabezado']['OtraMoneda'] = [];
             }
             // buscar si viene el tipo de cambio, si viene se usa (debería ser el del banco central
-            // se deja sólo porque a veces podría no estar el tipo de cambio en LibreDTE y sólo en ese
+            // se deja solo porque a veces podría no estar el tipo de cambio en LibreDTE y solo en ese
             // caso el usuario podría ingresar el tipo de cambio manualmente)
             $cambio = false;
             foreach ($dte['Encabezado']['OtraMoneda'] as $OtraMoneda) {
@@ -1202,7 +1202,7 @@ class Controller_Documentos extends \Controller_App
 
     /**
      * Acción que permite generar masivamente los DTE.
-     * En estrictor rigor esta opción sólo lanza un comando que permite hacer la generación masiva.
+     * En estrictor rigor esta opción solo lanza un comando que permite hacer la generación masiva.
      */
     public function emitir_masivo()
     {
@@ -1262,7 +1262,7 @@ class Controller_Documentos extends \Controller_App
             );
             $this->redirect('/dte');
         }
-        // si es sólo un número se busca si existe sólo un DTE que coincida con la búsqueda
+        // si es solo un número se busca si existe solo un DTE que coincida con la búsqueda
         // si hay más de uno se redirige a la página de documentos emitidos filtrado por folio
         if (is_numeric($q)) {
             $DteEmitidos = new Model_DteEmitidos();
@@ -1283,7 +1283,7 @@ class Controller_Documentos extends \Controller_App
                 if (isset($documentos[1])) {
                     $this->redirect('/dte/dte_emitidos/listar?search=folio:'.$q);
                 }
-                // se encontró sólo un DTE -> se redirige a la página del DTE
+                // se encontró solo un DTE -> se redirige a la página del DTE
                 else {
                     $this->redirect($documentos[0]->getLinks()['ver']);
                 }

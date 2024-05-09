@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte;
 
 /**
  * Clase base para para el modelo singular de Libros
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2021-08-18
  */
 abstract class Model_Base_Libro extends Model_Base_Envio
@@ -36,8 +35,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
      * Método que actualiza el estado del libro enviado al SII, en realidad
      * es un wrapper para las verdaderas llamadas
      * @param usarWebservice =true se consultará vía servicio web =false vía email
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-18
+         * @version 2021-08-18
      */
     public function actualizarEstado($user_id = null, $usarWebservice = true)
     {
@@ -53,8 +51,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
     /**
      * Método que actualiza el estado del Libro enviado al SII a través del
      * servicio web que dispone el SII para esta consulta
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-19
+         * @version 2021-08-19
      */
     private function actualizarEstadoWebservice($user_id = null)
     {
@@ -77,7 +74,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
         // consultar estado enviado
         $estado_up = \sasco\LibreDTE\Sii::request('QueryEstUp', 'getEstUp', [$Contribuyente->rut, $Contribuyente->dv, $this->track_id, $token]);
         // si el estado no se pudo recuperar error
-        if ($estado_up===false) {
+        if ($estado_up === false) {
             throw new \Exception('No fue posible obtener el estado del RCOF');
         }
         // validar track id
@@ -101,8 +98,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
     /**
      * Método que actualiza el estado del Libro enviado al SII a través del
      * email que es recibido desde el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-18
+         * @version 2021-08-18
      */
     private function actualizarEstadoEmail()
     {
@@ -132,7 +128,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
                     continue;
                 }
                 $status = $this->saveRevision($file['data']);
-                if ($status===true) {
+                if ($status === true) {
                     return;
                 } else {
                     throw new \Exception(
@@ -147,8 +143,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
 
     /**
      * Método que guarda el estado del envío del libro al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-12-27
+         * @version 2015-12-27
      */
     public function saveRevision($xml_data)
     {
@@ -177,8 +172,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
 
     /**
      * Método que entrega el estado (de 3 letras) del envío del libro
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-03-02
+         * @version 2016-03-02
      */
     public function getEstado()
     {
@@ -190,8 +184,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
 
     /**
      * Método que entrega el arreglo con los datos del libro de compra o ventas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-09-13
+         * @version 2016-09-13
      */
     public function getDatos()
     {

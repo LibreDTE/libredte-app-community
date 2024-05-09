@@ -15,7 +15,7 @@ foreach ($detalle as &$d) {
 }
 $keys = array_keys($detalle[0]);
 foreach ($keys as &$k) {
-    if (substr($k,0,3)=='det') {
+    if (substr($k,0,3) == 'det') {
         $k = substr($k, 3);
     }
 }

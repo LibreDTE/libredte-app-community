@@ -41,8 +41,7 @@ class Model_BoletaHonorarios extends \Model_Plural_App
     /**
      * Método que sincroniza las boletas de honorarios recibidas por la empresa
      * en el SII con el registro local de boletas en LibreDTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-06-29
+         * @version 2021-06-29
      */
     public function sincronizar($meses)
     {
@@ -79,8 +78,7 @@ class Model_BoletaHonorarios extends \Model_Plural_App
 
     /**
      * Método que obtiene las boletas recibidas desde el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     public function getBoletas($periodo)
     {
@@ -92,7 +90,7 @@ class Model_BoletaHonorarios extends \Model_Plural_App
                 ],
             ],
         ]);
-        if ($r['status']['code']!=200) {
+        if ($r['status']['code'] != 200) {
             if ($r['status']['code']==404) {
                 return [];
             }
@@ -104,8 +102,7 @@ class Model_BoletaHonorarios extends \Model_Plural_App
     /**
      * Método que entrega un resumen por período de las boletas de honorarios
      * recibidas
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-10
+         * @version 2019-08-10
      */
     public function getPeriodos($periodo = null)
     {
@@ -134,8 +131,7 @@ class Model_BoletaHonorarios extends \Model_Plural_App
 
     /**
      * Método que entrega el resumen de cierto período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-10
+         * @version 2019-08-10
      */
     public function getPeriodo($periodo)
     {
@@ -145,8 +141,7 @@ class Model_BoletaHonorarios extends \Model_Plural_App
 
     /**
      * Método que entrega las boletas de cierto período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-15
+         * @version 2019-08-15
      */
     public function buscar(array $filtros = [], $order = 'ASC')
     {

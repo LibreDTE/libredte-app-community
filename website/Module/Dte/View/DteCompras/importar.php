@@ -52,7 +52,7 @@ echo $f->input([
     'name' => 'periodo',
     'label' => 'Período',
     'check' => 'integer',
-    'help' => 'Período en el que registrar los documentos, se usará sólo si es diferente al mes de la fecha de emisión de estos.',
+    'help' => 'Período en el que registrar los documentos, se usará solo si es diferente al mes de la fecha de emisión de estos.',
     'datepicker' => [
         'format' => 'yyyymm',
         'viewMode' => 'months',

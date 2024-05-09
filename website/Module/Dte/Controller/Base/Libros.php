@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte;
 
 /**
  * Controlador base para libros
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2017-09-11
  */
 abstract class Controller_Base_Libros extends \Controller_App
@@ -34,8 +33,7 @@ abstract class Controller_Base_Libros extends \Controller_App
 
     /**
      * Acción que muestra el resumen de los períodos del libro
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-08-30
+         * @version 2017-08-30
      */
     public function index()
     {
@@ -48,8 +46,7 @@ abstract class Controller_Base_Libros extends \Controller_App
 
     /**
      * Acción que muestra la información del libro para cierto período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-17
+         * @version 2018-05-17
      */
     public function ver($periodo)
     {
@@ -57,7 +54,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         $n_detalles = $Emisor->{'count'.$this->config['model']['plural']}((int)$periodo);
-        if (!$n_detalles and !$Libro->exists()) {
+        if (!$n_detalles && !$Libro->exists()) {
             \sowerphp\core\Model_Datasource_Session::message('No hay documentos ni libro del período '.$periodo.'.', 'error');
             $this->redirect('/dte/'.$this->request->params['controller']);
         }
@@ -87,8 +84,7 @@ abstract class Controller_Base_Libros extends \Controller_App
 
     /**
      * Acción que descarga los datos del libro del período en un archivo CSV
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-18
+         * @version 2019-07-18
      */
     public function csv($periodo)
     {
@@ -109,8 +105,7 @@ abstract class Controller_Base_Libros extends \Controller_App
 
     /**
      * Acción que descarga el archivo PDF del libro
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+         * @version 2019-07-17
      */
     public function pdf($periodo)
     {
@@ -146,8 +141,7 @@ abstract class Controller_Base_Libros extends \Controller_App
 
     /**
      * Acción que descarga el archivo XML del libro
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+         * @version 2019-07-17
      */
     public function xml($periodo)
     {
@@ -171,16 +165,14 @@ abstract class Controller_Base_Libros extends \Controller_App
     /**
      * Acción que envía el archivo XML del libro al SII
      * Si no hay documentos en el período se enviará sin movimientos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-12-25
+         * @version 2015-12-25
      */
     abstract public function enviar_sii($periodo);
 
     /**
      * Acción que permite solicitar código de autorización para rectificar un
      * libro ya enviado al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-13
+         * @version 2016-02-13
      */
     public function enviar_rectificacion($periodo)
     {
@@ -201,16 +193,15 @@ abstract class Controller_Base_Libros extends \Controller_App
 
     /**
      * Acción para enviar el libro de un período sin movimientos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-12-25
+         * @version 2015-12-25
      */
     public function sin_movimientos()
     {
-        // procesar sólo si se envío el período
+        // procesar solo si se envío el período
         if (!empty($_POST['periodo'])) {
             // verificar período
             $periodo = (int)$_POST['periodo'];
-            if (strlen($_POST['periodo'])!=6 or !$periodo) {
+            if (strlen($_POST['periodo'])!=6 || !$periodo) {
                 \sowerphp\core\Model_Datasource_Session::message('Período no es correcto, usar formato AAAAMM.', 'error');
                 return;
             }
@@ -221,8 +212,7 @@ abstract class Controller_Base_Libros extends \Controller_App
 
     /**
      * Acción que solicita se envíe una nueva revisión del libro al email
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-06-14
+         * @version 2016-06-14
      */
     public function solicitar_revision($periodo)
     {
@@ -236,7 +226,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         }
         // solicitar envío de nueva revisión
         $estado = $Libro->solicitarRevision($this->Auth->User->id);
-        if ($estado===false) {
+        if ($estado === false) {
             \sowerphp\core\Model_Datasource_Session::message('No fue posible solicitar una nueva revisión del libro.<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
         } else if ((int)$estado->xpath('/SII:RESPUESTA/SII:RESP_HDR/SII:ESTADO')[0]) {
             \sowerphp\core\Model_Datasource_Session::message('No fue posible solicitar una nueva revisión del libro: '.$estado->xpath('/SII:RESPUESTA/SII:RESP_HDR/SII:GLOSA')[0], 'error');
@@ -249,8 +239,7 @@ abstract class Controller_Base_Libros extends \Controller_App
 
     /**
      * Acción que actualiza el estado del envío del libro
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-18
+         * @version 2021-08-18
      */
     public function actualizar_estado($periodo, $usarWebservice = null)
     {
@@ -283,8 +272,7 @@ abstract class Controller_Base_Libros extends \Controller_App
 
     /**
      * Recurso de la API que entrega el código de reemplazo de libro para cierto período
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     public function _api_codigo_reemplazo_GET($periodo, $contribuyente)
     {
@@ -320,7 +308,7 @@ abstract class Controller_Base_Libros extends \Controller_App
                 ],
             ],
         ]);
-        if ($response['status']['code']!=200) {
+        if ($response['status']['code'] != 200) {
             $this->Api->send('No fue posible obtener el código de reemplazo del libro: '.$response['body'], $response['status']['code']);
         }
         return $response['body'];

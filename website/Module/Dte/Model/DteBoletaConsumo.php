@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -152,8 +152,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
 
     /**
      * Método que obtiene el objeto del emisor y lo guarda en caché en la clase
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-10
+         * @version 2020-10-10
      */
     public function getEmisor()
     {
@@ -165,8 +164,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
 
     /**
      * Método que indica si el RCOF se debe enviar o no al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-06-20
+         * @version 2022-06-20
      */
     public function seEnvia(): bool
     {
@@ -178,10 +176,10 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
         if ($this->dia >= date('Y-m-d')) {
             return false;
         }
-        if ($this->getEmisor()->config_sii_envio_rcof_desde and $this->dia < $this->getEmisor()->config_sii_envio_rcof_desde) {
+        if ($this->getEmisor()->config_sii_envio_rcof_desde && $this->dia < $this->getEmisor()->config_sii_envio_rcof_desde) {
             return false;
         }
-        if ($this->getEmisor()->config_sii_envio_rcof_hasta and $this->dia > $this->getEmisor()->config_sii_envio_rcof_hasta) {
+        if ($this->getEmisor()->config_sii_envio_rcof_hasta && $this->dia > $this->getEmisor()->config_sii_envio_rcof_hasta) {
             return false;
         }
         // otros días se pueden enviar
@@ -190,27 +188,26 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
 
     /**
      * Método que envia el reporte de consumo de folios al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-10
+         * @version 2020-10-10
      */
     public function enviar($user_id = null)
     {
         if (!$this->seEnvia()) {
-            $msg = 'Sólo se pueden enviar RCOF de días pasados.';
-            if ($this->getEmisor()->config_sii_envio_rcof_desde and $this->getEmisor()->config_sii_envio_rcof_hasta) {
+            $msg = 'Solo se pueden enviar RCOF de días pasados.';
+            if ($this->getEmisor()->config_sii_envio_rcof_desde && $this->getEmisor()->config_sii_envio_rcof_hasta) {
                 $msg .= sprintf(
-                    ' Y sólo entre los días %s y %s.',
+                    ' Y solo entre los días %s y %s.',
                     \sowerphp\general\Utility_Date::format($this->getEmisor()->config_sii_envio_rcof_desde),
                     \sowerphp\general\Utility_Date::format($this->getEmisor()->config_sii_envio_rcof_hasta)
                 );
             } else if ($this->getEmisor()->config_sii_envio_rcof_desde) {
                 $msg .= sprintf(
-                    ' Y sólo desde el día %s.',
+                    ' Y solo desde el día %s.',
                     \sowerphp\general\Utility_Date::format($this->getEmisor()->config_sii_envio_rcof_desde)
                 );
             } else if ($this->getEmisor()->config_sii_envio_rcof_hasta) {
                 $msg .= sprintf(
-                    ' Y sólo hasta el día %s.',
+                    ' Y solo hasta el día %s.',
                     \sowerphp\general\Utility_Date::format($this->getEmisor()->config_sii_envio_rcof_hasta)
                 );
             }
@@ -235,8 +232,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
 
     /**
      * Método que entrega el XML del consumo de folios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-14
+         * @version 2016-02-14
      */
     public function getXML()
     {
@@ -248,8 +244,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
 
     /**
      * Método que genera el XML del consumo de folios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-09-14
+         * @version 2020-09-14
      */
     private function generarXML()
     {
@@ -263,8 +258,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
 
     /**
      * Método que crea el objeto del consumo de folios de LibreDTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-09-14
+         * @version 2020-09-14
      */
     private function generarConsumoFolio($user_id)
     {
@@ -315,8 +309,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
      * Método que actualiza el estado del RCOF enviado al SII, en realidad
      * es un wrapper para las verdaderas llamadas
      * @param usarWebservice =true se consultará vía servicio web =false vía email
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-18
+         * @version 2021-08-18
      */
     public function actualizarEstado($user_id = null, $usarWebservice = true)
     {
@@ -332,8 +325,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     /**
      * Método que actualiza el estado del RCOF enviado al SII a través del
      * servicio web que dispone el SII para esta consulta
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-18
+         * @version 2021-08-18
      */
     private function actualizarEstadoWebservice($user_id = null)
     {
@@ -355,7 +347,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
         // consultar estado enviado
         $estado_up = \sasco\LibreDTE\Sii::request('QueryEstUp', 'getEstUp', [$this->getEmisor()->rut, $this->getEmisor()->dv, $this->track_id, $token]);
         // si el estado no se pudo recuperar error
-        if ($estado_up===false) {
+        if ($estado_up === false) {
             throw new \Exception('No fue posible obtener el estado del RCOF');
         }
         // armar estado del dte
@@ -371,7 +363,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
         } else {
             $this->revision_detalle = null;
         }
-        if ($estado=='EPR') {
+        if ($estado == 'EPR') {
             $this->revision_estado = 'CORRECTO';
         }
         else if (in_array($estado, \website\Dte\Model_DteEmitidos::$revision_estados['rechazados'])) {
@@ -393,8 +385,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     /**
      * Método que actualiza el estado del RCOF enviado al SII a través del
      * email que es recibido desde el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-15
+         * @version 2019-07-15
      */
     private function actualizarEstadoEmail()
     {
@@ -460,8 +451,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
 
     /**
      * Método que entrega un resumen de los datos del RCOF enviado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-12-20
+         * @version 2021-12-20
      */
     public function getResumen()
     {

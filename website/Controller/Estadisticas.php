@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website;
 
 /**
  * Controlador para mostrar estadísticas públicas del sitio
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2017-09-10
  */
 class Controller_Estadisticas extends \Controller_App
@@ -36,8 +35,7 @@ class Controller_Estadisticas extends \Controller_App
 
     /**
      * Método para permitir acciones sin estar autenticado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-01-29
+         * @version 2023-01-29
      */
     public function beforeFilter()
     {
@@ -49,13 +47,12 @@ class Controller_Estadisticas extends \Controller_App
      * @param certificacion =true se generan estadísticas para el ambiente de certificación
      * @param desde Desde cuando considerar la actividad de los contribuyentes
      * @param hasta Hasta cuando considerar la actividad de los contribuyentes
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-01-29
+         * @version 2023-01-29
      */
     public function index($certificacion = false, $desde = 1, $hasta = 0)
     {
         $response = $this->consume('/api/estadisticas/'.($certificacion?'certificacion':'produccion'));
-        if ($response['status']['code']!=200) {
+        if ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             $this->redirect('/');
         }
@@ -69,8 +66,7 @@ class Controller_Estadisticas extends \Controller_App
      * producción
      * @param desde Desde cuando considerar la actividad de los contribuyentes
      * @param hasta Hasta cuando considerar la actividad de los contribuyentes
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-01-07
+         * @version 2016-01-07
      */
     public function produccion($desde = 1, $hasta = 0)
     {
@@ -82,8 +78,7 @@ class Controller_Estadisticas extends \Controller_App
      * certificación
      * @param desde Desde cuando considerar la actividad de los contribuyentes
      * @param hasta Hasta cuando considerar la actividad de los contribuyentes
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-01-07
+         * @version 2016-01-07
      */
     public function certificacion($desde = 1, $hasta = 0)
     {
@@ -95,8 +90,7 @@ class Controller_Estadisticas extends \Controller_App
      * producción
      * @param desde Desde cuando considerar la actividad de los contribuyentes
      * @param hasta Hasta cuando considerar la actividad de los contribuyentes
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-07
+         * @version 2016-02-07
      */
     public function _api_produccion_GET($desde = 1, $hasta = 0)
     {
@@ -108,8 +102,7 @@ class Controller_Estadisticas extends \Controller_App
      * certificación
      * @param desde Desde cuando considerar la actividad de los contribuyentes
      * @param hasta Hasta cuando considerar la actividad de los contribuyentes
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-07
+         * @version 2016-02-07
      */
     public function _api_certificacion_GET($desde = 1, $hasta = 0)
     {
@@ -122,8 +115,7 @@ class Controller_Estadisticas extends \Controller_App
      * @param certificacion =true se generan estadísticas para el ambiente de certificación
      * @param desde Desde cuando considerar la actividad de los contribuyentes
      * @param hasta Hasta cuando considerar la actividad de los contribuyentes
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-11
+         * @version 2021-05-11
      */
     protected function getEstadistica($certificacion, $desde, $hasta)
     {
@@ -137,12 +129,12 @@ class Controller_Estadisticas extends \Controller_App
         );
         $Usuarios = new \sowerphp\app\Sistema\Usuarios\Model_Usuarios();
         $Usuarios->setWhereStatement(['activo = true']);
-        // agregar contribuyentes activos sólo si se pide
+        // agregar contribuyentes activos solo si se pide
         extract($this->getQuery([
             'contribuyentes_activos' => null,
         ]));
         $oficial = $this->esVersionOficial();
-        if (!$oficial and $contribuyentes_activos) {
+        if (!$oficial && $contribuyentes_activos) {
             try {
                 $contribuyentes_activos = $Contribuyentes->getConMovimientos($desde, $hasta, $certificacion, false);
                 foreach($contribuyentes_activos as &$c) {
@@ -173,8 +165,7 @@ class Controller_Estadisticas extends \Controller_App
 
     /**
      * Acción que entrega la versión de LibreDTE que se está ejecutando
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-10
+         * @version 2017-09-10
      */
     public function _api_version_GET()
     {
@@ -183,8 +174,7 @@ class Controller_Estadisticas extends \Controller_App
 
     /**
      * Método que indica si la versión de LibreDTE es o no la oficial
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-10
+         * @version 2017-09-10
      */
     protected function esVersionOficial()
     {
@@ -193,14 +183,13 @@ class Controller_Estadisticas extends \Controller_App
 
     /**
      * Método que determina la versión de LibreDTE que se está ejecutando
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-29
+         * @version 2021-10-29
      */
     protected function getVersion()
     {
         $oficial = $this->esVersionOficial();
         return [
-            'linux' => (!$oficial and PHP_OS=='Linux') ? $this->getLinuxInfo()['PRETTY_NAME'] : null,
+            'linux' => (!$oficial and PHP_OS == 'Linux') ? $this->getLinuxInfo()['PRETTY_NAME'] : null,
             'php' => !$oficial ? phpversion() : null,
             'libredte' => $this->getVersionLibreDTE(),
         ];
@@ -233,13 +222,12 @@ class Controller_Estadisticas extends \Controller_App
 
     /**
      * Método que determina la versión de LibreDTE a partir del último commit del proyecto
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-10-29
+         * @version 2021-10-29
      */
     protected function getVersionLibreDTE()
     {
         $HEAD = DIR_PROJECT.'/.git/logs/HEAD';
-        if (!file_exists($HEAD) or !is_readable($HEAD)) {
+        if (!file_exists($HEAD) || !is_readable($HEAD)) {
             return null;
         }
         exec('git log --pretty="%H" -n1 HEAD', $last_commit_id, $last_commit_id_rc);

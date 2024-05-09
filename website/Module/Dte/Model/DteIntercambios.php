@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -28,7 +28,6 @@ namespace website\Dte;
  * Clase para mapear la tabla dte_intercambio de la base de datos
  * Comentario de la tabla:
  * Esta clase permite trabajar sobre un conjunto de registros de la tabla dte_intercambio
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2018-05-19
  */
 class Model_DteIntercambios extends \Model_Plural_App
@@ -40,8 +39,7 @@ class Model_DteIntercambios extends \Model_Plural_App
 
     /**
      * Método que entrega el total de documentos de intercambio pendientes de ser procesados
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-06-14
+         * @version 2018-06-14
      */
     public function getTotalPendientes()
     {
@@ -54,8 +52,7 @@ class Model_DteIntercambios extends \Model_Plural_App
 
     /**
      * Método que crea los filtros para ser usados en las consultas de documentos recibidos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-11-16
+         * @version 2022-11-16
      */
     private function crearFiltrosDocumentos($filtros)
     {
@@ -117,19 +114,19 @@ class Model_DteIntercambios extends \Model_Plural_App
             $vars[':firma_hasta'] = $filtros['firma_hasta'].' 23:59:59';
         }
         if (isset($filtros['estado'])) {
-            // sólo pendientes
+            // solo pendientes
             if ($filtros['estado'] == 1) {
                 $where[] = 'i.estado IS NULL';
             }
-            // sólo procesados
+            // solo procesados
             else if ($filtros['estado'] == 2) {
                 $where[] = 'i.estado IS NOT NULL';
             }
-            // sólo aceptados
+            // solo aceptados
             else if ($filtros['estado'] == 3) {
                 $where[] = 'i.estado = 0';
             }
-            // sólo rechazados
+            // solo rechazados
             else if ($filtros['estado'] == 4) {
                 $where[] = 'i.estado != 0';
             }
@@ -137,7 +134,7 @@ class Model_DteIntercambios extends \Model_Plural_App
             $where[] = 'i.estado IS NULL';
         }
         if (!empty($filtros['usuario'])) {
-            if ($filtros['usuario']=='!null') {
+            if ($filtros['usuario'] == '!null') {
                 $where[] = 'i.usuario IS NOT NULL';
             } else {
                 $where[] = 'u.usuario = :usuario';
@@ -195,8 +192,7 @@ class Model_DteIntercambios extends \Model_Plural_App
 
     /**
      * Método que cuenta los casos de intercambio del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-07-31
+         * @version 2022-07-31
      */
     public function countDocumentos(array $filtros = [])
     {
@@ -214,8 +210,7 @@ class Model_DteIntercambios extends \Model_Plural_App
 
     /**
      * Método que entrega la tabla con los casos de intercambio del contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-11-08
+         * @version 2021-11-08
      */
     public function getDocumentos(array $filtros = [])
     {
@@ -253,14 +248,14 @@ class Model_DteIntercambios extends \Model_Plural_App
             if (!empty($i['razon_social'])) {
                 $i['emisor'] = $i['razon_social'];
             }
-            if (isset($i['estado']) and is_numeric($i['estado'])) {
+            if (isset($i['estado']) && is_numeric($i['estado'])) {
                 $i['estado'] = (bool)!$i['estado'];
             }
             if (!empty($i['documentos'])) {
                 $nuevo_dte = true;
                 $n_letras = strlen($i['documentos']);
                 for ($j=0; $j<$n_letras; $j++) {
-                    if ($i['documentos'][$j]==',') {
+                    if ($i['documentos'][$j] == ',') {
                         $nuevo_dte = !$nuevo_dte;
                         if ($nuevo_dte) {
                             $i['documentos'][$j] = '|';
@@ -290,15 +285,14 @@ class Model_DteIntercambios extends \Model_Plural_App
      * Método para actualizar la bandeja de intercambio. Guarda los DTEs
      * recibidos por intercambio y guarda los acuses de recibos de DTEs
      * enviados por otros contribuyentes
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-03
+         * @version 2020-07-03
      */
     public function actualizar($dias = 7)
     {
         // ejecutar trigger para verificar cosas previo a actualizar bandeja
         $trigger_actualizar = \sowerphp\core\Trigger::run('dte_dte_intercambio_actualizar', $this->getContribuyente());
         // si el trigger entrega false la bandeja no se actualizará de manera silenciosa
-        if ($trigger_actualizar===false) {
+        if ($trigger_actualizar === false) {
             return ['n_uids'=>0, 'omitidos'=>0, 'n_EnvioDTE'=>0, 'n_EnvioRecibos'=>0, 'n_RecepcionEnvio'=>0, 'n_ResultadoDTE'=>0];
         }
         // si el trigger entrega un arreglo es el resultado de la actualización de la bandeja
@@ -341,7 +335,7 @@ class Model_DteIntercambios extends \Model_Plural_App
                 $errores[$uid] = $e->getMessage();
                 continue;
             }
-            if ($m and isset($m['attachments'][0])) {
+            if ($m && isset($m['attachments'][0])) {
                 $datos_email = [
                     'fecha_hora_email' => $m['date'],
                     'asunto' => !empty($m['header']->subject) ? substr($m['header']->subject, 0, 100) : 'Sin asunto',
@@ -442,14 +436,13 @@ class Model_DteIntercambios extends \Model_Plural_App
      * @param receptor RUT del receptor sin puntos ni dígito verificador
      * @param datos_email Arreglo con los índices: fecha_hora_email, asunto, de, mensaje, mensaje_html
      * @param file Arreglo con los índices: name, data, size y type
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-03
+         * @version 2020-07-03
      */
     public function procesarEnvioDTE(array $file, array $datos_email = [])
     {
         // preparar datos
         $EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
-        if (!$EnvioDte->loadXML($file['data']) or !$EnvioDte->getID()) {
+        if (!$EnvioDte->loadXML($file['data']) || !$EnvioDte->getID()) {
             return null; // no es un EnvioDTE, no se procesa
         }
         if ($EnvioDte->esBoleta()) {
@@ -472,7 +465,7 @@ class Model_DteIntercambios extends \Model_Plural_App
         if (!$documentos) {
             throw new \Exception('El intercambio no tiene DTE.');
         }
-        // si no hay datos de correo no se debe guardar y sólo se está probando el XML
+        // si no hay datos de correo no se debe guardar y solo se está probando el XML
         if (empty($datos_email)) {
             throw new \Exception('Envio ok. No guardado. Sin datos de correo para guardar el XML.');
         }
@@ -507,8 +500,7 @@ class Model_DteIntercambios extends \Model_Plural_App
 
     /**
      * Método que entrega la cantidad de intercambios que se han recibido en el periodo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-20
+         * @version 2018-05-20
      */
     public function countPeriodo($periodo = null)
     {
@@ -526,14 +518,13 @@ class Model_DteIntercambios extends \Model_Plural_App
     /**
      * Método que busca el o los intercambios asociados a un DTE
      * @warning Esta función es muy costosa, ya que debe buscar en los XML y además abrir luego cada intercambio para confirmar que el DTE que se encontró es correcto
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-11-29
+         * @version 2019-11-29
      */
     public function buscarIntercambiosDte($emisor, $dte, $folio)
     {
         $dte_col = $this->db->xml('archivo_xml', '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/TipoDTE', 'http://www.sii.cl/SiiDte');
         $folio_col = $this->db->xml('archivo_xml', '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/Folio', 'http://www.sii.cl/SiiDte');
-        if (!$dte_col or !$folio_col) { // parche para base de datos que no soportan consultas a los XML (ej: MariaDB)
+        if (!$dte_col || !$folio_col) { // parche para base de datos que no soportan consultas a los XML (ej: MariaDB)
             return null;
         }
         // buscar intercambios que probablemente sean
@@ -568,8 +559,7 @@ class Model_DteIntercambios extends \Model_Plural_App
 
     /**
      * Método que entrega el último código de intercambio usado por un receptor de DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-11-16
+         * @version 2022-11-16
      */
     public function getUltimoCodigo()
     {

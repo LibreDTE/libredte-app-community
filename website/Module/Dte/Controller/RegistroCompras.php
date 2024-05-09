@@ -39,8 +39,7 @@ class Controller_RegistroCompras extends \Controller_App
     /**
      * Acción principal que redirecciona a los documentos pendientes, ya que no
      * se deberían estar cargando de otro tipo actualmente, quizás en el futuro (?)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-13
+         * @version 2019-08-13
      */
     public function index()
     {
@@ -50,8 +49,7 @@ class Controller_RegistroCompras extends \Controller_App
     /**
      * Acción para mostrar los documentos recibidos en SII con estado pendientes
      * de procesar
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-31
+         * @version 2019-08-31
      */
     public function pendientes()
     {
@@ -77,8 +75,7 @@ class Controller_RegistroCompras extends \Controller_App
     /**
      * Acción para generar un CSV con los documentos recibidos en SII con
      * estado pendientes de procesar
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-09
+         * @version 2019-08-09
      */
     public function csv()
     {
@@ -103,8 +100,7 @@ class Controller_RegistroCompras extends \Controller_App
 
     /**
      * Acción para generar un CSV con el resumen de los documentos pendientes
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-31
+         * @version 2019-08-31
      */
     public function pendientes_resumen_csv()
     {
@@ -121,8 +117,7 @@ class Controller_RegistroCompras extends \Controller_App
 
     /**
      * Acción para el buscador de documentos recibidos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-13
+         * @version 2019-08-13
      */
     public function buscar()
     {
@@ -136,7 +131,7 @@ class Controller_RegistroCompras extends \Controller_App
             $filtros = array_merge($_POST, ['estado' => 0]); // forzar estado PENDIENTE
             // obtener PDF desde servicio web
             $r = $this->consume('/api/dte/registro_compras/buscar/'.$Receptor->rut, $filtros);
-            if ($r['status']['code']!=200) {
+            if ($r['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($r['body'], 'error');
                 return;
             }
@@ -153,8 +148,7 @@ class Controller_RegistroCompras extends \Controller_App
     /**
      * API que permite buscar en los documentos recibidos en el registro de
      * compras del SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-17
+         * @version 2020-02-17
      */
     public function _api_buscar_POST($receptor)
     {
@@ -174,7 +168,7 @@ class Controller_RegistroCompras extends \Controller_App
         // obtener boletas
         $filtros = [];
         foreach ((array)$this->Api->data as $key => $val) {
-            if (!empty($val) or (isset($val) and $val===0)) {
+            if (!empty($val) || (isset($val) && $val === 0)) {
                 $filtros[$key] = $val;
             }
         }
@@ -189,8 +183,7 @@ class Controller_RegistroCompras extends \Controller_App
     /**
      * Acción para actualizar el listado de documentos del registro de compras
      * del SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-02
+         * @version 2020-07-02
      */
     public function actualizar($meses = 2)
     {
@@ -208,8 +201,7 @@ class Controller_RegistroCompras extends \Controller_App
     /**
      * Acción que permite ingresar una acción al registro de compras del DTE en
      * el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-08-14
+         * @version 2019-08-14
      */
     public function ingresar_accion($emisor, $dte, $folio)
     {
@@ -238,7 +230,7 @@ class Controller_RegistroCompras extends \Controller_App
                     if (in_array($r['codigo'], [0,7])) {
                         try {
                             $RegistroCompra = new Model_RegistroCompra($Contribuyente->enCertificacion(), $dte, $emisor_rut, $folio);
-                            if ($RegistroCompra->estado == 0 and $RegistroCompra->receptor == $Contribuyente->rut) {
+                            if ($RegistroCompra->estado == 0 && $RegistroCompra->receptor == $Contribuyente->rut) {
                                 $RegistroCompra->delete();
                             }
                             $this->redirect('/dte/registro_compras/pendientes');

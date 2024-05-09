@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -39,8 +39,7 @@ class Controller_DteFolios extends \Controller_App
     /**
      * Acción que muestra la página principal para mantener los folios de la
      * empresa
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-22
+         * @version 2015-09-22
      */
     public function index()
     {
@@ -53,8 +52,7 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Acción que agrega mantenedor para un nuevo tipo de folios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-11
+         * @version 2023-10-11
      */
     public function agregar()
     {
@@ -91,8 +89,7 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Acción que permite subir un caf para un tipo de folio
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-06
+         * @version 2023-11-06
      */
     public function subir_caf()
     {
@@ -104,7 +101,7 @@ class Controller_DteFolios extends \Controller_App
         // procesar solo si se envió el formulario
         if (isset($_POST['submit'])) {
             // verificar que se haya podido subir CAF
-            if (!isset($_FILES['caf']) or $_FILES['caf']['error']) {
+            if (!isset($_FILES['caf']) || $_FILES['caf']['error']) {
                 $e = new \sowerphp\general\Exception_File_Upload($_FILES['caf']['error']);
                 $message = __('Error al subir el archivo XML del CAF. %s', $e->getMessage());
                 \sowerphp\core\Model_Datasource_Session::message($message, 'error');
@@ -196,8 +193,7 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Acción que permite ver el mantenedor de folios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-18
+         * @version 2021-05-18
      */
     public function ver($dte)
     {
@@ -217,8 +213,7 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Acción que permite ver los folios sin uso de un tipo de DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-04-01
+         * @version 2023-04-01
      */
     public function sin_uso($dte)
     {
@@ -237,8 +232,7 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Acción que permite modificar un mantenedor de folios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-01
+         * @version 2023-11-01
      */
     public function modificar($dte)
     {
@@ -300,14 +294,13 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Acción que permite eliminar un mantenedor de folios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-18
+         * @version 2021-05-18
      */
     public function eliminar($dte)
     {
         $Emisor = $this->getContribuyente();
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Sólo un administrador de la empresa puede eliminar un mantenedor de folios.', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('Solo un administrador de la empresa puede eliminar un mantenedor de folios.', 'error');
             $this->redirect('/dte/admin/dte_folios');
         }
         $DteFolio = new Model_DteFolio($Emisor->rut, (int)$dte, $Emisor->enCertificacion());
@@ -327,14 +320,13 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Acción que permite descargar el XML del archivo CAF
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-17
+         * @version 2019-07-17
      */
     public function xml($dte, $desde)
     {
         $Emisor = $this->getContribuyente();
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Sólo un administrador de la empresa puede descargar los archivos XML de los CAF desde LibreDTE.', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('Solo un administrador de la empresa puede descargar los archivos XML de los CAF desde LibreDTE.', 'error');
             $this->redirect('/dte/admin/dte_folios/ver/'.$dte);
         }
         $DteCaf = new Model_DteCaf($Emisor->rut, $dte, $Emisor->enCertificacion(), $desde);
@@ -353,14 +345,13 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Acción que permite eliminar un XML (CAF) específico del mantenedor de folios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-18
+         * @version 2021-05-18
      */
     public function eliminar_xml($dte, $desde)
     {
         $Emisor = $this->getContribuyente();
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Sólo un administrador de la empresa puede eliminar los archivos CAF.', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('Solo un administrador de la empresa puede eliminar los archivos CAF.', 'error');
             $this->redirect('/dte/admin/dte_folios');
         }
         $DteFolio = new Model_DteFolio($Emisor->rut, (int)$dte, $Emisor->enCertificacion());
@@ -376,7 +367,7 @@ class Controller_DteFolios extends \Controller_App
         $Caf = $DteCaf->getCAF();
         $vigente = $Caf ? $Caf->vigente() : false;
         $usado = $DteCaf->usado();
-        if ($vigente and $usado) {
+        if ($vigente && $usado) {
             \sowerphp\core\Model_Datasource_Session::message('No es posible eliminar un XML de un CAF vigente y con folios usados en LibreDTE. Debe esperar a que el CAF esté vencido y ahí lo podrá eliminar.', 'error');
             $this->redirect('/dte/admin/dte_folios/ver/'.$dte);
         }
@@ -388,8 +379,7 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Acción que permite reobtener un archivo CAF al SII y cargarlo en LibreDTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-06
+         * @version 2023-11-06
      */
     public function reobtener_caf($dte = null)
     {
@@ -434,7 +424,7 @@ class Controller_DteFolios extends \Controller_App
                     ],
                 ]
             );
-            if ($r['status']['code']!=200) {
+            if ($r['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message('No fue posible obtener el listado de CAFs solicitados en SII: '.$r['body'], 'error');
                 return;
             }
@@ -467,8 +457,7 @@ class Controller_DteFolios extends \Controller_App
     /**
      * Acción que permite descargar un archivo CAF previamente solicitado al SII
      * y cargarlo en LibreDTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-06
+         * @version 2023-11-06
      */
     public function reobtener_caf_cargar($dte, $folio_inicial, $folio_final, $fecha_autorizacion)
     {
@@ -542,8 +531,7 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Acción que permite solicitar un archivo CAF al SII y cargarlo en LibreDTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-06
+         * @version 2023-11-06
      */
     public function solicitar_caf($dte = null)
     {
@@ -607,14 +595,13 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Acción que muestra la página con el estado del folio en el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     public function estado($dte, $folio)
     {
         $Emisor = $this->getContribuyente();
         $r = $this->consume('/api/dte/admin/dte_folios/estado/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?formato=html');
-        if ($r['status']['code']!=200) {
+        if ($r['status']['code'] != 200) {
             die($r['body']);
         }
         $this->layout = null;
@@ -628,14 +615,13 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Acción que permite anular un folio directamente en el sitio del SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     public function anular($dte, $folio)
     {
         $Emisor = $this->getContribuyente();
         $r = $this->consume('/api/dte/admin/dte_folios/anular/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?formato=html');
-        if ($r['status']['code']!=200) {
+        if ($r['status']['code'] != 200) {
             $this->response->send($r['body']);
         }
         $this->response->send($r['body']);
@@ -643,8 +629,7 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Acción que permite descargar del SII los folios según su estado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-18
+         * @version 2019-07-18
      */
     public function descargar($dte, $folio, $estado = 'recibidos')
     {
@@ -674,8 +659,7 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Acción que permite solicitar el informe de estado de los folios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-05-19
+         * @version 2018-05-19
      */
     public function informe_estados()
     {
@@ -714,8 +698,7 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Recurso que entrega el la información de cierto mantenedor de folios
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-09-26
+         * @version 2017-09-26
      */
     public function _api_info_GET($dte, $emisor)
     {
@@ -744,8 +727,7 @@ class Controller_DteFolios extends \Controller_App
     /**
      * Recurso que permite modificar el mantenedor de folios
      * Modifica: folio siguiente y/o alerta
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-16
+         * @version 2021-08-16
      */
     public function _api_modificar_POST($dte, $emisor)
     {
@@ -796,8 +778,7 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Recurso que permite solicitar un CAF al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-01-26
+         * @version 2020-01-26
      */
     public function _api_solicitar_caf_GET($dte, $cantidad, $emisor)
     {
@@ -832,8 +813,7 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Recurso que permite consultar el estado de un folio en el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-18
+         * @version 2020-02-18
      */
     public function _api_estado_GET($dte, $folio, $emisor)
     {
@@ -871,10 +851,10 @@ class Controller_DteFolios extends \Controller_App
                 ],
             ]
         );
-        if ($r['status']['code']!=200) {
+        if ($r['status']['code'] != 200) {
             $this->Api->send('No fue posible consultar el estado del folio: '.$r['body'], 500);
         }
-        if ($formato=='html') {
+        if ($formato == 'html') {
             $this->Api->response()->type('text/html');
         } else {
             $this->Api->response()->type('application/json');
@@ -884,8 +864,7 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Recurso que permite anular un folio en el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-18
+         * @version 2020-02-18
      */
     public function _api_anular_GET($dte, $folio, $emisor)
     {
@@ -923,10 +902,10 @@ class Controller_DteFolios extends \Controller_App
                 ],
             ]
         );
-        if ($r['status']['code']!=200) {
+        if ($r['status']['code'] != 200) {
             $this->Api->send('No fue posible anular el folio: '.$r['body'], 500);
         }
-        if ($formato=='html') {
+        if ($formato == 'html') {
             $this->Api->response()->type('text/html');
         } else {
             $this->Api->response()->type('application/json');

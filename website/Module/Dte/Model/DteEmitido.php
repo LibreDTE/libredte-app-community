@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -381,12 +381,11 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Constructor clase DTE emitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-06-08
+         * @version 2021-06-08
      */
     public function __construct($emisor = null, $dte = null, $folio = null, $certificacion = null)
     {
-        if ($emisor!==null and $dte!==null and $folio!==null and $certificacion!==null) {
+        if ($emisor!==null && $dte!==null && $folio!==null && $certificacion!==null) {
             if ($folio > 2147483647) { // FIX: DTE usando folio muy grande en referencias
                 $folio = 0;
             }
@@ -399,8 +398,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que realiza verificaciones a campos antes de guardar
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-05-24
+         * @version 2022-05-24
      */
     public function save()
     {
@@ -409,7 +407,7 @@ class Model_DteEmitido extends Model_Base_Envio
         $this->iva_fuera_plazo = (int)$this->iva_fuera_plazo;
         // trigger al guardar el DTE emitido
         \sowerphp\core\Trigger::run('dte_dte_emitido_guardar', $this);
-        // corregir XML para sólo guardar en caso que sea de LibreDTE y guardar
+        // corregir XML para solo guardar en caso que sea de LibreDTE y guardar
         // codificado en base64
         if ($this->xml) {
             if ($this->mipyme) {
@@ -445,7 +443,7 @@ class Model_DteEmitido extends Model_Base_Envio
             }
         }
         // si los datos extras existen y son un arreglo se convierte antes de guardar
-        if (!empty($this->extra) and is_array($this->extra)) {
+        if (!empty($this->extra) && is_array($this->extra)) {
             $this->extra = json_encode($this->extra);
         }
         // guardar DTE emitido
@@ -454,8 +452,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que inserta un registro nuevo en la base de datos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-12-01
+         * @version 2019-12-01
      */
     public function insert()
     {
@@ -468,8 +465,7 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que entrega el objeto del tipo del dte
      * @return \website\Dte\Admin\Mantenedores\Model_DteTipo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-09-23
+         * @version 2015-09-23
      */
     public function getTipo()
     {
@@ -479,8 +475,7 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que entrega el objeto del Dte
      * @return \sasco\LibreDTE\Sii\Dte
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-08-30
+         * @version 2022-08-30
      */
     public function getDte()
     {
@@ -503,8 +498,7 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que entrega el objeto del emisor del DTE
      * @return \website\Dte\Model_Contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-16
+         * @version 2020-02-16
      */
     public function getEmisor()
     {
@@ -517,8 +511,7 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que entrega el objeto del receptor del DTE
      * @return \website\Dte\Model_Contribuyente
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-24
+         * @version 2021-08-24
      */
     public function getReceptor()
     {
@@ -564,8 +557,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega el período contable al que correspondel el DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2018-11-22
+         * @version 2018-11-22
      */
     public function getPeriodo()
     {
@@ -574,8 +566,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega la sucursal asociada al documento emitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-20
+         * @version 2021-08-20
      */
     public function getSucursal()
     {
@@ -584,8 +575,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega el vendedor asociado al DTE emitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-08-29
+         * @version 2022-08-29
      */
     public function getVendedor()
     {
@@ -596,12 +586,11 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que entrega el arreglo con los datos que se usaron para generar el
      * XML del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-04-24
+         * @version 2022-04-24
      */
     public function getDatos($force_reload = false)
     {
-        if (!isset($this->datos) or $force_reload) {
+        if (!isset($this->datos) || $force_reload) {
             // xml local
             if ($this->hasLocalXML()) {
                 $this->datos = $this->getDte()->getDatos($force_reload);
@@ -634,8 +623,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega el arreglo con los datos del XML de cesión del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-03-11
+         * @version 2019-03-11
      */
     public function getDatosCesion()
     {
@@ -658,8 +646,7 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que entrega el listado de correos a los que se debería enviar el
      * DTE (correo receptor, correo intercambio y correo del dte)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-10-08
+         * @version 2023-10-08
      */
     public function getEmails()
     {
@@ -670,7 +657,7 @@ class Model_DteEmitido extends Model_Base_Envio
             if ($this->getReceptor()->config_email_intercambio_user) {
                 $emails['Intercambio DTE'] = strtolower($this->getReceptor()->config_email_intercambio_user);
             }
-            if (in_array($origen, [0, 1, 2]) and !empty($datos['Encabezado']['Receptor']['CorreoRecep']) and !in_array(strtolower($datos['Encabezado']['Receptor']['CorreoRecep']), $emails)) {
+            if (in_array($origen, [0, 1, 2]) && !empty($datos['Encabezado']['Receptor']['CorreoRecep']) && !in_array(strtolower($datos['Encabezado']['Receptor']['CorreoRecep']), $emails)) {
                 $emails['Documento'] = strtolower($datos['Encabezado']['Receptor']['CorreoRecep']);
             }
         } else if (!empty($datos['Referencia'])) {
@@ -678,11 +665,11 @@ class Model_DteEmitido extends Model_Base_Envio
                 $datos['Referencia'] = [$datos['Referencia']];
             }
             foreach ($datos['Referencia'] as $r) {
-                if (!empty($r['RazonRef']) and strpos($r['RazonRef'], 'Email receptor:')===0) {
+                if (!empty($r['RazonRef']) and strpos($r['RazonRef'], 'Email receptor:') === 0) {
                     $aux = explode('Email receptor:', $r['RazonRef']);
                     if (!empty($aux[1])) {
                         $email_dte = strtolower(trim($aux[1]));
-                        if (in_array($origen, [0, 1, 2]) and $email_dte and !in_array($email_dte, $emails)) {
+                        if (in_array($origen, [0, 1, 2]) && $email_dte && !in_array($email_dte, $emails)) {
                             $emails['Documento'] = $email_dte;
                         }
                     }
@@ -690,10 +677,10 @@ class Model_DteEmitido extends Model_Base_Envio
                 }
             }
         }
-        if (in_array($origen, [0]) and $this->getReceptor()->email and !in_array(strtolower($this->getReceptor()->email), $emails)) {
+        if (in_array($origen, [0]) && $this->getReceptor()->email && !in_array(strtolower($this->getReceptor()->email), $emails)) {
             $emails['Compartido LibreDTE'] = strtolower($this->getReceptor()->email);
         }
-        if (in_array($origen, [0, 1]) and $this->getReceptor()->usuario and $this->getReceptor()->getUsuario()->email and !in_array(strtolower($this->getReceptor()->getUsuario()->email), $emails)) {
+        if (in_array($origen, [0, 1]) && $this->getReceptor()->usuario && $this->getReceptor()->getUsuario()->email && !in_array(strtolower($this->getReceptor()->getUsuario()->email), $emails)) {
             $emails['Usuario LibreDTE'] = strtolower($this->getReceptor()->getUsuario()->email);
         }
         $emails_trigger = \sowerphp\core\Trigger::run('dte_dte_emitido_emails', $this, $emails);
@@ -702,8 +689,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega las referencias que este DTE hace a otros documentos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-17
+         * @version 2023-11-17
      */
     public function getReferenciados()
     {
@@ -746,8 +732,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega las referencias que existen a este DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-06-26
+         * @version 2016-06-26
      */
     public function getReferencias()
     {
@@ -769,8 +754,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que indica si el documento permite o no ser cobrado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-29
+         * @version 2020-10-29
      */
     public function permiteCobro()
     {
@@ -795,8 +779,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega del intercambio el objeto del Recibo del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-12-23
+         * @version 2015-12-23
      */
     public function getIntercambioRecibo()
     {
@@ -808,8 +791,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega del intercambio el objeto de la Recepcion del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-12-23
+         * @version 2015-12-23
      */
     public function getIntercambioRecepcion()
     {
@@ -821,8 +803,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega del intercambio el objeto del Resultado del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2015-12-23
+         * @version 2015-12-23
      */
     public function getIntercambioResultado()
     {
@@ -834,13 +815,12 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega los pagos programados del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+         * @version 2020-02-22
      */
     public function getPagosProgramados()
     {
         $MntPagos = [];
-        if ($this->hasLocalXML() and isset($this->getDatos()['Encabezado']['IdDoc']['MntPagos']) and is_array($this->getDatos()['Encabezado']['IdDoc']['MntPagos'])) {
+        if ($this->hasLocalXML() && isset($this->getDatos()['Encabezado']['IdDoc']['MntPagos']) && is_array($this->getDatos()['Encabezado']['IdDoc']['MntPagos'])) {
             $MntPagos = $this->getDatos()['Encabezado']['IdDoc']['MntPagos'];
             if (!isset($MntPagos[0]))
                 $MntPagos = [$MntPagos];
@@ -855,8 +835,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega los datos de cobranza de los pagos programados del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-02-28
+         * @version 2016-02-28
      */
     public function getCobranza()
     {
@@ -875,8 +854,7 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que entrega el estado del envío del DTE al SII
      * @return R: si es RSC, RCT, RCH, =null otros casos
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-20
+         * @version 2021-08-20
      */
     public function getEstado()
     {
@@ -896,8 +874,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que indica si un documento es o no referenciable
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-05
+         * @version 2023-11-05
      */
     public function esReferenciable()
     {
@@ -910,7 +887,7 @@ class Model_DteEmitido extends Model_Base_Envio
                 throw new \Exception('Documento T'.$this->dte.'F'.$this->folio.' no está enviado al SII. Un documento no enviado aun no ha sido validado por el SII y por eso no debe ser referenciado.');
             }
             if ($this->track_id > 0) {
-                if (empty($this->revision_estado) or $estado_envio == 'N') {
+                if (empty($this->revision_estado) || $estado_envio == 'N') {
                     throw new \Exception('Documento T'.$this->dte.'F'.$this->folio.' fue enviado al SII, pero no se conoce el estado final de validación. Un documento sin estado final podría no ser válido y por eso no debe ser referenciado.');
                 }
             }
@@ -920,50 +897,49 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega true si se puede eliminar el DTE o una excepción con la causa si no es posible
-     * Sólo se pueden eliminar DTE que:
+     * Solo se pueden eliminar DTE que:
      *   - No sean boletas y cumplan con:
      *     - Estén rechazados
      *     - No estén enviados al SII
      *   - Sean  boletas y cumplan con:
      *     - Configuración para eliminar (definida según fecha emisión en la config de la empresa)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-01-05
+         * @version 2021-01-05
      */
     private function canBeDeleted($Usuario)
     {
         if ($this->track_id!=-1) {
             $estado = $this->getEstado();
             // no borrar casos con track id y donde el estado es diferente a rechazado
-            if ($this->track_id and $estado!='R') {
+            if ($this->track_id && $estado != 'R') {
                 throw new \Exception('El documento no tiene estado rechazado en el sistema, requerido para permitir eliminación');
             }
             // si es boleta se debe analizar según configuración
             if (in_array($this->dte, [39, 41])) {
                 // si la boleta está rechazada se puede eliminar
-                if ($this->track_id and $estado=='R') {
+                if ($this->track_id && $estado == 'R') {
                     return true;
                 }
-                // sólo usuarios administradores pueden eliminar boletas,
+                // solo usuarios administradores pueden eliminar boletas,
                 // si no se pasó usuario o no es administrador entonces error
-                if ($Usuario === null or ($Usuario !== false and !$this->getEmisor()->usuarioAutorizado($Usuario, 'admin'))) {
-                    throw new \Exception('Sólo usuarios administradores pueden eliminar una boleta');
+                if ($Usuario === null || ($Usuario !== false && !$this->getEmisor()->usuarioAutorizado($Usuario, 'admin'))) {
+                    throw new \Exception('Solo usuarios administradores pueden eliminar una boleta');
                 }
                 // si la empresa permite eliminar boletas se revisa por períodos de tiempo
                 if ($this->getEmisor()->config_boletas_eliminar) {
                     $today = date('Y-m-d');
-                    // Sólo las del día actual
+                    // Solo las del día actual
                     if ((int)$this->getEmisor()->config_boletas_eliminar == 1) {
                         if ($this->fecha != $today) {
-                            throw new \Exception('Sólo se pueden eliminar las boletas del día actual');
+                            throw new \Exception('Solo se pueden eliminar las boletas del día actual');
                         }
                         return true;
                     }
-                    // Sólo las del mes actual
+                    // Solo las del mes actual
                     else if ((int)$this->getEmisor()->config_boletas_eliminar == 2) {
                         $periodo_boleta = substr(str_replace('-','',$this->fecha),0,6);
                         $periodo_actual = substr(str_replace('-','',$today),0,6);
                         if ($periodo_boleta != $periodo_actual) {
-                            throw new \Exception('Sólo se pueden eliminar las boletas del mes actual');
+                            throw new \Exception('Solo se pueden eliminar las boletas del mes actual');
                         }
                         return true;
                     }
@@ -972,8 +948,8 @@ class Model_DteEmitido extends Model_Base_Envio
                         $periodo_boleta = substr(str_replace('-','',$this->fecha),0,6);
                         $periodo_actual = substr(str_replace('-','',$today),0,6);
                         $periodo_anterior = \sowerphp\general\Utility_Date::previousPeriod($periodo_actual);
-                        if ($periodo_boleta != $periodo_actual and $periodo_boleta != $periodo_anterior) {
-                            throw new \Exception('Sólo se pueden eliminar las boletas del mes actual y mes anterior');
+                        if ($periodo_boleta != $periodo_actual && $periodo_boleta != $periodo_anterior) {
+                            throw new \Exception('Solo se pueden eliminar las boletas del mes actual y mes anterior');
                         }
                         return true;
                     }
@@ -993,8 +969,7 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que indica si el DTE es o no eliminable
      * @return =true si se puede eliminar, =false si no es posible eliminar
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-05-21
+         * @version 2020-05-21
      */
     public function eliminable($Usuario = false)
     {
@@ -1011,15 +986,14 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que elimina el DTE, y si no hay DTE posterior del mismo tipo,
      * restaura el folio para que se volver a utilizar.
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-05-13
+         * @version 2021-05-13
      */
     public function delete($Usuario = null)
     {
         $this->canBeDeleted($Usuario);
         $this->db->beginTransaction(true);
         \sowerphp\core\Trigger::run('dte_dte_emitido_eliminar', $this);
-        // retroceder folio si corresponde hacerlo (sólo cuando este dte es el último emitido)
+        // retroceder folio si corresponde hacerlo (solo cuando este dte es el último emitido)
         $DteFolio = new \website\Dte\Admin\Model_DteFolio($this->emisor, $this->dte, (int)$this->certificacion);
         if ($DteFolio->siguiente == ($this->folio+1)) {
             $DteFolio->siguiente--;
@@ -1074,11 +1048,10 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega true si se puede eliminar el XML del DTE o una excepción con la causa si no es posible
-     * Actualmente, sólo se pueden eliminar:
+     * Actualmente, solo se pueden eliminar:
      *   - Boletas que cumplan con:
      *     - Configuración de límite de custodia de boletas activada
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-05-21
+         * @version 2020-05-21
      */
     private function canBeDeletedXML()
     {
@@ -1088,7 +1061,7 @@ class Model_DteEmitido extends Model_Base_Envio
         }
         // si no es boleta no se permite borrar el XML
         if (!in_array($this->dte, [39, 41])) {
-            throw new \Exception('Sólo es posible eliminar el XML de boletas');
+            throw new \Exception('Solo es posible eliminar el XML de boletas');
         }
         // si es boleta y no hay límite de custodia fijado no se deja borrar el XML (para qué? si no hay límite)
         $limite = \sowerphp\core\Configure::read('dte.custodia_boletas');
@@ -1113,8 +1086,7 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que indica si el XML del DTE es o no eliminable
      * @return =true si se puede eliminar, =false si no es posible eliminar
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-05-21
+         * @version 2020-05-21
      */
     public function eliminableXML($Usuario = false)
     {
@@ -1130,8 +1102,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que elimina el XML del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-05-21
+         * @version 2020-05-21
      */
     public function deleteXML($Usuario = null)
     {
@@ -1142,8 +1113,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que indica si el DTE se debe enviar o no al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-07-28
+         * @version 2021-07-28
      */
     public function seEnvia(): bool
     {
@@ -1152,9 +1122,9 @@ class Model_DteEmitido extends Model_Base_Envio
             return (bool)$this->getTipo()->enviar;
         }
         // el envío de boletas, en cualquier ambiente, depende de la fecha de la boleta
-        // esta opción sólo permitirá enviar las boletas que tienen una fecha igual o superior
+        // esta opción solo permitirá enviar las boletas que tienen una fecha igual o superior
         // a la entrada en vigencia de la obligatoriedad
-        if ($this->getTipo()->enviar and $this->fecha >= Model_DteEmitidos::ENVIO_BOLETA) {
+        if ($this->getTipo()->enviar && $this->fecha >= Model_DteEmitidos::ENVIO_BOLETA) {
             return true;
         }
         // no se debe enviar
@@ -1167,8 +1137,7 @@ class Model_DteEmitido extends Model_Base_Envio
      * @param user ID del usuari oque hace el envío
      * @param retry Número de intentos que se usarán para enviar el DTE al SII (=null, valor por defecto LibreDTE, =0 no se enviará, >0 cantidad de intentos)
      * @param gzip Indica si se debe enviar comprimido el XML del DTE al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-31
+         * @version 2020-10-31
      */
     public function enviar($user = null, $retry = null, $gzip = null)
     {
@@ -1191,18 +1160,18 @@ class Model_DteEmitido extends Model_Base_Envio
             $gzip = (bool)(int)$Emisor->config_sii_envio_gzip;
         }
         // si hay que hacer 0 intentos de envio no se envía
-        if ($retry !== null and ($retry===0 or $retry==='0')) {
+        if ($retry !== null && ($retry === 0 || $retry == '0')) {
             return false; // no hay excepción para hacerlo "silenciosamente"
         }
         // si hay track_id y el DTE no está rechazado entonces no se permite
         // volver a enviar al SII (ya que estaría aceptado, aceptado con reparos
         // o aun no se sabe su estado)
-        if ($this->track_id and $this->getEstado()!='R') {
+        if ($this->track_id && $this->getEstado() != 'R') {
             $msg = 'DTE no puede ser reenviado ya que ';
             if (!$this->revision_estado) {
                 $msg .= 'aun no se ha verificado su estado';
             }
-            else if ($this->getEstado()!='R') {
+            else if ($this->getEstado() != 'R') {
                 $msg .= 'no está rechazado';
             }
             throw new \Exception($msg);
@@ -1237,11 +1206,11 @@ class Model_DteEmitido extends Model_Base_Envio
         // enviar boleta al SII
         if (in_array($this->dte, [39, 41])) {
             $class = \sowerphp\core\Configure::read('dte.clase_boletas');
-            if (!$class or !class_exists($class)) {
+            if (!$class || !class_exists($class)) {
                 throw new \Exception('El envío de boletas al SII no está disponible en esta instancia de LibreDTE.');
             }
             $result = $class::enviar($Firma->getID(), $Emisor->rut.'-'.$Emisor->dv, $xml, $Firma, $gzip, $retry);
-            if ($result===false) {
+            if ($result === false) {
                 throw new \Exception('No fue posible enviar el DTE al SII<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()));
             }
             $this->track_id = (int)(!empty($result['track_id']) ? $result['track_id'] : $result['trackid']);
@@ -1257,7 +1226,7 @@ class Model_DteEmitido extends Model_Base_Envio
             }
             // enviar XML
             $result = \sasco\LibreDTE\Sii::enviar($Firma->getID(), $Emisor->rut.'-'.$Emisor->dv, $xml, $token, $gzip, $retry);
-            if ($result===false or $result->STATUS!='0') {
+            if ($result === false || $result->STATUS != '0') {
                 throw new \Exception('No fue posible enviar el DTE al SII<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()));
             }
             $this->track_id = (int)$result->TRACKID;
@@ -1272,8 +1241,7 @@ class Model_DteEmitido extends Model_Base_Envio
      * Método que actualiza el estado de un DTE enviado al SII, en realidad
      * es un wrapper para las verdaderas llamadas
      * @param usarWebservice =true se consultará vía servicio web = false vía email
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-18
+         * @version 2021-08-18
      */
     public function actualizarEstado($user_id = null, $usarWebservice = true)
     {
@@ -1292,8 +1260,7 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que actualiza el estado de un DTE enviado al SII a través del
      * servicio web que dispone el SII para esta consulta
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-08-18
+         * @version 2021-08-18
      */
     private function actualizarEstadoWebservice($user_id = null)
     {
@@ -1310,11 +1277,11 @@ class Model_DteEmitido extends Model_Base_Envio
         // consultar estado de boleta
         if (in_array($this->dte, [39, 41])) {
             $class = \sowerphp\core\Configure::read('dte.clase_boletas');
-            if (!$class or !class_exists($class)) {
+            if (!$class || !class_exists($class)) {
                 throw new \Exception('Consulta de estado de envío de boletas al SII no está disponible en esta versión de LibreDTE');
             }
             $estado_up = $class::estado_normalizado($this->getEmisor()->rut, $this->getEmisor()->dv, $this->track_id, $Firma, $this->dte, $this->folio);
-            if ($estado_up===false) {
+            if ($estado_up === false) {
                 throw new \Exception('No fue posible obtener el estado del DTE<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()));
             }
             $this->revision_estado = $estado_up['estado'];
@@ -1330,7 +1297,7 @@ class Model_DteEmitido extends Model_Base_Envio
             // consultar estado enviado
             $estado_up = \sasco\LibreDTE\Sii::request('QueryEstUp', 'getEstUp', [$this->getEmisor()->rut, $this->getEmisor()->dv, $this->track_id, $token]);
             // si el estado no se pudo recuperar error
-            if ($estado_up===false) {
+            if ($estado_up === false) {
                 throw new \Exception('No fue posible obtener el estado del DTE<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()));
             }
             // armar estado del dte
@@ -1342,7 +1309,7 @@ class Model_DteEmitido extends Model_Base_Envio
             }
             $this->revision_estado = $glosa ? ($estado.' - '.$glosa) : $estado;
             $this->revision_detalle = null;
-            if ($estado=='EPR') {
+            if ($estado == 'EPR') {
                 $resultado = (array)$estado_up->xpath('/SII:RESPUESTA/SII:RESP_BODY')[0];
                 // DTE aceptado
                 if ($resultado['ACEPTADOS']) {
@@ -1374,8 +1341,7 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que actualiza el estado de un DTE enviado al SII a través del
      * email que es recibido desde el SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-07-15
+         * @version 2019-07-15
      */
     private function actualizarEstadoEmail()
     {
@@ -1400,7 +1366,7 @@ class Model_DteEmitido extends Model_Base_Envio
                 $xml = new \SimpleXMLElement($file['data'], LIBXML_COMPACT);
                 // obtener estado y detalle
                 if (isset($xml->REVISIONENVIO)) {
-                    if ($xml->REVISIONENVIO->REVISIONDTE->TIPODTE==$this->dte and $xml->REVISIONENVIO->REVISIONDTE->FOLIO==$this->folio) {
+                    if ($xml->REVISIONENVIO->REVISIONDTE->TIPODTE==$this->dte && $xml->REVISIONENVIO->REVISIONDTE->FOLIO==$this->folio) {
                         $estado = (string)$xml->REVISIONENVIO->REVISIONDTE->ESTADO;
                         $detalle = (string)$xml->REVISIONENVIO->REVISIONDTE->DETALLE;
                     }
@@ -1436,8 +1402,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que propone una referencia para el documento emitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-04-27
+         * @version 2017-04-27
      */
     public function getPropuestaReferencia()
     {
@@ -1496,8 +1461,7 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que corrige el monto total del DTE al valor de la moneda oficial
      * para el día según lo registrado en el sistema (datos del banco central)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+         * @version 2020-02-22
      */
     public function calcularCLP()
     {
@@ -1515,8 +1479,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que indica la cantidad de veces que un DTE ha sido enviado por correo electrónico
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-10-16
+         * @version 2020-10-16
      */
     public function emailEnviado(string $email = null): int
     {
@@ -1558,7 +1521,7 @@ class Model_DteEmitido extends Model_Base_Envio
         }
         // armar cuerpo del correo
         $msg_html = $use_template ? $this->getEmisor()->getEmailFromTemplate('dte', $this, $msg) : false;
-        if (!$use_template and $msg) {
+        if (!$use_template && $msg) {
             $msg = ['html' => $msg];
         }
         if (!$msg) {
@@ -1616,7 +1579,7 @@ class Model_DteEmitido extends Model_Base_Envio
         ]);
         // enviar email
         $status = $email->send($msg);
-        if ($status===true) {
+        if ($status === true) {
             // registrar envío del email
             $fecha_hora = date('Y-m-d H:i:s');
             foreach ($to as $dest) {
@@ -1646,8 +1609,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega el resumen de los correos enviados
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2017-07-26
+         * @version 2017-07-26
      */
     public function getEmailEnviadosResumen()
     {
@@ -1667,21 +1629,19 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega el cobro asociado al DTE emitido
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2023-11-02
+         * @version 2023-11-02
      */
     public function getCobro($crearSiNoExiste = true)
     {
         /*if (!$this->getTipo()->permiteCobro()) {
             return false;
         }*/
-        return (new \libredte\oficial\Pagos\Model_Cobro())->setDocumento($this, $crearSiNoExiste);
+        return (new \libredte\enterprise\Pagos\Model_Cobro())->setDocumento($this, $crearSiNoExiste);
     }
 
     /**
      * Método que entrega el vencimiento del documento si es que existe
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+         * @version 2020-02-22
      */
     public function getVencimiento()
     {
@@ -1692,8 +1652,7 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que entrega el total real del DTE, si es documento de exportación
      * se entrega el total en la moneda extranjera
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-12-19
+         * @version 2020-12-19
      */
     public function getTotal($exception = true)
     {
@@ -1712,8 +1671,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega el detalle del DTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-22
+         * @version 2020-02-22
      */
     public function getDetalle()
     {
@@ -1723,15 +1681,14 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega el teléfono asociado al DTE, ya sea porque existe en el DTE o asociado directamente al receptor
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-07-11
+         * @version 2020-07-11
      */
     public function getTelefono() {
         if (!isset($this->_telefono)) {
             $this->_telefono = null;
-            if ($this->hasLocalXML() and !empty($this->getDatos()['Encabezado']['Receptor']['Contacto']) and $this->getDatos()['Encabezado']['Receptor']['Contacto'][0]=='+') {
+            if ($this->hasLocalXML() && !empty($this->getDatos()['Encabezado']['Receptor']['Contacto']) && $this->getDatos()['Encabezado']['Receptor']['Contacto'][0] == '+') {
                 $this->_telefono = $this->getDatos()['Encabezado']['Receptor']['Contacto'];
-            } else if (!empty($this->getReceptor()->telefono) and $this->getReceptor()->telefono[0]=='+') {
+            } else if (!empty($this->getReceptor()->telefono) && $this->getReceptor()->telefono[0] == '+') {
                 $this->_telefono = $this->getReceptor()->telefono;
             }
         }
@@ -1740,14 +1697,13 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega el celular asociado al DTE si existe
-     * @warning Sólo detecta como celular un número chileno (+56 9)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-03-24
+     * @warning Solo detecta como celular un número chileno (+56 9)
+         * @version 2020-03-24
      */
     public function getCelular() {
         if (!isset($this->_celular)) {
             $this->_celular = null;
-            if ($this->getTelefono() and strpos($this->getTelefono(), '+56 9')===0) {
+            if ($this->getTelefono() and strpos($this->getTelefono(), '+56 9') === 0) {
                 $this->_celular = $this->getTelefono();
             }
         }
@@ -1756,8 +1712,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega los enlaces públicos del documento
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-03-24
+         * @version 2020-03-24
      */
     public function getLinks()
     {
@@ -1779,8 +1734,7 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que indica si el estado de revisión del DTE en el envío al SII es
      * un estado final o bien aun faltan estados por obtener
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-10-11
+         * @version 2019-10-11
      */
     public function tieneEstadoRevisionEnvioSIIFinal()
     {
@@ -1797,12 +1751,11 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega posibles ayudas para los estados del envío al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2019-10-17
+         * @version 2019-10-17
      */
     public function getAyudaEstadoEnvioSII()
     {
-        if (empty($this->revision_estado) or empty($this->revision_detalle)) {
+        if (empty($this->revision_estado) || empty($this->revision_detalle)) {
             return null;
         }
         $estado = substr($this->revision_estado,0,3);
@@ -1810,7 +1763,7 @@ class Model_DteEmitido extends Model_Base_Envio
             // si es un arreglo, hay varias opciones para el estado reportado
             if (is_array(self::$envio_sii_ayudas[$estado])) {
                 foreach (self::$envio_sii_ayudas[$estado] as $detalle => $ayuda) {
-                    if (strpos($this->revision_detalle, '('.$detalle.')')===0) {
+                    if (strpos($this->revision_detalle, '('.$detalle.')') === 0) {
                         return str_replace(
                             ['{dte}', '{folio}'],
                             [$this->dte, $this->folio],
@@ -1819,7 +1772,7 @@ class Model_DteEmitido extends Model_Base_Envio
                     }
                 }
             }
-            // si no es arreglo, es sólo una opción
+            // si no es arreglo, es solo una opción
             else {
                 return str_replace(
                     ['{dte}', '{folio}'],
@@ -1833,18 +1786,16 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que indica si el DTE emitido tiene un XML asociado (LibreDTE o
      * MIPYME)
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-21
+         * @version 2020-02-21
      */
     public function hasXML()
     {
-        return $this->hasLocalXML() or $this->mipyme;
+        return $this->hasLocalXML() || $this->mipyme;
     }
 
     /**
      * Método que indica si el DTE emitido tiene un XML en LibreDTE
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-21
+         * @version 2020-02-21
      */
     public function hasLocalXML()
     {
@@ -1855,8 +1806,7 @@ class Model_DteEmitido extends Model_Base_Envio
      * Método que entrega el XML del documento emitido.
      * Entrega el XML que existe en LibreDTE o bien generado con el Portal
      * MIPYME del SII.
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2022-08-30
+         * @version 2022-08-30
      */
     public function getXML()
     {
@@ -1916,8 +1866,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega los datos extras del documento
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-01
+         * @version 2020-08-01
      */
     public function getExtra()
     {
@@ -1932,8 +1881,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega la actividad económica asociada al documento
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-04
+         * @version 2020-08-04
      */
     public function getActividad($default = null)
     {
@@ -1945,8 +1893,7 @@ class Model_DteEmitido extends Model_Base_Envio
      * Método que entrega el PDF del documento emitido.
      * Entrega el PDF que se ha generado con LibreDTE a partir del XML del DTE
      * emitido o bien el PDF generado con el PortalMIPYME del SII.
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-08-04
+         * @version 2020-08-04
      */
     public function getPDF(array $config = [])
     {
@@ -1981,7 +1928,7 @@ class Model_DteEmitido extends Model_Base_Envio
         // crear a partir de formato de PDF no estándar
         else if ($config['formato'] != 'estandar') {
             $apps = $this->getEmisor()->getApps('dtepdfs');
-            if (empty($apps[$config['formato']]) or empty($apps[$config['formato']]->getConfig()->disponible)) {
+            if (empty($apps[$config['formato']]) || empty($apps[$config['formato']]->getConfig()->disponible)) {
                 throw new \Exception('Formato de PDF '.$config['formato'].' no se encuentra disponible', 400);
             }
             $response = $apps[$config['formato']]->generar($config);
@@ -1992,12 +1939,12 @@ class Model_DteEmitido extends Model_Base_Envio
             $rest->setAuth($config['hash']);
             unset($config['hash']);
             $response = $rest->post(url('/api/utilidades/documentos/generar_pdf'), $config);
-            if ($response===false) {
+            if ($response === false) {
                 throw new \Exception(implode("\n", $rest->getErrors()), 500);
             }
         }
         // procesar respuesta
-        if ($response['status']['code']!=200) {
+        if ($response['status']['code'] != 200) {
             throw new \Exception($response['body'], $response['status']['code']);
         }
         // si dió código 200 se entrega la respuesta del servicio web
@@ -2006,8 +1953,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega el código ESCPOS del documento emitido.
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2021-02-21
+         * @version 2021-02-21
      */
     public function getESCPOS(array $config = [])
     {
@@ -2040,7 +1986,7 @@ class Model_DteEmitido extends Model_Base_Envio
         ];
         $config = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($default_config, $config);
         $formatoEstandar = $this->getEmisor()->getApp('dtepdfs.estandar');
-        if (!empty($formatoEstandar) and !empty($formatoEstandar->getConfig()->continuo->logo->posicion)) {
+        if (!empty($formatoEstandar) && !empty($formatoEstandar->getConfig()->continuo->logo->posicion)) {
             $logo_file = DIR_STATIC.'/contribuyentes/'.$this->getEmisor()->rut.'/logo.png';
             if (is_readable($logo_file)) {
                 $config['logo'] = base64_encode(file_get_contents($logo_file));
@@ -2054,7 +2000,7 @@ class Model_DteEmitido extends Model_Base_Envio
         }
         // consultar aplicación de ESCPOS según el formato solicitado
         else if ($apps = $this->getEmisor()->getApps('dteescpos')) {
-            if (empty($apps[$config['formato']]) or empty($apps[$config['formato']]->getConfig()->disponible)) {
+            if (empty($apps[$config['formato']]) || empty($apps[$config['formato']]->getConfig()->disponible)) {
                 throw new \Exception('Formato de ESCPOS '.$config['formato'].' no se encuentra disponible', 400);
             }
             $response = $apps[$config['formato']]->generar($config);
@@ -2064,7 +2010,7 @@ class Model_DteEmitido extends Model_Base_Envio
             unset($config['hash']);
             $response = apigateway_consume('/libredte/dte/documentos/escpos', $config);
         }
-        if ($response['status']['code']!=200) {
+        if ($response['status']['code'] != 200) {
             throw new \Exception($response['body'], 500);
         }
         // si dió código 200 se entrega la respuesta del servicio web
@@ -2073,8 +2019,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega el Track ID del DTE o la glosa si tiene otro significado
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2020-02-21
+         * @version 2020-02-21
      */
     public function getTrackID()
     {

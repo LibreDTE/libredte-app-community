@@ -20,7 +20,7 @@ $col = 1;
 new \sowerphp\general\View_Helper_Table([
     ['#', 'Columna', 'Tag XML', 'Nombre', 'Descripción y validaciones', 'Largo máximo', 'Obligatoriedad'],
     [$col++, 'A', 'TipoDTE', 'Tipo DTE', 'Ejemplos de códigos de documento:<br/>- 33: factura afecta<br/>- 34: factura exenta<br/>- 39: boleta afecta<br/>- 41: boleta exenta<br/>- 52: guía de despacho<br/>- 61: nota de crédito<br/>- 110: factura de exportación', '3', 'Obligatorio'],
-    [$col++, 'B', 'Folio', 'Folio', 'Número que identifica de manera única dentro del CSV al DTE. Por defecto no se usa en el DTE final, sólo si está configurado el folio manual en la empresa. Normalmente puede partir en 1 y ser un correlativo.', '10', 'Obligatorio'],
+    [$col++, 'B', 'Folio', 'Folio', 'Número que identifica de manera única dentro del CSV al DTE. Por defecto no se usa en el DTE final, solo si está configurado el folio manual en la empresa. Normalmente puede partir en 1 y ser un correlativo.', '10', 'Obligatorio'],
     [$col++, 'C', 'FchEmis', 'Fecha emisión', 'En formato AAAA-MM-DD', '10', 'Opcional'],
     [$col++, 'D', 'FchVenc', 'Fecha vencimiento', 'En formato AAAA-MM-DD', '10', 'Opcional'],
     [$col++, 'E', 'RUTRecep', 'RUT Receptor', 'Sin puntos, con guión y dígito verificador', '10', 'Obligatorio'],
@@ -43,8 +43,8 @@ new \sowerphp\general\View_Helper_Table([
     [$col++, 'V', 'PeriodoHasta', 'Fecha periodo hasta', 'En formato AAAA-MM-DD', '10', 'Opcional'],
     [$col++, 'W', 'Patente', 'Patente vehículo despacho', '', '8', 'Opcional'],
     [$col++, 'X', 'RUTTrans', 'RUT transportista despacho', 'Sin puntos, con guión y dígito verificador', '10', 'Opcional'],
-    [$col++, 'Y', 'RUTChofer', 'RUT chofer vehículo despacho', 'Sin puntos, con guión y dígito verificador', '10', 'Obligatorio sólo si va el nombre del chofer'],
-    [$col++, 'Z', 'NombreChofer', 'Nombre chofer vehículo despacho', '', '30', 'Obligatorio sólo si va el RUT del chofer'],
+    [$col++, 'Y', 'RUTChofer', 'RUT chofer vehículo despacho', 'Sin puntos, con guión y dígito verificador', '10', 'Obligatorio solo si va el nombre del chofer'],
+    [$col++, 'Z', 'NombreChofer', 'Nombre chofer vehículo despacho', '', '30', 'Obligatorio solo si va el RUT del chofer'],
     [$col++, 'AA', 'DirDest', 'Dirección despacho', '', '70', 'Opcional'],
     [$col++, 'AB', 'CmnaDest', 'Comuna despacho', 'Sin abreviaciones, tal como se ve en LibreDTE', '20', 'Opcional'],
     [$col++, 'AC', 'TpoDocRef', 'Tipo documento referencia', 'Ejemplos de códigos de documento:<br/>- 33: factura afecta<br/>- 34: factura exenta<br/>- 39: boleta afecta<br/>- 41: boleta exenta<br/>- 52: guía de despacho<br/>- 801: orden de compra<br/>- HES: hoja de entrada de servicios', '3', 'Opcional'],
@@ -60,7 +60,7 @@ new \sowerphp\general\View_Helper_Table([
     [$col++, 'AM', 'CodImpAdic', 'Impuesto adicional', 'Código de tipo de impuesto adicional, recargo o retención de un item. Por ejemplo usar "15" para "IVA retenido total" en facturas de compra.', '3', 'Opcional'],
 ]);
 ?>
-<p class="mt-3">Si el documento tiene más de un item o referencia, se agrega una nueva fila donde sólo van las columnas correspondientes al item o la referencia, y las demás vacías.</p>
+<p class="mt-3">Si el documento tiene más de un item o referencia, se agrega una nueva fila donde solo van las columnas correspondientes al item o la referencia, y las demás vacías.</p>
 <p>El archivo subido se procesará de manera asíncrona y se notificará vía correo electrónico a <?=$_Auth->User->email?> cuando el proceso esté completo. El correo incluirá el mismo archivo CSV que se subió a la plataforma con 2 columnas nuevas que incluirán el código del resultado de la operación para ese documento y la glosa asociada a dicho estado. El significado macro de cada código de estado es:</p>
 <?php
 new \sowerphp\general\View_Helper_Table([
@@ -91,7 +91,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'dte_emitido',
     'label' => '¿DTE real?',
-    'options' => ['No, sólo generar DTE temporal (cotización)', 'Si, generar DTE real (documento emitido)'],
+    'options' => ['No, solo generar DTE temporal (cotización)', 'Si, generar DTE real (documento emitido)'],
 ]);
 echo $f->input([
     'type' => 'select',

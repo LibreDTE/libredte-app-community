@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -25,9 +25,7 @@
 namespace website\Dte\Admin\Mantenedores;
 
 /**
- * Controlador para las acciones de administración de los contribuyentes
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]delaf.cl)
- * @version 2016-06-18
+ * Controlador para las acciones de administración de los contribuyentes.
  */
 class Controller_Contribuyentes extends \Controller_Maintainer
 {
@@ -38,13 +36,11 @@ class Controller_Contribuyentes extends \Controller_Maintainer
     ]; ///< Columnas que se deben mostrar en las vistas
 
     /**
-     * Acción que permite cargar los datos de contribuyentes
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]delaf.cl)
-     * @version 2020-07-10
+     * Acción que permite cargar los datos de contribuyentes.
      */
     public function importar()
     {
-        if (isset($_POST['submit']) and isset($_FILES['archivo']) and !$_FILES['archivo']['error']) {
+        if (isset($_POST['submit']) && isset($_FILES['archivo']) && !$_FILES['archivo']['error']) {
             $data = \sowerphp\general\Utility_Spreadsheet::read($_FILES['archivo']);
             unset($data[0]);
             $Comunas = new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas();
@@ -58,19 +54,19 @@ class Controller_Contribuyentes extends \Controller_Maintainer
                     continue;
                 }
                 $actualizado = false;
-                if ((empty($Contribuyente->razon_social) or in_array($Contribuyente->razon_social, [$Contribuyente->getRUT(), $Contribuyente->rut.'-'.$Contribuyente->dv])) and !empty($c[1])) {
+                if ((empty($Contribuyente->razon_social) || in_array($Contribuyente->razon_social, [$Contribuyente->getRUT(), $Contribuyente->rut.'-'.$Contribuyente->dv])) && !empty($c[1])) {
                     $Contribuyente->razon_social = mb_substr(trim($c[1]), 0, 100);
                     $actualizado = true;
                 }
-                if (empty($Contribuyente->giro) and !empty($c[2])) {
+                if (empty($Contribuyente->giro) && !empty($c[2])) {
                     $Contribuyente->giro = mb_substr(trim($c[2]), 0, 80);
                     $actualizado = true;
                 }
-                if (empty($Contribuyente->direccion) and !empty($c[3])) {
+                if (empty($Contribuyente->direccion) && !empty($c[3])) {
                     $Contribuyente->direccion = mb_substr(trim($c[3]), 0, 70);
                     $actualizado = true;
                 }
-                if (empty($Contribuyente->comuna) and !empty($c[4])) {
+                if (empty($Contribuyente->comuna) && !empty($c[4])) {
                     if (is_numeric($c[4])) {
                         $Contribuyente->comuna = trim($c[4]);
                         $actualizado = true;
@@ -82,15 +78,15 @@ class Controller_Contribuyentes extends \Controller_Maintainer
                         }
                     }
                 }
-                if (empty($Contribuyente->email) and !empty($c[5])) {
+                if (empty($Contribuyente->email) && !empty($c[5])) {
                     $Contribuyente->email = mb_substr(trim($c[5]), 0, 80);
                     $actualizado = true;
                 }
-                if (empty($Contribuyente->telefono) and !empty($c[6])) {
+                if (empty($Contribuyente->telefono) && !empty($c[6])) {
                     $Contribuyente->telefono = mb_substr(trim($c[6]), 0, 20);
                     $actualizado = true;
                 }
-                if (empty($Contribuyente->actividad_economica) and !empty($c[7])) {
+                if (empty($Contribuyente->actividad_economica) && !empty($c[7])) {
                     $Contribuyente->actividad_economica = (int)($c[7]);
                     $actualizado = true;
                 }

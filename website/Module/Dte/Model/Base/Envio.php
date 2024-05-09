@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Dte;
 
 /**
  * Clase base para para el modelo singular de documentos que se envían al SII
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2016-06-14
  */
 abstract class Model_Base_Envio extends Model_Base_Documento
@@ -34,8 +33,7 @@ abstract class Model_Base_Envio extends Model_Base_Documento
 
     /**
      * Método que solicita una nueva revisión por email del DTE enviado al SII
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-06-14
+         * @version 2016-06-14
      */
     public function solicitarRevision($user = null)
     {

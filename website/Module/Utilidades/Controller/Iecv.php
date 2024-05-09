@@ -1,8 +1,8 @@
 <?php
 
 /**
- * LibreDTE
- * Copyright (C) SASCO SpA (https://sasco.cl)
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
@@ -26,7 +26,6 @@ namespace website\Utilidades;
 
 /**
  * Controlador para utilides asociadas a los libros de compra y venta
- * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
  * @version 2016-09-12
  */
 class Controller_Iecv extends \Controller_App
@@ -35,8 +34,7 @@ class Controller_Iecv extends \Controller_App
     /**
      * Método que permite generar un libro de Compras o Ventas a partir de un
      * archivo CSV con el detalle del mismo
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-07-24
+         * @version 2016-07-24
      */
     public function xml()
     {
@@ -66,14 +64,14 @@ class Controller_Iecv extends \Controller_App
             }
         }
         // si no se pasó el archivo error
-        if (!isset($_FILES['archivo']) or $_FILES['archivo']['error']) {
+        if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'Debes enviar el archivo CSV con el detalle de las compras o ventas al que deseas generar su XML', 'error'
             );
             return;
         }
         // si no se pasó la firma error
-        if (!isset($_FILES['firma']) or $_FILES['firma']['error']) {
+        if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'Debes enviar el archivo con la firma digital', 'error'
             );
@@ -125,21 +123,21 @@ class Controller_Iecv extends \Controller_App
         ];
         $certificacion = true;
         foreach ($caratula_certificacion[$caratula['TipoOperacion']] as $attr => $val) {
-            if ($caratula[$attr]!=$val or ($attr=='PeriodoTributario' and substr($caratula[$attr],0 ,4)!=$val)) {
+            if ($caratula[$attr] != $val || ($attr == 'PeriodoTributario' and substr($caratula[$attr],0 ,4)!=$val)) {
                 $certificacion = false;
                 break;
             }
         }
         // crear libro de compras o venta
         $LibroCompraVenta = new \sasco\LibreDTE\Sii\LibroCompraVenta((bool)$_POST['simplificado']);
-        if ($caratula['TipoOperacion']==='COMPRA')
+        if ($caratula['TipoOperacion'] == 'COMPRA')
             $LibroCompraVenta->agregarComprasCSV($_FILES['archivo']['tmp_name']);
         else
             $LibroCompraVenta->agregarVentasCSV($_FILES['archivo']['tmp_name']);
         $LibroCompraVenta->setCaratula($caratula);
         $LibroCompraVenta->setFirma($Firma);
         // se setean resúmenes manuales enviados por post
-        if ($caratula['TipoOperacion']==='VENTA' and isset($_POST['TpoDoc'])) {
+        if ($caratula['TipoOperacion'] == 'VENTA' && isset($_POST['TpoDoc'])) {
             $resumen = [];
             $n_tipos = count($_POST['TpoDoc']);
             for ($i=0; $i<$n_tipos; $i++) {
@@ -190,12 +188,11 @@ class Controller_Iecv extends \Controller_App
 
     /**
      * Acción que permite la generación del PDF de un IECV
-     * @author Esteban De La Fuente Rubio, DeLaF (esteban[at]sasco.cl)
-     * @version 2016-07-28
+         * @version 2016-07-28
      */
     public function pdf()
     {
-        if (isset($_POST['submit']) and !empty($_FILES['xml']) and !$_FILES['xml']['error']) {
+        if (isset($_POST['submit']) && !empty($_FILES['xml']) && !$_FILES['xml']['error']) {
             $LibroCompraVenta = new \sasco\LibreDTE\Sii\LibroCompraVenta();
             $LibroCompraVenta->loadXML(file_get_contents($_FILES['xml']['tmp_name']));
             $pdf = new \sasco\LibreDTE\Sii\Dte\PDF\LibroCompraVenta();
