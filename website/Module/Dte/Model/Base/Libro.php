@@ -25,33 +25,33 @@
 namespace website\Dte;
 
 /**
- * Clase base para para el modelo singular de Libros
- * @version 2021-08-18
+ * Clase base para para el modelo singular de Libros.
  */
 abstract class Model_Base_Libro extends Model_Base_Envio
 {
 
     /**
-     * Método que actualiza el estado del libro enviado al SII, en realidad
-     * es un wrapper para las verdaderas llamadas
-     * @param usarWebservice =true se consultará vía servicio web =false vía email
-         * @version 2021-08-18
+     * Método que actualiza el estado del libro enviado al SII, en realidad.
+     * es un wrapper para las verdaderas llamadas.
+     * @param usarWebservice =true se consultará vía servicio web =false vía email.
      */
     public function actualizarEstado($user_id = null, $usarWebservice = true)
     {
         if (!$this->track_id) {
-            throw new \Exception('Libro no tiene Track ID, primero debe enviarlo al SII');
+            throw new \Exception('Libro no tiene Track ID, primero debe enviarlo al SII.');
         }
         if ($this->getContribuyente()->isEmailReceiverLibredte('sii')) {
             $usarWebservice = true;
         }
-        return $usarWebservice ? $this->actualizarEstadoWebservice($user_id) : $this->actualizarEstadoEmail();
+        return $usarWebservice
+            ? $this->actualizarEstadoWebservice($user_id)
+            : $this->actualizarEstadoEmail()
+        ;
     }
 
     /**
      * Método que actualiza el estado del Libro enviado al SII a través del
-     * servicio web que dispone el SII para esta consulta
-         * @version 2021-08-19
+     * servicio web que dispone el SII para esta consulta.
      */
     private function actualizarEstadoWebservice($user_id = null)
     {
@@ -69,22 +69,26 @@ abstract class Model_Base_Libro extends Model_Base_Envio
         // solicitar token
         $token = \sasco\LibreDTE\Sii\Autenticacion::getToken($Firma);
         if (!$token) {
-            throw new \Exception('No fue posible obtener el token');
+            throw new \Exception('No fue posible obtener el token.');
         }
         // consultar estado enviado
-        $estado_up = \sasco\LibreDTE\Sii::request('QueryEstUp', 'getEstUp', [$Contribuyente->rut, $Contribuyente->dv, $this->track_id, $token]);
+        $estado_up = \sasco\LibreDTE\Sii::request(
+            'QueryEstUp',
+            'getEstUp',
+            [$Contribuyente->rut, $Contribuyente->dv, $this->track_id, $token]
+        );
         // si el estado no se pudo recuperar error
         if ($estado_up === false) {
-            throw new \Exception('No fue posible obtener el estado del RCOF');
+            throw new \Exception('No fue posible obtener el estado del RCOF.');
         }
         // validar track id
         $track_id = (int)$estado_up->xpath('/SII:RESPUESTA/SII:RESP_HDR/TRACKID')[0];
         if ($track_id != $this->track_id) {
-            throw new \Exception('Track ID no corresponde al envío del Libro');
+            throw new \Exception('Track ID no corresponde al envío del Libro.');
         }
         // guardar estado
         $this->revision_estado = (string)$estado_up->xpath('/SII:RESPUESTA/SII:RESP_HDR/ESTADO')[0]
-                                    .' - '.(string)$estado_up->xpath('/SII:RESPUESTA/SII:RESP_HDR/GLOSA')[0];
+            . ' - ' . (string)$estado_up->xpath('/SII:RESPUESTA/SII:RESP_HDR/GLOSA')[0];
         $this->revision_detalle = (string)$estado_up->xpath('/SII:RESPUESTA/SII:RESP_HDR/NUM_ATENCION')[0];
         try {
             $this->save();
@@ -97,8 +101,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
 
     /**
      * Método que actualiza el estado del Libro enviado al SII a través del
-     * email que es recibido desde el SII
-         * @version 2021-08-18
+     * email que es recibido desde el SII.
      */
     private function actualizarEstadoEmail()
     {
@@ -142,14 +145,13 @@ abstract class Model_Base_Libro extends Model_Base_Envio
     }
 
     /**
-     * Método que guarda el estado del envío del libro al SII
-         * @version 2015-12-27
+     * Método que guarda el estado del envío del libro al SII.
      */
     public function saveRevision($xml_data)
     {
         $xml = new \SimpleXMLElement($xml_data, LIBXML_COMPACT);
-        if ($xml->Identificacion->TrackId!=$this->track_id) {
-            return 'Track ID no corresponde al envío del Libro';
+        if ($xml->Identificacion->TrackId != $this->track_id) {
+            return 'Track ID no corresponde al envío del Libro.';
         }
         $this->revision_estado = (string)$xml->Identificacion->EstadoEnvio;
         if (isset($xml->ErrorEnvioLibro)) {
@@ -171,8 +173,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el estado (de 3 letras) del envío del libro
-         * @version 2016-03-02
+     * Método que entrega el estado (de 3 letras) del envío del libro.
      */
     public function getEstado()
     {
@@ -183,8 +184,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el arreglo con los datos del libro de compra o ventas
-         * @version 2016-09-13
+     * Método que entrega el arreglo con los datos del libro de compra o ventas.
      */
     public function getDatos()
     {

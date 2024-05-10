@@ -24,6 +24,8 @@
 // namespace del modelo
 namespace website\Dte;
 
+use \website\Dte\Admin\Mantenedores\Model_DteTipos;
+
 /**
  * Clase para mapear la tabla dte_compra de la base de datos.
  */
@@ -179,8 +181,7 @@ class Model_DteCompra extends Model_Base_Libro
 
     /**
      * Método que entrega el resumen real (de los detalles registrados) del
-     * libro
-         * @version 2016-10-06
+     * libro.
      */
     public function getResumen()
     {
@@ -188,8 +189,7 @@ class Model_DteCompra extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega los documentos por día del libro
-         * @version 2017-09-11
+     * Método que entrega los documentos por día del libro.
      */
     public function getDocumentosPorDia()
     {
@@ -197,8 +197,7 @@ class Model_DteCompra extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega las compras por tipo del período
-         * @version 2017-09-11
+     * Método que entrega las compras por tipo del período.
      */
     public function getDocumentosPorTipo()
     {
@@ -206,12 +205,13 @@ class Model_DteCompra extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega los tipos de transacciones de las compras del período
-         * @version 2020-01-26
+     * Método que entrega los tipos de transacciones de las compras del período.
      */
-    public function getTiposTransacciones()
+    public function getTiposTransacciones(): array
     {
-        $compras = $this->getReceptor()->getCompras($this->periodo, [33, 34, 43, 46, 56, 61]);
+        $compras = $this->getReceptor()->getCompras(
+            $this->periodo, [33, 34, 43, 46, 56, 61]
+        );
         $datos = [];
         foreach ($compras as $c) {
             if (!$c['tipo_transaccion'] && !$c['iva_uso_comun'] && !$c['iva_no_recuperable_codigo']) {
@@ -240,10 +240,9 @@ class Model_DteCompra extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega los totales del período
-         * @version 2018-05-01
+     * Método que entrega los totales del período.
      */
-    public function getTotales()
+    public function getTotales(): array
     {
         $resumen = $this->getResumen();
         $total = [
@@ -271,7 +270,7 @@ class Model_DteCompra extends Model_Base_Libro
                 $total[$c] += $r[$c];
             }
             // sumar o restar campos segun operación
-            $operacion = (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->get($r['TpoDoc'])->operacion;
+            $operacion = (new Model_DteTipos())->get($r['TpoDoc'])->operacion;
             foreach ($total as $c => $v) {
                 if (!in_array($c, $columnas_siempre_suma)) {
                     // si es iva no recuperable se extrae (pueden ser varios) // TODO podría haber otro caso que requiera esto
@@ -295,23 +294,25 @@ class Model_DteCompra extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega el total del neto + exento del período
-         * @version 2018-04-25
+     * Método que entrega el total del neto + exento del período.
      */
-    public function getTotalExentoNeto()
+    public function getTotalExentoNeto(): int
     {
         $totales = $this->getTotales();
         return $totales['TotMntExe'] + $totales['TotMntNeto'];
     }
 
     /**
-     * Método que entrega la cantidad de documentos que tienen montos exentos
-         * @version 2021-09-14
+     * Método que entrega la cantidad de documentos que tienen montos exentos.
      */
-    public function countDocumentosConMontosExentos()
+    public function countDocumentosConMontosExentos(): int
     {
         $periodo_col = $this->db->date('Ym', 'r.fecha', 'INTEGER');
-        $vars = [':receptor' => $this->receptor, ':periodo' => $this->periodo, ':certificacion' => (int)$this->certificacion];
+        $vars = [
+            ':receptor' => $this->receptor,
+            ':periodo' => $this->periodo,
+            ':certificacion' => (int)$this->certificacion,
+        ];
         return (int)$this->db->getValue('
             SELECT COUNT(*)
             FROM

@@ -53,4 +53,4 @@ $maintainer = new \sowerphp\app\View_Helper_Maintainer([
 ]);
 $maintainer->setId('dte_emitidos_'.$Emisor->rut);
 $maintainer->setColsWidth([null, null, null, null, null, null, null, null, 110]);
-echo $maintainer->listar ($documentos, $paginas, $pagina, false);
+echo $maintainer->listar($documentos, $paginas, $pagina, false);

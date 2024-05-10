@@ -24,16 +24,18 @@
 // namespace del controlador
 namespace website\Dte;
 
+use \website\Dte\Admin\Mantenedores\Model_DteTipos;
+use \website\Dte\Admin\Mantenedores\Model_IvaNoRecuperables;
+use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
+
 /**
- * Controlador de dte recibidos
- * @version 2017-08-04
+ * Controlador de dte recibidos.
  */
 class Controller_DteRecibidos extends \Controller_App
 {
 
     /**
-     * Acción que permite mostrar los documentos recibidos por el contribuyente
-         * @version 2020-05-15
+     * Acción que permite mostrar los documentos recibidos por el contribuyente.
      */
     public function listar($pagina = 1)
     {
@@ -48,14 +50,14 @@ class Controller_DteRecibidos extends \Controller_App
                 $filtros[$var] = $val;
             }
         }
-        $searchUrl = isset($_GET['search'])?('?search='.$_GET['search']):'';
+        $searchUrl = isset($_GET['search']) ? ('?search='.$_GET['search']) : '';
         $paginas = 1;
         try {
             $documentos_total = $Receptor->countDocumentosRecibidos($filtros);
             if (!empty($pagina)) {
                 $filtros['limit'] = \sowerphp\core\Configure::read('app.registers_per_page');
-                $filtros['offset'] = ($pagina-1)*$filtros['limit'];
-                $paginas = ceil($documentos_total/$filtros['limit']);
+                $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
+                $paginas = ceil($documentos_total / $filtros['limit']);
                 if ($pagina != 1 && $pagina > $paginas) {
                     $this->redirect('/dte/'.$this->request->params['controller'].'/listar'.$searchUrl);
                 }
@@ -75,15 +77,14 @@ class Controller_DteRecibidos extends \Controller_App
             'paginas' => $paginas,
             'pagina' => $pagina,
             'search' => $filtros,
-            'tipos_dte' => (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->getList(true),
+            'tipos_dte' => (new Model_DteTipos())->getList(true),
             'usuarios' => $Receptor->getListUsuarios(),
             'searchUrl' => $searchUrl,
         ]);
     }
 
     /**
-     * Acción que permite agregar un DTE recibido
-         * @version 2020-05-15
+     * Acción que permite agregar un DTE recibido.
      */
     public function agregar()
     {
@@ -94,9 +95,9 @@ class Controller_DteRecibidos extends \Controller_App
         $this->set([
             '_header_extra' => ['js' => ['/dte/js/dte.js']],
             'Receptor' => $Receptor,
-            'tipos_documentos' => (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->getList(true),
-            'iva_no_recuperables' => (new \website\Dte\Admin\Mantenedores\Model_IvaNoRecuperables())->getList(),
-            'impuesto_adicionales' => (new \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales())->getList(),
+            'tipos_documentos' => (new Model_DteTipos())->getList(true),
+            'iva_no_recuperables' => (new Model_IvaNoRecuperables())->getList(),
+            'impuesto_adicionales' => (new Model_ImpuestoAdicionales())->getList(),
             'iva_tasa' => \sasco\LibreDTE\Sii::getIVA(),
             'sucursales' => $Receptor->getSucursales(),
             'tipo_transacciones' => $tipo_transacciones,
@@ -110,15 +111,19 @@ class Controller_DteRecibidos extends \Controller_App
     }
 
     /**
-     * Acción que permite editar un DTE recibido
-         * @version 2020-05-15
+     * Acción que permite editar un DTE recibido.
      */
     public function modificar($emisor, $dte, $folio)
     {
         $Receptor = $this->getContribuyente();
         // obtener dte recibido
-        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
-        if (!$DteRecibido->exists() || $DteRecibido->receptor!=$Receptor->rut) {
+        $DteRecibido = new Model_DteRecibido(
+            (int)$emisor,
+            (int)$dte,
+            (int)$folio,
+            $Receptor->enCertificacion()
+        );
+        if (!$DteRecibido->exists() || $DteRecibido->receptor != $Receptor->rut) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'DTE recibido solicitado no existe', 'error'
             );
@@ -131,9 +136,9 @@ class Controller_DteRecibidos extends \Controller_App
             '_header_extra' => ['js' => ['/dte/js/dte.js']],
             'Receptor' => $Receptor,
             'DteRecibido' => $DteRecibido,
-            'tipos_documentos' => (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->getList(true),
-            'iva_no_recuperables' => (new \website\Dte\Admin\Mantenedores\Model_IvaNoRecuperables())->getList(),
-            'impuesto_adicionales' => (new \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales())->getList(),
+            'tipos_documentos' => (new Model_DteTipos())->getList(true),
+            'iva_no_recuperables' => (new Model_IvaNoRecuperables())->getList(),
+            'impuesto_adicionales' => (new Model_ImpuestoAdicionales())->getList(),
             'iva_tasa' => \sasco\LibreDTE\Sii::getIVA(),
             'sucursales' => $Receptor->getSucursales(),
             'tipo_transacciones' => $tipo_transacciones,
@@ -147,17 +152,21 @@ class Controller_DteRecibidos extends \Controller_App
     }
 
     /**
-     * Acción que permite ver la página de un DTE recibido
-         * @version 2020-05-15
+     * Acción que permite ver la página de un DTE recibido.
      */
     public function ver($emisor, $dte, $folio)
     {
         $Receptor = $this->getContribuyente();
         // obtener dte recibido
-        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
-        if (!$DteRecibido->exists() || $DteRecibido->receptor!=$Receptor->rut) {
+        $DteRecibido = new Model_DteRecibido(
+            (int)$emisor,
+            (int)$dte,
+            (int)$folio,
+            $Receptor->enCertificacion()
+        );
+        if (!$DteRecibido->exists() || $DteRecibido->receptor != $Receptor->rut) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'DTE recibido solicitado no existe', 'error'
+                'DTE recibido solicitado no existe.', 'error'
             );
             $this->redirect('/dte/dte_recibidos/listar');
         }
@@ -168,13 +177,15 @@ class Controller_DteRecibidos extends \Controller_App
             'Emisor' => $DteRecibido->getEmisor(),
             'DteRecibido' => $DteRecibido,
             'referenciados' => $DteRecibido->getReferenciados(),
-            'DteIntercambio' => $DteRecibido->intercambio ? $DteRecibido->getDteIntercambio() : null,
+            'DteIntercambio' => $DteRecibido->intercambio
+                ? $DteRecibido->getDteIntercambio() 
+                : null
+            ,
         ]);
     }
 
     /**
-     * Método que agrega o modifica un DTE recibido
-         * @version 2020-05-16
+     * Método que agrega o modifica un DTE recibido.
      */
     private function save()
     {
@@ -183,7 +194,7 @@ class Controller_DteRecibidos extends \Controller_App
         foreach(['emisor', 'dte', 'folio', 'fecha', 'tasa'] as $attr) {
             if (!isset($_POST[$attr][0])) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Debe indicar '.$attr, 'error'
+                    'Debe indicar '.$attr.'.', 'error'
                 );
                 return;
             }
@@ -196,11 +207,20 @@ class Controller_DteRecibidos extends \Controller_App
         $DteRecibido->fecha = $_POST['fecha'];
         $DteRecibido->exento = !empty($_POST['exento']) ? $_POST['exento'] : null;
         $DteRecibido->neto = !empty($_POST['neto']) ? $_POST['neto'] : null;
-        $DteRecibido->iva = !empty($_POST['iva']) ? $_POST['iva'] : round((int)$DteRecibido->neto * ($DteRecibido->tasa/100));
+        $DteRecibido->iva = !empty($_POST['iva'])
+            ? $_POST['iva']
+            : round((int)$DteRecibido->neto * ($DteRecibido->tasa/100))
+        ;
         $DteRecibido->usuario = $this->Auth->User->id;
         // tipo transaccion, iva uso común, no recuperable e impuesto adicional
-        $DteRecibido->tipo_transaccion = !empty($_POST['tipo_transaccion']) ? $_POST['tipo_transaccion'] : null;
-        $DteRecibido->iva_uso_comun = !empty($_POST['iva_uso_comun']) ? $_POST['iva_uso_comun'] : null;
+        $DteRecibido->tipo_transaccion = !empty($_POST['tipo_transaccion'])
+            ? $_POST['tipo_transaccion']
+            : null
+        ;
+        $DteRecibido->iva_uso_comun = !empty($_POST['iva_uso_comun'])
+            ? $_POST['iva_uso_comun']
+            : null
+        ;
         if ($DteRecibido->iva && !empty($_POST['iva_no_recuperable_codigo'])) {
             $DteRecibido->iva_no_recuperable = [];
             $n_codigos = count($_POST['iva_no_recuperable_codigo']);
@@ -208,11 +228,17 @@ class Controller_DteRecibidos extends \Controller_App
                 if (!empty($_POST['iva_no_recuperable_codigo'][$i])) {
                     $DteRecibido->iva_no_recuperable[] = [
                         'codigo' => $_POST['iva_no_recuperable_codigo'][$i],
-                        'monto' => !empty($_POST['iva_no_recuperable_monto'][$i]) ? $_POST['iva_no_recuperable_monto'][$i] : $DteRecibido->iva,
+                        'monto' => !empty($_POST['iva_no_recuperable_monto'][$i])
+                            ? $_POST['iva_no_recuperable_monto'][$i]
+                            : $DteRecibido->iva
+                        ,
                     ];
                 }
             }
-            $DteRecibido->iva_no_recuperable = $DteRecibido->iva_no_recuperable ? json_encode($DteRecibido->iva_no_recuperable) : null;
+            $DteRecibido->iva_no_recuperable = $DteRecibido->iva_no_recuperable
+                ? json_encode($DteRecibido->iva_no_recuperable)
+                : null
+            ;
         } else {
             $DteRecibido->iva_no_recuperable = null;
         }
@@ -224,35 +250,90 @@ class Controller_DteRecibidos extends \Controller_App
                 if (!empty($_POST['impuesto_adicional_codigo'][$i])) {
                     $DteRecibido->impuesto_adicional[] = [
                         'codigo' => $_POST['impuesto_adicional_codigo'][$i],
-                        'tasa' => $_POST['impuesto_adicional_tasa'][$i] ? $_POST['impuesto_adicional_tasa'][$i] : null,
-                        'monto' => $_POST['impuesto_adicional_monto'][$i] ? $_POST['impuesto_adicional_monto'][$i] : null
+                        'tasa' => $_POST['impuesto_adicional_tasa'][$i]
+                            ? $_POST['impuesto_adicional_tasa'][$i]
+                            : null
+                        ,
+                        'monto' => $_POST['impuesto_adicional_monto'][$i]
+                            ? $_POST['impuesto_adicional_monto'][$i] 
+                            : null
+                        ,
                     ];
                     $impuesto_adicional_monto_total += (int)$_POST['impuesto_adicional_monto'][$i];
                 }
             }
-            $DteRecibido->impuesto_adicional = $DteRecibido->impuesto_adicional ? json_encode($DteRecibido->impuesto_adicional) : null;
+            $DteRecibido->impuesto_adicional = $DteRecibido->impuesto_adicional
+                ? json_encode($DteRecibido->impuesto_adicional)
+                : null
+            ;
         } else {
             $DteRecibido->impuesto_adicional = null;
         }
         $DteRecibido->impuesto_tipo = $_POST['impuesto_tipo'];
         $DteRecibido->anulado = isset($_POST['anulado']) ? 'A' : null;
-        $DteRecibido->impuesto_sin_credito = !empty($_POST['impuesto_sin_credito']) ? $_POST['impuesto_sin_credito'] : null;
-        $DteRecibido->monto_activo_fijo = !empty($_POST['monto_activo_fijo']) ? $_POST['monto_activo_fijo'] : null;
-        $DteRecibido->monto_iva_activo_fijo = !empty($_POST['monto_iva_activo_fijo']) ? $_POST['monto_iva_activo_fijo'] : null;
-        $DteRecibido->iva_no_retenido = !empty($_POST['iva_no_retenido']) ? $_POST['iva_no_retenido'] : null;
+        $DteRecibido->impuesto_sin_credito = !empty($_POST['impuesto_sin_credito'])
+            ? $_POST['impuesto_sin_credito']
+            : null
+        ;
+        $DteRecibido->monto_activo_fijo = !empty($_POST['monto_activo_fijo'])
+            ? $_POST['monto_activo_fijo']
+            : null
+        ;
+        $DteRecibido->monto_iva_activo_fijo = !empty($_POST['monto_iva_activo_fijo'])
+            ? $_POST['monto_iva_activo_fijo']
+            : null
+        ;
+        $DteRecibido->iva_no_retenido = !empty($_POST['iva_no_retenido'])
+            ? $_POST['iva_no_retenido']
+            : null
+        ;
         $DteRecibido->periodo = !empty($_POST['periodo']) ? $_POST['periodo'] : null;
-        $DteRecibido->impuesto_puros = !empty($_POST['impuesto_puros']) ? $_POST['impuesto_puros'] : null;
-        $DteRecibido->impuesto_cigarrillos = !empty($_POST['impuesto_cigarrillos']) ? $_POST['impuesto_cigarrillos'] : null;
-        $DteRecibido->impuesto_tabaco_elaborado = !empty($_POST['impuesto_tabaco_elaborado']) ? $_POST['impuesto_tabaco_elaborado'] : null;
-        $DteRecibido->impuesto_vehiculos = !empty($_POST['impuesto_vehiculos']) ? $_POST['impuesto_vehiculos'] : null;
-        $DteRecibido->numero_interno = !empty($_POST['numero_interno']) ? $_POST['numero_interno'] : null;
+        $DteRecibido->impuesto_puros = !empty($_POST['impuesto_puros'])
+            ? $_POST['impuesto_puros']
+            : null
+        ;
+        $DteRecibido->impuesto_cigarrillos = !empty($_POST['impuesto_cigarrillos'])
+            ? $_POST['impuesto_cigarrillos']
+            : null
+        ;
+        $DteRecibido->impuesto_tabaco_elaborado = !empty($_POST['impuesto_tabaco_elaborado'])
+            ? $_POST['impuesto_tabaco_elaborado']
+            : null
+        ;
+        $DteRecibido->impuesto_vehiculos = !empty($_POST['impuesto_vehiculos'])
+            ? $_POST['impuesto_vehiculos']
+            : null
+        ;
+        $DteRecibido->numero_interno = !empty($_POST['numero_interno'])
+            ? $_POST['numero_interno']
+            : null
+        ;
         $DteRecibido->emisor_nc_nd_fc = isset($_POST['emisor_nc_nd_fc']) ? 1 : null;
-        $DteRecibido->sucursal_sii_receptor = !empty($_POST['sucursal_sii_receptor']) ? $_POST['sucursal_sii_receptor'] : null;
-        $DteRecibido->total = !empty($_POST['total']) ? $_POST['total'] : (int)$DteRecibido->exento + (int)$DteRecibido->neto + (int)$DteRecibido->iva + $impuesto_adicional_monto_total + (int)$DteRecibido->impuesto_sin_credito + (int)$DteRecibido->impuesto_puros + (int)$DteRecibido->impuesto_cigarrillos + (int)$DteRecibido->impuesto_tabaco_elaborado + (int)$DteRecibido->impuesto_vehiculos;
+        $DteRecibido->sucursal_sii_receptor = !empty($_POST['sucursal_sii_receptor'])
+            ? $_POST['sucursal_sii_receptor']
+            : null
+        ;
+        $DteRecibido->total = !empty($_POST['total'])
+            ? $_POST['total']
+            :
+                (int)$DteRecibido->exento
+                + (int)$DteRecibido->neto
+                + (int)$DteRecibido->iva
+                + $impuesto_adicional_monto_total
+                + (int)$DteRecibido->impuesto_sin_credito
+                + (int)$DteRecibido->impuesto_puros 
+                + (int)$DteRecibido->impuesto_cigarrillos 
+                + (int)$DteRecibido->impuesto_tabaco_elaborado 
+                + (int)$DteRecibido->impuesto_vehiculos
+        ;
         // si el DTE es de producción y es electrónico entonces se consultará su
         // estado antes de poder guardar, esto evitará agregar documentos que no
         // han sido recibidos en el SII o sus datos son incorrectos
-        if (!$Receptor->enCertificacion() && $DteRecibido->getTipo()->electronico && !$Receptor->config_recepcion_omitir_verificacion_sii) {
+        if (
+            !$Receptor->enCertificacion() 
+            && $DteRecibido->getTipo()->electronico 
+            && !$Receptor->config_recepcion_omitir_verificacion_sii
+        ) {
             // obtener firma
             $Firma = $Receptor->getFirma($this->Auth->User->id);
             if (!$Firma) {
@@ -260,8 +341,7 @@ class Controller_DteRecibidos extends \Controller_App
                     'No existe una firma electrónica asociada a la empresa que se pueda utilizar para guardar el documento. Se requiere para consultar el estado del documento al SII antes de que sea guardado. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
                     url('/dte/admin/firma_electronicas/agregar')
                 );
-                \sowerphp\core\Model_Datasource_Session::message($message, 'error'
-                );
+                \sowerphp\core\Model_Datasource_Session::message($message, 'error');
                 $this->redirect('/dte/admin/firma_electronicas/agregar');
             }
             // consultar estado dte
@@ -273,7 +353,7 @@ class Controller_DteRecibidos extends \Controller_App
                 return;
             } else if (in_array($estado['ESTADO'], ['DNK', 'FAU', 'FNA', 'EMP'])) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Estado DTE: '.(is_array($estado)?implode('. ', $estado):$estado), 'error'
+                    'Estado DTE: '.(is_array($estado) ? implode('. ', $estado) : $estado), 'error'
                 );
                 return;
             }
@@ -282,7 +362,7 @@ class Controller_DteRecibidos extends \Controller_App
         try {
             $DteRecibido->save();
             \sowerphp\core\Model_Datasource_Session::message(
-                'DTE recibido guardado', 'ok'
+                'DTE recibido guardado.', 'ok'
             );
             $this->redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
         } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
@@ -293,16 +373,20 @@ class Controller_DteRecibidos extends \Controller_App
     }
 
     /**
-     * Acción que permite eliminar un DTE recibido
-         * @version 2020-05-15
+     * Acción que permite eliminar un DTE recibido.
      */
     public function eliminar($emisor, $dte, $folio)
     {
         $Receptor = $this->getContribuyente();
-        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido(
+            (int)$emisor,
+            (int)$dte, 
+            (int)$folio, 
+            $Receptor->enCertificacion()
+        );
         if (!$DteRecibido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible eliminar, el DTE recibido solicitado no existe', 'warning'
+                'No fue posible eliminar, el DTE recibido solicitado no existe.', 'warning'
             );
         } else {
             $DteRecibido->delete();
@@ -314,24 +398,28 @@ class Controller_DteRecibidos extends \Controller_App
     }
 
     /**
-     * Acción que descarga el XML del documento recibido
-         * @version 2020-05-16
+     * Acción que descarga el XML del documento recibido.
      */
     public function xml($emisor, $dte, $folio)
     {
         $Receptor = $this->getContribuyente();
         // obtener DTE recibido
-        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido(
+            (int)$emisor, 
+            (int)$dte, 
+            (int)$folio, 
+            $Receptor->enCertificacion()
+        );
         if (!$DteRecibido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el DTE recibido solicitado', 'error'
+                'No existe el DTE recibido solicitado.', 'error'
             );
             $this->redirect('/dte/dte_recibidos/listar');
         }
         // si no tiene XML error
         if (!$DteRecibido->hasXML()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'El DTE no tiene XML asociado', 'error'
+                'El DTE no tiene XML asociado.', 'error'
             );
             $this->redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
         }
@@ -345,24 +433,28 @@ class Controller_DteRecibidos extends \Controller_App
     }
 
     /**
-     * Acción que descarga el JSON del documento recibido
-         * @version 2020-05-16
+     * Acción que descarga el JSON del documento recibido.
      */
     public function json($emisor, $dte, $folio)
     {
         $Receptor = $this->getContribuyente();
         // obtener DTE recibido
-        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido(
+            (int)$emisor, 
+            (int)$dte, 
+            (int)$folio, 
+            $Receptor->enCertificacion()
+        );
         if (!$DteRecibido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el DTE recibido solicitado', 'error'
+                'No existe el DTE recibido solicitado.', 'error'
             );
             $this->redirect('/dte/dte_recibidos/listar');
         }
         // si no tiene XML error
         if (!$DteRecibido->hasXML()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'El DTE no tiene XML asociado, no es posible obtener JSON', 'error'
+                'El DTE no tiene XML asociado, no es posible obtener JSON.', 'error'
             );
             $this->redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
         }
@@ -378,29 +470,47 @@ class Controller_DteRecibidos extends \Controller_App
     }
 
     /**
-     * Acción que permite descargar el PDF del documento recibido
-         * @version 2020-08-29
+     * Acción que permite descargar el PDF del documento recibido.
      */
     public function pdf($emisor, $dte, $folio, $cedible = false)
     {
         $Receptor = $this->getContribuyente();
         // obtener DTE recibido
-        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido(
+            (int)$emisor, 
+            (int)$dte, 
+            (int)$folio, 
+            $Receptor->enCertificacion()
+        );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible obtener el PDF, el DTE recibido solicitado no existe o bien no tiene intercambio asociado', 'error'
+                'No fue posible obtener el PDF, el DTE recibido solicitado no existe o bien no tiene intercambio asociado.', 'error'
             );
             $this->redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
         }
         // datos por defecto y recibidos por GET
         $formatoPDF = $DteRecibido->getEmisor()->getConfigPDF($DteRecibido);
         $config = $this->getQuery([
-            'cedible' => isset($_POST['copias_cedibles']) ? (int)(bool)$_POST['copias_cedibles'] : $cedible,
+            'cedible' => isset($_POST['copias_cedibles'])
+                ? (int)(bool)$_POST['copias_cedibles']
+                : $cedible
+            ,
             'compress' => false,
-            'copias_tributarias' => isset($_POST['copias_tributarias']) ? (int)$_POST['copias_tributarias'] : 1,
-            'copias_cedibles' => isset($_POST['copias_cedibles']) ? (int)$_POST['copias_cedibles'] : 1,
-            'formato' => isset($_POST['formato']) ? $_POST['formato'] : ( isset($_GET['formato']) ? $_GET['formato'] : $formatoPDF['formato'] ),
-            'papelContinuo' => isset($_POST['papelContinuo']) ? $_POST['papelContinuo'] : ( isset($_GET['papelContinuo']) ? $_GET['papelContinuo'] : $formatoPDF['papelContinuo'] ),
+            'copias_tributarias' => isset($_POST['copias_tributarias'])
+                ? (int)$_POST['copias_tributarias']
+                : 1
+            ,
+            'copias_cedibles' => isset($_POST['copias_cedibles'])
+                ? (int)$_POST['copias_cedibles']
+                : 1
+            ,
+            'formato' => isset($_POST['formato'])
+                ? $_POST['formato']
+                : (isset($_GET['formato']) ? $_GET['formato'] : $formatoPDF['formato'])
+            ,
+            'papelContinuo' => isset($_POST['papelContinuo'])
+                ? $_POST['papelContinuo']
+                : (isset($_GET['papelContinuo']) ? $_GET['papelContinuo'] : $formatoPDF['papelContinuo']),
         ]);
         // generar PDF
         try {
@@ -422,16 +532,20 @@ class Controller_DteRecibidos extends \Controller_App
 
     /**
      * Acción que permite usar la verificación avanzada de datos del DTE
-     * Permite validar firma con la enviada al SII
-         * @version 2020-05-16
+     * Permite validar firma con la enviada al SII.
      */
     public function verificar_datos_avanzado($emisor, $dte, $folio)
     {
         $Receptor = $this->getContribuyente();
         // obtener DTE recibido
-        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido(
+            (int)$emisor, 
+            (int)$dte, 
+            (int)$folio, 
+            $Receptor->enCertificacion()
+        );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
-            die('No fue posible obtener el PDF, el DTE recibido solicitado no existe o bien no tiene intercambio asociado');
+            die('No fue posible obtener el PDF, el DTE recibido solicitado no existe o bien no tiene intercambio asociado.');
         }
         $r = $this->consume('/api/dte/dte_recibidos/estado/'.$DteRecibido->emisor.'/'.$dte.'/'.$folio.'/'.$DteRecibido->receptor.'?avanzado=1');
         if ($r['status']['code'] != 200) {
@@ -448,8 +562,7 @@ class Controller_DteRecibidos extends \Controller_App
     }
 
     /**
-     * Acción de la API que permite obtener el PDF de un DTE recibido
-         * @version 2020-08-04
+     * Acción de la API que permite obtener el PDF de un DTE recibido.
      */
     public function _api_pdf_GET($emisor, $dte, $folio, $receptor)
     {
@@ -459,14 +572,19 @@ class Controller_DteRecibidos extends \Controller_App
         }
         $Receptor = new Model_Contribuyente($receptor);
         if (!$Receptor->exists()) {
-            $this->Api->send('Receptor no existe', 404);
+            $this->Api->send('Receptor no existe.', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/pdf')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
-        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido(
+            (int)$emisor, 
+            (int)$dte, 
+            (int)$folio, 
+            $Receptor->enCertificacion()
+        );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
-            $this->Api->send('No existe el documento recibido solicitado T'.$dte.'F'.$folio.' del emisor '.$emisor.' o no tiene XML asociado', 404);
+            $this->Api->send('No existe el documento recibido solicitado T'.$dte.'F'.$folio.' del emisor '.$emisor.' o no tiene XML asociado.', 404);
         }
         // datos por defecto
         $formatoPDF = $DteRecibido->getEmisor()->getConfigPDF($DteRecibido);
@@ -499,8 +617,7 @@ class Controller_DteRecibidos extends \Controller_App
     }
 
     /**
-     * Recurso de la API que descarga el código ESCPOS del DTE recibido
-         * @version 2020-06-14
+     * Recurso de la API que descarga el código ESCPOS del DTE recibido.
      */
     public function _api_escpos_GET($emisor, $dte, $folio, $receptor)
     {
@@ -512,12 +629,17 @@ class Controller_DteRecibidos extends \Controller_App
         // crear receptor y verificar permisos
         $Receptor = new Model_Contribuyente($receptor);
         if (!$Receptor->usuario) {
-            $this->Api->send('Receptor no está registrado en la aplicación', 404);
+            $this->Api->send('Receptor no está registrado en la aplicación.', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/escpos')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
-        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido(
+            (int)$emisor, 
+            (int)$dte, 
+            (int)$folio, 
+            $Receptor->enCertificacion()
+        );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
             $this->Api->send('No existe el documento recibido solicitado T'.$dte.'F'.$folio.' del emisor '.$emisor, 404);
         }
@@ -552,8 +674,7 @@ class Controller_DteRecibidos extends \Controller_App
     }
 
     /**
-     * Acción de la API que permite obtener el XML de un DTE recibido
-         * @version 2020-06-16
+     * Acción de la API que permite obtener el XML de un DTE recibido.
      */
     public function _api_xml_GET($emisor, $dte, $folio, $receptor)
     {
@@ -563,21 +684,25 @@ class Controller_DteRecibidos extends \Controller_App
         }
         $Receptor = new Model_Contribuyente($receptor);
         if (!$Receptor->exists()) {
-            $this->Api->send('Receptor no existe', 404);
+            $this->Api->send('Receptor no existe.', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/xml')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
-        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido(
+            (int)$emisor, 
+            (int)$dte, 
+            (int)$folio, 
+            $Receptor->enCertificacion()
+        );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
-            $this->Api->send('No existe el documento recibido solicitado T'.$dte.'F'.$folio.' del emisor '.$emisor.' o no tiene XML asociado', 404);
+            $this->Api->send('No existe el documento recibido solicitado T'.$dte.'F'.$folio.' del emisor '.$emisor.' o no tiene XML asociado.', 404);
         }
         return base64_encode($DteRecibido->getXML());
     }
 
     /**
-     * Acción de la API que permite consultar el estado del envío del DTE al SII
-         * @version 2020-02-21
+     * Acción de la API que permite consultar el estado del envío del DTE al SII.
      */
     public function _api_estado_GET($emisor, $dte, $folio, $receptor)
     {
@@ -588,7 +713,7 @@ class Controller_DteRecibidos extends \Controller_App
         }
         $Receptor = new Model_Contribuyente($receptor);
         if (!$Receptor->exists()) {
-            $this->Api->send('Receptor no existe', 404);
+            $this->Api->send('Receptor no existe.', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/xml')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
@@ -597,34 +722,37 @@ class Controller_DteRecibidos extends \Controller_App
         if (!$Firma) {
             $this->Api->send('No existe firma asociada.', 506);
         }
-        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido(
+            (int)$emisor, 
+            (int)$dte, 
+            (int)$folio, 
+            $Receptor->enCertificacion()
+        );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
             $this->Api->send('No existe el documento recibido solicitado T'.$dte.'F'.$folio.' del emisor '.$emisor, 404);
         }
         if (!$DteRecibido->getDte()) {
-            $this->Api->send('El documento T'.$dte.'F'.$folio.' del emisor '.$DteRecibido->getEmisor()->getRUT().' no tiene XML en LibreDTE', 400);
+            $this->Api->send('El documento T'.$dte.'F'.$folio.' del emisor '.$DteRecibido->getEmisor()->getRUT().' no tiene XML en LibreDTE.', 400);
         }
         \sasco\LibreDTE\Sii::setAmbiente($Receptor->enCertificacion());
-        return $avanzado ? $DteRecibido->getDte()->getEstadoAvanzado($Firma) : $DteRecibido->getDte()->getEstado($Firma);
+        return $avanzado
+            ? $DteRecibido->getDte()->getEstadoAvanzado($Firma)
+            : $DteRecibido->getDte()->getEstado($Firma)
+        ;
     }
 
     /**
-     * Acción de la API que permite obtener la información de un documento recibido
-         * @version 2020-02-22
+     * Acción de la API que permite obtener la información de un documento recibido.
      */
     public function _api_info_GET($emisor, $dte, $folio, $receptor)
     {
-        if ($this->Auth->User) {
-            $User = $this->Auth->User;
-        } else {
-            $User = $this->Api->getAuthUser();
-            if (is_string($User)) {
-                $this->Api->send($User, 401);
-            }
+        $User = $this->Api->getAuthUser();
+        if (is_string($User)) {
+            $this->Api->send($User, 401);
         }
         $Receptor = new Model_Contribuyente($receptor);
         if (!$Receptor->exists()) {
-            $this->Api->send('Receptor no existe', 404);
+            $this->Api->send('Receptor no existe.', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/ver')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
@@ -632,11 +760,16 @@ class Controller_DteRecibidos extends \Controller_App
         if (strpos($emisor, '-')) {
             $emisor = \sowerphp\app\Utility_Rut::normalizar($emisor);
         }
-        $DteRecibido = new Model_DteRecibido((int)$emisor, (int)$dte, (int)$folio, $Receptor->enCertificacion());
+        $DteRecibido = new Model_DteRecibido(
+            (int)$emisor, 
+            (int)$dte, 
+            (int)$folio, 
+            $Receptor->enCertificacion()
+        );
         if (!$DteRecibido->exists()) {
             $this->Api->send('No existe el documento recibido solicitado T'.$dte.'F'.$folio, 404);
         }
-        if ($DteRecibido->receptor!=$Receptor->rut) {
+        if ($DteRecibido->receptor != $Receptor->rut) {
             $this->Api->send('RUT del receptor no corresponde al DTE T'.$dte.'F'.$folio, 400);
         }
         extract($this->getQuery([
@@ -663,14 +796,14 @@ class Controller_DteRecibidos extends \Controller_App
 
     /**
      * Acción que permite realizar una búsqueda avanzada dentro de los DTE
-     * recibidos
-         * @version 2021-10-12
+     * recibidos.
      */
     public function buscar()
     {
         $Receptor = $this->getContribuyente();
         $this->set([
-            'tipos_dte' => (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->getList(),
+            'Receptor' => $Receptor,
+            'tipos_dte' => (new Model_DteTipos())->getList(),
         ]);
         if (isset($_POST['submit'])) {
             $rest = new \sowerphp\core\Network_Http_Rest();
@@ -691,7 +824,6 @@ class Controller_DteRecibidos extends \Controller_App
             }
             else {
                 $this->set([
-                    'Receptor' => $Receptor,
                     'documentos' => $response['body'],
                 ]);
             }
@@ -700,8 +832,7 @@ class Controller_DteRecibidos extends \Controller_App
 
     /**
      * Acción de la API que permite realizar una búsqueda avanzada dentro de los
-     * DTE recibidos
-         * @version 2019-07-02
+     * DTE recibidos.
      */
     public function _api_buscar_POST($receptor)
     {
@@ -713,19 +844,19 @@ class Controller_DteRecibidos extends \Controller_App
         // verificar permisos del usuario autenticado sobre el receptor del DTE
         $Receptor = new Model_Contribuyente($receptor);
         if (!$Receptor->exists()) {
-            $this->Api->send('Receptor no existe', 404);
+            $this->Api->send('Receptor no existe.', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/buscar')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // buscar documentos
-        $this->Api->send($Receptor->getDocumentosRecibidos($this->Api->data, true), 200);
+        $documentos = $Receptor->getDocumentosRecibidos($this->Api->data, true);
+        $this->Api->send($documentos, 200);
     }
 
     /**
      * Acción de la API que permite buscar dentro de los documentos recibidos
-     * @deprecated Este método se debe dejar de usar y será reemplazado con la versión por POST
-         * @version 2017-01-11
+     * @deprecated Este método se debe dejar de usar y será reemplazado con la versión por POST (existe en doc API).
      */
     public function _api_buscar_GET($receptor)
     {
@@ -736,7 +867,7 @@ class Controller_DteRecibidos extends \Controller_App
         }
         $Receptor = new Model_Contribuyente($receptor);
         if (!$Receptor->exists()) {
-            $this->Api->send('Receptor no existe', 404);
+            $this->Api->send('Receptor no existe.', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/listar')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
@@ -752,10 +883,10 @@ class Controller_DteRecibidos extends \Controller_App
             'total_hasta' => null,
             'total' => null,
         ]);
-        $documentos = (new Model_DteRecibidos())->setContribuyente($Receptor)->buscar($filtros);
-        if (!$documentos) {
-            $this->Api->send('No se encontraron documentos', 404);
-        }
+        $documentos = (new Model_DteRecibidos())
+            ->setContribuyente($Receptor)
+            ->buscar($filtros)
+        ;
         $this->Api->send($documentos, 200);
     }
 

@@ -123,8 +123,7 @@ class Model_DteCaf extends \Model_App
     ); ///< Namespaces que utiliza esta clase
 
     /**
-     * Método que entrega el objeto del contribuyente asociado al mantenedor de folios
-         * @version 2018-05-18
+     * Método que entrega el objeto del contribuyente asociado al mantenedor de folios.
      */
     public function getEmisor()
     {
@@ -132,8 +131,7 @@ class Model_DteCaf extends \Model_App
     }
 
     /**
-     * Método que entrega el objeto del CAF
-         * @version 2023-08-25
+     * Método que entrega el objeto del CAF.
      */
     public function getCAF()
     {
@@ -153,8 +151,7 @@ class Model_DteCaf extends \Model_App
     }
 
     /**
-     * Método que entrega el XML del archivo CAF desencriptado
-         * @version 2016-08-24
+     * Método que entrega el XML del archivo CAF desencriptado.
      */
     public function getXML()
     {
@@ -164,8 +161,7 @@ class Model_DteCaf extends \Model_App
 
     /**
      * Método que entrega los folios en SII con cierto estado
-     * @param estado String recibidos, anulados o pendientes
-         * @version 2020-01-26
+     * @param estado String recibidos, anulados o pendientes.
      */
     private function getFoliosByEstadoSII($estado)
     {
@@ -173,7 +169,7 @@ class Model_DteCaf extends \Model_App
         $Emisor = $this->getEmisor();
         $Firma = $Emisor->getFirma();
         if (!$Firma) {
-            throw new \Exception('No hay firma electrónica');
+            throw new \Exception('No hay firma electrónica.');
         }
         // solicitar listado de folios según estado
         $r = apigateway_consume(
@@ -194,8 +190,7 @@ class Model_DteCaf extends \Model_App
     }
 
     /**
-     * Método que entrega los folios en SII con estado recibidos
-         * @version 2018-05-18
+     * Método que entrega los folios en SII con estado recibidos.
      */
     public function getFoliosRecibidos()
     {
@@ -203,8 +198,7 @@ class Model_DteCaf extends \Model_App
     }
 
     /**
-     * Método que entrega los folios en SII con estado anulados
-         * @version 2018-05-18
+     * Método que entrega los folios en SII con estado anulados.
      */
     public function getFoliosAnulados()
     {
@@ -212,8 +206,7 @@ class Model_DteCaf extends \Model_App
     }
 
     /**
-     * Método que entrega los folios en SII con estado pendientes
-         * @version 2018-05-18
+     * Método que entrega los folios en SII con estado pendientes.
      */
     public function getFoliosPendientes()
     {
@@ -222,8 +215,7 @@ class Model_DteCaf extends \Model_App
 
     /**
      * Método que indica si alguno de los folios de este CAF han sido o no usados
-     * para emitir algún DTE en LibreDTE
-         * @version 2021-05-18
+     * para emitir algún DTE en LibreDTE.
      */
     public function usado()
     {
@@ -245,8 +237,7 @@ class Model_DteCaf extends \Model_App
     }
 
     /**
-     * Método que entrega el objeto del tipo de DTE asociado al folio
-         * @version 2021-05-18
+     * Método que entrega el objeto del tipo de DTE asociado al folio.
      */
     public function getTipo()
     {

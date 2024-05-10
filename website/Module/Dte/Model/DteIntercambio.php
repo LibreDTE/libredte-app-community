@@ -24,6 +24,8 @@
 // namespace del modelo
 namespace website\Dte;
 
+use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+
 /**
  * Clase para mapear la tabla dte_intercambio de la base de datos.
  */
@@ -302,12 +304,11 @@ class Model_DteIntercambio extends \Model_App
     ); ///< Namespaces que utiliza esta clase
 
     /**
-     * Método que indica si ya existe previamente el documento (mismo archivo)
-         * @version 2018-05-20
+     * Método que indica si ya existe previamente el documento (mismo archivo).
      */
-    private function existeArchivo()
+    private function existeArchivo(): bool
     {
-        return (bool)$this->db->getValue('
+        return (bool)(int)$this->db->getValue('
             SELECT COUNT(*)
             FROM dte_intercambio
             WHERE
@@ -324,8 +325,7 @@ class Model_DteIntercambio extends \Model_App
     }
 
     /**
-     * Método que guarda el enviodte que se ha recibido desde otro contribuyente
-         * @version 2018-05-20
+     * Método que guarda el enviodte que se ha recibido desde otro contribuyente.
      */
     public function save()
     {
@@ -343,7 +343,10 @@ class Model_DteIntercambio extends \Model_App
                 SELECT MAX(codigo)
                 FROM dte_intercambio
                 WHERE receptor = :receptor AND certificacion = :certificacion
-            ', [':receptor' => $this->receptor, 'certificacion' => $this->certificacion]) + 1;
+            ', [
+                ':receptor' => $this->receptor,
+                'certificacion' => $this->certificacion,
+            ]) + 1;
             try {
                 $status = parent::save();
                 $this->db->commit();
@@ -358,11 +361,10 @@ class Model_DteIntercambio extends \Model_App
     }
 
     /**
-     * Método que entrega el objeto EnvioDte
+     * Método que entrega el objeto EnvioDte.
      * @return \sasco\LibreDTE\Sii\EnvioDte
-         * @version 2015-09-28
      */
-    public function getEnvioDte()
+    public function getEnvioDte(): \sasco\LibreDTE\Sii\EnvioDte
     {
         if (!isset($this->EnvioDte)) {
             $this->EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
@@ -372,9 +374,8 @@ class Model_DteIntercambio extends \Model_App
     }
 
     /**
-     * Método que entrega un arreglo con los objetos Dte con los documentos
-     * @return Arreglo de \sasco\LibreDTE\Sii\Dte
-         * @version 2016-11-21
+     * Método que entrega un arreglo con los objetos Dte con los documentos.
+     * @return array Arreglo de \sasco\LibreDTE\Sii\Dte
      */
     public function getDocumentos()
     {
@@ -385,18 +386,16 @@ class Model_DteIntercambio extends \Model_App
     }
 
     /**
-     * Método que entrega un objetos Dte con el documento solicitado o false si no se encontró
+     * Método que entrega un objetos Dte con el documento solicitado o false si no se encontró.
      * @return \sasco\LibreDTE\Sii\Dte
-         * @version 2016-11-21
      */
-    public function getDocumento($emisor, $dte, $folio)
+    public function getDocumento($emisor, $dte, $folio): \sasco\LibreDTE\Sii\Dte
     {
         return $this->getEnvioDte()->getDocumento($emisor, $dte, $folio);
     }
 
     /**
-     * Método que entrega el objeto del receptor del intercambio
-         * @version 2018-05-20
+     * Método que entrega el objeto del receptor del intercambio.
      */
     public function getReceptor()
     {
@@ -407,8 +406,7 @@ class Model_DteIntercambio extends \Model_App
     }
 
     /**
-     * Método que entrega el objeto del emisor del intercambio
-         * @version 2015-09-28
+     * Método que entrega el objeto del emisor del intercambio.
      */
     public function getEmisor()
     {
@@ -424,8 +422,7 @@ class Model_DteIntercambio extends \Model_App
     }
 
     /**
-     * Método que entrega el objeto del estado del intercambio
-         * @version 2015-09-27
+     * Método que entrega el objeto del estado del intercambio.
      */
     public function getEstado()
     {
@@ -436,9 +433,8 @@ class Model_DteIntercambio extends \Model_App
     }
 
     /**
-     * Método que entrega el asunto del correo del intercambio
-     * Se recomienda usar este método para tratar de obtener el texto en la codificación correcta
-         * @version 2021-10-12
+     * Método que entrega el asunto del correo del intercambio.
+     * Se recomienda usar este método para tratar de obtener el texto en la codificación correcta.
      */
     public function getEmailAsunto()
     {
@@ -449,9 +445,8 @@ class Model_DteIntercambio extends \Model_App
     }
 
     /**
-     * Método que entrega el contenido del correo del intercambio en TXT
-     * Se recomienda usar este método para tratar de obtener el texto en la codificación correcta
-         * @version 2021-10-14
+     * Método que entrega el contenido del correo del intercambio en TXT.
+     * Se recomienda usar este método para tratar de obtener el texto en la codificación correcta.
      */
     public function getEmailTxt()
     {
@@ -466,9 +461,8 @@ class Model_DteIntercambio extends \Model_App
     }
 
     /**
-     * Método que entrega el contenido del correo del intercambio en HTML
-     * Se recomienda usar este método para tratar de obtener el texto en la codificación correcta
-         * @version 2021-10-12
+     * Método que entrega el contenido del correo del intercambio en HTML.
+     * Se recomienda usar este método para tratar de obtener el texto en la codificación correcta.
      */
     public function getEmailHtml()
     {
@@ -483,8 +477,7 @@ class Model_DteIntercambio extends \Model_App
     }
 
     /**
-     * Método que indica si intercambio se encuentra asociado a un DTE recibido
-         * @version 2018-05-21
+     * Método que indica si intercambio se encuentra asociado a un DTE recibido.
      */
     public function recibido()
     {
@@ -492,12 +485,16 @@ class Model_DteIntercambio extends \Model_App
             SELECT COUNT(*)
             FROM dte_recibido
             WHERE receptor = :receptor AND emisor = :emisor AND certificacion = :certificacion AND intercambio = :intercambio
-        ', [':receptor' => $this->receptor, ':emisor' => $this->emisor, ':certificacion' => (int)$this->certificacion, ':intercambio' => $this->codigo]);
+        ', [
+            ':receptor' => $this->receptor,
+            ':emisor' => $this->emisor,
+            ':certificacion' => (int)$this->certificacion,
+            ':intercambio' => $this->codigo,
+        ]);
     }
 
     /**
-     * Método que busca si los documentos del intercambio ya están en otro intercambio previamente recibido
-         * @version 2018-05-20
+     * Método que busca si los documentos del intercambio ya están en otro intercambio previamente recibido.
      */
     public function recibidoPreviamente()
     {
@@ -509,9 +506,16 @@ class Model_DteIntercambio extends \Model_App
         $documentos = $this->getDocumentos();
         $n_documentos = count($documentos);
         $existen = 0;
-        $DteIntercambios = (new Model_DteIntercambios())->setContribuyente($this->getReceptor());
+        $DteIntercambios = (new Model_DteIntercambios())
+            ->setContribuyente($this->getReceptor())
+        ;
         foreach ($documentos as $Dte) {
-            if ($DteIntercambios->buscarIntercambiosDte(substr($Dte->getEmisor(),0,-2), $Dte->getTipo(), $Dte->getFolio())) {
+            $docs = $DteIntercambios->buscarIntercambiosDte(
+                substr($Dte->getEmisor(), 0, -2),
+                $Dte->getTipo(),
+                $Dte->getFolio()
+            );
+            if ($docs) {
                 $existen++;
             }
         }
@@ -526,8 +530,7 @@ class Model_DteIntercambio extends \Model_App
 
     /**
      * Método para procesar el intercambio de manera automática si es que así
-     * está configurado
-         * @version 2018-05-21
+     * está configurado.
      */
     public function procesarRespuestaAutomatica($silenciosa = true)
     {
@@ -586,9 +589,8 @@ class Model_DteIntercambio extends \Model_App
 
     /**
      * Método que genera y envía la respuesta del intercambio
-     * @param accion =true recibir todo el intercambio, =false reclama todo el intercambio, =array procesa los documentos indicados, debe tener índice recibir y/o reclamar o bien indíce númerico y se asume es el listado de documentos
-     * @param config Configuración global para la respuesta con índices: user_id, NmbContacto, MailContacto, sucursal, Recinto, responder_a, periodo
-         * @version 2021-08-25
+     * @param accion =true recibir todo el intercambio, =false reclama todo el intercambio, =array procesa los documentos indicados, debe tener índice recibir y/o reclamar o bien indíce númerico y se asume es el listado de documentos.
+     * @param config Configuración global para la respuesta con índices: user_id, NmbContacto, MailContacto, sucursal, Recinto, responder_a, periodo.
      */
     public function responder($accion, array $config = [])
     {
@@ -599,7 +601,10 @@ class Model_DteIntercambio extends \Model_App
             'MailContacto' => $this->getReceptor()->getUsuario()->email,
             'sucursal' => 0,
             'Recinto' => $this->getReceptor()->direccion.', '.$this->getReceptor()->getComuna()->comuna,
-            'responder_a' => $this->getEmisor()->config_email_intercambio_user ? $this->getEmisor()->config_email_intercambio_user : $this->de,
+            'responder_a' => $this->getEmisor()->config_email_intercambio_user
+                ? $this->getEmisor()->config_email_intercambio_user
+                : $this->de
+            ,
             'periodo' => date('Ym'),
         ], $config);
         // obtener firma
@@ -639,7 +644,7 @@ class Model_DteIntercambio extends \Model_App
         }
         // si no es arreglo o faltan ambos índices aceptar o reclamar -> error
         else if (!is_array($accion) || (empty($accion['recibir']) && empty($accion['reclamar']))) {
-            throw new \Exception('Acción no válida para responder el intercambio');
+            throw new \Exception('Acción no válida para responder el intercambio.');
         }
         // armar un único arreglo con los documentos a procesar
         if (empty($documentos)) {
@@ -650,7 +655,7 @@ class Model_DteIntercambio extends \Model_App
                         $doc['EstadoRecepDTE'] = 'ERM';
                     }
                     if (empty($doc['RecepDTEGlosa'])) {
-                        $doc['RecepDTEGlosa'] = 'Otorga recibo de mercaderías o servicios';
+                        $doc['RecepDTEGlosa'] = 'Otorga recibo de mercaderías o servicios.';
                     }
                 }
                 $documentos = array_merge($documentos, $accion['recibir']);
@@ -661,7 +666,7 @@ class Model_DteIntercambio extends \Model_App
                         $doc['EstadoRecepDTE'] = 'RCD';
                     }
                     if (empty($doc['RecepDTEGlosa'])) {
-                        $doc['RecepDTEGlosa'] = 'Reclamo al contenido del documento';
+                        $doc['RecepDTEGlosa'] = 'Reclamo al contenido del documento.';
                     }
                 }
                 $documentos = array_merge($documentos, $accion['reclamar']);
@@ -672,7 +677,7 @@ class Model_DteIntercambio extends \Model_App
         foreach ($documentos as &$dte) {
             // validar datos requeridos
             if (empty($dte['TipoDTE']) || empty($dte['Folio'])) {
-                throw new \Exception('Falta tipo o folio del DTE');
+                throw new \Exception('Falta tipo o folio del DTE.');
             }
             // si no están los ruts se agregan
             // WARNING si el EnvioDTE pudiese contener más de un emisor de DTE
@@ -690,7 +695,7 @@ class Model_DteIntercambio extends \Model_App
             // verificar que el DTE solicitado exista en el envío
             $Dte = $this->getDocumento($dte['RUTEmisor'], $dte['TipoDTE'], $dte['Folio']);
             if (!$Dte) {
-                throw new \Exception('DTE T'.$dte['TipoDTE'].'F'.$dte['Folio'].' no existe en el intercambio');
+                throw new \Exception('DTE T'.$dte['TipoDTE'].'F'.$dte['Folio'].' no existe en el intercambio.');
             }
             // agregar datos que no están pero que se pueden buscar en el documento de intercambio
             if (empty($dte['FchEmis']) || !isset($dte['MntTotal'])) {
@@ -723,8 +728,14 @@ class Model_DteIntercambio extends \Model_App
         } else {
             $this->estado = 0; // estado "mentiroso" podría ser rechazo de un DTE 43 y quedar ok (=> se borra el intercambio)
         }
-        $this->recibos_xml = $xmlEnvioRecibos ? base64_encode($xmlEnvioRecibos) : null;
-        $this->resultado_xml = $xmlResultadoDte ? base64_encode($xmlResultadoDte) : null;
+        $this->recibos_xml = $xmlEnvioRecibos
+            ? base64_encode($xmlEnvioRecibos)
+            : null
+        ;
+        $this->resultado_xml = $xmlResultadoDte
+            ? base64_encode($xmlResultadoDte)
+            : null
+        ;
         $this->fecha_hora_respuesta = date('Y-m-d H:i:s');
         $this->usuario = $config['user_id'];
         $this->save();
@@ -737,8 +748,7 @@ class Model_DteIntercambio extends \Model_App
     }
 
     /**
-     * Método que crea el XML RecepcionDTE
-         * @version 2020-08-06
+     * Método que crea el XML RecepcionDTE.
      */
     private function crearXmlRecepcionDte($documentos, $config, $Firma)
     {
@@ -777,7 +787,10 @@ class Model_DteIntercambio extends \Model_App
             'RutEmisor' => $EnvioDte->getEmisor(),
             'RutReceptor' => $EnvioDte->getReceptor(),
             'EstadoRecepEnv' => $EstadoRecepEnv,
-            'RecepEnvGlosa' => !$EstadoRecepEnv ? 'EnvioDTE recibido' : 'No se aceptaron los DTE del EnvioDTE',
+            'RecepEnvGlosa' => !$EstadoRecepEnv
+                ? 'EnvioDTE recibido.'
+                : 'No se aceptaron los DTE del EnvioDTE.'
+            ,
             'NroDTE' => count($RecepcionDTE),
             'RecepcionDTE' => $RecepcionDTE,
         ]);
@@ -800,8 +813,7 @@ class Model_DteIntercambio extends \Model_App
     }
 
     /**
-     * Método que crea el XML EnvioRecibos
-         * @version 2020-08-06
+     * Método que crea el XML EnvioRecibos.
      */
     private function crearXmlEnvioRecibos($documentos, $config, $Firma)
     {
@@ -846,8 +858,7 @@ class Model_DteIntercambio extends \Model_App
     }
 
     /**
-     * Método que crea el XML ResultadoDTE
-         * @version 2020-08-06
+     * Método que crea el XML ResultadoDTE.
      */
     private function crearXmlResultadoDte($documentos, $config, $Firma)
     {
@@ -891,8 +902,7 @@ class Model_DteIntercambio extends \Model_App
     }
 
     /**
-     * Método que envía los 3 XML (si existen) por correo electrónico al emisor del intercambio
-         * @version 2018-05-20
+     * Método que envía los 3 XML (si existen) por correo electrónico al emisor del intercambio.
      */
     private function enviarEmailRespuestaXML($responder_a, $xmlRecepcionDte, $xmlEnvioRecibos, $xmlResultadoDte)
     {
@@ -912,8 +922,7 @@ class Model_DteIntercambio extends \Model_App
     }
 
     /**
-     * Método que permite ingresar las acciones (respuestas) al registro de compras del SII
-         * @version 2018-05-20
+     * Método que permite ingresar las acciones (respuestas) al registro de compras del SII.
      */
     private function enviarRespuestaSII($documentos, $Firma)
     {
@@ -926,7 +935,13 @@ class Model_DteIntercambio extends \Model_App
         foreach ($documentos as $dte) {
             if (in_array($dte['TipoDTE'], array_keys(\sasco\LibreDTE\Sii\RegistroCompraVenta::$dtes))) {
                 list($emisor_rut, $emisor_dv) = explode('-', $dte['RUTEmisor']);
-                $r = $RCV->ingresarAceptacionReclamoDoc($emisor_rut, $emisor_dv, $dte['TipoDTE'], $dte['Folio'], $dte['EstadoRecepDTE']);
+                $r = $RCV->ingresarAceptacionReclamoDoc(
+                    $emisor_rut,
+                    $emisor_dv,
+                    $dte['TipoDTE'],
+                    $dte['Folio'],
+                    $dte['EstadoRecepDTE']
+                );
                 $resultado['estado'][] = 'T'.$dte['TipoDTE'].'F'.$dte['Folio'].': '.$r['glosa'];
                 if (!$r['codigo']) {
                     $resultado['accion']['T'.$dte['TipoDTE'].'F'.$dte['Folio']] = $dte['EstadoRecepDTE'];
@@ -937,8 +952,7 @@ class Model_DteIntercambio extends \Model_App
     }
 
     /**
-     * Método que guarda los documentos que han sido aceptados (con acuse de recibo)
-         * @version 2020-10-02
+     * Método que guarda los documentos que han sido aceptados (con acuse de recibo).
      */
     private function guardarDocumentosRecibidos(array $guardar_dte, array $rc_accion, array $config)
     {
@@ -963,7 +977,7 @@ class Model_DteIntercambio extends \Model_App
                     }
                 }
                 if (!empty($emisor['CmnaOrigen'])) {
-                    $comuna = (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->getComunaByName($emisor['CmnaOrigen']);
+                    $comuna = (new Model_Comunas())->getComunaByName($emisor['CmnaOrigen']);
                     if ($comuna) {
                         $EmisorIntercambio->direccion = $emisor['DirOrigen'];
                         $EmisorIntercambio->comuna = $comuna;
@@ -982,8 +996,16 @@ class Model_DteIntercambio extends \Model_App
                 if (in_array($dte_id, $guardar_dte)) {
                     // procesar DTE recibido
                     $resumen = $Dte->getResumen();
-                    $DteRecibido = new Model_DteRecibido($this->getEmisor()->rut, $resumen['TpoDoc'], $resumen['NroDoc'], (int)$this->certificacion);
-                    $DteRecibido->rcv_accion = !empty($rc_accion[$dte_id]) ? $rc_accion[$dte_id] : ($DteRecibido->rcv_accion ? $DteRecibido->rcv_accion : '000');
+                    $DteRecibido = new Model_DteRecibido(
+                        $this->getEmisor()->rut,
+                        $resumen['TpoDoc'],
+                        $resumen['NroDoc'],
+                        (int)$this->certificacion
+                    );
+                    $DteRecibido->rcv_accion = !empty($rc_accion[$dte_id])
+                        ? $rc_accion[$dte_id]
+                        : ($DteRecibido->rcv_accion ? $DteRecibido->rcv_accion : '000')
+                    ;
                     if (!$DteRecibido->exists()) {
                         $DteRecibido->receptor = $this->getReceptor()->rut;
                         $DteRecibido->tasa = (int)$resumen['TasaImp'];
@@ -1025,12 +1047,21 @@ class Model_DteIntercambio extends \Model_App
                             $DteRecibido->impuesto_adicional = [];
                             $impuesto_sin_credito = 0;
                             foreach ($datos['Encabezado']['Totales']['ImptoReten'] as $ia) {
-                                if ($this->getReceptor()->config_extra_impuestos_sin_credito && in_array($ia['TipoImp'], $this->getReceptor()->config_extra_impuestos_sin_credito)) {
+                                if (
+                                    $this->getReceptor()->config_extra_impuestos_sin_credito
+                                    && in_array(
+                                        $ia['TipoImp'],
+                                        $this->getReceptor()->config_extra_impuestos_sin_credito
+                                    )
+                                ) {
                                     $impuesto_sin_credito += $ia['MontoImp'];
                                 } else {
                                     $DteRecibido->impuesto_adicional[] = [
                                         'codigo' => $ia['TipoImp'],
-                                        'tasa' => !empty($ia['TasaImp']) ? $ia['TasaImp'] : null,
+                                        'tasa' => !empty($ia['TasaImp'])
+                                            ? $ia['TasaImp']
+                                            : null
+                                        ,
                                         'monto' => $ia['MontoImp'],
                                     ];
                                 }
@@ -1063,8 +1094,7 @@ class Model_DteIntercambio extends \Model_App
     /**
      * Método que entrega el PDF del intercambio.
      * Entrega un PDF con todos los documentos del intercambio o bien puede
-     * entregar el PDF de un DTE específico que venga en el intercambio
-         * @version 2021-05-07
+     * entregar el PDF de un DTE específico que venga en el intercambio.
      */
     public function getPDF(array $config = [])
     {
@@ -1099,9 +1129,13 @@ class Model_DteIntercambio extends \Model_App
             $options = [
                 'documento' => $datos['Encabezado']['IdDoc']['TipoDTE'],
                 'actividad' => !empty($datos['Encabezado']['Emisor']['Acteco'])
-                                ? $datos['Encabezado']['Emisor']['Acteco'] : '*',
+                    ? $datos['Encabezado']['Emisor']['Acteco']
+                    : '*'
+                ,
                 'sucursal' => !empty($datos['Encabezado']['Emisor']['CdgSIISucur'])
-                                ? $datos['Encabezado']['Emisor']['CdgSIISucur'] : '*',
+                    ? $datos['Encabezado']['Emisor']['CdgSIISucur']
+                    : '*'
+                ,
             ];
             unset($Documento);
             unset($datos);
@@ -1122,13 +1156,23 @@ class Model_DteIntercambio extends \Model_App
             'copias_cedibles' => 1,
             'xml' => $xml,
             'caratula' => [
-                'FchResol' => $this->certificacion ? $this->getEmisor()->config_ambiente_certificacion_fecha : $this->getEmisor()->config_ambiente_produccion_fecha,
-                'NroResol' => $this->certificacion ? 0 : $this->getEmisor()->config_ambiente_produccion_numero,
+                'FchResol' => $this->certificacion
+                    ? $this->getEmisor()->config_ambiente_certificacion_fecha
+                    : $this->getEmisor()->config_ambiente_produccion_fecha
+                ,
+                'NroResol' => $this->certificacion
+                    ? 0
+                    : $this->getEmisor()->config_ambiente_produccion_numero
+                ,
             ],
             'hash' => $this->getReceptor()->getUsuario()->hash,
         ];
-        $default_config = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($default_config, $config_emisor);
-        $config = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($default_config, $config);
+        $default_config = \sowerphp\core\Utility_Array::mergeRecursiveDistinct(
+            $default_config, $config_emisor
+        );
+        $config = \sowerphp\core\Utility_Array::mergeRecursiveDistinct(
+            $default_config, $config
+        );
         // consultar servicio web del contribuyente
         $ApiDtePdfClient = $this->getEmisor()->getApiClient('dte_pdf');
         if ($ApiDtePdfClient) {
@@ -1138,8 +1182,11 @@ class Model_DteIntercambio extends \Model_App
         // crear a partir de formato de PDF no estándar
         else if ($config['formato'] != 'estandar') {
             $apps = $this->getEmisor()->getApps('dtepdfs');
-            if (empty($apps[$config['formato']]) || empty($apps[$config['formato']]->getConfig()->disponible)) {
-                throw new \Exception('Formato de PDF '.$config['formato'].' no se encuentra disponible', 400);
+            if (
+                empty($apps[$config['formato']])
+                || empty($apps[$config['formato']]->getConfig()->disponible)
+            ) {
+                throw new \Exception('Formato de PDF '.$config['formato'].' no se encuentra disponible.', 400);
             }
             $response = $apps[$config['formato']]->generar($config);
         }
@@ -1163,14 +1210,19 @@ class Model_DteIntercambio extends \Model_App
 
     /**
      * Método que prueba el XML para corroborar eventual problema por archivo
-     * con codificación errónea
-         * @version 2022-11-16
+     * con codificación errónea.
      */
     public function testXML()
     {
-        $filtros = ['codigo' => $this->codigo, 'soloPendientes' => false];
+        $filtros = [
+            'codigo' => $this->codigo,
+            'soloPendientes' => false,
+        ];
         try {
-            $docs = (new Model_DteIntercambios())->setContribuyente($this->getReceptor())->getDocumentos($filtros);
+            $docs = (new Model_DteIntercambios())
+                ->setContribuyente($this->getReceptor())
+                ->getDocumentos($filtros)
+            ;
             return true;
         } catch (\Exception $e) {
             return $e->getMessage();
@@ -1178,12 +1230,14 @@ class Model_DteIntercambio extends \Model_App
     }
 
     /**
-     * Método que indica si el intercambio es el último (según código)
-         * @version 2022-11-16
+     * Método que indica si el intercambio es el último (según código).
      */
-    public function esUltimoIntercambio()
+    public function esUltimoIntercambio(): bool
     {
-        $ultimo_codigo = (new Model_DteIntercambios())->setContribuyente($this->getReceptor())->getUltimoCodigo();
+        $ultimo_codigo = (new Model_DteIntercambios())
+            ->setContribuyente($this->getReceptor())
+            ->getUltimoCodigo()
+        ;
         return $ultimo_codigo == $this->codigo;
     }
 

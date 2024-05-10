@@ -37,8 +37,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
     ]; ///< Columnas que se deben mostrar en las vistas
 
     /**
-     * Acción para listar las clasificaciones de items del contribuyente
-         * @version 2016-02-24
+     * Acción para listar las clasificaciones de items del contribuyente.
      */
     public function listar($page = 1, $orderby = null, $order = 'A')
     {
@@ -48,36 +47,39 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
     }
 
     /**
-     * Acción para crear una clasificación de items
-         * @version 2019-07-25
+     * Acción para crear una clasificación de items.
      */
     public function crear()
     {
         $Contribuyente = $this->getContribuyente();
         $_POST['contribuyente'] = $Contribuyente->rut;
         $this->set([
-            'clasificaciones' => (new Model_ItemClasificaciones())->setContribuyente($Contribuyente)->getList(),
+            'clasificaciones' => (new Model_ItemClasificaciones())
+                ->setContribuyente($Contribuyente)
+                ->getList()
+            ,
         ]);
         parent::crear();
     }
 
     /**
-     * Acción para editar una clasificación de items
-         * @version 2019-07-25
+     * Acción para editar una clasificación de items.
      */
     public function editar($codigo)
     {
         $Contribuyente = $this->getContribuyente();
         $_POST['contribuyente'] = $Contribuyente->rut;
         $this->set([
-            'clasificaciones' => (new Model_ItemClasificaciones())->setContribuyente($Contribuyente)->getList(),
+            'clasificaciones' => (new Model_ItemClasificaciones())
+                ->setContribuyente($Contribuyente)
+                ->getList()
+            ,
         ]);
         parent::editar($Contribuyente->rut, $codigo);
     }
 
     /**
-     * Acción para eliminar una clasificacion de items
-         * @version 2016-02-24
+     * Acción para eliminar una clasificacion de items.
      */
     public function eliminar($codigo)
     {
@@ -85,7 +87,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
         $Clasificacion = new Model_ItemClasificacion($Contribuyente->rut, $codigo);
         if ($Clasificacion->enUso()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No es posible eliminar la clasificacion '.$Clasificacion->clasificacion.' ya que existen items que la usan', 'error'
+                'No es posible eliminar la clasificacion '.$Clasificacion->clasificacion.' ya que existen items que la usan.', 'error'
             );
             $filterListar = !empty($_GET['listar']) ? base64_decode($_GET['listar']) : '';
             $this->redirect(
@@ -97,8 +99,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
 
     /**
      * Acción que permite importar las casificaciones de items desde un archivo
-     * CSV
-         * @version 2016-02-26
+     * CSV.
      */
     public function importar()
     {
@@ -106,7 +107,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
             // verificar que se haya podido subir el archivo con el libro
             if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Ocurrió un error al subir el plan de cuentas', 'error'
+                    'Ocurrió un error al subir el listado de clasificaciones de items.', 'error'
                 );
                 return;
             }
@@ -128,10 +129,11 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
                 try {
                     $existia = $Clasificacion->exists();
                     if ($Clasificacion->save()) {
-                        if ($existia)
+                        if ($existia) {
                             $resumen['editadas'][] = $Clasificacion->codigo;
-                        else
+                        } else {
                             $resumen['nuevas'][] = $Clasificacion->codigo;
+                        }
                     } else {
                         $resumen['error'][] = $Clasificacion->codigo;
                     }
@@ -149,7 +151,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
                 );
             } else {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Se importó el archivo de clasificaciones de items', 'ok'
+                    'Se importó el archivo de clasificaciones de items.', 'ok'
                 );
                 $this->redirect('/dte/admin/item_clasificaciones/listar');
             }
@@ -157,16 +159,18 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
     }
 
     /**
-     * Acción que permite exportar todas las clasificaciones de items a un archivo CSV
-         * @version 2019-07-18
+     * Acción que permite exportar todas las clasificaciones de items a un archivo CSV.
      */
     public function exportar()
     {
         $Contribuyente = $this->getContribuyente();
-        $clasificaciones = (new Model_ItemClasificaciones())->setContribuyente($Contribuyente)->exportar();
+        $clasificaciones = (new Model_ItemClasificaciones())
+            ->setContribuyente($Contribuyente)
+            ->exportar()
+        ;
         if (!$clasificaciones) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No hay clasificaciones de items que exportar', 'warning'
+                'No hay clasificaciones de items que exportar.', 'warning'
             );
             $this->redirect('/dte/admin/item_clasificaciones/listar');
         }
@@ -176,8 +180,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
     }
 
     /**
-     * Recurso de la API que permite obtener el listado de clasificaciones de items completo, con todos sus datos
-         * @version 2020-03-15
+     * Recurso de la API que permite obtener el listado de clasificaciones de items completo, con todos sus datos.
      */
     public function _api_raw_GET($empresa)
     {
@@ -189,16 +192,20 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
         // crear contribuyente y verificar que exista y el usuario esté autorizado
         $Empresa = new \website\Dte\Model_Contribuyente($empresa);
         if (!$Empresa->exists()) {
-            $this->Api->send('Empresa solicitada no existe', 404);
+            $this->Api->send('Empresa solicitada no existe.', 404);
         }
         if (!$Empresa->usuarioAutorizado($User, '/dte/documentos/emitir')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // entregar datos
         return (new Model_ItemClasificaciones())
-            ->setWhereStatement(['contribuyente = :contribuyente'], [':contribuyente' => $Empresa->rut])
+            ->setWhereStatement(
+                ['contribuyente = :contribuyente'],
+                [':contribuyente' => $Empresa->rut]
+            )
             ->setOrderByStatement('clasificacion')
-            ->getTable();
+            ->getTable()
+        ;
     }
 
 }

@@ -527,7 +527,7 @@ class Model_DteEmitido extends Model_Base_Envio
                 }
                 // datos del receptor si es boleta
                 if (in_array($this->dte, [39, 41])) {
-                    if ($this->receptor==66666666) {
+                    if ($this->receptor == 66666666) {
                         if ($this->hasLocalXML()) {
                             $datos = $this->getDte()->getDatos()['Encabezado']['Receptor'];
                             $this->Receptor->razon_social = !empty($datos['RznSocRecep']) ? $datos['RznSocRecep'] : null;
@@ -823,7 +823,7 @@ class Model_DteEmitido extends Model_Base_Envio
             $MntPago = 0;
             foreach ($MntPagos as $pago)
                 $MntPago += $pago['MntPago'];
-            if ($MntPago!=$this->total)
+            if ($MntPago != $this->total)
                 $MntPagos = [];
         }
         return $MntPagos;
@@ -1362,7 +1362,7 @@ class Model_DteEmitido extends Model_Base_Envio
                 $xml = new \SimpleXMLElement($file['data'], LIBXML_COMPACT);
                 // obtener estado y detalle
                 if (isset($xml->REVISIONENVIO)) {
-                    if ($xml->REVISIONENVIO->REVISIONDTE->TIPODTE==$this->dte && $xml->REVISIONENVIO->REVISIONDTE->FOLIO==$this->folio) {
+                    if ($xml->REVISIONENVIO->REVISIONDTE->TIPODTE == $this->dte && $xml->REVISIONENVIO->REVISIONDTE->FOLIO == $this->folio) {
                         $estado = (string)$xml->REVISIONENVIO->REVISIONDTE->ESTADO;
                         $detalle = (string)$xml->REVISIONENVIO->REVISIONDTE->DETALLE;
                     }
@@ -1413,7 +1413,7 @@ class Model_DteEmitido extends Model_Base_Envio
             ];
         }
         // si es nota de crédito se anula con nota de débito
-        else if ($this->dte==61) {
+        else if ($this->dte == 61) {
             return [
                 'titulo' => 'Anular documento',
                 'color' => 'danger',
@@ -1423,7 +1423,7 @@ class Model_DteEmitido extends Model_Base_Envio
             ];
         }
         // si es guía de despacho se factura
-        else if ($this->dte==52) {
+        else if ($this->dte == 52) {
             return [
                 'titulo' => 'Facturar guía',
                 'color' => 'success',

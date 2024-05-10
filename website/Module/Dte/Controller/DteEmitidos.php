@@ -55,13 +55,13 @@ class Controller_DteEmitidos extends \Controller_App
                 $filtros[$var] = $val;
             }
         }
-        $searchUrl = isset($_GET['search'])?('?search='.$_GET['search']):'';
+        $searchUrl = isset($_GET['search']) ? ('?search='.$_GET['search']) : '';
         $paginas = 1;
         try {
             $documentos_total = $Emisor->countDocumentosEmitidos($filtros);
             if (!empty($pagina)) {
                 $filtros['limit'] = \sowerphp\core\Configure::read('app.registers_per_page');
-                $filtros['offset'] = ($pagina-1)*$filtros['limit'];
+                $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = $documentos_total ? ceil($documentos_total/$filtros['limit']) : 0;
                 if ($pagina != 1 && $pagina > $paginas) {
                     $this->redirect('/dte/'.$this->request->params['controller'].'/listar'.$searchUrl);
@@ -1406,13 +1406,9 @@ class Controller_DteEmitidos extends \Controller_App
      */
     public function _api_xml_GET($dte, $folio, $emisor)
     {
-        if ($this->Auth->User) {
-            $User = $this->Auth->User;
-        } else {
-            $User = $this->Api->getAuthUser();
-            if (is_string($User)) {
-                $this->Api->send($User, 401);
-            }
+        $User = $this->Api->getAuthUser();
+        if (is_string($User)) {
+            $this->Api->send($User, 401);
         }
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
@@ -1527,13 +1523,9 @@ class Controller_DteEmitidos extends \Controller_App
     {
         extract($this->getQuery(['usarWebservice' => true]));
         // verificar permisos y crear DteEmitido
-        if ($this->Auth->User) {
-            $User = $this->Auth->User;
-        } else {
-            $User = $this->Api->getAuthUser();
-            if (is_string($User)) {
-                $this->Api->send($User, 401);
-            }
+        $User = $this->Api->getAuthUser();
+        if (is_string($User)) {
+            $this->Api->send($User, 401);
         }
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
@@ -1958,7 +1950,7 @@ class Controller_DteEmitidos extends \Controller_App
             $this->Api->send($Emisor->razon_social.' no tiene emitido el DTE solicitado en el ambiente de '.$Emisor->getAmbiente(), 404);
         }
         // verificar que coincida fecha de emisión y monto total del DTE
-        if ($DteEmitido->fecha!=$this->Api->data['fecha'] || $DteEmitido->total!=$this->Api->data['total']) {
+        if ($DteEmitido->fecha != $this->Api->data['fecha'] || $DteEmitido->total != $this->Api->data['total']) {
             $this->Api->send('DTE existe, pero fecha y/o monto no coinciden con los registrados.', 409);
         }
         // quitar XML si no se pidió explícitamente

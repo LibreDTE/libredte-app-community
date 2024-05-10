@@ -135,8 +135,7 @@ class Model_DteFolio extends \Model_App
 
     /**
      * Método para guardar el mantenedor del folio usando una transacción
-     * serializable
-         * @version 2015-09-22
+     * serializable.
      */
     public function save($exitOnFailTransaction = true)
     {
@@ -148,8 +147,7 @@ class Model_DteFolio extends \Model_App
     }
 
     /**
-     * Método que calcula la cantidad de folios que quedan disponibles y guarda
-         * @version 2016-01-27
+     * Método que calcula la cantidad de folios que quedan disponibles y guarda.
      */
     public function calcularDisponibles()
     {
@@ -170,19 +168,25 @@ class Model_DteFolio extends \Model_App
                         AND certificacion = :certificacion
                         AND :folio BETWEEN desde AND hasta
                 )
-        ', [':emisor' => $this->emisor, ':dte' => $this->dte, 'certificacion' => (int)$this->certificacion, ':folio' => $this->siguiente]);
+        ', [
+            ':emisor' => $this->emisor,
+            ':dte' => $this->dte,
+            'certificacion' => (int)$this->certificacion,
+            ':folio' => $this->siguiente,
+        ]);
         $n_cafs = count($cafs);
-        if (!$n_cafs)
+        if (!$n_cafs) {
             return false;
-        if ($n_cafs==1) {
-            $this->disponibles = $cafs[0]['hasta'] - $this->siguiente + 1;
         }
-        else {
+        if ($n_cafs == 1) {
+            $this->disponibles = $cafs[0]['hasta'] - $this->siguiente + 1;
+        } else {
             for ($i=1; $i<$n_cafs; $i++) {
-                if ($cafs[$i]['desde'] != ($cafs[$i-1]['hasta']+1))
+                if ($cafs[$i]['desde'] != ($cafs[$i - 1]['hasta'] + 1)) {
                     break;
+                }
             }
-            $this->disponibles = $cafs[$i-1]['hasta'] - $this->siguiente + 1;
+            $this->disponibles = $cafs[$i - 1]['hasta'] - $this->siguiente + 1;
         }
         $status = $this->save(false);
         if (!$status) {
@@ -195,17 +199,20 @@ class Model_DteFolio extends \Model_App
 
     /**
      * Método que entrega el listado de archivos CAF que existen cargados para
-     * el tipo de DTE
-         * @version 2023-08-25
+     * el tipo de DTE.
      */
-    public function getCafs($order = 'ASC')
+    public function getCafs(string $order = 'ASC')
     {
         $cafs = $this->db->getTable('
             SELECT desde, hasta, (hasta - desde + 1) AS cantidad, xml
             FROM dte_caf
             WHERE emisor = :rut AND dte = :dte AND certificacion = :certificacion
             ORDER BY desde '.($order == 'ASC'?'ASC':'DESC').'
-        ', [':rut' => $this->emisor, ':dte' => $this->dte, ':certificacion' => $this->certificacion]);
+        ', [
+            ':rut' => $this->emisor,
+            ':dte' => $this->dte,
+            ':certificacion' => $this->certificacion,
+        ]);
         foreach ($cafs as &$caf) {
             try {
                 $xml = \website\Dte\Utility_Data::decrypt($caf['xml']);
@@ -226,11 +233,9 @@ class Model_DteFolio extends \Model_App
     }
 
     /**
-     * Método que entrega el CAF de un folio de cierto DTE
-     * @param dte Tipo de documento para el cual se quiere su CAF
-     * @param folio Folio del CAF del DTE que se busca
+     * Método que entrega el CAF de un folio de cierto DTE.
+     * @param folio Folio del CAF del DTE que se busca.
      * @return \sasco\LibreDTE\Sii\Folios
-         * @version 2021-08-16
      */
     public function getCaf($folio = null)
     {
@@ -263,8 +268,7 @@ class Model_DteFolio extends \Model_App
     }
 
     /**
-     * Método que entrega el objeto del tipo de DTE asociado al folio
-         * @version 2017-07-19
+     * Método que entrega el objeto del tipo de DTE asociado al folio.
      */
     public function getTipo()
     {
@@ -272,8 +276,7 @@ class Model_DteFolio extends \Model_App
     }
 
     /**
-     * Método que entrega el objeto del contribuyente asociado al mantenedor de folios
-         * @version 2018-05-18
+     * Método que entrega el objeto del contribuyente asociado al mantenedor de folios.
      */
     public function getEmisor()
     {
@@ -281,15 +284,14 @@ class Model_DteFolio extends \Model_App
     }
 
     /**
-     * Método que permite realizar el timbraje de manera automática
-         * @version 2020-01-26
+     * Método que permite realizar el timbraje de manera automática.
      */
     public function timbrar($cantidad = null)
     {
         // corregir cantidad si no se pasó
         if (!$cantidad) {
             if (!$this->alerta) {
-                throw new \Exception('No hay alerta configurada');
+                throw new \Exception('No hay alerta configurada.');
             }
             $cantidad = $this->alerta * 5;
         }
@@ -297,7 +299,7 @@ class Model_DteFolio extends \Model_App
         $Emisor = $this->getEmisor();
         $Firma = $Emisor->getFirma();
         if (!$Firma) {
-            throw new \Exception('No hay firma electrónica');
+            throw new \Exception('No hay firma electrónica.');
         }
         // solicitar timbraje
         $r = apigateway_consume(
@@ -319,8 +321,7 @@ class Model_DteFolio extends \Model_App
     }
 
     /**
-     * Método que guardar un archivo de folios en la base de datos
-         * @version 2017-11-05
+     * Método que guardar un archivo de folios en la base de datos.
      */
     public function guardarFolios($xml)
     {
@@ -331,17 +332,22 @@ class Model_DteFolio extends \Model_App
             throw new \Exception('No fue posible cargar el archivo XML del CAF:<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()));
         }
         // verificar que el caf sea del emisor
-        if ($Folios->getEmisor()!=$Emisor->rut.'-'.$Emisor->dv) {
+        if ($Folios->getEmisor() != $Emisor->rut.'-'.$Emisor->dv) {
             throw new \Exception('RUT del CAF '.$Folios->getEmisor().' no corresponde con el RUT de la empresa '.$Emisor->razon_social.' '.$Emisor->rut.'-'.$Emisor->dv);
         }
         // verificar que el folio que se está subiendo sea para el ambiente actual de la empresa
         $ambiente_empresa = $Emisor->enCertificacion() ? 'certificación' : 'producción';
         $ambiente_caf = $Folios->getCertificacion() ? 'certificación' : 'producción';
-        if ($ambiente_empresa!=$ambiente_caf) {
-            throw new \Exception('Empresa está en ambiente de '.$ambiente_empresa.' pero folios son de '.$ambiente_caf);
+        if ($ambiente_empresa != $ambiente_caf) {
+            throw new \Exception('Empresa está en ambiente de '.$ambiente_empresa.' pero folios son de '.$ambiente_caf.'.');
         }
         // crear caf para el folio
-        $DteCaf = new Model_DteCaf($this->emisor, $this->dte, (int)$Folios->getCertificacion(), $Folios->getDesde());
+        $DteCaf = new Model_DteCaf(
+            $this->emisor,
+            $this->dte,
+            (int)$Folios->getCertificacion(),
+            $Folios->getDesde()
+        );
         if ($DteCaf->exists()) {
             throw new \Exception('El archivo XML del CAF para el documento de tipo '.$DteCaf->dte.' que inicia en '.$Folios->getDesde().' en ambiente de '.$ambiente_caf.' ya estaba cargado en LibreDTE.');
         }
@@ -369,10 +375,9 @@ class Model_DteFolio extends \Model_App
     }
 
     /**
-     * Método que entrega el uso mensual de los folios
-         * @version 2018-10-20
+     * Método que entrega el uso mensual de los folios.
      */
-    public function getUsoMensual($limit = 12, $order = 'ASC')
+    public function getUsoMensual(int $limit = 12, string $order = 'ASC')
     {
         $periodo_col = $this->db->date('Ym', 'fecha');
         return $this->db->getTable('
@@ -384,27 +389,34 @@ class Model_DteFolio extends \Model_App
                 ORDER BY '.$periodo_col.' DESC
                 LIMIT '.(int)$limit.'
             ) AS t ORDER BY mes '.($order == 'ASC'?'ASC':'DESC').'
-        ', [':rut' => $this->emisor, ':dte' => $this->dte, ':certificacion' => $this->certificacion]);
+        ', [
+            ':rut' => $this->emisor,
+            ':dte' => $this->dte,
+            ':certificacion' => $this->certificacion,
+        ]);
     }
 
     /**
-     * Método que entrega el primer folio usado del mantenedor
-         * @version 2017-09-11
+     * Método que entrega el primer folio usado del mantenedor.
      */
-    public function getPrimerFolio()
+    public function getPrimerFolio(): int
     {
-        return $this->db->getValue(
-            'SELECT MIN(folio) FROM dte_emitido WHERE emisor = :rut AND dte = :dte AND certificacion = :certificacion',
-            [':rut' => $this->emisor, ':dte' => $this->dte, ':certificacion' => $this->certificacion]
-        );
+        return (int)$this->db->getValue('
+            SELECT MIN(folio)
+            FROM dte_emitido
+            WHERE emisor = :rut AND dte = :dte AND certificacion = :certificacion
+        ', [
+            ':rut' => $this->emisor,
+            ':dte' => $this->dte,
+            ':certificacion' => $this->certificacion,
+        ]);
     }
 
     /**
      * Método que entrega los folios que están antes del folio siguiente, para
-     * los cuales hay CAF y no se han usado
-         * @version 2017-09-11
+     * los cuales hay CAF y no se han usado.
      */
-    public function getSinUso()
+    public function getSinUso(): array
     {
         // si no hay caf error
         if (!$this->getCafs()) {
@@ -421,7 +433,11 @@ class Model_DteFolio extends \Model_App
             FROM dte_caf
             WHERE emisor = :rut AND dte = :dte AND certificacion = :certificacion
             ORDER BY desde
-        ', [':rut' => $this->emisor, ':dte' => $this->dte, ':certificacion' => $this->certificacion]);
+        ', [
+            ':rut' => $this->emisor,
+            ':dte' => $this->dte,
+            ':certificacion' => $this->certificacion,
+        ]);
         $folios = [];
         foreach ($rangos_aux as $r) {
             for ($folio=$r['desde']; $folio<=$r['hasta']; $folio++) {
@@ -433,20 +449,30 @@ class Model_DteFolio extends \Model_App
             FROM UNNEST(ARRAY['.implode(', ', $folios).']) AS folio
             WHERE
                 folio NOT IN (
-                    SELECT folio FROM dte_emitido WHERE emisor = :rut AND dte = :dte AND certificacion = :certificacion
+                    SELECT folio
+                    FROM dte_emitido
+                    WHERE emisor = :rut AND dte = :dte AND certificacion = :certificacion
                 )
                 AND folio > :primer_folio
-                AND folio < (SELECT siguiente FROM dte_folio WHERE emisor = :rut AND dte = :dte AND certificacion = :certificacion)
+                AND folio < (
+                    SELECT siguiente
+                    FROM dte_folio
+                    WHERE emisor = :rut AND dte = :dte AND certificacion = :certificacion
+                )
             ORDER BY folio
-        ', [':rut' => $this->emisor, ':dte' => $this->dte, ':certificacion' => $this->certificacion, ':primer_folio' => $primer_folio]);
+        ', [
+            ':rut' => $this->emisor,
+            ':dte' => $this->dte,
+            ':certificacion' => $this->certificacion,
+            ':primer_folio' => $primer_folio,
+        ]);
     }
 
     /**
      * Método que entrega el estado de todos los folios asociados a todos los
-     * CAFs del mantenedor de folios
-         * @version 2018-05-18
+     * CAFs del mantenedor de folios.
      */
-    public function getEstadoFolios($estados = 'recibidos,anulados,pendientes', $retry = 100)
+    public function getEstadoFolios($estados = 'recibidos,anulados,pendientes', int $retry = 10, int $sleep = 200000)
     {
         $estados = explode(',', $estados);
         // arreglo para resultado
@@ -462,8 +488,16 @@ class Model_DteFolio extends \Model_App
         }
         // obtener todos los cafs existentes
         $cafs = (new Model_DteCafs())->setWhereStatement(
-            ['emisor = :emisor', 'dte = :dte', 'certificacion = :certificacion'],
-            [':emisor' => $this->emisor, ':dte' => $this->dte, ':certificacion' => (int)$this->certificacion]
+            [
+                'emisor = :emisor',
+                'dte = :dte',
+                'certificacion = :certificacion',
+            ],
+            [
+                ':emisor' => $this->emisor,
+                ':dte' => $this->dte,
+                ':certificacion' => (int)$this->certificacion,
+            ]
         )->setOrderByStatement('desde')->getObjects();
         // recorrer cada caf e ir extrayendo los campos
         foreach($cafs as $DteCaf) {
@@ -471,10 +505,13 @@ class Model_DteFolio extends \Model_App
             if (in_array('recibidos', $estados)) {
                 for ($i=0; $i<$retry; $i++) {
                     try {
-                        $folios['recibidos'] = array_merge($folios['recibidos'], $DteCaf->getFoliosRecibidos());
+                        $folios['recibidos'] = array_merge(
+                            $folios['recibidos'],
+                            $DteCaf->getFoliosRecibidos()
+                        );
                         break;
                     } catch (\Exception $e) {
-                        usleep(200000);
+                        usleep($sleep);
                     }
                 }
             }
@@ -482,10 +519,13 @@ class Model_DteFolio extends \Model_App
             if (in_array('anulados', $estados)) {
                 for ($i=0; $i<$retry; $i++) {
                     try {
-                        $folios['anulados'] = array_merge($folios['anulados'], $DteCaf->getFoliosAnulados());
+                        $folios['anulados'] = array_merge(
+                            $folios['anulados'],
+                            $DteCaf->getFoliosAnulados()
+                        );
                         break;
                     } catch (\Exception $e) {
-                        usleep(200000);
+                        usleep($sleep);
                     }
                 }
             }
@@ -493,10 +533,13 @@ class Model_DteFolio extends \Model_App
             if (in_array('pendientes', $estados)) {
                 for ($i=0; $i<$retry; $i++) {
                     try {
-                        $folios['pendientes'] = array_merge($folios['pendientes'], $DteCaf->getFoliosPendientes());
+                        $folios['pendientes'] = array_merge(
+                            $folios['pendientes'],
+                            $DteCaf->getFoliosPendientes()
+                        );
                         break;
                     } catch (\Exception $e) {
-                        usleep(200000);
+                        usleep($sleep);
                     }
                 }
             }

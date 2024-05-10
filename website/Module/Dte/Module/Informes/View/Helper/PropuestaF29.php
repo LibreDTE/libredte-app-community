@@ -24,8 +24,7 @@
 namespace website\Dte\Informes;
 
 /**
- * Helper para generar la propuesta del formulario 29
- * @version 2017-11-03
+ * Helper para generar la propuesta del formulario 29.
  */
 class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
 {
@@ -166,8 +165,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
     private $electronicos = [33, 34, 39, 41, 46, 52, 56, 61]; ///< Código de documentos que son electrónicos
 
     /**
-     * Constructor de la planilla con la propuesta del formulario 29
-         * @version 2016-02-01
+     * Constructor de la planilla con la propuesta del formulario 29.
      */
     public function __construct($periodo)
     {
@@ -178,8 +176,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
     }
 
     /**
-     * Método que separa los documentos y crea los grupos para compras y ventas
-         * @version 2016-02-02
+     * Método que separa los documentos y crea los grupos para compras y ventas.
      */
     private function crearGrupos($documentos, $grupos)
     {
@@ -187,8 +184,9 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
         foreach ($grupos as $codigo => $info) {
             $datos[$codigo] = [];
             foreach ($documentos as &$d) {
-                if ($d === null)
+                if ($d === null) {
                     continue;
+                }
                 if (in_array($d['dte'], $info['tipos'])) {
                     $datos[$codigo][] = $d;
                     $d = null;
@@ -199,8 +197,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
     }
 
     /**
-     * Método que crea la hoja con las compras del período
-         * @version 2016-06-10
+     * Método que crea la hoja con las compras del período.
      */
     public function setCompras($compras)
     {
@@ -299,8 +296,9 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
         $this->getActiveSheet()->setCellValue('A'.$this->y, 'Totales');
         foreach (['E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'] as $col) {
             $suma = [];
-            foreach ($subtotales as $s)
+            foreach ($subtotales as $s) {
                 $suma[] = $col.$s;
+            }
             $this->getActiveSheet()->getStyle($col.$this->y)->getNumberFormat()->setFormatCode('#,##0');
             if ($col == 'E') {
                 $this->getActiveSheet()->setCellValue($col.$this->y, '='.implode('+', $suma));
@@ -315,8 +313,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
     }
 
     /**
-     * Método que crea la hoja con las ventas del período
-         * @version 2016-02-02
+     * Método que crea la hoja con las ventas del período.
      */
     public function setVentas($ventas)
     {
@@ -408,8 +405,9 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
         $this->getActiveSheet()->setCellValue('A'.$this->y, 'Totales');
         foreach (['E', 'F', 'G', 'H', 'I'] as $col) {
             $suma = [];
-            foreach ($subtotales as $s)
+            foreach ($subtotales as $s) {
                 $suma[] = $col.$s;
+            }
             $this->getActiveSheet()->getStyle($col.$this->y)->getNumberFormat()->setFormatCode('#,##0');
             if ($col == 'E') {
                 $this->getActiveSheet()->setCellValue($col.$this->y, '='.implode('+', $suma));
@@ -423,13 +421,13 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
     }
 
     /**
-     * Método que crea la hoja de resumen con la propuesta del formulario 29
-         * @version 2016-02-02
+     * Método que crea la hoja de resumen con la propuesta del formulario 29.
      */
     public function setResumen(array $f29)
     {
-        foreach ($f29 as $k => $v)
+        foreach ($f29 as $k => $v) {
             $this->datos[$k] = $v;
+        }
         // crear hoja
         $this->createSheet(2);
         $this->setActiveSheetIndex(2);
@@ -457,9 +455,11 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
     private function agregarLineas($cantidad)
     {
         for ($i=$this->y; $i<($this->y+$cantidad); $i++) {
-            $this->getActiveSheet()->getStyle('B'.$i)->applyFromArray(
-                ['alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]]
-            );
+            $this->getActiveSheet()->getStyle('B'.$i)->applyFromArray([
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                ]
+            ]);
             $this->getActiveSheet()->setCellValue('B'.$i, $this->linea++);
         }
     }
@@ -853,8 +853,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
     /**
      * Método que asigna un dato a una celda, se usa este método para poder ir
      * recordando las celdas donde se dejaron los datos y así poder usar en las
-     * fórmulas
-         * @version 2016-02-02
+     * fórmulas.
      */
     private function setDato($celda, $codigo, $formato = '#,##0')
     {
@@ -865,15 +864,15 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
 
     /**
      * Método que obtiene un dato del arreglo con los códigos y datos del
-     * formulario
-         * @version 2017-03-09
+     * formulario.
      */
     private function getDato($codigo)
     {
         if (isset($this->formulas[$codigo])) {
             $ubicaciones = [];
-            foreach ($this->ubicaciones as $c => $u)
+            foreach ($this->ubicaciones as $c => $u) {
                 $ubicaciones[' '.$c.' '] = $u;
+            }
             return '='.str_replace(' ', '', (str_replace(array_keys($ubicaciones), $ubicaciones, $this->formulas[$codigo])));
         }
         if ($codigo == 563) {

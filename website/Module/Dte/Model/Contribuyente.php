@@ -1049,7 +1049,7 @@ class Model_Contribuyente extends \Model_App
             $this->db->rollback();
             return false;
         }
-        if ($folio_manual==$DteFolio->siguiente) {
+        if ($folio_manual == $DteFolio->siguiente) {
             $folio_manual = 0;
         }
         if (!$folio_manual) {
@@ -1123,7 +1123,7 @@ class Model_Contribuyente extends \Model_App
                 WHERE f.usuario = c.usuario AND c.rut = :rut
             ', [':rut' => $this->rut]);
             // buscar firma del usuario que está haciendo la solicitud
-            if (empty($datos) && $user_id && $user_id!=$this->usuario) {
+            if (empty($datos) && $user_id && $user_id != $this->usuario) {
                 $datos = $this->db->getRow('
                     SELECT archivo, contrasenia
                     FROM firma_electronica

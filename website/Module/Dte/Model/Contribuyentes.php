@@ -25,8 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla contribuyente de la base de datos
- * @version 2017-09-03
+ * Clase para mapear la tabla contribuyente de la base de datos.
  */
 class Model_Contribuyentes extends \Model_Plural_App
 {
@@ -36,8 +35,7 @@ class Model_Contribuyentes extends \Model_Plural_App
     protected $_table = 'contribuyente'; ///< Tabla del modelo
 
     /**
-     * Método que entrega el listado de contribuyentes
-         * @version 2015-09-21
+     * Método que entrega el listado de contribuyentes.
      */
     public function getList($all = false)
     {
@@ -59,12 +57,17 @@ class Model_Contribuyentes extends \Model_Plural_App
 
     /**
      * Método que busca el objeto de un contribuyente (o varios) a partir
-     * del correo electrónico registrado del contribuyente
-         * @version 2019-01-30
+     * del correo electrónico registrado del contribuyente.
      */
     public function getByEmail($email, $onlyOne = false)
     {
-        $contribuyentes = (new Model_Contribuyentes())->setWhereStatement(['email = :email'], [':email' => $email])->getObjects();
+        $contribuyentes = (new Model_Contribuyentes())
+            ->setWhereStatement(
+                ['email = :email'],
+                [':email' => $email]
+            )
+            ->getObjects()
+        ;
         if (!$contribuyentes) {
             return false;
         }
@@ -76,13 +79,12 @@ class Model_Contribuyentes extends \Model_Plural_App
 
     /**
      * Método que entrega una tabla con los contribuyentes que cierto usuario
-     * está autorizado a operar
-     * @param usuario ID del usuario que se quiere obtener el listado de contribuyentes con los que está autorizado a operar
-     * @param omitir Se puede indicar el RUT de una empresa que no se quiere que aparezca en el listado
-     * @return Tabla con las empresas que se están buscando
-         * @version 2018-12-13
+     * está autorizado a operar.
+     * @param usuario ID del usuario que se quiere obtener el listado de contribuyentes con los que está autorizado a operar.
+     * @param omitir Se puede indicar el RUT de una empresa que no se quiere que aparezca en el listado.
+     * @return array Tabla con las empresas que se están buscando.
      */
-    public function getByUsuario($usuario, $omitir = null)
+    public function getByUsuario($usuario, $omitir = null): array
     {
         $empresas =  $this->db->getTable('
             (
@@ -123,16 +125,15 @@ class Model_Contribuyentes extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega una tabla con los movimientos de los contribuyentes
-     * @param desde Desde cuando considerar la actividad de los contribuyentes
-     * @param hasta Hasta cuando considerar la actividad de los contribuyentes
-     * @param certificacion Ambiente por el que se está consultando
-     * @param dte Filtrar por un DTE específico
-     * @param rut Filtrar por el RUT de un contribuyente específico
-     * @return Tabla con los contribuyentes y sus movimientos
-         * @version 2019-08-19
+     * Método que entrega una tabla con los movimientos de los contribuyentes.
+     * @param desde Desde cuando considerar la actividad de los contribuyentes.
+     * @param hasta Hasta cuando considerar la actividad de los contribuyentes.
+     * @param certificacion Ambiente por el que se está consultando.
+     * @param dte Filtrar por un DTE específico.
+     * @param rut Filtrar por el RUT de un contribuyente específico.
+     * @return array Tabla con los contribuyentes y sus movimientos.
      */
-    public function getConMovimientos($desde = 1, $hasta = null, $certificacion = false, $dte = null, $rut = null)
+    public function getConMovimientos($desde = 1, $hasta = null, $certificacion = false, $dte = null, $rut = null): array
     {
         $vars = [];
         $where = ['c.usuario IS NOT NULL', ];
@@ -189,11 +190,12 @@ class Model_Contribuyentes extends \Model_Plural_App
             WHERE (e.emitidos > 0 OR r.recibidos > 0)
             ORDER BY c.razon_social
         ', $vars), 9, 'grupos_aux');
+        $grupos_sistema = ['sysadmin', 'appadmin', 'passwd', 'soporte', 'mantenedores', 'usuarios'];
         foreach ($contribuyentes as &$c) {
             $c['total'] = $c['emitidos'] + $c['recibidos'];
             $c['grupos'] = [];
             foreach ($c['grupos_aux'] as $g) {
-                if (!in_array($g['grupo'], ['sysadmin', 'appadmin', 'passwd', 'soporte', 'mantenedores', 'usuarios'])) {
+                if (!in_array($g['grupo'], $grupos_sistema)) {
                     $c['grupos'][] = $g['grupo'];
                 }
             }
@@ -203,32 +205,42 @@ class Model_Contribuyentes extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega la cantidad de contribuyentes registrados
+     * Método que entrega la cantidad de contribuyentes registrados.
      * @param certificacion =true solo certificación, =false solo producción, =null todos
-         * @version 2016-01-07
      */
-    public function countRegistrados($certificacion = null)
+    public function countRegistrados($certificacion = null): int
     {
         if ($certificacion === null) {
-            return $this->db->getValue(
-                'SELECT COUNT(*) FROM contribuyente WHERE usuario IS NOT NULL'
-            );
+            return (int)$this->db->getValue('
+                SELECT
+                    COUNT(*)
+                FROM
+                    contribuyente
+                WHERE
+                    usuario IS NOT NULL
+            ');
         } else {
-            return $this->db->getValue('
-                SELECT COUNT(*)
-                FROM contribuyente AS c JOIN contribuyente_config AS e ON c.rut = e.contribuyente
-                WHERE c.usuario IS NOT NULL AND e.configuracion = \'ambiente\' AND e.variable = \'en_certificacion\' AND e.valor = :certificacion
+            return (int)$this->db->getValue('
+                SELECT
+                    COUNT(*)
+                FROM
+                    contribuyente AS c JOIN contribuyente_config AS e ON
+                        c.rut = e.contribuyente
+                WHERE
+                    c.usuario IS NOT NULL
+                    AND e.configuracion = \'ambiente\'
+                    AND e.variable = \'en_certificacion\'
+                    AND e.valor = :certificacion
             ', [':certificacion' => (int)$certificacion]);
         }
     }
 
     /**
-     * Método que entrega el listado de contribuyentes registrados
-     * @param desde Fecha desde último ingreso que se buscará
-     * @param hasta Fecha hasta el último ingreso que se buscará
-         * @version 2016-02-26
+     * Método que entrega el listado de contribuyentes registrados.
+     * @param desde Fecha desde último ingreso que se buscará.
+     * @param hasta Fecha hasta el último ingreso que se buscará.
      */
-    public function getRegistrados($desde = null, $hasta = null)
+    public function getRegistrados($desde = null, $hasta = null): array
     {
         return $this->db->getTable('
             SELECT
@@ -254,54 +266,67 @@ class Model_Contribuyentes extends \Model_Plural_App
                 AND c.comuna = co.codigo
                 AND u.ultimo_ingreso_fecha_hora BETWEEN :desde AND :hasta
             ORDER BY u.usuario, c.razon_social
-        ', [':desde' => $desde, ':hasta' => $hasta.' 23:59:59']);
+        ', [
+            ':desde' => $desde,
+            ':hasta' => $hasta.' 23:59:59',
+        ]);
     }
 
     /**
-     * Método que entrega la cantidad de contribuyentes registrados por comuna
+     * Método que entrega la cantidad de contribuyentes registrados por comuna.
      * @param certificacion =true solo certificación, =false solo producción, =null todos
-         * @version 2017-09-03
      */
     public function countByComuna($certificacion = null)
     {
         $vars[':certificacion'] = (int)$certificacion;
         return $this->db->getTable('
-            SELECT co.comuna, COUNT(c.rut) AS contribuyentes
+            SELECT
+                co.comuna,
+                COUNT(c.rut) AS contribuyentes
             FROM
                 contribuyente AS c
-                JOIN comuna AS co ON co.codigo = c.comuna
-                JOIN contribuyente_config AS e ON c.rut = e.contribuyente
+                JOIN comuna AS co ON
+                    co.codigo = c.comuna
+                JOIN contribuyente_config AS e ON
+                    c.rut = e.contribuyente
             WHERE
                 c.usuario IS NOT NULL
                 AND e.configuracion = \'ambiente\'
                 AND e.variable = \'en_certificacion\'
                 AND e.valor = :certificacion
-            GROUP BY co.comuna
-            ORDER BY co.comuna
+            GROUP BY
+                co.comuna
+            ORDER BY
+                co.comuna
         ', $vars);
     }
 
     /**
-     * Método que entrega la cantidad de contribuyentes registrados por actividad económica
-     * @param certificacion =true solo certificación, =false solo producción, =null todos
-         * @version 2017-11-14
+     * Método que entrega la cantidad de contribuyentes registrados por actividad económica.
+     * @param certificacion =true solo certificación, =false solo producción, =null todos.
      */
-    public function countByActividadEconomica($certificacion = null)
+    public function countByActividadEconomica($certificacion = null): array
     {
         $vars[':certificacion'] = (int)$certificacion;
         return $this->db->getTable('
-            SELECT a.actividad_economica, COUNT(c.rut) AS contribuyentes
+            SELECT
+                a.actividad_economica,
+                COUNT(c.rut) AS contribuyentes
             FROM
                 contribuyente AS c
-                JOIN actividad_economica AS a ON a.codigo = c.actividad_economica
-                JOIN contribuyente_config AS e ON c.rut = e.contribuyente
+                JOIN actividad_economica AS a ON
+                    a.codigo = c.actividad_economica
+                JOIN contribuyente_config AS e ON
+                    c.rut = e.contribuyente
             WHERE
                 c.usuario IS NOT NULL
                 AND e.configuracion = \'ambiente\'
                 AND e.variable = \'en_certificacion\'
                 AND e.valor = :certificacion
-            GROUP BY a.actividad_economica
-            ORDER BY a.actividad_economica
+            GROUP BY
+                a.actividad_economica
+            ORDER BY
+                a.actividad_economica
         ', $vars);
     }
 

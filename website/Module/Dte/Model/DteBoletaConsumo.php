@@ -417,7 +417,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
                 $xml = new \SimpleXMLElement($file['data'], LIBXML_COMPACT);
                 // obtener estado y detalle
                 if (isset($xml->DocumentoResultadoConsumoFolios)) {
-                    if ($xml->DocumentoResultadoConsumoFolios->Identificacion->Envio->TrackId==$this->track_id) {
+                    if ($xml->DocumentoResultadoConsumoFolios->Identificacion->Envio->TrackId == $this->track_id) {
                         $estado = (string)$xml->DocumentoResultadoConsumoFolios->Resultado->Estado;
                         $detalle = str_replace('T', ' ', (string)$xml->DocumentoResultadoConsumoFolios->Identificacion->Envio->TmstRecepcion);
                         if (!empty($xml->DocumentoResultadoConsumoFolios->Resultado->Reparos->Reparo)) {

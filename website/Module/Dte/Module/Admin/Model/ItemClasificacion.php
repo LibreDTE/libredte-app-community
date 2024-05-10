@@ -110,8 +110,7 @@ class Model_ItemClasificacion extends \Model_App
     ); ///< Namespaces que utiliza esta clase
 
     /**
-     * Constructor de la clasificación del item
-         * @version 2016-02-24
+     * Constructor de la clasificación del item.
      */
     public function __construct($contribuyente = null, $codigo = null)
     {
@@ -120,8 +119,7 @@ class Model_ItemClasificacion extends \Model_App
     }
 
     /**
-     * Método que guarda la clasificación del item
-         * @version 2018-09-14
+     * Método que guarda la clasificación del item.
      */
     public function save()
     {
@@ -130,8 +128,7 @@ class Model_ItemClasificacion extends \Model_App
     }
 
     /**
-     * Método que entrega la clasificación superior de la clasificación
-         * @version 2016-02-24
+     * Método que entrega la clasificación superior de la clasificación.
      */
     public function getSuperior()
     {
@@ -139,8 +136,7 @@ class Model_ItemClasificacion extends \Model_App
     }
 
     /**
-     * Método que entrega la clasificación superior de la clasificación
-         * @version 2016-02-24
+     * Método que entrega la clasificación superior de la clasificación.
      */
     public function getItemClasificacion()
     {
@@ -148,8 +144,7 @@ class Model_ItemClasificacion extends \Model_App
     }
 
     /**
-     * Método que indica si la clasificación está o no en uso
-         * @version 2016-02-24
+     * Método que indica si la clasificación está o no en uso.
      */
     public function enUso()
     {
@@ -157,12 +152,14 @@ class Model_ItemClasificacion extends \Model_App
             SELECT COUNT(*)
             FROM item
             WHERE contribuyente = :contribuyente AND clasificacion = :clasificacion
-        ', [':contribuyente' => $this->contribuyente, ':clasificacion' => $this->codigo]);
+        ', [
+            ':contribuyente' => $this->contribuyente,
+            ':clasificacion' => $this->codigo,
+        ]);
     }
 
     /**
-     * Método que entrega el listado de items de la clasificación
-         * @version 2017-03-23
+     * Método que entrega el listado de items de la clasificación.
      */
     public function getItems()
     {

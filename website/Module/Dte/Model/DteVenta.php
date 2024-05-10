@@ -24,6 +24,8 @@
 // namespace del modelo
 namespace website\Dte;
 
+use \website\Dte\Admin\Mantenedores\Model_DteTipos;
+
 /**
  * Clase para mapear la tabla dte_venta de la base de datos.
  */
@@ -189,10 +191,9 @@ class Model_DteVenta extends Model_Base_Libro
 
     /**
      * Método que entrega el resumen real (de los detalles registrados) del
-     * libro
-         * @version 2016-10-06
+     * libro.
      */
-    public function getResumen()
+    public function getResumen(): array
     {
         $Libro = $this->getEmisor()->getLibroVentas($this->periodo);
         $resumen = $Libro->getResumen() + $this->getResumenManual();
@@ -224,10 +225,9 @@ class Model_DteVenta extends Model_Base_Libro
 
     /**
      * Método que entrega el resumen manual, de los totales registrados al
-     * enviar el libro al SII
-         * @version 2016-09-13
+     * enviar el libro al SII.
      */
-    public function getResumenManual()
+    public function getResumenManual(): array
     {
         if ($this->_table == 'dte_venta' && $this->xml) {
             $Libro = new \sasco\LibreDTE\Sii\LibroCompraVenta();
@@ -238,8 +238,7 @@ class Model_DteVenta extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega los documentos por día del libro
-         * @version 2017-09-11
+     * Método que entrega los documentos por día del libro.
      */
     public function getDocumentosPorDia()
     {
@@ -247,8 +246,7 @@ class Model_DteVenta extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega las compras por tipo del período
-         * @version 2017-09-11
+     * Método que entrega las compras por tipo del período.
      */
     public function getDocumentosPorTipo()
     {
@@ -256,10 +254,9 @@ class Model_DteVenta extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega los documentos por evento del receptor
-         * @version 2017-09-11
+     * Método que entrega los documentos por evento del receptor.
      */
-    public function getDocumentosPorEventoReceptor()
+    public function getDocumentosPorEventoReceptor(): array
     {
         $aux = $this->db->getTable('
             SELECT receptor_evento AS codigo, NULL AS glosa, COUNT(*) AS documentos
@@ -271,7 +268,11 @@ class Model_DteVenta extends Model_Base_Libro
                 AND certificacion = :certificacion
             GROUP BY receptor_evento
             ORDER BY receptor_evento ASC
-        ', [':emisor' => $this->emisor, ':periodo' => $this->periodo, ':certificacion' => (int)$this->certificacion]);
+        ', [
+            ':emisor' => $this->emisor,
+            ':periodo' => $this->periodo,
+            ':certificacion' => (int)$this->certificacion,
+        ]);
         foreach ($aux as &$a) {
             if ($a['codigo']) {
                 $a['glosa'] = \sasco\LibreDTE\Sii\RegistroCompraVenta::$eventos[$a['codigo']];
@@ -284,8 +285,7 @@ class Model_DteVenta extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega los documentos por evento del receptor
-         * @version 2017-09-12
+     * Método que entrega los documentos por evento del receptor.
      */
     public function getDocumentosConEventoReceptor($evento)
     {
@@ -297,10 +297,9 @@ class Model_DteVenta extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega los totales del período
-         * @version 2018-04-25
+     * Método que entrega los totales del período.
      */
-    public function getTotales()
+    public function getTotales(): array
     {
         $resumen = $this->getResumen();
         $total = [
@@ -323,7 +322,7 @@ class Model_DteVenta extends Model_Base_Libro
                 $total[$c] += $r[$c];
             }
             // sumar o restar campos segun operación
-            $operacion = (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->get($r['TpoDoc'])->operacion;
+            $operacion = (new Model_DteTipos())->get($r['TpoDoc'])->operacion;
             foreach (['TotMntExe', 'TotMntNeto', 'TotMntIVA', 'TotIVAPropio', 'TotIVATerceros', 'TotLey18211', 'TotMntTotal', 'TotMntNoFact', 'TotMntPeriodo'] as $c) {
                 if ($operacion == 'S') {
                     $total[$c] += $r[$c];
@@ -336,10 +335,9 @@ class Model_DteVenta extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega el total del neto + exento del período
-         * @version 2018-04-25
+     * Método que entrega el total del neto + exento del período.
      */
-    public function getTotalExentoNeto()
+    public function getTotalExentoNeto(): int
     {
         $totales = $this->getTotales();
         return $totales['TotMntExe'] + $totales['TotMntNeto'];
@@ -347,13 +345,12 @@ class Model_DteVenta extends Model_Base_Libro
 
     /**
      * Método que entrega la cantidad de documentos que se envían al SII pero que no tienen
-     * estado asociado
-         * @version 2018-11-11
+     * estado asociado.
      */
-    public function countDteSinEstadoEnvioSII()
+    public function countDteSinEstadoEnvioSII(): int
     {
         $periodo_col = $this->db->date('Ym', 'fecha');
-        return $this->db->getValue('
+        return (int)$this->db->getValue('
             SELECT COUNT(folio)
             FROM dte_emitido
             WHERE
@@ -363,18 +360,21 @@ class Model_DteVenta extends Model_Base_Libro
                 AND '.$periodo_col.' = :periodo
                 AND track_id != -1
                 AND revision_estado IS NULL
-        ', [':emisor' => $this->emisor, ':periodo' => $this->periodo, ':certificacion' => (int)$this->certificacion]);
+        ', [
+            ':emisor' => $this->emisor,
+            ':periodo' => $this->periodo,
+            ':certificacion' => (int)$this->certificacion,
+        ]);
     }
 
     /**
      * Método que entrega la cantidad de documentos que están rechazados por el SII
-     * en el período
-         * @version 2018-11-11
+     * en el período.
      */
-    public function countDteRechazadosSII()
+    public function countDteRechazadosSII(): int
     {
         $periodo_col = $this->db->date('Ym', 'fecha');
-        return $this->db->getValue('
+        return (int)$this->db->getValue('
             SELECT COUNT(folio)
             FROM dte_emitido
             WHERE
@@ -384,7 +384,11 @@ class Model_DteVenta extends Model_Base_Libro
                 AND '.$periodo_col.' = :periodo
                 AND track_id != -1
                 AND SUBSTRING(revision_estado FROM 1 FOR 3) IN (\''.implode('\', \'', Model_DteEmitidos::$revision_estados['rechazados']).'\')
-        ', [':emisor' => $this->emisor, ':periodo' => $this->periodo, ':certificacion' => (int)$this->certificacion]);
+        ', [
+            ':emisor' => $this->emisor,
+            ':periodo' => $this->periodo,
+            ':certificacion' => (int)$this->certificacion,
+        ]);
     }
 
 }

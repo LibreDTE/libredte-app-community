@@ -25,15 +25,13 @@
 namespace website\Dte;
 
 /**
- * Controlador para intercambio entre contribuyentes
- * @version 2018-05-19
+ * Controlador para intercambio entre contribuyentes.
  */
 class Controller_DteIntercambios extends \Controller_App
 {
 
     /**
-     * Acción para mostrar la bandeja de intercambio de DTE
-         * @version 2017-04-05
+     * Acción para mostrar la bandeja de intercambio de DTE.
      */
     public function listar($pagina = 1, $soloPendientes = false)
     {
@@ -51,13 +49,13 @@ class Controller_DteIntercambios extends \Controller_App
                 $filtros[$var] = $val;
             }
         }
-        $searchUrl = isset($_GET['search'])?('?search='.$_GET['search']):'';
+        $searchUrl = isset($_GET['search']) ? ('?search=' . $_GET['search']) : '';
         $paginas = 1;
         try {
             $documentos_total = $Emisor->countDocumentosIntercambios($filtros);
             if (!empty($pagina)) {
                 $filtros['limit'] = \sowerphp\core\Configure::read('app.registers_per_page');
-                $filtros['offset'] = ($pagina-1)*$filtros['limit'];
+                $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = $documentos_total ? ceil($documentos_total/$filtros['limit']) : 0;
                 if ($pagina != 1 && $pagina > $paginas) {
                     $this->redirect('/dte/'.$this->request->params['controller'].'/listar'.$searchUrl);
@@ -85,17 +83,18 @@ class Controller_DteIntercambios extends \Controller_App
     }
 
     /**
-     * Acción que muestra la página de un intercambio
-         * @version 2022-11-16
+     * Acción que muestra la página de un intercambio.
      */
     public function ver($codigo)
     {
         $Emisor = $this->getContribuyente();
         // obtener DTE intercambiado
-        $DteIntercambio = new Model_DteIntercambio($Emisor->rut, (int)$codigo, $Emisor->enCertificacion());
+        $DteIntercambio = new Model_DteIntercambio(
+            $Emisor->rut, (int)$codigo, $Emisor->enCertificacion()
+        );
         if (!$DteIntercambio->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el intercambio solicitado', 'error'
+                'No existe el intercambio solicitado.', 'error'
             );
             $this->redirect('/dte/dte_intercambios/listar');
         }
@@ -124,61 +123,62 @@ class Controller_DteIntercambios extends \Controller_App
     }
 
     /**
-     * Acción que permite eliminar un intercambio desde la bandeja
-         * @version 2018-05-21
+     * Acción que permite eliminar un intercambio desde la bandeja.
      */
     public function eliminar($codigo)
     {
         $Emisor = $this->getContribuyente();
         // obtener DTE intercambiado
-        $DteIntercambio = new Model_DteIntercambio($Emisor->rut, (int)$codigo, $Emisor->enCertificacion());
+        $DteIntercambio = new Model_DteIntercambio(
+            $Emisor->rut, (int)$codigo, $Emisor->enCertificacion()
+        );
         if (!$DteIntercambio->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el intercambio solicitado', 'error'
+                'No existe el intercambio solicitado.', 'error'
             );
             $this->redirect('/dte/dte_intercambios/listar');
         }
         // verificar que el intercambio no esté en uso en los documentos recibidos
         if ($DteIntercambio->recibido()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'El intercambio tiene a lo menos un DTE recibido asociado, no se puede eliminar', 'error'
+                'El intercambio tiene a lo menos un DTE recibido asociado, no se puede eliminar.', 'error'
             );
             $this->redirect('/dte/dte_intercambios/ver/'.$codigo);
         }
         // eliminar el intercambio y redireccionar
         $DteIntercambio->delete();
         \sowerphp\core\Model_Datasource_Session::message(
-            'Intercambio '.$codigo.' eliminado', 'ok'
+            'Intercambio '.$codigo.' eliminado.', 'ok'
         );
         $this->redirect('/dte/dte_intercambios/listar');
     }
 
     /**
-     * Acción que muestra el mensaje del email de intercambio
-         * @version 2021-10-12
+     * Acción que muestra el mensaje del email de intercambio.
      */
     public function html($codigo)
     {
         $Emisor = $this->getContribuyente();
-        $DteIntercambio = new Model_DteIntercambio($Emisor->rut, (int)$codigo, $Emisor->enCertificacion());
+        $DteIntercambio = new Model_DteIntercambio(
+            $Emisor->rut, (int)$codigo, $Emisor->enCertificacion()
+        );
         if (!$DteIntercambio->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el intercambio solicitado', 'error'
+                'No existe el intercambio solicitado.', 'error'
             );
             $this->redirect('/dte/dte_intercambios/listar');
         }
         $this->layout = null;
         $html = $DteIntercambio->getEmailHtml();
         $this->set([
-            'html' => $html ? $html : 'No hay mensaje HTML',
+            'html' => $html ? $html : 'No hay mensaje HTML.',
         ]);
     }
 
     /**
      * Acción para actualizar la bandeja de intercambio. Guarda los DTE
      * recibidos por intercambio y guarda los acuses de recibos de DTE
-     * enviados por otros contribuyentes
-         * @version 2020-04-17
+     * enviados por otros contribuyentes.
      */
     public function actualizar($dias = 7)
     {
@@ -187,15 +187,15 @@ class Controller_DteIntercambios extends \Controller_App
             $resultado = $Emisor->actualizarBandejaIntercambio($dias);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message(
-                $e->getMessage(), ($e->getCode()==500 ? 'error' : 'info')
+                $e->getMessage(), ($e->getCode() == 500 ? 'error' : 'info')
             );
             $this->redirect('/dte/dte_intercambios/listar');
         }
         extract($resultado);
         if ($n_uids>1) {
-            $encontrados = 'Se encontraron '.num($n_uids).' correos';
+            $encontrados = 'Se encontraron '.num($n_uids).' correos.';
         } else {
-            $encontrados = 'Se encontró '.num($n_uids).' correo';
+            $encontrados = 'Se encontró '.num($n_uids).' correo.';
         }
         \sowerphp\core\Model_Datasource_Session::message(
             $encontrados.': EnvioDTE='.num($n_EnvioDTE).',  EnvioRecibos='.num($n_EnvioRecibos).', RecepcionEnvio='.num($n_RecepcionEnvio).', ResultadoDTE='.num($n_ResultadoDTE).' y Omitidos='.num($omitidos), 'ok'
@@ -209,8 +209,7 @@ class Controller_DteIntercambios extends \Controller_App
     }
 
     /**
-     * Recurso para mostrar el PDF de un EnvioDTE de un intercambio de DTE
-         * @version 2021-10-09
+     * Recurso para mostrar el PDF de un EnvioDTE de un intercambio de DTE.
      */
     public function _api_pdf_GET($codigo, $contribuyente, $cedible = false, $emisor = null, $dte = null, $folio = null)
     {
@@ -227,7 +226,7 @@ class Controller_DteIntercambios extends \Controller_App
         // obtener DTE intercambiado
         $DteIntercambio = new Model_DteIntercambio($Receptor->rut, $codigo, $Receptor->enCertificacion());
         if (!$DteIntercambio->exists()) {
-            $this->Api->send('No existe el intercambio solicitado', 404);
+            $this->Api->send('No existe el intercambio solicitado.', 404);
         }
         // armar configuración del PDF
         extract($this->getQuery([
@@ -273,8 +272,7 @@ class Controller_DteIntercambios extends \Controller_App
     }
 
     /**
-     * Acción para mostrar el PDF de un EnvioDTE de un intercambio de DTE
-         * @version 2021-10-09
+     * Acción para mostrar el PDF de un EnvioDTE de un intercambio de DTE.
      */
     public function pdf($codigo, $cedible = false, $emisor = null, $dte = null, $folio = null)
     {
@@ -305,8 +303,7 @@ class Controller_DteIntercambios extends \Controller_App
     }
 
     /**
-     * Recurso que descarga el XML del documento intercambiado
-         * @version 2019-07-17
+     * Recurso que descarga el XML del documento intercambiado.
      */
     public function _api_xml_GET($codigo, $contribuyente)
     {
@@ -323,7 +320,7 @@ class Controller_DteIntercambios extends \Controller_App
         // obtener DTE intercambio
         $DteIntercambio = new Model_DteIntercambio($Receptor->rut, $codigo, $Receptor->enCertificacion());
         if (!$DteIntercambio->exists()) {
-            $this->Api->send('No existe el intercambio solicitado', 404);
+            $this->Api->send('No existe el intercambio solicitado.', 404);
         }
         // entregar XML
         $xml = base64_decode($DteIntercambio->archivo_xml);
@@ -334,8 +331,7 @@ class Controller_DteIntercambios extends \Controller_App
     }
 
     /**
-     * Acción que descarga el XML del documento intercambiado
-         * @version 2019-07-17
+     * Acción que descarga el XML del documento intercambiado.
      */
     public function xml($codigo)
     {
@@ -358,8 +354,7 @@ class Controller_DteIntercambios extends \Controller_App
     }
 
     /**
-     * Recurso que entrega los XML del resultado de la revisión del intercambio
-         * @version 2019-02-07
+     * Recurso que entrega los XML del resultado de la revisión del intercambio.
      */
     public function _api_resultados_xml_GET($codigo, $contribuyente)
     {
@@ -374,13 +369,19 @@ class Controller_DteIntercambios extends \Controller_App
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // obtener DTE intercambio
-        $DteIntercambio = new Model_DteIntercambio($Emisor->rut, (int)$codigo, $Emisor->enCertificacion());
+        $DteIntercambio = new Model_DteIntercambio(
+            $Emisor->rut, (int)$codigo, $Emisor->enCertificacion()
+        );
         if (!$DteIntercambio->exists()) {
-            $this->Api->send('No existe el intercambio solicitado', 404);
+            $this->Api->send('No existe el intercambio solicitado.', 404);
         }
         // si no hay XML error
-        if (!$DteIntercambio->recepcion_xml && !$DteIntercambio->recibos_xml && !$DteIntercambio->resultado_xml) {
-            $this->Api->send('No existen archivos de resultado generados, no se ha procesado aun el intercambio', 400);
+        if (
+            !$DteIntercambio->recepcion_xml
+            && !$DteIntercambio->recibos_xml
+            && !$DteIntercambio->resultado_xml
+        ) {
+            $this->Api->send('No existen archivos de resultado generados, no se ha procesado aun el intercambio.', 400);
         }
         // agregar a archivo comprimido y entregar
         $dir = TMP.'/resultado_intercambio_'.$Emisor->rut.'-'.$Emisor->dv.'_'.$DteIntercambio->codigo;
@@ -388,7 +389,7 @@ class Controller_DteIntercambios extends \Controller_App
             \sowerphp\general\Utility_File::rmdir($dir);
         }
         if (!mkdir($dir)) {
-            $this->Api->send('No fue posible crear el directorio temporal para los XML', 507);
+            $this->Api->send('No fue posible crear el directorio temporal para los XML.', 507);
         }
         if ($DteIntercambio->recepcion_xml) {
             file_put_contents($dir.'/RecepcionDTE.xml', base64_decode($DteIntercambio->recepcion_xml));
@@ -404,8 +405,7 @@ class Controller_DteIntercambios extends \Controller_App
     }
 
     /**
-     * Acción que entrega los XML del resultado de la revisión del intercambio
-         * @version 2019-07-17
+     * Acción que entrega los XML del resultado de la revisión del intercambio.
      */
     public function resultados_xml($codigo)
     {
@@ -432,8 +432,7 @@ class Controller_DteIntercambios extends \Controller_App
     }
 
     /**
-     * Acción que procesa y responde al intercambio recibido
-         * @version 2018-05-20
+     * Acción que procesa y responde al intercambio recibido.
      */
     public function responder($codigo)
     {
@@ -449,7 +448,7 @@ class Controller_DteIntercambios extends \Controller_App
         $DteIntercambio = new Model_DteIntercambio($Emisor->rut, (int)$codigo, $Emisor->enCertificacion());
         if (!$DteIntercambio->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el intercambio solicitado', 'error'
+                'No existe el intercambio solicitado.', 'error'
             );
             $this->redirect('/dte/dte_intercambios/listar');
         }
@@ -503,8 +502,7 @@ class Controller_DteIntercambios extends \Controller_App
 
     /**
      * Acción que permite realizar una búsqueda avanzada dentro de los
-     * documentos de intercambio
-         * @version 2021-08-18
+     * documentos de intercambio.
      */
     public function buscar()
     {
@@ -557,8 +555,7 @@ class Controller_DteIntercambios extends \Controller_App
 
     /**
      * Acción de la API que permite realizar una búsqueda avanzada dentro de los
-     * documentos de intercambio
-         * @version 2021-10-15
+     * documentos de intercambio.
      */
     public function _api_buscar_POST($receptor)
     {
@@ -569,8 +566,9 @@ class Controller_DteIntercambios extends \Controller_App
         }
         // verificar permisos del usuario autenticado sobre el emisor del DTE
         $Receptor = new Model_Contribuyente($receptor);
-        if (!$Receptor->exists())
+        if (!$Receptor->exists()) {
             $this->Api->send('Emisor no existe.', 404);
+        }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_intercambios/buscar')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
@@ -580,8 +578,7 @@ class Controller_DteIntercambios extends \Controller_App
     }
 
     /**
-     * Acción de la API que permite buscar dentro de la bandeja de intercambio
-         * @version 2021-10-15
+     * Acción de la API que permite buscar dentro de la bandeja de intercambio.
      */
     public function _api_buscar_GET($receptor)
     {
@@ -592,7 +589,7 @@ class Controller_DteIntercambios extends \Controller_App
         }
         $Receptor = new Model_Contribuyente($receptor);
         if (!$Receptor->exists()) {
-            $this->Api->send('Receptor no existe', 404);
+            $this->Api->send('Receptor no existe.', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_intercambios/listar')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
@@ -614,8 +611,7 @@ class Controller_DteIntercambios extends \Controller_App
      * Acción que permite cargar la respuesta recibida de un intercambio
      * Esta acción principalmente sirve para procesar y validar una respuesta
      * que no ha sido procesada de manera automática por la actualización
-     * de la bandeja de intercambio
-         * @version 2022-08-24
+     * de la bandeja de intercambio.
      */
     public function probar_xml()
     {
@@ -641,9 +637,12 @@ class Controller_DteIntercambios extends \Controller_App
                 ];
                 // tratar de procesar como EnvioDTE
                 try {
-                    $procesarEnvioDTE = (new Model_DteIntercambios())->setContribuyente($Emisor)->procesarEnvioDTE($file);
+                    $procesarEnvioDTE = (new Model_DteIntercambios())
+                        ->setContribuyente($Emisor)
+                        ->procesarEnvioDTE($file)
+                    ;
                     if ($procesarEnvioDTE !== null) {
-                        $archivo['estado'] = 'EnvioDTE: procesado y guardado';
+                        $archivo['estado'] = 'EnvioDTE: procesado y guardado.';
                         $archivos[] = $archivo;
                         continue;
                     }
@@ -654,9 +653,11 @@ class Controller_DteIntercambios extends \Controller_App
                 }
                 // tratar de procesar como Recibo
                 try {
-                    $procesarRecibo = (new Model_DteIntercambioRecibo())->saveXML($this->getContribuyente(), $file['data']);
+                    $procesarRecibo = (new Model_DteIntercambioRecibo())
+                        ->saveXML($this->getContribuyente(), $file['data'])
+                    ;
                     if ($procesarRecibo !== null) {
-                        $archivo['estado'] = 'Recibo: procesado y guardado';
+                        $archivo['estado'] = 'Recibo: procesado y guardado.';
                         $archivos[] = $archivo;
                         continue;
                     }
@@ -667,9 +668,11 @@ class Controller_DteIntercambios extends \Controller_App
                 }
                 // tratar de procesar como Recepción
                 try {
-                    $procesarRecepcion = (new Model_DteIntercambioRecepcion())->saveXML($this->getContribuyente(), $file['data']);
+                    $procesarRecepcion = (new Model_DteIntercambioRecepcion())
+                        ->saveXML($this->getContribuyente(), $file['data'])
+                    ;
                     if ($procesarRecepcion !== null) {
-                        $archivo['estado'] = 'Recepción: procesado y guardado';
+                        $archivo['estado'] = 'Recepción: procesado y guardado.';
                         $archivos[] = $archivo;
                         continue;
                     }
@@ -680,9 +683,11 @@ class Controller_DteIntercambios extends \Controller_App
                 }
                 // tratar de procesar como Resultado
                 try {
-                    $procesarResultado = (new Model_DteIntercambioResultado())->saveXML($this->getContribuyente(), $file['data']);
+                    $procesarResultado = (new Model_DteIntercambioResultado())
+                        ->saveXML($this->getContribuyente(), $file['data'])
+                    ;
                     if ($procesarResultado !== null) {
-                        $archivo['estado'] = 'Resultado: procesado y guardado';
+                        $archivo['estado'] = 'Resultado: procesado y guardado.';
                         $archivos[] = $archivo;
                         continue;
                     }

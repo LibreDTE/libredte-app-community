@@ -24,6 +24,8 @@
 // namespace del modelo
 namespace website\Dte\Admin;
 
+use \sowerphp\app\Sistema\General\Model_MonedaCambios;
+
 /**
  * Clase para mapear la tabla item de la base de datos.
  */
@@ -235,8 +237,7 @@ class Model_Item extends \Model_App
     private $ItemTienda;
 
     /**
-     * Método que guarda el item de facturación
-         * @version 2020-09-14
+     * Método que guarda el item de facturación.
      */
     public function save()
     {
@@ -245,8 +246,7 @@ class Model_Item extends \Model_App
     }
 
     /**
-     * Método que entrega la clasificación del item
-         * @version 2016-02-24
+     * Método que entrega la clasificación del item.
      */
     public function getClasificacion()
     {
@@ -254,69 +254,69 @@ class Model_Item extends \Model_App
     }
 
     /**
-     * Método que entrega la clasificación del item
-         * @version 2016-02-24
+     * Método que entrega la clasificación del item.
      */
     public function getItemClasificacion()
     {
-        return (new Model_ItemClasificaciones())->get($this->contribuyente, $this->clasificacion);
+        return (new Model_ItemClasificaciones())->get(
+            $this->contribuyente, $this->clasificacion
+        );
     }
 
     /**
-     * Método que entrega el precio del item
-     * @param fecha Permite solicitar el precio para una fecha en particular (sirve cuando el precio no está en CLP)
-     * @param bruto =false se obtendrá el valor neto del item, =true se obtendrá el valor bruto (con impuestos)
-     * @param moneda Tipo de moneda en la que se desea obtener el precio del item
-     * @param decimales Cantidad de decimales para la moneda que se está solicitando obtener el precio
-     * @todo Calcular monto neto/bruto cuando hay impuestos específicos
-         * @version 2020-07-02
+     * Método que entrega el precio del item.
+     * @param fecha Permite solicitar el precio para una fecha en particular (sirve cuando el precio no está en CLP).
+     * @param bruto =false se obtendrá el valor neto del item, =true se obtendrá el valor bruto (con impuestos).
+     * @param moneda Tipo de moneda en la que se desea obtener el precio del item.
+     * @param decimales Cantidad de decimales para la moneda que se está solicitando obtener el precio.
+     * @todo Calcular monto neto/bruto cuando hay impuestos específicos.
      */
-    public function getPrecio($fecha = null, $bruto = false, $moneda = 'CLP', $decimales = null)
+    public function getPrecio(?string $fecha = null, bool $bruto = false, string $moneda = 'CLP', ?int $decimales = null)
     {
         if ($bruto) {
             return $this->getPrecioBruto($fecha, $moneda, $decimales);
         }
         if ($moneda == 'CLP') {
-            $precio = $this->bruto ? $this->precio/1.19 : $this->precio;
+            $precio = $this->bruto ? $this->precio / 1.19 : $this->precio;
             if ($this->moneda == 'CLP') {
                 return round($precio, $decimales);
             }
         } else {
             $d = $decimales ? (int)$decimales : ($this->moneda != 'CLP' ? 3 : 0);
-            $precio = $this->bruto ? round($this->precio/1.19, $d) : $this->precio;
+            $precio = $this->bruto ? round($this->precio / 1.19, $d) : $this->precio;
         }
         if ($moneda == $this->moneda) {
             return $precio;
         }
-        return (new \sowerphp\app\Sistema\General\Model_MonedaCambios())->convertir($this->moneda, $moneda, $precio, $fecha, $decimales);
+        return (new Model_MonedaCambios())->convertir(
+            $this->moneda, $moneda, $precio, $fecha, $decimales
+        );
     }
 
     /**
-     * Método que entrega el precio bruto del item
-     * @param fecha Permite solicitar el precio para una fecha en particular (sirve cuando el precio no está en CLP)
-     * @param moneda Tipo de moneda en la que se desea obtener el precio del item
-     * @param decimales Cantidad de decimales para la moneda que se está solicitando obtener el precio
-     * @todo Calcular monto neto/bruto cuando hay impuestos específicos
-         * @version 2017-07-31
+     * Método que entrega el precio bruto del item.
+     * @param fecha Permite solicitar el precio para una fecha en particular (sirve cuando el precio no está en CLP).
+     * @param moneda Tipo de moneda en la que se desea obtener el precio del item.
+     * @param decimales Cantidad de decimales para la moneda que se está solicitando obtener el precio.
+     * @todo Calcular monto neto/bruto cuando hay impuestos específicos.
      */
-    public function getPrecioBruto($fecha = null, $moneda = 'CLP', $decimales = null)
+    public function getPrecioBruto(?string $fecha = null, string $moneda = 'CLP', ?int $decimales = null)
     {
-        if ($this->bruto && $this->moneda==$moneda) {
+        if ($this->bruto && $this->moneda == $moneda) {
             return $this->precio;
         }
         $neto = $this->getPrecio($fecha, false, $moneda, $decimales);
-        return !$this->exento ? $neto*1.19 : $neto;
+        return !$this->exento ? $neto * 1.19 : $neto;
     }
 
     /**
-     * Método que entrega el descuento del item
-     * @param fecha Permite solicitar el descuento para una fecha en particular (sirve cuando el descuento no está en CLP)
-     * @param bruto =false se obtendrá el descuento neto del item, =true se obtendrá el descuento bruto (con impuestos)
-     * @param moneda Tipo de moneda en la que se desea obtener el descuento del item
-     * @param decimales Cantidad de decimales para la moneda que se está solicitando obtener el descuento
-         * @version 2020-07-02
+     * Método que entrega el descuento del item.
+     * @param fecha Permite solicitar el descuento para una fecha en particular (sirve cuando el descuento no está en CLP).
+     * @param bruto =false se obtendrá el descuento neto del item, =true se obtendrá el descuento bruto (con impuestos).
+     * @param moneda Tipo de moneda en la que se desea obtener el descuento del item.
+     * @param decimales Cantidad de decimales para la moneda que se está solicitando obtener el descuento.
      */
-    public function getDescuento($fecha = null, $bruto = false, $moneda = 'CLP', $decimales = null)
+    public function getDescuento(?string $fecha = null, bool $bruto = false, string $moneda = 'CLP', ?int $decimales = null)
     {
         // si el descuento es en porcentaje se entrega directamente ya que no se ve afectado por los parámetros o si es o no bruto
         if ($this->descuento_tipo == '%') {
@@ -328,58 +328,67 @@ class Model_Item extends \Model_App
         }
         // si es descuento neto se revisa según moneda solicitada
         if ($moneda == 'CLP') {
-            $descuento = $this->bruto ? $this->descuento/1.19 : $this->descuento;
+            $descuento = $this->bruto ? $this->descuento / 1.19 : $this->descuento;
             if ($this->moneda == 'CLP') {
                 return round($descuento, $decimales);
             }
         } else {
             $d = $decimales ? (int)$decimales : ($this->moneda != 'CLP' ? 3 : 0);
-            $descuento = $this->bruto ? round($this->descuento/1.19, $d) : $this->descuento;
+            $descuento = $this->bruto ? round($this->descuento / 1.19, $d) : $this->descuento;
         }
         if ($moneda == $this->moneda) {
             return $descuento;
         }
-        return (new \sowerphp\app\Sistema\General\Model_MonedaCambios())->convertir($this->moneda, $moneda, $descuento, $fecha, $decimales);
+        return (new Model_MonedaCambios())->convertir(
+            $this->moneda, $moneda, $descuento, $fecha, $decimales
+        );
     }
 
     /**
-     * Método que entrega el descuento bruto del item
-     * @param fecha Permite solicitar el descuento para una fecha en particular (sirve cuando el descuento no está en CLP)
-     * @param moneda Tipo de moneda en la que se desea obtener el descuento del item
-     * @param decimales Cantidad de decimales para la moneda que se está solicitando obtener el descuento
-         * @version 2018-10-25
+     * Método que entrega el descuento bruto del item.
+     * @param fecha Permite solicitar el descuento para una fecha en particular (sirve cuando el descuento no está en CLP).
+     * @param moneda Tipo de moneda en la que se desea obtener el descuento del item.
+     * @param decimales Cantidad de decimales para la moneda que se está solicitando obtener el descuento.
      */
-    public function getDescuentoBruto($fecha = null, $moneda = 'CLP', $decimales = null)
+    public function getDescuentoBruto(?string $fecha = null, string $moneda = 'CLP', ?int $decimales = null)
     {
-        if ($this->descuento_tipo == '%' || ($this->bruto && $this->moneda==$moneda)) {
+        if ($this->descuento_tipo == '%' || ($this->bruto && $this->moneda == $moneda)) {
             return $this->descuento;
         }
         $neto = $this->getDescuento($fecha, false, $moneda, $decimales);
-        return !$this->exento ? $neto*1.19 : $neto;
+        return !$this->exento ? $neto * 1.19 : $neto;
     }
 
     /**
-     * Método que entrega el objeto del Item del módulo de Inventario
-         * @version 2020-06-07
+     * Método que entrega el objeto del Item del módulo de Inventario.
      */
     public function getItemInventario()
     {
+        if (!is_libredte_enterprise()) {
+            return null;
+        }
         if (!isset($this->ItemInventario)) {
             $this->ItemInventario = (new \libredte\enterprise\Inventario\Model_InventarioItemes())
-                ->setContribuyente($this->getContribuyente())->getByFacturacion($this->codigo, $this->codigo_tipo);
+                ->setContribuyente($this->getContribuyente())
+                ->getByFacturacion($this->codigo, $this->codigo_tipo)
+            ;
         }
         return $this->ItemInventario;
     }
 
     /**
-     * Método que entrega el objeto del Item del módulo de Tienda Electrónica
-         * @version 2020-06-07
+     * Método que entrega el objeto del Item del módulo de Tienda Electrónica.
      */
     public function getItemTienda($tienda = null)
     {
+        if (!is_libredte_enterprise()) {
+            return null;
+        }
         if (!isset($this->ItemTienda)) {
             $this->ItemTienda = (new \libredte\enterprise\Tienda\Admin\Model_TiendaItemes())
-                ->setContribuyente($this->getContribuyente())->getByFacturacion($tienda, $this->codigo, $this->codigo_tipo);
+                ->setContribuyente($this->getContribuyente())
+                ->getByFacturacion($tienda, $this->codigo, $this->codigo_tipo)
+            ;
         }
         return $this->ItemTienda;
     }

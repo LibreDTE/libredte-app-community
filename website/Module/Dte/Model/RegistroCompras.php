@@ -40,8 +40,7 @@ class Model_RegistroCompras extends \Model_Plural_App
 
     /**
      * Método que sincroniza los registros en estado PENDIENTE del registro de
-     * compras del SII con un registro local para notificaciones en el sistema
-         * @version 2019-08-09
+     * compras del SII con un registro local para notificaciones en el sistema.
      */
     public function sincronizar($estado = 'PENDIENTE', $meses = 2)
     {
@@ -59,12 +58,27 @@ class Model_RegistroCompras extends \Model_Plural_App
         // sincronizar periodos
         foreach ($periodos as $periodo) {
             $estado_codigo = $this->getEstadoCodigo($estado);
-            $pendientes = $this->getContribuyente()->getRCV(['operacion' => 'COMPRA', 'periodo' => $periodo, 'estado' => $estado, 'tipo' => 'rcv']);
+            $pendientes = $this->getContribuyente()->getRCV([
+                'operacion' => 'COMPRA',
+                'periodo' => $periodo,
+                'estado' => $estado,
+                'tipo' => 'rcv',
+            ]);
             $this->db->beginTransaction();
-            $this->db->query(
-                'DELETE FROM registro_compra WHERE receptor = :receptor AND periodo = :periodo AND certificacion = :certificacion AND estado = :estado',
-                [':receptor' => $this->getContribuyente()->rut, ':periodo' => $periodo, ':certificacion' => $this->getContribuyente()->enCertificacion(), ':estado' => $estado_codigo]
-            );
+            $this->db->query('
+                DELETE
+                FROM registro_compra
+                WHERE
+                    receptor = :receptor
+                    AND periodo = :periodo
+                    AND certificacion = :certificacion
+                    AND estado = :estado
+                ', [
+                    ':receptor' => $this->getContribuyente()->rut,
+                    ':periodo' => $periodo,
+                    ':certificacion' => $this->getContribuyente()->enCertificacion(),
+                    ':estado' => $estado_codigo,
+            ]);
             foreach ($pendientes as $pendiente) {
                 $RegistroCompra = new Model_RegistroCompra();
                 $RegistroCompra->receptor = $this->getContribuyente()->rut;
@@ -79,8 +93,7 @@ class Model_RegistroCompras extends \Model_Plural_App
     }
 
     /**
-     * Método entrega el código de un estado a partir de su glosa
-         * @version 2019-08-09
+     * Método entrega el código de un estado a partir de su glosa.
      */
     private function getEstadoCodigo($estado)
     {
@@ -91,8 +104,7 @@ class Model_RegistroCompras extends \Model_Plural_App
     /**
      * Método que recibe un registro con el formato del SII (registro de compras)
      * y lo modifica para poder ser usado en el registro local de LibreDTE
-     * (normalizándolo para el uso en la base de datos)
-         * @version 2019-08-09
+     * (normalizándolo para el uso en la base de datos).
      */
     private function normalizar($datos)
     {
@@ -117,13 +129,18 @@ class Model_RegistroCompras extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega los documentos de compras pendientes de ser procesados
-         * @version 2021-10-12
+     * Método que entrega los documentos de compras pendientes de ser procesados.
      */
-    public function buscar(array $filtros = [], $detalle = false)
+    public function buscar(array $filtros = [], $detalle = false): array
     {
-        $where = ['rc.receptor = :receptor', 'rc.certificacion = :certificacion', ];
-        $vars = [':receptor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion()];
+        $where = [
+            'rc.receptor = :receptor',
+            'rc.certificacion = :certificacion',
+        ];
+        $vars = [
+            ':receptor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+        ];
         if (isset($filtros['estado'])) {
             $where[] = 'rc.estado = :estado';
             $vars[':estado'] = $filtros['estado'];
@@ -216,27 +233,28 @@ class Model_RegistroCompras extends \Model_Plural_App
         ', $vars);
         $tipo_transacciones = \sasco\LibreDTE\Sii\RegistroCompraVenta::$tipo_transacciones;
         foreach ($pendientes as &$p) {
-            $p['desctipotransaccion'] = !empty($tipo_transacciones[$p['dettipotransaccion']]) ? $tipo_transacciones[$p['dettipotransaccion']] : ('Tipo #'.$p['dettipotransaccion']);
+            $p['desctipotransaccion'] = !empty($tipo_transacciones[$p['dettipotransaccion']])
+                ? $tipo_transacciones[$p['dettipotransaccion']]
+                : ('Tipo #' . $p['dettipotransaccion'])
+            ;
         }
         return $pendientes;
     }
 
     /**
      * Método que entrega los documentos de compras pendientes de ser procesados
-     * con su detalle completo del registro de compras
-         * @version 2019-08-09
+     * con su detalle completo del registro de compras.
      */
-    public function getDetalle(array $filtros = [])
+    public function getDetalle(array $filtros = []): array
     {
         return $this->buscar($filtros, true);
     }
 
     /**
      * Método que entrega las cantidad de documentos de compras pendientes de
-     * ser procesados
-         * @version 2019-08-11
+     * ser procesados.
      */
-    public function getResumenPendientes()
+    public function getResumenPendientes(): array
     {
         return $this->db->getTable('
             SELECT
@@ -255,15 +273,17 @@ class Model_RegistroCompras extends \Model_Plural_App
                 AND estado = 0
             GROUP BY rc.dettipodoc, t.tipo
             ORDER BY fecha_recepcion_sii_inicial
-        ', [':receptor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion()]);
+        ', [
+            ':receptor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+        ]);
     }
 
     /**
      * Método que entrega las cantidad de documentos de compras pendientes de
-     * ser procesados agrupados por días
-         * @version 2019-08-31
+     * ser procesados agrupados por días.
      */
-    public function getByDias($dias = 8)
+    public function getByDias(int $dias = 8): array
     {
         return $this->db->getTable('
             SELECT
@@ -299,10 +319,9 @@ class Model_RegistroCompras extends \Model_Plural_App
 
     /**
      * Método que entrega la cantidad de pendientes agrupados por rango de montos
-     * y el monto total
-         * @version 2019-08-31
+     * y el monto total.
      */
-    public function getByRangoMontos()
+    public function getByRangoMontos(): array
     {
         $rangos = [
             [         1,     100000],
@@ -337,7 +356,7 @@ class Model_RegistroCompras extends \Model_Plural_App
         }
         return $this->db->getTable(
             implode(' UNION ', $query)
-            .' ORDER BY hasta DESC'
+            . ' ORDER BY hasta DESC'
         , [
             ':receptor' => $this->getContribuyente()->rut,
             ':certificacion' => $this->getContribuyente()->enCertificacion(),

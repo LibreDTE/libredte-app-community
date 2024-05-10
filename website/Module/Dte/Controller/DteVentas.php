@@ -24,9 +24,10 @@
 // namespace del controlador
 namespace website\Dte;
 
+use \website\Dte\Admin\Mantenedores\Model_DteTipos;
+
 /**
- * Controlador de ventas
- * @version 2018-03-27
+ * Controlador de ventas.
  */
 class Controller_DteVentas extends Controller_Base_Libros
 {
@@ -39,8 +40,7 @@ class Controller_DteVentas extends Controller_Base_Libros
     ]; ///< Configuración para las acciones del controlador
 
     /**
-     * Método para permitir acciones sin estar autenticado
-         * @version 2020-08-06
+     * Método para permitir acciones sin estar autenticado.
      */
     public function beforeFilter()
     {
@@ -49,17 +49,21 @@ class Controller_DteVentas extends Controller_Base_Libros
     }
 
     /**
-     * Acción que envía el archivo XML del libro de ventas al SII
-     * Si no hay documentos en el período se enviará sin movimientos
-         * @version 2020-01-26
+     * Acción que envía el archivo XML del libro de ventas al SII.
+     * Si no hay documentos en el período se enviará sin movimientos.
      */
     public function enviar_sii($periodo)
     {
         $Emisor = $this->getContribuyente();
         // si el libro fue enviado y no es rectifica error
         $DteVenta = new Model_DteVenta($Emisor->rut, $periodo, $Emisor->enCertificacion());
-        if ($DteVenta->track_id && empty($_POST['CodAutRec']) && $DteVenta->getEstado() != 'LRH' && $DteVenta->track_id!=-1) {
-            \sowerphp\core\Model_Datasource_Session::message('Libro del período '.$periodo.' ya fue enviado, ahora solo puede hacer rectificaciones', 'error');
+        if (
+            $DteVenta->track_id
+            && empty($_POST['CodAutRec'])
+            && $DteVenta->getEstado() != 'LRH'
+            && $DteVenta->track_id != -1
+        ) {
+            \sowerphp\core\Model_Datasource_Session::message('Libro del período '.$periodo.' ya fue enviado, ahora solo puede hacer rectificaciones.', 'error');
             $this->redirect(str_replace('enviar_sii', 'ver', $this->request->request));
         }
         // si el periodo es mayor o igual al actual no se puede enviar
@@ -97,8 +101,14 @@ class Controller_DteVentas extends Controller_Base_Libros
             'RutEmisorLibro' => $Emisor->rut.'-'.$Emisor->dv,
             'RutEnvia' => $Firma->getID(),
             'PeriodoTributario' => substr($periodo, 0, 4).'-'.substr($periodo, 4),
-            'FchResol' => $Emisor->enCertificacion() ? $Emisor->config_ambiente_certificacion_fecha : $Emisor->config_ambiente_produccion_fecha,
-            'NroResol' =>  $Emisor->enCertificacion() ? 0 : $Emisor->config_ambiente_produccion_numero,
+            'FchResol' => $Emisor->enCertificacion()
+                ? $Emisor->config_ambiente_certificacion_fecha
+                : $Emisor->config_ambiente_produccion_fecha
+            ,
+            'NroResol' =>  $Emisor->enCertificacion()
+                ? 0
+                : $Emisor->config_ambiente_produccion_numero
+            ,
             'TipoOperacion' => 'VENTA',
             'TipoLibro' => 'MENSUAL',
             'TipoEnvio' => 'TOTAL',
@@ -214,9 +224,8 @@ class Controller_DteVentas extends Controller_Base_Libros
     }
 
     /**
-     * Acción que genera el archivo CSV con el registro de ventas
-     * En realidad esto descarga los datos que están localmente y no los del RV del SII
-         * @version 2019-07-18
+     * Acción que genera el archivo CSV con el registro de ventas.
+     * En realidad esto descarga los datos que están localmente y no los del RV del SII.
      */
     public function descargar_registro_venta($periodo)
     {
@@ -224,7 +233,7 @@ class Controller_DteVentas extends Controller_Base_Libros
         $ventas = $Emisor->getVentas($periodo);
         if (!$ventas) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No hay documentos de venta del período '.$periodo, 'warning'
+                'No hay documentos de venta del período '.$periodo.'.', 'warning'
             );
             $this->redirect(str_replace('descargar_registro_venta', 'ver', $this->request->request));
         }
@@ -240,8 +249,7 @@ class Controller_DteVentas extends Controller_Base_Libros
     }
 
     /**
-     * Acción que genera el archivo CSV con los resúmenes de ventas (ingresados manualmente)
-         * @version 2019-07-18
+     * Acción que genera el archivo CSV con los resúmenes de ventas (ingresados manualmente).
      */
     public function descargar_resumenes($periodo)
     {
@@ -249,7 +257,7 @@ class Controller_DteVentas extends Controller_Base_Libros
         $Libro = new Model_DteVenta($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         if (!$Libro->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Aun no se ha generado el XML del período '.$periodo, 'error'
+                'Aun no se ha generado el XML del período '.$periodo.'.', 'error'
             );
             $this->redirect(str_replace('descargar_resumenes', 'ver', $this->request->request));
         }
@@ -259,7 +267,7 @@ class Controller_DteVentas extends Controller_Base_Libros
         $resumenes = $LibroCompraVenta->getResumenManual() + $LibroCompraVenta->getResumenBoletas();
         if (!$resumenes) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No hay resúmenes para el período '.$periodo, 'warning'
+                'No hay resúmenes para el período '.$periodo.'.', 'warning'
             );
             $this->redirect(str_replace('descargar_resumenes', 'ver', $this->request->request));
         }
@@ -284,8 +292,7 @@ class Controller_DteVentas extends Controller_Base_Libros
     }
 
     /**
-     * Acción que permite seleccionar el período para explorar el resumen del registro de ventas del SII
-         * @version 2018-04-25
+     * Acción que permite seleccionar el período para explorar el resumen del registro de ventas del SII.
      */
     public function registro_ventas()
     {
@@ -295,8 +302,7 @@ class Controller_DteVentas extends Controller_Base_Libros
     }
 
     /**
-     * Acción que permite obtener el resumen del registro de venta para un período
-         * @version 2017-09-10
+     * Acción que permite obtener el resumen del registro de venta para un período.
      */
     public function rcv_resumen($periodo)
     {
@@ -315,20 +321,24 @@ class Controller_DteVentas extends Controller_Base_Libros
     }
 
     /**
-     * Acción que permite obtener el detalle del registro de venta para un período
-         * @version 2017-09-10
+     * Acción que permite obtener el detalle del registro de venta para un período.
      */
     public function rcv_detalle($periodo, $dte)
     {
         $Emisor = $this->getContribuyente();
         try {
-            $detalle = $Emisor->getRCV(['operacion' => 'VENTA', 'periodo' => $periodo, 'dte' => $dte, 'estado' => 'REGISTRO']);
+            $detalle = $Emisor->getRCV([
+                'operacion' => 'VENTA',
+                'periodo' => $periodo,
+                'dte' => $dte,
+                'estado' => 'REGISTRO',
+            ]);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
             $this->redirect('/dte/dte_ventas/ver/'.$periodo);
         }
         if (!$detalle) {
-            \sowerphp\core\Model_Datasource_Session::message('No hay detalle para el período y estado solicitados', 'warning');
+            \sowerphp\core\Model_Datasource_Session::message('No hay detalle para el período y estado solicitados.', 'warning');
             $this->redirect('/dte/dte_ventas/ver/'.$periodo);
         }
         $this->set([
@@ -340,8 +350,7 @@ class Controller_DteVentas extends Controller_Base_Libros
     }
 
     /**
-     * Acción que permite obtener el detalle de documentos emitidos con cierto evento del receptor
-         * @version 2017-09-12
+     * Acción que permite obtener el detalle de documentos emitidos con cierto evento del receptor.
      */
     public function eventos_receptor($periodo, $evento)
     {
@@ -350,14 +359,18 @@ class Controller_DteVentas extends Controller_Base_Libros
         $this->set([
             'Emisor' => $Emisor,
             'periodo' => $periodo,
-            'Evento' => (object)['codigo' => $evento, 'glosa' => $evento?\sasco\LibreDTE\Sii\RegistroCompraVenta::$eventos[$evento] : 'Sin evento registrado'],
+            'Evento' => (object)[
+                'codigo' => $evento,
+                'glosa' => $evento
+                    ? \sasco\LibreDTE\Sii\RegistroCompraVenta::$eventos[$evento]
+                    : 'Sin evento registrado',
+            ],
             'documentos' => $DteVenta->getDocumentosConEventoReceptor($evento),
         ]);
     }
 
     /**
-     * Acción que genera un resumen de las ventas de un año completo
-         * @version 2018-04-25
+     * Acción que genera un resumen de las ventas de un año completo.
      */
     public function resumen($anio = null)
     {
@@ -372,7 +385,7 @@ class Controller_DteVentas extends Controller_Base_Libros
             // crear operaciones
             $operaciones = [];
             foreach ($resumen as $r) {
-                $operaciones[$r['TpoDoc']] = (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->get($r['TpoDoc'])->operacion;
+                $operaciones[$r['TpoDoc']] = (new Model_DteTipos())->get($r['TpoDoc'])->operacion;
             }
             // asignar variable a vista
             $this->set([
@@ -385,8 +398,7 @@ class Controller_DteVentas extends Controller_Base_Libros
     }
 
     /**
-     * Servicio web que entrega el historial de montos agrupados por mes de un receptor
-         * @version 2020-08-06
+     * Servicio web que entrega el historial de montos agrupados por mes de un receptor.
      */
     public function _api_historial_GET($receptor, $fecha, $emisor, $dte = null, $folio = null, $total = null)
     {
@@ -433,7 +445,7 @@ class Controller_DteVentas extends Controller_Base_Libros
         if ($formato == 'png') {
             $n_historial = count($historial);
             $title = $n_historial > 1 ? ('Historial últimos '.$n_historial.' meses') : 'Historial último mes';
-            $chart = new \Libchart\View\Chart\VerticalBarChart(250,195);
+            $chart = new \Libchart\View\Chart\VerticalBarChart(250, 195);
             $dataSet = new \Libchart\Model\XYDataSet();
             foreach ($historial as $periodo => $valor) {
                 $dataSet->addPoint(new \Libchart\Model\Point($periodo, $valor));
@@ -473,8 +485,7 @@ class Controller_DteVentas extends Controller_Base_Libros
     }
 
     /**
-     * Servicio web que entrega un resumen de ventas por cada tipo de documento
-         * @version 2020-02-28
+     * Servicio web que entrega un resumen de ventas por cada tipo de documento.
      */
     public function _api_resumen_POST($emisor)
     {
@@ -494,8 +505,7 @@ class Controller_DteVentas extends Controller_Base_Libros
     /**
      * Acción que permite descargar todo el registro de compras del SII pero
      * eligiendo el tipo de formato, ya sea por defecto en formato RCV o en
-     * formato IECV (esto permite importar el archivo en LibreDTE u otra app)
-         * @version 2020-02-19
+     * formato IECV (esto permite importar el archivo en LibreDTE u otra app).
      */
     public function rcv_csv($periodo, $tipo = 'rcv')
     {
@@ -512,7 +522,7 @@ class Controller_DteVentas extends Controller_Base_Libros
             $this->redirect('/dte/dte_ventas/ver/'.$periodo);
         }
         if (!$detalle) {
-            \sowerphp\core\Model_Datasource_Session::message('No hay detalle para el período y estado solicitados', 'warning');
+            \sowerphp\core\Model_Datasource_Session::message('No hay detalle para el período y estado solicitados.', 'warning');
             $this->redirect('/dte/dte_ventas/ver/'.$periodo);
         }
         if ($tipo == 'rcv_csv') {

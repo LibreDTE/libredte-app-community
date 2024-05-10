@@ -25,12 +25,13 @@
 namespace website\Dte;
 
 use stdClass;
+use \sowerphp\core\Utility_Array;
+use \website\Dte\Admin\Mantenedores\Model_DteTipo;
+use \website\Dte\Admin\Mantenedores\Model_DteTipos;
+use \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos;
 
 /**
- * Clase para mapear la tabla dte_recibido de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un registro de la tabla dte_recibido
- * @version 2015-12-28
+ * Clase para mapear la tabla dte_recibido de la base de datos.
  */
 class Model_DteRecibido extends \Model_App
 {
@@ -487,8 +488,7 @@ class Model_DteRecibido extends \Model_App
 
     /**
      * Método que asigna los campos iva_no_recuperable e impuesto_adicional si
-     * se pasaron separados en varios campos
-         * @version 2016-10-06
+     * se pasaron separados en varios campos.
      */
     public function set($datos)
     {
@@ -506,7 +506,10 @@ class Model_DteRecibido extends \Model_App
                 ];
             }
         }
-        $this->iva_no_recuperable = $iva_no_recuperable ? json_encode($iva_no_recuperable) : null;
+        $this->iva_no_recuperable = $iva_no_recuperable
+            ? json_encode($iva_no_recuperable)
+            : null
+        ;
         // asignar impuesto adicional
         $impuesto_adicional = [];
         if ($datos['impuesto_adicional_codigo']) {
@@ -522,20 +525,23 @@ class Model_DteRecibido extends \Model_App
                 ];
             }
         }
-        $this->impuesto_adicional = $impuesto_adicional ? json_encode($impuesto_adicional) : null;
+        $this->impuesto_adicional = $impuesto_adicional
+            ? json_encode($impuesto_adicional)
+            : null
+        ;
     }
 
     /**
-     * Método para guardar el documento recibido, se hacen algunas validaciones previo a guardar
-         * @version 2017-09-06
+     * Método para guardar el documento recibido, se hacen algunas validaciones previo a guardar.
      */
     public function save()
     {
         // si el emisor no existe con esto se creará
         $this->getEmisor();
         // campo emisor solo en nc y nd
-        if (!in_array($this->dte, [55, 56, 60, 61]))
+        if (!in_array($this->dte, [55, 56, 60, 61])) {
             $this->emisor_nc_nd_fc = null;
+        }
         // trigger al guardar el DTE recibido
         \sowerphp\core\Trigger::run('dte_dte_recibido_guardar', $this);
         // se guarda el documento
@@ -560,7 +566,7 @@ class Model_DteRecibido extends \Model_App
     }
 
     /**
-     * Método que entrega el tipo de transación asociado
+     * Método que entrega el tipo de transación asociado.
      */
     public function getTipoTransaccion(): stdClass
     {
@@ -637,23 +643,23 @@ class Model_DteRecibido extends \Model_App
      */
     public function getPeriodo()
     {
-        return $this->periodo ? $this->periodo : substr(str_replace('-', '', $this->fecha), 0, 6);
+        return $this->periodo
+            ? $this->periodo
+            : substr(str_replace('-', '', $this->fecha), 0, 6)
+        ;
     }
 
     /**
      * Método que entrega el objeto del tipo del dte
-     * @return \website\Dte\Admin\Mantenedores\Model_DteTipo
-         * @version 2015-09-27
+     * @return Model_DteTipo
      */
-    public function getTipo()
+    public function getTipo(): Model_DteTipo
     {
-        return (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->get($this->dte);
+        return (new Model_DteTipos())->get($this->dte);
     }
 
     /**
-     * Método que entrega el objeto del Dte
-     * @return \sasco\LibreDTE\Sii\Dte
-         * @version 2020-05-16
+     * Método que entrega el objeto del Dte.
      */
     public function getDte()
     {
@@ -663,7 +669,7 @@ class Model_DteRecibido extends \Model_App
                 $EnvioDte->loadXML($this->getXML());
                 $Documentos = $EnvioDte->getDocumentos();
                 if (!isset($Documentos[0])) {
-                    throw new \Exception('No se encontró DTE asociado al documento recibido');
+                    throw new \Exception('No se encontró DTE asociado al documento recibido.');
                 }
                 $this->Dte = $Documentos[0];
             } else {
@@ -674,8 +680,7 @@ class Model_DteRecibido extends \Model_App
     }
 
     /**
-     * Método que entrega el objeto del emisor del dte recibido
-         * @version 2015-09-28
+     * Método que entrega el objeto del emisor del dte recibido.
      */
     public function getEmisor()
     {
@@ -691,8 +696,7 @@ class Model_DteRecibido extends \Model_App
     }
 
     /**
-     * Método que entrega el objeto del receptor del dte recibido
-         * @version 2015-09-28
+     * Método que entrega el objeto del receptor del dte recibido.
      */
     public function getReceptor()
     {
@@ -700,15 +704,15 @@ class Model_DteRecibido extends \Model_App
     }
 
     /**
-     * Método que consulta al estado al SII del dte recibido
-         * @version 2016-06-17
+     * Método que consulta al estado al SII del dte recibido.
      */
     public function getEstado(\sasco\LibreDTE\FirmaElectronica $Firma)
     {
         // obtener token
         $token = \sasco\LibreDTE\Sii\Autenticacion::getToken($Firma);
-        if (!$token)
+        if (!$token) {
             return false;
+        }
         // consultar estado
         list($RutConsultante, $DvConsultante) = explode('-', $Firma->getID());
         list($Y, $m, $d) = explode('-', $this->fecha);
@@ -726,19 +730,20 @@ class Model_DteRecibido extends \Model_App
             'token'             => $token,
         ]);
         // si hubo error con el estado se muestra que no se pudo obtener
-        if ($xml === false)
+        if ($xml === false) {
             return false;
+        }
         return (array)$xml->xpath('/SII:RESPUESTA/SII:RESP_HDR')[0];
     }
 
     /**
-     * Método que entrega los impuestos adicionales del documento
-         * @version 2016-08-09
+     * Método que entrega los impuestos adicionales del documento.
      */
-    public function getImpuestosAdicionales($prefix = '')
+    public function getImpuestosAdicionales(string $prefix = ''): array
     {
-        if (!$this->impuesto_adicional)
+        if (!$this->impuesto_adicional) {
             return [];
+        }
         $impuesto_adicional = [];
         foreach (json_decode($this->impuesto_adicional, true) as $ia) {
             $fila = [];
@@ -751,18 +756,18 @@ class Model_DteRecibido extends \Model_App
     }
 
     /**
-     * Método que entrega los valores de IVA no recuperable
-         * @version 2016-08-09
+     * Método que entrega los valores de IVA no recuperable.
      */
     public function getIVANoRecuperable($prefix = '')
     {
-        if (!$this->iva_no_recuperable)
+        if (!$this->iva_no_recuperable) {
             return [];
+        }
         $iva_no_recuperable = [];
         foreach (json_decode($this->iva_no_recuperable, true) as $inr) {
             $fila = [];
             foreach ($inr as $k => $v) {
-                $fila[$prefix.$k] = $v;
+                $fila[$prefix . $k] = $v;
             }
             $iva_no_recuperable[] = $fila;
         }
@@ -770,20 +775,22 @@ class Model_DteRecibido extends \Model_App
     }
 
     /**
-     * Método que entrega el objeto del DTE de intercambio
-         * @version 2017-06-21
+     * Método que entrega el objeto del DTE de intercambio.
      */
     public function getDteIntercambio()
     {
         if (!isset($this->DteIntercambio) && $this->intercambio) {
-            $this->DteIntercambio = (new Model_DteIntercambios())->get($this->receptor, $this->intercambio, $this->certificacion);
+            $this->DteIntercambio = (new Model_DteIntercambios())->get(
+                $this->receptor,
+                $this->intercambio,
+                $this->certificacion
+            );
         }
         return $this->DteIntercambio;
     }
 
     /**
-     * Método que entrega los datos del DTE (el XML como arreglo)
-         * @version 2020-02-22
+     * Método que entrega los datos del DTE (el XML como arreglo).
      */
     public function getDatos()
     {
@@ -791,7 +798,10 @@ class Model_DteRecibido extends \Model_App
         if (!isset($this->datos)) {
             // hay intercambio
             if ($this->intercambio) {
-                $this->datos = $this->getDteIntercambio()->getDocumento($this->emisor, $this->dte, $this->folio)->getDatos();
+                $this->datos = $this->getDteIntercambio()
+                    ->getDocumento($this->emisor, $this->dte, $this->folio)
+                    ->getDatos()
+                ;
             }
             // es documento mipyme
             else if ($this->mipyme) {
@@ -815,8 +825,7 @@ class Model_DteRecibido extends \Model_App
     }
 
     /**
-     * Método que entrega el detalle del documento recibido si existe intercambio asociado
-         * @version 2020-02-22
+     * Método que entrega el detalle del documento recibido si existe intercambio asociado.
      */
     public function getDetalle()
     {
@@ -839,8 +848,7 @@ class Model_DteRecibido extends \Model_App
     }
 
     /**
-     * Método que entrega las referencias que este DTE hace a otros documentos
-         * @version 2023-11-17
+     * Método que entrega las referencias que este DTE hace a otros documentos.
      */
     public function getReferenciados()
     {
@@ -871,7 +879,7 @@ class Model_DteRecibido extends \Model_App
                 $referencia['IdDocRef'] = 'T'.$referencia['TpoDocRef'].'F'.$referencia['FolioRef'];
             }
             if (!empty($referencia['CodRef'])) {
-                $DteReferenciaTipo = (new \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos())->get($referencia['CodRef']);
+                $DteReferenciaTipo = (new Model_DteReferenciaTipos())->get($referencia['CodRef']);
                 if (!empty($DteReferenciaTipo->tipo)) {
                     $referencia['TipoRef'] = $DteReferenciaTipo->tipo;
                 }
@@ -883,8 +891,7 @@ class Model_DteRecibido extends \Model_App
 
     /**
      * Método que indica si el DTE recibido tiene un XML asociado (LibreDTE o
-     * MIPYME)
-         * @version 2020-05-16
+     * MIPYME).
      */
     public function hasXML()
     {
@@ -892,8 +899,7 @@ class Model_DteRecibido extends \Model_App
     }
 
     /**
-     * Método que indica si el DTE recibido tiene un XML en LibreDTE
-         * @version 2020-05-16
+     * Método que indica si el DTE recibido tiene un XML en LibreDTE.
      */
     public function hasLocalXML()
     {
@@ -904,7 +910,6 @@ class Model_DteRecibido extends \Model_App
      * Método que entrega el XML del documento recibido.
      * Entrega el XML asociado a un intercambio en LibreDTE o bien recibido con
      * el Portal MIPYME del SII.
-         * @version 2020-02-22
      */
     public function getXML()
     {
@@ -914,7 +919,10 @@ class Model_DteRecibido extends \Model_App
         }
         // buscar en intercambio
         if ($this->intercambio) {
-            $this->xml = $this->getDteIntercambio()->getDocumento($this->emisor, $this->dte, $this->folio)->saveXML();
+            $this->xml = $this->getDteIntercambio()
+                ->getDocumento($this->emisor, $this->dte, $this->folio)
+                ->saveXML()
+            ;
             return $this->xml;
         }
         // si no hay XML en la base de datos, se busca si es un DTE del Portal
@@ -936,7 +944,10 @@ class Model_DteRecibido extends \Model_App
                 if ($r['status']['code'] == 404) {
                     $this->xml = false;
                 } else {
-                    throw new \Exception('Error al obtener el XML: '.$r['body'], $r['status']['code']);
+                    throw new \Exception(
+                        'Error al obtener el XML: '.$r['body'],
+                        $r['status']['code']
+                    );
                 }
             } else {
                 $XML = new \sasco\LibreDTE\XML();
@@ -954,20 +965,21 @@ class Model_DteRecibido extends \Model_App
     }
 
     /**
-     * Método que entrega la actividad económica asociada al documento
-         * @version 2020-08-04
+     * Método que entrega la actividad económica asociada al documento.
      */
     public function getActividad($default = null)
     {
         $datos = $this->getDatos();
-        return !empty($datos['Encabezado']['Emisor']['Acteco']) ? $datos['Encabezado']['Emisor']['Acteco'] : $default;
+        return !empty($datos['Encabezado']['Emisor']['Acteco'])
+            ? $datos['Encabezado']['Emisor']['Acteco']
+            : $default
+        ;
     }
 
     /**
      * Método que entrega el PDF del documento recibido.
      * Entrega el PDF que se ha generado con LibreDTE a partir del XML del DTE
      * recibido o bien el PDF generado con el PortalMIPYME del SII.
-         * @version 2020-08-07
      */
     public function getPDF(array $config = [])
     {
@@ -980,13 +992,23 @@ class Model_DteRecibido extends \Model_App
             'copias_cedibles' => 1,
             'xml' => base64_encode($this->getXML()),
             'caratula' => [
-                'FchResol' => $this->certificacion ? $this->getEmisor()->config_ambiente_certificacion_fecha : $this->getEmisor()->config_ambiente_produccion_fecha,
-                'NroResol' => $this->certificacion ? 0 : $this->getEmisor()->config_ambiente_produccion_numero,
+                'FchResol' => $this->certificacion
+                    ? $this->getEmisor()->config_ambiente_certificacion_fecha
+                    : $this->getEmisor()->config_ambiente_produccion_fecha
+                ,
+                'NroResol' => $this->certificacion
+                    ? 0
+                    : $this->getEmisor()->config_ambiente_produccion_numero
+                ,
             ],
             'hash' => $this->getReceptor()->getUsuario()->hash,
         ];
-        $default_config = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($default_config, $config_emisor);
-        $config = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($default_config, $config);
+        $default_config = Utility_Array::mergeRecursiveDistinct(
+            $default_config, $config_emisor
+        );
+        $config = Utility_Array::mergeRecursiveDistinct(
+            $default_config, $config
+        );
         // si es un DTE del portal MIPYME se busca el PDF ahí
         if ($this->mipyme) {
             $r = apigateway_consume(
@@ -1001,7 +1023,10 @@ class Model_DteRecibido extends \Model_App
                 ]
             );
             if ($r['status']['code'] != 200) {
-                throw new \Exception('Error al obtener el PDF: '.$r['body'], $r['status']['code']);
+                throw new \Exception(
+                    'Error al obtener el PDF: '.$r['body'],
+                    $r['status']['code']
+                );
             }
             return $r['body'];
         }
@@ -1016,8 +1041,11 @@ class Model_DteRecibido extends \Model_App
             // crear a partir de formato de PDF no estándar
             else if ($config['formato'] != 'estandar') {
                 $apps = $this->getEmisor()->getApps('dtepdfs');
-                if (empty($apps[$config['formato']]) || empty($apps[$config['formato']]->getConfig()->disponible)) {
-                    throw new \Exception('Formato de PDF '.$config['formato'].' no se encuentra disponible', 400);
+                if (
+                    empty($apps[$config['formato']])
+                    || empty($apps[$config['formato']]->getConfig()->disponible)
+                ) {
+                    throw new \Exception('Formato de PDF '.$config['formato'].' no se encuentra disponible.', 400);
                 }
                 $response = $apps[$config['formato']]->generar($config);
             }
@@ -1040,31 +1068,42 @@ class Model_DteRecibido extends \Model_App
         }
         // si no es mipyme ni intercambio error
         else {
-            throw new \Exception('No es posible obtener el PDF del DTE recibido');
+            throw new \Exception('No es posible obtener el PDF del DTE recibido.');
         }
     }
 
     /**
      * Método que entrega el código ESCPOS del documento emitido.
-         * @version 2021-02-28
      */
     public function getESCPOS(array $config = [])
     {
         // si no tiene XML error
         if (!$this->hasXML()) {
-            throw new \Exception('El DTE no tiene XML asociado para generar el código ESCPOS');
+            throw new \Exception('El DTE no tiene XML asociado para generar el código ESCPOS.');
         }
         // configuración por defecto para el código ESCPOS
         $config = array_merge([
             'formato' => 'estandar', // en el futuro podría salir de una configuración por DTE como los PDF
             'cedible' => $this->getEmisor()->config_pdf_dte_cedible,
             'compress' => false,
-            'copias_tributarias' => $this->getEmisor()->config_pdf_copias_tributarias ? $this->getEmisor()->config_pdf_copias_tributarias : 1,
-            'copias_cedibles' => $this->getEmisor()->config_pdf_copias_cedibles ? $this->getEmisor()->config_pdf_copias_cedibles : $this->getEmisor()->config_pdf_dte_cedible,
+            'copias_tributarias' => $this->getEmisor()->config_pdf_copias_tributarias
+                ? $this->getEmisor()->config_pdf_copias_tributarias
+                : 1
+            ,
+            'copias_cedibles' => $this->getEmisor()->config_pdf_copias_cedibles
+                ? $this->getEmisor()->config_pdf_copias_cedibles
+                : $this->getEmisor()->config_pdf_dte_cedible
+            ,
             'xml' => base64_encode($this->getXML()),
             'caratula' => [
-                'FchResol' => $this->certificacion ? $this->getEmisor()->config_ambiente_certificacion_fecha : $this->getEmisor()->config_ambiente_produccion_fecha,
-                'NroResol' => $this->certificacion ? 0 : $this->getEmisor()->config_ambiente_produccion_numero,
+                'FchResol' => $this->certificacion
+                    ? $this->getEmisor()->config_ambiente_certificacion_fecha
+                    : $this->getEmisor()->config_ambiente_produccion_fecha
+                ,
+                'NroResol' => $this->certificacion
+                    ? 0
+                    : $this->getEmisor()->config_ambiente_produccion_numero
+                ,
             ],
             'papelContinuo' => 80,
             'profile' => 'default',
@@ -1077,7 +1116,10 @@ class Model_DteRecibido extends \Model_App
         ], $config);
         // logo
         $formatoEstandar = $this->getEmisor()->getApp('dtepdfs.estandar');
-        if (!empty($formatoEstandar) && !empty($formatoEstandar->getConfig()->continuo->logo->posicion)) {
+        if (
+            !empty($formatoEstandar)
+            && !empty($formatoEstandar->getConfig()->continuo->logo->posicion)
+        ) {
             $logo_file = DIR_STATIC.'/contribuyentes/'.$this->getEmisor()->rut.'/logo.png';
             if (is_readable($logo_file)) {
                 $config['logo'] = base64_encode(file_get_contents($logo_file));
@@ -1091,8 +1133,11 @@ class Model_DteRecibido extends \Model_App
         }
         // consultar aplicación de ESCPOS según el formato solicitado
         else if ($apps = $this->getEmisor()->getApps('dteescpos')) {
-            if (empty($apps[$config['formato']]) || empty($apps[$config['formato']]->getConfig()->disponible)) {
-                throw new \Exception('Formato de ESCPOS '.$config['formato'].' no se encuentra disponible', 400);
+            if (
+                empty($apps[$config['formato']])
+                || empty($apps[$config['formato']]->getConfig()->disponible)
+            ) {
+                throw new \Exception('Formato de ESCPOS '.$config['formato'].' no se encuentra disponible.', 400);
             }
             $response = $apps[$config['formato']]->generar($config);
         }

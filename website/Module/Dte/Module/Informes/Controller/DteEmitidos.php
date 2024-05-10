@@ -24,16 +24,16 @@
 // namespace del controlador
 namespace website\Dte\Informes;
 
+use \website\Dte\Model_DteEmitidos;
+
 /**
- * Clase para informes de los documentos emitidos
- * @version 2016-09-24
+ * Clase para informes de los documentos emitidos.
  */
 class Controller_DteEmitidos extends \Controller_App
 {
 
     /**
-     * Acción principal del informe de ventas
-         * @version 2019-07-09
+     * Acción principal del informe de ventas.
      */
     public function index()
     {
@@ -46,7 +46,7 @@ class Controller_DteEmitidos extends \Controller_App
             'hasta' => $hasta,
         ]);
         if (isset($_POST['submit'])) {
-            $DteEmitidos = (new \website\Dte\Model_DteEmitidos())->setContribuyente($Emisor);
+            $DteEmitidos = (new Model_DteEmitidos())->setContribuyente($Emisor);
             $emitidos_por_hora = $DteEmitidos->getPorHora($desde, $hasta);
             foreach ($emitidos_por_hora as &$e) {
                 $e['hora'] = '0000-00-00 '.$e['hora'];
@@ -64,8 +64,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que entrega el informe de ventas en CSV
-         * @version 2022-08-22
+     * Acción que entrega el informe de ventas en CSV.
      */
     public function csv($desde, $hasta)
     {
@@ -119,7 +118,10 @@ class Controller_DteEmitidos extends \Controller_App
             $cols[] = 'Imp. Adic.';
             $cols[] = 'Subtotal';
         }
-        $aux = (new \website\Dte\Model_DteEmitidos())->setContribuyente($Emisor)->getDetalle($desde, $hasta, $detalle);
+        $aux = (new Model_DteEmitidos())
+            ->setContribuyente($Emisor)
+            ->getDetalle($desde, $hasta, $detalle)
+        ;
         if ($aux && $detalle) {
             $emitidos = [];
             foreach($aux as $e) {
@@ -143,8 +145,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que permite buscar los estados de los dte emitidos
-         * @version 2016-09-23
+     * Acción que permite buscar los estados de los dte emitidos.
      */
     public function estados($desde = null, $hasta = null)
     {
@@ -158,13 +159,15 @@ class Controller_DteEmitidos extends \Controller_App
             'Emisor' => $Emisor,
             'desde' => $desde ? $desde : date('Y-m-01'),
             'hasta' => $hasta ? $hasta : date('Y-m-d'),
-            'documentos' => ($desde && $hasta) ? $Emisor->getDocumentosEmitidosResumenEstados($desde, $hasta) : false,
+            'documentos' => ($desde && $hasta)
+                ? $Emisor->getDocumentosEmitidosResumenEstados($desde, $hasta)
+                : false
+            ,
         ]);
     }
 
     /**
-     * Acción que permite buscar los documentos emitidos con cierto estado
-         * @version 2016-09-23
+     * Acción que permite buscar los documentos emitidos con cierto estado.
      */
     public function estados_detalle($desde, $hasta, $estado = null)
     {
@@ -175,13 +178,14 @@ class Controller_DteEmitidos extends \Controller_App
             'desde' => $desde,
             'hasta' => $hasta,
             'estado' => $estado,
-            'documentos' => $Emisor->getDocumentosEmitidosEstado($desde, $hasta, $estado),
+            'documentos' => $Emisor->getDocumentosEmitidosEstado(
+                $desde, $hasta, $estado
+            ),
         ]);
     }
 
     /**
-     * Acción que permite buscar los eventos de los dte emitidos
-         * @version 2016-09-23
+     * Acción que permite buscar los eventos de los dte emitidos.
      */
     public function eventos($desde = null, $hasta = null)
     {
@@ -195,13 +199,15 @@ class Controller_DteEmitidos extends \Controller_App
             'Emisor' => $Emisor,
             'desde' => $desde ? $desde : date('Y-m-01'),
             'hasta' => $hasta ? $hasta : date('Y-m-d'),
-            'documentos' => ($desde && $hasta) ? $Emisor->getDocumentosEmitidosResumenEventos($desde, $hasta) : false,
+            'documentos' => ($desde && $hasta)
+                ? $Emisor->getDocumentosEmitidosResumenEventos($desde, $hasta)
+                : false
+            ,
         ]);
     }
 
     /**
-     * Acción que permite buscar los documentos emitidos con cierto evento
-         * @version 2018-04-25
+     * Acción que permite buscar los documentos emitidos con cierto evento.
      */
     public function eventos_detalle($desde, $hasta, $evento = null)
     {
@@ -212,14 +218,15 @@ class Controller_DteEmitidos extends \Controller_App
             'desde' => $desde,
             'hasta' => $hasta,
             'evento' => $evento,
-            'documentos' => $Emisor->getDocumentosEmitidosEvento($desde, $hasta, $evento),
+            'documentos' => $Emisor->getDocumentosEmitidosEvento(
+                $desde, $hasta, $evento
+            ),
         ]);
     }
 
     /**
      * Acción que permite buscar los documentos emitidos pero que aun no se
-     * envian al SII
-         * @version 2016-09-23
+     * envian al SII.
      */
     public function sin_enviar()
     {
@@ -231,8 +238,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que permite buscar los DTE emitidos sin envíos de intercambio
-         * @version 2020-11-11
+     * Acción que permite buscar los DTE emitidos sin envíos de intercambio.
      */
     public function sin_intercambio($desde = null, $hasta = null)
     {
@@ -242,9 +248,14 @@ class Controller_DteEmitidos extends \Controller_App
         }
         // obtener datos
         $Emisor = $this->getContribuyente();
-        $documentos = ($desde && $hasta) ? (new \website\Dte\Model_DteEmitidos())->setContribuyente($Emisor)->getSinEnvioIntercambio($desde, $hasta) : false;
+        $documentos = ($desde && $hasta)
+            ? (new Model_DteEmitidos())
+                ->setContribuyente($Emisor)
+                ->getSinEnvioIntercambio($desde, $hasta)
+            : false
+        ;
         if ($desde && $hasta && !$documentos) {
-            \sowerphp\core\Model_Datasource_Session::message('No existen documentos pendientes de enviar en el rango de fechas consultado ('.\sowerphp\general\Utility_Date::format($desde).' al '.\sowerphp\general\Utility_Date::format($hasta).')', 'warning');
+            \sowerphp\core\Model_Datasource_Session::message('No existen documentos pendientes de enviar en el rango de fechas consultado ('.\sowerphp\general\Utility_Date::format($desde).' al '.\sowerphp\general\Utility_Date::format($hasta).').', 'warning');
             $this->redirect('/dte/informes/dte_emitidos/sin_intercambio');
         }
         $this->set([
@@ -256,8 +267,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que permite buscar las respuestas de los procesos de intercambio
-         * @version 2016-09-23
+     * Acción que permite buscar las respuestas de los procesos de intercambio.
      */
     public function intercambio($desde = null, $hasta = null)
     {
@@ -271,13 +281,15 @@ class Controller_DteEmitidos extends \Controller_App
             'Emisor' => $Emisor,
             'desde' => $desde ? $desde : date('Y-m-01'),
             'hasta' => $hasta ? $hasta : date('Y-m-d'),
-            'documentos' => ($desde && $hasta) ? $Emisor->getDocumentosEmitidosResumenEstadoIntercambio($desde, $hasta) : false,
+            'documentos' => ($desde && $hasta)
+                ? $Emisor->getDocumentosEmitidosResumenEstadoIntercambio($desde, $hasta)
+                : false
+            ,
         ]);
     }
 
     /**
-     * Acción que permite buscar los detalles de los intercambios por ciertas respuestas
-         * @version 2016-10-12
+     * Acción que permite buscar los detalles de los intercambios por ciertas respuestas.
      */
     public function intercambio_detalle($desde, $hasta, $recibo = null, $recepcion = null, $resultado = null)
     {
@@ -287,15 +299,22 @@ class Controller_DteEmitidos extends \Controller_App
             'desde' => $desde,
             'hasta' => $hasta,
             'recibo' => $recibo ? 'si' : 'no',
-            'recepcion' => $recepcion !== null ? (isset(\sasco\LibreDTE\Sii\RespuestaEnvio::$estados['envio'][$recepcion]) ? \sasco\LibreDTE\Sii\RespuestaEnvio::$estados['envio'][$recepcion] : $recepcion) : null,
-            'resultado' => $resultado !== null ? (isset(\sasco\LibreDTE\Sii\RespuestaEnvio::$estados['respuesta_documento'][$resultado]) ? \sasco\LibreDTE\Sii\RespuestaEnvio::$estados['respuesta_documento'][$resultado] : $resultado) : null,
-            'documentos' => $Emisor->getDocumentosEmitidosEstadoIntercambio($desde, $hasta, $recibo, $recepcion, $resultado),
+            'recepcion' => $recepcion !== null
+                ? \sasco\LibreDTE\Sii\RespuestaEnvio::$estados['envio'][$recepcion] ?? $recepcion
+                : null
+            ,
+            'resultado' => $resultado !== null
+                ? \sasco\LibreDTE\Sii\RespuestaEnvio::$estados['respuesta_documento'][$resultado] ?? $resultado
+                : null
+            ,
+            'documentos' => $Emisor->getDocumentosEmitidosEstadoIntercambio(
+                $desde, $hasta, $recibo, $recepcion, $resultado
+            ),
         ]);
     }
 
     /**
-     * Acción que permite buscar las boleta que no han sido enviadas por email
-         * @version 2021-05-16
+     * Acción que permite buscar las boleta que no han sido enviadas por email.
      */
     public function boletas_sin_email($desde = null, $hasta = null)
     {
@@ -305,7 +324,12 @@ class Controller_DteEmitidos extends \Controller_App
         }
         // obtener datos
         $Emisor = $this->getContribuyente();
-        $documentos = ($desde && $hasta) ? (new \website\Dte\Model_DteEmitidos())->setContribuyente($Emisor)->getBoletasSinEnvioEmail($desde, $hasta) : false;
+        $documentos = ($desde && $hasta)
+            ? (new Model_DteEmitidos())
+                ->setContribuyente($Emisor)
+                ->getBoletasSinEnvioEmail($desde, $hasta)
+            : false
+        ;
         if ($desde && $hasta && !$documentos) {
             \sowerphp\core\Model_Datasource_Session::message('No existen boletas pendientes de enviar por email en el rango de fechas consultado ('.\sowerphp\general\Utility_Date::format($desde).' al '.\sowerphp\general\Utility_Date::format($hasta).')', 'warning');
             $this->redirect('/dte/informes/dte_emitidos/boletas_sin_email');
@@ -319,8 +343,7 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
-     * Acción que permite obtener un resumen mensual diario
-         * @version 2022-09-14
+     * Acción que permite obtener un resumen mensual diario.
      */
     public function diario($periodo = null)
     {

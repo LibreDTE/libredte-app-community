@@ -184,7 +184,7 @@ echo $f->end('Descargar PDF');
         <div class="card-body">
 <?php
 $de = $DteIntercambio->de;
-if ($DteIntercambio->de!=$DteIntercambio->responder_a) {
+if ($DteIntercambio->de != $DteIntercambio->responder_a) {
     $de .= '<br/><span>'.$DteIntercambio->responder_a.'</span>';
 }
 new \sowerphp\general\View_Helper_Table([

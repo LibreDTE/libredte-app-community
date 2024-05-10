@@ -25,8 +25,7 @@
 namespace website\Dte\Admin;
 
 /**
- * Modelo para generar respaldo de datos de un contribuyente
- * @version 2017-01-19
+ * Modelo para generar respaldo de datos de un contribuyente.
  */
 class Model_Respaldo
 {
@@ -124,8 +123,7 @@ class Model_Respaldo
     private $_pks = []; ///< Caché para las PKs
 
     /**
-     * Constructor del modelo de respaldos
-         * @version 2017-01-19
+     * Constructor del modelo de respaldos.
      */
     public function __construct()
     {
@@ -137,10 +135,9 @@ class Model_Respaldo
     }
 
     /**
-     * Método que entrega el listado de tablas que se podrán respaldar
-         * @version 2016-01-29
+     * Método que entrega el listado de tablas que se podrán respaldar.
      */
-    public function getTablas()
+    public function getTablas(): array
     {
         $tablas = [];
         foreach ($this->tablas as $tabla => $info) {
@@ -150,13 +147,12 @@ class Model_Respaldo
     }
 
     /**
-     * Método que genera el respaldo
-     * @param rut RUT del contribuyente que se desea respaldar
-     * @param tablas Arreglo con las tablas a respaldar
-     * @return Ruta del directorio donde se dejó el respaldo recién creado
-         * @version 2019-04-10
+     * Método que genera el respaldo.
+     * @param rut RUT del contribuyente que se desea respaldar.
+     * @param tablas Arreglo con las tablas a respaldar.
+     * @return string Ruta del directorio donde se dejó el respaldo recién creado.
      */
-    public function generar($rut, $tablas = [])
+    public function generar($rut, array $tablas = []): string
     {
         // si no se especificaron tablas se respaldarán todas
         if (!$tablas) {
@@ -172,10 +168,11 @@ class Model_Respaldo
             }
             // obtener datos de la tabla
             $info = $this->tablas[$tabla];
-            $datos = $this->db->getTable(
-                'SELECT * FROM '.$tabla.' WHERE '.$info['rut'].' = :rut',
-                [':rut' => $rut]
-            );
+            $datos = $this->db->getTable('
+                SELECT *
+                FROM ' . $tabla . '
+                WHERE ' . $info['rut'].' = :rut
+            ', [':rut' => $rut]);
             if (empty($datos)) {
                 continue;
             }
@@ -219,7 +216,10 @@ class Model_Respaldo
                             $file_meta = ['ext' => $file_meta, 'base64' => true];
                         }
                         // recuperar el archivo si está en base64 (o sea no está encriptado)
-                        if ($file_meta['base64'] && (!isset($info['encriptar']) || !in_array($col, $info['encriptar']))) {
+                        if (
+                            $file_meta['base64']
+                            && (!isset($info['encriptar']) || !in_array($col, $info['encriptar']))
+                        ) {
                             $row[$col] = base64_decode($row[$col]);
                         }
                         if (!empty($row[$col])) {
@@ -262,32 +262,30 @@ class Model_Respaldo
             $msg .= '- '.$tabla.': '.num($cantidad)."\n";
         }
         $msg .= "\n".'Total de registros: '.num($total)."\n\n\n\n";
-        $msg .= "\n".'LibreDTE ¡facturación electrónica libre para Chile!'."\n";
+        $msg .= "\n".'LibreDTE: facturación electrónica libre para Chile.'."\n";
         file_put_contents($dir.'/README.md', $msg);
         // entregar directorio
         return $dir;
     }
 
     /**
-     * Método que crea el directorio temporal para el respaldo
-         * @version 2021-09-26
+     * Método que crea el directorio temporal para el respaldo.
      */
-    private function mkdirRespaldo($rut, $prefix = 'libredte_contribuyente')
+    private function mkdirRespaldo($rut, string $prefix = 'libredte_contribuyente'): string
     {
         $dir = TMP.'/'.$prefix.'_'.$rut;
         if (file_exists($dir)) {
             \sowerphp\general\Utility_File::rmdir($dir);
         }
         if (file_exists($dir)) {
-            throw new \Exception('Directorio de respaldo ya existe');
+            throw new \Exception('Directorio de respaldo ya existe.');
         }
         mkdir($dir);
         return $dir;
     }
 
     /**
-     * Método que entrega las PKs de una tabla
-         * @version 2019-04-10
+     * Método que entrega las PK de una tabla.
      */
     private function getPKs($tabla)
     {
@@ -301,8 +299,7 @@ class Model_Respaldo
     }
 
     /**
-     * Método que realiza el respaldo asociado a Boletas Electrónicas
-         * @version 2021-09-26
+     * Método que realiza el respaldo asociado a Boletas Electrónicas.
      */
     public function boletas($Contribuyente, $fecha_creacion)
     {

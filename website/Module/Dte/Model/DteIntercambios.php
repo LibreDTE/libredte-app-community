@@ -25,10 +25,7 @@
 namespace website\Dte;
 
 /**
- * Clase para mapear la tabla dte_intercambio de la base de datos
- * Comentario de la tabla:
- * Esta clase permite trabajar sobre un conjunto de registros de la tabla dte_intercambio
- * @version 2018-05-19
+ * Clase para mapear la tabla dte_intercambio de la base de datos.
  */
 class Model_DteIntercambios extends \Model_Plural_App
 {
@@ -38,23 +35,24 @@ class Model_DteIntercambios extends \Model_Plural_App
     protected $_table = 'dte_intercambio'; ///< Tabla del modelo
 
     /**
-     * Método que entrega el total de documentos de intercambio pendientes de ser procesados
-         * @version 2018-06-14
+     * Método que entrega el total de documentos de intercambio pendientes de ser procesados.
      */
-    public function getTotalPendientes()
+    public function getTotalPendientes(): int
     {
-        return $this->db->getValue('
+        return (int)$this->db->getValue('
             SELECT COUNT(*)
             FROM dte_intercambio
             WHERE receptor = :receptor AND certificacion = :certificacion AND usuario IS NULL
-        ', [':receptor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion()]);
+        ', [
+            ':receptor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+        ]);
     }
 
     /**
-     * Método que crea los filtros para ser usados en las consultas de documentos recibidos
-         * @version 2022-11-16
+     * Método que crea los filtros para ser usados en las consultas de documentos recibidos.
      */
-    private function crearFiltrosDocumentos($filtros)
+    private function crearFiltrosDocumentos(array $filtros): array
     {
         list($col_documentos, $col_totales) = $this->db->xml('i.archivo_xml', [
             '/*/SetDTE/DTE/*/Encabezado/IdDoc/TipoDTE|/*/SetDTE/DTE/*/Encabezado/IdDoc/Folio',
@@ -64,8 +62,14 @@ class Model_DteIntercambios extends \Model_Plural_App
             'soloPendientes' => true,
             'p' => 0, // página de intercambios
         ], $filtros);
-        $where = ['i.receptor = :receptor', 'i.certificacion = :certificacion'];
-        $vars = [':receptor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion()];
+        $where = [
+            'i.receptor = :receptor',
+            'i.certificacion = :certificacion',
+        ];
+        $vars = [
+            ':receptor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+        ];
         if (!empty($filtros['codigo'])) {
             $where[] = 'i.codigo = :codigo';
             $vars[':codigo'] = $filtros['codigo'];
@@ -143,29 +147,49 @@ class Model_DteIntercambios extends \Model_Plural_App
         }
         // si se debe hacer búsqueda dentro de los XML
         if (!empty($filtros['dte'])) {
-            $dte_where = $this->db->xml('i.archivo_xml', '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/TipoDTE', 'http://www.sii.cl/SiiDte');
+            $dte_where = $this->db->xml(
+                'i.archivo_xml',
+                '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/TipoDTE',
+                'http://www.sii.cl/SiiDte'
+            );
             $where[] = '((is_numeric('.$dte_where.') = true AND '.$dte_where.'::INTEGER = :dte_n) OR (is_numeric('.$dte_where.') = false AND '.$dte_where.' LIKE :dte_s))';
             $vars[':dte_n'] = (int)$filtros['dte'];
             $vars[':dte_s'] = '%'.(int)$filtros['dte'].'%';
         }
         if (!empty($filtros['folio'])) {
-            $folio_where = $this->db->xml('i.archivo_xml', '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/Folio', 'http://www.sii.cl/SiiDte');
+            $folio_where = $this->db->xml(
+                'i.archivo_xml',
+                '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/Folio',
+                'http://www.sii.cl/SiiDte'
+            );
             $where[] = '((is_numeric('.$folio_where.') = true AND '.$folio_where.'::INTEGER = :folio_n) OR (is_numeric('.$folio_where.') = false AND '.$folio_where.' LIKE :folio_s))';
             $vars[':folio_n'] = (int)$filtros['folio'];
             $vars[':folio_s'] = '%'.(int)$filtros['folio'].'%';
         }
         if (!empty($filtros['item'])) {
-            $item_where = $this->db->xml('i.archivo_xml', '/*/SetDTE/DTE/Documento/Detalle/NmbItem', 'http://www.sii.cl/SiiDte');
+            $item_where = $this->db->xml(
+                'i.archivo_xml',
+                '/*/SetDTE/DTE/Documento/Detalle/NmbItem',
+                'http://www.sii.cl/SiiDte'
+            );
             $where[] = 'LOWER('.$item_where.') LIKE :item';
             $vars[':item'] = '%'.strtolower($filtros['item']).'%';
         }
         if (!empty($filtros['fecha_emision_desde'])) {
-            $fecha_emision_desde = $this->db->xml('i.archivo_xml', '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/FchEmis', 'http://www.sii.cl/SiiDte');
+            $fecha_emision_desde = $this->db->xml(
+                'i.archivo_xml',
+                '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/FchEmis',
+                'http://www.sii.cl/SiiDte'
+            );
             $where[] = $fecha_emision_desde.' >= :fecha_emision_desde';
             $vars[':fecha_emision_desde'] = $filtros['fecha_emision_desde'];
         }
         if (!empty($filtros['fecha_emision_hasta'])) {
-            $fecha_emision_hasta = $this->db->xml('i.archivo_xml', '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/FchEmis', 'http://www.sii.cl/SiiDte');
+            $fecha_emision_hasta = $this->db->xml(
+                'i.archivo_xml',
+                '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/FchEmis',
+                'http://www.sii.cl/SiiDte'
+            );
             $where[] = $fecha_emision_hasta.' <= :fecha_emision_hasta';
             $vars[':fecha_emision_hasta'] = $filtros['fecha_emision_hasta'];
         }
@@ -181,7 +205,11 @@ class Model_DteIntercambios extends \Model_Plural_App
             $i = 1;
             foreach ((array)$filtros['xml'] as $nodo => $valor) {
                 $nodo = preg_replace('/[^A-Za-z\/]/', '', $nodo);
-                $where[] = 'LOWER('.$this->db->xml('i.archivo_xml', '/*/SetDTE/DTE/Documento/'.$nodo, 'http://www.sii.cl/SiiDte').') LIKE :xml'.$i;
+                $where[] = 'LOWER('.$this->db->xml(
+                    'i.archivo_xml',
+                    '/*/SetDTE/DTE/Documento/'.$nodo,
+                    'http://www.sii.cl/SiiDte'
+                ) . ') LIKE :xml' . $i;
                 $vars[':xml'.$i] = '%'.strtolower($valor).'%';
                 $i++;
             }
@@ -191,10 +219,9 @@ class Model_DteIntercambios extends \Model_Plural_App
     }
 
     /**
-     * Método que cuenta los casos de intercambio del contribuyente
-         * @version 2022-07-31
+     * Método que cuenta los casos de intercambio del contribuyente.
      */
-    public function countDocumentos(array $filtros = [])
+    public function countDocumentos(array $filtros = []): int
     {
         list($where, $vars) = $this->crearFiltrosDocumentos($filtros);
         return (int)$this->db->getValue('
@@ -209,10 +236,9 @@ class Model_DteIntercambios extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega la tabla con los casos de intercambio del contribuyente
-         * @version 2021-11-08
+     * Método que entrega la tabla con los casos de intercambio del contribuyente.
      */
-    public function getDocumentos(array $filtros = [])
+    public function getDocumentos(array $filtros = []): array
     {
         list($where, $vars, $col_documentos, $col_totales) = $this->crearFiltrosDocumentos($filtros);
         // armar limite
@@ -284,16 +310,22 @@ class Model_DteIntercambios extends \Model_Plural_App
     /**
      * Método para actualizar la bandeja de intercambio. Guarda los DTE
      * recibidos por intercambio y guarda los acuses de recibos de DTE
-     * enviados por otros contribuyentes
-         * @version 2020-07-03
+     * enviados por otros contribuyentes.
      */
-    public function actualizar($dias = 7)
+    public function actualizar(int $dias = 7): array
     {
         // ejecutar trigger para verificar cosas previo a actualizar bandeja
         $trigger_actualizar = \sowerphp\core\Trigger::run('dte_dte_intercambio_actualizar', $this->getContribuyente());
         // si el trigger entrega false la bandeja no se actualizará de manera silenciosa
         if ($trigger_actualizar === false) {
-            return ['n_uids' => 0, 'omitidos' => 0, 'n_EnvioDTE' => 0, 'n_EnvioRecibos' => 0, 'n_RecepcionEnvio' => 0, 'n_ResultadoDTE' => 0];
+            return [
+                'n_uids' => 0,
+                'omitidos' => 0,
+                'n_EnvioDTE' => 0,
+                'n_EnvioRecibos' => 0,
+                'n_RecepcionEnvio' => 0,
+                'n_ResultadoDTE' => 0,
+            ];
         }
         // si el trigger entrega un arreglo es el resultado de la actualización de la bandeja
         else if (is_array($trigger_actualizar)) {
@@ -301,7 +333,10 @@ class Model_DteIntercambios extends \Model_Plural_App
         }
         // obtener correo
         try {
-            $Imap = is_object($trigger_actualizar) ? $trigger_actualizar : $this->getContribuyente()->getEmailReceiver();
+            $Imap = is_object($trigger_actualizar)
+                ? $trigger_actualizar
+                : $this->getContribuyente()->getEmailReceiver()
+            ;
         } catch (\Exception $e) {
             throw new \sowerphp\core\Exception($e->getMessage(), 500);
         }
@@ -320,9 +355,9 @@ class Model_DteIntercambios extends \Model_Plural_App
         }
         if (!$uids) {
             if ($dias) {
-                throw new \sowerphp\core\Exception('No se encontraron documentos sin leer en los últimos '.num($dias).' días en el correo de intercambio', 204);
+                throw new \sowerphp\core\Exception('No se encontraron documentos sin leer en los últimos '.num($dias).' días en el correo de intercambio.', 204);
             } else {
-                throw new \sowerphp\core\Exception('No se encontraron documentos sin leer en el correo de intercambio', 204);
+                throw new \sowerphp\core\Exception('No se encontraron documentos sin leer en el correo de intercambio.', 204);
             }
         }
         // procesar cada mensaje sin leer
@@ -330,7 +365,13 @@ class Model_DteIntercambios extends \Model_Plural_App
         $errores = [];
         foreach ($uids as &$uid) {
             try {
-                $m = $Imap->getMessage($uid, ['subtype' => ['PLAIN', 'HTML', 'XML'], 'extension' => ['xml']]);
+                $m = $Imap->getMessage(
+                    $uid,
+                    [
+                        'subtype' => ['PLAIN', 'HTML', 'XML'],
+                        'extension' => ['xml']
+                    ]
+                );
             } catch (\Exception $e) {
                 $errores[$uid] = $e->getMessage();
                 continue;
@@ -338,10 +379,19 @@ class Model_DteIntercambios extends \Model_Plural_App
             if ($m && isset($m['attachments'][0])) {
                 $datos_email = [
                     'fecha_hora_email' => $m['date'],
-                    'asunto' => !empty($m['header']->subject) ? substr($m['header']->subject, 0, 100) : 'Sin asunto',
+                    'asunto' => !empty($m['header']->subject)
+                        ? substr($m['header']->subject, 0, 100)
+                        : 'Sin asunto'
+                    ,
                     'de' => substr($m['header']->from[0]->mailbox.'@'.$m['header']->from[0]->host, 0, 80),
-                    'mensaje' => $m['body']['plain'] ? base64_encode($m['body']['plain']) : null,
-                    'mensaje_html' => $m['body']['html'] ? base64_encode($m['body']['html']) : null,
+                    'mensaje' => $m['body']['plain']
+                        ? base64_encode($m['body']['plain'])
+                        : null
+                    ,
+                    'mensaje_html' => $m['body']['html']
+                        ? base64_encode($m['body']['html'])
+                        : null
+                    ,
                 ];
                 if (isset($m['header']->reply_to[0])) {
                     $datos_email['responder_a'] = substr($m['header']->reply_to[0]->mailbox.'@'.$m['header']->reply_to[0]->host, 0, 80);
@@ -370,7 +420,9 @@ class Model_DteIntercambios extends \Model_Plural_App
                     }
                     // tratar de procesar como Recibo
                     try {
-                        $procesarRecibo = (new Model_DteIntercambioRecibo())->saveXML($this->getContribuyente(), $file['data']);
+                        $procesarRecibo = (new Model_DteIntercambioRecibo())
+                            ->saveXML($this->getContribuyente(), $file['data'])
+                        ;
                     } catch (\Exception $e) {
                         $procesarRecibo = false;
                     }
@@ -387,7 +439,9 @@ class Model_DteIntercambios extends \Model_Plural_App
                     }
                     // tratar de procesar como Recepción
                     try {
-                        $procesarRecepcion = (new Model_DteIntercambioRecepcion())->saveXML($this->getContribuyente(), $file['data']);
+                        $procesarRecepcion = (new Model_DteIntercambioRecepcion())
+                            ->saveXML($this->getContribuyente(), $file['data'])
+                        ;
                     } catch (\Exception $e) {
                         $procesarRecepcion = false;
                     }
@@ -404,7 +458,9 @@ class Model_DteIntercambios extends \Model_Plural_App
                     }
                     // tratar de procesar como Resultado
                     try {
-                        $procesarResultado = (new Model_DteIntercambioResultado())->saveXML($this->getContribuyente(), $file['data']);
+                        $procesarResultado = (new Model_DteIntercambioResultado())
+                            ->saveXML($this->getContribuyente(), $file['data'])
+                        ;
                     } catch (\Exception $e) {
                         $procesarResultado = false;
                     }
@@ -421,7 +477,7 @@ class Model_DteIntercambios extends \Model_Plural_App
                     }
                 }
                 // marcar email como leído si fueron procesados todos los archivos adjuntos
-                if ($procesados==$n_attachments) {
+                if ($procesados == $n_attachments) {
                     $Imap->setSeen($uid);
                 }
             }
@@ -432,11 +488,10 @@ class Model_DteIntercambios extends \Model_Plural_App
     }
 
     /**
-     * Método que procesa el archivo EnvioDTE recibido desde un contribuyente
-     * @param receptor RUT del receptor sin puntos ni dígito verificador
-     * @param datos_email Arreglo con los índices: fecha_hora_email, asunto, de, mensaje, mensaje_html
-     * @param file Arreglo con los índices: name, data, size y type
-         * @version 2020-07-03
+     * Método que procesa el archivo EnvioDTE recibido desde un contribuyente.
+     * @param receptor RUT del receptor sin puntos ni dígito verificador.
+     * @param datos_email Arreglo con los índices: fecha_hora_email, asunto, de, mensaje, mensaje_html.
+     * @param file Arreglo con los índices: name, data, size y type.
      */
     public function procesarEnvioDTE(array $file, array $datos_email = [])
     {
@@ -499,10 +554,9 @@ class Model_DteIntercambios extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega la cantidad de intercambios que se han recibido en el periodo
-         * @version 2018-05-20
+     * Método que entrega la cantidad de intercambios que se han recibido en el periodo.
      */
-    public function countPeriodo($periodo = null)
+    public function countPeriodo($periodo = null): int
     {
         if (!$periodo) {
             $periodo = date('Ym');
@@ -512,21 +566,28 @@ class Model_DteIntercambios extends \Model_Plural_App
             SELECT COUNT(*)
             FROM dte_intercambio
             WHERE receptor = :receptor AND '.$periodo_col.' = :periodo
-        ', [':receptor' => $this->getContribuyente()->rut, ':periodo' => $periodo]);
+        ', [
+            ':receptor' => $this->getContribuyente()->rut,
+            ':periodo' => $periodo,
+        ]);
     }
 
     /**
-     * Método que busca el o los intercambios asociados a un DTE
-     * @warning Esta función es muy costosa, ya que debe buscar en los XML y además abrir luego cada intercambio para confirmar que el DTE que se encontró es correcto
-         * @version 2019-11-29
+     * Método que busca el o los intercambios asociados a un DTE.
+     * @warning Esta función es muy costosa, ya que debe buscar en los XML y además abrir luego cada intercambio para confirmar que el DTE que se encontró es correcto.
      */
-    public function buscarIntercambiosDte($emisor, $dte, $folio)
+    public function buscarIntercambiosDte($emisor, $dte, $folio): array
     {
-        $dte_col = $this->db->xml('archivo_xml', '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/TipoDTE', 'http://www.sii.cl/SiiDte');
-        $folio_col = $this->db->xml('archivo_xml', '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/Folio', 'http://www.sii.cl/SiiDte');
-        if (!$dte_col || !$folio_col) { // parche para base de datos que no soportan consultas a los XML (ej: MariaDB)
-            return null;
-        }
+        $dte_col = $this->db->xml(
+            'archivo_xml',
+            '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/TipoDTE',
+            'http://www.sii.cl/SiiDte'
+        );
+        $folio_col = $this->db->xml(
+            'archivo_xml',
+            '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/Folio',
+            'http://www.sii.cl/SiiDte'
+        );
         // buscar intercambios que probablemente sean
         $intercambios = (new Model_DteIntercambios())->setWhereStatement(
             [
@@ -558,13 +619,15 @@ class Model_DteIntercambios extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega el último código de intercambio usado por un receptor de DTE
-         * @version 2022-11-16
+     * Método que entrega el último código de intercambio usado por un receptor de DTE.
      */
-    public function getUltimoCodigo()
+    public function getUltimoCodigo(): int
     {
         $where = ['i.receptor = :receptor', 'i.certificacion = :certificacion'];
-        $vars = [':receptor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion()];
+        $vars = [
+            ':receptor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+        ];
         return (int)$this->db->getValue('
             SELECT MAX(codigo)
             FROM dte_intercambio AS i

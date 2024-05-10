@@ -75,7 +75,7 @@ class Controller_BoletaHonorarios extends \Controller_App
         // crear receptor
         $Receptor = new \website\Dte\Model_Contribuyente($receptor);
         if (!$Receptor->exists()) {
-            $this->Api->send('Receptor no existe', 404);
+            $this->Api->send('Receptor no existe.', 404);
         }
         if (!$Receptor->usuarioAutorizado($User, '/honorarios/boleta_honorarios/buscar')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
@@ -104,7 +104,7 @@ class Controller_BoletaHonorarios extends \Controller_App
     {
         $Receptor = $this->getContribuyente();
         $BoletaHonorario = new Model_BoletaHonorario($emisor, $numero);
-        if (!$BoletaHonorario->exists() || $BoletaHonorario->receptor!=$Receptor->rut) {
+        if (!$BoletaHonorario->exists() || $BoletaHonorario->receptor != $Receptor->rut) {
             \sowerphp\core\Model_Datasource_Session::message('No existe la boleta solicitada.', 'error');
             $this->redirect('/honorarios/boleta_honorarios');
         }
@@ -141,7 +141,7 @@ class Controller_BoletaHonorarios extends \Controller_App
         }
         // obtener boleta
         $BoletaHonorario = new Model_BoletaHonorario($emisor, $numero);
-        if (!$BoletaHonorario->exists() || $BoletaHonorario->receptor!=$Receptor->rut) {
+        if (!$BoletaHonorario->exists() || $BoletaHonorario->receptor != $Receptor->rut) {
             $this->Api->send('No existe la boleta solicitada.', 404);
         }
         // obtener pdf

@@ -35,23 +35,29 @@ class Model_DteCompras extends \Model_Plural_App
     protected $_table = 'dte_compra'; ///< Tabla del modelo
 
     /**
-     * Método que indica si el libro para cierto periodo está o no generado
-         * @version 2018-06-14
+     * Método que indica si el libro para cierto periodo está o no generado.
      */
-    public function libroGenerado($periodo)
+    public function libroGenerado($periodo): bool
     {
-        return $this->db->getValue('
+        return (bool)(int)$this->db->getValue('
             SELECT COUNT(*)
             FROM dte_compra
-            WHERE receptor = :receptor AND periodo = :periodo AND certificacion = :certificacion AND track_id IS NOT NULL
-        ', [':receptor' => $this->getContribuyente()->rut, ':periodo' => $periodo, ':certificacion' => $this->getContribuyente()->enCertificacion()]);
+            WHERE
+                receptor = :receptor
+                AND periodo = :periodo
+                AND certificacion = :certificacion
+                AND track_id IS NOT NULL
+        ', [
+            ':receptor' => $this->getContribuyente()->rut,
+            ':periodo' => $periodo,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+        ]);
     }
 
     /**
-     * Método que entrega el total mensual del libro de compras
-         * @version 2020-02-20
+     * Método que entrega el total mensual del libro de compras.
      */
-    public function getTotalesMensuales($anio)
+    public function getTotalesMensuales($anio): array
     {
         $periodo_actual = date('Ym');
         $periodo = $anio.'01';
@@ -62,7 +68,9 @@ class Model_DteCompras extends \Model_Plural_App
             }
             $totales_mensuales[$periodo] = array_merge(
                 ['periodo' => $periodo],
-                (new Model_DteCompra($this->getContribuyente()->rut, $periodo, $this->getContribuyente()->enCertificacion()))->getTotales()
+                (new Model_DteCompra(
+                    $this->getContribuyente()->rut, $periodo, $this->getContribuyente()->enCertificacion()
+                ))->getTotales()
             );
             $periodo = \sowerphp\general\Utility_Date::nextPeriod($periodo);
         }
@@ -70,15 +78,18 @@ class Model_DteCompras extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega el resumen anual de compras
-         * @version 2020-02-20
+     * Método que entrega el resumen anual de compras.
      */
-    public function getResumenAnual($anio)
+    public function getResumenAnual($anio): array
     {
         $libros = [];
         foreach (range(1,12) as $mes) {
             $mes = $mes < 10 ? '0'.$mes : $mes;
-            $DteCompra = new Model_DteCompra($this->getContribuyente()->rut, (int)($anio.$mes), $this->getContribuyente()->enCertificacion());
+            $DteCompra = new Model_DteCompra(
+                $this->getContribuyente()->rut,
+                (int)($anio.$mes),
+                $this->getContribuyente()->enCertificacion()
+            );
             $resumen = $DteCompra->getResumen();
             if ($resumen) {
                 $libros[$anio][$mes] = $resumen;
@@ -108,10 +119,9 @@ class Model_DteCompras extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega el resumen de los documentos de compras
+     * Método que entrega el resumen de los documentos de compras.
      * totalizado según ciertos filtros y por tipo de documento.
-     * @todo Agregar las facturas de compras al resumen (tipo 46)
-         * @version 2022-06-16
+     * @todo Agregar las facturas de compras al resumen (tipo 46).
      */
     public function getResumen(array $filtros = [])
     {
@@ -222,12 +232,11 @@ class Model_DteCompras extends \Model_Plural_App
     }
 
     /**
-     * Método que sincroniza el libro de compras local con el registro de compras del SII
-     * - Se agregan documentos "registrados" en el registro de compras del SII
-     * - Se eliminan documentos que están en el SII marcados como "no incluir" o "reclamados"
-         * @version 2020-02-19
+     * Método que sincroniza el libro de compras local con el registro de compras del SII.
+     * - Se agregan documentos "registrados" en el registro de compras del SII.
+     * - Se eliminan documentos que están en el SII marcados como "no incluir" o "reclamados".
      */
-    public function sincronizarRegistroComprasSII($meses = 2)
+    public function sincronizarRegistroComprasSII(int $meses = 2): int
     {
         $documentos_encontrados = 0;
         // periodos a procesar
@@ -269,24 +278,29 @@ class Model_DteCompras extends \Model_Plural_App
     }
 
     /**
-     * Método que agrega masivamente documentos recibidos y acepta los intercambios asociados al DTE
-         * @version 2020-02-19
+     * Método que agrega masivamente documentos recibidos y acepta los intercambios asociados al DTE.
      */
-    private function agregarMasivo($documentos, array $config = [])
+    private function agregarMasivo($documentos, array $config = []): void
     {
         $config = array_merge([
             'periodo' => (int)date('Ym'),
             'sucursal' => 0,
         ], $config);
         $Emisores = new Model_Contribuyentes();
-        $DteIntercambios = (new Model_DteIntercambios())->setContribuyente($this->getContribuyente());
+        $DteIntercambios = (new Model_DteIntercambios())
+            ->setContribuyente($this->getContribuyente())
+        ;
         foreach ($documentos as $doc) {
             // si el documento está anulado se omite
             if ($doc['anulado']) {
                 continue;
             }
             // aceptar intercambios
-            $intercambios = $DteIntercambios->buscarIntercambiosDte(substr($doc['rut'],0,-2), $doc['dte'], $doc['folio']);
+            $intercambios = $DteIntercambios->buscarIntercambiosDte(
+                substr($doc['rut'], 0, -2),
+                $doc['dte'],
+                $doc['folio']
+            );
             if ($intercambios) {
                 foreach ($intercambios as $DteIntercambio) {
                     if (!$DteIntercambio->usuario && $DteIntercambio->documentos == 1) {
@@ -295,8 +309,13 @@ class Model_DteCompras extends \Model_Plural_App
                 }
             }
             // agregar el documento recibido si no existe
-            $Emisor = $Emisores->get(substr($doc['rut'],0,-2));
-            $DteRecibido = new Model_DteRecibido($Emisor->rut, $doc['dte'], $doc['folio'], $this->getContribuyente()->enCertificacion());
+            $Emisor = $Emisores->get(substr($doc['rut'], 0, -2));
+            $DteRecibido = new Model_DteRecibido(
+                $Emisor->rut,
+                $doc['dte'],
+                $doc['folio'],
+                $this->getContribuyente()->enCertificacion()
+            );
             if (!$DteRecibido->usuario || $DteRecibido->mipyme) {
                 $DteRecibido->tasa = (float)$doc['tasa'];
                 $DteRecibido->fecha = $doc['fecha'];
@@ -306,9 +325,13 @@ class Model_DteCompras extends \Model_Plural_App
                 $DteRecibido->iva = $doc['iva'] ? $doc['iva'] : 0;
                 $DteRecibido->total = $doc['total'] ? $doc['total'] : 0;
                 $DteRecibido->iva_uso_comun = $doc['iva_uso_comun'];
-                $DteRecibido->iva_no_recuperable =
-                    $doc['iva_no_recuperable_monto']
-                    ? json_encode([['codigo' => $doc['iva_no_recuperable_codigo'], 'monto' => $doc['iva_no_recuperable_monto']]])
+                $DteRecibido->iva_no_recuperable = $doc['iva_no_recuperable_monto']
+                    ? json_encode([
+                        [
+                            'codigo' => $doc['iva_no_recuperable_codigo'],
+                            'monto' => $doc['iva_no_recuperable_monto'],
+                        ]
+                    ])
                     : null
                 ;
                 $DteRecibido->impuesto_adicional = null;
@@ -343,12 +366,13 @@ class Model_DteCompras extends \Model_Plural_App
     }
 
     /**
-     * Método que elimina masivamente documentos recibidos y los intercambios asociados al DTE
-         * @version 2018-05-20
+     * Método que elimina masivamente documentos recibidos y los intercambios asociados al DTE.
      */
-    private function eliminarMasivo($documentos)
+    private function eliminarMasivo($documentos): void
     {
-        $DteIntercambios = (new Model_DteIntercambios())->setContribuyente($this->getContribuyente());
+        $DteIntercambios = (new Model_DteIntercambios())
+            ->setContribuyente($this->getContribuyente())
+        ;
         foreach ($documentos as $doc) {
             // eliminar DTE recibido
             $DteRecibido = new Model_DteRecibido();
@@ -358,7 +382,11 @@ class Model_DteCompras extends \Model_Plural_App
             $DteRecibido->certificacion = $this->getContribuyente()->enCertificacion();
             $DteRecibido->delete();
             // eliminar intercambio
-            $intercambios = $DteIntercambios->buscarIntercambiosDte(substr($doc['rut'],0,-2), $doc['dte'], $doc['folio']);
+            $intercambios = $DteIntercambios->buscarIntercambiosDte(
+                substr($doc['rut'], 0, -2),
+                $doc['dte'],
+                $doc['folio']
+            );
             if ($intercambios) {
                 foreach ($intercambios as $DteIntercambio) {
                     if ($DteIntercambio->documentos == 1) {
@@ -371,10 +399,9 @@ class Model_DteCompras extends \Model_Plural_App
 
     /**
      * Método que sincroniza los documentos recibidos del Portal MIPYME con
-     * LibreDTE, cargando los datos que estén en el SII
-         * @version 2020-02-22
+     * LibreDTE, cargando los datos que estén en el SII.
      */
-    public function sincronizarRecibidosPortalMipymeSII($meses = 2)
+    public function sincronizarRecibidosPortalMipymeSII(int $meses = 2)
     {
         $documentos_encontrados = 0;
         // periodos a procesar
@@ -406,7 +433,11 @@ class Model_DteCompras extends \Model_Plural_App
             $documentos_encontrados += count($documentos);
             foreach($documentos as $dte) {
                 $Emisor = $Emisores->get($dte['rut']);
-                $DteRecibido = new Model_DteRecibido($Emisor->rut, $dte['dte'], $dte['folio'], 0);
+                $DteRecibido = new Model_DteRecibido(
+                    $Emisor->rut, $dte['dte'],
+                    $dte['folio'],
+                    0
+                );
                 if ($DteRecibido->mipyme) {
                     continue;
                 }

@@ -24,9 +24,10 @@
 // namespace del controlador
 namespace website\Dte\Admin;
 
+use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
+
 /**
- * Clase para las acciones asociadas a items
- * @version 2016-10-25
+ * Clase para las acciones asociadas a items.
  */
 class Controller_Itemes extends \Controller_Maintainer
 {
@@ -37,8 +38,7 @@ class Controller_Itemes extends \Controller_Maintainer
     ]; ///< Columnas que se deben mostrar en las vistas
 
     /**
-     * Acción para listar los items del contribuyente
-         * @version 2016-02-24
+     * Acción para listar los items del contribuyente.
      */
     public function listar($page = 1, $orderby = null, $order = 'A')
     {
@@ -48,8 +48,7 @@ class Controller_Itemes extends \Controller_Maintainer
     }
 
     /**
-     * Acción para crear un nuevo item
-         * @version 2019-07-25
+     * Acción para crear un nuevo item.
      */
     public function crear()
     {
@@ -58,14 +57,15 @@ class Controller_Itemes extends \Controller_Maintainer
         $this->set([
             'Contribuyente' => $Contribuyente,
             'clasificaciones' => (new Model_ItemClasificaciones())->setContribuyente($Contribuyente)->getList(),
-            'impuesto_adicionales' => (new \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales())->getListContribuyente($Contribuyente->config_extra_impuestos_adicionales),
+            'impuesto_adicionales' => (new Model_ImpuestoAdicionales())
+                ->getListContribuyente($Contribuyente->config_extra_impuestos_adicionales)
+            ,
         ]);
         parent::crear();
     }
 
     /**
-     * Acción para editar un item
-         * @version 2019-09-14
+     * Acción para editar un item.
      */
     public function editar($codigo, $tipo = 'INT1')
     {
@@ -74,14 +74,15 @@ class Controller_Itemes extends \Controller_Maintainer
         $this->set([
             'Contribuyente' => $Contribuyente,
             'clasificaciones' => (new Model_ItemClasificaciones())->setContribuyente($Contribuyente)->getList(),
-            'impuesto_adicionales' => (new \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales())->getListContribuyente($Contribuyente->config_extra_impuestos_adicionales),
+            'impuesto_adicionales' => (new Model_ImpuestoAdicionales())
+                ->getListContribuyente($Contribuyente->config_extra_impuestos_adicionales)
+            ,
         ]);
         parent::editar($Contribuyente->rut, urldecode($tipo), urldecode($codigo));
     }
 
     /**
-     * Acción para eliminar un item
-         * @version 2020-09-14
+     * Acción para eliminar un item.
      */
     public function eliminar($codigo, $tipo = 'INT1')
     {
@@ -92,8 +93,7 @@ class Controller_Itemes extends \Controller_Maintainer
     /**
      * Recurso de la API que permite obtener los datos de un item a partir de su
      * código (puede ser el código de 'libredte', el que se usa en el mantenedor de productos)
-     * o bien puede ser por 'sku', 'upc' o 'ean'
-         * @version 2020-06-07
+     * o bien puede ser por 'sku', 'upc' o 'ean'.
      */
     public function _api_info_GET($empresa, $codigo)
     {
@@ -119,7 +119,7 @@ class Controller_Itemes extends \Controller_Maintainer
         // crear contribuyente y verificar que exista y el usuario esté autorizado
         $Empresa = new \website\Dte\Model_Contribuyente($empresa);
         if (!$Empresa->exists()) {
-            $this->Api->send('Empresa solicitada no existe', 404);
+            $this->Api->send('Empresa solicitada no existe.', 404);
         }
         if (!$Empresa->usuarioAutorizado($User, '/dte/documentos/emitir')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
@@ -134,11 +134,16 @@ class Controller_Itemes extends \Controller_Maintainer
         else {
             if ($campo == 'libredte') {
                 $Item = (new Model_Itemes())->get($Empresa->rut, $codigo, $tipo);
+            } else if (is_libredte_enterprise()) {
+                $Item = (new \libredte\enterprise\Inventario\Model_InventarioItemes())
+                    ->setContribuyente($Empresa)
+                    ->getItemFacturacion($codigo, $tipo, $campo)
+                ;
             } else {
-                $Item = (new \libredte\enterprise\Inventario\Model_InventarioItemes())->setContribuyente($Empresa)->getItemFacturacion($codigo, $tipo, $campo);
+                $Item = null;
             }
             if (!$Item || !$Item->exists() || !$Item->activo) {
-                $this->Api->send('Item solicitado no existe o está inactivo', 404);
+                $this->Api->send('Item solicitado no existe o está inactivo.', 404);
             }
             try {
                 $datos_trigger = (array)\sowerphp\core\Trigger::run('dte_item_info', $Item, $options);
@@ -161,14 +166,16 @@ class Controller_Itemes extends \Controller_Maintainer
                 'ValorDR' => $Item->getDescuento($fecha, $bruto, $moneda, $decimales),
                 'TpoValor' => $Item->descuento_tipo,
                 'CodImpAdic' => $Item->impuesto_adicional,
-                'TasaImp' => $Item->impuesto_adicional ? \sasco\LibreDTE\Sii\ImpuestosAdicionales::getTasa($Item->impuesto_adicional) : 0,
+                'TasaImp' => $Item->impuesto_adicional
+                    ? \sasco\LibreDTE\Sii\ImpuestosAdicionales::getTasa($Item->impuesto_adicional)
+                    : 0
+                ,
             ], $datos_trigger), 200);
         }
     }
 
     /**
-     * Recurso de la API que permite obtener el listado de items completo con, todos sus datos
-         * @version 2020-03-15
+     * Recurso de la API que permite obtener el listado de items completo con, todos sus datos.
      */
     public function _api_raw_GET($empresa)
     {
@@ -180,21 +187,24 @@ class Controller_Itemes extends \Controller_Maintainer
         // crear contribuyente y verificar que exista y el usuario esté autorizado
         $Empresa = new \website\Dte\Model_Contribuyente($empresa);
         if (!$Empresa->exists()) {
-            $this->Api->send('Empresa solicitada no existe', 404);
+            $this->Api->send('Empresa solicitada no existe.', 404);
         }
         if (!$Empresa->usuarioAutorizado($User, '/dte/documentos/emitir')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // entregar datos
         return (new Model_Itemes())
-            ->setWhereStatement(['contribuyente = :contribuyente'], [':contribuyente' => $Empresa->rut])
+            ->setWhereStatement(
+                ['contribuyente = :contribuyente'],
+                [':contribuyente' => $Empresa->rut]
+            )
             ->setOrderByStatement('item')
-            ->getTable();
+            ->getTable()
+        ;
     }
 
     /**
-     * Acción que permite importar los items desde un archivo CSV
-         * @version 2022-11-22
+     * Acción que permite importar los items desde un archivo CSV.
      */
     public function importar()
     {
@@ -229,25 +239,31 @@ class Controller_Itemes extends \Controller_Maintainer
                     }
                 }
                 // verificar codificación del nombre y descripción del item
-                if (mb_detect_encoding($Item->item, 'UTF-8', true) === false or mb_detect_encoding($Item->descripcion, 'UTF-8', true) === false) {
+                if (
+                    mb_detect_encoding($Item->item, 'UTF-8', true) === false
+                    || mb_detect_encoding($Item->descripcion, 'UTF-8', true) === false
+                ) {
                     $resumen['error']++;
                     $item[] = 'No';
-                    $item[] = 'Codificación del nombre o descripción del item no es UTF-8';
+                    $item[] = 'Codificación del nombre o descripción del item no es UTF-8.';
                     continue;
                 }
                 // verificar que exista la clasificación solicitada
-                $ItemClasificacion = $Clasificaciones->get($Contribuyente->rut, $Item->clasificacion);
+                $ItemClasificacion = $Clasificaciones->get(
+                    $Contribuyente->rut,
+                    $Item->clasificacion
+                );
                 if (empty($ItemClasificacion->clasificacion)) {
                     $resumen['error']++;
                     $item[] = 'No';
-                    $item[] = 'Código de clasificación '.$ItemClasificacion->codigo.' no existe';
+                    $item[] = 'Código de clasificación '.$ItemClasificacion->codigo.' no existe.';
                     continue;
                 }
                 // verificar que el precio sea mayor a 0
-                if (empty($Item->precio) || $Item->precio<=0) {
+                if (empty($Item->precio) || $Item->precio <= 0) {
                     $resumen['error']++;
                     $item[] = 'No';
-                    $item[] = 'Precio del item debe ser mayor a 0';
+                    $item[] = 'Precio del item debe ser mayor a 0.';
                     continue;
                 }
                 // guardar
@@ -264,7 +280,7 @@ class Controller_Itemes extends \Controller_Maintainer
                     } else {
                         $resumen['error']++;
                         $item[] = 'No';
-                        $item[] = 'Error al guardar';
+                        $item[] = 'Error al guardar.';
                     }
                 } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
                     $resumen['error']++;
@@ -274,15 +290,24 @@ class Controller_Itemes extends \Controller_Maintainer
             }
             // asignar mensajes de sesión
             if ($resumen['nuevos']) {
-                $msg = $resumen['nuevos'] == 1 ? __('Se agregó un item') : __('Se agregaron %s items', $resumen['nuevos']);
+                $msg = $resumen['nuevos'] == 1
+                    ? __('Se agregó un item.')
+                    : __('Se agregaron %s items.', $resumen['nuevos'])
+                ;
                 \sowerphp\core\Model_Datasource_Session::message($msg, 'ok');
             }
             if ($resumen['editados']) {
-                $msg = $resumen['editados'] == 1 ? __('Se editó un item') : __('Se editaron %s items', $resumen['editados']);
+                $msg = $resumen['editados'] == 1
+                    ? __('Se editó un item.')
+                    : __('Se editaron %s items.', $resumen['editados'])
+                ;
                 \sowerphp\core\Model_Datasource_Session::message($msg, 'ok');
             }
             if ($resumen['error']) {
-                $msg = $resumen['error'] == 1 ? __('Se encontró un item con error (detalle en tabla de items)') : __('Se encontraron %s items con error (detalle en tabla de items)', $resumen['error']);
+                $msg = $resumen['error'] == 1
+                    ? __('Se encontró un item con error (detalle en tabla de items).')
+                    : __('Se encontraron %s items con error (detalle en tabla de items).', $resumen['error'])
+                ;
                 \sowerphp\core\Model_Datasource_Session::message($msg, 'error');
             }
             // mostrar resultado de lo realizado
@@ -297,8 +322,7 @@ class Controller_Itemes extends \Controller_Maintainer
     }
 
     /**
-     * Acción que permite exportar todos los items a un archivo CSV
-         * @version 2019-07-18
+     * Acción que permite exportar todos los items a un archivo CSV.
      */
     public function exportar()
     {
@@ -306,7 +330,7 @@ class Controller_Itemes extends \Controller_Maintainer
         $items = (new Model_Itemes())->setContribuyente($Contribuyente)->exportar();
         if (!$items) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No hay items que exportar', 'warning'
+                'No hay items que exportar.', 'warning'
             );
             $this->redirect('/dte/admin/itemes/listar');
         }

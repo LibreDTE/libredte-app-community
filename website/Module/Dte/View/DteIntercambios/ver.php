@@ -59,7 +59,7 @@ function intercambio_reclamar() {
 <div role="tabpanel" class="tab-pane active" id="email" aria-labelledby="email-tab">
 <?php
 $de = $DteIntercambio->de;
-if ($DteIntercambio->de!=$DteIntercambio->responder_a)
+if ($DteIntercambio->de != $DteIntercambio->responder_a)
     $de .= '<br/><span>'.$DteIntercambio->responder_a.'</span>';
 new \sowerphp\general\View_Helper_Table([
     ['Recibido', 'De', 'Emisor', 'Firma', 'Documentos', 'Estado', 'Procesado'],

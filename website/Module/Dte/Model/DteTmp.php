@@ -24,6 +24,11 @@
 // namespace del modelo
 namespace website\Dte;
 
+use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
+use \sowerphp\app\Sistema\General\Model_MonedaCambio;
+use \website\Dte\Admin\Mantenedores\Model_DteTipo;
+use \website\Dte\Admin\Mantenedores\Model_DteTipos;
+
 /**
  * Clase para mapear la tabla dte_tmp de la base de datos.
  */
@@ -166,7 +171,7 @@ class Model_DteTmp extends \Model_App
 
     public static $fkNamespace = array(
         'Model_Contribuyente' => 'website\Dte',
-        'Model_DteTipo' => 'website\Dte',
+        'Model_DteTipo' => 'website\Dte\Admin\Mantenedores',
         'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios',
     ); ///< Namespaces que utiliza esta clase
 
@@ -175,8 +180,7 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que genera el XML de EnvioDTE a partir de los datos ya
-     * normalizados de un DTE temporal
-         * @version 2022-06-20
+     * normalizados de un DTE temporal.
      */
     public function getEnvioDte($folio = 0, \sasco\LibreDTE\Sii\Folios $Folios = null, \sasco\LibreDTE\FirmaElectronica $Firma = null, $RutReceptor = null, $fecha_emision = null)
     {
@@ -193,17 +197,19 @@ class Model_DteTmp extends \Model_App
                     // actualizar total en los datos del DTE
                     $fecha = $dte['Encabezado']['IdDoc']['FchEmis'];
                     $moneda = $dte['Encabezado']['Totales']['TpoMoneda'];
-                    if ($moneda == 'PESO CL') {
-                        $cambio = 1;
-                    } else {
-                        $cambio = (new \sowerphp\app\Sistema\General\Model_MonedaCambio($moneda, 'CLP', $fecha))->valor;
-                    }
+                    $cambio = $moneda == 'PESO CL'
+                        ? 1
+                        : (new Model_MonedaCambio($moneda, 'CLP', $fecha))->valor
+                    ;
                     $dte['Encabezado']['OtraMoneda'] = [[
                         'TpoMoneda' => 'PESO CL',
                         'TpoCambio' => $cambio,
                     ]];
                     $dte['Encabezado']['Totales'] = [
-                        'TpoMoneda' => isset($dte['Encabezado']['Totales']['TpoMoneda']) ? $dte['Encabezado']['Totales']['TpoMoneda'] : false,
+                        'TpoMoneda' => isset($dte['Encabezado']['Totales']['TpoMoneda'])
+                            ? $dte['Encabezado']['Totales']['TpoMoneda']
+                            : false
+                        ,
                     ];
                     $dte = (new \sasco\LibreDTE\Sii\Dte($dte))->getDatos();
                     // actualizar total en el temporal y en el cobro
@@ -214,7 +220,10 @@ class Model_DteTmp extends \Model_App
                                 $dte['Encabezado']['OtraMoneda'] = [$dte['Encabezado']['OtraMoneda']];
                             }
                             foreach ($dte['Encabezado']['OtraMoneda'] as $OtraMoneda) {
-                                if ($OtraMoneda['TpoMoneda'] == 'PESO CL' && !empty($OtraMoneda['MntTotOtrMnda'])) {
+                                if (
+                                    $OtraMoneda['TpoMoneda'] == 'PESO CL'
+                                    && !empty($OtraMoneda['MntTotOtrMnda'])
+                                ) {
                                     $total = $OtraMoneda['MntTotOtrMnda'];
                                     break;
                                 }
@@ -262,15 +271,20 @@ class Model_DteTmp extends \Model_App
         $EnvioDte->setCaratula([
             'RutEnvia' => $Firma ? $Firma->getID() : null,
             'RutReceptor' => $RutReceptor ? $RutReceptor : $Dte->getReceptor(),
-            'FchResol' => $Emisor->enCertificacion() ? $Emisor->config_ambiente_certificacion_fecha : $Emisor->config_ambiente_produccion_fecha,
-            'NroResol' => $Emisor->enCertificacion() ? 0 : $Emisor->config_ambiente_produccion_numero,
+            'FchResol' => $Emisor->enCertificacion()
+                ? $Emisor->config_ambiente_certificacion_fecha
+                : $Emisor->config_ambiente_produccion_fecha
+            ,
+            'NroResol' => $Emisor->enCertificacion()
+                ? 0
+                : $Emisor->config_ambiente_produccion_numero
+            ,
         ]);
         return $EnvioDte;
     }
 
     /**
-     * Método que entrega el objeto de receptor
-         * @version 2021-08-24
+     * Método que entrega el objeto de receptor.
      */
     public function getReceptor()
     {
@@ -290,11 +304,20 @@ class Model_DteTmp extends \Model_App
                 }
                 // datos del receptor si es boleta
                 if (in_array($this->dte, [39, 41])) {
-                    if ($this->receptor==66666666) {
+                    if ($this->receptor == 66666666) {
                         $datos = json_decode($this->datos, true)['Encabezado']['Receptor'];
-                        $this->Receptor->razon_social = !empty($datos['RznSocRecep']) ? $datos['RznSocRecep'] : null;
-                        $this->Receptor->direccion = !empty($datos['DirRecep']) ? $datos['DirRecep'] : null;
-                        $this->Receptor->comuna = !empty($datos['CmnaRecep']) ? $datos['CmnaRecep'] : null;
+                        $this->Receptor->razon_social = !empty($datos['RznSocRecep'])
+                            ? $datos['RznSocRecep']
+                            : null
+                        ;
+                        $this->Receptor->direccion = !empty($datos['DirRecep'])
+                            ? $datos['DirRecep']
+                            : null
+                        ;
+                        $this->Receptor->comuna = !empty($datos['CmnaRecep'])
+                            ? $datos['CmnaRecep']
+                            : null
+                        ;
                         $this->Receptor->giro = null;
                     }
                 }
@@ -311,36 +334,31 @@ class Model_DteTmp extends \Model_App
     }
 
     /**
-     * Método que entrega el objeto del tipo de dte
-     * @return \website\Dte\Admin\Mantenedores\Model_DteTipo
-         * @version 2019-02-04
+     * Método que entrega el objeto del tipo de dte.
      */
-    public function getTipo()
+    public function getTipo(): Model_DteTipo
     {
-        return (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->get($this->dte);
+        return (new Model_DteTipos())->get($this->dte);
     }
 
     /**
-     * Método que entrega el objeto del emisor
-         * @version 2016-01-02
+     * Método que entrega el objeto del emisor.
      */
-    public function getEmisor()
+    public function getEmisor(): Model_Contribuyente
     {
-        return (new \website\Dte\Model_Contribuyentes())->get($this->emisor);
+        return (new Model_Contribuyentes())->get($this->emisor);
     }
 
     /**
-     * Método que entrega el folio del documento temporal
-         * @version 2016-06-13
+     * Método que entrega el folio del documento temporal.
      */
     public function getFolio()
     {
-        return $this->dte.'-'.strtoupper(substr($this->codigo, 0, 7));
+        return $this->dte .'-' . strtoupper(substr($this->codigo, 0, 7));
     }
 
     /**
-     * Método que entrega la sucursal asociada al documento temporal
-         * @version 2021-08-20
+     * Método que entrega la sucursal asociada al documento temporal.
      */
     public function getSucursal()
     {
@@ -348,36 +366,42 @@ class Model_DteTmp extends \Model_App
     }
 
     /**
-     * Método que crea el DTE real asociado al DTE temporal
-     * Permite usar el facturador local de LibreDTE o el del Portal MIPYME del SII
-         * @version 2020-02-22
+     * Método que crea el DTE real asociado al DTE temporal.
+     * Permite usar el facturador local de LibreDTE o el del Portal MIPYME del SII.
      */
     public function generar($user_id = null, $fecha_emision = null, $retry = null, $gzip = null)
     {
         // facturador local de LibreDTE
         if (!$this->getEmisor()->config_libredte_facturador) {
-            return $this->generarConFacturadorLocal($user_id, $fecha_emision, $retry, $gzip);
+            return $this->generarConFacturadorLocal(
+                $user_id, $fecha_emision, $retry, $gzip
+            );
         }
         // facturador del Portal MIPYME del SII
         else if ($this->getEmisor()->config_libredte_facturador == 1) {
-            return $this->generarConFacturadorSii($user_id, $fecha_emision);
+            return $this->generarConFacturadorSii(
+                $user_id, $fecha_emision
+            );
         }
         // facturador mixto
         else if ($this->getEmisor()->config_libredte_facturador == 2) {
             // facturador local de LibreDTE para boletas
             if (in_array($this->dte, [39, 41])) {
-                return $this->generarConFacturadorLocal($user_id, $fecha_emision, $retry, $gzip);
+                return $this->generarConFacturadorLocal(
+                    $user_id, $fecha_emision, $retry, $gzip
+                );
             }
             // facturador del Portal MIPYME del SII para otros documentos
             else {
-                return $this->generarConFacturadorSii($user_id, $fecha_emision);
+                return $this->generarConFacturadorSii(
+                    $user_id, $fecha_emision
+                );
             }
         }
     }
 
     /**
-     * Método que crea el DTE real asociado al DTE temporal usando LibreDTE
-         * @version 2023-11-04
+     * Método que crea el DTE real asociado al DTE temporal usando LibreDTE.
      */
     private function generarConFacturadorLocal($user_id = null, $fecha_emision = null, $retry = null, $gzip = null)
     {
@@ -407,10 +431,13 @@ class Model_DteTmp extends \Model_App
         }
         // determinar folio a usar
         $datos_dte = $this->getDatos();
-        $folio_dte = !empty($datos_dte['Encabezado']['IdDoc']['Folio']) ? (int)$datos_dte['Encabezado']['IdDoc']['Folio'] : 0;
+        $folio_dte = !empty($datos_dte['Encabezado']['IdDoc']['Folio'])
+            ? (int)$datos_dte['Encabezado']['IdDoc']['Folio']
+            : 0
+        ;
         // se fuerza a folio 0 para que se asigne automáticamente por LibreDTE si el usuario no tiene permiso para asignar manualmente
         if ($folio_dte) {
-            $Usuario = new \sowerphp\app\Sistema\Usuarios\Model_Usuario($user_id);
+            $Usuario = new Model_Usuario($user_id);
             if (!$Emisor->puedeAsignarFolio($Usuario)) {
                 $folio_dte = 0;
             }
@@ -454,7 +481,9 @@ class Model_DteTmp extends \Model_App
             // timbrar automáticmente
             if ($Emisor->config_sii_timbraje_automatico==1) {
                 try {
-                    $xml = $FolioInfo->DteFolio->timbrar($FolioInfo->DteFolio->alerta*$Emisor->config_sii_timbraje_multiplicador);
+                    $xml = $FolioInfo->DteFolio->timbrar(
+                        $FolioInfo->DteFolio->alerta * $Emisor->config_sii_timbraje_multiplicador
+                    );
                     $FolioInfo->DteFolio->guardarFolios($xml);
                     $timbrado = true;
                 } catch (\Exception $e) {
@@ -471,7 +500,9 @@ class Model_DteTmp extends \Model_App
             }
         }
         // armar xml a partir del DTE temporal
-        $EnvioDte = $this->getEnvioDte($FolioInfo->folio, $FolioInfo->Caf, $Firma, null, $fecha_emision);
+        $EnvioDte = $this->getEnvioDte(
+            $FolioInfo->folio, $FolioInfo->Caf, $Firma, null, $fecha_emision
+        );
         if (!$EnvioDte) {
             $message = __(
                 'Ocurrió un error al preparar los datos del EnvioDTE del documento. Del rango de folios del %d al %d de %s, el folio %d fue saltado, por lo que quedará sin usar y debe ser [anulado en el SII](%s). Debe revisar el siguiente error y corregir la situación que lo ocasionó antes de intentar emitir nuevamente el documento (o podría tener más folios saltados).<br/><br/>- %s',
@@ -517,7 +548,12 @@ class Model_DteTmp extends \Model_App
         }
         // guardar DTE
         $r = $EnvioDte->getDocumentos()[0]->getResumen();
-        $DteEmitido = new Model_DteEmitido($Emisor->rut, (int)$r['TpoDoc'], (int)$r['NroDoc'], $Emisor->enCertificacion());
+        $DteEmitido = new Model_DteEmitido(
+            $Emisor->rut,
+            (int)$r['TpoDoc'],
+            (int)$r['NroDoc'],
+            $Emisor->enCertificacion()
+        );
         if ($DteEmitido->exists()) {
             $message = __(
                 'No fue posible generar el documento puesto que ya existía una %s de folio %d emitida en LibreDTE. Antes de intentar generar nuevamente el documento [actualice el folio siguiente a utilizar](%s) por uno que sea válido.',
@@ -553,7 +589,11 @@ class Model_DteTmp extends \Model_App
                 $datos['Referencia'] = [$datos['Referencia']];
             }
             foreach ($datos['Referencia'] as $referencia) {
-                if (!empty($referencia['TpoDocRef']) && is_numeric($referencia['TpoDocRef']) && $referencia['TpoDocRef']<200) {
+                if (
+                    !empty($referencia['TpoDocRef'])
+                    && is_numeric($referencia['TpoDocRef'])
+                    && $referencia['TpoDocRef'] < 200
+                ) {
                     // guardar referencia
                     $DteReferencia = new Model_DteReferencia();
                     $DteReferencia->emisor = $DteEmitido->emisor;
@@ -562,29 +602,40 @@ class Model_DteTmp extends \Model_App
                     $DteReferencia->certificacion = $DteEmitido->certificacion;
                     $DteReferencia->referencia_dte = $referencia['TpoDocRef'];
                     $DteReferencia->referencia_folio = $referencia['FolioRef'];
-                    $DteReferencia->codigo = !empty($referencia['CodRef']) ? $referencia['CodRef'] : null;
-                    $DteReferencia->razon = !empty($referencia['RazonRef']) ? $referencia['RazonRef'] : null;
+                    $DteReferencia->codigo = !empty($referencia['CodRef'])
+                        ? $referencia['CodRef']
+                        : null
+                    ;
+                    $DteReferencia->razon = !empty($referencia['RazonRef'])
+                        ? $referencia['RazonRef']
+                        : null
+                    ;
                     $DteReferencia->save();
                     // si es nota de crédito asociada a boleta se recuerda por si se debe invalidar RCOF
-                    if ($DteEmitido->dte==61 && in_array($referencia['TpoDocRef'], [39, 41])) {
+                    if ($DteEmitido->dte == 61 && in_array($referencia['TpoDocRef'], [39, 41])) {
                         $nc_referencia_boleta = true;
                     }
                     // si es nota de crédito que anula un DTE con cobro programado se borra el cobro programado
-                    if (in_array($DteEmitido->dte, [61,112]) && $DteReferencia->codigo==1) {
+                    if (in_array($DteEmitido->dte, [61,112]) && $DteReferencia->codigo == 1) {
                         $DteEmitidoReferencia = $DteReferencia->getDocumento();
                         if ($DteEmitidoReferencia->exists()) {
                             $pagos = $DteEmitidoReferencia->getPagosProgramados();
                             if ($pagos) {
                                 try {
-                                    $this->db->query(
-                                        'DELETE FROM cobranza WHERE emisor = :emisor AND dte = :dte AND folio = :folio AND certificacion = :certificacion',
-                                        [
-                                            ':emisor' => $DteEmitidoReferencia->emisor,
-                                            ':dte' => $DteEmitidoReferencia->dte,
-                                            ':folio' => $DteEmitidoReferencia->folio,
-                                            ':certificacion' => $DteEmitidoReferencia->certificacion,
-                                        ]
-                                    );
+                                    $this->db->query('
+                                        DELETE
+                                        FROM cobranza
+                                        WHERE
+                                            emisor = :emisor
+                                            AND dte = :dte
+                                            AND folio = :folio
+                                            AND certificacion = :certificacion
+                                    ', [
+                                        ':emisor' => $DteEmitidoReferencia->emisor,
+                                        ':dte' => $DteEmitidoReferencia->dte,
+                                        ':folio' => $DteEmitidoReferencia->folio,
+                                        ':certificacion' => $DteEmitidoReferencia->certificacion,
+                                    ]);
                                 } catch (\Exception $e) {
                                     // fallo silencioso (se tendría que borrar a mano en el módulo de cobranza)
                                 }
@@ -598,14 +649,17 @@ class Model_DteTmp extends \Model_App
         $MntPagos = $DteEmitido->getPagosProgramados();
         if (!empty($MntPagos)) {
             foreach ($MntPagos as $pago) {
-                $Cobranza = new \website\Dte\Model_Cobranza();
+                $Cobranza = new Model_Cobranza();
                 $Cobranza->emisor = $DteEmitido->emisor;
                 $Cobranza->dte = $DteEmitido->dte;
                 $Cobranza->folio = $DteEmitido->folio;
                 $Cobranza->certificacion = $DteEmitido->certificacion;
                 $Cobranza->fecha = $pago['FchPago'];
                 $Cobranza->monto = $pago['MntPago'];
-                $Cobranza->glosa = !empty($pago['GlosaPagos']) ? $pago['GlosaPagos'] : null;
+                $Cobranza->glosa = !empty($pago['GlosaPagos'])
+                    ? $pago['GlosaPagos']
+                    : null
+                ;
                 $Cobranza->save();
             }
         }
@@ -613,7 +667,11 @@ class Model_DteTmp extends \Model_App
         // emisión es anterior al día actual
         if ($DteEmitido->fecha < date('Y-m-d')) {
             if (in_array($DteEmitido->dte, [39, 41]) || $nc_referencia_boleta) {
-                $DteBoletaConsumo = new Model_DteBoletaConsumo($DteEmitido->emisor, $DteEmitido->fecha, (int)$DteEmitido->certificacion);
+                $DteBoletaConsumo = new Model_DteBoletaConsumo(
+                    $DteEmitido->emisor,
+                    $DteEmitido->fecha,
+                    (int)$DteEmitido->certificacion
+                );
                 if ($DteBoletaConsumo->track_id) {
                     $DteBoletaConsumo->track_id = null;
                     $DteBoletaConsumo->revision_estado = null;
@@ -636,8 +694,7 @@ class Model_DteTmp extends \Model_App
     }
 
     /**
-     * Método que crea el DTE real asociado al DTE temporal usando el SII
-         * @version 2020-02-22
+     * Método que crea el DTE real asociado al DTE temporal usando el SII.
      */
     private function generarConFacturadorSii($user_id = null, $fecha_emision = null)
     {
@@ -645,8 +702,7 @@ class Model_DteTmp extends \Model_App
     }
 
     /**
-     * Método que realiza verificaciones a campos antes de guardar
-         * @version 2020-08-01
+     * Método que realiza verificaciones a campos antes de guardar.
      */
     public function save()
     {
@@ -661,8 +717,7 @@ class Model_DteTmp extends \Model_App
     }
 
     /**
-     * Método que borra el DTE temporal y su cobro asociado si existe
-         * @version 2016-12-16
+     * Método que borra el DTE temporal y su cobro asociado si existe.
      */
     public function delete($borrarCobro = true)
     {
@@ -686,8 +741,7 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que entrega el listado de correos a los que se podría enviar el documento
-     * temporal (correo receptor, correo del dte y contacto comercial)
-         * @version 2023-10-08
+     * temporal (correo receptor, correo del dte y contacto comercial).
      */
     public function getEmails()
     {
@@ -715,10 +769,19 @@ class Model_DteTmp extends \Model_App
                 }
             }
         }
-        if (in_array($origen, [0]) && $this->getReceptor()->email && !in_array($this->getReceptor()->email, $emails)) {
+        if (
+            in_array($origen, [0])
+            && $this->getReceptor()->email
+            && !in_array($this->getReceptor()->email, $emails)
+        ) {
             $emails['Compartido LibreDTE'] = strtolower($this->getReceptor()->email);
         }
-        if (in_array($origen, [0, 1]) && $this->getReceptor()->usuario && $this->getReceptor()->getUsuario()->email && !in_array(strtolower($this->getReceptor()->getUsuario()->email), $emails)) {
+        if (
+            in_array($origen, [0, 1])
+            && $this->getReceptor()->usuario
+            && $this->getReceptor()->getUsuario()->email
+            && !in_array(strtolower($this->getReceptor()->getUsuario()->email), $emails)
+        ) {
             $emails['Usuario LibreDTE'] = strtolower($this->getReceptor()->getUsuario()->email);
         }
         $emails_trigger = \sowerphp\core\Trigger::run('dte_dte_tmp_emails', $this, $emails);
@@ -726,8 +789,7 @@ class Model_DteTmp extends \Model_App
     }
 
     /**
-     * Método que envía el DTE temporal por correo electrónico
-         * @version 2023-02-15
+     * Método que envía el DTE temporal por correo electrónico.
      */
     public function email($to = null, $subject = null, $msg = null, $cotizacion = true, $use_template = true)
     {
@@ -745,7 +807,10 @@ class Model_DteTmp extends \Model_App
             $subject = 'Documento N° '.$this->getFolio().' de '.$this->getEmisor()->getNombre().' ('.$this->getEmisor()->getRUT().')';
         }
         // armar cuerpo del correo
-        $msg_html = $use_template ? $this->getEmisor()->getEmailFromTemplate('dte', $this, $msg) : false;
+        $msg_html = $use_template
+            ? $this->getEmisor()->getEmailFromTemplate('dte', $this, $msg)
+            : false
+        ;
         if (!$use_template && $msg) {
             $msg = ['html' => $msg];
         }
@@ -818,10 +883,9 @@ class Model_DteTmp extends \Model_App
     }
 
     /**
-     * Método que entrega el resumen de los correos enviados
-         * @version 2019-07-09
+     * Método que entrega el resumen de los correos enviados.
      */
-    public function getEmailEnviadosResumen()
+    public function getEmailEnviadosResumen(): array
     {
         return $this->db->getTable('
             SELECT email, COUNT(*) AS enviados, MIN(fecha_hora) AS primer_envio, MAX(fecha_hora) AS ultimo_envio
@@ -838,8 +902,7 @@ class Model_DteTmp extends \Model_App
     }
 
     /**
-     * Método que entrega el arreglo con los datos del documento
-         * @version 2023-11-01
+     * Método que entrega el arreglo con los datos del documento.
      */
     public function getDatos($force_reload = false)
     {
@@ -856,30 +919,32 @@ class Model_DteTmp extends \Model_App
     }
 
     /**
-     * Método que entrega el cobro asociado al DTE temporal
-         * @version 2023-11-02
+     * Método que entrega el cobro asociado al DTE temporal.
      */
-    public function getCobro($crearSiNoExiste = true)
+    public function getCobro(bool $crearSiNoExiste = true)
     {
         /*if (!$this->getTipo()->permiteCobro()) {
             return false;
         }*/
-        return (new \libredte\enterprise\Pagos\Model_Cobro())->setDocumento($this, $crearSiNoExiste);
+        return (new \libredte\enterprise\Pagos\Model_Cobro())
+            ->setDocumento($this, $crearSiNoExiste)
+        ;
     }
 
     /**
-     * Método que entrega el vencimiento del documento si es que existe
-         * @version 2016-12-15
+     * Método que entrega el vencimiento del documento si es que existe.
      */
     public function getVencimiento()
     {
         $datos = $this->getDatos();
-        return !empty($datos['Encabezado']['IdDoc']['FchVenc']) ? $datos['Encabezado']['IdDoc']['FchVenc'] : null;
+        return !empty($datos['Encabezado']['IdDoc']['FchVenc'])
+            ? $datos['Encabezado']['IdDoc']['FchVenc']
+            : null
+        ;
     }
 
     /**
-     * Método que entrega el detalle del DTE
-         * @version 2017-07-20
+     * Método que entrega el detalle del DTE.
      */
     public function getDetalle()
     {
@@ -888,8 +953,7 @@ class Model_DteTmp extends \Model_App
     }
 
     /**
-     * Método que entrega los enlaces públicos del documento
-         * @version 2019-06-16
+     * Método que entrega los enlaces públicos del documento.
      */
     public function getLinks()
     {
@@ -901,16 +965,21 @@ class Model_DteTmp extends \Model_App
     }
 
     /**
-     * Método que entrega el teléfono asociado al DTE, ya sea porque existe en el DTE o asociado directamente al receptor
-         * @version 2020-03-24
+     * Método que entrega el teléfono asociado al DTE, ya sea porque existe en el DTE o asociado directamente al receptor.
      */
     public function getTelefono()
     {
         if (!isset($this->_telefono)) {
             $this->_telefono = null;
-            if (!empty($this->getDatos()['Encabezado']['Receptor']['Contacto']) && $this->getDatos()['Encabezado']['Receptor']['Contacto'][0] == '+') {
+            if (
+                !empty($this->getDatos()['Encabezado']['Receptor']['Contacto'])
+                && $this->getDatos()['Encabezado']['Receptor']['Contacto'][0] == '+'
+            ) {
                 $this->_telefono = $this->getDatos()['Encabezado']['Receptor']['Contacto'];
-            } else if (!empty($this->getReceptor()->telefono) && $this->getReceptor()->telefono[0] == '+') {
+            } else if (
+                !empty($this->getReceptor()->telefono)
+                && $this->getReceptor()->telefono[0] == '+'
+            ) {
                 $this->_telefono = $this->getReceptor()->telefono;
             }
         }
@@ -918,15 +987,17 @@ class Model_DteTmp extends \Model_App
     }
 
     /**
-     * Método que entrega el celular asociado al DTE si existe
-     * @warning Solo detecta como celular un número chileno (+56 9)
-         * @version 2020-03-24
+     * Método que entrega el celular asociado al DTE si existe.
+     * @warning Solo detecta como celular un número chileno (+56 9).
      */
     public function getCelular()
     {
         if (!isset($this->_celular)) {
             $this->_celular = null;
-            if ($this->getTelefono() and strpos($this->getTelefono(), '+56 9') === 0) {
+            if (
+                $this->getTelefono()
+                && strpos($this->getTelefono(), '+56 9') === 0
+            ) {
                 $this->_celular = $this->getTelefono();
             }
         }
@@ -934,8 +1005,7 @@ class Model_DteTmp extends \Model_App
     }
 
     /**
-     * Método que entrega los datos extras del documento
-         * @version 2023-11-01
+     * Método que entrega los datos extras del documento.
      */
     public function getExtra($force_reload = false)
     {
@@ -949,13 +1019,15 @@ class Model_DteTmp extends \Model_App
     }
 
     /**
-     * Método que entrega la actividad económica asociada al documento
-         * @version 2020-08-04
+     * Método que entrega la actividad económica asociada al documento.
      */
     public function getActividad($default = null)
     {
         $datos = $this->getDatos();
-        return !empty($datos['Encabezado']['Emisor']['Acteco']) ? $datos['Encabezado']['Emisor']['Acteco'] : $default;
+        return !empty($datos['Encabezado']['Emisor']['Acteco'])
+            ? $datos['Encabezado']['Emisor']['Acteco']
+            : $default
+        ;
     }
 
     /**
@@ -998,7 +1070,6 @@ class Model_DteTmp extends \Model_App
      * Método que entrega el PDF del documento temporal.
      * Entrega el PDF que se ha generado con LibreDTE a partir del JSON del DTE
      * temporal.
-         * @version 2020-08-07
      */
     public function getPDF(array $config = [])
     {
@@ -1014,7 +1085,10 @@ class Model_DteTmp extends \Model_App
         $default_config = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($config_emisor, $default_config);
         $config = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($default_config, $config);
         // armar xml a partir de datos del dte temporal
-        $xml = $this->getEnvioDte($config['cotizacion'] ? $this->getFolio() : 0)->generar();
+        $xml = $this->getEnvioDte($config['cotizacion']
+            ? $this->getFolio()
+            : 0
+        )->generar();
         if (!$xml) {
             throw new \Exception('No fue posible crear el PDF:<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 507);
         }
@@ -1028,8 +1102,11 @@ class Model_DteTmp extends \Model_App
         // crear a partir de formato de PDF no estándar
         else if ($config['formato'] != 'estandar') {
             $apps = $this->getEmisor()->getApps('dtepdfs');
-            if (empty($apps[$config['formato']]) || empty($apps[$config['formato']]->getConfig()->disponible)) {
-                throw new \Exception('Formato de PDF '.$config['formato'].' no se encuentra disponible', 400);
+            if (
+                empty($apps[$config['formato']])
+                || empty($apps[$config['formato']]->getConfig()->disponible)
+            ) {
+                throw new \Exception('Formato de PDF '.$config['formato'].' no se encuentra disponible.', 400);
             }
             $response = $apps[$config['formato']]->generar($config);
         }
@@ -1053,7 +1130,6 @@ class Model_DteTmp extends \Model_App
 
     /**
      * Método que entrega el código ESCPOS del documento temporal.
-         * @version 2021-02-28
      */
     public function getESCPOS(array $config = [])
     {
@@ -1067,8 +1143,14 @@ class Model_DteTmp extends \Model_App
             'copias_cedibles' => 0,
             'webVerificacion' => \sowerphp\core\Configure::read('dte.web_verificacion'),
             'caratula' => [
-                'FchResol' => $this->getEmisor()->enCertificacion() ? $this->getEmisor()->config_ambiente_certificacion_fecha : $this->getEmisor()->config_ambiente_produccion_fecha,
-                'NroResol' => $this->getEmisor()->enCertificacion() ? 0 : $this->getEmisor()->config_ambiente_produccion_numero,
+                'FchResol' => $this->getEmisor()->enCertificacion()
+                    ? $this->getEmisor()->config_ambiente_certificacion_fecha
+                    : $this->getEmisor()->config_ambiente_produccion_fecha
+                ,
+                'NroResol' => $this->getEmisor()->enCertificacion()
+                    ? 0
+                    : $this->getEmisor()->config_ambiente_produccion_numero
+                ,
             ],
             'papelContinuo' => 80,
             'profile' => 'default',
@@ -1082,14 +1164,19 @@ class Model_DteTmp extends \Model_App
         ];
         $config = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($default_config, $config);
         // armar xml a partir de datos del dte temporal
-        $xml = $this->getEnvioDte($config['cotizacion'] ? $this->getFolio() : 0)->generar();
+        $xml = $this->getEnvioDte(
+            $config['cotizacion'] ? $this->getFolio() : 0
+        )->generar();
         if (!$xml) {
             throw new \Exception('No fue posible crear el ESCPOS:<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 507);
         }
         $config['xml'] = base64_encode($xml);
         // logo
         $formatoEstandar = $this->getEmisor()->getApp('dtepdfs.estandar');
-        if (!empty($formatoEstandar) && !empty($formatoEstandar->getConfig()->continuo->logo->posicion)) {
+        if (
+            !empty($formatoEstandar)
+            && !empty($formatoEstandar->getConfig()->continuo->logo->posicion)
+        ) {
             $logo_file = DIR_STATIC.'/contribuyentes/'.$this->getEmisor()->rut.'/logo.png';
             if (is_readable($logo_file)) {
                 $config['logo'] = base64_encode(file_get_contents($logo_file));
@@ -1103,7 +1190,10 @@ class Model_DteTmp extends \Model_App
         }
         // consultar aplicación de ESCPOS según el formato solicitado
         else if ($apps = $this->getEmisor()->getApps('dteescpos')) {
-            if (empty($apps[$config['formato']]) || empty($apps[$config['formato']]->getConfig()->disponible)) {
+            if (
+                empty($apps[$config['formato']])
+                || empty($apps[$config['formato']]->getConfig()->disponible)
+            ) {
                 throw new \Exception('Formato de ESCPOS '.$config['formato'].' no se encuentra disponible.', 400);
             }
             $response = $apps[$config['formato']]->generar($config);

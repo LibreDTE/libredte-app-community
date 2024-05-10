@@ -35,10 +35,9 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
     protected $_table = 'dte_boleta_consumo'; ///< Tabla del modelo
 
     /**
-     * Método que entrega los días pendientes de enviar RCOF
-     * Por defecto, se busca entre el primer día enviado y el día de ayer
-     * Si está configurado el desde y/o hasta se usan esos para el rango
-         * @version 2021-03-17
+     * Método que entrega los días pendientes de enviar RCOF.
+     * Por defecto, se busca entre el primer día enviado y el día de ayer.
+     * Si está configurado el desde y/o hasta se usan esos para el rango.
      */
     public function getPendientes()
     {
@@ -46,10 +45,14 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
         if ($this->getContribuyente()->config_sii_envio_rcof_desde) {
             $desde = $this->getContribuyente()->config_sii_envio_rcof_desde;
         } else {
-            $desde = $this->db->getValue(
-                'SELECT MIN(dia) FROM dte_boleta_consumo WHERE emisor = :emisor AND certificacion = :certificacion',
-                [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion()]
-            );
+            $desde = $this->db->getValue('
+                SELECT MIN(dia)
+                FROM dte_boleta_consumo
+                WHERE emisor = :emisor AND certificacion = :certificacion
+            ', [
+                ':emisor' => $this->getContribuyente()->rut,
+                ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ]);
         }
         if (empty($desde)) {
             return false;
@@ -62,22 +65,25 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
         // crear listado de días que se buscarán
         $dias = [];
         $dia = $desde;
-        while ($dia<=$hasta) {
+        while ($dia <= $hasta) {
             $dias[] = $dia;
             $dia = \sowerphp\general\Utility_Date::getNext($dia, 'D');
         }
         // consultar los dias que si están en el RCOF
-        $dias_enviados = $this->db->getCol(
-            'SELECT dia FROM dte_boleta_consumo WHERE emisor = :emisor AND certificacion = :certificacion AND track_id IS NOT NULL',
-            [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion()]
-        );
+        $dias_enviados = $this->db->getCol('
+            SELECT dia
+            FROM dte_boleta_consumo
+            WHERE emisor = :emisor AND certificacion = :certificacion AND track_id IS NOT NULL
+        ', [
+            ':emisor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+        ]);
         // calcular la diferencia entre los enviados y los que se solicitaron
         return array_diff($dias, $dias_enviados);
     }
 
     /**
-     * Método que entrega los días con RCOF enviados y que se considera que ya no tuvieron respuesta
-         * @version 2020-09-22
+     * Método que entrega los días con RCOF enviados y que se considera que ya no tuvieron respuesta.
      */
     public function getSinRespuesta($multiplicador_dias = 5, $secuencia_maxima = 5)
     {
@@ -113,8 +119,7 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega los RCOF rechazados (opcionalmente en un período de tiempo)
-         * @version 2020-04-29
+     * Método que entrega los RCOF rechazados (opcionalmente en un período de tiempo).
      */
     public function getRechazados($desde = null, $hasta = null)
     {
@@ -135,14 +140,18 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
             $where[] = 'dia <= :hasta';
             $vars[':hasta'] = $hasta;
         }
-        return $this->db->getCol('SELECT dia FROM dte_boleta_consumo WHERE '.implode(' AND ', $where).' ORDER BY dia', $vars);
+        return $this->db->getCol('
+            SELECT dia
+            FROM dte_boleta_consumo
+            WHERE '.implode(' AND ', $where).'
+            ORDER BY dia
+        ', $vars);
     }
 
     /**
-     * Método que entrega un resumen de los estados del envío del RCOF al SII
-         * @version 2018-11-11
+     * Método que entrega un resumen de los estados del envío del RCOF al SII.
      */
-    public function getResumenEstados($desde, $hasta)
+    public function getResumenEstados($desde, $hasta): array
     {
         return $this->db->getTable('
             SELECT revision_estado AS estado, COUNT(*) AS total
@@ -150,12 +159,16 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
             WHERE emisor = :emisor AND certificacion = :certificacion AND dia BETWEEN :desde AND :hasta AND track_id > 0
             GROUP BY revision_estado
             ORDER BY total DESC
-        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta]);
+        ', [
+            ':emisor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+        ]);
     }
 
     /**
-     * Método que entrega el total de RCOF rechazados y el rango de fechas
-         * @version 2019-02-18
+     * Método que entrega el total de RCOF rechazados y el rango de fechas.
      */
     public function getTotalRechazados()
     {
@@ -166,13 +179,15 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
                 emisor = :emisor
                 AND certificacion = :certificacion
                 AND revision_estado = \'ERRONEO\'
-        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion()]);
+        ', [
+            ':emisor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+        ]);
         return !empty($aux['total']) ? $aux : null;
     }
 
     /**
      * Método que entrega el total de RCOF con reparo por secuencia y el rango de fechas
-         * @version 2021-07-19
      */
     public function getTotalReparosSecuencia()
     {
@@ -184,7 +199,10 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
                 AND certificacion = :certificacion
                 AND revision_estado = \'REPARO\'
                 AND SUBSTRING(revision_detalle, 1, 27) = \'Secuencia de Envio Invalida\'
-        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion()]);
+        ', [
+            ':emisor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+        ]);
         return !empty($aux['total']) ? $aux : null;
     }
 

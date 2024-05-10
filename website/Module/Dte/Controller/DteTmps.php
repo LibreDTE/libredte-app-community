@@ -25,15 +25,13 @@
 namespace website\Dte;
 
 /**
- * Controlador de dte temporales
- * @version 2021-10-12
+ * Controlador de dte temporales.
  */
 class Controller_DteTmps extends \Controller_App
 {
 
     /**
-     * Se permite descargar las cotizaciones sin estar logueado
-         * @version 2016-12-13
+     * Se permite descargar las cotizaciones sin estar logueado.
      */
     public function beforeFilter()
     {
@@ -42,8 +40,7 @@ class Controller_DteTmps extends \Controller_App
     }
 
     /**
-     * Método que muestra los documentos temporales disponibles
-         * @version 2021-10-12
+     * Método que muestra los documentos temporales disponibles.
      */
     public function listar($pagina = 1)
     {
@@ -58,13 +55,13 @@ class Controller_DteTmps extends \Controller_App
                 $filtros[$var] = $val;
             }
         }
-        $searchUrl = isset($_GET['search'])?('?search='.$_GET['search']):'';
+        $searchUrl = isset($_GET['search']) ? ('?search='.$_GET['search']) : '';
         $paginas = 1;
         try {
             $documentos_total = $Emisor->countDocumentosTemporales($filtros);
             if (!empty($pagina)) {
                 $filtros['limit'] = \sowerphp\core\Configure::read('app.registers_per_page');
-                $filtros['offset'] = ($pagina-1)*$filtros['limit'];
+                $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = $documentos_total ? ceil($documentos_total/$filtros['limit']) : 0;
                 if ($pagina != 1 && $pagina > $paginas) {
                     $this->redirect('/dte/'.$this->request->params['controller'].'/listar'.$searchUrl);
@@ -94,8 +91,7 @@ class Controller_DteTmps extends \Controller_App
     }
 
     /**
-     * Acción que muestra la página del documento temporal
-         * @version 2019-07-09
+     * Acción que muestra la página del documento temporal.
      */
     public function ver($receptor, $dte, $codigo)
     {
@@ -104,7 +100,7 @@ class Controller_DteTmps extends \Controller_App
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el documento temporal solicitado', 'error'
+                'No existe el documento temporal solicitado.', 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
@@ -120,23 +116,31 @@ class Controller_DteTmps extends \Controller_App
     }
 
     /**
-     * Método que genera la cotización en PDF del DTE
-         * @version 2020-08-04
+     * Método que genera la cotización en PDF del DTE.
      */
     public function cotizacion($receptor, $dte, $codigo, $emisor = null)
     {
-        $Emisor = $emisor === null ? $this->getContribuyente() : new Model_Contribuyente($emisor);
+        $Emisor = $emisor === null
+            ? $this->getContribuyente() 
+            : new Model_Contribuyente($emisor)
+        ;
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
-            \sowerphp\core\Model_Datasource_Session::message('No existe el documento temporal solicitado', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('No existe el documento temporal solicitado.', 'error');
             $this->redirect('/dte/dte_tmps/listar');
         }
         // datos por defecto
         $formatoPDF = $Emisor->getConfigPDF($DteTmp);
         extract($this->getQuery([
-            'formato' => isset($_POST['formato']) ? $_POST['formato']: $formatoPDF['formato'],
-            'papelContinuo' => isset($_POST['papelContinuo']) ? $_POST['papelContinuo']: $formatoPDF['papelContinuo'],
+            'formato' => isset($_POST['formato'])
+                ? $_POST['formato']
+                : $formatoPDF['formato']
+            ,
+            'papelContinuo' => isset($_POST['papelContinuo'])
+                ? $_POST['papelContinuo']
+                : $formatoPDF['papelContinuo']
+            ,
             'compress' => false,
         ]));
         // realizar consulta a la API
@@ -162,8 +166,7 @@ class Controller_DteTmps extends \Controller_App
     }
 
     /**
-     * Método que genera la previsualización del PDF del DTE
-         * @version 2020-08-04
+     * Método que genera la previsualización del PDF del DTE.
      */
     public function pdf($receptor, $dte, $codigo, $disposition = 'attachment')
     {
@@ -171,14 +174,20 @@ class Controller_DteTmps extends \Controller_App
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
-            \sowerphp\core\Model_Datasource_Session::message('No existe el documento temporal solicitado', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('No existe el documento temporal solicitado.', 'error');
             $this->redirect('/dte/dte_tmps/listar');
         }
         // datos por defecto
         $formatoPDF = $Emisor->getConfigPDF($DteTmp);
         extract($this->getQuery([
-            'formato' => isset($_POST['formato']) ? $_POST['formato']: $formatoPDF['formato'],
-            'papelContinuo' => isset($_POST['papelContinuo']) ? $_POST['papelContinuo']: $formatoPDF['papelContinuo'],
+            'formato' => isset($_POST['formato'])
+                ? $_POST['formato']
+                : $formatoPDF['formato']
+            ,
+            'papelContinuo' => isset($_POST['papelContinuo']) 
+                ? $_POST['papelContinuo']
+                : $formatoPDF['papelContinuo']
+            ,
             'compress' => false,
         ]));
         // realizar consulta a la API
@@ -200,13 +209,23 @@ class Controller_DteTmps extends \Controller_App
                 $this->response->header($header, $response['header'][$header]);
             }
         }
-        $this->response->header('Content-Disposition', ($disposition == 'inline'?'inline':(!empty($response['header']['Content-Disposition']) ? $response['header']['Content-Disposition'] : 'inline')));
+        $this->response->header(
+            'Content-Disposition',
+            (
+                $disposition == 'inline'
+                    ? 'inline'
+                    : (
+                        !empty($response['header']['Content-Disposition'])
+                            ? $response['header']['Content-Disposition']
+                            : 'inline'
+                    )
+            )
+        );
         $this->response->send($response['body']);
     }
 
     /**
-     * Acción que permite ver una vista previa del correo en HTML
-         * @version 2019-07-17
+     * Acción que permite ver una vista previa del correo en HTML.
      */
     public function email_html($receptor, $dte, $codigo)
     {
@@ -215,22 +234,21 @@ class Controller_DteTmps extends \Controller_App
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el documento temporal solicitado', 'error'
+                'No existe el documento temporal solicitado.', 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
         // tratar de obtener email
         $email_html = $Emisor->getEmailFromTemplate('dte', $DteTmp);
         if (!$email_html) {
-            \sowerphp\core\Model_Datasource_Session::message('No existe correo en HTML para el envío del documento', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('No existe correo en HTML para el envío del documento.', 'error');
             $this->redirect(str_replace('email_html', 'ver', $this->request->request));
         }
         $this->response->send($email_html);
     }
 
     /**
-     * Acción que envía por email el PDF de la cotización del documento temporal
-         * @version 2018-04-29
+     * Acción que envía por email el PDF de la cotización del documento temporal.
      */
     public function enviar_email($receptor, $dte, $codigo)
     {
@@ -258,11 +276,9 @@ class Controller_DteTmps extends \Controller_App
             );
             if ($response === false) {
                 \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
-            }
-            else if ($response['status']['code'] != 200) {
+            } else if ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
-            }
-            else {
+            } else {
                 \sowerphp\core\Model_Datasource_Session::message(
                     'Se envió el PDF a: '.implode(', ', $emails), 'ok'
                 );
@@ -272,19 +288,14 @@ class Controller_DteTmps extends \Controller_App
     }
 
     /**
-     * Acción de la API que permite enviar el documento temporal por correo electrónico
-         * @version 2023-02-15
+     * Acción de la API que permite enviar el documento temporal por correo electrónico.
      */
     public function _api_enviar_email_POST($receptor, $dte, $codigo, $emisor)
     {
         // verificar permisos y crear DteEmitido
-        if ($this->Auth->User) {
-            $User = $this->Auth->User;
-        } else {
-            $User = $this->Api->getAuthUser();
-            if (is_string($User)) {
-                $this->Api->send($User, 401);
-            }
+        $User = $this->Api->getAuthUser();
+        if (is_string($User)) {
+            $this->Api->send($User, 401);
         }
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
@@ -294,8 +305,9 @@ class Controller_DteTmps extends \Controller_App
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
-        if (!$DteTmp->exists())
+        if (!$DteTmp->exists()) {
             $this->Api->send('No existe el documento temporal solicitado N° '.$DteTmp->getFolio(), 404);
+        }
         // parametros por defecto
         $data = array_merge([
             'emails' => $DteTmp->getReceptor()->email,
@@ -306,7 +318,13 @@ class Controller_DteTmps extends \Controller_App
         ], (array)$this->Api->data);
         // enviar por correo
         try {
-            $emails = $DteTmp->email($data['emails'], $data['asunto'], $data['mensaje'], $data['cotizacion'], $data['plantilla']);
+            $emails = $DteTmp->email(
+                $data['emails'], 
+                $data['asunto'], 
+                $data['mensaje'], 
+                $data['cotizacion'], 
+                $data['plantilla']
+            );
             return $emails;
         } catch (\Exception $e) {
             $this->Api->send($e->getMessage(), 500);
@@ -314,8 +332,7 @@ class Controller_DteTmps extends \Controller_App
     }
 
     /**
-     * Recurso de la API que genera el PDF del documento temporal (cotización o previsualización)
-         * @version 2020-08-01
+     * Recurso de la API que genera el PDF del documento temporal (cotización o previsualización).
      */
     public function _api_pdf_GET($receptor, $dte, $codigo, $emisor)
     {
@@ -323,9 +340,8 @@ class Controller_DteTmps extends \Controller_App
     }
 
     /**
-     * Recurso de la API que genera el PDF del documento temporal (cotización o previsualización)
-     * Permite pasar datos extras al PDF por POST
-         * @version 2020-08-04
+     * Recurso de la API que genera el PDF del documento temporal (cotización o previsualización).
+     * Permite pasar datos extras al PDF por POST.
      */
     public function _api_pdf_POST($receptor, $dte, $codigo, $emisor)
     {
@@ -343,7 +359,7 @@ class Controller_DteTmps extends \Controller_App
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
-            $this->Api->send('No existe el documento temporal solicitado', 404);
+            $this->Api->send('No existe el documento temporal solicitado.', 404);
         }
         // datos por defecto
         $formatoPDF = $Emisor->getConfigPDF($DteTmp);
@@ -377,8 +393,7 @@ class Controller_DteTmps extends \Controller_App
     }
 
     /**
-     * Recurso de la API que descarga el código ESCPOS del documento temporal
-         * @version 2020-05-15
+     * Recurso de la API que descarga el código ESCPOS del documento temporal.
      */
     public function _api_escpos_GET($receptor, $dte, $codigo, $emisor)
     {
@@ -390,7 +405,7 @@ class Controller_DteTmps extends \Controller_App
         // crear emisor y verificar permisos
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->usuario) {
-            $this->Api->send('Contribuyente no está registrado en la aplicación', 404);
+            $this->Api->send('Contribuyente no está registrado en la aplicación.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/escpos')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
@@ -398,7 +413,7 @@ class Controller_DteTmps extends \Controller_App
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
-            $this->Api->send('No existe el documento temporal solicitado', 404);
+            $this->Api->send('No existe el documento temporal solicitado.', 404);
         }
         // datos por defecto
         $config = $this->getQuery([
@@ -439,8 +454,7 @@ class Controller_DteTmps extends \Controller_App
     }
 
     /**
-     * Método que genera la previsualización del XML del DTE
-         * @version 2019-07-17
+     * Método que genera la previsualización del XML del DTE.
      */
     public function xml($receptor, $dte, $codigo)
     {
@@ -449,7 +463,7 @@ class Controller_DteTmps extends \Controller_App
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el documento temporal solicitado', 'error'
+                'No existe el documento temporal solicitado.', 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
@@ -469,15 +483,14 @@ class Controller_DteTmps extends \Controller_App
     }
 
     /**
-     * Recurso que entrega la previsualización del XML del DTE
-         * @version 2020-11-24
+     * Recurso que entrega la previsualización del XML del DTE.
      */
     public function _api_xml_GET($receptor, $dte, $codigo, $emisor)
     {
         // obtener datos JSON del DTE
         $DteTmp = new Model_DteTmp($emisor, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
-            $this->Api->send('No existe el documento temporal solicitado', 400);
+            $this->Api->send('No existe el documento temporal solicitado.', 400);
         }
         // armar xml a partir de datos del dte temporal
         $xml = $DteTmp->getEnvioDte()->generar();
@@ -489,8 +502,7 @@ class Controller_DteTmps extends \Controller_App
     }
 
     /**
-     * Método que entrega el JSON del documento temporal
-         * @version 2019-07-17
+     * Método que entrega el JSON del documento temporal.
      */
     public function json($receptor, $dte, $codigo)
     {
@@ -499,7 +511,7 @@ class Controller_DteTmps extends \Controller_App
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el documento temporal solicitado', 'error'
+                'No existe el documento temporal solicitado.', 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
@@ -512,8 +524,7 @@ class Controller_DteTmps extends \Controller_App
     }
 
     /**
-     * Método que elimina todos los documentos temporales del emisor
-         * @version 2021-10-13
+     * Método que elimina todos los documentos temporales del emisor.
      */
     public function eliminar_masivo()
     {
@@ -521,7 +532,7 @@ class Controller_DteTmps extends \Controller_App
         // solo administrador puede eliminar masivamente los temporales
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Solo el administrador de la empresa está autorizado a eliminar masivamente los documentos temporales', 'error'
+                'Solo el administrador de la empresa está autorizado a eliminar masivamente los documentos temporales.', 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
@@ -538,14 +549,13 @@ class Controller_DteTmps extends \Controller_App
         (new Model_DteTmps())->setContribuyente($Emisor)->eliminar();
         // todo ok
         \sowerphp\core\Model_Datasource_Session::message(
-            'Se eliminaron todos los documentos temporales del emisor', 'ok'
+            'Se eliminaron todos los documentos temporales del emisor.', 'ok'
         );
         $this->redirect('/dte/dte_tmps/listar');
     }
 
     /**
-     * Método que elimina un documento temporal
-         * @version 2020-02-11
+     * Método que elimina un documento temporal.
      */
     public function eliminar($receptor, $dte, $codigo)
     {
@@ -554,7 +564,7 @@ class Controller_DteTmps extends \Controller_App
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el documento temporal solicitado', 'error'
+                'No existe el documento temporal solicitado.', 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
@@ -569,7 +579,7 @@ class Controller_DteTmps extends \Controller_App
         try {
             $DteTmp->delete();
             \sowerphp\core\Model_Datasource_Session::message(
-                'Documento temporal eliminado', 'ok'
+                'Documento temporal eliminado.', 'ok'
             );
             $this->redirect('/dte/dte_tmps/listar');
         } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
@@ -581,8 +591,7 @@ class Controller_DteTmps extends \Controller_App
     }
 
     /**
-     * Servicio web que elimina un documento temporal
-         * @version 2020-02-11
+     * Servicio web que elimina un documento temporal.
      */
     public function _api_eliminar_GET($receptor, $dte, $codigo, $emisor)
     {
@@ -591,9 +600,9 @@ class Controller_DteTmps extends \Controller_App
             $this->Api->send($User, 401);
         }
         // crear emisor
-        $Emisor = new \website\Dte\Model_Contribuyente($emisor);
+        $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->usuario) {
-            $this->Api->send('Contribuyente no está registrado en la aplicación', 404);
+            $this->Api->send('Contribuyente no está registrado en la aplicación.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_tmps/eliminar')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
@@ -601,7 +610,7 @@ class Controller_DteTmps extends \Controller_App
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
-            $this->Api->send('No existe el documento temporal solicitado', 404);
+            $this->Api->send('No existe el documento temporal solicitado.', 404);
         }
         // verificar que el usuario pueda trabajar con el tipo de dte
         if (!$Emisor->documentoAutorizado($DteTmp->dte, $User)) {
@@ -613,8 +622,7 @@ class Controller_DteTmps extends \Controller_App
     }
 
     /**
-     * Método que actualiza un documento temporal
-         * @version 2021-08-24
+     * Método que actualiza un documento temporal.
      */
     public function actualizar($receptor, $dte, $codigo, $fecha = null, $actualizar_precios = true)
     {
@@ -634,11 +642,17 @@ class Controller_DteTmps extends \Controller_App
                 'dte' => [
                     'Encabezado' => [
                         'IdDoc' => [
-                            'FchEmis' => $fecha ? $fecha : (!empty($_POST['fecha']) ? $_POST['fecha'] : date('Y-m-d')),
+                            'FchEmis' => $fecha ? $fecha : (!empty($_POST['fecha'])
+                                ? $_POST['fecha']
+                                : date('Y-m-d'))
+                            ,
                         ],
                     ],
                 ],
-                'actualizar_precios' => (bool)(isset($_POST['actualizar_precios']) ? $_POST['actualizar_precios'] : $actualizar_precios),
+                'actualizar_precios' => (bool)(isset($_POST['actualizar_precios'])
+                    ? $_POST['actualizar_precios']
+                    : $actualizar_precios)
+                ,
             ]
         );
         if ($response === false) {
@@ -656,8 +670,7 @@ class Controller_DteTmps extends \Controller_App
     }
 
     /**
-     * Recurso para actualizar el documento temporal
-         * @version 2022-06-20
+     * Recurso para actualizar el documento temporal.
      */
     public function _api_actualizar_POST($receptor, $dte, $codigo, $emisor)
     {
@@ -670,7 +683,7 @@ class Controller_DteTmps extends \Controller_App
             $this->Api->send('Debe enviar los datos del DTE que desea actualizar.', 400);
         }
         // crear emisor
-        $Emisor = new \website\Dte\Model_Contribuyente($emisor);
+        $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->usuario) {
             $this->Api->send('Contribuyente no está registrado en la aplicación.', 404);
         }
@@ -801,14 +814,13 @@ class Controller_DteTmps extends \Controller_App
             $DteTmp->datos = $DteTmp->getDatos();
             return $DteTmp;
         } catch (\Exception $e) {
-            $this->Api->send('No fue posible actualizar el documento temporal', 500);
+            $this->Api->send('No fue posible actualizar el documento temporal.', 500);
         }
     }
 
     /**
      * Acción que permite generar un vale para imprimir con la identificación
-     * del documento temporal
-         * @version 2018-10-22
+     * del documento temporal.
      */
     public function vale($receptor, $dte, $codigo)
     {
@@ -817,7 +829,7 @@ class Controller_DteTmps extends \Controller_App
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el documento temporal solicitado', 'error'
+                'No existe el documento temporal solicitado.', 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
@@ -827,31 +839,7 @@ class Controller_DteTmps extends \Controller_App
     }
 
     /**
-     * Acción que permite editar el documento temporal
-     * @todo Programar funcionalidad
-         * @version 2017-03-31
-     */
-    public function editar($receptor, $dte, $codigo)
-    {
-        $Emisor = $this->getContribuyente();
-        // obtener documento temporal
-        $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
-        if (!$DteTmp->exists()) {
-            \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el documento temporal solicitado', 'error'
-            );
-            $this->redirect('/dte/dte_tmps/listar');
-        }
-        // editar
-        \sowerphp\core\Model_Datasource_Session::message(
-            'Edición del documento temporal aun no está disponible', 'warning'
-        );
-        $this->redirect(str_replace('/editar/', '/ver/', $this->request->request));
-    }
-
-    /**
-     * Acción que permite editar el JSON del documento temporal
-         * @version 2020-08-01
+     * Acción que permite editar el JSON del documento temporal.
      */
     public function editar_json($receptor, $dte, $codigo)
     {
@@ -860,14 +848,14 @@ class Controller_DteTmps extends \Controller_App
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el documento temporal solicitado', 'error'
+                'No existe el documento temporal solicitado.', 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
         // solo administrador puede editar el JSON
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Solo el administrador de la empresa está autorizado a editar el JSON del documento temporal', 'error'
+                'Solo el administrador de la empresa está autorizado a editar el JSON del documento temporal.', 'error'
             );
             $this->redirect(str_replace('/editar_json/', '/ver/', $this->request->request));
         }
@@ -875,7 +863,7 @@ class Controller_DteTmps extends \Controller_App
         $datos = json_decode($_POST['datos']);
         if (!$datos) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'JSON es inválido, no se editó', 'error'
+                'JSON es inválido, no se editó.', 'error'
             );
             $this->redirect(str_replace('/editar_json/', '/ver/', $this->request->request));
         }
@@ -885,11 +873,11 @@ class Controller_DteTmps extends \Controller_App
         $DteTmp->extra = $extra ? json_encode($extra) : null;
         if ($DteTmp->save()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'JSON guardado', 'ok'
+                'JSON guardado.', 'ok'
             );
         } else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible guardar el nuevo JSON', 'error'
+                'No fue posible guardar el nuevo JSON.', 'error'
             );
         }
         $this->redirect(str_replace('/editar_json/', '/ver/', $this->request->request).'#avanzado');
@@ -897,8 +885,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Acción que permite realizar una búsqueda avanzada dentro de los DTE
-     * temporales
-         * @version 2018-05-03
+     * temporales.
      */
     public function buscar()
     {
@@ -934,8 +921,7 @@ class Controller_DteTmps extends \Controller_App
 
     /**
      * Acción de la API que permite realizar una búsqueda avanzada dentro de los
-     * DTE temporales
-         * @version 2018-05-03
+     * DTE temporales.
      */
     public function _api_buscar_POST($emisor)
     {
@@ -957,8 +943,7 @@ class Controller_DteTmps extends \Controller_App
     }
 
     /**
-     * Acción de la API que permite obtener la información de un documento temporal
-         * @version 2021-08-24
+     * Acción de la API que permite obtener la información de un documento temporal.
      */
     public function _api_info_GET($receptor, $dte, $codigo, $emisor)
     {
@@ -967,9 +952,9 @@ class Controller_DteTmps extends \Controller_App
             $this->Api->send($User, 401);
         }
         // crear emisor
-        $Emisor = new \website\Dte\Model_Contribuyente($emisor);
+        $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->usuario) {
-            $this->Api->send('Contribuyente no está registrado en la aplicación', 404);
+            $this->Api->send('Contribuyente no está registrado en la aplicación.', 404);
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/dte_tmps/ver')) {
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
@@ -977,7 +962,7 @@ class Controller_DteTmps extends \Controller_App
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
-            $this->Api->send('No existe el documento temporal solicitado', 404);
+            $this->Api->send('No existe el documento temporal solicitado.', 404);
         }
         extract($this->getQuery([
             'getDetalle' => false,

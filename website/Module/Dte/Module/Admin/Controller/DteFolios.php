@@ -33,8 +33,7 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Acción que muestra la página principal para mantener los folios de la
-     * empresa
-         * @version 2015-09-22
+     * empresa.
      */
     public function index()
     {
@@ -46,8 +45,7 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
-     * Acción que agrega mantenedor para un nuevo tipo de folios
-         * @version 2023-10-11
+     * Acción que agrega mantenedor para un nuevo tipo de folios.
      */
     public function agregar()
     {
@@ -83,8 +81,7 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
-     * Acción que permite subir un caf para un tipo de folio
-         * @version 2023-11-06
+     * Acción que permite subir un caf para un tipo de folio.
      */
     public function subir_caf()
     {
@@ -187,8 +184,7 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
-     * Acción que permite ver el mantenedor de folios
-         * @version 2021-05-18
+     * Acción que permite ver el mantenedor de folios.
      */
     public function ver($dte)
     {
@@ -207,8 +203,7 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
-     * Acción que permite ver los folios sin uso de un tipo de DTE
-         * @version 2023-04-01
+     * Acción que permite ver los folios sin uso de un tipo de DTE.
      */
     public function sin_uso($dte)
     {
@@ -226,8 +221,7 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
-     * Acción que permite modificar un mantenedor de folios
-         * @version 2023-11-01
+     * Acción que permite modificar un mantenedor de folios.
      */
     public function modificar($dte)
     {
@@ -288,8 +282,7 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
-     * Acción que permite eliminar un mantenedor de folios
-         * @version 2021-05-18
+     * Acción que permite eliminar un mantenedor de folios.
      */
     public function eliminar($dte)
     {
@@ -300,7 +293,7 @@ class Controller_DteFolios extends \Controller_App
         }
         $DteFolio = new Model_DteFolio($Emisor->rut, (int)$dte, $Emisor->enCertificacion());
         if (!$DteFolio->exists()) {
-            \sowerphp\core\Model_Datasource_Session::message('No existe el mantenedor de folios solicitado', 'error');
+            \sowerphp\core\Model_Datasource_Session::message('No existe el mantenedor de folios solicitado.', 'error');
             $this->redirect('/dte/admin/dte_folios');
         }
         $cafs = $DteFolio->getCafs();
@@ -314,8 +307,7 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
-     * Acción que permite descargar el XML del archivo CAF
-         * @version 2019-07-17
+     * Acción que permite descargar el XML del archivo CAF.
      */
     public function xml($dte, $desde)
     {
@@ -339,8 +331,7 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
-     * Acción que permite eliminar un XML (CAF) específico del mantenedor de folios
-         * @version 2021-05-18
+     * Acción que permite eliminar un XML (CAF) específico del mantenedor de folios.
      */
     public function eliminar_xml($dte, $desde)
     {
@@ -373,8 +364,7 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
-     * Acción que permite reobtener un archivo CAF al SII y cargarlo en LibreDTE
-         * @version 2023-11-06
+     * Acción que permite reobtener un archivo CAF al SII y cargarlo en LibreDTE.
      */
     public function reobtener_caf($dte = null)
     {
@@ -451,8 +441,7 @@ class Controller_DteFolios extends \Controller_App
 
     /**
      * Acción que permite descargar un archivo CAF previamente solicitado al SII
-     * y cargarlo en LibreDTE
-         * @version 2023-11-06
+     * y cargarlo en LibreDTE.
      */
     public function reobtener_caf_cargar($dte, $folio_inicial, $folio_final, $fecha_autorizacion)
     {
@@ -518,15 +507,13 @@ class Controller_DteFolios extends \Controller_App
                     : 'https://palena.sii.cl/cvc_cgi/dte/rf_reobtencion1_folios',
                 url('/dte/admin/dte_folios/subir_caf')
             );
-
             \sowerphp\core\Model_Datasource_Session::message($message, 'error');
             $this->redirect('/dte/admin/dte_folios/reobtener_caf/'.$DteFolio->dte);
         }
     }
 
     /**
-     * Acción que permite solicitar un archivo CAF al SII y cargarlo en LibreDTE
-         * @version 2023-11-06
+     * Acción que permite solicitar un archivo CAF al SII y cargarlo en LibreDTE.
      */
     public function solicitar_caf($dte = null)
     {
@@ -589,8 +576,7 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
-     * Acción que muestra la página con el estado del folio en el SII
-         * @version 2020-01-26
+     * Acción que muestra la página con el estado del folio en el SII.
      */
     public function estado($dte, $folio)
     {
@@ -609,8 +595,7 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
-     * Acción que permite anular un folio directamente en el sitio del SII
-         * @version 2020-01-26
+     * Acción que permite anular un folio directamente en el sitio del SII.
      */
     public function anular($dte, $folio)
     {
@@ -623,8 +608,7 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
-     * Acción que permite descargar del SII los folios según su estado
-         * @version 2019-07-18
+     * Acción que permite descargar del SII los folios según su estado.
      */
     public function descargar($dte, $folio, $estado = 'recibidos')
     {
@@ -653,8 +637,7 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
-     * Acción que permite solicitar el informe de estado de los folios
-         * @version 2018-05-19
+     * Acción que permite solicitar el informe de estado de los folios.
      */
     public function informe_estados()
     {
@@ -692,8 +675,7 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
-     * Recurso que entrega el la información de cierto mantenedor de folios
-         * @version 2017-09-26
+     * Recurso que entrega el la información de cierto mantenedor de folios.
      */
     public function _api_info_GET($dte, $emisor)
     {
@@ -720,9 +702,8 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
-     * Recurso que permite modificar el mantenedor de folios
-     * Modifica: folio siguiente y/o alerta
-         * @version 2021-08-16
+     * Recurso que permite modificar el mantenedor de folios.
+     * Modifica: folio siguiente y/o alerta.
      */
     public function _api_modificar_POST($dte, $emisor)
     {
@@ -756,7 +737,12 @@ class Controller_DteFolios extends \Controller_App
             $this->Api->send('El CAF que contiene el folio '.$DteFolio->siguiente.' está vencido, no se puede asignar.', 500);
         }
         // verificar que el folio siguiente que se está asignando no esté siendo usado actualmente por otro DTE ya emitido
-        $DteEmitido = new \website\Dte\Model_DteEmitido($DteFolio->emisor, $DteFolio->dte, $DteFolio->siguiente, (int)$DteFolio->certificacion);
+        $DteEmitido = new \website\Dte\Model_DteEmitido(
+            $DteFolio->emisor,
+            $DteFolio->dte,
+            $DteFolio->siguiente,
+            (int)$DteFolio->certificacion
+        );
         if ($DteEmitido->exists()) {
             $this->Api->send('El folio '.$DteFolio->siguiente.' se encuentra usado, no se puede asignar como folio siguiente.', 500);
         }
@@ -772,8 +758,7 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
-     * Recurso que permite solicitar un CAF al SII
-         * @version 2020-01-26
+     * Recurso que permite solicitar un CAF al SII.
      */
     public function _api_solicitar_caf_GET($dte, $cantidad, $emisor)
     {
@@ -807,8 +792,7 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
-     * Recurso que permite consultar el estado de un folio en el SII
-         * @version 2020-02-18
+     * Recurso que permite consultar el estado de un folio en el SII.
      */
     public function _api_estado_GET($dte, $folio, $emisor)
     {
@@ -858,8 +842,7 @@ class Controller_DteFolios extends \Controller_App
     }
 
     /**
-     * Recurso que permite anular un folio en el SII
-         * @version 2020-02-18
+     * Recurso que permite anular un folio en el SII.
      */
     public function _api_anular_GET($dte, $folio, $emisor)
     {

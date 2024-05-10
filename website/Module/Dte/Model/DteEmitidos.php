@@ -43,10 +43,9 @@ class Model_DteEmitidos extends \Model_Plural_App
     const ENVIO_BOLETA = '2021-01-01'; // desde qué día se deben enviar las boletas al SII en producción
 
     /**
-     * Método que entrega el detalle de las ventas en un rango de tiempo
-         * @version 2022-11-11
+     * Método que entrega el detalle de las ventas en un rango de tiempo.
      */
-    public function getDetalle($desde, $hasta, $detalle)
+    public function getDetalle($desde, $hasta, $detalle): array
     {
         // datos del xml
         list(
@@ -138,7 +137,12 @@ class Model_DteEmitidos extends \Model_Plural_App
                 AND e.fecha BETWEEN :desde AND :hasta
                 AND e.dte != 46
             ORDER BY e.fecha, e.dte, e.folio
-        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta]);
+        ', [
+            ':emisor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+        ]);
         foreach ($datos as &$dato) {
             $dato['id'] = 'T'.$dato['id'].'F'.$dato['folio'];
         }
@@ -177,10 +181,9 @@ class Model_DteEmitidos extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por tipo de DTE
-         * @version 2016-09-24
+     * Método que entrega los totales de documentos emitidos por tipo de DTE.
      */
-    public function getPorTipo($desde, $hasta)
+    public function getPorTipo($desde, $hasta): array
     {
         return $this->db->getTable('
             SELECT t.tipo, COUNT(*) AS total
@@ -192,14 +195,18 @@ class Model_DteEmitidos extends \Model_Plural_App
                 AND e.dte != 46
             GROUP BY t.tipo
             ORDER BY total DESC
-        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta]);
+        ', [
+            ':emisor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+        ]);
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por día
-         * @version 2016-09-24
+     * Método que entrega los totales de documentos emitidos por día.
      */
-    public function getPorDia($desde, $hasta)
+    public function getPorDia($desde, $hasta): array
     {
         return $this->db->getTable('
             SELECT fecha AS dia, COUNT(*) AS total
@@ -211,14 +218,18 @@ class Model_DteEmitidos extends \Model_Plural_App
                 AND dte != 46
             GROUP BY fecha
             ORDER BY fecha
-        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta]);
+        ', [
+            ':emisor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+        ]);
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por hora
-         * @version 2019-07-09
+     * Método que entrega los totales de documentos emitidos por hora.
      */
-    public function getPorHora($desde, $hasta)
+    public function getPorHora($desde, $hasta): array
     {
         $hora = $this->db->xml('xml', '/*/SetDTE/Caratula/TmstFirmaEnv', 'http://www.sii.cl/SiiDte');
         return $this->db->getTable('
@@ -231,14 +242,18 @@ class Model_DteEmitidos extends \Model_Plural_App
                 AND dte != 46
             GROUP BY hora
             ORDER BY hora
-        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta]);
+        ', [
+            ':emisor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+        ]);
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por sucursal
-         * @version 2016-09-24
+     * Método que entrega los totales de documentos emitidos por sucursal.
      */
-    public function getPorSucursal($desde, $hasta)
+    public function getPorSucursal($desde, $hasta): array
     {
         $datos = $this->db->getTable('
             SELECT sucursal_sii AS sucursal, COUNT(*) AS total
@@ -250,7 +265,12 @@ class Model_DteEmitidos extends \Model_Plural_App
                 AND dte != 46
             GROUP BY sucursal
             ORDER BY total DESC
-        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta]);
+        ', [
+            ':emisor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+        ]);
         foreach($datos as &$d) {
             $d['sucursal'] = $this->getContribuyente()->getSucursal($d['sucursal'])->sucursal;
         }
@@ -258,10 +278,9 @@ class Model_DteEmitidos extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por usuario
-         * @version 2016-09-24
+     * Método que entrega los totales de documentos emitidos por usuario.
      */
-    public function getPorUsuario($desde, $hasta)
+    public function getPorUsuario($desde, $hasta): array
     {
         return $this->db->getTable('
             SELECT u.usuario, COUNT(*) AS total
@@ -273,14 +292,18 @@ class Model_DteEmitidos extends \Model_Plural_App
                 AND e.dte != 46
             GROUP BY u.usuario
             ORDER BY total DESC
-        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta]);
+        ', [
+            ':emisor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+        ]);
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por nacionalidad
-         * @version 2016-10-12
+     * Método que entrega los totales de documentos emitidos por nacionalidad.
      */
-    public function getPorNacionalidad($desde, $hasta)
+    public function getPorNacionalidad($desde, $hasta): array
     {
         $nacionalidad = $this->db->xml('xml', '/EnvioDTE/SetDTE/DTE/Exportaciones/Encabezado/Receptor/Extranjero/Nacionalidad', 'http://www.sii.cl/SiiDte');
         $datos = $this->db->getTable('
@@ -294,7 +317,12 @@ class Model_DteEmitidos extends \Model_Plural_App
                 AND '.$nacionalidad.' != \'\'
             GROUP BY nacionalidad
             ORDER BY total DESC
-        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta]);
+        ', [
+            ':emisor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+        ]);
         foreach ($datos as &$d) {
             $d['nacionalidad'] = \sasco\LibreDTE\Sii\Aduana::getNacionalidad($d['nacionalidad']);
         }
@@ -302,10 +330,9 @@ class Model_DteEmitidos extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por moneda
-         * @version 2016-10-12
+     * Método que entrega los totales de documentos emitidos por moneda.
      */
-    public function getPorMoneda($desde, $hasta)
+    public function getPorMoneda($desde, $hasta): array
     {
         $moneda = $this->db->xml('xml', '/EnvioDTE/SetDTE/DTE/Exportaciones/Encabezado/Totales/TpoMoneda', 'http://www.sii.cl/SiiDte');
         return $this->db->getTable('
@@ -319,20 +346,25 @@ class Model_DteEmitidos extends \Model_Plural_App
                 AND '.$moneda.' != \'\'
             GROUP BY moneda
             ORDER BY total DESC
-        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta]);
+        ', [
+            ':emisor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+        ]);
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por día de todos los contribuyentes
-         * @version 2016-10-27
+     * Método que entrega los totales de documentos emitidos por día de todos los contribuyentes.
      */
-    public function countDiarios($desde, $hasta, $certificacion)
+    public function countDiarios($desde, $hasta, $certificacion): array
     {
         if (is_numeric($desde)) {
             $desde = date('Y-m-d', strtotime('-'.$desde.' months'));
         }
-        if (!$hasta)
+        if (!$hasta) {
             $hasta = date('Y-m-d');
+        }
         return $this->db->getTable('
             SELECT fecha AS dia, COUNT(*) AS total
             FROM dte_emitido
@@ -341,20 +373,30 @@ class Model_DteEmitidos extends \Model_Plural_App
                 AND fecha BETWEEN :desde AND :hasta
             GROUP BY fecha
             ORDER BY fecha
-        ', [':certificacion' => (int)$certificacion, ':desde' => $desde, ':hasta' => $hasta]);
+        ', [
+            ':certificacion' => (int)$certificacion,
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+        ]);
     }
 
     /**
-     * Método que entrega el listado de documentos rechazados
-     * Puede ser el de un emisor en específico o bien de todos los emisores
-         * @version 2022-08-09
+     * Método que entrega el listado de documentos rechazados.
+     * Puede ser el de un emisor en específico o bien de todos los emisores.
      */
-    public function getRechazados($desde, $hasta, $certificacion = false)
+    public function getRechazados($desde, $hasta, $certificacion = false): array
     {
         // obtener emisor si existe (si no existe es consulta global)
         $Emisor = $this->getContribuyente(false);
-        $where = ['e.fecha BETWEEN :desde AND :hasta', 'e.certificacion = :certificacion'];
-        $vars = [':desde' => $desde, ':hasta' => $hasta, ':certificacion' => (int)$certificacion];
+        $where = [
+            'e.fecha BETWEEN :desde AND :hasta',
+            'e.certificacion = :certificacion',
+        ];
+        $vars = [
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+            ':certificacion' => (int)$certificacion,
+        ];
         if ($Emisor) {
             $vars[':certificacion'] = $Emisor->enCertificacion();
             $where[] = 'e.emisor = :emisor';
@@ -362,7 +404,14 @@ class Model_DteEmitidos extends \Model_Plural_App
         }
         // realizar consulta
         return $this->db->getTable('
-            SELECT c.rut, c.razon_social, e.fecha, e.dte, t.tipo AS documento, e.folio, e.revision_estado, e.revision_detalle
+            SELECT
+                c.rut,
+                c.razon_social,
+                e.fecha, e.dte,
+                t.tipo AS documento,
+                e.folio,
+                e.revision_estado,
+                e.revision_detalle
             FROM
                 dte_emitido AS e
                 JOIN contribuyente AS c ON e.emisor = c.rut
@@ -375,10 +424,9 @@ class Model_DteEmitidos extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega el total de documentos rechazados y el rango de fechas
-         * @version 2020-10-26
+     * Método que entrega el total de documentos rechazados y el rango de fechas.
      */
-    public function getTotalRechazados()
+    public function getTotalRechazados(): ?array
     {
         $aux = $this->db->getRow('
             SELECT COUNT(folio) AS total, MIN(fecha) AS desde, MAX(fecha) AS hasta
@@ -389,15 +437,18 @@ class Model_DteEmitidos extends \Model_Plural_App
                 AND certificacion = :certificacion
                 AND revision_estado IS NOT NULL
                 AND SUBSTRING(revision_estado FROM 1 FOR 3) IN (\''.implode('\', \'', self::$revision_estados['rechazados']).'\')
-        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion(), ':envio_boleta' => Model_DteEmitidos::ENVIO_BOLETA]);
+        ', [
+            ':emisor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':envio_boleta' => Model_DteEmitidos::ENVIO_BOLETA,
+        ]);
         return !empty($aux['total']) ? $aux : null;
     }
 
     /**
-     * Método que actualiza el estado del evento del receptor (si está aceptado o no el DTE)
-         * @version 2017-09-12
+     * Método que actualiza el estado del evento del receptor (si está aceptado o no el DTE).
      */
-    public function actualizarEstadoReceptor($periodo = null)
+    public function actualizarEstadoReceptor($periodo = null): void
     {
         if (!$periodo) {
             $periodo = date('Ym');
@@ -412,14 +463,27 @@ class Model_DteEmitidos extends \Model_Plural_App
                 AND certificacion = :certificacion
                 AND receptor_evento IS NULL
                 AND '.$this->db->date('Ym', 'fecha', 'INTEGER').' = :periodo
-        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion(), ':periodo' => $periodo]);
+        ', [
+            ':emisor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':periodo' => $periodo,
+        ]);
         foreach ($dtes as $dte) {
-            $documentos = $this->getContribuyente()->getRCV(['operacion' => 'VENTA', 'periodo' => $periodo, 'dte' => $dte]);
+            $documentos = $this->getContribuyente()->getRCV([
+                'operacion' => 'VENTA',
+                'periodo' => $periodo,
+                'dte' => $dte,
+            ]);
             foreach ($documentos as $d) {
                 if (!$d['detEventoReceptor']) {
                     continue;
                 }
-                $DteEmitido = new Model_DteEmitido($this->getContribuyente()->rut, $dte, $d['detNroDoc'], $this->getContribuyente()->enCertificacion());
+                $DteEmitido = new Model_DteEmitido(
+                    $this->getContribuyente()->rut,
+                    $dte,
+                    $d['detNroDoc'],
+                    $this->getContribuyente()->enCertificacion()
+                );
                 if (!$DteEmitido->usuario || $DteEmitido->receptor_evento) {
                     continue; // DTE no está emitido en LibreDTE o ya tiene evento registrado
                 }
@@ -431,10 +495,9 @@ class Model_DteEmitidos extends \Model_Plural_App
 
     /**
      * Método que entrega el listado de documentos en cierto rango de fecha que
-     * no han sido enviados al correo de intercambio del receptor
-         * @version 2021-05-16
+     * no han sido enviados al correo de intercambio del receptor.
      */
-    public function getSinEnvioIntercambio($desde, $hasta)
+    public function getSinEnvioIntercambio($desde, $hasta): array
     {
         return $this->db->getTable('
             SELECT
@@ -469,15 +532,19 @@ class Model_DteEmitidos extends \Model_Plural_App
                 AND d.xml IS NOT NULL
                 AND re.valor IS NOT NULL
             ORDER BY d.fecha DESC, t.tipo, d.folio DESC
-        ', [':emisor' => $this->getContribuyente()->rut, ':certificacion' => $this->getContribuyente()->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta]);
+        ', [
+            ':emisor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+        ]);
     }
 
     /**
      * Método que entrega el listado de boletas en cierto rango de fecha que
-     * no han sido enviados al correo electrónico del receptor
-         * @version 2021-05-16
+     * no han sido enviados al correo electrónico del receptor.
      */
-    public function getBoletasSinEnvioEmail($desde, $hasta)
+    public function getBoletasSinEnvioEmail($desde, $hasta): array
     {
         return $this->db->getTable('
             SELECT

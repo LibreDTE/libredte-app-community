@@ -35,34 +35,44 @@ class Model_DteVentas extends \Model_Plural_App
     protected $_table = 'dte_venta'; ///< Tabla del modelo
 
     /**
-     * Método que indica si el libro para cierto periodo está o no generado
-         * @version 2019-07-05
+     * Método que indica si el libro para cierto periodo está o no generado.
      */
     public function libroGenerado($periodo)
     {
         return $this->db->getValue('
             SELECT COUNT(*)
             FROM dte_venta
-            WHERE emisor = :emisor AND periodo = :periodo AND certificacion = :certificacion AND track_id IS NOT NULL
-        ', [':emisor' => $this->getContribuyente()->rut, ':periodo' => $periodo, ':certificacion' => $this->getContribuyente()->enCertificacion()]);
+            WHERE
+                emisor = :emisor
+                AND periodo = :periodo
+                AND certificacion = :certificacion
+                AND track_id IS NOT NULL
+        ', [
+            ':emisor' => $this->getContribuyente()->rut,
+            ':periodo' => $periodo,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+        ]);
     }
 
     /**
-     * Método que entrega el total mensual del libro de ventas
-         * @version 2018-04-25
+     * Método que entrega el total mensual del libro de ventas.
      */
-    public function getTotalesMensuales($anio)
+    public function getTotalesMensuales(int $anio): array
     {
         $periodo_actual = date('Ym');
-        $periodo = $anio.'01';
+        $periodo = (int)(((string)$anio) . '01');
         $totales_mensuales = [];
         for ($i=0; $i<12; $i++) {
-            if ($periodo>$periodo_actual) {
+            if ($periodo > $periodo_actual) {
                 break;
             }
             $totales_mensuales[$periodo] = array_merge(
                 ['periodo' => $periodo],
-                (new Model_DteVenta($this->getContribuyente()->rut, $periodo, $this->getContribuyente()->enCertificacion()))->getTotales()
+                (new Model_DteVenta(
+                    $this->getContribuyente()->rut,
+                    $periodo,
+                    $this->getContribuyente()->enCertificacion()
+                ))->getTotales()
             );
             $periodo = \sowerphp\general\Utility_Date::nextPeriod($periodo);
         }
@@ -70,15 +80,18 @@ class Model_DteVentas extends \Model_Plural_App
     }
 
     /**
-     * Método que entrega el resumen anual de ventas
-         * @version 2019-01-16
+     * Método que entrega el resumen anual de ventas.
      */
     public function getResumenAnual($anio)
     {
         $libros = [];
-        foreach (range(1,12) as $mes) {
+        foreach (range(1, 12) as $mes) {
             $mes = $mes < 10 ? '0'.$mes : $mes;
-            $DteVenta = new Model_DteVenta($this->getContribuyente()->rut, (int)($anio.$mes), $this->getContribuyente()->enCertificacion());
+            $DteVenta = new Model_DteVenta(
+                $this->getContribuyente()->rut,
+                (int)($anio.$mes),
+                $this->getContribuyente()->enCertificacion()
+            );
             $resumen = $DteVenta->getResumen();
             if ($resumen) {
                 $libros[$anio][$mes] = $resumen;
@@ -110,11 +123,13 @@ class Model_DteVentas extends \Model_Plural_App
     /**
      * Método que entrega el resumen de los documentos de ventas
      * totalizado según ciertos filtros y por tipo de documento.
-         * @version 2022-06-16
      */
-    public function getResumen(array $filtros = [])
+    public function getResumen(array $filtros = []): array
     {
-        $where = ['d.emisor = :emisor', 'd.certificacion = :certificacion'];
+        $where = [
+            'd.emisor = :emisor',
+            'd.certificacion = :certificacion',
+        ];
         $vars = [
             ':emisor' => $this->getContribuyente()->rut,
             ':certificacion' => $this->getContribuyente()->enCertificacion(),
@@ -197,11 +212,10 @@ class Model_DteVentas extends \Model_Plural_App
     }
 
     /**
-     * Método que sincroniza el libro de ventas local con el registro de ventas del SII
-     * - Se agregan documentos "registrados" en el registro de ventas del SII
-         * @version 2020-02-19
+     * Método que sincroniza el libro de ventas local con el registro de ventas del SII.
+     * - Se agregan documentos "registrados" en el registro de ventas del SII.
      */
-    public function sincronizarRegistroVentasSII($meses = 2)
+    public function sincronizarRegistroVentasSII(int $meses = 2): int
     {
         $documentos_encontrados = 0;
         // periodos a procesar
@@ -226,10 +240,9 @@ class Model_DteVentas extends \Model_Plural_App
     }
 
     /**
-     * Método que agrega masivamente documentos emitidos
-         * @version 2020-02-21
+     * Método que agrega masivamente documentos emitidos.
      */
-    private function agregarMasivo($documentos, array $config = [])
+    private function agregarMasivo($documentos, array $config = []): void
     {
         $config = array_merge([
             'periodo' => (int)date('Ym'),
@@ -247,7 +260,12 @@ class Model_DteVentas extends \Model_Plural_App
             }
             // agregar el documento emitido si no existe
             $Receptor = $Receptores->get(substr($doc['rut'],0,-2));
-            $DteEmitido = new Model_DteEmitido($this->getContribuyente()->rut, $doc['dte'], $doc['folio'], $this->getContribuyente()->enCertificacion());
+            $DteEmitido = new Model_DteEmitido(
+                $this->getContribuyente()->rut,
+                $doc['dte'],
+                $doc['folio'],
+                $this->getContribuyente()->enCertificacion()
+            );
             if (!$DteEmitido->usuario || $DteEmitido->mipyme) {
                 $DteEmitido->tasa = $doc['tasa'] ? $doc['tasa'] : 0;
                 $DteEmitido->fecha = $doc['fecha'];
@@ -266,8 +284,7 @@ class Model_DteVentas extends \Model_Plural_App
 
     /**
      * Método que sincroniza los documentos emitidos del Portal MIPYME con
-     * LibreDTE, cargando los datos que estén en el SII
-         * @version 2020-02-22
+     * LibreDTE, cargando los datos que estén en el SII.
      */
     public function sincronizarEmitidosPortalMipymeSII($meses = 2)
     {
@@ -282,7 +299,7 @@ class Model_DteVentas extends \Model_Plural_App
         // se requiere firma electrónica
         $Firma = $this->getContribuyente()->getFirma();
         if (!$Firma) {
-            throw new \Exception('No es posible sincronizar MIPYME, falta firma electrónica');
+            throw new \Exception('No es posible sincronizar MIPYME, falta firma electrónica.');
         }
         // sincronizar periodos
         foreach ($periodos as $periodo) {
@@ -298,7 +315,10 @@ class Model_DteVentas extends \Model_Plural_App
                 ]
             );
             if ($r['status']['code'] != 200) {
-                throw new \Exception('Error al sincronizar emitidos del período '.$periodo.': '.$r['body'], $r['status']['code']);
+                throw new \Exception(
+                    'Error al sincronizar emitidos del período '.$periodo.': '.$r['body'],
+                    $r['status']['code']
+                );
             }
             // guardar documentos encontrados
             $Receptores = new Model_Contribuyentes();
@@ -306,7 +326,12 @@ class Model_DteVentas extends \Model_Plural_App
             $documentos_encontrados += count($documentos);
             foreach($documentos as $dte) {
                 $Receptor = $Receptores->get($dte['rut']);
-                $DteEmitido = new Model_DteEmitido($this->getContribuyente()->rut, $dte['dte'], $dte['folio'], 0);
+                $DteEmitido = new Model_DteEmitido(
+                    $this->getContribuyente()->rut,
+                    $dte['dte'],
+                    $dte['folio'],
+                    0
+                );
                 if ($DteEmitido->mipyme && $DteEmitido->revision_detalle == $dte['estado']) {
                     continue;
                 }

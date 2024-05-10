@@ -143,4 +143,4 @@ $maintainer = new \sowerphp\app\View_Helper_Maintainer ([
 ]);
 $maintainer->setId($models);
 $maintainer->setColsWidth($colsWidth);
-echo $maintainer->listar ($data, $pages, $page);
+echo $maintainer->listar($data, $pages, $page);

@@ -50,4 +50,4 @@ $maintainer = new \sowerphp\app\View_Helper_Maintainer([
 ]);
 $maintainer->setId('dte_tmps_'.$Emisor->rut);
 $maintainer->setColsWidth([null, null, null, null, null, null, null, 160]);
-echo $maintainer->listar ($documentos, $paginas, $pagina, false);
+echo $maintainer->listar($documentos, $paginas, $pagina, false);

@@ -24,16 +24,16 @@
 // namespace del controlador
 namespace website\Dte;
 
+use \website\Dte\Admin\Mantenedores\Model_DteTipo;
+
 /**
- * Controlador base para libros
- * @version 2017-09-11
+ * Controlador base para libros.
  */
 abstract class Controller_Base_Libros extends \Controller_App
 {
 
     /**
-     * Acción que muestra el resumen de los períodos del libro
-         * @version 2017-08-30
+     * Acción que muestra el resumen de los períodos del libro.
      */
     public function index()
     {
@@ -45,8 +45,7 @@ abstract class Controller_Base_Libros extends \Controller_App
     }
 
     /**
-     * Acción que muestra la información del libro para cierto período
-         * @version 2018-05-17
+     * Acción que muestra la información del libro para cierto período.
      */
     public function ver($periodo)
     {
@@ -61,7 +60,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $resumen = $Libro->getResumen();
         $operaciones = [];
         foreach ($resumen as $r) {
-            $operaciones[$r['TpoDoc']] = (new \website\Dte\Admin\Mantenedores\Model_DteTipo($r['TpoDoc']))->operacion;
+            $operaciones[$r['TpoDoc']] = (new Model_DteTipo($r['TpoDoc']))->operacion;
         }
         $this->set([
             'Emisor' => $Emisor,
@@ -83,8 +82,7 @@ abstract class Controller_Base_Libros extends \Controller_App
     }
 
     /**
-     * Acción que descarga los datos del libro del período en un archivo CSV
-         * @version 2019-07-18
+     * Acción que descarga los datos del libro del período en un archivo CSV.
      */
     public function csv($periodo)
     {
@@ -104,8 +102,7 @@ abstract class Controller_Base_Libros extends \Controller_App
     }
 
     /**
-     * Acción que descarga el archivo PDF del libro
-         * @version 2019-07-17
+     * Acción que descarga el archivo PDF del libro.
      */
     public function pdf($periodo)
     {
@@ -133,15 +130,14 @@ abstract class Controller_Base_Libros extends \Controller_App
         // entregar libro de guías
         else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Libro en PDF no está implementado', 'error'
+                'Libro en PDF no está implementado.', 'error'
             );
             $this->redirect(str_replace('pdf', 'ver', $this->request->request));
         }
     }
 
     /**
-     * Acción que descarga el archivo XML del libro
-         * @version 2019-07-17
+     * Acción que descarga el archivo XML del libro.
      */
     public function xml($periodo)
     {
@@ -163,16 +159,14 @@ abstract class Controller_Base_Libros extends \Controller_App
     }
 
     /**
-     * Acción que envía el archivo XML del libro al SII
-     * Si no hay documentos en el período se enviará sin movimientos
-         * @version 2015-12-25
+     * Acción que envía el archivo XML del libro al SII.
+     * Si no hay documentos en el período se enviará sin movimientos.
      */
     abstract public function enviar_sii($periodo);
 
     /**
      * Acción que permite solicitar código de autorización para rectificar un
-     * libro ya enviado al SII
-         * @version 2016-02-13
+     * libro ya enviado al SII.
      */
     public function enviar_rectificacion($periodo)
     {
@@ -192,8 +186,7 @@ abstract class Controller_Base_Libros extends \Controller_App
     }
 
     /**
-     * Acción para enviar el libro de un período sin movimientos
-         * @version 2015-12-25
+     * Acción para enviar el libro de un período sin movimientos.
      */
     public function sin_movimientos()
     {
@@ -211,8 +204,7 @@ abstract class Controller_Base_Libros extends \Controller_App
     }
 
     /**
-     * Acción que solicita se envíe una nueva revisión del libro al email
-         * @version 2016-06-14
+     * Acción que solicita se envíe una nueva revisión del libro al email.
      */
     public function solicitar_revision($periodo)
     {
@@ -238,8 +230,7 @@ abstract class Controller_Base_Libros extends \Controller_App
     }
 
     /**
-     * Acción que actualiza el estado del envío del libro
-         * @version 2021-08-18
+     * Acción que actualiza el estado del envío del libro.
      */
     public function actualizar_estado($periodo, $usarWebservice = null)
     {
@@ -271,8 +262,7 @@ abstract class Controller_Base_Libros extends \Controller_App
     }
 
     /**
-     * Recurso de la API que entrega el código de reemplazo de libro para cierto período
-         * @version 2020-01-26
+     * Recurso de la API que entrega el código de reemplazo de libro para cierto período.
      */
     public function _api_codigo_reemplazo_GET($periodo, $contribuyente)
     {
@@ -292,7 +282,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Contribuyente->rut, $periodo, $Contribuyente->enCertificacion());
         if (!$Libro->track_id) {
-            $this->Api->send('Libro no tiene Track ID', 500);
+            $this->Api->send('Libro no tiene Track ID.', 500);
         }
         // consultar código reemplazo libro
         $Firma = $Contribuyente->getFirma($User->id);
