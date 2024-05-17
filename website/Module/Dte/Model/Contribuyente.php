@@ -24,6 +24,27 @@
 // namespace del modelo
 namespace website\Dte;
 
+use \sowerphp\core\Configure;
+use \sowerphp\core\Exception_Model_Datasource_Database as DatabaseException;
+use \sowerphp\core\Model_Datasource_Session as Session;
+use \sowerphp\core\Network_Email;
+use \sowerphp\core\Network_Email_Imap;
+use \sowerphp\core\Network_Http_Rest;
+use \sowerphp\core\Trigger;
+use \sowerphp\core\Utility_Array;
+use \sowerphp\app\Utility_Apps;
+use \sowerphp\app\Utility_Rut;
+use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna;
+use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
+use \sowerphp\app\Sistema\Usuarios\Model_Usuarios;
+use \sowerphp\general\Utility_Date;
+use \sowerphp\general\Utility_File;
+use \sowerphp\general\Utility_Image;
+use \sowerphp\general\Utility_Mapas_Google;
+use \website\Dte\Admin\Model_DteFolio;
+use \website\Sistema\General\Model_ActividadEconomica;
+
 /**
  * Clase para mapear la tabla contribuyente de la base de datos.
  */
@@ -210,8 +231,7 @@ class Model_Contribuyente extends \Model_App
     private $firmas = []; ///< Caché de las firmas del contribuyente
 
     /**
-     * Constructor del contribuyente
-         * @version 2020-07-23
+     * Constructor del contribuyente.
      */
     public function __construct($rut = null)
     {
@@ -223,38 +243,9 @@ class Model_Contribuyente extends \Model_App
         }
         parent::__construct((int)$rut);
         if ($this->rut && !$this->exists()) {
-            $this->dv = \sowerphp\app\Utility_Rut::dv($this->rut);
+            $this->dv = Utility_Rut::dv($this->rut);
             if (self::$autocompletar) {
-                try {
-                    $response = apigateway_consume(
-                        '/sii/contribuyentes/situacion_tributaria/tercero/'.$this->rut.'-'.$this->dv
-                    );
-                    if ($response['status']['code'] == 200) {
-                        $info = $response['body'];
-                        if (!empty($info['razon_social'])) {
-                            $this->razon_social = mb_substr($info['razon_social'], 0, 100);
-                        }
-                        if (!empty($info['actividades'][0]['codigo'])) {
-                            $ActividadEconomica = new \website\Sistema\General\Model_ActividadEconomica($info['actividades'][0]['codigo']);
-                            if ($ActividadEconomica->actividad_economica) {
-                                $this->actividad_economica = $info['actividades'][0]['codigo'];
-                            }
-                        }
-                        if (!empty($info['actividades'][0]['glosa'])) {
-                            $this->giro = mb_substr($info['actividades'][0]['glosa'], 0, 80);
-                        }
-                        $this->save();
-                    }
-                    foreach (['telefono', 'email', 'direccion'] as $attr) {
-                        if (!$this->$attr) {
-                            $this->$attr = null;
-                        }
-                    }
-                }
-                catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-                }
-                catch (\Exception $e) {
-                }
+                $this->getDatosDesdeSii();
             }
         }
         $this->contribuyente = &$this->razon_social;
@@ -262,14 +253,56 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
+     * Obtener y asignar datos del contribuyente desde datos del SII.
+     */
+    private function getDatosDesdeSii(): void
+    {
+        if (empty($this->razon_social) || empty($this->actividad_economica) || empty($this->giro)) {
+            return;
+        }
+        try {
+            $url = '/sii/contribuyentes/situacion_tributaria/tercero/' . $this->rut . '-' . $this->dv;
+            $response = apigateway_consume($url);
+            if ($response['status']['code'] == 200) {
+                $info = $response['body'];
+                if (empty($this->razon_social) && !empty($info['razon_social'])) {
+                    $this->razon_social = mb_substr($info['razon_social'], 0, 100);
+                }
+                if (empty($this->actividad_economica) && !empty($info['actividades'][0]['codigo'])) {
+                    $ActividadEconomica = new Model_ActividadEconomica(
+                        $info['actividades'][0]['codigo']
+                    );
+                    if ($ActividadEconomica->actividad_economica) {
+                        $this->actividad_economica = $info['actividades'][0]['codigo'];
+                    }
+                }
+                if (empty($this->giro) && !empty($info['actividades'][0]['glosa'])) {
+                    $this->giro = mb_substr($info['actividades'][0]['glosa'], 0, 80);
+                }
+                $this->save();
+            }
+            foreach (['telefono', 'email', 'direccion'] as $attr) {
+                if (!$this->$attr) {
+                    $this->$attr = null;
+                }
+            }
+        }
+        catch (DatabaseException $e) {
+        }
+        catch (\Exception $e) {
+        }
+    }
+
+
+    /**
      * Método que entrega las configuraciones y parámetros extras para el
-     * contribuyente
-         * @version 2023-01-05
+     * contribuyente.
      */
     public function getConfig()
     {
-        if ($this->config === false || !$this->rut)
+        if ($this->config === false || !$this->rut) {
             return null;
+        }
         if ($this->config === null) {
             $config = $this->db->getAssociativeArray('
                 SELECT configuracion, variable, valor, json
@@ -294,8 +327,9 @@ class Model_Contribuyente extends \Model_App
                             $dato['valor'] = null;
                         }
                     }
-                    $this->config[$configuracion][$dato['variable']] =
-                        $dato['json'] ? json_decode($dato['valor']) : $dato['valor']
+                    $this->config[$configuracion][$dato['variable']] = $dato['json']
+                        ? json_decode($dato['valor'])
+                        : $dato['valor']
                     ;
                 }
             }
@@ -304,8 +338,7 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método mágico para obtener configuraciones del contribuyente
-         * @version 2016-01-31
+     * Método mágico para obtener configuraciones del contribuyente.
      */
     public function __get($name)
     {
@@ -313,23 +346,22 @@ class Model_Contribuyente extends \Model_App
             $this->getConfig();
             $key = str_replace('config_', '', $name);
             $c = substr($key, 0, strpos($key, '_'));
-            $v = substr($key, strpos($key, '_')+1);
+            $v = substr($key, strpos($key, '_') + 1);
             if (!isset($this->config[$c][$v])) {
                 $class = get_called_class();
-                return isset($class::$defaultConfig[$c.'_'.$v]) ? $class::$defaultConfig[$c.'_'.$v] : null;
+                return $class::$defaultConfig[$c . '_' . $v] ?? null;
             }
             $this->$name = $this->config[$c][$v];
             return $this->$name;
         } else {
             throw new \Exception(
-                'Atributo '.$name.' del contribuyente no existe (no se puede obtener)'
+                'Atributo '.$name.' del contribuyente no existe (no se puede obtener).'
             );
         }
     }
 
     /**
-     * Método mágico asignar una configuración del contribuyente
-         * @version 2016-02-04
+     * Método mágico asignar una configuración del contribuyente.
      */
     public function __set($name, $value)
     {
@@ -337,20 +369,34 @@ class Model_Contribuyente extends \Model_App
             $key = str_replace('config_', '', $name);
             $c = substr($key, 0, strpos($key, '_'));
             $v = substr($key, strpos($key, '_')+1);
-            $value = ($value === false || $value === 0) ? '0' : ((!is_array($value) && !is_object($value)) ? (string)$value : ((is_array($value) && empty($value))?null:$value));
-            $this->config[$c][$v] = (!is_string($value) or isset($value[0])) ? $value : null;
+            $value = ($value === false || $value === 0)
+                ? '0'
+                : (
+                    (!is_array($value) && !is_object($value))
+                        ? (string)$value
+                        : (
+                            (is_array($value) && empty($value))
+                                ? null
+                                : $value
+                        )
+                )
+            ;
+            $this->config[$c][$v] = (!is_string($value) || isset($value[0]))
+                ? $value
+                : null
+            ;
             $this->$name = $this->config[$c][$v];
         } else {
-            throw new \Exception(
-                'Atributo '.$name.' del contribuyente no existe (no se puede asignar)'
-            );
+            throw new \Exception(__(
+                'Atributo %(name)s del contribuyente no existe (no se puede asignar).',
+                ['name' => $name]
+            ));
         }
     }
 
     /**
-     * Método para setear los atributos del contribuyente
-     * @param array Arreglo con los datos que se deben asignar
-         * @version 2016-01-29
+     * Método para setear los atributos del contribuyente.
+     * @param array $array Arreglo con los datos que se deben asignar.
      */
     public function set($array)
     {
@@ -364,8 +410,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método permite desactivar la autocompletación de datos de los contribuyentes
-     * nuevos que se instanciarán
-         * @version 2020-07-23
+     * nuevos que se instanciarán.
      */
     public static function noAutocompletarNuevosContribuyentes()
     {
@@ -374,10 +419,10 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que guarda los datos del contribuyente, incluyendo su
-     * configuración y parámetros adicionales
-     * @param registrado Se usa para indicar que el contribuyente que se esta guardando es uno registrado por un usuario (se validan otros datos)
-     * @param no_modificar =true Evita que se modifiquen ciertos contribuyentes reservados
-         * @version 2019-11-27
+     * configuración y parámetros adicionales.
+     * @param bool $registrado Se usa para indicar que el contribuyente que se esta
+     * guardando es uno registrado por un usuario (se validan otros datos).
+     * @param bool no_modificar =true Evita que se modifiquen ciertos contribuyentes reservados.
      */
     public function save($registrado = false, $no_modificar = true)
     {
@@ -390,20 +435,31 @@ class Model_Contribuyente extends \Model_App
             // verificar campos mínimos
             foreach (['razon_social', 'giro', 'actividad_economica', 'direccion', 'comuna'] as $attr) {
                 if (empty($this->$attr)) {
-                    throw new \Exception('Debe especificar: '.$attr);
+                    throw new \Exception(__('Debe especificar: %s.', $attr));
                 }
             }
             // si se pasó un logo se guarda
             if (isset($_FILES['logo']) && !$_FILES['logo']['error']) {
-                if (\sowerphp\general\Utility_File::mimetype($_FILES['logo']['tmp_name']) != 'image/png') {
-                    throw new \Exception('Formato del logo debe ser PNG');
+                $mimetype = Utility_File::mimetype(
+                    $_FILES['logo']['tmp_name']
+                );
+                if ($mimetype != 'image/png') {
+                    throw new \Exception('Formato del logo debe ser PNG.');
                 }
-                $config = \sowerphp\core\Configure::read('dte.logos');
-                \sowerphp\general\Utility_Image::resizeOnFile($_FILES['logo']['tmp_name'], $config['width'], $config['height']);
-                if (!is_dir(DIR_STATIC.'/contribuyentes/'.$this->rut)) {
-                    mkdir(DIR_STATIC.'/contribuyentes/'.$this->rut, 0777, true);
+                $config = Configure::read('dte.logos');
+                Utility_Image::resizeOnFile(
+                    $_FILES['logo']['tmp_name'],
+                    $config['width'],
+                    $config['height']
+                );
+                $dir_path = DIR_STATIC . '/contribuyentes/' . $this->rut;
+                if (!is_dir($dir_path)) {
+                    mkdir($dir_path, 0777, true);
                 }
-                move_uploaded_file($_FILES['logo']['tmp_name'], DIR_STATIC.'/contribuyentes/'.$this->rut.'/logo.png');
+                move_uploaded_file(
+                    $_FILES['logo']['tmp_name'],
+                    $dir_path . '/logo.png'
+                );
             }
         }
         // corregir datos
@@ -422,7 +478,11 @@ class Model_Contribuyente extends \Model_App
         if ($this->config) {
             foreach ($this->config as $configuracion => $datos) {
                 foreach ($datos as $variable => $valor) {
-                    $Config = new Model_ContribuyenteConfig($this->rut, $configuracion, $variable);
+                    $Config = new Model_ContribuyenteConfig(
+                        $this->rut,
+                        $configuracion,
+                        $variable
+                    );
                     if (!is_array($valor) && !is_object($valor)) {
                         $Config->json = 0;
                     } else {
@@ -470,33 +530,38 @@ class Model_Contribuyente extends \Model_App
                     $this->config[$configuracion][$variable] = $this->$valor;
                 }
             }
-            $this->db->query('DELETE FROM contribuyente_config WHERE contribuyente = :rut', [':rut' => $this->rut]);
+            $vars = [':rut' => $this->rut];
+            $this->db->query('
+                DELETE
+                FROM contribuyente_config
+                WHERE contribuyente = :rut
+            ', $vars);
             if (!$this->save()) {
                 $this->db->rollback();
                 return false;
             }
             // módulo Dte
-            $this->db->query('DELETE FROM contribuyente_dte WHERE contribuyente = :rut', [':rut' => $this->rut]);
-            $this->db->query('DELETE FROM contribuyente_usuario WHERE contribuyente = :rut', [':rut' => $this->rut]);
-            $this->db->query('DELETE FROM contribuyente_usuario_dte WHERE contribuyente = :rut', [':rut' => $this->rut]);
-            $this->db->query('DELETE FROM contribuyente_usuario_sucursal WHERE contribuyente = :rut', [':rut' => $this->rut]);
-            $this->db->query('DELETE FROM dte_boleta_consumo WHERE emisor = :rut', [':rut' => $this->rut]);
-            $this->db->query('DELETE FROM dte_compra WHERE receptor = :rut', [':rut' => $this->rut]);
-            $this->db->query('DELETE FROM dte_emitido WHERE emisor = :rut', [':rut' => $this->rut]); // borra: dte_emitido_email, cobranza
-            $this->db->query('DELETE FROM dte_folio WHERE emisor = :rut', [':rut' => $this->rut]); // borra: dte_caf
-            $this->db->query('DELETE FROM dte_guia WHERE emisor = :rut', [':rut' => $this->rut]);
-            $this->db->query('DELETE FROM dte_recibido WHERE receptor = :rut', [':rut' => $this->rut]);
-            $this->db->query('DELETE FROM dte_intercambio WHERE receptor = :rut', [':rut' => $this->rut]);
-            $this->db->query('DELETE FROM dte_intercambio_recepcion WHERE recibe = :rut', [':rut' => $this->rut]); // borra: dte_intercambio_recepcion_dte
-            $this->db->query('DELETE FROM dte_intercambio_recibo WHERE recibe = :rut', [':rut' => $this->rut]); // borra: dte_intercambio_recibo_dte
-            $this->db->query('DELETE FROM dte_intercambio_resultado WHERE recibe = :rut', [':rut' => $this->rut]); // borra: dte_intercambio_resultado_dte
-            $this->db->query('DELETE FROM dte_referencia WHERE emisor = :rut', [':rut' => $this->rut]);
-            $this->db->query('DELETE FROM dte_tmp WHERE emisor = :rut', [':rut' => $this->rut]); // borra: dte_tmp_email
-            $this->db->query('DELETE FROM dte_venta WHERE emisor = :rut', [':rut' => $this->rut]);
-            $this->db->query('DELETE FROM item_clasificacion WHERE contribuyente = :rut', [':rut' => $this->rut]); // borra: item
-            $this->db->query('DELETE FROM registro_compra WHERE receptor = :rut', [':rut' => $this->rut]);
-            $this->db->query('DELETE FROM boleta_honorario WHERE receptor = :rut', [':rut' => $this->rut]);
-            $this->db->query('DELETE FROM boleta_tercero WHERE emisor = :rut', [':rut' => $this->rut]);
+            $this->db->query('DELETE FROM contribuyente_dte WHERE contribuyente = :rut', $vars);
+            $this->db->query('DELETE FROM contribuyente_usuario WHERE contribuyente = :rut', $vars);
+            $this->db->query('DELETE FROM contribuyente_usuario_dte WHERE contribuyente = :rut', $vars);
+            $this->db->query('DELETE FROM contribuyente_usuario_sucursal WHERE contribuyente = :rut', $vars);
+            $this->db->query('DELETE FROM dte_boleta_consumo WHERE emisor = :rut', $vars);
+            $this->db->query('DELETE FROM dte_compra WHERE receptor = :rut', $vars);
+            $this->db->query('DELETE FROM dte_emitido WHERE emisor = :rut', $vars); // borra: dte_emitido_email, cobranza
+            $this->db->query('DELETE FROM dte_folio WHERE emisor = :rut', $vars); // borra: dte_caf
+            $this->db->query('DELETE FROM dte_guia WHERE emisor = :rut', $vars);
+            $this->db->query('DELETE FROM dte_recibido WHERE receptor = :rut', $vars);
+            $this->db->query('DELETE FROM dte_intercambio WHERE receptor = :rut', $vars);
+            $this->db->query('DELETE FROM dte_intercambio_recepcion WHERE recibe = :rut', $vars); // borra: dte_intercambio_recepcion_dte
+            $this->db->query('DELETE FROM dte_intercambio_recibo WHERE recibe = :rut', $vars); // borra: dte_intercambio_recibo_dte
+            $this->db->query('DELETE FROM dte_intercambio_resultado WHERE recibe = :rut', $vars); // borra: dte_intercambio_resultado_dte
+            $this->db->query('DELETE FROM dte_referencia WHERE emisor = :rut', $vars);
+            $this->db->query('DELETE FROM dte_tmp WHERE emisor = :rut', $vars); // borra: dte_tmp_email
+            $this->db->query('DELETE FROM dte_venta WHERE emisor = :rut', $vars);
+            $this->db->query('DELETE FROM item_clasificacion WHERE contribuyente = :rut', $vars); // borra: item
+            $this->db->query('DELETE FROM registro_compra WHERE receptor = :rut', $vars);
+            $this->db->query('DELETE FROM boleta_honorario WHERE receptor = :rut', $vars);
+            $this->db->query('DELETE FROM boleta_tercero WHERE emisor = :rut', $vars);
             // eliminar archivos asociados al contribuyente (carpeta: data/static/contribuyentes/RUT)
             // TODO
         }
@@ -505,21 +570,23 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega el nombre del contribuyente: nombre de fantasía si existe o razón social
-         * @version 2017-04-24
+     * Método que entrega el nombre del contribuyente. Entregará el nombre de
+     * fantasía si existe o la razón social del contribuyente.
      */
     public function getNombre()
     {
-        return $this->config_extra_nombre_fantasia ? $this->config_extra_nombre_fantasia : $this->razon_social;
+        return $this->config_extra_nombre_fantasia
+            ? $this->config_extra_nombre_fantasia
+            : $this->razon_social
+        ;
     }
 
     /**
-     * Método que envía un correo electrónico al contribuyente
-         * @version 2021-02-11
+     * Método que envía un correo electrónico al contribuyente.
      */
-    public function notificar($asunto, $mensaje, $para = null, $responder_a = null, $attach = null)
+    public function notificar(string $asunto, string $mensaje, $para = null, $responder_a = null, $attach = null): bool
     {
-        $email = new \sowerphp\core\Network_Email();
+        $email = new Network_Email();
         $email->to($para ? $para : $this->getUsuariosEmail());
         if ($responder_a) {
             $email->replyTo($responder_a);
@@ -527,37 +594,40 @@ class Model_Contribuyente extends \Model_App
         if ($attach) {
             $email->attach($attach);
         }
-        $email->subject('['.\sowerphp\core\Configure::read('page.body.title').'] '.$this->rut.'-'.$this->dv.': '.$asunto);
+        $app = Configure::read('page.body.title');
+        $subject = __('[%(app)s] %(rut)s: %(asunto)s', [
+            'app' => $app,
+            'rut' => $this->rut . '-' . $this->dv,
+            'asunto' => $asunto,
+        ]);
+        $email->subject($subject);
         $msg = $mensaje."\n\n";
         $msg .= 'PD: este correo es generado de forma automática, por favor no contestar.'."\n\n";
-        $msg .= '-- '."\n".\sowerphp\core\Configure::read('page.body.title');
+        $msg .= '-- ' . "\n" . $app;
         return $email->send($msg) === true ? true : false;
     }
 
     /**
-     * Método que entrega el RUT formateado del contribuyente
-         * @version 2015-09-20
+     * Método que entrega el RUT formateado del contribuyente.
      */
-    public function getRUT()
+    public function getRUT(): string
     {
-        return num($this->rut).'-'.$this->dv;
+        return num($this->rut) . '-' . $this->dv;
     }
 
     /**
      * Método que entrega la glosa del ambiente en el que se encuentra el
-     * contribuyente
-         * @version 2015-09-23
+     * contribuyente.
      */
-    public function getAmbiente()
+    public function getAmbiente(): string
     {
         return $this->enCertificacion() ? 'certificación' : 'producción';
     }
 
     /**
-     * Método que entrega las actividades económicas del contribuyente
-         * @version 2016-08-08
+     * Método que entrega las actividades económicas del contribuyente.
      */
-    public function getListActividades()
+    public function getListActividades(): array
     {
         $actividades = [$this->actividad_economica];
         if ($this->config_extra_otras_actividades) {
@@ -581,43 +651,51 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el listado de giros del contribuyente por cada
-     * actividad económmica que tiene registrada
-         * @version 2016-08-08
+     * actividad económmica que tiene registrada.
      */
     public function getListGiros()
     {
         $giros = [$this->actividad_economica => $this->giro];
         if ($this->config_extra_otras_actividades) {
             foreach ($this->config_extra_otras_actividades as $a) {
-                $giros[is_object($a) ? $a->actividad : $a] = is_object($a) ? ($a->giro ? $a->giro:$this->giro) : $this->giro;
+                $key = is_object($a) ? $a->actividad : $a;
+                $giros[$key] = is_object($a)
+                    ? ($a->giro ? $a->giro : $this->giro)
+                    : $this->giro
+                ;
             }
         }
         return $giros;
     }
 
     /**
-     * Método que asigna los usuarios autorizados a operar con el contribuyente
-     * @param usuarios Arreglo con índice nombre de usuario y valores un arreglo con los permisos a asignar
-         * @version 2017-06-11
+     * Método que asigna los usuarios autorizados a operar con el contribuyente.
+     * @param array $usuarios Arreglo con índice nombre de usuario y valores un arreglo con los permisos a asignar.
      */
-    public function setUsuarios(array $usuarios) {
+    public function setUsuarios(array $usuarios): bool
+    {
         $this->db->beginTransaction();
-        $this->db->query(
-            'DELETE FROM contribuyente_usuario WHERE contribuyente = :rut',
-            [':rut' => $this->rut]
-        );
+        $this->db->query('
+            DELETE
+            FROM contribuyente_usuario
+            WHERE contribuyente = :rut
+        ', [':rut' => $this->rut]);
         foreach ($usuarios as $usuario => $permisos) {
             if (!$permisos) {
                 continue;
             }
-            $Usuario = new \sowerphp\app\Sistema\Usuarios\Model_Usuario($usuario);
+            $Usuario = new Model_Usuario($usuario);
             if (!$Usuario->exists()) {
                 $this->db->rollback();
                 throw new \Exception('Usuario '.$usuario.' no existe');
                 return false;
             }
             foreach ($permisos as $permiso) {
-                $ContribuyenteUsuario = new Model_ContribuyenteUsuario($this->rut, $Usuario->id, $permiso);
+                $ContribuyenteUsuario = new Model_ContribuyenteUsuario(
+                    $this->rut,
+                    $Usuario->id,
+                    $permiso
+                );
                 $ContribuyenteUsuario->save();
             }
         }
@@ -626,12 +704,11 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega los correos electrónicos asociados a cierto permiso
-     * Por defecto se entregan los correos de los usuarios administradores
-     * @return Arreglo con los correos electrónicos solicitados
-         * @version 2018-12-09
+     * Método que entrega los correos electrónicos asociados a cierto permiso.
+     * Por defecto se entregan los correos de los usuarios administradores.
+     * @return array Arreglo con los correos electrónicos solicitados.
      */
-    public function getUsuariosEmail($permiso = 'admin')
+    public function getUsuariosEmail(string $permiso = 'admin'): array
     {
         $emails = $this->db->getCol('
             (
@@ -643,16 +720,18 @@ class Model_Contribuyente extends \Model_App
                 FROM contribuyente_usuario AS c JOIN usuario AS u ON u.id = c.usuario
                 WHERE c.contribuyente = :rut AND c.permiso = :permiso AND u.activo = true
             )
-        ', [':rut' => $this->rut, ':permiso' => $permiso]);
+        ', [
+            ':rut' => $this->rut,
+            ':permiso' => $permiso,
+        ]);
         return $emails;
     }
 
     /**
-     * Método que entrega el listado de usuarios autorizados y sus permisos
-     * @return array Tabla con los usuarios y sus permisos
-         * @version 2021-10-14
+     * Método que entrega el listado de usuarios autorizados y sus permisos.
+     * @return array Tabla con los usuarios y sus permisos.
      */
-    public function getUsuarios()
+    public function getUsuarios(): array
     {
         $usuarios = $this->db->getAssociativeArray('
             SELECT u.usuario, c.permiso
@@ -669,11 +748,10 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega el listado de usuarios para los campos select
-     * @return Listado de usuarios
-         * @version 2017-10-20
+     * Método que entrega el listado de usuarios para los campos select.
+     * @return array Listado de usuarios.
      */
-    public function getListUsuarios()
+    public function getListUsuarios(): array
     {
         return $this->db->getTable('
             (
@@ -691,13 +769,12 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que determina si el usuario está o no autorizado a trabajar con el
-     * contribuyente
-     * @param Usuario Objeto \sowerphp\app\Sistema\Usuarios\Model_Usuario con el usuario a verificar
-     * @param permisos Permisos que se desean verificar que tenga el usuario
-     * @return =true si está autorizado
-         * @version 2018-02-16
+     * contribuyente.
+     * @param Model_Usuario $Usuario con el usuario a verificar.
+     * @param string|array $permisos Permisos que se desean verificar que tenga el usuario
+     * @return bool =true si está autorizado.
      */
-    public function usuarioAutorizado($Usuario, $permisos = [])
+    public function usuarioAutorizado($Usuario, $permisos = []): bool
     {
         // si es el usuario que registró la empresa se le autoriza
         if ($this->usuario == $Usuario->id) {
@@ -709,7 +786,7 @@ class Model_Contribuyente extends \Model_App
         }
         // si la aplicación solo tiene configurada una empresa se verifican los
         // permisos normales (basados en grupos) de sowerphp
-        if (\sowerphp\core\Configure::read('dte.empresa')) {
+        if (Configure::read('dte.empresa')) {
             foreach ($permisos as $permiso) {
                 if ($Usuario->auth($permiso)) {
                     return true;
@@ -726,7 +803,10 @@ class Model_Contribuyente extends \Model_App
             SELECT permiso
             FROM contribuyente_usuario
             WHERE contribuyente = :rut AND usuario = :usuario
-        ', [':rut' => $this->rut, ':usuario' => $Usuario->id]);
+        ', [
+            ':rut' => $this->rut,
+            ':usuario' => $Usuario->id,
+        ]);
         if (!$usuario_permisos) {
             return false;
         }
@@ -742,7 +822,8 @@ class Model_Contribuyente extends \Model_App
                 }
             }
         }
-        // se está pidiendo un permiso por tipo de permiso (agrupación, se verifica si pertenece)
+        // se está pidiendo un permiso por tipo de permiso
+        // (agrupación, se verifica si pertenece)
         else {
             // si no se está pidiendo ningún permiso en particular, solo se
             // quiere saber si el usuario tiene acceso a la empresa
@@ -751,7 +832,8 @@ class Model_Contribuyente extends \Model_App
                     return true;
                 }
             }
-            // si se está pidiendo algún permiso en particular se verifica si existe
+            // si se está pidiendo algún permiso en particular,
+            // se verifica si existe
             else {
                 foreach ($permisos as $p) {
                     if (in_array($p, $usuario_permisos)) {
@@ -765,24 +847,24 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que asigna los permisos al usuario
-     * @param Usuario Objeto \sowerphp\app\Sistema\Usuarios\Model_Usuario al que se asignarán permisos
-     * @return =true si está autorizado
-         * @version 2024-01-01
+     * Método que asigna los permisos al usuario.
+     * @param Model_Usuario $Usuario Usuario al que se asignarán permisos.
      */
     public function setPermisos(&$Usuario)
     {
         $usuario_grupos_reales = $Usuario->groups(true);
-        // si el usuario es el administrador de la empresa se asignan sus propios grupos como los que tiene acceso
+        // si el usuario es el administrador de la empresa se asignan sus
+        // propios grupos como los que tiene acceso
         if ($this->usuario == $Usuario->id) {
             $usuario_grupos_sesion = $usuario_grupos_reales;
         }
-        // si el usuario es de soporte se colocan los permisos completos del usuario principal de la empresa
+        // si el usuario es de soporte se colocan los permisos completos del
+        // usuario principal de la empresa
         else if ($this->config_app_soporte && in_array('soporte', $usuario_grupos_reales)) {
             $usuario_grupos_sesion = $this->getUsuario()->groups(true);
         }
-        // si es un usuario autorizado, entonces se copian los permisos asignados de los disponibles en el
-        // administrador
+        // si es un usuario autorizado, entonces se copian los permisos
+        // asignados de los disponibles en el administrador
         else {
             $usuario_grupos_sesion = [];
             // siempre asignar el grupo 'usuarios' para mantener permisos básicos
@@ -792,32 +874,54 @@ class Model_Contribuyente extends \Model_App
                 SELECT permiso
                 FROM contribuyente_usuario
                 WHERE contribuyente = :rut AND usuario = :usuario
-            ', [':rut' => $this->rut, ':usuario' => $Usuario->id]);
+            ', [
+                ':rut' => $this->rut,
+                ':usuario' => $Usuario->id,
+            ]);
             // mapa de permisos definidos por la configuración y la empresa
-            $permisos = \sowerphp\core\Configure::read('empresa.permisos');
-            // asignar los grupos del sistema a los que se podría tener acceso por el permisos de la empresa
+            $permisos = Configure::read('empresa.permisos');
+            // asignar los grupos del sistema a los que se podría tener acceso
+            // por el permisos de la empresa
             $admin_grupos = $this->getUsuario()->getGroups();
             foreach ($usuario_permisos as $p) {
                 foreach ($permisos[$p]['grupos'] as $g) {
-                    if (!in_array($g, $usuario_grupos_sesion) && in_array($g, $admin_grupos)) {
+                    if (
+                        !in_array($g, $usuario_grupos_sesion)
+                        && in_array($g, $admin_grupos)
+                    ) {
                         $usuario_grupos_sesion[] = $g;
                     }
                 }
             }
         }
         // buscar permisos y grupos del usuario principal administrador
-        $usuario_auths_sesion = $this->getUsuario()->getAuths($usuario_grupos_sesion);
+        $usuario_auths_sesion = $this->getUsuario()
+            ->getAuths($usuario_grupos_sesion)
+        ;
         // corregir permisos de soporte
         // si el contribuyente tiene activado soporte: los del usuario
         // si el contribuyente no tiene soporte activo: se añaden los de soporte/backoffice
         if (in_array('soporte', $usuario_grupos_reales)) {
-            $grupos_soporte = $this->config_app_soporte ? $usuario_grupos_reales : [
-                'sysadmin', 'appadmin', 'passwd', 'soporte', 'mantenedores'
-            ];
+            $grupos_soporte = $this->config_app_soporte
+                ? $usuario_grupos_reales
+                : [
+                    'sysadmin',
+                    'appadmin',
+                    'passwd',
+                    'soporte',
+                    'mantenedores',
+                ]
+            ;
             foreach ($grupos_soporte as $grupo) {
-                if (in_array($grupo, $usuario_grupos_reales) && !in_array($grupo, $usuario_grupos_sesion)) {
+                if (
+                    in_array($grupo, $usuario_grupos_reales)
+                    && !in_array($grupo, $usuario_grupos_sesion)
+                ) {
                     $grupo_auths = $Usuario->getAuths([$grupo]);
-                    $usuario_auths_sesion = array_merge($usuario_auths_sesion, $grupo_auths);
+                    $usuario_auths_sesion = array_merge(
+                        $usuario_auths_sesion,
+                        $grupo_auths
+                    );
                     $usuario_grupos_sesion[] = $grupo;
                 }
             }
@@ -828,20 +932,20 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que determina si el usuario está o no autorizado a asignar manualmente el Folio de un DTE
-     * @param Usuario Objeto \sowerphp\app\Sistema\Usuarios\Model_Usuario con el usuario a verificar
-     * @return =true si está autorizado a cambiar el folio
-         * @version 2017-11-07
+     * Método que determina si el usuario está o no autorizado a asignar
+     * manualmente el Folio de un DTE.
+     * @param Model_Usuario $Usuario Usuario con el usuario a verificar.
+     * @return bool =true si está autorizado a cambiar el folio.
      */
-    public function puedeAsignarFolio($Usuario)
+    public function puedeAsignarFolio($Usuario): bool
     {
         if (!$this->config_emision_asignar_folio) {
             return false;
         }
-        if ($this->config_emision_asignar_folio==1) {
+        if ($this->config_emision_asignar_folio == 1) {
             return $this->usuarioAutorizado($Usuario, 'admin');
         }
-        if ($this->config_emision_asignar_folio==2) {
+        if ($this->config_emision_asignar_folio == 2) {
             return $this->usuarioAutorizado($Usuario, ['admin', 'dte']);
         }
         return false;
@@ -849,11 +953,11 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega los documentos que el contribuyente tiene autorizados
-     * a emitir en la aplicación
-     * @return Listado de documentos autorizados
-         * @version 2020-08-22
+     * a emitir en la aplicación.
+     * @param bool|object $onlyPK
+     * @return array Listado de documentos autorizados.
      */
-    public function getDocumentosAutorizados($onlyPK = false, $User = null)
+    public function getDocumentosAutorizados($onlyPK = false, $User = null): array
     {
         // invertir parámetros recibidos si User es objeto (se pasó el objeto del usuario)
         if (is_object($onlyPK)) {
@@ -864,20 +968,42 @@ class Model_Contribuyente extends \Model_App
         // buscar documentos
         if ($onlyPK) {
             $documentos = $this->db->getCol('
-                SELECT t.codigo
-                FROM dte_tipo AS t, contribuyente_dte AS c
-                WHERE t.codigo = c.dte AND c.contribuyente = :rut AND c.activo = :activo
-                ORDER BY t.codigo
-            ', [':rut' => $this->rut, ':activo' => 1]);
+                SELECT
+                    t.codigo
+                FROM
+                    contribuyente_dte AS c
+                    JOIN dte_tipo AS t ON
+                        t.codigo = c.dte
+                WHERE
+                    c.contribuyente = :rut
+                    AND c.activo = :activo
+                ORDER BY
+                    t.codigo
+            ', [
+                ':rut' => $this->rut,
+                ':activo' => 1,
+            ]);
         } else {
             $documentos = $this->db->getTable('
-                SELECT t.codigo, t.tipo
-                FROM dte_tipo AS t, contribuyente_dte AS c
-                WHERE t.codigo = c.dte AND c.contribuyente = :rut AND c.activo = :activo
-                ORDER BY t.codigo
-            ', [':rut' => $this->rut, ':activo' => 1]);
+                SELECT
+                    t.codigo,
+                    t.tipo
+                FROM
+                    contribuyente_dte AS c
+                    JOIN dte_tipo AS t ON
+                        t.codigo = c.dte
+                WHERE
+                    c.contribuyente = :rut
+                    AND c.activo = :activo
+                ORDER BY
+                    t.codigo
+            ', [
+                ':rut' => $this->rut,
+                ':activo' => 1,
+            ]);
         }
-        // entregar todos los documentos si no se pidió filtrar por usuario o el usuario es administrador o el usuario es de soporte
+        // entregar todos los documentos si no se pidió filtrar por usuario
+        // o el usuario es administrador o el usuario es de soporte
         if (!$User || $User->id == $this->usuario || $User->inGroup(['soporte'])) {
             return $documentos;
         }
@@ -899,16 +1025,21 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega los documentos que el contribuyente tiene autorizados
-     * a emitir en la aplicación por cada usuario autorizado que tiene
-     * @return Listado de documentos autorizados por usuario
-         * @version 2017-06-25
+     * a emitir en la aplicación por cada usuario autorizado que tiene.
+     * @return array Listado de documentos autorizados por usuario.
      */
-    public function getDocumentosAutorizadosPorUsuario()
+    public function getDocumentosAutorizadosPorUsuario(): array
     {
         $autorizados = $this->db->getAssociativeArray('
-            SELECT u.usuario, d.dte
-            FROM usuario AS u JOIN contribuyente_usuario_dte AS d ON d.usuario = u.id
-            WHERE d.contribuyente = :contribuyente
+            SELECT
+                u.usuario,
+                d.dte
+            FROM
+                usuario AS u
+                JOIN contribuyente_usuario_dte AS d ON
+                    d.usuario = u.id
+            WHERE
+                d.contribuyente = :contribuyente
         ', [':contribuyente' => $this->rut]);
         foreach ($autorizados as &$a) {
             if (!isset($a[0])) {
@@ -919,27 +1050,34 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que asigna los documentos autorizados por cada usuario del contribuyente
-     * @param usuarios Arreglo con índice nombre de usuario y valores un arreglo con los documentos
-         * @version 2017-06-25
+     * Método que asigna los documentos autorizados por cada usuario del
+     * contribuyente.
+     * @param usuarios Arreglo asociativo (usuario) con los los documentos.
      */
-    public function setDocumentosAutorizadosPorUsuario(array $usuarios) {
+    public function setDocumentosAutorizadosPorUsuario(array $usuarios)
+    {
         $this->db->beginTransaction();
-        $this->db->query(
-            'DELETE FROM contribuyente_usuario_dte WHERE contribuyente = :rut',
-            [':rut' => $this->rut]
-        );
+        $this->db->query('
+            DELETE
+            FROM contribuyente_usuario_dte
+            WHERE contribuyente = :rut
+        ', [':rut' => $this->rut]);
         foreach ($usuarios as $usuario => $documentos) {
-            if (!$documentos)
+            if (!$documentos) {
                 continue;
-            $Usuario = new \sowerphp\app\Sistema\Usuarios\Model_Usuario($usuario);
+            }
+            $Usuario = new Model_Usuario($usuario);
             if (!$Usuario->exists()) {
                 $this->db->rollback();
-                throw new \Exception('Usuario '.$usuario.' no existe');
+                throw new \Exception('Usuario '.$usuario.' no existe.');
                 return false;
             }
             foreach ($documentos as $dte) {
-                $ContribuyenteUsuarioDte = new Model_ContribuyenteUsuarioDte($this->rut, $Usuario->id, $dte);
+                $ContribuyenteUsuarioDte = new Model_ContribuyenteUsuarioDte(
+                    $this->rut,
+                    $Usuario->id,
+                    $dte
+                );
                 $ContribuyenteUsuarioDte->save();
             }
         }
@@ -949,19 +1087,21 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que determina si el documento puede o no ser emitido por el
-     * contribuyente a través de la aplicación
-     * @param dte Código del DTE que se quiere saber si está autorizado
-     * @param Usuario Permite determinar el permiso para un usuario autorizado
-     * @return =true si está autorizado
-         * @version 2018-05-19
+     * contribuyente a través de la aplicación.
+     * @param int $dte Código del DTE que se quiere saber si está autorizado.
+     * @param Model_Usuario $Usuario Permite determinar el permiso para un usuario autorizado.
+     * @return bool =true si está autorizado.
      */
-    public function documentoAutorizado($dte, $Usuario = null)
+    public function documentoAutorizado($dte, $Usuario = null): bool
     {
         $dte_autorizado = (bool)$this->db->getValue('
             SELECT COUNT(*)
             FROM contribuyente_dte
-            WHERE contribuyente = :rut AND dte = :dte AND activo = :activo
-        ', [':rut' => $this->rut, ':dte' => $dte, ':activo' => 1]);
+            WHERE contribuyente = :rut AND dte = :dte AND activo = true
+        ', [
+            ':rut' => $this->rut,
+            ':dte' => $dte,
+        ]);
         if (!$dte_autorizado) {
             return false;
         }
@@ -969,14 +1109,17 @@ class Model_Contribuyente extends \Model_App
             if ($Usuario->id == $this->usuario || $Usuario->inGroup(['soporte'])) {
                 return true;
             }
-            $dtes = $this->db->getCol(
-                'SELECT dte FROM contribuyente_usuario_dte WHERE contribuyente = :contribuyente AND usuario = :usuario',
-                [':contribuyente' => $this->rut, ':usuario' => $Usuario->id]
-            );
-            if (!$dtes) {
-                return false; // si nada está autorizado se rechaza el DTE (=true si nada está autorizado se acepta cualquier DTE)
-            }
-            if (!in_array($dte, $dtes)) {
+            $dtes = $this->db->getCol('
+                SELECT dte
+                FROM contribuyente_usuario_dte
+                WHERE contribuyente = :contribuyente AND usuario = :usuario
+            ', [
+                ':contribuyente' => $this->rut,
+                ':usuario' => $Usuario->id,
+            ]);
+            // Si no hay documentos autorizados o el solicitado no está
+            // autorizado se rechaza.
+            if (!$dtes || !in_array($dte, $dtes)) {
                 return false;
             }
         }
@@ -984,10 +1127,9 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega el listado de folios que el Contribuyente dispone
-         * @version 2023-01-05
+     * Método que entrega el listado de folios que el Contribuyente dispone.
      */
-    public function getFolios()
+    public function getFolios(): array
     {
         $folios = $this->db->getTable('
             SELECT
@@ -999,13 +1141,22 @@ class Model_Contribuyente extends \Model_App
                 c.xml
             FROM
                 dte_folio AS f
-                JOIN dte_tipo AS t ON t.codigo = f.dte
-                LEFT JOIN dte_caf AS c ON c.emisor = f.emisor AND c.dte = f.dte AND c.certificacion = f.certificacion AND f.siguiente BETWEEN c.desde AND c.hasta
+                JOIN dte_tipo AS t ON
+                    t.codigo = f.dte
+                LEFT JOIN dte_caf AS c ON
+                    c.emisor = f.emisor
+                    AND c.dte = f.dte
+                    AND c.certificacion = f.certificacion
+                    AND f.siguiente BETWEEN c.desde AND c.hasta
             WHERE
                 f.emisor = :rut
                 AND f.certificacion = :certificacion
-            ORDER BY f.dte
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion()]);
+            ORDER BY
+                f.dte
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+        ]);
         foreach ($folios as &$f) {
             $f['fecha_vencimiento'] = $f['meses_autorizacion'] = $f['vigente'] = null;
             if ($f['xml']) {
@@ -1027,20 +1178,30 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega los datos del folio del documento solicitado
-     * @param dte Tipo de documento para el cual se quiere su folio
-         * @version 2021-08-16
+     * Método que entrega los datos del folio del documento solicitado.
+     * @param int $dte Tipo de documento para el cual se quiere su folio.
      */
-    public function getFolio($dte, $folio_manual = 0)
+    public function getFolio(int $dte, int $folio_manual = 0)
     {
         if (!$this->db->beginTransaction(true)) {
             return false;
         }
-        $DteFolio = new \website\Dte\Admin\Model_DteFolio($this->rut, $dte, $this->enCertificacion());
+        $DteFolio = new Model_DteFolio(
+            $this->rut,
+            $dte,
+            $this->enCertificacion()
+        );
         if (!$DteFolio->disponibles && $this->config_sii_timbraje_automatico) {
             try {
-                $DteFolio->timbrar($DteFolio->alerta*$this->config_sii_timbraje_multiplicador);
-                $DteFolio = new \website\Dte\Admin\Model_DteFolio($this->rut, $dte, $this->enCertificacion()); // actualiza info del mantenedor de folios
+                // Solicitar timbraje al SII.
+                $n_folios_solicitados = $DteFolio->alerta * $this->config_sii_timbraje_multiplicador;
+                $DteFolio->timbrar($n_folios_solicitados);
+                // Se vuelve a instanciar actualizar info del mantenedor de folios.
+                $DteFolio = new Model_DteFolio(
+                    $this->rut,
+                    $dte,
+                    $this->enCertificacion()
+                );
             } catch (\Exception $e) {
                 // fallar silenciosamente
             }
@@ -1061,7 +1222,7 @@ class Model_Contribuyente extends \Model_App
                     $this->db->rollback();
                     return false;
                 }
-            } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+            } catch (DatabaseException $e) {
                 $this->db->rollback();
                 return false;
             }
@@ -1083,44 +1244,76 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega una tabla con los datos de las firmas electrónicas de
-     * los usuarios que están autorizados a trabajar con el contribuyente
-     * @param dte Tipo de documento para el cual se quiere su folio
-         * @version 2018-12-21
+     * los usuarios que están autorizados a trabajar con el contribuyente.
      */
-    public function getFirmas()
+    public function getFirmas(): array
     {
         return $this->db->getTable('
             (
-                SELECT f.run, f.nombre, f.email, f.desde, f.hasta, f.emisor, u.usuario, true AS administrador
-                FROM firma_electronica AS f, usuario AS u, contribuyente AS c
-                WHERE f.usuario = u.id AND f.usuario = c.usuario AND c.rut = :rut
+                SELECT
+                    f.run,
+                    f.nombre,
+                    f.email,
+                    f.desde,
+                    f.hasta,
+                    f.emisor,
+                    u.usuario,
+                    true AS administrador
+                FROM
+                    contribuyente AS c
+                    JOIN usuario AS u ON u.id = c.usuario
+                    JOIN firma_electronica AS f ON f.usuario = u.id
+                WHERE
+                    c.rut = :rut
             ) UNION (
-                SELECT DISTINCT f.run, f.nombre, f.email, f.desde, f.hasta, f.emisor, u.usuario, false AS administrador
-                FROM firma_electronica AS f, usuario AS u, contribuyente_usuario AS c
-                WHERE f.usuario = u.id AND f.usuario = c.usuario AND c.contribuyente = :rut AND u.id NOT IN (
-                    SELECT c.usuario FROM contribuyente AS c WHERE c.rut = :rut
-                )
+                SELECT DISTINCT
+                    f.run,
+                    f.nombre,
+                    f.email,
+                    f.desde,
+                    f.hasta,
+                    f.emisor,
+                    u.usuario,
+                    false AS administrador
+                FROM
+                    contribuyente AS c
+                    JOIN contribuyente_usuario AS cu ON cu.contribuyente = c.rut
+                    JOIN usuario AS u ON u.id = cu.usuario
+                    JOIN firma_electronica AS f ON f.usuario = u.id
+                WHERE
+                    c.rut = :rut
+                    AND u.id NOT IN (
+                        SELECT c.usuario
+                        FROM contribuyente AS c
+                        WHERE c.rut = :rut
+                    )
             )
-            ORDER BY administrador DESC, nombre ASC
+            ORDER BY
+                administrador DESC,
+                nombre ASC
         ', [':rut' => $this->rut]);
     }
 
     /**
-     * Método que entrega el objeto de la firma electronica asociada al usuario
-     * que la está solicitando o bien aquella firma del usuario que es el
-     * administrador del contribuyente.
-     * @param user ID del usuario que desea obtener la firma
-     * @return \sasco\LibreDTE\FirmaElectronica
-         * @version 2023-08-25
+     * Método que entrega el objeto de la firma electronica asociada al
+     * usuario que la está solicitando o bien aquella firma del usuario
+     * que es el administrador del contribuyente.
+     * @param int $user ID del usuario que desea obtener la firma.
+     * @return \sasco\LibreDTE\FirmaElectronica.
      */
-    public function getFirma($user_id = null)
+    public function getFirma(?int $user_id = null)
     {
         if (!isset($this->firmas[(int)$user_id])) {
             // buscar firma del usuario administrador de la empresa
             $datos = $this->db->getRow('
-                SELECT f.archivo, f.contrasenia
-                FROM firma_electronica AS f, contribuyente AS c
-                WHERE f.usuario = c.usuario AND c.rut = :rut
+                SELECT
+                    f.archivo,
+                    f.contrasenia
+                FROM
+                    contribuyente AS c
+                    JOIN firma_electronica AS f ON f.usuario = c.usuario
+                WHERE
+                    c.rut = :rut
             ', [':rut' => $this->rut]);
             // buscar firma del usuario que está haciendo la solicitud
             if (empty($datos) && $user_id && $user_id != $this->usuario) {
@@ -1159,9 +1352,10 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que crea los filtros para ser usados en las consultas de documentos temporales.
+     * Método que crea los filtros para ser usados en las consultas de
+     * documentos temporales.
      */
-    private function crearFiltrosDocumentosTemporales($filtros)
+    private function crearFiltrosDocumentosTemporales(array $filtros): array
     {
         $where = ['d.emisor = :rut'];
         $vars = [':rut' => $this->rut];
@@ -1187,7 +1381,7 @@ class Model_Contribuyente extends \Model_App
                 throw new \Exception('Folio del DTE temporal debe ser en formato DTE-CODIGO_7.');
             }
             list($dte, $codigo) = $aux;
-            $where[] = 'd.dte = :dte AND SUBSTR(d.codigo,1,7) = :codigo';
+            $where[] = 'd.dte = :dte AND SUBSTR(d.codigo, 1, 7) = :codigo';
             $vars[':dte'] = (int)$dte;
             $vars[':codigo'] = strtolower($codigo);
         }
@@ -1215,7 +1409,10 @@ class Model_Contribuyente extends \Model_App
             if (!is_numeric($filtros['receptor'])) {
                 // si tiene guión se asume RUT con DV
                 if (strpos($filtros['receptor'], '-')) {
-                    $filtros['receptor'] = explode('-', str_replace('.', '', $filtros['receptor']))[0];
+                    $filtros['receptor'] = explode(
+                        '-',
+                        str_replace('.', '', $filtros['receptor'])
+                    )[0];
                 }
                 // si es otra cosa (otro string) se asume razón social
                 else {
@@ -1227,7 +1424,7 @@ class Model_Contribuyente extends \Model_App
             if (!empty($filtros['receptor'])) {
                 if ($filtros['receptor'][0] == '!') {
                     $where[] = 'd.receptor != :receptor';
-                    $vars[':receptor'] = substr($filtros['receptor'],1);
+                    $vars[':receptor'] = substr($filtros['receptor'], 1);
                 }
                 else {
                     $where[] = 'd.receptor = :receptor';
@@ -1276,14 +1473,14 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega el total de documentos temporales por el contribuyente
-         * @version 2021-10-12
+     * Método que entrega el total de documentos temporales por el contribuyente.
      */
-    public function countDocumentosTemporales($filtros = [])
+    public function countDocumentosTemporales(array $filtros = []): int
     {
         list($where, $vars) = $this->crearFiltrosDocumentosTemporales($filtros);
         return (int)$this->db->getValue('
-            SELECT COUNT(*)
+            SELECT
+                COUNT(*)
             FROM
                 dte_tmp AS d
                 JOIN dte_tipo AS t ON d.dte = t.codigo
@@ -1297,7 +1494,7 @@ class Model_Contribuyente extends \Model_App
     /**
      * Método que entrega el listado de documentos temporales por el contribuyente.
      */
-    public function getDocumentosTemporales($filtros = [])
+    public function getDocumentosTemporales(array $filtros = []): array
     {
         list($where, $vars) = $this->crearFiltrosDocumentosTemporales($filtros);
         // armar consulta interna
@@ -1308,11 +1505,10 @@ class Model_Contribuyente extends \Model_App
                 d.codigo,
                 (d.dte || \'-\' || UPPER(SUBSTR(d.codigo,1,7))) AS folio,
                 d.receptor,
-                CASE
-                    WHEN d.receptor IN (55555555, 66666666) THEN
-                        d.datos::JSONB->\'Encabezado\'->\'Receptor\'->>\'RznSocRecep\'
-                    ELSE
-                        r.razon_social
+                CASE WHEN d.receptor IN (55555555, 66666666) THEN
+                    d.datos::JSONB->\'Encabezado\'->\'Receptor\'->>\'RznSocRecep\'
+                ELSE
+                    r.razon_social
                 END AS razon_social,
                 d.fecha,
                 d.total,
@@ -1328,19 +1524,30 @@ class Model_Contribuyente extends \Model_App
         ';
         // armar límite consulta
         if (isset($filtros['limit'])) {
-            $query = $this->db->setLimit($query, $filtros['limit'], !empty($filtros['offset']) ? $filtros['offset'] : 0);
+            $query = $this->db->setLimit(
+                $query,
+                $filtros['limit'],
+                !empty($filtros['offset']) ? $filtros['offset'] : 0
+            );
         }
-        // entregar consulta TODO: abrir JSON para consultar razón social verdadera
+        // entregar consulta
         return $this->db->getTable($query, $vars);
     }
 
     /**
-     * Método que crea los filtros para ser usados en las consultas de documentos emitidos.
+     * Método que crea los filtros para ser usados en las consultas de
+     * documentos emitidos.
      */
-    private function crearFiltrosDocumentosEmitidos($filtros)
+    private function crearFiltrosDocumentosEmitidos(array $filtros): array
     {
-        $where = ['d.emisor = :rut', 'd.certificacion = :certificacion'];
-        $vars = [':rut' => $this->rut, ':certificacion' => $this->enCertificacion()];
+        $where = [
+            'd.emisor = :rut',
+            'd.certificacion = :certificacion',
+        ];
+        $vars = [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+        ];
         foreach (['folio', 'fecha', 'total'] as $c) {
             if (!empty($filtros[$c])) {
                 $where[] = 'd.' . $c . ' = :' . $c;
@@ -1388,7 +1595,10 @@ class Model_Contribuyente extends \Model_App
             if (!is_numeric($filtros['receptor'])) {
                 // si tiene guión se asume RUT con DV
                 if (strpos($filtros['receptor'], '-')) {
-                    $filtros['receptor'] = explode('-', str_replace('.', '', $filtros['receptor']))[0];
+                    $filtros['receptor'] = explode(
+                        '-',
+                        str_replace('.', '', $filtros['receptor'])
+                    )[0];
                 }
                 // si es otra cosa (otro string) se asume razón social
                 else {
@@ -1401,7 +1611,7 @@ class Model_Contribuyente extends \Model_App
                 $filtros['receptor'] = (string)$filtros['receptor'];
                 if ($filtros['receptor'][0] == '!') {
                     $where[] = 'd.receptor != :receptor';
-                    $vars[':receptor'] = substr($filtros['receptor'],1);
+                    $vars[':receptor'] = substr($filtros['receptor'], 1);
                 }
                 else {
                     $where[] = 'd.receptor = :receptor';
@@ -1427,8 +1637,8 @@ class Model_Contribuyente extends \Model_App
         }
         // otros filtros
         if (!empty($filtros['periodo'])) {
-            $filtros['fecha_desde'] = \sowerphp\general\Utility_Date::normalize($filtros['periodo'].'01');
-            $filtros['fecha_hasta'] = \sowerphp\general\Utility_Date::lastDayPeriod($filtros['periodo']);
+            $filtros['fecha_desde'] = Utility_Date::normalize($filtros['periodo'] . '01');
+            $filtros['fecha_hasta'] = Utility_Date::lastDayPeriod($filtros['periodo']);
         }
         if (!empty($filtros['fecha_desde'])) {
             $where[] = 'd.fecha >= :fecha_desde';
@@ -1487,16 +1697,21 @@ class Model_Contribuyente extends \Model_App
             }
             // solo documentos sin estado final (falta actualizar)
             else if ($filtros['estado_sii'] == 'no_final') {
+                $estados_no_final = implode('\', \'', Model_DteEmitidos::$revision_estados['no_final']);
                 $where[] = '(
                     (
                         d.revision_estado IS NOT NULL
                         AND (
                             (
                                 STRPOS(d.revision_estado, \' \') = 0
-                                AND d.revision_estado IN (\'' . implode('\', \'', Model_DteEmitidos::$revision_estados['no_final']) . '\')
+                                AND d.revision_estado IN (
+                                    \'' . $estados_no_final . '\'
+                                )
                             ) OR (
                                 STRPOS(d.revision_estado, \' \') != 0
-                                AND SUBSTR(d.revision_estado, 0, STRPOS(d.revision_estado, \' \')) IN (\'' . implode('\', \'', Model_DteEmitidos::$revision_estados['no_final']) . '\')
+                                AND SUBSTR(d.revision_estado, 0, STRPOS(d.revision_estado, \' \')) IN (
+                                    \'' . $estados_no_final . '\'
+                                )
                             )
                         )
                     )
@@ -1504,15 +1719,20 @@ class Model_Contribuyente extends \Model_App
             }
             // solo documentos con estado rechazado (eliminar y, quizás, volver a emitir)
             else if ($filtros['estado_sii'] == 'rechazados') {
+                $estados_rechazados = implode('\', \'', Model_DteEmitidos::$revision_estados['rechazados']);
                 $where[] = '(
                     d.revision_estado IS NOT NULL
                     AND (
                         (
                             STRPOS(d.revision_estado, \' \') = 0
-                            AND d.revision_estado IN (\'' . implode('\', \'', Model_DteEmitidos::$revision_estados['rechazados']) . '\')
+                            AND d.revision_estado IN (
+                                \'' . $estados_rechazados . '\'
+                            )
                         ) OR (
                             STRPOS(d.revision_estado, \' \') != 0
-                            AND SUBSTR(d.revision_estado, 0, STRPOS(d.revision_estado, \' \')) IN (\'' . implode('\', \'', Model_DteEmitidos::$revision_estados['rechazados']) . '\')
+                            AND SUBSTR(d.revision_estado, 0, STRPOS(d.revision_estado, \' \')) IN (
+                                \'' . $estados_rechazados . '\'
+                            )
                         )
                     )
                 )';
@@ -1523,8 +1743,9 @@ class Model_Contribuyente extends \Model_App
             $i = 1;
             foreach ($filtros['xml'] as $nodo => $valor) {
                 $nodo = preg_replace('/[^A-Za-z\/]/', '', $nodo);
-                $where[] = 'LOWER('.$this->db->xml('d.xml', '/EnvioDTE/SetDTE/DTE/*/'.$nodo, 'http://www.sii.cl/SiiDte').') LIKE :xml'.$i;
-                $vars[':xml'.$i] = '%'.strtolower($valor).'%';
+                $nodo_col = $this->db->xml('d.xml', '/EnvioDTE/SetDTE/DTE/*/'.$nodo, 'http://www.sii.cl/SiiDte');
+                $where[] = 'LOWER(' . $nodo_col . ') LIKE :xml' . $i;
+                $vars[':xml' . $i] = '%' . strtolower($valor) . '%';
                 $i++;
             }
         }
@@ -1533,49 +1754,69 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega el total de documentos emitidos por el contribuyente
-         * @version 2021-10-12
+     * Método que entrega el total de documentos emitidos por el contribuyente.
      */
-    public function countDocumentosEmitidos($filtros = [])
+    public function countDocumentosEmitidos(array $filtros = []): int
     {
         list($where, $vars) = $this->crearFiltrosDocumentosEmitidos($filtros);
         // contar documentos emitidos
-        return (integer)$this->db->getValue('
+        return (int)$this->db->getValue('
             SELECT
                 COUNT(*)
             FROM
                 dte_emitido AS d
-                JOIN dte_tipo AS t ON d.dte = t.codigo
-                JOIN contribuyente AS r ON d.receptor = r.rut
-                JOIN usuario AS u ON d.usuario = u.id
-                LEFT JOIN dte_intercambio_resultado_dte AS i ON i.emisor = d.emisor AND i.dte = d.dte AND i.folio = d.folio AND i.certificacion = d.certificacion
+                JOIN dte_tipo AS t ON
+                    d.dte = t.codigo
+                JOIN contribuyente AS r ON
+                    d.receptor = r.rut
+                JOIN usuario AS u ON
+                    d.usuario = u.id
+                LEFT JOIN dte_intercambio_resultado_dte AS i ON
+                    i.emisor = d.emisor
+                    AND i.dte = d.dte
+                    AND i.folio = d.folio
+                    AND i.certificacion = d.certificacion
             WHERE
                 '.implode(' AND ', $where).'
         ', $vars);
     }
 
     /**
-     * Método que entrega el listado de documentos emitidos por el contribuyente
-         * @version 2023-04-03
+     * Método que entrega el listado de documentos emitidos por el contribuyente.
      */
-    public function getDocumentosEmitidos($filtros = [])
+    public function getDocumentosEmitidos(array $filtros = []): array
     {
         list($where, $vars) = $this->crearFiltrosDocumentosEmitidos($filtros);
-        // armar consulta interna (no obtiene razón social verdadera en DTE exportación por que requiere acceder al XML)
+        // armar consulta interna (no obtiene razón social verdadera en DTE
+        // exportación por que requiere acceder al XML)
         $query = '
-            SELECT d.emisor, d.dte, d.folio, d.certificacion
+            SELECT
+                d.emisor,
+                d.dte,
+                d.folio,
+                d.certificacion
             FROM
                 dte_emitido AS d
-                JOIN contribuyente AS r ON d.receptor = r.rut
-                JOIN usuario AS u ON d.usuario = u.id
-            WHERE '.implode(' AND ', $where).'
-            ORDER BY d.fecha DESC, d.fecha_hora_creacion DESC
+                JOIN contribuyente AS r ON
+                    d.receptor = r.rut
+                JOIN usuario AS u ON
+                    d.usuario = u.id
+            WHERE
+                '.implode(' AND ', $where).'
+            ORDER BY
+                d.fecha DESC,
+                d.fecha_hora_creacion DESC
         ';
         // armar límite consulta
         if (isset($filtros['limit'])) {
-            $query = $this->db->setLimit($query, $filtros['limit'], !empty($filtros['offset']) ? $filtros['offset'] : 0);
+            $query = $this->db->setLimit(
+                $query,
+                $filtros['limit'],
+                !empty($filtros['offset']) ? $filtros['offset'] : 0
+            );
         }
-        // entregar consulta verdadera (esta si obtiene razón social verdadera en DTE exportación, pero solo para las filas del límite consultado)
+        // entregar consulta verdadera (esta si obtiene razón social verdadera
+        // en DTE exportación, pero solo para las filas del límite consultado)
         $razon_social_xpath = $this->db->xml(
             'd.xml',
             '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep',
@@ -1587,34 +1828,60 @@ class Model_Contribuyente extends \Model_App
                 t.tipo,
                 d.folio,
                 d.receptor,
-                CASE WHEN d.receptor NOT IN (55555555, 66666666) THEN r.razon_social ELSE '.$razon_social_xpath.' END AS razon_social,
+                CASE WHEN d.receptor NOT IN (55555555, 66666666) THEN
+                    r.razon_social
+                ELSE
+                    '.$razon_social_xpath.'
+                END AS razon_social,
                 d.fecha,
                 d.total,
                 d.revision_estado AS estado,
                 i.glosa AS intercambio,
                 d.sucursal_sii,
                 u.usuario,
-                CASE WHEN d.xml IS NOT NULL OR d.mipyme IS NOT NULL THEN true ELSE false END AS has_xml,
+                CASE WHEN d.xml IS NOT NULL OR d.mipyme IS NOT NULL THEN
+                    true
+                ELSE
+                    false
+                END AS has_xml,
                 d.track_id
             FROM
                 dte_emitido AS d
-                JOIN ('.$query.') AS e ON d.emisor = e.emisor AND e.dte = d.dte AND e.folio = d.folio AND e.certificacion = d.certificacion
-                JOIN dte_tipo AS t ON d.dte = t.codigo
-                JOIN contribuyente AS r ON d.receptor = r.rut
-                JOIN usuario AS u ON d.usuario = u.id
-                LEFT JOIN dte_intercambio_resultado_dte AS i ON i.emisor = d.emisor AND i.dte = d.dte AND i.folio = d.folio AND i.certificacion = d.certificacion
-            ORDER BY d.fecha DESC, d.fecha_hora_creacion DESC
+                JOIN ('.$query.') AS e ON
+                    d.emisor = e.emisor
+                    AND e.dte = d.dte
+                    AND e.folio = d.folio
+                    AND e.certificacion = d.certificacion
+                JOIN dte_tipo AS t ON
+                    d.dte = t.codigo
+                JOIN contribuyente AS r ON
+                    d.receptor = r.rut
+                JOIN usuario AS u ON
+                    d.usuario = u.id
+                LEFT JOIN dte_intercambio_resultado_dte AS i ON
+                    i.emisor = d.emisor
+                    AND i.dte = d.dte
+                    AND i.folio = d.folio
+                    AND i.certificacion = d.certificacion
+            ORDER BY
+                d.fecha DESC,
+                d.fecha_hora_creacion DESC
         ', $vars);
     }
 
     /**
-     * Método que crea el objeto para enviar correo
-     * @param email Email que se quiere obtener: intercambio o sii
-         * @version 2021-07-20
+     * Método que crea el objeto para enviar correo.
+     * @param email Email que se quiere obtener: intercambio o sii.
+     * @return Network_Email
      */
-    public function getEmailSender($email = 'intercambio', $debug = false)
+    public function getEmailSender(string $email = 'intercambio', bool $debug = false): Network_Email
     {
-        $Sender = \sowerphp\core\Trigger::run('dte_contribuyente_email_sender', $this, $email, ['debug' => $debug]);
+        $Sender = Trigger::run(
+            'dte_contribuyente_email_sender',
+            $this,
+            $email,
+            ['debug' => $debug]
+        );
         if ($Sender) {
             return $Sender;
         }
@@ -1622,13 +1889,17 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que crea el objeto para recibir correo
-     * @param email Email que se quiere obtener: intercambio o sii
-         * @version 2021-07-20
+     * Método que crea el objeto para recibir correo.
+     * @param email Email que se quiere obtener: intercambio o sii.
+     * @return Network_Email_Imap
      */
-    public function getEmailReceiver($email = 'intercambio')
+    public function getEmailReceiver(string $email = 'intercambio'): Network_Email_Imap
     {
-        $Receiver = \sowerphp\core\Trigger::run('dte_contribuyente_email_receiver', $this, $email);
+        $Receiver = Trigger::run(
+            'dte_contribuyente_email_receiver',
+            $this,
+            $email
+        );
         if ($Receiver) {
             return $Receiver;
         }
@@ -1636,12 +1907,11 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que crea el objeto email para enviar por SMTP y lo entrega
-     * @param email Email que se quiere obteber: intercambio o sii
-     * @return \sowerphp\core\Network_Email
-         * @version 2020-06-12
+     * Método que crea el objeto email para enviar por SMTP y lo entrega.
+     * @param email Email que se quiere obteber: intercambio o sii.
+     * @return Network_Email
      */
-    private function getEmailSenderSmtp($email = 'intercambio', $debug = false)
+    private function getEmailSenderSmtp(string $email = 'intercambio', bool $debug = false): Network_Email
     {
         $user = $this->{'config_email_'.$email.'_user'};
         $pass = $this->{'config_email_'.$email.'_pass'};
@@ -1657,23 +1927,25 @@ class Model_Contribuyente extends \Model_App
             throw new \Exception('El servidor SMTP del correo "'.$email.'" no está definido. Por favor, verificar configuración de la empresa.');
         }
         // crear objeto con configuración del correo
-        return new \sowerphp\core\Network_Email([
+        return new Network_Email([
             'type' => 'smtp-phpmailer',
             'host' => $host,
             'user' => $user,
             'pass' => $pass,
-            'from' => ['email' => $user, 'name' => str_replace(',', '', $this->getNombre())],
+            'from' => [
+                'email' => $user,
+                'name' => str_replace(',', '', $this->getNombre())
+            ],
             'debug' => $debug,
         ]);
     }
 
     /**
-     * Método que crea el objeto Imap para recibir correo por IMAP
-     * @param email Email que se quiere obteber: intercambio o sii
-     * @return \sowerphp\core\Network_Email_Imap
-         * @version 2020-06-12
+     * Método que crea el objeto Imap para recibir correo por IMAP.
+     * @param email Email que se quiere obteber: intercambio o sii.
+     * @return Network_Email_Imap
      */
-    private function getEmailReceiverImap($email = 'intercambio')
+    private function getEmailReceiverImap(string $email = 'intercambio'): Network_Email_Imap
     {
         $user = $this->{'config_email_'.$email.'_user'};
         $pass = $this->{'config_email_'.$email.'_pass'};
@@ -1689,7 +1961,7 @@ class Model_Contribuyente extends \Model_App
             throw new \Exception('El servidor IMAP del correo "'.$email.'" no está definido. Por favor, verificar configuración de la empresa.');
         }
         // crear objeto con configuración del correo
-        $Imap = new \sowerphp\core\Network_Email_Imap([
+        $Imap = new Network_Email_Imap([
             'mailbox' => $host,
             'user' => $user,
             'pass' => $pass,
@@ -1699,10 +1971,9 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que indica si el correo de recepción configurado en el
-     * contribuyente es el correo genérico de LibreDTE
-         * @version 2021-08-18
+     * contribuyente es el correo genérico de LibreDTE.
      */
-    public function isEmailReceiverLibredte($email = 'intercambio')
+    public function isEmailReceiverLibredte(string $email = 'intercambio'): bool
     {
         if (!in_array($email, ['intercambio', 'sii'])) {
             return false;
@@ -1710,7 +1981,10 @@ class Model_Contribuyente extends \Model_App
         // está configurado el correo de LibreDTE como "usable" en el contribuyente
         if (!empty($this->config_emails_libredte->disponible)) {
             $config = 'config_email_'.$email.'_receiver';
-            if (!empty($this->$config->type) && $this->$config->type == 'libredte') {
+            if (
+                !empty($this->$config->type)
+                && $this->$config->type == 'libredte'
+            ) {
                 return true;
             }
         }
@@ -1719,10 +1993,9 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega el resumen de las boletas por períodos
-         * @version 2020-05-21
+     * Método que entrega el resumen de las boletas por períodos.
      */
-    public function getResumenBoletasPeriodos()
+    public function getResumenBoletasPeriodos(): array
     {
         $periodo_col = $this->db->date('Ym', 'fecha');
         return $this->db->getTable('
@@ -1736,18 +2009,26 @@ class Model_Contribuyente extends \Model_App
                 SUM(iva) AS iva,
                 SUM(total) AS total,
                 COUNT(xml) AS xml
-            FROM dte_emitido
-            WHERE emisor = :rut AND certificacion = :certificacion AND dte IN (39, 41)
-            GROUP BY '.$periodo_col.'
-            ORDER BY '.$periodo_col.' DESC
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion()]);
+            FROM
+                dte_emitido
+            WHERE
+                emisor = :rut
+                AND certificacion = :certificacion
+                AND dte IN (39, 41)
+            GROUP BY
+                '.$periodo_col.'
+            ORDER BY
+                '.$periodo_col.' DESC
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+        ]);
     }
 
     /**
-     * Método que entrega las boletas de un período
-         * @version 2018-11-07
+     * Método que entrega las boletas de un período.
      */
-    public function getBoletas($periodo)
+    public function getBoletas($periodo): array
     {
         $periodo_col = $this->db->date('Ym', 'e.fecha');
         return $this->db->getTable('
@@ -1777,7 +2058,10 @@ class Model_Contribuyente extends \Model_App
                 AND e.certificacion = :certificacion
                 AND e.dte IN (39, 41)
                 AND '.$periodo_col.' = :periodo
-            ORDER BY e.fecha, e.dte, e.folio
+            ORDER BY
+                e.fecha,
+                e.dte,
+                e.folio
         ', [
             ':rut' => $this->rut,
             ':certificacion' => $this->enCertificacion(),
@@ -1786,14 +2070,14 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega los documentos para el reporte de consumo de folios de
-     * las boletas electrónicas
-         * @version 2016-02-14
+     * Método que entrega los documentos para el reporte de consumo de
+     * folios de las boletas electrónicas.
      */
-    public function getDocumentosConsumoFolios($desde, $hasta = null)
+    public function getDocumentosConsumoFolios(string $desde, ?string $hasta = null): array
     {
-        if (!$hasta)
+        if (!$hasta) {
             $hasta = $desde;
+        }
         return $this->db->getTable('
             (
                 SELECT
@@ -1846,38 +2130,70 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega el resumen de las ventas por períodos
-         * @version 2016-10-12
+     * Método que entrega el resumen de las ventas por períodos.
      */
-    public function getResumenVentasPeriodos()
+    public function getResumenVentasPeriodos(): array
     {
         $periodo_col = $this->db->date('Ym', 'e.fecha', 'INTEGER');
         return $this->db->getTable('
             (
-                SELECT '.$periodo_col.' AS periodo, COUNT(*) AS emitidos, v.documentos AS enviados, v.track_id, v.revision_estado
-                FROM dte_tipo AS t, dte_emitido AS e LEFT JOIN dte_venta AS v ON e.emisor = v.emisor AND e.certificacion = v.certificacion AND '.$periodo_col.' = v.periodo
-                WHERE t.codigo = e.dte AND t.venta = true AND e.emisor = :rut AND e.certificacion = :certificacion AND e.dte != 46
-                GROUP BY '.$periodo_col.', enviados, v.track_id, v.revision_estado
+                SELECT
+                    '.$periodo_col.' AS periodo,
+                    COUNT(*) AS emitidos,
+                    v.documentos AS enviados,
+                    v.track_id,
+                    v.revision_estado
+                FROM
+                    dte_emitido AS e
+                    JOIN dte_tipo AS t ON
+                        t.codigo = e.dte
+                    LEFT JOIN dte_venta AS v ON
+                        e.emisor = v.emisor
+                        AND e.certificacion = v.certificacion
+                        AND '.$periodo_col.' = v.periodo
+                WHERE
+                    e.emisor = :rut
+                    AND e.certificacion = :certificacion
+                    AND e.dte != 46
+                    AND t.venta = true
+                GROUP BY
+                    '.$periodo_col.',
+                    enviados,
+                    v.track_id,
+                    v.revision_estado
             ) UNION (
-                SELECT periodo, documentos AS emitidos, documentos AS enviados, track_id, revision_estado
-                FROM dte_venta
-                WHERE emisor = :rut AND certificacion = :certificacion
+                SELECT
+                    periodo,
+                    documentos AS emitidos,
+                    documentos AS enviados,
+                    track_id,
+                    revision_estado
+                FROM
+                    dte_venta
+                WHERE
+                    emisor = :rut
+                    AND certificacion = :certificacion
             )
             ORDER BY periodo DESC
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion()]);
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+        ]);
     }
 
     /**
-     * Método que entrega el total de ventas de un período
-         * @version 2023-02-06
+     * Método que entrega el total de ventas de un período.
      */
-    public function countVentas($periodo)
+    public function countVentas($periodo): int
     {
-        $fecha_desde = \sowerphp\general\Utility_Date::normalize($periodo.'01');
-        $fecha_hasta = \sowerphp\general\Utility_Date::lastDayPeriod($periodo);
-        return (integer)$this->db->getValue('
+        $fecha_desde = Utility_Date::normalize($periodo . '01');
+        $fecha_hasta = Utility_Date::lastDayPeriod($periodo);
+        return (int)$this->db->getValue('
             SELECT COUNT(*)
-            FROM dte_emitido AS e JOIN dte_tipo AS t ON e.dte = t.codigo
+            FROM
+                dte_emitido AS e
+                JOIN dte_tipo AS t ON
+                    e.dte = t.codigo
             WHERE
                 e.emisor = :rut
                 AND e.certificacion = :certificacion
@@ -1888,7 +2204,11 @@ class Model_Contribuyente extends \Model_App
                     SELECT e.emisor, e.dte, e.folio, e.certificacion
                     FROM
                         dte_emitido AS e
-                        JOIN dte_referencia AS r ON r.emisor = e.emisor AND r.dte = e.dte AND r.folio = e.folio AND r.certificacion = e.certificacion
+                        JOIN dte_referencia AS r ON
+                            r.emisor = e.emisor
+                            AND r.dte = e.dte
+                            AND r.folio = e.folio
+                            AND r.certificacion = e.certificacion
                     WHERE
                         e.emisor = :rut
                         AND e.fecha BETWEEN :fecha_desde AND :fecha_hasta
@@ -1903,15 +2223,21 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega las ventas de un período
-     * @todo Corregir ID en Extranjero y asignar los NULL por los valores que corresponden (quizás haya que modificar tabla dte_emitido)
-         * @version 2022-06-13
+     * Método que entrega las ventas de un período.
+     * @todo Corregir ID en Extranjero y asignar los NULL por los valores que
+     * corresponden (quizás haya que modificar tabla dte_emitido).
      */
-    public function getVentas($periodo)
+    public function getVentas($periodo): array
     {
         $periodo_col = $this->db->date('Ym', 'e.fecha');
-        $razon_social_xpath = $this->db->xml('e.xml', '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep', 'http://www.sii.cl/SiiDte');
-        $razon_social = 'CASE WHEN e.receptor NOT IN (55555555, 66666666) THEN r.razon_social ELSE '.$razon_social_xpath.' END AS razon_social';
+        $razon_social_xpath = $this->db->xml(
+            'e.xml',
+            '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep',
+            'http://www.sii.cl/SiiDte'
+        );
+        $razon_social = 'CASE WHEN e.receptor NOT IN (55555555, 66666666) THEN r.razon_social ELSE '
+            . $razon_social_xpath . ' END AS razon_social'
+        ;
         // si el contribuyente tiene impuestos adicionales se crean las query para esos campos
         if ($this->config_extra_impuestos_adicionales) {
             list($impuesto_codigo, $impuesto_tasa, $impuesto_monto) = $this->db->xml('e.xml', [
@@ -1923,16 +2249,21 @@ class Model_Contribuyente extends \Model_App
             $impuesto_codigo = $impuesto_tasa = $impuesto_monto = 'NULL';
         }
         if ($this->config_extra_constructora) {
-            $credito_constructoras = $this->db->xml('e.xml', '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Totales/CredEC', 'http://www.sii.cl/SiiDte');
+            $credito_constructoras = $this->db->xml(
+                'e.xml',
+                '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Totales/CredEC',
+                'http://www.sii.cl/SiiDte'
+            );
         } else {
             $credito_constructoras = 'NULL';
         }
         // campos para datos extranjeros
         list($extranjero_id, $extranjero_nacionalidad) = $this->db->xml('e.xml', [
-            '/EnvioDTE/SetDTE/DTE/Exportaciones/Referencia/FolioRef', // FIXME
+            '/EnvioDTE/SetDTE/DTE/Exportaciones/Referencia/FolioRef',
             '/EnvioDTE/SetDTE/DTE/Exportaciones/Encabezado/Receptor/Extranjero/Nacionalidad',
         ], 'http://www.sii.cl/SiiDte');
-        $extranjero_id = 'NULL'; // TODO: fix xpath para seleccionar la referencia que tiene codigo 813 (u otro doc identidad que se defina)
+        // TODO: fix xpath para seleccionar la referencia que tiene codigo 813 (u otro doc identidad que se defina).
+        $extranjero_id = 'NULL';
         // realizar consulta
         return $this->db->getTable('
             SELECT
@@ -1946,7 +2277,11 @@ class Model_Contribuyente extends \Model_App
                 e.exento,
                 e.neto,
                 e.iva,
-                CASE WHEN e.iva_fuera_plazo THEN e.iva ELSE NULL END AS iva_fuera_plazo,
+                CASE WHEN e.iva_fuera_plazo THEN
+                    e.iva
+                ELSE
+                    NULL
+                END AS iva_fuera_plazo,
                 '.$impuesto_codigo.' AS impuesto_codigo,
                 '.$impuesto_tasa.' AS impuesto_tasa,
                 '.$impuesto_monto.' AS impuesto_monto,
@@ -1964,8 +2299,16 @@ class Model_Contribuyente extends \Model_App
                 NULL AS monto_periodo,
                 NULL AS pasaje_nacional,
                 NULL AS pasaje_internacional,
-                CASE WHEN e.receptor = 55555555 THEN '.$extranjero_id.' ELSE NULL END AS extranjero_id,
-                CASE WHEN e.receptor = 55555555 THEN '.$extranjero_nacionalidad.' ELSE NULL END AS extranjero_nacionalidad,
+                CASE WHEN e.receptor = 55555555 THEN
+                    '.$extranjero_id.'
+                ELSE
+                    NULL
+                END AS extranjero_id,
+                CASE WHEN e.receptor = 55555555 THEN
+                    '.$extranjero_nacionalidad.'
+                ELSE
+                    NULL
+                END AS extranjero_nacionalidad,
                 NULL AS indicador_servicio,
                 NULL AS indicador_sin_costo,
                 NULL AS liquidacion_rut,
@@ -1978,31 +2321,58 @@ class Model_Contribuyente extends \Model_App
                 e.total
             FROM
                 dte_emitido AS e
-                JOIN contribuyente AS r ON e.receptor = r.rut
-                JOIN dte_tipo AS t ON t.codigo = e.dte
-                LEFT JOIN dte_referencia AS ref
-                    ON
-                        ref.emisor = e.emisor AND ref.dte = e.dte AND ref.folio = e.folio AND ref.certificacion = e.certificacion
-                        AND ref.dte IN (56, 61, 111, 112) AND ref.codigo = 1
+                JOIN contribuyente AS r ON
+                    e.receptor = r.rut
+                JOIN dte_tipo AS t ON
+                    t.codigo = e.dte
+                LEFT JOIN dte_referencia AS ref ON
+                    ref.emisor = e.emisor
+                    AND ref.dte = e.dte
+                    AND ref.folio = e.folio
+                    AND ref.certificacion = e.certificacion
+                    AND ref.dte IN (56, 61, 111, 112)
+                    AND ref.codigo = 1
             WHERE
-                t.venta = true AND e.emisor = :rut AND e.certificacion = :certificacion AND '.$periodo_col.' = :periodo AND e.dte != 46
+                t.venta = true
+                AND e.emisor = :rut
+                AND e.certificacion = :certificacion
+                AND '.$periodo_col.' = :periodo
+                AND e.dte != 46
                 AND (e.emisor, e.dte, e.folio, e.certificacion) NOT IN (
-                    SELECT e.emisor, e.dte, e.folio, e.certificacion
+                    SELECT
+                        e.emisor,
+                        e.dte,
+                        e.folio,
+                        e.certificacion
                     FROM
                         dte_emitido AS e
-                        JOIN dte_referencia AS r ON r.emisor = e.emisor AND r.dte = e.dte AND r.folio = e.folio AND r.certificacion = e.certificacion
-                        WHERE e.emisor = :rut AND '.$periodo_col.' = :periodo AND r.referencia_dte = 46
+                        JOIN dte_referencia AS r ON
+                            r.emisor = e.emisor
+                            AND r.dte = e.dte
+                            AND r.folio = e.folio
+                            AND r.certificacion = e.certificacion
+                        WHERE
+                            e.emisor = :rut
+                            AND '.$periodo_col.' = :periodo
+                            AND r.referencia_dte = 46
                 )
-            ORDER BY e.fecha, e.dte, e.folio
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo]);
+            ORDER BY
+                e.fecha,
+                e.dte,
+                e.folio
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':periodo' => $periodo,
+        ]);
     }
 
     /**
-     * Método que entrega el historial de ventas con el monto total por período para un determinado receptor
-     * @param periodo Período para el cual se está construyendo el libro
-         * @version 2021-04-21
+     * Método que entrega el historial de ventas con el monto total por período
+     * para un determinado receptor.
+     * @param periodo Período para el cual se está construyendo el libro.
      */
-    public function getHistorialVentas($receptor, $fecha = null, $periodos = 12)
+    public function getHistorialVentas($receptor, ?string $fecha = null, int $periodos = 12): array
     {
         if (strpos($receptor, '-')) {
             $receptor = substr($receptor, 0, -2);
@@ -2014,15 +2384,18 @@ class Model_Contribuyente extends \Model_App
             $fecha = date('Y-m-d');
         }
         $periodo_col = $this->db->date('Ym', 'e.fecha');
-        $desde = substr(str_replace('-', '', \sowerphp\general\Utility_Date::getPrevious($fecha, 'M', $periodos)),0,6);
-        $hasta = \sowerphp\general\Utility_Date::previousPeriod(substr(str_replace('-', '', $fecha),0,6));
+        $desde = substr(str_replace('-', '', Utility_Date::getPrevious($fecha, 'M', $periodos)), 0, 6);
+        $hasta = Utility_Date::previousPeriod(substr(str_replace('-', '', $fecha), 0, 6));
         // realizar consulta
         $montos = $this->db->getTable('
             SELECT
                 '.$periodo_col.' AS periodo,
                 t.operacion,
                 SUM(e.total) AS total
-            FROM dte_emitido AS e JOIN dte_tipo AS t ON t.codigo = e.dte
+            FROM
+                dte_emitido AS e
+                JOIN dte_tipo AS t ON
+                    t.codigo = e.dte
             WHERE
                 t.venta = true
                 AND e.emisor = :emisor
@@ -2030,9 +2403,18 @@ class Model_Contribuyente extends \Model_App
                 AND e.dte != 46
                 AND '.$periodo_col.' BETWEEN :desde AND :hasta
                 AND e.receptor = :receptor
-            GROUP BY periodo, t.operacion
-            ORDER BY periodo
-        ', [':emisor' => $this->rut, ':certificacion' => $this->enCertificacion(), ':receptor' => $receptor, ':desde' => $desde, ':hasta' => $hasta]);
+            GROUP BY
+                periodo,
+                t.operacion
+            ORDER BY
+                periodo
+        ', [
+            ':emisor' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':receptor' => $receptor,
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+        ]);
         if (!$montos) {
             return [];
         }
@@ -2040,7 +2422,7 @@ class Model_Contribuyente extends \Model_App
         $periodo = $montos[0]['periodo'];
         while ($periodo <= $hasta) {
             $historial[(int)$periodo] = 0;
-            $periodo = \sowerphp\general\Utility_Date::nextPeriod($periodo);
+            $periodo = Utility_Date::nextPeriod($periodo);
         }
         foreach ($montos as $monto) {
             if ($monto['operacion'] == 'S') {
@@ -2053,9 +2435,9 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega el objeto del libro de ventas a partir de las ventas registradas en la aplicación
-     * @param periodo Período para el cual se está construyendo el libro
-         * @version 2016-12-21
+     * Método que entrega el objeto del libro de ventas a partir de las ventas
+     * registradas en la aplicación.
+     * @param int $periodo Período para el cual se está construyendo el libro.
      */
     public function getLibroVentas($periodo)
     {
@@ -2065,7 +2447,7 @@ class Model_Contribuyente extends \Model_App
             // armar detalle para agregar al libro
             $d = [];
             foreach ($venta as $k => $v) {
-                if (strpos($k, 'impuesto_') !== 0 and strpos($k, 'extranjero_') !== 0) {
+                if (strpos($k, 'impuesto_') !== 0 && strpos($k, 'extranjero_') !== 0) {
                     if ($v !== null) {
                         $d[Model_DteVenta::$libro_cols[$k]] = $v;
                     }
@@ -2074,8 +2456,14 @@ class Model_Contribuyente extends \Model_App
             // agregar datos si es extranjero
             if (!empty($venta['extranjero_id']) || !empty($venta['extranjero_nacionalidad'])) {
                 $d['Extranjero'] = [
-                    'NumId' => !empty($venta['extranjero_id']) ? $venta['extranjero_id'] : false,
-                    'Nacionalidad' => !empty($venta['extranjero_nacionalidad']) ? $venta['extranjero_nacionalidad'] : false,
+                    'NumId' => !empty($venta['extranjero_id'])
+                        ? $venta['extranjero_id']
+                        : false
+                    ,
+                    'Nacionalidad' => !empty($venta['extranjero_nacionalidad'])
+                        ? $venta['extranjero_nacionalidad']
+                        : false
+                    ,
                 ];
             }
             // agregar otros impuestos
@@ -2093,91 +2481,168 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega el resumen de las ventas diarias de un período
-         * @version 2017-09-11
+     * Método que entrega el resumen de las ventas diarias de un período.
      */
-    public function getVentasDiarias($periodo)
+    public function getVentasDiarias($periodo): array
     {
         $periodo_col = $this->db->date('Ym', 'e.fecha');
         $dia_col = $this->db->date('d', 'e.fecha');
         return $this->db->getTable('
-            SELECT '.$dia_col.' AS dia, COUNT(*) AS documentos
-            FROM dte_tipo AS t, dte_emitido AS e
-            WHERE t.codigo = e.dte AND t.venta = true AND e.emisor = :rut AND e.certificacion = :certificacion AND '.$periodo_col.' = :periodo AND e.dte != 46
-            GROUP BY e.fecha
-            ORDER BY e.fecha
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo]);
+            SELECT
+                '.$dia_col.' AS dia,
+                COUNT(*) AS documentos
+            FROM
+                dte_emitido AS e
+                JOIN dte_tipo AS t ON
+                    t.codigo = e.dte
+            WHERE
+                e.emisor = :rut
+                AND e.certificacion = :certificacion
+                AND '.$periodo_col.' = :periodo
+                AND t.venta = true
+                AND e.dte != 46
+            GROUP BY
+                e.fecha
+            ORDER BY
+                e.fecha
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':periodo' => $periodo,
+        ]);
     }
 
     /**
-     * Método que entrega el resumen de ventas por tipo de un período
-     * @return Arreglo asociativo con las ventas
-         * @version 2017-09-11
+     * Método que entrega el resumen de ventas por tipo de un período.
+     * @return Arreglo asociativo con las ventas.
      */
-    public function getVentasPorTipo($periodo)
+    public function getVentasPorTipo($periodo): array
     {
         $periodo_col = $this->db->date('Ym', 'e.fecha');
         return $this->db->getTable('
-            SELECT t.tipo, COUNT(*) AS documentos
-            FROM dte_tipo AS t, dte_emitido AS e
-            WHERE t.codigo = e.dte AND t.venta = true AND e.emisor = :rut AND e.certificacion = :certificacion AND '.$periodo_col.' = :periodo AND e.dte != 46
-            GROUP BY t.tipo
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo]);
+            SELECT
+                t.tipo,
+                COUNT(*) AS documentos
+            FROM
+                dte_emitido AS e
+                JOIN dte_tipo AS t ON
+                    t.codigo = e.dte
+            WHERE
+                t.venta = true
+                AND e.emisor = :rut
+                AND e.certificacion = :certificacion
+                AND '.$periodo_col.' = :periodo
+                AND e.dte != 46
+            GROUP BY
+                t.tipo
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':periodo' => $periodo,
+        ]);
     }
 
     /**
-     * Método que entrega el resumen de las guías por períodos
-         * @version 2016-10-12
+     * Método que entrega el resumen de las guías por períodos.
      */
-    public function getResumenGuiasPeriodos()
+    public function getResumenGuiasPeriodos(): array
     {
         $periodo_col = $this->db->date('Ym', 'e.fecha', 'INTEGER');
         return $this->db->getTable('
             (
-                SELECT '.$periodo_col.' AS periodo, COUNT(*) AS emitidos, g.documentos AS enviados, g.track_id, g.revision_estado
-                FROM dte_emitido AS e LEFT JOIN dte_guia AS g ON e.emisor = g.emisor AND e.certificacion = g.certificacion AND '.$periodo_col.' = g.periodo
-                WHERE e.emisor = :rut AND e.certificacion = :certificacion AND e.dte = 52
-                GROUP BY '.$periodo_col.', enviados, g.track_id, g.revision_estado
+                SELECT
+                    '.$periodo_col.' AS periodo,
+                    COUNT(*) AS emitidos,
+                    g.documentos AS enviados,
+                    g.track_id,
+                    g.revision_estado
+                FROM
+                    dte_emitido AS e
+                    LEFT JOIN dte_guia AS g ON
+                        e.emisor = g.emisor
+                        AND e.certificacion = g.certificacion
+                        AND '.$periodo_col.' = g.periodo
+                WHERE
+                    e.emisor = :rut
+                    AND e.certificacion = :certificacion
+                    AND e.dte = 52
+                GROUP BY
+                    '.$periodo_col.',
+                    enviados,
+                    g.track_id,
+                    g.revision_estado
             ) UNION (
-                SELECT periodo, documentos AS emitidos, documentos AS enviados, track_id, revision_estado
-                FROM dte_guia
-                WHERE emisor = :rut AND certificacion = :certificacion
+                SELECT
+                    periodo,
+                    documentos AS emitidos,
+                    documentos AS enviados,
+                    track_id,
+                    revision_estado
+                FROM
+                    dte_guia
+                WHERE
+                    emisor = :rut
+                    AND certificacion = :certificacion
             )
             ORDER BY periodo DESC
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion()]);
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+        ]);
     }
 
     /**
-     * Método que entrega el resumen de las guías de un período
-     * @todo Extraer IndTraslado en MariaDB
-         * @version 2016-10-12
+     * Método que entrega el resumen de las guías de un período.
      */
-    public function countGuias($periodo)
+    public function countGuias($periodo): int
     {
         $periodo_col = $this->db->date('Ym', 'e.fecha');
-        return (integer)$this->db->getValue('
-            SELECT COUNT(*)
+        return (int)$this->db->getValue('
+            SELECT
+                COUNT(*)
             FROM
                 dte_emitido AS e
-                LEFT JOIN dte_referencia AS ref ON e.emisor = ref.emisor AND e.dte = ref.referencia_dte AND e.folio = ref.referencia_folio AND e.certificacion = ref.certificacion
-                LEFT JOIN dte_emitido AS re ON re.emisor = ref.emisor AND re.dte = ref.dte AND re.folio = ref.folio AND re.certificacion = ref.certificacion
-            WHERE e.emisor = :rut AND e.certificacion = :certificacion AND '.$periodo_col.' = :periodo AND e.dte = 52
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo]);
+                LEFT JOIN dte_referencia AS ref ON
+                    e.emisor = ref.emisor
+                    AND e.dte = ref.referencia_dte
+                    AND e.folio = ref.referencia_folio
+                    AND e.certificacion = ref.certificacion
+                LEFT JOIN dte_emitido AS re ON
+                    re.emisor = ref.emisor
+                    AND re.dte = ref.dte
+                    AND re.folio = ref.folio
+                    AND re.certificacion = ref.certificacion
+            WHERE
+                e.emisor = :rut
+                AND e.certificacion = :certificacion
+                AND '.$periodo_col.' = :periodo
+                AND e.dte = 52
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':periodo' => $periodo,
+        ]);
     }
 
     /**
-     * Método que entrega el resumen de las guías de un período
-     * @todo Extraer IndTraslado en MariaDB
-         * @version 2016-10-12
+     * Método que entrega el resumen de las guías de un período.
      */
-    public function getGuias($periodo)
+    public function getGuias($periodo): array
     {
         $periodo_col = $this->db->date('Ym', 'e.fecha');
-        $tipo_col= $this->db->xml('e.xml', '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/IdDoc/IndTraslado', 'http://www.sii.cl/SiiDte');
+        $tipo_col= $this->db->xml(
+            'e.xml',
+            '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/IdDoc/IndTraslado',
+            'http://www.sii.cl/SiiDte'
+        );
         return $this->db->getTable('
             SELECT
                 e.folio,
-                CASE WHEN e.anulado THEN 2 ELSE NULL END AS anulado,
+                CASE WHEN e.anulado THEN
+                    2
+                ELSE
+                    NULL
+                END AS anulado,
                 1 AS operacion,
                 '.$tipo_col.' AS tipo,
                 e.fecha,
@@ -2193,69 +2658,111 @@ class Model_Contribuyente extends \Model_App
                 re.fecha AS ref_fecha
             FROM
                 dte_emitido AS e
-                LEFT JOIN dte_referencia AS ref ON e.emisor = ref.emisor AND e.dte = ref.referencia_dte AND e.folio = ref.referencia_folio AND e.certificacion = ref.certificacion
-                LEFT JOIN dte_emitido AS re ON re.emisor = ref.emisor AND re.dte = ref.dte AND re.folio = ref.folio AND re.certificacion = ref.certificacion,
-                contribuyente AS r
-            WHERE e.receptor = r.rut AND e.emisor = :rut AND e.certificacion = :certificacion AND '.$periodo_col.' = :periodo AND e.dte = 52
-            ORDER BY e.fecha, e.folio
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo]);
+                JOIN contribuyente AS r ON
+                    e.receptor = r.rut
+                LEFT JOIN dte_referencia AS ref ON
+                    e.emisor = ref.emisor
+                    AND e.dte = ref.referencia_dte
+                    AND e.folio = ref.referencia_folio
+                    AND e.certificacion = ref.certificacion
+                LEFT JOIN dte_emitido AS re ON
+                    re.emisor = ref.emisor
+                    AND re.dte = ref.dte
+                    AND re.folio = ref.folio
+                    AND re.certificacion = ref.certificacion
+            WHERE
+                e.emisor = :rut
+                AND e.certificacion = :certificacion
+                AND '.$periodo_col.' = :periodo
+                AND e.dte = 52
+            ORDER BY
+                e.fecha,
+                e.folio
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':periodo' => $periodo,
+        ]);
     }
 
     /**
-     * Método que entrega el resumen de las guías diarias de un período
-         * @version 2018-05-17
+     * Método que entrega el resumen de las guías diarias de un período.
      */
-    public function getGuiasDiarias($periodo)
+    public function getGuiasDiarias($periodo): array
     {
         $periodo_col = $this->db->date('Ym', 'fecha');
         $dia_col = $this->db->date('d', 'fecha');
         return $this->db->getTable('
-            SELECT '.$dia_col.' AS dia, COUNT(*) AS documentos
-            FROM dte_emitido
-            WHERE emisor = :rut AND certificacion = :certificacion AND '.$periodo_col.' = :periodo AND dte = 52
-            GROUP BY fecha
-            ORDER BY fecha
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo]);
+            SELECT
+                '.$dia_col.' AS dia,
+                COUNT(*) AS documentos
+            FROM
+                dte_emitido
+            WHERE
+                emisor = :rut
+                AND certificacion = :certificacion
+                AND '.$periodo_col.' = :periodo
+                AND dte = 52
+            GROUP BY
+                fecha
+            ORDER BY
+                fecha
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':periodo' => $periodo,
+        ]);
     }
 
     /**
-     * Método que cuenta los casos de intercambio del contribuyente
-         * @version 2021-10-12
+     * Método que cuenta los casos de intercambio del contribuyente.
      */
-    public function countDocumentosIntercambios(array $filter = [])
+    public function countDocumentosIntercambios(array $filter = []): int
     {
-        return (new Model_DteIntercambios())->setContribuyente($this)->countDocumentos($filter);
+        return (new Model_DteIntercambios())
+            ->setContribuyente($this)
+            ->countDocumentos($filter)
+        ;
     }
 
     /**
-     * Método que entrega la tabla con los casos de intercambio del contribuyente
-         * @version 2021-10-12
+     * Método que entrega la tabla con los casos de intercambio del contribuyente.
      */
-    public function getDocumentosIntercambios(array $filter = [])
+    public function getDocumentosIntercambios(array $filter = []): array
     {
-        return (new Model_DteIntercambios())->setContribuyente($this)->getDocumentos($filter);
+        return (new Model_DteIntercambios())
+            ->setContribuyente($this)
+            ->getDocumentos($filter)
+        ;
     }
 
     /**
-     * Método para actualizar la bandeja de intercambio
-         * @version 2018-05-19
+     * Método para actualizar la bandeja de intercambio.
      */
-    public function actualizarBandejaIntercambio($dias = 7)
+    public function actualizarBandejaIntercambio(int $dias = 7)
     {
-        return (new Model_DteIntercambios())->setContribuyente($this)->actualizar($dias);
+        return (new Model_DteIntercambios())
+            ->setContribuyente($this)
+            ->actualizar($dias)
+        ;
     }
 
     /**
-     * Método que crea los filtros para ser usados en las consultas de documentos recibidos
-         * @version 2023-02-10
+     * Método que crea los filtros para ser usados en las consultas de documentos recibidos.
      */
-    private function crearFiltrosDocumentosRecibidos($filtros)
+    private function crearFiltrosDocumentosRecibidos(array $filtros): array
     {
-        $where = ['d.receptor = :rut', 'd.certificacion = :certificacion'];
-        $vars = [':rut' => $this->rut, ':certificacion' => $this->enCertificacion()];
+        $where = [
+            'd.receptor = :rut',
+            'd.certificacion = :certificacion',
+        ];
+        $vars = [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+        ];
         foreach (['folio', 'fecha', 'total', 'intercambio', 'usuario'] as $c) {
             if (isset($filtros[$c])) {
-                $where[] = 'd.'.$c.' = :'.$c;
+                $where[] = 'd.' . $c . ' = :' . $c;
                 $vars[':'.$c] = $filtros[$c];
             }
         }
@@ -2269,7 +2776,7 @@ class Model_Contribuyente extends \Model_App
                     $vars[':dte'.$i] = $filtro_dte;
                     $i++;
                 }
-                $where[] = 'd.dte IN ('.implode(', ', $where_dte).')';
+                $where[] = 'd.dte IN (' . implode(', ', $where_dte) . ')';
             } else {
                 $where[] = 'd.dte = :dte';
                 $vars[':dte'] = $filtros['dte'];
@@ -2283,7 +2790,10 @@ class Model_Contribuyente extends \Model_App
             if (!is_numeric($filtros['emisor'])) {
                 // si tiene guión se asume RUT con DV
                 if (strpos($filtros['emisor'], '-')) {
-                    $filtros['emisor'] = explode('-', str_replace('.', '', $filtros['emisor']))[0];
+                    $filtros['emisor'] = explode(
+                        '-',
+                        str_replace('.', '', $filtros['emisor'])
+                    )[0];
                 }
                 // si es otra cosa (otro string) se asume razón social
                 else {
@@ -2299,12 +2809,12 @@ class Model_Contribuyente extends \Model_App
         }
         if (!empty($filtros['razon_social'])) {
             $where[] = 'e.razon_social ILIKE :razon_social';
-            $vars[':razon_social'] = '%'.$filtros['razon_social'].'%';
+            $vars[':razon_social'] = '%' . $filtros['razon_social'] . '%';
         }
         // filtrar por fechas
         if (!empty($filtros['periodo'])) {
-            $fecha_desde = \sowerphp\general\Utility_Date::normalize($filtros['periodo'].'01');
-            $fecha_hasta = \sowerphp\general\Utility_Date::lastDayPeriod($filtros['periodo']);
+            $fecha_desde = Utility_Date::normalize($filtros['periodo'] . '01');
+            $fecha_hasta = Utility_Date::lastDayPeriod($filtros['periodo']);
             $where[] = '((d.periodo IS NULL AND d.fecha BETWEEN :fecha_desde AND :fecha_hasta) OR (d.periodo IS NOT NULL AND d.periodo = :periodo))';
             $vars[':periodo'] = $filtros['periodo'];
             $vars[':fecha_desde'] = $fecha_desde;
@@ -2332,30 +2842,31 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega el total de documentos recibidos por el contribuyente
-         * @version 2021-10-12
+     * Método que entrega el total de documentos recibidos por el contribuyente.
      */
-    public function countDocumentosRecibidos($filtros = [])
+    public function countDocumentosRecibidos(array $filtros = []): int
     {
         list($where, $vars) = $this->crearFiltrosDocumentosRecibidos($filtros);
-        return (integer)$this->db->getValue('
+        return (int)$this->db->getValue('
             SELECT
                 COUNT(*)
             FROM
                 dte_recibido AS d
-                JOIN dte_tipo AS t ON d.dte = t.codigo
-                JOIN contribuyente AS e ON d.emisor = e.rut
-                JOIN usuario AS u ON d.usuario = u.id
+                JOIN dte_tipo AS t ON
+                    d.dte = t.codigo
+                JOIN contribuyente AS e ON
+                    d.emisor = e.rut
+                JOIN usuario AS u ON
+                    d.usuario = u.id
             WHERE
                 '.implode(' AND ', $where).'
         ', $vars);
     }
 
     /**
-     * Método que entrega el listado de documentos recibidos por el contribuyente
-         * @version 2021-10-12
+     * Método que entrega el listado de documentos recibidos por el contribuyente.
      */
-    public function getDocumentosRecibidos($filtros = [])
+    public function getDocumentosRecibidos(array $filtros = []): array
     {
         list($where, $vars) = $this->crearFiltrosDocumentosRecibidos($filtros);
         // armar consulta
@@ -2374,29 +2885,36 @@ class Model_Contribuyente extends \Model_App
                 d.mipyme
             FROM
                 dte_recibido AS d
-                JOIN dte_tipo AS t ON d.dte = t.codigo
-                JOIN contribuyente AS e ON d.emisor = e.rut
-                JOIN usuario AS u ON d.usuario = u.id
-            WHERE '.implode(' AND ', $where).'
-            ORDER BY d.fecha DESC, t.tipo, e.razon_social
+                JOIN dte_tipo AS t ON
+                    d.dte = t.codigo
+                JOIN contribuyente AS e ON
+                    d.emisor = e.rut
+                JOIN usuario AS u ON
+                    d.usuario = u.id
+            WHERE
+                '.implode(' AND ', $where).'
+            ORDER BY
+                d.fecha DESC,
+                t.tipo,
+                e.razon_social
         ';
         // armar límite consulta
         if (isset($filtros['limit'])) {
-            $query = $this->db->setLimit($query, $filtros['limit'], $filtros['offset']);
+            $query = $this->db->setLimit(
+                $query,
+                $filtros['limit'],
+                $filtros['offset']
+            );
         }
         // entregar consulta
         return $this->db->getTable($query, $vars);
     }
 
     /**
-     * Método que entrega el resumen de las compras por períodos
-         * @version 2020-07-21
+     * Método que entrega el resumen de las compras por períodos.
      */
-    public function getResumenComprasPeriodos()
+    public function getResumenComprasPeriodos(): array
     {
-        if ($this->db->config['type'] != 'PostgreSQL') {
-            return $this->getResumenComprasPeriodosMySQL();
-        }
         $periodo_col = $this->db->date('Ym', 'r.fecha', 'INTEGER');
         $periodo_col_46 = $this->db->date('Ym', 'r.fecha_hora_creacion', 'INTEGER'); ///< se asume como período el de la creación de la FC
         return $this->db->getTable('
@@ -2425,7 +2943,9 @@ class Model_Contribuyente extends \Model_App
                     c.revision_estado
                 FROM
                     (
-                        SELECT periodo, COUNT(*) AS recibidos
+                        SELECT
+                            periodo,
+                            COUNT(*) AS recibidos
                         FROM (
                             SELECT
                                 CASE WHEN r.periodo IS NOT NULL THEN
@@ -2435,7 +2955,8 @@ class Model_Contribuyente extends \Model_App
                                 END AS periodo
                             FROM
                                 dte_recibido AS r
-                                JOIN dte_tipo AS t ON t.codigo = r.dte
+                                JOIN dte_tipo AS t ON
+                                    t.codigo = r.dte
                             WHERE
                                 t.compra = true
                                 AND r.receptor = :rut
@@ -2445,80 +2966,96 @@ class Model_Contribuyente extends \Model_App
                         GROUP BY periodo
                     ) AS r
                     FULL JOIN (
-                        SELECT '.$periodo_col_46.' AS periodo, COUNT(*) AS facturas_compra
-                        FROM dte_emitido AS r
-                        WHERE r.emisor = :rut AND r.certificacion = :certificacion AND r.dte = 46
-                        GROUP BY '.$periodo_col_46.'
-                    ) AS f ON r.periodo = f.periodo
-                    LEFT JOIN dte_compra AS c ON c.receptor = :rut AND c.certificacion = :certificacion AND c.periodo IN (r.periodo, f.periodo)
+                        SELECT
+                            '.$periodo_col_46.' AS periodo,
+                            COUNT(*) AS facturas_compra
+                        FROM
+                            dte_emitido AS r
+                        WHERE
+                            r.emisor = :rut
+                            AND r.certificacion = :certificacion
+                            AND r.dte = 46
+                        GROUP BY
+                            '.$periodo_col_46.'
+                    ) AS f ON
+                        r.periodo = f.periodo
+                    LEFT JOIN dte_compra AS c ON
+                        c.receptor = :rut
+                        AND c.certificacion = :certificacion
+                        AND c.periodo IN (r.periodo, f.periodo)
             ) UNION (
-                SELECT periodo, documentos AS recibidos, documentos AS enviados, track_id, revision_estado
-                FROM dte_compra
-                WHERE receptor = :rut AND certificacion = :certificacion
+                SELECT
+                    periodo,
+                    documentos AS recibidos,
+                    documentos AS enviados,
+                    track_id,
+                    revision_estado
+                FROM
+                    dte_compra
+                WHERE
+                    receptor = :rut
+                    AND certificacion = :certificacion
             )
             ORDER BY periodo DESC
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion()]);
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+        ]);
     }
 
     /**
-     * Método que entrega el resumen de las compras por períodos
-     * @warning Versión del método para MySQL, no soporta facturas de compra (se hace en método aparte porque no hay FULL JOIN en MySQL)
-     * @todo Emular FULL JOIN para obtener el soporte para facturas de compra
-         * @version 2016-10-12
+     * Método que entrega el total de las compras de un período.
      */
-    private function getResumenComprasPeriodosMySQL()
+    public function countCompras($periodo): int
     {
-        $periodo_col = $this->db->date('Ym', 'r.fecha');
-        return $this->db->getTable('
-            (
-                SELECT '.$periodo_col.' AS periodo, COUNT(*) AS recibidos, c.documentos AS enviados, c.track_id, c.revision_estado
-                FROM dte_tipo AS t, dte_recibido AS r LEFT JOIN dte_compra AS c ON r.receptor = c.receptor AND r.certificacion = c.certificacion AND '.$periodo_col.' = c.periodo
-                WHERE t.codigo = r.dte AND t.compra = true AND r.receptor = :rut AND r.certificacion = :certificacion
-                GROUP BY '.$periodo_col.', enviados, c.track_id, c.revision_estado
-            ) UNION (
-                SELECT periodo, documentos AS recibidos, documentos AS enviados, track_id, revision_estado
-                FROM dte_compra
-                WHERE receptor = :rut AND certificacion = :certificacion
-            )
-            ORDER BY periodo DESC
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion()]);
-    }
-
-    /**
-     * Método que entrega el total de las compras de un período
-         * @version 2023-02-06
-     */
-    public function countCompras($periodo)
-    {
-        $fecha_desde = \sowerphp\general\Utility_Date::normalize($periodo.'01');
-        $fecha_hasta = \sowerphp\general\Utility_Date::lastDayPeriod($periodo);
-        $fechahora_hasta = $fecha_hasta.' 23:59:59'; // se asume como período el de la creación de la FC porque la FC se podría generar en un período diferente y quedará en ese período diferente (cuando se creó)
+        $fecha_desde = Utility_Date::normalize($periodo . '01');
+        $fecha_hasta = Utility_Date::lastDayPeriod($periodo);
+        $fechahora_hasta = $fecha_hasta . ' 23:59:59';
         $compras = $this->db->getCol('
             (
-                SELECT COUNT(*)
-                FROM dte_tipo AS t JOIN dte_recibido AS r ON t.codigo = r.dte
+                SELECT
+                    COUNT(*)
+                FROM
+                    dte_tipo AS t
+                    JOIN dte_recibido AS r ON
+                        t.codigo = r.dte
                 WHERE
                     t.compra = true
                     AND r.receptor = :rut
                     AND r.certificacion = :certificacion
                     AND r.dte != 46 -- se quitan FC para evitar duplicidad con las que están en dte_emitidos
                     AND (r.receptor, r.dte, r.folio, r.certificacion) NOT IN (
-                        SELECT r.emisor, r.dte, r.folio, r.certificacion
+                        SELECT
+                            r.emisor,
+                            r.dte,
+                            r.folio,
+                            r.certificacion
                         FROM
                             dte_emitido AS r
-                            JOIN dte_referencia AS re ON re.emisor = r.emisor AND re.dte = r.dte AND re.folio = r.folio AND re.certificacion = r.certificacion
-                            WHERE re.referencia_dte = 46
+                            JOIN dte_referencia AS re ON
+                                re.emisor = r.emisor
+                                AND re.dte = r.dte
+                                AND re.folio = r.folio
+                                AND re.certificacion = r.certificacion
+                        WHERE
+                            re.referencia_dte = 46
                     )
                     AND (
                         (
-                            r.periodo IS NULL AND r.fecha BETWEEN :fecha_desde AND :fecha_hasta
+                            r.periodo IS NULL
+                            AND r.fecha BETWEEN :fecha_desde AND :fecha_hasta
                         ) OR (
-                            r.periodo IS NOT NULL AND r.periodo = :periodo
+                            r.periodo IS NOT NULL
+                            AND r.periodo = :periodo
                         )
                     )
             ) UNION (
-                SELECT COUNT(*)
-                FROM dte_tipo AS t JOIN dte_emitido AS r ON t.codigo = r.dte
+                SELECT
+                    COUNT(*)
+                FROM
+                    dte_tipo AS t
+                    JOIN dte_emitido AS r ON
+                        t.codigo = r.dte
                 WHERE
                     r.emisor = :rut
                     AND r.certificacion = :certificacion
@@ -2526,11 +3063,20 @@ class Model_Contribuyente extends \Model_App
                     AND (
                         r.dte = 46
                         OR (r.emisor, r.dte, r.folio, r.certificacion) IN (
-                            SELECT r.emisor, r.dte, r.folio, r.certificacion
+                            SELECT
+                                r.emisor,
+                                r.dte,
+                                r.folio,
+                                r.certificacion
                             FROM
                                 dte_emitido AS r
-                                JOIN dte_referencia AS re ON re.emisor = r.emisor AND re.dte = r.dte AND re.folio = r.folio AND re.certificacion = r.certificacion
-                                WHERE re.referencia_dte = 46
+                                JOIN dte_referencia AS re ON
+                                    re.emisor = r.emisor
+                                    AND re.dte = r.dte
+                                    AND re.folio = r.folio
+                                    AND re.certificacion = r.certificacion
+                            WHERE
+                                re.referencia_dte = 46
                         )
                     )
             )
@@ -2542,26 +3088,29 @@ class Model_Contribuyente extends \Model_App
             ':fecha_hasta' => $fecha_hasta,
             ':fechahora_hasta' => $fechahora_hasta,
         ]);
-        return array_sum($compras);
+        return (int)array_sum($compras);
     }
 
     /**
-     * Método que entrega el resumen de las compras de un período
-         * @version 2022-06-20
+     * Método que entrega el resumen de las compras de un período.
      */
-    public function getCompras($periodo, $tipo_dte = null)
+    public function getCompras($periodo, $tipo_dte = null): array
     {
         $periodo_col = $this->db->date('Ym', 'r.fecha', 'INTEGER');
-        $periodo_col_46 = $this->db->date('Ym', 'r.fecha_hora_creacion', 'INTEGER'); ///< se asume como período el de la creación de la FC
+        $periodo_col_46 = $this->db->date('Ym', 'r.fecha_hora_creacion', 'INTEGER');
         list($impuesto_codigo, $impuesto_tasa, $impuesto_monto) = $this->db->xml('r.xml', [
             '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Totales/ImptoReten/TipoImp',
             '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Totales/ImptoReten/TasaImp',
             '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Totales/ImptoReten/MontoImp',
         ], 'http://www.sii.cl/SiiDte');
-        $vars = [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo];
+        $vars = [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':periodo' => $periodo,
+        ];
         if ($tipo_dte !== null) {
             if (is_array($tipo_dte)) {
-                $where_tipo_dte = 'AND t.codigo IN ('.implode(', ', array_map('intval', $tipo_dte)).')';
+                $where_tipo_dte = 'AND t.codigo IN (' . implode(', ', array_map('intval', $tipo_dte)) . ')';
             } else {
                 $where_tipo_dte = 'AND t.electronico = :electronico';
                 $vars[':electronico'] = (int)$tipo_dte;
@@ -2574,7 +3123,7 @@ class Model_Contribuyente extends \Model_App
                 SELECT
                     r.dte,
                     r.folio,
-                    '.$this->db->concat('e.rut', '-', 'e.dv').' AS rut,
+                    ' . $this->db->concat('e.rut', '-', 'e.dv') . ' AS rut,
                     r.tasa,
                     e.razon_social,
                     r.impuesto_tipo,
@@ -2606,8 +3155,10 @@ class Model_Contribuyente extends \Model_App
                     r.tipo_transaccion
                 FROM
                     dte_recibido AS r
-                    JOIN dte_tipo AS t ON t.codigo = r.dte
-                    JOIN contribuyente AS e ON e.rut = r.emisor
+                    JOIN dte_tipo AS t ON
+                        t.codigo = r.dte
+                    JOIN contribuyente AS e ON
+                        e.rut = r.emisor
                 WHERE
                     r.receptor = :rut
                     '.$where_tipo_dte.'
@@ -2615,18 +3166,36 @@ class Model_Contribuyente extends \Model_App
                     AND t.compra = true
                     AND r.dte != 46 -- se quitan FC para evitar duplicidad con las que están en dte_emitidos
                     AND (r.receptor, r.dte, r.folio, r.certificacion) NOT IN (
-                        SELECT r.emisor, r.dte, r.folio, r.certificacion
+                        SELECT
+                            r.emisor,
+                            r.dte,
+                            r.folio,
+                            r.certificacion
                         FROM
                             dte_emitido AS r
-                            JOIN dte_referencia AS re ON re.emisor = r.emisor AND re.dte = r.dte AND re.folio = r.folio AND re.certificacion = r.certificacion
-                            WHERE '.$periodo_col_46.' = :periodo AND re.referencia_dte = 46
+                            JOIN dte_referencia AS re ON
+                                re.emisor = r.emisor
+                                AND re.dte = r.dte
+                                AND re.folio = r.folio
+                                AND re.certificacion = r.certificacion
+                        WHERE
+                            '.$periodo_col_46.' = :periodo
+                            AND re.referencia_dte = 46
                     )
-                    AND ((r.periodo IS NULL AND '.$periodo_col.' = :periodo) OR (r.periodo IS NOT NULL AND r.periodo = :periodo))
+                    AND (
+                        (
+                            r.periodo IS NULL
+                            AND '.$periodo_col.' = :periodo
+                        ) OR (
+                            r.periodo IS NOT NULL
+                            AND r.periodo = :periodo
+                        )
+                    )
             ) UNION (
                 SELECT
                     r.dte,
                     r.folio,
-                    '.$this->db->concat('e.rut', '-', 'e.dv').' AS rut,
+                    ' . $this->db->concat('e.rut', '-', 'e.dv') . ' AS rut,
                     r.tasa,
                     e.razon_social,
                     NULL AS impuesto_tipo,
@@ -2653,13 +3222,19 @@ class Model_Contribuyente extends \Model_App
                     NULL AS impuesto_vehiculos,
                     NULL AS sucursal_sii,
                     NULL AS numero_interno,
-                    CASE WHEN r.dte IN (56, 61) THEN 1 ELSE NULL END AS emisor_nc_nd_fc,
+                    CASE WHEN r.dte IN (56, 61) THEN
+                        1
+                    ELSE
+                        NULL
+                    END AS emisor_nc_nd_fc,
                     r.total,
                     NULL AS tipo_transaccion
                 FROM
                     dte_emitido AS r
-                    JOIN dte_tipo AS t ON t.codigo = r.dte
-                    JOIN contribuyente AS e ON e.rut = r.receptor
+                    JOIN dte_tipo AS t ON
+                        t.codigo = r.dte
+                    JOIN contribuyente AS e ON
+                        e.rut = r.receptor
                 WHERE
                     r.emisor = :rut
                     '.$where_tipo_dte.'
@@ -2668,15 +3243,28 @@ class Model_Contribuyente extends \Model_App
                     AND (
                         r.dte = 46
                         OR (r.emisor, r.dte, r.folio, r.certificacion) IN (
-                            SELECT r.emisor, r.dte, r.folio, r.certificacion
+                            SELECT
+                                r.emisor,
+                                r.dte,
+                                r.folio,
+                                r.certificacion
                             FROM
                                 dte_emitido AS r
-                                JOIN dte_referencia AS re ON re.emisor = r.emisor AND re.dte = r.dte AND re.folio = r.folio AND re.certificacion = r.certificacion
-                                WHERE '.$periodo_col_46.' = :periodo AND re.referencia_dte = 46
+                                JOIN dte_referencia AS re ON
+                                    re.emisor = r.emisor
+                                    AND re.dte = r.dte
+                                    AND re.folio = r.folio
+                                    AND re.certificacion = r.certificacion
+                            WHERE
+                                '.$periodo_col_46.' = :periodo
+                                AND re.referencia_dte = 46
                         )
                     )
             )
-            ORDER BY fecha, dte, folio
+            ORDER BY
+                fecha,
+                dte,
+                folio
         ', $vars);
         // procesar cada compra
         foreach ($compras as &$c) {
@@ -2694,7 +3282,7 @@ class Model_Contribuyente extends \Model_App
                 $c['iva_no_recuperable_monto'] = implode(',', $iva_no_recuperable_monto);
             }
             unset($c['iva_no_recuperable']);
-            // asignar monto de impuesto adicionl
+            // asignar monto de impuesto adicional
             if ($c['impuesto_adicional']) {
                 $impuesto_adicional = json_decode($c['impuesto_adicional'], true);
                 $impuesto_adicional_codigo = [];
@@ -2711,15 +3299,18 @@ class Model_Contribuyente extends \Model_App
             }
             unset($c['impuesto_adicional']);
             // asignar factor de proporcionalidad
-            $c['iva_uso_comun_factor'] = $c['iva_uso_comun'] ? round(($c['iva_uso_comun']/$c['iva'])*100) : null;
+            $c['iva_uso_comun_factor'] = $c['iva_uso_comun']
+                ? round(($c['iva_uso_comun'] / $c['iva']) * 100)
+                : null
+            ;
         }
         return $compras;
     }
 
     /**
-     * Método que entrega el objeto del libro de compras a partir de las compras registradas en la aplicación
-     * @param periodo Período para el cual se está construyendo el libro
-         * @version 2017-09-03
+     * Método que entrega el objeto del libro de compras a partir de las
+     * compras registradas en la aplicación.
+     * @param int $periodo Período para el cual se está construyendo el libro.
      */
     public function getLibroCompras($periodo)
     {
@@ -2729,10 +3320,13 @@ class Model_Contribuyente extends \Model_App
             // armar detalle para agregar al libro
             $d = [];
             foreach ($compra as $k => $v) {
-                if (strpos($k, 'impuesto_adicional') !== 0 and strpos($k, 'iva_no_recuperable') !== 0) {
-                    if ($v !== null && isset(Model_DteCompra::$libro_cols[$k])) {
-                        $d[Model_DteCompra::$libro_cols[$k]] = $v;
-                    }
+                if (
+                    strpos($k, 'impuesto_adicional') !== 0
+                    && strpos($k, 'iva_no_recuperable') !== 0
+                    && $v !== null
+                    && isset(Model_DteCompra::$libro_cols[$k])
+                ) {
+                    $d[Model_DteCompra::$libro_cols[$k]] = $v;
                 }
             }
             // agregar iva no recuperable
@@ -2746,7 +3340,10 @@ class Model_Contribuyente extends \Model_App
             if (!empty($compra['impuesto_adicional_codigo'])) {
                 $d['OtrosImp'] = [
                     'CodImp' => $compra['impuesto_adicional_codigo'],
-                    'TasaImp' => $compra['impuesto_adicional_tasa'] ? $compra['impuesto_adicional_tasa'] : 0,
+                    'TasaImp' => $compra['impuesto_adicional_tasa']
+                        ? $compra['impuesto_adicional_tasa']
+                        : 0
+                    ,
                     'MntImp' => $compra['impuesto_adicional_monto'],
                 ];
             }
@@ -2757,18 +3354,14 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega el resumen de las compras diarias de un período
-         * @version 2020-07-21
+     * Método que entrega el resumen de las compras diarias de un período.
      */
-    public function getComprasDiarias($periodo)
+    public function getComprasDiarias($periodo): array
     {
-        if ($this->db->config['type'] != 'PostgreSQL') {
-            return $this->getComprasDiariasMySQL($periodo);
-        }
         $periodo_col = $this->db->date('Ym', 'r.fecha');
         $dia_col = $this->db->date('d', 'r.fecha');
-        $periodo_col_46 = $this->db->date('Ym', 'r.fecha_hora_creacion'); ///< se asume como período el de la creación de la FC
-        $dia_col_46 = $this->db->date('d', 'r.fecha_hora_creacion'); ///< se asume como período el de la creación de la FC
+        $periodo_col_46 = $this->db->date('Ym', 'r.fecha_hora_creacion');
+        $dia_col_46 = $this->db->date('d', 'r.fecha_hora_creacion');
         return $this->db->getTable('
             SELECT
                 CASE WHEN r.dia IS NOT NULL THEN
@@ -2791,96 +3384,128 @@ class Model_Contribuyente extends \Model_App
                 END AS documentos
             FROM
                 (
-                    SELECT '.$dia_col.' AS dia, COUNT(*) AS documentos
+                    SELECT
+                        '.$dia_col.' AS dia,
+                        COUNT(*) AS documentos
                     FROM
                         dte_recibido AS r
-                        JOIN dte_tipo AS t ON t.codigo = r.dte
+                        JOIN dte_tipo AS t ON
+                            t.codigo = r.dte
                     WHERE
                         t.compra = true
                         AND r.receptor = :rut
                         AND r.dte != 46 -- se quitan FC para evitar duplicidad con las que están en dte_emitidos
                         AND r.certificacion = :certificacion
                         AND '.$periodo_col.' = :periodo
-                    GROUP BY r.fecha
+                    GROUP BY
+                        r.fecha
                 ) AS r
                 FULL JOIN
                 (
-                    SELECT '.$dia_col_46.' AS dia, COUNT(*) AS documentos
-                    FROM dte_emitido AS r
-                    WHERE r.emisor = :rut AND r.certificacion = :certificacion AND '.$periodo_col_46.' = :periodo AND r.dte = 46
-                    GROUP BY r.fecha_hora_creacion
-                ) AS f ON r.dia = f.dia
-            ORDER BY dia
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo]);
+                    SELECT
+                        '.$dia_col_46.' AS dia,
+                        COUNT(*) AS documentos
+                    FROM
+                        dte_emitido AS r
+                    WHERE
+                        r.emisor = :rut
+                        AND r.certificacion = :certificacion
+                        AND '.$periodo_col_46.' = :periodo
+                        AND r.dte = 46
+                    GROUP BY
+                        r.fecha_hora_creacion
+                ) AS f ON
+                    r.dia = f.dia
+            ORDER BY
+                dia
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':periodo' => $periodo,
+        ]);
     }
 
     /**
-     * Método que entrega el resumen de las compras diarias de un período
-     * @warning Versión del método para MySQL, no soporta facturas de compra (se hace en método aparte porque no hay FULL JOIN en MySQL)
-     * @todo Emular FULL JOIN para obtener el soporte para facturas de compra
-         * @version 2017-09-11
+     * Método que entrega el resumen de compras por tipo de un período.
+     * @return array Arreglo asociativo con las compras.
      */
-    private function getComprasDiariasMySQL($periodo)
+    public function getComprasPorTipo($periodo): array
     {
         $periodo_col = $this->db->date('Ym', 'r.fecha');
-        $dia_col = $this->db->date('d', 'r.fecha');
-        return $this->db->getTable('
-            SELECT '.$dia_col.' AS dia, COUNT(*) AS documentos
-            FROM dte_tipo AS t, dte_recibido AS r
-            WHERE t.codigo = r.dte AND t.compra = true AND r.receptor = :rut AND r.certificacion = :certificacion AND '.$periodo_col.' = :periodo
-            GROUP BY r.fecha
-            ORDER BY r.fecha
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo]);
-    }
-
-    /**
-     * Método que entrega el resumen de compras por tipo de un período
-     * @return Arreglo asociativo con las compras
-         * @version 2020-07-21
-     */
-    public function getComprasPorTipo($periodo)
-    {
-        $periodo_col = $this->db->date('Ym', 'r.fecha');
-        $periodo_col_46 = $this->db->date('Ym', 'r.fecha_hora_creacion'); ///< se asume como período el de la creación de la FC
+        $periodo_col_46 = $this->db->date('Ym', 'r.fecha_hora_creacion');
         return $this->db->getTable('
             (
-                SELECT t.tipo, COUNT(*) AS documentos
+                SELECT
+                    t.tipo,
+                    COUNT(*) AS documentos
                 FROM
                     dte_recibido AS r
-                    JOIN dte_tipo AS t ON t.codigo = r.dte
+                    JOIN dte_tipo AS t ON
+                        t.codigo = r.dte
                 WHERE
                     t.compra = true
                     AND r.receptor = :rut
                     AND r.dte != 46 -- se quitan FC para evitar duplicidad con las que están en dte_emitidos
                     AND r.certificacion = :certificacion
                     AND '.$periodo_col.' = :periodo
-                GROUP BY t.tipo
+                GROUP BY
+                    t.tipo
             ) UNION (
-                SELECT t.tipo, COUNT(*) AS facturas_compra
-                FROM dte_emitido AS r JOIN dte_tipo AS t ON t.codigo = r.dte
-                WHERE  r.emisor = :rut AND r.certificacion = :certificacion AND r.dte = 46 AND '.$periodo_col_46.' = :periodo
-                GROUP BY t.tipo
+                SELECT
+                    t.tipo,
+                    COUNT(*) AS facturas_compra
+                FROM
+                    dte_emitido AS r
+                    JOIN dte_tipo AS t ON
+                        t.codigo = r.dte
+                WHERE
+                    r.emisor = :rut
+                    AND r.certificacion = :certificacion
+                    AND r.dte = 46
+                    AND '.$periodo_col_46.' = :periodo
+                GROUP BY
+                    t.tipo
             )
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $periodo]);
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':periodo' => $periodo,
+        ]);
     }
 
     /**
-     * Método que entrega el listado de documentos electrónicos que han sido
-     * generados pero no se han enviado al SII
-         * @version 2021-08-12
+     * Método que entrega el listado de documentos electrónicos que han
+     * sido generados pero no se han enviado al SII.
      */
-    public function getDteEmitidosSinEnviar($certificacion = null, $creados_hace_horas = 0)
+    public function getDteEmitidosSinEnviar(?int $certificacion = null, int $creados_hace_horas = 0): array
     {
-        $certificacion = (int)($certificacion !== null ? $certificacion : $this->enCertificacion());
+        $certificacion = (int)($certificacion !== null
+            ? $certificacion
+            : $this->enCertificacion()
+        );
         return $this->db->getTable('
-            SELECT dte, folio
-            FROM dte_emitido
+            SELECT
+                dte,
+                folio
+            FROM
+                dte_emitido
             WHERE
                 emisor = :rut
                 AND certificacion = :certificacion
-                AND (dte NOT IN (39, 41) OR (dte IN (39, 41) AND fecha >= :envio_boleta))
-                AND (track_id IS NULL OR track_id = 0)
-                AND NOW() AT TIME ZONE \'America/Santiago\' >= (fecha_hora_creacion + interval \'1h\' * :creados_hace_horas)
+                AND (
+                    dte NOT IN (39, 41)
+                    OR (
+                        dte IN (39, 41)
+                        AND fecha >= :envio_boleta
+                    )
+                )
+                AND (
+                    track_id IS NULL
+                    OR track_id = 0
+                )
+                AND NOW() AT TIME ZONE \'America/Santiago\' >= (
+                    fecha_hora_creacion + interval \'1h\' * :creados_hace_horas
+                )
         ', [
             ':rut' => $this->rut,
             ':certificacion' => $certificacion,
@@ -2891,56 +3516,82 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el listado de documentos electrónicos que han sido
-     * generados y enviados al SII pero aun no se ha actualizado su estado
-         * @version 2020-08-22
+     * generados y enviados al SII pero aun no se ha actualizado su estado.
      */
-    public function getDteEmitidosSinEstado($certificacion = null)
+    public function getDteEmitidosSinEstado(?int $certificacion = null): array
     {
-        $certificacion = (int)($certificacion !== null ? $certificacion : $this->enCertificacion());
+        $certificacion = (int)($certificacion !== null
+            ? $certificacion
+            : $this->enCertificacion()
+        );
+        $estados_no_final = implode('\', \'', Model_DteEmitidos::$revision_estados['no_final']);
         return $this->db->getTable('
-            SELECT dte, folio
-            FROM dte_emitido
+            SELECT
+                dte,
+                folio
+            FROM
+                dte_emitido
             WHERE
                 emisor = :rut
                 AND certificacion = :certificacion
-                AND (dte NOT IN (39, 41) OR (dte IN (39, 41) AND fecha >= :envio_boleta))
+                AND (
+                    dte NOT IN (39, 41)
+                    OR (
+                        dte IN (39, 41)
+                        AND fecha >= :envio_boleta
+                    )
+                )
                 AND track_id > 0
                 AND (
                     revision_estado IS NULL
                     OR revision_estado LIKE \'-%\'
-                    OR SUBSTRING(revision_estado FROM 1 FOR 3) IN (\''.implode('\', \'', Model_DteEmitidos::$revision_estados['no_final']).'\')
+                    OR SUBSTRING(revision_estado FROM 1 FOR 3) IN (
+                        \'' . $estados_no_final . '\'
+                    )
                 )
-        ', [':rut' => $this->rut, ':certificacion' => $certificacion, ':envio_boleta' => Model_DteEmitidos::ENVIO_BOLETA]);
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $certificacion,
+            ':envio_boleta' => Model_DteEmitidos::ENVIO_BOLETA,
+        ]);
     }
 
     /**
      * Método que entrega el listado de sucursales del contribuyente con los
-     * codigos de actividad económica asociados a cada una (uno por sucursal)
-         * @version 2016-08-08
+     * codigos de actividad económica asociados a cada una (uno por sucursal).
      */
     public function getSucursalesActividades()
     {
         $actividades = [0 => $this->actividad_economica];
         if ($this->config_extra_sucursales) {
             foreach ($this->config_extra_sucursales as $sucursal) {
-                $actividades[$sucursal->codigo] = $sucursal->actividad_economica ? $sucursal->actividad_economica : $this->actividad_economica;
+                $actividades[$sucursal->codigo] = $sucursal->actividad_economica
+                    ? $sucursal->actividad_economica
+                    : $this->actividad_economica
+                ;
             }
         }
         return $actividades;
     }
 
     /**
-     * Método que entrega el listado de sucursales del contribuyente (se incluye
-     * la casa matriz)
-         * @version 2016-07-13
+     * Método que entrega el listado de sucursales del contribuyente,
+     * se incluye la casa matriz.
      */
-    public function getSucursales()
+    public function getSucursales(): array
     {
-        $sucursales = [0=>'Casa matriz ('.$this->direccion.', '.$this->getComuna()->comuna.')'];
+        $sucursales = [
+            0 => 'Casa matriz (' . $this->direccion . ', ' . $this->getComuna()->comuna . ')',
+        ];
         if ($this->config_extra_sucursales) {
             foreach ($this->config_extra_sucursales as $sucursal) {
-                $comuna = (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->get($sucursal->comuna)->comuna;
-                $sucursales[$sucursal->codigo] = $sucursal->sucursal.' ('.$sucursal->direccion.', '.$comuna.')';
+                $comuna = (new Model_Comunas())
+                    ->get($sucursal->comuna)
+                    ->comuna
+                ;
+                $sucursales[$sucursal->codigo] = $sucursal->sucursal
+                    . ' (' . $sucursal->direccion . ', ' . $comuna . ')'
+                ;
             }
         }
         return $sucursales;
@@ -2948,8 +3599,7 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que entrega el objeto de la sucursal del contribuyente a partir
-     * del código de la sucursal (por defecto casa matriz)
-         * @version 2021-10-31
+     * del código de la sucursal (por defecto casa matriz).
      */
     public function getSucursal($codigo = null)
     {
@@ -2981,8 +3631,7 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega la sucursal del usuario indicado
-         * @version 2021-10-14
+     * Método que entrega la sucursal del usuario indicado.
      */
     public function getSucursalUsuario($Usuario)
     {
@@ -2991,75 +3640,102 @@ class Model_Contribuyente extends \Model_App
             SELECT sucursal_sii
             FROM contribuyente_usuario_sucursal
             WHERE contribuyente = :rut AND usuario = :usuario
-        ', [':rut' => $this->rut, ':usuario' => $Usuario->id]);
+        ', [
+            ':rut' => $this->rut,
+            ':usuario' => $Usuario->id,
+        ]);
         if ($sucursal) {
             return $sucursal;
         }
-        // obtener desde el usuario (permite obtener mediante un trigger desde otro módulo)
-        return method_exists($Usuario, 'getSucursal') ? $Usuario->getSucursal($this) : null;
+        // Obtener desde el usuario, permite obtener mediante un trigger
+        // desde otro módulo.
+        return method_exists($Usuario, 'getSucursal')
+            ? $Usuario->getSucursal($this)
+            : null
+        ;
     }
 
     /**
-     * Método que asigna las sucursales por defecto de los usuarios
-         * @version 2021-10-14
+     * Método que asigna las sucursales por defecto de los usuarios.
      */
     public function setSucursalesPorUsuario(array $usuarios = [])
     {
         $this->db->beginTransaction();
-        // se eliminan todas las sucursales (para dejar solo lo que viene en el arreglo)
-        $this->db->query('DELETE FROM contribuyente_usuario_sucursal WHERE contribuyente = :rut', [':rut' => $this->rut]);
+        // Se eliminan todas las sucursales, para dejar solo lo que
+        // viene en el arreglo.
+        $this->db->query('
+            DELETE
+            FROM contribuyente_usuario_sucursal
+            WHERE contribuyente = :rut
+        ', [':rut' => $this->rut]);
         // se agregan las sucursales por defecto
         foreach ($usuarios as $usuario => $sucursal) {
-            $Usuario = new \sowerphp\app\Sistema\Usuarios\Model_Usuario($usuario);
+            $Usuario = new Model_Usuario($usuario);
             if (!$Usuario->exists()) {
                 $this->db->rollback();
-                throw new \Exception('Usuario '.$usuario.' no existe');
+                throw new \Exception('Usuario '.$usuario.' no existe.');
                 return false;
             }
             $Sucursal = $this->getSucursal($sucursal);
             if (!$Sucursal->codigo) {
                 continue;
             }
-            $this->db->query(
-                'INSERT INTO contribuyente_usuario_sucursal VALUES (:rut, :usuario, :sucursal)',
-                [':rut' => $this->rut, ':usuario' => $Usuario->id, ':sucursal' => $Sucursal->codigo]
-            );
+            $this->db->query('
+                INSERT INTO contribuyente_usuario_sucursal
+                VALUES (:rut, :usuario, :sucursal)
+            ', [
+                ':rut' => $this->rut,
+                ':usuario' => $Usuario->id,
+                ':sucursal' => $Sucursal->codigo,
+            ]);
         }
         return $this->db->commit();
     }
 
     /**
-     * Método que obtiene las sucursales por defecto de los usuarios
-         * @version 2021-10-14
+     * Método que obtiene las sucursales por defecto de los usuarios.
      */
-    public function getSucursalesPorUsuario()
+    public function getSucursalesPorUsuario(): array
     {
         return $this->db->getAssociativeArray('
-            SELECT u.usuario, s.sucursal_sii
-            FROM contribuyente_usuario_sucursal AS s JOIN usuario AS u ON u.id = s.usuario
-            WHERE contribuyente = :rut
+            SELECT
+                u.usuario,
+                s.sucursal_sii
+            FROM
+                contribuyente_usuario_sucursal AS s
+                JOIN usuario AS u ON
+                    u.id = s.usuario
+            WHERE
+                contribuyente = :rut
         ', [':rut' => $this->rut]);
     }
 
     /**
-     * Método que entrega las coordenadas geográficas del emisor según su dirección
-         * @version 2016-12-26
+     * Método que entrega las coordenadas geográficas del emisor según su dirección.
      */
     public function getCoordenadas($sucursal = null)
     {
         $Sucursal = $this->getSucursal($sucursal);
-        $direccion = $Sucursal->direccion.', '.(new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna($Sucursal->comuna))->comuna;
-        return (new \sowerphp\general\Utility_Mapas_Google())->getCoordenadas($direccion);
+        $direccion = $Sucursal->direccion
+            . ', ' . (new Model_Comuna($Sucursal->comuna))->comuna
+        ;
+        return (new Utility_Mapas_Google())->getCoordenadas($direccion);
     }
 
     /**
-     * Método que entrega el listado de clientes del contribuyente
-         * @version 2021-06-08
+     * Método que entrega el listado de clientes del contribuyente.
      */
-    public function getClientes(array $filtros = [])
+    public function getClientes(array $filtros = []): array
     {
-        // si no hay módulo CRM se sacan los clientes de los DTE emitidos
-        if (!\sowerphp\core\Module::loaded('Crm')) {
+        // Si es edición enterprise se saca del CRM.
+        if (is_libredte_enterprise()) {
+            return (new \libredte\enterprise\Crm\Model_Clientes())
+                ->setContribuyente($this)
+                ->getListado($filtros)
+            ;
+        }
+        // Si es edición comunidad se sacan los clientes de los DTE emitidos.
+        else {
             return $this->db->getTable('
                 SELECT DISTINCT
                     c.rut,
@@ -3073,38 +3749,41 @@ class Model_Contribuyente extends \Model_App
                     c.giro
                 FROM
                     contribuyente AS c
-                    JOIN dte_emitido AS d ON d.receptor = c.rut
-                    LEFT JOIN comuna AS co ON co.codigo = c.comuna
+                    JOIN dte_emitido AS d ON
+                        d.receptor = c.rut
+                    LEFT JOIN comuna AS co ON
+                        co.codigo = c.comuna
                 WHERE
                     d.emisor = :emisor
                     AND d.receptor NOT IN (55555555, 66666666)
                     AND d.certificacion = :certificacion
-                ORDER BY c.razon_social
-            ', [':emisor' => $this->rut, ':certificacion' => $this->enCertificacion()]);
-        }
-        // si hay módulo CRM se sacan los clientes desde el módulo
-        else {
-            return (new \libredte\enterprise\Crm\Model_Clientes())->setContribuyente($this)->getListado($filtros);
+                ORDER BY
+                    c.razon_social
+            ', [
+                ':emisor' => $this->rut,
+                ':certificacion' => $this->enCertificacion(),
+            ]);
         }
     }
 
     /**
-     * Método que entrega la cuota de documentos asignada al contribuyente
-         * @version 2019-08-19
+     * Método que entrega la cuota de documentos asignada al contribuyente.
      */
-    public function getCuota()
+    public function getCuota(): int
     {
         return (int)$this->config_libredte_cuota;
     }
 
     /**
-     * Método que entrega los documentos usados por el contribuyente. Ya sea en
-     * todos los períodos o en uno en específico.
-         * @version 2020-01-01
+     * Método que entrega los documentos usados por el contribuyente.
+     * Ya sea en todos los períodos o en uno en específico.
      */
-    public function getDocumentosUsados($periodo = null)
+    public function getDocumentosUsados($periodo = null): array
     {
-        $vars = [':rut' => $this->rut, ':certificacion' => $this->enCertificacion()];
+        $vars = [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+        ];
         // columnas de periodos
         $periodo_col = $this->db->date('Ym', 'fecha_hora_creacion');
         $intercambio_periodo_col = $this->db->date('Ym', 'fecha_hora_email');
@@ -3114,47 +3793,71 @@ class Model_Contribuyente extends \Model_App
         } else {
             // WARNING al ser muchos períodos (casos raros donde un cliente emitió con período
             // del año 2130) sale: "ERROR:  stack depth limit exceeded" (error de SQL)
-            // por eso se usa un período mínimo base que es enero del 2000 y un periodo máximo
-            // que es el períodi siguiente al actual
+            // por eso se usa un período mínimo base que es enero del 2016 y un periodo máximo
+            // que es el período siguiente al actual.
             // el error ocurre por la gran cantidad de UNION que aparecen
             $periodo_actual = date('Ym');
             $periodos_min = array_filter($this->db->getCol('
                 (
                     SELECT MIN('.$periodo_col.')
                     FROM dte_emitido
-                    WHERE emisor = :rut AND certificacion = :certificacion AND dte NOT IN (39,41)
+                    WHERE
+                        emisor = :rut
+                        AND certificacion = :certificacion
+                        AND dte NOT IN (39,41)
                 ) UNION (
                     SELECT MIN('.$periodo_col.')
                     FROM dte_emitido
-                    WHERE emisor = :rut AND certificacion = :certificacion AND dte IN (39,41)
+                    WHERE
+                        emisor = :rut
+                        AND certificacion = :certificacion
+                        AND dte IN (39,41)
                 ) UNION (
                     SELECT MIN('.$periodo_col.')
                     FROM dte_recibido
-                    WHERE receptor = :rut AND certificacion = :certificacion AND emisor = 1
+                    WHERE
+                        receptor = :rut
+                        AND certificacion = :certificacion
+                        AND emisor = 1
                 )
             ', $vars));
-            $periodo_min = max($periodos_min ? min($periodos_min) : $periodo_actual, 200001);
+            $periodo_min = max(
+                $periodos_min ? min($periodos_min) : $periodo_actual,
+                201601
+            );
             $periodos_max = array_filter($this->db->getCol('
                 (
                     SELECT MAX('.$periodo_col.')
                     FROM dte_emitido
-                    WHERE emisor = :rut AND certificacion = :certificacion AND dte NOT IN (39,41)
+                    WHERE
+                        emisor = :rut
+                        AND certificacion = :certificacion
+                        AND dte NOT IN (39,41)
                 ) UNION (
                     SELECT MAX('.$periodo_col.')
                     FROM dte_emitido
-                    WHERE emisor = :rut AND certificacion = :certificacion AND dte IN (39,41)
+                    WHERE
+                        emisor = :rut
+                        AND certificacion = :certificacion
+                        AND dte IN (39,41)
                 ) UNION (
                     SELECT MAX('.$periodo_col.')
                     FROM dte_recibido
-                    WHERE receptor = :rut AND certificacion = :certificacion AND emisor = 1
+                    WHERE
+                        receptor = :rut
+                        AND certificacion = :certificacion
+                        AND emisor = 1
                 )
             ', $vars));
-            $periodo_max = min($periodos_max ? max($periodos_max) : $periodo_actual, \sowerphp\general\Utility_Date::nextPeriod($periodo_actual));
+            $periodo_max = min(
+                $periodos_max ? max($periodos_max) : $periodo_actual,
+                Utility_Date::nextPeriod($periodo_actual)
+            );
             $periodos = [];
             $p_aux = $periodo_min;
             do {
                 $periodos[] = $p_aux;
-                $p_aux = \sowerphp\general\Utility_Date::nextPeriod($p_aux);
+                $p_aux = Utility_Date::nextPeriod($p_aux);
             } while($p_aux <= $periodo_max);
         }
         // consulta SQL
@@ -3165,7 +3868,10 @@ class Model_Contribuyente extends \Model_App
         } else {
             $periodo_where = $intercambio_periodo_where = '';
         }
-        $periodos = array_map(function($p) { return '(SELECT '.$p.' AS periodo)'; }, $periodos);
+        $periodos = array_map(
+            function($p) { return '(SELECT '.$p.' AS periodo)'; },
+            $periodos
+        );
         $datos = $this->db->getTable('
             SELECT
                 p.periodo,
@@ -3181,25 +3887,35 @@ class Model_Contribuyente extends \Model_App
                 LEFT JOIN (
                     SELECT '.$periodo_col.' AS periodo, COUNT(*) AS total
                     FROM dte_emitido
-                    WHERE emisor = :rut AND certificacion = :certificacion AND dte NOT IN (39,41) '.$periodo_where.'
+                    WHERE
+                        emisor = :rut
+                        AND certificacion = :certificacion
+                        AND dte NOT IN (39,41) '.$periodo_where.'
                     GROUP BY '.$periodo_col.'
                 ) AS e ON e.periodo = p.periodo
                 LEFT JOIN (
                     SELECT '.$periodo_col.' AS periodo, COUNT(*) AS total
                     FROM dte_emitido
-                    WHERE emisor = :rut AND certificacion = :certificacion AND dte IN (39,41) '.$periodo_where.'
+                    WHERE
+                        emisor = :rut
+                        AND certificacion = :certificacion
+                        AND dte IN (39,41) '.$periodo_where.'
                     GROUP BY '.$periodo_col.'
                 ) AS b ON b.periodo = p.periodo
                 LEFT JOIN (
                     SELECT '.$periodo_col.' AS periodo, COUNT(*) AS total
                     FROM dte_recibido
-                    WHERE receptor = :rut AND certificacion = :certificacion '.$periodo_where.'
+                    WHERE
+                        receptor = :rut
+                        AND certificacion = :certificacion '.$periodo_where.'
                     GROUP BY '.$periodo_col.'
                 ) AS r ON r.periodo = p.periodo
                 LEFT JOIN (
                     SELECT '.$intercambio_periodo_col.' AS periodo, COUNT(*) AS total
                     FROM dte_intercambio
-                    WHERE receptor = :rut AND certificacion = :certificacion '.$intercambio_periodo_where.'
+                    WHERE
+                        receptor = :rut
+                        AND certificacion = :certificacion '.$intercambio_periodo_where.'
                     GROUP BY '.$intercambio_periodo_col.'
                 ) AS i ON i.periodo = p.periodo
             ORDER BY periodo DESC
@@ -3221,11 +3937,10 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega el total de documentos usados por el contribuyente en
-     * un periodo en particular
-         * @version 2020-01-01
+     * Método que entrega el total de documentos usados por el
+     * contribuyente en un periodo en particular.
      */
-    public function getTotalDocumentosUsadosPeriodo($periodo = null)
+    public function getTotalDocumentosUsadosPeriodo($periodo = null): int
     {
         if (!$periodo) {
             $periodo = date('Ym');
@@ -3234,37 +3949,58 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega el resumen de los estados de los DTE para un periodo de tiempo
-         * @version 2016-09-23
+     * Método que entrega el resumen de los estados de los DTE para un
+     * periodo de tiempo.
      */
-    public function getDocumentosEmitidosResumenEstados($desde, $hasta)
+    public function getDocumentosEmitidosResumenEstados(string $desde, string $hasta): array
     {
         return $this->db->getTable('
-            SELECT revision_estado AS estado, COUNT(*) AS total
-            FROM dte_emitido
-            WHERE emisor = :rut AND certificacion = :certificacion AND fecha BETWEEN :desde AND :hasta AND track_id > 0
-            GROUP BY revision_estado
-            ORDER BY total DESC
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta]);
+            SELECT
+                revision_estado AS estado,
+                COUNT(*) AS total
+            FROM
+                dte_emitido
+            WHERE
+                emisor = :rut
+                AND certificacion = :certificacion
+                AND fecha BETWEEN :desde AND :hasta
+                AND track_id > 0
+            GROUP BY
+                revision_estado
+            ORDER BY
+                total DESC
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+        ]);
     }
 
     /**
-     * Método que entrega el resumen diario de los documentos emitidos
-         * @version 2022-09-15
+     * Método que entrega el resumen diario de los documentos emitidos.
      */
-    public function getDocumentosEmitidosResumenDiario(array $filtros)
+    public function getDocumentosEmitidosResumenDiario(array $filtros): array
     {
         if (empty($filtros['periodo'])) {
             $filtros['periodo'] = date('Ym');
         }
         $periodo_col = $this->db->date('Ym', 'fecha');
-        $where = ['emisor = :rut', 'certificacion = :certificacion', $periodo_col . ' = :periodo'];
-        $vars = [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':periodo' => $filtros['periodo']];
+        $where = [
+            'emisor = :rut',
+            'certificacion = :certificacion',
+            $periodo_col . ' = :periodo',
+        ];
+        $vars = [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':periodo' => $filtros['periodo'],
+        ];
         if (!empty($filtros['dtes'])) {
             if (!is_array($filtros['dtes'])) {
                 [$filtros['dtes']] = [$filtros['dtes']];
             }
-            $where[] = 'dte IN ('.implode(', ', array_map('intval', $filtros['dtes'])).')';
+            $where[] = 'dte IN (' . implode(', ', array_map('intval', $filtros['dtes'])) . ')';
         }
         return $this->db->getTable('
             SELECT
@@ -3276,24 +4012,31 @@ class Model_Contribuyente extends \Model_App
                 SUM(neto) AS neto,
                 SUM(iva) AS iva,
                 SUM(total) AS total
-            FROM dte_emitido
+            FROM
+                dte_emitido
             WHERE
                 '.implode(' AND ', $where).'
                 AND dte != 46
-            GROUP BY fecha
-            ORDER BY fecha
+            GROUP BY
+                fecha
+            ORDER BY
+                fecha
         ', $vars);
     }
 
     /**
-     * Método que entrega el detalle de los documentos emitidos con cierto
-     * estado en un rango de tiempo
-         * @version 2021-02-03
+     * Método que entrega el detalle de los documentos emitidos con
+     * cierto estado en un rango de tiempo.
      */
-    public function getDocumentosEmitidosEstado($desde, $hasta, $estado = null)
+    public function getDocumentosEmitidosEstado(string $desde, string $hasta, ?string $estado = null): array
     {
         // filtros
-        $vars = [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta];
+        $vars = [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+        ];
         if ($estado) {
             $vars[':estado'] = $estado;
             $estado = 'd.revision_estado = :estado';
@@ -3301,8 +4044,14 @@ class Model_Contribuyente extends \Model_App
             $estado = 'd.revision_estado IS NULL';
         }
         // forma de obtener razón social
-        $razon_social_xpath = $this->db->xml('d.xml', '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep', 'http://www.sii.cl/SiiDte');
-        $razon_social = 'CASE WHEN d.receptor NOT IN (55555555, 66666666) THEN r.razon_social ELSE '.$razon_social_xpath.' END AS razon_social';
+        $razon_social_xpath = $this->db->xml(
+            'd.xml',
+            '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep',
+            'http://www.sii.cl/SiiDte'
+        );
+        $razon_social = 'CASE WHEN d.receptor NOT IN (55555555, 66666666) THEN r.razon_social ELSE '
+            . $razon_social_xpath . ' END AS razon_social'
+        ;
         // realizar consulta
         return $this->db->getTable('
             SELECT
@@ -3318,49 +4067,73 @@ class Model_Contribuyente extends \Model_App
                 d.sucursal_sii,
                 u.usuario
             FROM
-                dte_emitido AS d LEFT JOIN dte_intercambio_resultado_dte AS i
-                    ON i.emisor = d.emisor AND i.dte = d.dte AND i.folio = d.folio AND i.certificacion = d.certificacion,
-                dte_tipo AS t,
-                contribuyente AS r,
-                usuario AS u
+                dte_emitido AS d
+                JOIN contribuyente AS r ON
+                    d.receptor = r.rut
+                JOIN dte_tipo AS t ON
+                    d.dte = t.codigo
+                JOIN usuario AS u ON
+                    d.usuario = u.id
+                LEFT JOIN dte_intercambio_resultado_dte AS i ON
+                    i.emisor = d.emisor
+                    AND i.dte = d.dte
+                    AND i.folio = d.folio
+                    AND i.certificacion = d.certificacion
             WHERE
-                d.dte = t.codigo
-                AND d.receptor = r.rut
-                AND d.usuario = u.id
-                AND d.emisor = :rut
+                d.emisor = :rut
                 AND d.certificacion = :certificacion
                 AND d.fecha BETWEEN :desde AND :hasta
                 AND d.track_id > 0
                 AND '.$estado.'
-            ORDER BY d.fecha DESC, t.tipo, d.folio DESC
-
+            ORDER BY
+                d.fecha DESC,
+                t.tipo,
+                d.folio DESC
         ', $vars);
     }
 
     /**
-     * Método que entrega el resumen de los eventos asignados por los receptores para un periodo de tiempo
-         * @version 2018-04-25
+     * Método que entrega el resumen de los eventos asignados por los
+     * receptores para un periodo de tiempo.
      */
-    public function getDocumentosEmitidosResumenEventos($desde, $hasta)
+    public function getDocumentosEmitidosResumenEventos(string $desde, string $hasta): array
     {
         return $this->db->getTable('
-            SELECT receptor_evento AS evento, COUNT(*) AS total
-            FROM dte_emitido
-            WHERE emisor = :rut AND certificacion = :certificacion AND fecha BETWEEN :desde AND :hasta AND dte IN (33, 34, 43)
-            GROUP BY receptor_evento
-            ORDER BY total DESC
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta]);
+            SELECT
+                receptor_evento AS evento,
+                COUNT(*) AS total
+            FROM
+                dte_emitido
+            WHERE
+                emisor = :rut
+                AND certificacion = :certificacion
+                AND fecha BETWEEN :desde AND :hasta
+                AND dte IN (33, 34, 43)
+            GROUP BY
+                receptor_evento
+            ORDER BY
+                total DESC
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+        ]);
     }
 
     /**
-     * Método que entrega el detalle de los documentos emitidos con cierto
-     * evento en un rango de tiempo
-         * @version 2020-08-22
+     * Método que entrega el detalle de los documentos emitidos con
+     * cierto evento en un rango de tiempo.
      */
-    public function getDocumentosEmitidosEvento($desde, $hasta, $evento = null)
+    public function getDocumentosEmitidosEvento(string $desde, string $hasta, ?string $evento = null): array
     {
         // filtros
-        $vars = [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta];
+        $vars = [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+        ];
         if ($evento) {
             $vars[':evento'] = $evento;
             $evento = 'd.receptor_evento = :evento';
@@ -3368,8 +4141,14 @@ class Model_Contribuyente extends \Model_App
             $evento = 'd.receptor_evento IS NULL';
         }
         // forma de obtener razón social
-        $razon_social_xpath = $this->db->xml('d.xml', '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep', 'http://www.sii.cl/SiiDte');
-        $razon_social = 'CASE WHEN d.receptor NOT IN (55555555, 66666666) THEN r.razon_social ELSE '.$razon_social_xpath.' END AS razon_social';
+        $razon_social_xpath = $this->db->xml(
+            'd.xml',
+            '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep',
+            'http://www.sii.cl/SiiDte'
+        );
+        $razon_social = 'CASE WHEN d.receptor NOT IN (55555555, 66666666) THEN r.razon_social ELSE '
+            . $razon_social_xpath . ' END AS razon_social'
+        ;
         // realizar consulta
         return $this->db->getTable('
             SELECT
@@ -3384,35 +4163,46 @@ class Model_Contribuyente extends \Model_App
                 d.sucursal_sii,
                 u.usuario
             FROM
-                dte_emitido AS d LEFT JOIN dte_intercambio_resultado_dte AS i
-                    ON i.emisor = d.emisor AND i.dte = d.dte AND i.folio = d.folio AND i.certificacion = d.certificacion,
-                dte_tipo AS t,
-                contribuyente AS r,
-                usuario AS u
+                dte_emitido AS d
+                JOIN contribuyente AS r ON
+                    d.receptor = r.rut
+                JOIN dte_tipo AS t ON
+                    d.dte = t.codigo
+                JOIN usuario AS u ON
+                    d.usuario = u.id
+                LEFT JOIN dte_intercambio_resultado_dte AS i ON
+                    i.emisor = d.emisor
+                    AND i.dte = d.dte
+                    AND i.folio = d.folio
+                    AND i.certificacion = d.certificacion
             WHERE
-                d.dte = t.codigo
-                AND d.receptor = r.rut
-                AND d.usuario = u.id
-                AND d.emisor = :rut
+                d.emisor = :rut
                 AND d.certificacion = :certificacion
                 AND d.fecha BETWEEN :desde AND :hasta
                 AND d.dte IN (33, 34, 43)
                 AND '.$evento.'
-            ORDER BY d.fecha DESC, t.tipo, d.folio DESC
-
+            ORDER BY
+                d.fecha DESC,
+                t.tipo,
+                d.folio DESC
         ', $vars);
     }
 
     /**
-     * Método que entrega el detalle de los documentos emitidos que aun no han
-     * sido enviado al SII
-         * @version 2021-07-30
+     * Método que entrega el detalle de los documentos emitidos que aun
+     * no han sido enviado al SII.
      */
-    public function getDocumentosEmitidosSinEnviar()
+    public function getDocumentosEmitidosSinEnviar(): array
     {
         // forma de obtener razón social
-        $razon_social_xpath = $this->db->xml('d.xml', '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep', 'http://www.sii.cl/SiiDte');
-        $razon_social = 'CASE WHEN d.receptor NOT IN (55555555, 66666666) THEN r.razon_social ELSE '.$razon_social_xpath.' END AS razon_social';
+        $razon_social_xpath = $this->db->xml(
+            'd.xml',
+            '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep',
+            'http://www.sii.cl/SiiDte'
+        );
+        $razon_social = 'CASE WHEN d.receptor NOT IN (55555555, 66666666) THEN r.razon_social ELSE '
+            . $razon_social_xpath . ' END AS razon_social'
+        ;
         // realizar consulta
         return $this->db->getTable('
             SELECT
@@ -3426,76 +4216,124 @@ class Model_Contribuyente extends \Model_App
                 d.sucursal_sii,
                 u.usuario
             FROM
-                dte_emitido AS d LEFT JOIN dte_intercambio_resultado_dte AS i
-                    ON i.emisor = d.emisor AND i.dte = d.dte AND i.folio = d.folio AND i.certificacion = d.certificacion,
-                dte_tipo AS t,
-                contribuyente AS r,
-                usuario AS u
+                dte_emitido AS d
+                JOIN contribuyente AS r ON
+                    d.receptor = r.rut
+                JOIN dte_tipo AS t ON
+                    d.dte = t.codigo
+                JOIN usuario AS u ON
+                    d.usuario = u.id
+                LEFT JOIN dte_intercambio_resultado_dte AS i ON
+                    i.emisor = d.emisor
+                    AND i.dte = d.dte
+                    AND i.folio = d.folio
+                    AND i.certificacion = d.certificacion
             WHERE
-                d.dte = t.codigo
-                AND d.receptor = r.rut
-                AND d.usuario = u.id
-                AND d.emisor = :rut
+                d.emisor = :rut
                 AND d.certificacion = :certificacion
                 AND (d.dte NOT IN (39, 41) OR (d.dte IN (39, 41) AND d.fecha >= :envio_boleta))
                 AND (d.track_id IS NULL OR d.track_id = 0)
                 AND d.xml IS NOT NULL
             ORDER BY d.fecha DESC, t.tipo, d.folio DESC
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':envio_boleta' => Model_DteEmitidos::ENVIO_BOLETA]);
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':envio_boleta' => Model_DteEmitidos::ENVIO_BOLETA,
+        ]);
     }
 
     /**
-     * Método que entrega el resumen de los estados de los DTE para un periodo de tiempo
-         * @version 2016-09-23
+     * Método que entrega el resumen de los estados de los DTE para un
+     * periodo de tiempo.
      */
-    public function getDocumentosEmitidosResumenEstadoIntercambio($desde, $hasta)
+    public function getDocumentosEmitidosResumenEstadoIntercambio(string $desde, string $hasta): array
     {
         return $this->db->getTable('
             SELECT
-                CASE WHEN recibo.responde IS NOT NULL THEN true ELSE false END AS recibo,
+                CASE WHEN recibo.responde IS NOT NULL THEN
+                    true
+                ELSE
+                    false
+                END AS recibo,
                 recepcion.estado AS recepcion,
                 resultado.estado  AS resultado,
                 COUNT(*) AS total
             FROM
                 dte_emitido AS e
-                LEFT JOIN dte_intercambio_recibo_dte AS recibo ON recibo.emisor = e.emisor AND recibo.dte = e.dte AND recibo.folio = e.folio AND recibo.certificacion = e.certificacion
-                LEFT JOIN dte_intercambio_recepcion_dte AS recepcion ON recepcion.emisor = e.emisor AND recepcion.dte = e.dte AND recepcion.folio = e.folio AND recepcion.certificacion = e.certificacion
-                LEFT JOIN dte_intercambio_resultado_dte AS resultado ON resultado.emisor = e.emisor AND resultado.dte = e.dte AND resultado.folio = e.folio AND resultado.certificacion = e.certificacion
+                LEFT JOIN dte_intercambio_recibo_dte AS recibo ON
+                    recibo.emisor = e.emisor
+                    AND recibo.dte = e.dte
+                    AND recibo.folio = e.folio
+                    AND recibo.certificacion = e.certificacion
+                LEFT JOIN dte_intercambio_recepcion_dte AS recepcion ON
+                    recepcion.emisor = e.emisor
+                    AND recepcion.dte = e.dte
+                    AND recepcion.folio = e.folio
+                    AND recepcion.certificacion = e.certificacion
+                LEFT JOIN dte_intercambio_resultado_dte AS resultado ON
+                    resultado.emisor = e.emisor
+                    AND resultado.dte = e.dte
+                    AND resultado.folio = e.folio
+                    AND resultado.certificacion = e.certificacion
             WHERE
                 e.emisor = :rut
                 AND e.certificacion = :certificacion
                 AND e.fecha BETWEEN :desde AND :hasta
                 AND e.track_id > 0
                 AND  e.revision_estado IS NOT NULL
-            GROUP BY recibo, recepcion, resultado
-            ORDER BY total DESC
-        ', [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta]);
+            GROUP BY
+                recibo,
+                recepcion,
+                resultado
+            ORDER BY
+                 total DESC
+        ', [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+        ]);
     }
 
     /**
-     * Método que entrega los estados de los DTE para un periodo de tiempo
-         * @version 2020-08-22
+     * Método que entrega los estados de los DTE para un periodo de tiempo.
      */
-    public function getDocumentosEmitidosEstadoIntercambio($desde, $hasta, $recibo, $recepcion, $resultado)
+    public function getDocumentosEmitidosEstadoIntercambio(string $desde, string $hasta, $recibo, $recepcion, $resultado): array
     {
         // filtros
-        $vars = [':rut' => $this->rut, ':certificacion' => $this->enCertificacion(), ':desde' => $desde, ':hasta' => $hasta];
-        $where = [$recibo ? 'recibo.responde IS NOT NULL' : 'recibo.responde IS NULL'];
-        if ($recepcion !== null && $recepcion!=-1) {
+        $vars = [
+            ':rut' => $this->rut,
+            ':certificacion' => $this->enCertificacion(),
+            ':desde' => $desde,
+            ':hasta' => $hasta,
+        ];
+        $where = [
+            $recibo
+                ? 'recibo.responde IS NOT NULL'
+                : 'recibo.responde IS NULL'
+            ,
+        ];
+        if ($recepcion !== null && $recepcion != -1) {
             $where[] = 'recepcion.estado = :recepcion';
             $vars[':recepcion'] = $recepcion;
         } else {
             $where[] = 'recepcion.estado IS NULL';
         }
-        if ($resultado !== null && $resultado!=-1) {
+        if ($resultado !== null && $resultado != -1) {
             $where[] = 'resultado.estado = :resultado';
             $vars[':resultado'] = $resultado;
         } else {
             $where[] = 'resultado.estado IS NULL';
         }
         // forma de obtener razón social
-        $razon_social_xpath = $this->db->xml('e.xml', '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep', 'http://www.sii.cl/SiiDte');
-        $razon_social = 'CASE WHEN e.receptor NOT IN (55555555, 66666666) THEN r.razon_social ELSE '.$razon_social_xpath.' END AS razon_social';
+        $razon_social_xpath = $this->db->xml(
+            'e.xml',
+            '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep',
+            'http://www.sii.cl/SiiDte'
+        );
+        $razon_social = 'CASE WHEN e.receptor NOT IN (55555555, 66666666) THEN r.razon_social ELSE '
+            . $razon_social_xpath . ' END AS razon_social'
+        ;
         // realizar consulta
         return $this->db->getTable('
             SELECT
@@ -3510,29 +4348,46 @@ class Model_Contribuyente extends \Model_App
                 u.usuario
             FROM
                 dte_emitido AS e
-                LEFT JOIN dte_intercambio_recibo_dte AS recibo ON recibo.emisor = e.emisor AND recibo.dte = e.dte AND recibo.folio = e.folio AND recibo.certificacion = e.certificacion
-                LEFT JOIN dte_intercambio_recepcion_dte AS recepcion ON recepcion.emisor = e.emisor AND recepcion.dte = e.dte AND recepcion.folio = e.folio AND recepcion.certificacion = e.certificacion
-                LEFT JOIN dte_intercambio_resultado_dte AS resultado ON resultado.emisor = e.emisor AND resultado.dte = e.dte AND resultado.folio = e.folio AND resultado.certificacion = e.certificacion
-                JOIN dte_tipo AS t ON t.codigo = e.dte
-                JOIN contribuyente AS r ON r.rut = e.receptor
-                JOIN usuario AS u ON u.id = e.usuario
+                LEFT JOIN dte_intercambio_recibo_dte AS recibo ON
+                    recibo.emisor = e.emisor
+                    AND recibo.dte = e.dte
+                    AND recibo.folio = e.folio
+                    AND recibo.certificacion = e.certificacion
+                LEFT JOIN dte_intercambio_recepcion_dte AS recepcion ON
+                    recepcion.emisor = e.emisor
+                    AND recepcion.dte = e.dte
+                    AND recepcion.folio = e.folio
+                    AND recepcion.certificacion = e.certificacion
+                LEFT JOIN dte_intercambio_resultado_dte AS resultado ON
+                    resultado.emisor = e.emisor
+                    AND resultado.dte = e.dte
+                    AND resultado.folio = e.folio
+                    AND resultado.certificacion = e.certificacion
+                JOIN dte_tipo AS t ON
+                    t.codigo = e.dte
+                JOIN contribuyente AS r ON
+                    r.rut = e.receptor
+                JOIN usuario AS u ON
+                    u.id = e.usuario
             WHERE
                 e.emisor = :rut
                 AND e.certificacion = :certificacion
                 AND e.fecha BETWEEN :desde AND :hasta
                 AND e.track_id > 0
                 AND  e.revision_estado IS NOT NULL
-                AND '.implode(' AND ', $where).'
-            ORDER BY e.fecha DESC, t.tipo, e.folio DESC
+                AND ' . implode(' AND ', $where) . '
+            ORDER BY
+                e.fecha DESC,
+                t.tipo,
+                e.folio DESC
         ', $vars);
     }
 
     /**
-     * Método que entrega la información del registro de compra y venta del SII
-     * del contribuyente
-         * @version 2020-02-22
+     * Método que entrega la información del registro de compra y venta
+     * del SII del contribuyente.
      */
-    public function getRCV(array $filtros = [])
+    public function getRCV(array $filtros = []): array
     {
         // definir autenticación
         try {
@@ -3547,25 +4402,32 @@ class Model_Contribuyente extends \Model_App
             'estado' => 'REGISTRO',
             'periodo' => date('Ym'),
             'dte' => null,
-            'tipo' => 'rcv', // tipo de archivo a usar cuando se pide el detalle de documentos (rcv, iecv o rcv_csv)
-            'formato' => 'json', // formato en el que se debe entregar la respuesta, siempre debería ser json, excepto si es rcv_csv que podría ser csv
+            // tipo de archivo a usar cuando se pide el detalle de
+            // documentos (rcv, iecv o rcv_csv)
+            'tipo' => 'rcv',
+            // formato en el que se debe entregar la respuesta, siempre
+            // debería ser json, excepto si es rcv_csv que podría ser csv
+            'formato' => 'json',
         ], $filtros);
-        // si se pide el detalle pero no se indicó el tipo de documento se buscan todos los posible
+        // si se pide el detalle pero no se indicó el tipo de documento
+        // se buscan todos los posible
         if ($filtros['detalle'] === true) {
             // si no se indicó dte se colocan todos los posibles
             if (!$filtros['dte']) {
-                // si se solicita el ripo rcv_csv no se indican los DTE; se obtiene todo por defecto
+                // si se solicita el ripo rcv_csv no se indican los DTE;
+                // se obtiene todo por defecto
                 if ($filtros['tipo'] == 'rcv_csv') {
                     $filtros['dte'] = [0];
                 }
-                // si es tipo rcv o iecv se deben buscar los posibles tipos de documentos
+                // si es tipo rcv o iecv se deben buscar los posibles
+                // tipos de documentos
                 else {
                     $dtes = [];
                     $resumen = $this->getRCV([
                         'operacion' => $filtros['operacion'],
                         'periodo' => $filtros['periodo'],
                         'estado' => $filtros['estado'],
-                        'detalle' => false
+                        'detalle' => false,
                     ]);
                     foreach ($resumen as $r) {
                         if ($r['rsmnTotDoc']) {
@@ -3592,12 +4454,19 @@ class Model_Contribuyente extends \Model_App
             if ($filtros['operacion'] == 'COMPRA') {
                 $url = sprintf(
                     '/sii/rcv/compras/resumen/%d-%s/%d/%s?formato=json&certificacion=%d',
-                    $this->rut, $this->dv, $filtros['periodo'], $filtros['estado'], $this->enCertificacion()
+                    $this->rut,
+                    $this->dv,
+                    $filtros['periodo'],
+                    $filtros['estado'],
+                    $this->enCertificacion()
                 );
             } else {
                 $url = sprintf(
                     '/sii/rcv/ventas/resumen/%d-%s/%d?formato=json&certificacion=%d',
-                    $this->rut, $this->dv, $filtros['periodo'], $this->enCertificacion()
+                    $this->rut,
+                    $this->dv,
+                    $filtros['periodo'],
+                    $this->enCertificacion()
                 );
             }
             $r = apigateway_consume($url, ['auth' => $auth]);
@@ -3605,11 +4474,18 @@ class Model_Contribuyente extends \Model_App
                 throw new \Exception('Error al obtener el resumen del RCV: '.$r['body']);
             }
             if ($r['body']['respEstado']['codRespuesta']) {
-                $error = isset($errores[$r['body']['respEstado']['codRespuesta']]) ? $errores[$r['body']['respEstado']['codRespuesta']] : ('Código '.$r['body']['respEstado']['codRespuesta']);
+                $error = isset($errores[$r['body']['respEstado']['codRespuesta']])
+                    ? $errores[$r['body']['respEstado']['codRespuesta']]
+                    : ('Código ' . $r['body']['respEstado']['codRespuesta'])
+                ;
                 if ($error == 'Sin datos') {
                     return [];
                 }
-                throw new \Exception('No fue posible obtener el resumen: '.$r['body']['respEstado']['msgeRespuesta'].' ('.$error.')');
+                throw new \Exception(
+                    'No fue posible obtener el resumen: '
+                        . $r['body']['respEstado']['msgeRespuesta']
+                        . ' (' . $error . ').'
+                );
             }
             return $r['body']['data'];
         }
@@ -3619,25 +4495,47 @@ class Model_Contribuyente extends \Model_App
             foreach ($filtros['dte'] as $dte) {
                 if ($filtros['operacion'] == 'COMPRA') {
                     $url = sprintf(
-                        '/sii/rcv/compras/detalle/%d-%s/%d/%d/%s?formato='.$filtros['formato'].'&certificacion=%d&tipo=%s',
-                        $this->rut, $this->dv, $filtros['periodo'], $dte, $filtros['estado'], $this->enCertificacion(), $filtros['tipo']
+                        '/sii/rcv/compras/detalle/%d-%s/%d/%d/%s?formato='
+                            . $filtros['formato'] . '&certificacion=%d&tipo=%s'
+                        ,
+                        $this->rut,
+                        $this->dv,
+                        $filtros['periodo'],
+                        $dte,
+                        $filtros['estado'],
+                        $this->enCertificacion(),
+                        $filtros['tipo']
                     );
                 } else {
                     $url = sprintf(
-                        '/sii/rcv/ventas/detalle/%d-%s/%d/%d?formato='.$filtros['formato'].'&certificacion=%d&tipo=%s',
-                        $this->rut, $this->dv, $filtros['periodo'], $dte, $this->enCertificacion(), $filtros['tipo']
+                        '/sii/rcv/ventas/detalle/%d-%s/%d/%d?formato='
+                            . $filtros['formato'] . '&certificacion=%d&tipo=%s'
+                        ,
+                        $this->rut,
+                        $this->dv,
+                        $filtros['periodo'],
+                        $dte,
+                        $this->enCertificacion(),
+                        $filtros['tipo']
                     );
                 }
                 $r = apigateway_consume($url, ['auth' => $auth]);
                 if ($r['status']['code'] != 200) {
-                    throw new \Exception('Error al obtener el detalle del RCV: '.$r['body']);
+                    throw new \Exception('Error al obtener el detalle del RCV: ' . $r['body']);
                 }
                 if ($filtros['tipo'] == 'rcv_csv') {
                     return $r['body'];
                 } else {
                     if ($r['body']['respEstado']['codRespuesta']) {
-                        $error = isset($errores[$r['body']['respEstado']['codRespuesta']]) ? $errores[$r['body']['respEstado']['codRespuesta']] : ('Código '.$r['body']['respEstado']['codRespuesta']);
-                        throw new \Exception('No fue posible obtener el detalle: '.$r['body']['respEstado']['msgeRespuesta'].' ('.$error.')');
+                        $error = isset($errores[$r['body']['respEstado']['codRespuesta']])
+                            ? $errores[$r['body']['respEstado']['codRespuesta']]
+                            : ('Código ' . $r['body']['respEstado']['codRespuesta'])
+                        ;
+                        throw new \Exception(
+                            'No fue posible obtener el detalle: '
+                                . $r['body']['respEstado']['msgeRespuesta']
+                                . ' (' . $error . ').'
+                        );
                     }
                     $detalle = array_merge($detalle, $r['body']['data']);
                 }
@@ -3647,17 +4545,19 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega la configuración de cierta API (servicio web) del contribuyente
-         * @version 2017-10-06
+     * Método que entrega la configuración de cierta API (servicio web)
+     * del contribuyente.
      */
     public function getAPI($api)
     {
-        return ($this->config_api_servicios && isset($this->config_api_servicios->$api)) ? $this->config_api_servicios->$api : false;
+        return ($this->config_api_servicios && isset($this->config_api_servicios->$api))
+            ? $this->config_api_servicios->$api
+            : false
+        ;
     }
 
     /**
-     * Método que entrega el cliente para la API (servicio web) del contribuyente
-         * @version 2017-10-06
+     * Método que entrega el cliente para la API del contribuyente.
      */
     public function getApiClient($api)
     {
@@ -3665,7 +4565,7 @@ class Model_Contribuyente extends \Model_App
         if (!$Api) {
             return false;
         }
-        $rest = new \sowerphp\core\Network_Http_Rest();
+        $rest = new Network_Http_Rest();
         $rest->url = $Api->url;
         if (!empty($Api->credenciales)) {
             if ($Api->auth == 'http_auth_basic') {
@@ -3681,13 +4581,15 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega los enlaces normalizados para ser usados en el layout
-     * de la aplicación
-         * @version 2023-02-08
+     * Método que entrega los enlaces normalizados para ser usados en el
+     * layout de la aplicación.
      */
-    public function getLinks()
+    public function getLinks(): array
     {
-        $links = $this->config_extra_links ? $this->config_extra_links : (array)\sowerphp\core\Configure::read('nav.contribuyente');
+        $links = $this->config_extra_links
+            ? $this->config_extra_links
+            : (array)Configure::read('nav.contribuyente')
+        ;
         foreach ($links as &$l) {
             if (empty($l->icono)) {
                 $l->icono = 'fa-solid fa-link';
@@ -3697,13 +4599,14 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega la plantilla de un correo ya armada con los datos
-         * @version 2023-11-17
+     * Método que entrega la plantilla de un correo ya armada con los datos.
      */
     public function getEmailFromTemplate($template, $params = null)
     {
         // buscar plantilla
-        $file = DIR_PROJECT.'/data/static/contribuyentes/'.(int)$this->rut.'/email/'.$template.'.html';
+        $file = DIR_PROJECT . '/data/static/contribuyentes/'
+            . (int)$this->rut . '/email/' . $template . '.html'
+        ;
         if (!is_readable($file)) {
             return false;
         }
@@ -3745,9 +4648,18 @@ class Model_Contribuyente extends \Model_App
                 $dte_cotizacion = 'documento tributario electrónico';
                 $dte_tipo = $Documento->getTipo()->tipo;
             }
-            $fecha_pago = $mostrar_pagado ? \sowerphp\general\Utility_Date::format($Cobro->pagado) : '00/00/0000';
-            $medio_pago = $mostrar_pagado ? $Cobro->getMedioPago()->getNombre() : '"sin pago"';
-            $fecha_vencimiento = !empty($Cobro->vencimiento) ? $Cobro->vencimiento : $Documento->fecha;
+            $fecha_pago = $mostrar_pagado
+                ? Utility_Date::format($Cobro->pagado)
+                : '00/00/0000'
+            ;
+            $medio_pago = $mostrar_pagado
+                ? $Cobro->getMedioPago()->getNombre()
+                : '"sin pago"'
+            ;
+            $fecha_vencimiento = !empty($Cobro->vencimiento)
+                ? $Cobro->vencimiento
+                : $Documento->fecha
+            ;
             return str_replace(
                 [
                     '{dte_cotizacion}',
@@ -3778,14 +4690,14 @@ class Model_Contribuyente extends \Model_App
                     $dte_tipo,
                     $Documento->getFolio(),
                     $Documento->fecha,
-                    \sowerphp\general\Utility_Date::format($Documento->fecha),
+                    Utility_Date::format($Documento->fecha),
                     $fecha_vencimiento,
-                    \sowerphp\general\Utility_Date::format($fecha_vencimiento),
+                    Utility_Date::format($fecha_vencimiento),
                     $mostrar_pagar ? $links['pagar'] : '',
                     $links['pdf'],
                     $msg_text ? str_replace("\n", '</p><p>', $msg_text) : null,
                     !$mostrar_pagado ? 'none' : '',
-                    $mostrar_pagado ? __('El documento se encuentra pagado con fecha %s usando el medio de pago %s', $fecha_pago, $medio_pago) : '',
+                    $mostrar_pagado ? __('El documento se encuentra pagado con fecha %s usando el medio de pago %s.', $fecha_pago, $medio_pago) : '',
                     $fecha_pago,
                     $medio_pago,
                     !$mostrar_pagar ? 'none' : '',
@@ -3799,23 +4711,24 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega la URL del sitio web
-         * @version 2019-02-18
+     * Método que entrega la URL del sitio web.
      */
     public function getURL()
     {
         if ($this->config_extra_web) {
-            if (strpos($this->config_extra_web, 'http://') === 0 or strpos($this->config_extra_web, 'https://')) {
+            if (
+                strpos($this->config_extra_web, 'http://') === 0
+                || strpos($this->config_extra_web, 'https://')
+            ) {
                 return $this->config_extra_web;
             } else {
-                return 'http://'.$this->config_extra_web;
+                return 'http://' . $this->config_extra_web;
             }
         }
     }
 
     /**
-     * Método que entrega la aplicación de tercero del contribuyente
-         * @version 2019-06-14
+     * Método que entrega la aplicación de tercero del contribuyente.
      */
     public function getApp($app)
     {
@@ -3827,10 +4740,10 @@ class Model_Contribuyente extends \Model_App
             $codigo = $app;
         }
         // cargar app si existe
-        $apps_config = \sowerphp\core\Configure::read('apps_3rd_party.'.$namespace);
-        $App = (new \sowerphp\app\Utility_Apps($apps_config))->getApp($codigo);
+        $apps_config = Configure::read('apps_3rd_party.' . $namespace);
+        $App = (new Utility_Apps($apps_config))->getApp($codigo);
         if (!$App) {
-            throw new \Exception('Aplicación solicitada "'.$app.'" no existe', 404);
+            throw new \Exception('Aplicación solicitada "'.$app.'" no existe.', 404);
         }
         // cargar configuración de la app
         $App->setConfig($this->{'config_'.$namespace.'_'.$codigo});
@@ -3842,10 +4755,11 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega todas los aplicaciones disponibles para el contribuyente
-         * @version 2019-06-15
+     * Método que entrega todas los aplicaciones disponibles para el contribuyente.
+     * @param array|string $filtros Los filtros de aplicaciones (como arreglo)
+     * o el namespace de las aplicaciones (como string).
      */
-    public function getApps($filtros = [])
+    public function getApps($filtros = []): array
     {
         // ver si viene el namespace como filtro y extraer
         if (is_string($filtros)) {
@@ -3861,8 +4775,8 @@ class Model_Contribuyente extends \Model_App
             unset($filtros[$key]);
         }
         // obtener aplicaciones según namespace y filtros
-        $apps_config = \sowerphp\core\Configure::read('apps_3rd_party.'.$namespace);
-        $apps = (new \sowerphp\app\Utility_Apps($apps_config))->getApps($filtros);
+        $apps_config = Configure::read('apps_3rd_party.' . $namespace);
+        $apps = (new Utility_Apps($apps_config))->getApps($filtros);
         // cargar variables por defecto (asociar contribuyente)
         foreach ($apps as $App) {
             $App->setVars([
@@ -3877,11 +4791,11 @@ class Model_Contribuyente extends \Model_App
             // cargar configuración de la app desde el objeto contribuyente y prefijo estándar
             else {
                 $config_obj = $this;
-                $config_prefix = 'config_'.$namespace.'_';
+                $config_prefix = 'config_' . $namespace . '_';
             }
             // cargar la configuración de cada aplicación
             foreach ($apps as $App) {
-                $App->setConfig($config_obj->{$config_prefix.$App->getCodigo()});
+                $App->setConfig($config_obj->{$config_prefix . $App->getCodigo()});
                 // si se solicitó solo disponibles o solo no disponibles verificar
                 if (isset($filtros['disponible'])) {
                     if ($App->getConfig()->disponible != $filtros['disponible']) {
@@ -3895,49 +4809,53 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega el contador asociado al contribuyente
-         * @version 2019-08-09
+     * Método que entrega el contador asociado al contribuyente.
      */
     public function getContador()
     {
         if (!$this->config_contabilidad_contador_run) {
             return false;
         }
-        return (new Model_Contribuyentes())->get($this->config_contabilidad_contador_run);
+        return (new Model_Contribuyentes())
+            ->get($this->config_contabilidad_contador_run)
+        ;
     }
 
     /**
-     * Método que entrega las credenciales de empresa para autenticación en el
-     * SII.
-         * @version 2020-02-22
+     * Método que entrega las credenciales de empresa para autenticación
+     * en el SII.
      */
-    public function getSiiAuth()
+    public function getSiiAuth(): array
     {
         if (!$this->config_sii_pass) {
-            throw new \Exception('Falta la contraseña del SII en la configuración de la empresa');
+            throw new \Exception(
+                'La empresa no tiene configurada la contraseña del SII.'
+            );
         }
         return [
             'pass' => [
-                'rut' => $this->rut.'-'.$this->dv,
+                'rut' => $this->rut . '-' . $this->dv,
                 'clave' => $this->config_sii_pass
             ]
         ];
     }
 
     /**
-     * Método que entrega las credenciales de usuario para autenticación en el
-     * SII. Se puede entregar las credenciales rut/clave del usuario o en
-     * segunda instancia la firma electrónica del usuario
-         * @version 2020-02-22
+     * Método que entrega las credenciales de usuario para autenticación
+     * en el SII. Se puede entregar las credenciales rut/clave del
+     * usuario o en segunda instancia la firma electrónica del usuario.
      */
-    public function getSiiAuthUser($user_id = null)
+    public function getSiiAuthUser($user_id = null): array
     {
         // si no se indicó usuario se usa el por defecto de la empresa
         if (!$user_id) {
             $user_id = $this->usuario;
         }
         // mediante rut/clave del usuario
-        $Usuario = $user_id == $this->usuario ? $this->getUsuario() : (new \sowerphp\app\Sistema\Usuarios\Model_Usuarios())->get($user_id);
+        $Usuario = $user_id == $this->usuario
+            ? $this->getUsuario()
+            : (new Model_Usuarios())->get($user_id)
+        ;
         if ($Usuario->config_sii_rut && $Usuario->config_sii_pass) {
             return [
                 'pass' => [
@@ -3951,15 +4869,16 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega las credenciales de usuario para autenticación en el
-     * SII usando firma electrónica
-         * @version 2020-02-22
+     * Método que entrega las credenciales de usuario para autenticación
+     * en el SII usando firma electrónica.
      */
-    public function getSiiAuthCert($user_id = null)
+    public function getSiiAuthCert($user_id = null): array
     {
         $Firma = $this->getFirma($user_id);
         if (!$Firma) {
-            throw new \Exception('No fue posible obtener credenciales de autenticación del usuario para el SII, falta firma electrónica');
+            throw new \Exception(
+                'No existe una firma electrónica cargada que pueda ser usada.'
+            );
         }
         return [
             'cert' => [
@@ -3971,28 +4890,29 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que indica si el contribuyente está o no en ambiente de certificación.
-     * @return =0 ambiente de producción, =1 ambiente de certificación.
+     * @return int =0 ambiente de producción, =1 ambiente de certificación.
      */
     public function enCertificacion(): int
     {
-        $certificacion = \sowerphp\core\Configure::read('dte.certificacion');
+        $certificacion = Configure::read('dte.certificacion');
         if ($certificacion !== null) {
             return (int)(bool)$certificacion;
         }
         if (isset($_GET['_contribuyente_certificacion'])) {
             return (int)(bool)$_GET['_contribuyente_certificacion'];
         }
-        if (\sowerphp\core\Model_Datasource_Session::check('dte.certificacion')) {
-            return (int)(bool)\sowerphp\core\Model_Datasource_Session::read('dte.certificacion');
+        if (Session::check('dte.certificacion')) {
+            return (int)(bool)Session::read('dte.certificacion');
         }
         return (int)(bool)$this->config_ambiente_en_certificacion;
     }
 
     /**
-     * Método que entrega la configuración para el PDF de los DTE
-         * @version 2021-10-09
+     * Método que entrega la configuración para el PDF de los DTE.
+     * @param array|object $options
+     * @param array $default_config
      */
-    public function getConfigPDF($options, $default_config = [])
+    public function getConfigPDF($options, array $default_config = [])
     {
         if (is_object($options)) {
             $Documento = $options;
@@ -4002,7 +4922,10 @@ class Model_Contribuyente extends \Model_App
                 'sucursal' => $Documento->sucursal_sii,
             ];
         }
-        if (empty($default_config['formato']) || !isset($default_config['papelContinuo'])) {
+        if (
+            empty($default_config['formato'])
+            || !isset($default_config['papelContinuo'])
+        ) {
             foreach (['documento', 'actividad', 'sucursal'] as $col) {
                 if (!isset($options[$col])) {
                     $options[$col] = '*';
@@ -4010,20 +4933,31 @@ class Model_Contribuyente extends \Model_App
             }
             $config = $this->_getConfigPDF($options);
         } else {
-            $config = ['formato' => $default_config['formato'], 'papelContinuo' => $default_config['papelContinuo']];
+            $config = [
+                'formato' => $default_config['formato'],
+                'papelContinuo' => $default_config['papelContinuo'],
+            ];
         }
         // agregar configuración del formato encontrado como datos "extra"
-        $formatoPDF = $this->getApp('dtepdfs.'.$config['formato']);
+        $formatoPDF = $this->getApp('dtepdfs.' . $config['formato']);
         if (!empty($formatoPDF)) {
-            $config['extra'] = json_decode(json_encode($formatoPDF->getConfig()), true);
+            $config['extra'] = json_decode(json_encode(
+                $formatoPDF->getConfig()
+            ), true);
             unset($config['extra']['disponible']);
             if (!empty($default_config['extra'])) {
-                $config['extra'] = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($config['extra'], $default_config['extra']);
+                $config['extra'] = Utility_Array::mergeRecursiveDistinct(
+                    $config['extra'],
+                    $default_config['extra']
+                );
             }
         }
-        // agregar siempre que se pueda la dirección de la casa matriz como dato "extra"
+        // agregar siempre que se pueda la dirección de la casa matriz
+        // como dato "extra"
         if (!empty($this->direccion) && !empty($this->comuna)) {
-            $config['extra']['casa_matriz'] = $this->direccion.', '.$this->getComuna()->comuna;
+            $config['extra']['casa_matriz'] = $this->direccion
+                . ', ' . $this->getComuna()->comuna
+            ;
         }
         // agregar opciones del documento si se indicó
         if (!empty($Documento)) {
@@ -4031,7 +4965,10 @@ class Model_Contribuyente extends \Model_App
                 'emisor' => $Documento->emisor,
                 'receptor' => $Documento->receptor,
                 'dte' => $Documento->dte,
-                'folio' => !empty($Documento->folio) ? $Documento->folio : $Documento->codigo,
+                'folio' => !empty($Documento->folio)
+                    ? $Documento->folio
+                    : $Documento->codigo
+                ,
                 'fecha' => $Documento->fecha,
                 'total' => $Documento->total,
             ];
@@ -4041,55 +4978,89 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que entrega la configuración de formato y papel para los PDF
-         * @version 2020-08-04
+     * Método que entrega la configuración de formato y papel para los PDF.
      */
     private function _getConfigPDF($options, $firstQuery = true)
     {
         // buscar si existe configuración creada según los filtros
         foreach ((array)$this->config_pdf_mapeo as $m) {
-            if ($options['documento'] == $m->documento && $options['actividad'] == $m->actividad && $options['sucursal'] == $m->sucursal) {
-                return ['formato' => $m->formato, 'papelContinuo' => $m->papel];
+            if (
+                $options['documento'] == $m->documento
+                && $options['actividad'] == $m->actividad
+                && $options['sucursal'] == $m->sucursal
+            ) {
+                return [
+                    'formato' => $m->formato,
+                    'papelContinuo' => $m->papel,
+                ];
             }
         }
         // no se encontró la configuración buscada y la buscada no es la por defecto
-        if ($options['documento'] == '*' && $options['actividad'] == '*' && $options['sucursal'] == '*') {
-            return ['formato' => 'estandar', 'papelContinuo' => 0];
+        if (
+            $options['documento'] == '*'
+            && $options['actividad'] == '*'
+            && $options['sucursal'] == '*'
+        ) {
+            return [
+                'formato' => 'estandar',
+                'papelContinuo' => 0,
+            ];
         }
         // buscar con permutaciones
         if ($firstQuery) {
             // documento por defecto
-            $config = $this->_getConfigPDF(array_merge($options, ['documento' => '*']), false);
+            $config = $this->_getConfigPDF(
+                array_merge($options, ['documento' => '*']),
+                false
+            );
             if ($config) {
                 return $config;
             }
             // actividad por defecto
-            $config = $this->_getConfigPDF(array_merge($options, ['actividad' => '*']), false);
+            $config = $this->_getConfigPDF(
+                array_merge($options, ['actividad' => '*']),
+                false
+            );
             if ($config) {
                 return $config;
             }
             // sucursal por defecto
-            $config = $this->_getConfigPDF(array_merge($options, ['sucursal' => '*']), false);
+            $config = $this->_getConfigPDF(
+                array_merge($options, ['sucursal' => '*']),
+                false
+            );
             if ($config) {
                 return $config;
             }
             // documento y actividad por defecto
-            $config = $this->_getConfigPDF(array_merge($options, ['documento' => '*', 'actividad' => '*']), false);
+            $config = $this->_getConfigPDF(
+                array_merge($options, ['documento' => '*', 'actividad' => '*']),
+                false
+            );
             if ($config) {
                 return $config;
             }
             // documento y sucursal por defecto
-            $config = $this->_getConfigPDF(array_merge($options, ['documento' => '*', 'sucursal' => '*']), false);
+            $config = $this->_getConfigPDF(
+                array_merge($options, ['documento' => '*', 'sucursal' => '*']),
+                false
+            );
             if ($config) {
                 return $config;
             }
             // actividad y sucursal por defecto
-            $config = $this->_getConfigPDF(array_merge($options, ['actividad' => '*', 'sucursal' => '*']), false);
+            $config = $this->_getConfigPDF(
+                array_merge($options, ['actividad' => '*', 'sucursal' => '*']),
+                false
+            );
             if ($config) {
                 return $config;
             }
             // todo por defecto
-            $config = $this->_getConfigPDF(array_merge($options, ['documento' => '*', 'actividad' => '*', 'sucursal' => '*']), false);
+            $config = $this->_getConfigPDF(
+                array_merge($options, ['documento' => '*', 'actividad' => '*', 'sucursal' => '*']),
+                false
+            );
             if ($config) {
                 return $config;
             }

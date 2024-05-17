@@ -24,6 +24,18 @@
 // namespace del modelo
 namespace website\Dte;
 
+use \sowerphp\core\Configure;
+use \sowerphp\core\Exception_Model_Datasource_Database as DatabaseException;
+use \sowerphp\core\Network_Http_Rest;
+use \sowerphp\core\Trigger;
+use \sowerphp\core\Utility_Array;
+use \sowerphp\general\Utility_Date;
+use \sowerphp\app\Sistema\General\Model_MonedaCambio;
+use \website\Dte\Admin\Model_DteFolio;
+use \website\Dte\Admin\Mantenedores\Model_DteTipo;
+use \website\Dte\Admin\Mantenedores\Model_DteTipos;
+use \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos;
+
 /**
  * Clase para mapear la tabla dte_emitido de la base de datos.
  */
@@ -376,25 +388,47 @@ class Model_DteEmitido extends Model_Base_Envio
     ]; ///< listado de ayudas disponibles para los tipos de estado del SII
 
     /**
-     * Constructor clase DTE emitido
-         * @version 2021-06-08
+     * Constructor clase DTE emitido.
      */
     public function __construct($emisor = null, $dte = null, $folio = null, $certificacion = null)
     {
-        if ($emisor !== null && $dte !== null && $folio !== null && $certificacion !== null) {
-            if ($folio > 2147483647) { // FIX: DTE usando folio muy grande en referencias
+        if (
+            $emisor !== null
+            && $dte !== null
+            && $folio !== null
+            && $certificacion !== null
+        ) {
+            // NOTE: Existen DTE usando folios muy grande en referencias.
+            // El atributo folio es un int4 (entero "normal").
+            // Actualmente en LibreDTE Edición Enterprise no existen documentos
+            // emitidos con un folio que requiera que sea tipo BIGINT, sin
+            // embargo se han visto referencias en DTE que tienen folios que
+            // si requerirían un BIGINT. No se ha visto una referencia real que
+            // requiera el cambio. Las referencias que se han visto son
+            // erronres de los usuarios al generar las referencias del documento.
+            // Por lo que si el folio excede el máximo de int4 simplemente se
+            // quita (asumiendo que es error) y se asigna con valor 0.
+            // TODO: migrar folios a BIGINT (cuando sea necesario).
+            if ($folio > 2147483647) {
                 $folio = 0;
             }
-            parent::__construct((int)$emisor, (int)$dte, (int)$folio, (int)$certificacion);
+            // Llamar al constructor del modelo.
+            parent::__construct(
+                (int)$emisor,
+                (int)$dte,
+                (int)$folio,
+                (int)$certificacion
+            );
+            // El estado -11 es un estado especial del SII, se avisa
+            // en el detalle ya que no hay aún respuesta del SII.
             if ($this->revision_estado == -11) {
-                $this->revision_detalle = 'Esperando respuesta de SII';
+                $this->revision_detalle = 'Esperando respuesta de SII.';
             }
         }
     }
 
     /**
-     * Método que realiza verificaciones a campos antes de guardar
-         * @version 2022-05-24
+     * Método que realiza verificaciones a campos antes de guardar.
      */
     public function save()
     {
@@ -402,14 +436,15 @@ class Model_DteEmitido extends Model_Base_Envio
         $this->anulado = (int)$this->anulado;
         $this->iva_fuera_plazo = (int)$this->iva_fuera_plazo;
         // trigger al guardar el DTE emitido
-        \sowerphp\core\Trigger::run('dte_dte_emitido_guardar', $this);
-        // corregir XML para solo guardar en caso que sea de LibreDTE y guardar
-        // codificado en base64
+        Trigger::run('dte_dte_emitido_guardar', $this);
+        // corregir XML para solo guardar en caso que sea de LibreDTE
+        // y guardar codificado en base64
         if ($this->xml) {
             if ($this->mipyme) {
                 $this->xml = null;
             }
-            // si es un XML, hay que corroborar el XML (firma) y además codificar  en base64
+            // si es un XML, hay que corroborar el XML (firma) y además
+            // codificar  en base64
             else if (substr($this->xml,0,5) == '<?xml') {
                 $datos = $this->getDatos();
                 // si el XML viene sin TED se rechaza el guardado
@@ -429,7 +464,8 @@ class Model_DteEmitido extends Model_Base_Envio
                         );
                         throw new \Exception($message);
                     }
-                    // si hay firma se firma el DTE y se guarda el DTE (independientemente que se haya pasado un EnvioDTE)
+                    // si hay firma se firma el DTE y se guarda el DTE
+                    // (independientemente que se haya pasado un EnvioDTE)
                     $Dte->firmar($Firma);
                     $this->xml = $Dte->saveXML();
                     $datos = $this->getDatos(true);
@@ -447,8 +483,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que inserta un registro nuevo en la base de datos
-         * @version 2019-12-01
+     * Método que inserta un registro nuevo en la base de datos.
      */
     public function insert()
     {
@@ -459,19 +494,17 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el objeto del tipo del dte
-     * @return \website\Dte\Admin\Mantenedores\Model_DteTipo
-         * @version 2015-09-23
+     * Método que entrega el objeto del tipo del dte.
+     * @return Model_DteTipo
      */
-    public function getTipo()
+    public function getTipo(): Model_DteTipo
     {
-        return (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->get($this->dte);
+        return (new Model_DteTipos())->get($this->dte);
     }
 
     /**
-     * Método que entrega el objeto del Dte
+     * Método que entrega el objeto del Dte.
      * @return \sasco\LibreDTE\Sii\Dte
-         * @version 2022-08-30
      */
     public function getDte()
     {
@@ -481,7 +514,9 @@ class Model_DteEmitido extends Model_Base_Envio
                 $EnvioDte->loadXML($this->getXML());
                 $Documentos = $EnvioDte->getDocumentos();
                 if (!isset($Documentos[0])) {
-                    throw new \Exception('No se encontró un DTE válido en el XML asociado al documento emitido.');
+                    throw new \Exception(
+                        'No se encontró un DTE válido en el XML asociado al documento emitido.'
+                    );
                 }
                 $this->Dte = $Documentos[0];
             } else {
@@ -492,27 +527,29 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el objeto del emisor del DTE
-     * @return \website\Dte\Model_Contribuyente
-         * @version 2020-02-16
+     * Método que entrega el objeto del emisor del DTE.
+     * @return Model_Contribuyente
      */
-    public function getEmisor()
+    public function getEmisor(): Model_Contribuyente
     {
         if ($this->Emisor === null) {
-            $this->Emisor = (new Model_Contribuyentes())->get($this->emisor);
+            $this->Emisor = (new Model_Contribuyentes())
+                ->get($this->emisor)
+            ;
         }
         return $this->Emisor;
     }
 
     /**
-     * Método que entrega el objeto del receptor del DTE
-     * @return \website\Dte\Model_Contribuyente
-         * @version 2021-08-24
+     * Método que entrega el objeto del receptor del DTE.
+     * @return Model_Contribuyente
      */
-    public function getReceptor()
+    public function getReceptor(): Model_Contribuyente
     {
         if ($this->Receptor === null) {
-            $this->Receptor = (new Model_Contribuyentes())->get($this->receptor);
+            $this->Receptor = (new Model_Contribuyentes())
+                ->get($this->receptor)
+            ;
             // si es boleta o documento de exportación se buscan datos adicionales del receptor
             if (in_array($this->dte, [39, 41, 110, 111, 112])) {
                 // datos del receptor generales (si es boleta o doc de exp)
@@ -530,9 +567,18 @@ class Model_DteEmitido extends Model_Base_Envio
                     if ($this->receptor == 66666666) {
                         if ($this->hasLocalXML()) {
                             $datos = $this->getDte()->getDatos()['Encabezado']['Receptor'];
-                            $this->Receptor->razon_social = !empty($datos['RznSocRecep']) ? $datos['RznSocRecep'] : null;
-                            $this->Receptor->direccion = !empty($datos['DirRecep']) ? $datos['DirRecep'] : null;
-                            $this->Receptor->comuna = !empty($datos['CmnaRecep']) ? $datos['CmnaRecep'] : null;
+                            $this->Receptor->razon_social = !empty($datos['RznSocRecep'])
+                                ? $datos['RznSocRecep']
+                                : null
+                            ;
+                            $this->Receptor->direccion = !empty($datos['DirRecep'])
+                                ? $datos['DirRecep']
+                                : null
+                            ;
+                            $this->Receptor->comuna = !empty($datos['CmnaRecep'])
+                                ? $datos['CmnaRecep']
+                                : null
+                            ;
                         }
                         $this->Receptor->giro = null;
                     }
@@ -542,7 +588,10 @@ class Model_DteEmitido extends Model_Base_Envio
                     if ($this->hasLocalXML()) {
                         $datos = $this->getDte()->getDatos()['Encabezado']['Receptor'];
                         $this->Receptor->razon_social = $datos['RznSocRecep'];
-                        $this->Receptor->direccion = !empty($datos['DirRecep']) ? $datos['DirRecep'] : null;
+                        $this->Receptor->direccion = !empty($datos['DirRecep'])
+                            ? $datos['DirRecep']
+                            : null
+                        ;
                     }
                     $this->Receptor->comuna = null;
                 }
@@ -552,17 +601,15 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el período contable al que correspondel el DTE
-         * @version 2018-11-22
+     * Método que entrega el período contable al que correspondel el DTE.
      */
-    public function getPeriodo()
+    public function getPeriodo(): int
     {
-        return substr(str_replace('-', '', $this->fecha), 0, 6);
+        return (int)substr(str_replace('-', '', $this->fecha), 0, 6);
     }
 
     /**
-     * Método que entrega la sucursal asociada al documento emitido
-         * @version 2021-08-20
+     * Método que entrega la sucursal asociada al documento emitido.
      */
     public function getSucursal()
     {
@@ -570,19 +617,21 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el vendedor asociado al DTE emitido
-         * @version 2022-08-29
+     * Método que entrega el vendedor asociado al DTE emitido.
      */
     public function getVendedor()
     {
         $datos = $this->getDatos();
-        return !empty($datos['Encabezado']['Emisor']['CdgVendedor']) ? $datos['Encabezado']['Emisor']['CdgVendedor'] : null;
+        return !empty($datos['Encabezado']['Emisor']['CdgVendedor'])
+            ? $datos['Encabezado']['Emisor']['CdgVendedor']
+            : null
+        ;
     }
 
     /**
-     * Método que entrega el arreglo con los datos que se usaron para generar el
-     * XML del DTE
-         * @version 2022-04-24
+     * Método que entrega el arreglo con los datos que se usaron para
+     * generar el XML del DTE.
+     * @return array|false
      */
     public function getDatos($force_reload = false)
     {
@@ -592,8 +641,9 @@ class Model_DteEmitido extends Model_Base_Envio
                 $this->datos = $this->getDte()->getDatos($force_reload);
                 $extra = (array)$this->getExtra();
                 if (!empty($extra['dte'])) {
-                    $this->datos = \sowerphp\core\Utility_Array::mergeRecursiveDistinct(
-                        $this->datos, $extra['dte']
+                    $this->datos = Utility_Array::mergeRecursiveDistinct(
+                        $this->datos,
+                        $extra['dte']
                     );
                 }
             }
@@ -618,8 +668,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el arreglo con los datos del XML de cesión del DTE
-         * @version 2019-03-11
+     * Método que entrega el arreglo con los datos del XML de cesión del DTE.
      */
     public function getDatosCesion()
     {
@@ -641,19 +690,24 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega el listado de correos a los que se debería enviar el
-     * DTE (correo receptor, correo intercambio y correo del dte)
-         * @version 2023-10-08
+     * DTE (correo receptor, correo intercambio y correo del dte).
      */
-    public function getEmails()
+    public function getEmails(): array
     {
         $origen = (int)$this->getEmisor()->config_emision_origen_email;
         $emails = [];
         $datos = $this->hasLocalXML() ? $this->getDatos() : [];
         if (!in_array($this->dte, [39, 41])) {
             if ($this->getReceptor()->config_email_intercambio_user) {
-                $emails['Intercambio DTE'] = strtolower($this->getReceptor()->config_email_intercambio_user);
+                $emails['Intercambio DTE'] = strtolower(
+                    $this->getReceptor()->config_email_intercambio_user
+                );
             }
-            if (in_array($origen, [0, 1, 2]) && !empty($datos['Encabezado']['Receptor']['CorreoRecep']) && !in_array(strtolower($datos['Encabezado']['Receptor']['CorreoRecep']), $emails)) {
+            if (
+                in_array($origen, [0, 1, 2])
+                && !empty($datos['Encabezado']['Receptor']['CorreoRecep'])
+                && !in_array(strtolower($datos['Encabezado']['Receptor']['CorreoRecep']), $emails)
+            ) {
                 $emails['Documento'] = strtolower($datos['Encabezado']['Receptor']['CorreoRecep']);
             }
         } else if (!empty($datos['Referencia'])) {
@@ -661,11 +715,18 @@ class Model_DteEmitido extends Model_Base_Envio
                 $datos['Referencia'] = [$datos['Referencia']];
             }
             foreach ($datos['Referencia'] as $r) {
-                if (!empty($r['RazonRef']) and strpos($r['RazonRef'], 'Email receptor:') === 0) {
+                if (
+                    !empty($r['RazonRef'])
+                    && strpos($r['RazonRef'], 'Email receptor:') === 0
+                ) {
                     $aux = explode('Email receptor:', $r['RazonRef']);
                     if (!empty($aux[1])) {
                         $email_dte = strtolower(trim($aux[1]));
-                        if (in_array($origen, [0, 1, 2]) && $email_dte && !in_array($email_dte, $emails)) {
+                        if (
+                            in_array($origen, [0, 1, 2])
+                            && $email_dte
+                            && !in_array($email_dte, $emails)
+                        ) {
                             $emails['Documento'] = $email_dte;
                         }
                     }
@@ -673,21 +734,33 @@ class Model_DteEmitido extends Model_Base_Envio
                 }
             }
         }
-        if (in_array($origen, [0]) && $this->getReceptor()->email && !in_array(strtolower($this->getReceptor()->email), $emails)) {
-            $emails['Compartido LibreDTE'] = strtolower($this->getReceptor()->email);
+        if (
+            in_array($origen, [0])
+            && $this->getReceptor()->email
+            && !in_array(strtolower($this->getReceptor()->email), $emails)
+        ) {
+            $emails['Compartido LibreDTE'] = strtolower(
+                $this->getReceptor()->email
+            );
         }
-        if (in_array($origen, [0, 1]) && $this->getReceptor()->usuario && $this->getReceptor()->getUsuario()->email && !in_array(strtolower($this->getReceptor()->getUsuario()->email), $emails)) {
-            $emails['Usuario LibreDTE'] = strtolower($this->getReceptor()->getUsuario()->email);
+        if (
+            in_array($origen, [0, 1])
+            && $this->getReceptor()->usuario
+            && $this->getReceptor()->getUsuario()->email
+            && !in_array(strtolower($this->getReceptor()->getUsuario()->email), $emails)
+        ) {
+            $emails['Usuario LibreDTE'] = strtolower(
+                $this->getReceptor()->getUsuario()->email
+            );
         }
-        $emails_trigger = \sowerphp\core\Trigger::run('dte_dte_emitido_emails', $this, $emails);
+        $emails_trigger = Trigger::run('dte_dte_emitido_emails', $this, $emails);
         return $emails_trigger ? $emails_trigger : $emails;
     }
 
     /**
-     * Método que entrega las referencias que este DTE hace a otros documentos
-         * @version 2023-11-17
+     * Método que entrega las referencias que este DTE hace a otros documentos.
      */
-    public function getReferenciados()
+    public function getReferenciados(): ?array
     {
         $datos = $this->hasLocalXML() ? $this->getDatos() : [];
         if (empty($datos['Referencia'])) {
@@ -712,11 +785,18 @@ class Model_DteEmitido extends Model_Base_Envio
                 'CodVndor' => false,
                 'CodCaja' => false,
             ], $r);
-            if (is_numeric($referencia['TpoDocRef']) && is_numeric($referencia['FolioRef'])) {
-                $referencia['IdDocRef'] = 'T'.$referencia['TpoDocRef'].'F'.$referencia['FolioRef'];
+            if (
+                is_numeric($referencia['TpoDocRef'])
+                && is_numeric($referencia['FolioRef'])
+            ) {
+                $referencia['IdDocRef'] = 'T' . $referencia['TpoDocRef']
+                    . 'F' . $referencia['FolioRef']
+                ;
             }
             if (!empty($referencia['CodRef'])) {
-                $DteReferenciaTipo = (new \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos())->get($referencia['CodRef']);
+                $DteReferenciaTipo = (new Model_DteReferenciaTipos())
+                    ->get($referencia['CodRef'])
+                ;
                 if (!empty($DteReferenciaTipo->tipo)) {
                     $referencia['TipoRef'] = $DteReferenciaTipo->tipo;
                 }
@@ -727,46 +807,71 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega las referencias que existen a este DTE
-         * @version 2016-06-26
+     * Método que entrega las referencias que existen a este DTE.
      */
-    public function getReferencias()
+    public function getReferencias(): array
     {
         return $this->db->getTable('
-            SELECT t.tipo AS documento_tipo, r.folio, d.fecha, rt.tipo AS referencia_tipo, r.razon, r.dte
+            SELECT
+                t.tipo AS documento_tipo,
+                r.folio,
+                d.fecha,
+                rt.tipo AS referencia_tipo,
+                r.razon,
+                r.dte
             FROM
                 dte_referencia AS r
-                JOIN dte_tipo AS t ON r.dte = t.codigo
-                JOIN dte_emitido AS d ON d.emisor= r.emisor AND d.certificacion = r.certificacion AND d.dte = r.dte AND d.folio = r.folio
-                LEFT JOIN dte_referencia_tipo AS rt ON r.codigo = rt.codigo
+                JOIN dte_tipo AS t ON
+                    r.dte = t.codigo
+                JOIN dte_emitido AS d ON
+                    d.emisor = r.emisor
+                    AND d.certificacion = r.certificacion
+                    AND d.dte = r.dte
+                    AND d.folio = r.folio
+                LEFT JOIN dte_referencia_tipo AS rt ON
+                    r.codigo = rt.codigo
             WHERE
                 r.emisor = :rut
                 AND r.certificacion = :certificacion
                 AND r.referencia_dte = :dte
                 AND r.referencia_folio = :folio
-            ORDER BY fecha DESC, t.tipo ASC, r.folio DESC
-        ', [':rut' => $this->emisor, ':dte' => $this->dte, ':folio' => $this->folio, ':certificacion' => (int)$this->certificacion]);
+            ORDER BY
+                fecha DESC,
+                t.tipo ASC,
+                r.folio DESC
+        ', [
+            ':rut' => $this->emisor,
+            ':dte' => $this->dte,
+            ':folio' => $this->folio,
+            ':certificacion' => (int)$this->certificacion,
+        ]);
     }
 
     /**
-     * Método que indica si el documento permite o no ser cobrado
-         * @version 2020-10-29
+     * Método que indica si el documento permite o no ser cobrado.
      */
-    public function permiteCobro()
+    public function permiteCobro(): bool
     {
         if (!$this->getTipo()->permiteCobro()) {
             return false;
         }
         $anulado = (bool)$this->db->getValue('
-            SELECT COUNT(*)
-            FROM dte_referencia AS r
+            SELECT
+                COUNT(*)
+            FROM
+                dte_referencia AS r
             WHERE
                 r.emisor = :rut
                 AND r.certificacion = :certificacion
                 AND r.referencia_dte = :dte
                 AND r.referencia_folio = :folio
                 AND r.codigo = 1
-        ', [':rut' => $this->emisor, ':dte' => $this->dte, ':folio' => $this->folio, ':certificacion' => (int)$this->certificacion]);
+        ', [
+            ':rut' => $this->emisor,
+            ':dte' => $this->dte,
+            ':folio' => $this->folio,
+            ':certificacion' => (int)$this->certificacion,
+        ]);
         if ($anulado) {
             return false;
         }
@@ -774,88 +879,120 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega del intercambio el objeto del Recibo del DTE
-         * @version 2015-12-23
+     * Método que entrega del intercambio el objeto del Recibo del DTE.
+     * @return Model_DteIntercambioReciboDte|false
      */
     public function getIntercambioRecibo()
     {
         $Recibo = new Model_DteIntercambioReciboDte(
-            $this->emisor, $this->dte, $this->folio, $this->certificacion
+            $this->emisor,
+            $this->dte,
+            $this->folio,
+            $this->certificacion
         );
         return $Recibo->exists() ? $Recibo : false;
     }
 
     /**
-     * Método que entrega del intercambio el objeto de la Recepcion del DTE
-         * @version 2015-12-23
+     * Método que entrega del intercambio el objeto de la Recepcion del DTE.
+     * @return Model_DteIntercambioRecepcionDte|false
      */
     public function getIntercambioRecepcion()
     {
         $Recepcion = new Model_DteIntercambioRecepcionDte(
-            $this->emisor, $this->dte, $this->folio, $this->certificacion
+            $this->emisor,
+            $this->dte,
+            $this->folio,
+            $this->certificacion
         );
         return $Recepcion->exists() ? $Recepcion : false;
     }
 
     /**
-     * Método que entrega del intercambio el objeto del Resultado del DTE
-         * @version 2015-12-23
+     * Método que entrega del intercambio el objeto del Resultado del DTE.
+     * @return Model_DteIntercambioResultadoDte|false
      */
     public function getIntercambioResultado()
     {
         $Resultado = new Model_DteIntercambioResultadoDte(
-            $this->emisor, $this->dte, $this->folio, $this->certificacion
+            $this->emisor,
+            $this->dte,
+            $this->folio,
+            $this->certificacion
         );
         return $Resultado->exists() ? $Resultado : false;
     }
 
     /**
-     * Método que entrega los pagos programados del DTE
-         * @version 2020-02-22
+     * Método que entrega los pagos programados del DTE.
      */
-    public function getPagosProgramados()
+    public function getPagosProgramados(): array
     {
         $MntPagos = [];
-        if ($this->hasLocalXML() && isset($this->getDatos()['Encabezado']['IdDoc']['MntPagos']) && is_array($this->getDatos()['Encabezado']['IdDoc']['MntPagos'])) {
+        if (
+            $this->hasLocalXML()
+            && isset($this->getDatos()['Encabezado']['IdDoc']['MntPagos'])
+            && is_array($this->getDatos()['Encabezado']['IdDoc']['MntPagos'])
+        ) {
             $MntPagos = $this->getDatos()['Encabezado']['IdDoc']['MntPagos'];
-            if (!isset($MntPagos[0]))
+            if (!isset($MntPagos[0])) {
                 $MntPagos = [$MntPagos];
+            }
             $MntPago = 0;
-            foreach ($MntPagos as $pago)
+            foreach ($MntPagos as $pago) {
                 $MntPago += $pago['MntPago'];
-            if ($MntPago != $this->total)
+            }
+            if ($MntPago != $this->total) {
                 $MntPagos = [];
+            }
         }
         return $MntPagos;
     }
 
     /**
-     * Método que entrega los datos de cobranza de los pagos programados del DTE
-         * @version 2016-02-28
+     * Método que entrega los datos de cobranza de los pagos programados del DTE.
      */
-    public function getCobranza()
+    public function getCobranza(): array
     {
         return $this->db->getTable('
-            SELECT c.fecha, c.monto, c.glosa, c.pagado, c.observacion, u.usuario, c.modificado
-            FROM cobranza AS c LEFT JOIN usuario AS u ON c.usuario = u.id
+            SELECT
+                c.fecha,
+                c.monto,
+                c.glosa,
+                c.pagado,
+                c.observacion,
+                u.usuario,
+                c.modificado
+            FROM
+                cobranza AS c
+                LEFT JOIN usuario AS u ON
+                    c.usuario = u.id
             WHERE
                 c.emisor = :rut
                 AND c.dte = :dte
                 AND c.folio = :folio
                 AND c.certificacion = :certificacion
-            ORDER BY fecha
-        ', [':rut' => $this->emisor, ':dte' => $this->dte, ':folio' => $this->folio, ':certificacion' => (int)$this->certificacion]);
+            ORDER BY
+                fecha
+        ', [
+            ':rut' => $this->emisor,
+            ':dte' => $this->dte,
+            ':folio' => $this->folio,
+            ':certificacion' => (int)$this->certificacion,
+        ]);
     }
 
     /**
-     * Método que entrega el estado del envío del DTE al SII
-     * @return R: si es RSC, RCT, RCH, =null otros casos
-         * @version 2021-08-20
+     * Método que entrega el estado del envío del DTE al SII.
+     * @return string R: si es RSC, RCT, RCH, =null otros casos.
      */
-    public function getEstado()
+    public function getEstado(): ?string
     {
         $espacio = strpos($this->revision_estado, ' ');
-        $estado = $espacio ? substr($this->revision_estado, 0, $espacio) : $this->revision_estado;
+        $estado = $espacio
+            ? substr($this->revision_estado, 0, $espacio)
+            : $this->revision_estado
+        ;
         if (in_array($estado, Model_DteEmitidos::$revision_estados['final'])) {
             return 'F';
         }
@@ -869,10 +1006,9 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que indica si un documento es o no referenciable
-         * @version 2023-11-05
+     * Método que indica si un documento es o no referenciable.
      */
-    public function esReferenciable()
+    public function esReferenciable(): bool
     {
         $estado_envio = $this->getEstado();
         if ($estado_envio == 'R') {
@@ -892,22 +1028,22 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega true si se puede eliminar el DTE o una excepción con la causa si no es posible
+     * Método que entrega true si se puede eliminar el DTE o una excepción con la causa si no es posible.
      * Solo se pueden eliminar DTE que:
      *   - No sean boletas y cumplan con:
-     *     - Estén rechazados
-     *     - No estén enviados al SII
+     *     - Estén rechazados.
+     *     - No estén enviados al SII.
      *   - Sean  boletas y cumplan con:
-     *     - Configuración para eliminar (definida según fecha emisión en la config de la empresa)
-         * @version 2021-01-05
+     *     - Configuración para eliminar (definida según fecha emisión en la config de la empresa).
      */
-    private function canBeDeleted($Usuario)
+    private function canBeDeleted($Usuario): bool
     {
         if ($this->track_id!=-1) {
             $estado = $this->getEstado();
-            // no borrar casos con track id y donde el estado es diferente a rechazado
+            // no borrar casos con track id y donde el estado es
+            // diferente a rechazado
             if ($this->track_id && $estado != 'R') {
-                throw new \Exception('El documento no tiene estado rechazado en el sistema, requerido para permitir eliminación');
+                throw new \Exception('El documento no tiene estado rechazado en el sistema, requerido para permitir eliminación.');
             }
             // si es boleta se debe analizar según configuración
             if (in_array($this->dte, [39, 41])) {
@@ -917,8 +1053,14 @@ class Model_DteEmitido extends Model_Base_Envio
                 }
                 // solo usuarios administradores pueden eliminar boletas,
                 // si no se pasó usuario o no es administrador entonces error
-                if ($Usuario === null || ($Usuario !== false && !$this->getEmisor()->usuarioAutorizado($Usuario, 'admin'))) {
-                    throw new \Exception('Solo usuarios administradores pueden eliminar una boleta');
+                if (
+                    $Usuario === null
+                    || (
+                        $Usuario !== false
+                        && !$this->getEmisor()->usuarioAutorizado($Usuario, 'admin')
+                    )
+                ) {
+                    throw new \Exception('Solo usuarios administradores pueden eliminar una boleta.');
                 }
                 // si la empresa permite eliminar boletas se revisa por períodos de tiempo
                 if ($this->getEmisor()->config_boletas_eliminar) {
@@ -926,26 +1068,26 @@ class Model_DteEmitido extends Model_Base_Envio
                     // Solo las del día actual
                     if ((int)$this->getEmisor()->config_boletas_eliminar == 1) {
                         if ($this->fecha != $today) {
-                            throw new \Exception('Solo se pueden eliminar las boletas del día actual');
+                            throw new \Exception('Solo se pueden eliminar las boletas del día actual.');
                         }
                         return true;
                     }
                     // Solo las del mes actual
                     else if ((int)$this->getEmisor()->config_boletas_eliminar == 2) {
-                        $periodo_boleta = substr(str_replace('-','',$this->fecha),0,6);
-                        $periodo_actual = substr(str_replace('-','',$today),0,6);
+                        $periodo_boleta = substr(str_replace('-', '', $this->fecha), 0, 6);
+                        $periodo_actual = substr(str_replace('-', '', $today), 0, 6);
                         if ($periodo_boleta != $periodo_actual) {
-                            throw new \Exception('Solo se pueden eliminar las boletas del mes actual');
+                            throw new \Exception('Solo se pueden eliminar las boletas del mes actual.');
                         }
                         return true;
                     }
                     // Las del mes actual y mes anterior (no recomendado)
                     else if ((int)$this->getEmisor()->config_boletas_eliminar == 3) {
-                        $periodo_boleta = substr(str_replace('-','',$this->fecha),0,6);
-                        $periodo_actual = substr(str_replace('-','',$today),0,6);
-                        $periodo_anterior = \sowerphp\general\Utility_Date::previousPeriod($periodo_actual);
+                        $periodo_boleta = substr(str_replace('-', '', $this->fecha), 0, 6);
+                        $periodo_actual = substr(str_replace('-', '', $today), 0, 6);
+                        $periodo_anterior = Utility_Date::previousPeriod($periodo_actual);
                         if ($periodo_boleta != $periodo_actual && $periodo_boleta != $periodo_anterior) {
-                            throw new \Exception('Solo se pueden eliminar las boletas del mes actual y mes anterior');
+                            throw new \Exception('Solo se pueden eliminar las boletas del mes actual y mes anterior.');
                         }
                         return true;
                     }
@@ -955,7 +1097,7 @@ class Model_DteEmitido extends Model_Base_Envio
                     }
                 }
                 // por defecto no se deja borrar boletas
-                throw new \Exception('No es posible eliminar la boleta');
+                throw new \Exception('No es posible eliminar la boleta.');
             }
         }
         // por defecto se deja borrar cualquier DTE que no haya cumplido algún estado previo
@@ -963,11 +1105,10 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que indica si el DTE es o no eliminable
-     * @return =true si se puede eliminar, =false si no es posible eliminar
-         * @version 2020-05-21
+     * Método que indica si el DTE es o no eliminable.
+     * @return bool =true si se puede eliminar, =false si no es posible eliminar.
      */
-    public function eliminable($Usuario = false)
+    public function eliminable($Usuario = false): bool
     {
         if ($this->eliminable === null) {
             try {
@@ -982,16 +1123,20 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que elimina el DTE, y si no hay DTE posterior del mismo tipo,
      * restaura el folio para que se volver a utilizar.
-         * @version 2021-05-13
      */
     public function delete($Usuario = null)
     {
         $this->canBeDeleted($Usuario);
         $this->db->beginTransaction(true);
-        \sowerphp\core\Trigger::run('dte_dte_emitido_eliminar', $this);
-        // retroceder folio si corresponde hacerlo (solo cuando este dte es el último emitido)
-        $DteFolio = new \website\Dte\Admin\Model_DteFolio($this->emisor, $this->dte, (int)$this->certificacion);
-        if ($DteFolio->siguiente == ($this->folio+1)) {
+        Trigger::run('dte_dte_emitido_eliminar', $this);
+        // retroceder folio si corresponde hacerlo
+        // (solo cuando este dte es el último emitido)
+        $DteFolio = new Model_DteFolio(
+            $this->emisor,
+            $this->dte,
+            (int)$this->certificacion
+        );
+        if ($DteFolio->siguiente == ($this->folio + 1)) {
             $DteFolio->siguiente--;
             $DteFolio->disponibles++;
             try {
@@ -999,7 +1144,7 @@ class Model_DteEmitido extends Model_Base_Envio
                     $this->db->rollback();
                     return false;
                 }
-            } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+            } catch (DatabaseException $e) {
                 $this->db->rollback();
                 return false;
             }
@@ -1011,7 +1156,11 @@ class Model_DteEmitido extends Model_Base_Envio
         }
         // invalidar RCOF enviado si era boleta
         if (in_array($this->dte, [39, 41])) {
-            $DteBoletaConsumo = new Model_DteBoletaConsumo($this->emisor, $this->fecha, (int)$this->certificacion);
+            $DteBoletaConsumo = new Model_DteBoletaConsumo(
+                $this->emisor,
+                $this->fecha,
+                (int)$this->certificacion
+            );
             if ($DteBoletaConsumo->track_id) {
                 $DteBoletaConsumo->track_id = null;
                 $DteBoletaConsumo->revision_estado = null;
@@ -1019,13 +1168,15 @@ class Model_DteEmitido extends Model_Base_Envio
                 $DteBoletaConsumo->save();
             }
         }
-        // eliminar referencias de este DTE eliminado
-        // se requiere porque la tabla dte_referencia no tiene llave foranea (FK) a dte_emitido
-        // agregando una FK no debería ser necesario esto, pero al haber datos antiguo malos
-        // no se puede agregar la FK hasta corregir primero esos datos
-        // este DELETE evitará nuevos casos
+        // Eliminar referencias de este DTE eliminado.
+        // Se requiere porque la tabla dte_referencia no tiene llave
+        // foranea (FK) a dte_emitido. Agregando una FK no debería ser
+        // necesario esto, pero al haber datos antiguo malos no se puede
+        // agregar la FK hasta corregir primero esos datos. Este DELETE
+        // evitará nuevos casos con el error por la falta de la FK.
         $this->db->query('
-            DELETE FROM dte_referencia
+            DELETE
+            FROM dte_referencia
             WHERE
                 emisor = :emisor
                 AND dte = :dte
@@ -1043,48 +1194,57 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega true si se puede eliminar el XML del DTE o una excepción con la causa si no es posible
+     * Método que entrega true si se puede eliminar el XML del DTE o una
+     * excepción con la causa si no es posible.
      * Actualmente, solo se pueden eliminar:
      *   - Boletas que cumplan con:
-     *     - Configuración de límite de custodia de boletas activada
-         * @version 2020-05-21
+     *     - Configuración de límite de custodia de boletas activada.
      */
-    private function canBeDeletedXML()
+    private function canBeDeletedXML(): bool
     {
         // si no hay XML error
         if (!$this->xml) {
-            throw new \Exception('El documento no tiene un XML asociado en LibreDTE');
+            throw new \Exception(
+                'El documento no tiene un XML asociado en LibreDTE.'
+            );
         }
         // si no es boleta no se permite borrar el XML
         if (!in_array($this->dte, [39, 41])) {
-            throw new \Exception('Solo es posible eliminar el XML de boletas');
+            throw new \Exception(
+                'Solo es posible eliminar el XML de boletas.'
+            );
         }
-        // si es boleta y no hay límite de custodia fijado no se deja borrar el XML (para qué? si no hay límite)
-        $limite = \sowerphp\core\Configure::read('dte.custodia_boletas');
+        // si es boleta y no hay límite de custodia fijado no se deja
+        // borrar el XML (para qué? si no hay límite)
+        $limite = Configure::read('dte.custodia_boletas');
         if (!$limite) {
-            throw new \Exception('No hay límite de custodia para el XML de boletas, no se permite borrar (no es necesario)');
+            throw new \Exception(
+                'No hay límite de custodia para el XML de boletas, no se permite borrar (no es necesario).'
+            );
         }
         // si LibreDTE permite borrar el XML de boletas (porque tiene custodia limitada)
         // se revisa que a lo menos hayan pasado 3 meses desde la fecha de emisión
         if ($this->getEmisor()->config_libredte_custodia_boletas_limitada) {
-            $meses_custodia_minima = 3; // debe estar 3 meses mínimo en la web para consulta pública
+            $meses_custodia_minima = 3; // 3 meses definidos por SII.
             $today = date('Y-m-d');
-            $meses_emitido = \sowerphp\general\Utility_Date::countMonths($this->fecha, $today);
+            $meses_emitido = Utility_Date::countMonths($this->fecha, $today);
             if ($meses_emitido < $meses_custodia_minima) {
-                throw new \Exception('Deben pasar '.$meses_custodia_minima.' meses antes de poder eliminar el XML de la boleta');
+                throw new \Exception(
+                    'Deben pasar ' . $meses_custodia_minima
+                        . ' meses antes de poder eliminar el XML de la boleta'
+                );
             }
             return true;
         }
         // por defecto no se deja borrar el XML del DTE
-        throw new \Exception('No es posible borrar el XML del documento');
+        throw new \Exception('No es posible borrar el XML del documento.');
     }
 
     /**
      * Método que indica si el XML del DTE es o no eliminable
-     * @return =true si se puede eliminar, =false si no es posible eliminar
-         * @version 2020-05-21
+     * @return bool =true si se puede eliminar, =false si no es posible eliminar.
      */
-    public function eliminableXML($Usuario = false)
+    public function eliminableXML($Usuario = false): bool
     {
         if ($this->eliminableXML === null) {
             try {
@@ -1097,8 +1257,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que elimina el XML del DTE
-         * @version 2020-05-21
+     * Método que elimina el XML del DTE.
      */
     public function deleteXML($Usuario = null)
     {
@@ -1108,19 +1267,23 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que indica si el DTE se debe enviar o no al SII
-         * @version 2021-07-28
+     * Método que indica si el DTE se debe enviar o no al SII.
      */
     public function seEnvia(): bool
     {
-        // todos los documentos menos boletas dependen solamente de la configuración
+        // todos los documentos menos boletas dependen solamente de la
+        // configuración
         if (!in_array($this->dte, [39, 41])) {
             return (bool)$this->getTipo()->enviar;
         }
-        // el envío de boletas, en cualquier ambiente, depende de la fecha de la boleta
-        // esta opción solo permitirá enviar las boletas que tienen una fecha igual o superior
-        // a la entrada en vigencia de la obligatoriedad
-        if ($this->getTipo()->enviar && $this->fecha >= Model_DteEmitidos::ENVIO_BOLETA) {
+        // el envío de boletas, en cualquier ambiente, depende de la
+        // fecha de la boleta esta opción solo permitirá enviar las
+        // boletas que tienen una fecha igual o superior a la entrada en
+        // vigencia de la obligatoriedad
+        if (
+            $this->getTipo()->enviar
+            && $this->fecha >= Model_DteEmitidos::ENVIO_BOLETA
+        ) {
             return true;
         }
         // no se debe enviar
@@ -1128,20 +1291,25 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que envía el DTE emitido al SII, básicamente lo saca del sobre y
-     * lo pone en uno nuevo con el RUT del SII
-     * @param user ID del usuari oque hace el envío
-     * @param retry Número de intentos que se usarán para enviar el DTE al SII (=null, valor por defecto LibreDTE, =0 no se enviará, >0 cantidad de intentos)
-     * @param gzip Indica si se debe enviar comprimido el XML del DTE al SII
-         * @version 2020-10-31
+     * Método que envía el DTE emitido al SII, básicamente lo saca del
+     * sobre y lo pone en uno nuevo con el RUT del SII.
+     * @param user ID del usuari oque hace el envío.
+     * @param retry Número de intentos que se usarán para enviar el DTE al SII
+     * (=null, valor por defecto LibreDTE, =0 no se enviará, >0 cantidad de intentos).
+     * @param gzip Indica si se debe enviar comprimido el XML del DTE al SII.
+     * @return int|false
      */
     public function enviar($user = null, $retry = null, $gzip = null)
     {
         if (!$this->hasLocalXML()) {
-            throw new \Exception('No fue posible obtener el DTE que se debe enviar al SII');
+            throw new \Exception(
+                'No fue posible obtener el DTE que se debe enviar al SII.'
+            );
         }
         if ($this->mipyme) {
-            throw new \Exception('No es posible enviar XML emitidos en el Portal MIPYME');
+            throw new \Exception(
+                'No es posible enviar XML emitidos en el Portal MIPYME.'
+            );
         }
         $Emisor = $this->getEmisor();
         // verificar que el documento se pueda enviar al SII
@@ -1165,10 +1333,10 @@ class Model_DteEmitido extends Model_Base_Envio
         if ($this->track_id && $this->getEstado() != 'R') {
             $msg = 'DTE no puede ser reenviado ya que ';
             if (!$this->revision_estado) {
-                $msg .= 'aun no se ha verificado su estado';
+                $msg .= 'aun no se ha verificado su estado.';
             }
             else if ($this->getEstado() != 'R') {
-                $msg .= 'no está rechazado';
+                $msg .= 'no está rechazado.';
             }
             throw new \Exception($msg);
         }
@@ -1188,28 +1356,55 @@ class Model_DteEmitido extends Model_Base_Envio
         $EnvioDte->setCaratula([
             'RutEnvia' => $Firma ? $Firma->getID() : false,
             'RutReceptor' => '60803000-K',
-            'FchResol' => $this->certificacion ? $Emisor->config_ambiente_certificacion_fecha : $Emisor->config_ambiente_produccion_fecha,
-            'NroResol' => $this->certificacion ? 0 : $Emisor->config_ambiente_produccion_numero,
+            'FchResol' => $this->certificacion
+                ? $Emisor->config_ambiente_certificacion_fecha
+                : $Emisor->config_ambiente_produccion_fecha
+            ,
+            'NroResol' => $this->certificacion
+                ? 0
+                : $Emisor->config_ambiente_produccion_numero
+            ,
         ]);
         // generar XML del sobre y "parchar" el DTE
         $xml = $EnvioDte->generar();
         $xml = str_replace(
-            ['<DTE xmlns="http://www.sii.cl/SiiDte" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"', '<SignedInfo>'],
-            ['<DTE', '<SignedInfo xmlns="http://www.w3.org/2000/09/xmldsig#">'],
+            [
+                '<DTE xmlns="http://www.sii.cl/SiiDte" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"',
+                '<SignedInfo>',
+            ],
+            [
+                '<DTE',
+                '<SignedInfo xmlns="http://www.w3.org/2000/09/xmldsig#">',
+            ],
             $xml
         );
         \sasco\LibreDTE\Sii::setAmbiente((int)$this->certificacion);
         // enviar boleta al SII
         if (in_array($this->dte, [39, 41])) {
-            $class = \sowerphp\core\Configure::read('dte.clase_boletas');
+            $class = Configure::read('dte.clase_boletas');
             if (!$class || !class_exists($class)) {
-                throw new \Exception('El envío de boletas al SII no está disponible en este servidor de LibreDTE.');
+                throw new \Exception(
+                    'El envío de boletas al SII no está disponible en este servidor de LibreDTE.'
+                );
             }
-            $result = $class::enviar($Firma->getID(), $Emisor->rut.'-'.$Emisor->dv, $xml, $Firma, $gzip, $retry);
+            $result = $class::enviar(
+                $Firma->getID(),
+                $Emisor->rut . '-' . $Emisor->dv,
+                $xml,
+                $Firma,
+                $gzip,
+                $retry
+            );
             if ($result === false) {
-                throw new \Exception('No fue posible enviar el DTE al SII<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()));
+                throw new \Exception(
+                    'No fue posible enviar el DTE al SII<br/>'
+                        . implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                );
             }
-            $this->track_id = (int)(!empty($result['track_id']) ? $result['track_id'] : $result['trackid']);
+            $this->track_id = (int)(!empty($result['track_id'])
+                ? $result['track_id']
+                : $result['trackid']
+            );
             $this->revision_estado = $result['estado'];
             $this->revision_detalle = $result['fecha_recepcion'];
         }
@@ -1218,12 +1413,25 @@ class Model_DteEmitido extends Model_Base_Envio
             // obtener token
             $token = \sasco\LibreDTE\Sii\Autenticacion::getToken($Firma);
             if (!$token) {
-                throw new \Exception('No fue posible obtener el token para el SII<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()));
+                throw new \Exception(
+                    'No fue posible obtener el token para el SII<br/>'
+                        . implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                );
             }
             // enviar XML
-            $result = \sasco\LibreDTE\Sii::enviar($Firma->getID(), $Emisor->rut.'-'.$Emisor->dv, $xml, $token, $gzip, $retry);
+            $result = \sasco\LibreDTE\Sii::enviar(
+                $Firma->getID(),
+                $Emisor->rut . '-' . $Emisor->dv,
+                $xml,
+                $token,
+                $gzip,
+                $retry
+            );
             if ($result === false || $result->STATUS != '0') {
-                throw new \Exception('No fue posible enviar el DTE al SII<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()));
+                throw new \Exception(
+                    'No fue posible enviar el DTE al SII<br/>'
+                        . implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                );
             }
             $this->track_id = (int)$result->TRACKID;
             $this->revision_estado = null;
@@ -1234,15 +1442,14 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que actualiza el estado de un DTE enviado al SII, en realidad
-     * es un wrapper para las verdaderas llamadas
-     * @param usarWebservice =true se consultará vía servicio web = false vía email
-         * @version 2021-08-18
+     * Método que actualiza el estado de un DTE enviado al SII.
+     * En realidad es un wrapper para las verdaderas llamadas.
+     * @param bool $usarWebservice =true se consultará vía servicio web =false vía email.
      */
-    public function actualizarEstado($user_id = null, $usarWebservice = true)
+    public function actualizarEstado($user_id = null, bool $usarWebservice = true): array
     {
         if (!$this->track_id) {
-            throw new \Exception('DTE no tiene Track ID, primero debe enviarlo al SII');
+            throw new \Exception('DTE no tiene Track ID, primero debe enviarlo al SII.');
         }
         if (in_array($this->dte, [39, 41])) {
             $usarWebservice = true;
@@ -1250,15 +1457,17 @@ class Model_DteEmitido extends Model_Base_Envio
         if ($this->getEmisor()->isEmailReceiverLibredte('sii')) {
             $usarWebservice = true;
         }
-        return $usarWebservice ? $this->actualizarEstadoWebservice($user_id) : $this->actualizarEstadoEmail();
+        return $usarWebservice
+            ? $this->actualizarEstadoWebservice($user_id)
+            : $this->actualizarEstadoEmail()
+        ;
     }
 
     /**
-     * Método que actualiza el estado de un DTE enviado al SII a través del
-     * servicio web que dispone el SII para esta consulta
-         * @version 2021-08-18
+     * Método que actualiza el estado de un DTE enviado al SII a través
+     * del servicio web que dispone el SII para esta consulta.
      */
-    private function actualizarEstadoWebservice($user_id = null)
+    private function actualizarEstadoWebservice($user_id = null): array
     {
         // obtener firma
         $Firma = $this->getEmisor()->getFirma($user_id);
@@ -1272,13 +1481,25 @@ class Model_DteEmitido extends Model_Base_Envio
         \sasco\LibreDTE\Sii::setAmbiente((int)$this->certificacion);
         // consultar estado de boleta
         if (in_array($this->dte, [39, 41])) {
-            $class = \sowerphp\core\Configure::read('dte.clase_boletas');
+            $class = Configure::read('dte.clase_boletas');
             if (!$class || !class_exists($class)) {
-                throw new \Exception('Consulta de estado de envío de boletas al SII no está disponible en este servidor de LibreDTE.');
+                throw new \Exception(
+                    'Consulta de estado de envío de boletas al SII no está disponible en este servidor de LibreDTE.'
+                );
             }
-            $estado_up = $class::estado_normalizado($this->getEmisor()->rut, $this->getEmisor()->dv, $this->track_id, $Firma, $this->dte, $this->folio);
+            $estado_up = $class::estado_normalizado(
+                $this->getEmisor()->rut,
+                $this->getEmisor()->dv,
+                $this->track_id,
+                $Firma,
+                $this->dte,
+                $this->folio
+            );
             if ($estado_up === false) {
-                throw new \Exception('No fue posible obtener el estado del DTE<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()));
+                throw new \Exception(
+                    'No fue posible obtener el estado del DTE<br/>'
+                        . implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                );
             }
             $this->revision_estado = $estado_up['estado'];
             $this->revision_detalle = $estado_up['detalle'];
@@ -1288,13 +1509,28 @@ class Model_DteEmitido extends Model_Base_Envio
             // obtener token
             $token = \sasco\LibreDTE\Sii\Autenticacion::getToken($Firma);
             if (!$token) {
-                throw new \Exception('No fue posible obtener el token para el SII<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()));
+                throw new \Exception(
+                    'No fue posible obtener el token para el SII<br/>'
+                        . implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                );
             }
             // consultar estado enviado
-            $estado_up = \sasco\LibreDTE\Sii::request('QueryEstUp', 'getEstUp', [$this->getEmisor()->rut, $this->getEmisor()->dv, $this->track_id, $token]);
+            $estado_up = \sasco\LibreDTE\Sii::request(
+                'QueryEstUp',
+                'getEstUp',
+                [
+                    $this->getEmisor()->rut,
+                    $this->getEmisor()->dv,
+                    $this->track_id,
+                    $token,
+                ]
+            );
             // si el estado no se pudo recuperar error
             if ($estado_up === false) {
-                throw new \Exception('No fue posible obtener el estado del DTE<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()));
+                throw new \Exception(
+                    'No fue posible obtener el estado del DTE<br/>'
+                        . implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                );
             }
             // armar estado del dte
             $estado = (string)$estado_up->xpath('/SII:RESPUESTA/SII:RESP_HDR/ESTADO')[0];
@@ -1303,7 +1539,10 @@ class Model_DteEmitido extends Model_Base_Envio
             } else {
                 $glosa = null;
             }
-            $this->revision_estado = $glosa ? ($estado.' - '.$glosa) : $estado;
+            $this->revision_estado = $glosa
+                ? ($estado.' - '.$glosa)
+                : $estado
+            ;
             $this->revision_detalle = null;
             if ($estado == 'EPR') {
                 $resultado = (array)$estado_up->xpath('/SII:RESPUESTA/SII:RESP_BODY')[0];
@@ -1329,26 +1568,39 @@ class Model_DteEmitido extends Model_Base_Envio
                 'revision_estado' => $this->revision_estado,
                 'revision_detalle' => $this->revision_detalle,
             ];
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-            throw new \Exception('El estado se obtuvo pero no fue posible guardarlo en la base de datos<br/>'.$e->getMessage());
+        } catch (DatabaseException $e) {
+            throw new \Exception(
+                'El estado se obtuvo pero no fue posible guardarlo en la base de datos<br/>'
+                    . $e->getMessage()
+            );
         }
     }
 
     /**
-     * Método que actualiza el estado de un DTE enviado al SII a través del
-     * email que es recibido desde el SII
-         * @version 2019-07-15
+     * Método que actualiza el estado de un DTE enviado al SII a través
+     * del email que es recibido desde el SII.
      */
-    private function actualizarEstadoEmail()
+    private function actualizarEstadoEmail(): array
     {
         // buscar correo con respuesta
         $Imap = $this->getEmisor()->getEmailReceiver('sii');
         if (!$Imap) {
-            throw new \Exception('No fue posible conectar mediante IMAP a '.$this->getEmisor()->config_email_sii_imap.', verificar mailbox, usuario y/o contraseña de contacto SII:<br/>'.implode('<br/>', imap_errors()));
+            throw new \Exception(
+                'No fue posible conectar mediante IMAP a '
+                    . $this->getEmisor()->config_email_sii_imap
+                    . ', verificar mailbox, usuario y/o contraseña de contacto SII:<br/>'
+                    . implode('<br/>', imap_errors())
+            );
         }
-        $asunto = 'Resultado de Revision Envio '.$this->track_id.' - '.$this->getEmisor()->rut.'-'.$this->getEmisor()->dv;
-        $uids = (array)$Imap->search('FROM @sii.cl SUBJECT "'.$asunto.'" UNSEEN');
+        $asunto = 'Resultado de Revision Envio '
+            . $this->track_id . ' - ' . $this->getEmisor()->rut
+            . '-' . $this->getEmisor()->dv
+        ;
+        $uids = (array)$Imap->search(
+            'FROM @sii.cl SUBJECT "'.$asunto.'" UNSEEN'
+        );
         // procesar emails recibidos
+        $mimetypes = ['application/xml', 'text/xml'];
         foreach ($uids as $uid) {
             $estado = $detalle = null;
             $m = $Imap->getMessage($uid);
@@ -1356,19 +1608,25 @@ class Model_DteEmitido extends Model_Base_Envio
                 continue;
             }
             foreach ($m['attachments'] as $file) {
-                if (!in_array($file['type'], ['application/xml', 'text/xml'])) {
+                if (!in_array($file['type'], $mimetypes)) {
                     continue;
                 }
                 $xml = new \SimpleXMLElement($file['data'], LIBXML_COMPACT);
                 // obtener estado y detalle
                 if (isset($xml->REVISIONENVIO)) {
-                    if ($xml->REVISIONENVIO->REVISIONDTE->TIPODTE == $this->dte && $xml->REVISIONENVIO->REVISIONDTE->FOLIO == $this->folio) {
+                    if (
+                        $xml->REVISIONENVIO->REVISIONDTE->TIPODTE == $this->dte
+                        && $xml->REVISIONENVIO->REVISIONDTE->FOLIO == $this->folio
+                    ) {
                         $estado = (string)$xml->REVISIONENVIO->REVISIONDTE->ESTADO;
                         $detalle = (string)$xml->REVISIONENVIO->REVISIONDTE->DETALLE;
                     }
                 } else {
                     $estado = (string)$xml->IDENTIFICACION->ESTADO;
-                    $detalle = (int)$xml->ESTADISTICA->SUBTOTAL->ACEPTA ? 'DTE aceptado' : 'DTE no aceptado';
+                    $detalle = (int)$xml->ESTADISTICA->SUBTOTAL->ACEPTA
+                        ? 'DTE aceptado'
+                        : 'DTE no aceptado'
+                    ;
                 }
             }
             if (isset($estado)) {
@@ -1382,25 +1640,32 @@ class Model_DteEmitido extends Model_Base_Envio
                         'revision_estado' => $estado,
                         'revision_detalle' => $detalle
                     ];
-                } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-                    throw new \Exception('El estado se obtuvo pero no fue posible guardarlo en la base de datos<br/>'.$e->getMessage());
+                } catch (DatabaseException $e) {
+                    throw new \Exception(
+                        'El estado se obtuvo pero no fue posible guardarlo en la base de datos<br/>'
+                            . $e->getMessage()
+                    );
                 }
             }
         }
-        // no se encontró email o bien los que se encontraron no se procesaron (porque no se retornó)
+        // no se encontró email o bien los que se encontraron no se
+        // procesaron (porque no se retornó)
         if (str_replace('-', '', $this->fecha)<date('Ymd')) {
             $this->solicitarRevision();
-            throw new \Exception('No se encontró respuesta de envío del DTE, se solicitó nueva revisión.');
+            throw new \Exception(
+                'No se encontró respuesta de envío del DTE, se solicitó nueva revisión.'
+            );
         } else {
-            throw new \Exception('No se encontró respuesta de envío del DTE, espere unos segundos o solicite nueva revisión.');
+            throw new \Exception(
+                'No se encontró respuesta de envío del DTE, espere unos segundos o solicite nueva revisión.'
+            );
         }
     }
 
     /**
-     * Método que propone una referencia para el documento emitido
-         * @version 2017-04-27
+     * Método que propone una referencia para el documento emitido.
      */
-    public function getPropuestaReferencia()
+    public function getPropuestaReferencia(): array
     {
         // si es factura o boleta se anula con nota crédito
         if (in_array($this->dte, [33, 34, 39, 41, 46, 56])) {
@@ -1432,7 +1697,8 @@ class Model_DteEmitido extends Model_Base_Envio
                 'razon' => 'Se factura',
             ];
         }
-        // si es factura de exportación o nota de débito de exportación se anula con nota de crédito exp
+        // si es factura de exportación o nota de débito de exportación
+        // se anula con nota de crédito de exportación
         else if (in_array($this->dte, [110, 111])) {
             return [
                 'titulo' => 'Anular documento',
@@ -1442,8 +1708,9 @@ class Model_DteEmitido extends Model_Base_Envio
                 'razon' => 'Anula documento',
             ];
         }
-        // si es nota de crédito de exportación electrónica se anula con nota de débito exp
-        else if ($this->dte==112) {
+        // si es nota de crédito de exportación electrónica se anula con
+        // nota de débito de exportación
+        else if ($this->dte == 112) {
             return [
                 'titulo' => 'Anular documento',
                 'color' => 'danger',
@@ -1455,48 +1722,70 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que corrige el monto total del DTE al valor de la moneda oficial
-     * para el día según lo registrado en el sistema (datos del banco central)
-         * @version 2020-02-22
+     * Método que corrige el monto total del DTE al valor de la moneda
+     * oficial para el día según lo registrado en el sistema (datos del
+     * banco central).
      */
-    public function calcularCLP()
+    public function calcularCLP(): int
     {
         if (!$this->getTipo()->esExportacion()) {
             return false;
         }
         if (!$this->hasLocalXML()) {
-            throw new \Exception('No es posible calcular el CLP de un DTE que no tiene XML en LibreDTE');
+            throw new \Exception(
+                'No es posible calcular el CLP de un DTE que no tiene XML en LibreDTE.'
+            );
         }
         $moneda = $this->getDte()->getDatos()['Encabezado']['Totales']['TpoMoneda'];
         $total = $this->getDte()->getDatos()['Encabezado']['Totales']['MntTotal'];
-        $cambio = (float)(new \sowerphp\app\Sistema\General\Model_MonedaCambio($moneda, 'CLP', $this->fecha))->valor;
-        return $cambio ? abs(round($total*$cambio)) : -1;
+        $cambio = (float)(new Model_MonedaCambio(
+            $moneda,
+            'CLP',
+            $this->fecha
+        ))->valor;
+        return $cambio ? abs(round($total * $cambio)) : -1;
     }
 
     /**
-     * Método que indica la cantidad de veces que un DTE ha sido enviado por correo electrónico
-         * @version 2020-10-16
+     * Método que indica la cantidad de veces que un DTE ha sido enviado
+     * por correo electrónico.
      */
     public function emailEnviado(string $email = null): int
     {
-        $where = ['emisor = :emisor', 'dte = :dte', 'folio = :folio', 'certificacion = :certificacion'];
-        $vars = [':emisor' => $this->emisor, ':dte' => $this->dte, ':folio' => $this->folio, ':certificacion' => $this->certificacion];
+        $where = [
+            'emisor = :emisor',
+            'dte = :dte',
+            'folio = :folio',
+            'certificacion = :certificacion',
+        ];
+        $vars = [
+            ':emisor' => $this->emisor,
+            ':dte' => $this->dte,
+            ':folio' => $this->folio,
+            ':certificacion' => $this->certificacion,
+        ];
         if (!empty($email)) {
             $where[] = 'email = :email';
             $vars[':email'] = $email;
         }
-        return (int)$this->db->getValue('SELECT COUNT(*) FROM dte_emitido_email WHERE '.implode(' AND ', $where), $vars);
+        return (int)$this->db->getValue('
+            SELECT COUNT(*)
+            FROM dte_emitido_email
+            WHERE ' . implode(' AND ', $where)
+        , $vars);
     }
 
     /**
      * Método que envía el DTE por correo electrónico.
      */
-    public function email($to = null, $subject = null, $msg = null, $pdf = false, $cedible = false, $papelContinuo = null, $use_template = true)
+    public function email($to = null, ?string $subject = null, ?string $msg = null, bool $pdf = false, bool $cedible = false, ?int $papelContinuo = null, bool $use_template = true)
     {
         // destinatario(s) del correo
         if (!$to) {
             if (!$this->getReceptor()->config_email_intercambio_user) {
-                throw new \Exception('El receptor no tiene configurado un correo de intercambio. Debe proporcionar un correo para enviar el documento.');
+                throw new \Exception(
+                    'El receptor no tiene configurado un correo de intercambio. Debe proporcionar un correo para enviar el documento.'
+                );
             }
             $to = [$this->getReceptor()->config_email_intercambio_user];
         }
@@ -1513,30 +1802,48 @@ class Model_DteEmitido extends Model_Base_Envio
         }
         // asunto por defecto del correo
         if (!$subject) {
-            $subject = $this->getTipo()->tipo.' N° '.$this->folio.' de '.$this->getEmisor()->getNombre().' ('.$this->getEmisor()->getRUT().')';
+            $subject = $this->getTipo()->tipo . ' N° ' . $this->folio
+                . ' de ' . $this->getEmisor()->getNombre()
+                . ' (' . $this->getEmisor()->getRUT() . ')'
+            ;
         }
         // armar cuerpo del correo
-        $msg_html = $use_template ? $this->getEmisor()->getEmailFromTemplate('dte', $this, $msg) : false;
+        $msg_html = $use_template
+            ? $this->getEmisor()->getEmailFromTemplate('dte', $this, $msg)
+            : false
+        ;
         if (!$use_template && $msg) {
             $msg = ['html' => $msg];
         }
         if (!$msg) {
-            $msg = 'Se adjunta '.$this->getTipo()->tipo.' N° '.$this->folio.' del día '.\sowerphp\general\Utility_Date::format($this->fecha).' por un monto total de $'.num($this->total).'.-'."\n\n";
+            $msg = 'Se adjunta ' . $this->getTipo()->tipo . ' N° '
+                . $this->folio . ' del día ' . Utility_Date::format($this->fecha)
+                . ' por un monto total de $' . num($this->total) . '.-' . "\n\n"
+            ;
             $links = $this->getLinks();
             if (!empty($links['pagar'])) {
                 $Cobro = $this->getCobro(false);
                 if ($Cobro) {
                     if (!$Cobro->pagado) {
-                        $msg .= 'Enlace pago en línea: '.$links['pagar']."\n\n";
+                        $msg .= 'Enlace pago en línea: ' . $links['pagar'] . "\n\n";
                     } else {
-                        $msg .= 'El documento se encuentra pagado con fecha '.\sowerphp\general\Utility_Date::format($Cobro->pagado).' usando el medio de pago '.$Cobro->getMedioPago()->getNombre()."\n\n";
-                        $msg .= 'Puede descargar el documento en: '.$links['pdf']."\n\n";
+                        $msg .= 'El documento se encuentra pagado con fecha '
+                            . Utility_Date::format($Cobro->pagado)
+                            . ' usando el medio de pago '
+                            . $Cobro->getMedioPago()->getNombre() . "\n\n"
+                            . 'Puede descargar el documento en: '
+                            . $links['pdf'] . "\n\n"
+                        ;
                     }
                 } else {
-                    $msg .= 'Puede descargar el documento en: '.$links['pdf']."\n\n";
+                    $msg .= 'Puede descargar el documento en: '
+                        . $links['pdf'] . "\n\n"
+                    ;
                 }
             } else {
-                $msg .= 'Puede descargar el documento en: '.$links['pdf']."\n\n";
+                $msg .= 'Puede descargar el documento en: '
+                    . $links['pdf'] . "\n\n"
+                ;
             }
         }
         if ($msg_html) {
@@ -1549,11 +1856,17 @@ class Model_DteEmitido extends Model_Base_Envio
         $email->subject($subject);
         // agregar reply to si corresponde
         if (!empty($this->getEmisor()->config_email_intercambio_sender->reply_to)) {
-            $email->replyTo($this->getEmisor()->config_email_intercambio_sender->reply_to);
+            $email->replyTo(
+                $this->getEmisor()->config_email_intercambio_sender->reply_to
+            );
         } else if ($this->getEmisor()->config_pagos_email) {
-            $email->replyTo($this->getEmisor()->config_pagos_email);
+            $email->replyTo(
+                $this->getEmisor()->config_pagos_email
+            );
         } else if ($this->getEmisor()->email) {
-            $email->replyTo($this->getEmisor()->email);
+            $email->replyTo(
+                $this->getEmisor()->email
+            );
         }
         // adjuntar PDF
         if ($pdf) {
@@ -1563,14 +1876,20 @@ class Model_DteEmitido extends Model_Base_Envio
             }
             $email->attach([
                 'data' => $this->getPDF($pdf_config),
-                'name' => 'dte_'.$this->getEmisor()->rut.'-'.$this->getEmisor()->dv.'_T'.$this->dte.'F'.$this->folio.'.pdf',
+                'name' => 'dte_' . $this->getEmisor()->rut . '-'
+                    . $this->getEmisor()->dv . '_T' . $this->dte
+                    . 'F' . $this->folio . '.pdf'
+                ,
                 'type' => 'application/pdf',
             ]);
         }
         // adjuntar XML
         $email->attach([
             'data' => $this->getXML(),
-            'name' => 'dte_'.$this->getEmisor()->rut.'-'.$this->getEmisor()->dv.'_T'.$this->dte.'F'.$this->folio.'.xml',
+            'name' => 'dte_' . $this->getEmisor()->rut . '-'
+                . $this->getEmisor()->dv . '_T' . $this->dte
+                . 'F' . $this->folio . '.xml'
+            ,
             'type' => 'application/xml',
         ]);
         // enviar email
@@ -1582,7 +1901,14 @@ class Model_DteEmitido extends Model_Base_Envio
                 try {
                     $this->db->query('
                         INSERT INTO dte_emitido_email
-                        VALUES (:emisor, :dte, :folio, :certificacion, :email, :fecha_hora)
+                        VALUES (
+                            :emisor,
+                            :dte,
+                            :folio,
+                            :certificacion,
+                            :email,
+                            :fecha_hora
+                        )
                     ', [
                         ':emisor' => $this->emisor,
                         ':dte' => $this->dte,
@@ -1598,23 +1924,34 @@ class Model_DteEmitido extends Model_Base_Envio
             return $to;
         } else {
             throw new \Exception(
-                'No fue posible enviar el email: '.$status['message']
+                'No fue posible enviar el email: ' . $status['message']
             );
         }
     }
 
     /**
-     * Método que entrega el resumen de los correos enviados
-         * @version 2017-07-26
+     * Método que entrega el resumen de los correos enviados.
      */
-    public function getEmailEnviadosResumen()
+    public function getEmailEnviadosResumen(): array
     {
         return $this->db->getTable('
-            SELECT email, COUNT(*) AS enviados, MIN(fecha_hora) AS primer_envio, MAX(fecha_hora) AS ultimo_envio
-            FROM dte_emitido_email
-            WHERE emisor = :emisor AND dte = :dte AND folio = :folio AND certificacion = :certificacion
-            GROUP BY email
-            ORDER BY ultimo_envio DESC, primer_envio ASC
+            SELECT
+                email,
+                COUNT(*) AS enviados,
+                MIN(fecha_hora) AS primer_envio,
+                MAX(fecha_hora) AS ultimo_envio
+            FROM
+                dte_emitido_email
+            WHERE
+                emisor = :emisor
+                AND dte = :dte
+                AND folio = :folio
+                AND certificacion = :certificacion
+            GROUP BY
+                email
+            ORDER BY
+                ultimo_envio DESC,
+                primer_envio ASC
         ', [
             ':emisor' => $this->emisor,
             ':dte' => $this->dte,
@@ -1624,40 +1961,49 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el cobro asociado al DTE emitido
-         * @version 2023-11-02
+     * Método que entrega el cobro asociado al DTE emitido.
+     * @return \libredte\enterprise\Pagos\Model_Cobro|false
      */
     public function getCobro($crearSiNoExiste = true)
     {
+        if (!is_libredte_enterprise()) {
+            return false;
+        }
         /*if (!$this->getTipo()->permiteCobro()) {
             return false;
         }*/
-        return (new \libredte\enterprise\Pagos\Model_Cobro())->setDocumento($this, $crearSiNoExiste);
+        return (new \libredte\enterprise\Pagos\Model_Cobro())
+            ->setDocumento($this, $crearSiNoExiste)
+        ;
     }
 
     /**
-     * Método que entrega el vencimiento del documento si es que existe
-         * @version 2020-02-22
+     * Método que entrega el vencimiento del documento si es que existe.
      */
-    public function getVencimiento()
+    public function getVencimiento(): ?string
     {
         $datos = $this->hasLocalXML() ? $this->getDatos() : [];
-        return !empty($datos['Encabezado']['IdDoc']['FchVenc']) ? $datos['Encabezado']['IdDoc']['FchVenc'] : null;
+        return !empty($datos['Encabezado']['IdDoc']['FchVenc'])
+            ? $datos['Encabezado']['IdDoc']['FchVenc']
+            : null
+        ;
     }
 
     /**
-     * Método que entrega el total real del DTE, si es documento de exportación
-     * se entrega el total en la moneda extranjera
-         * @version 2020-12-19
+     * Método que entrega el total real del DTE, si es documento de
+     * exportación se entrega el total en la moneda extranjera.
+     * @return number|false
      */
-    public function getTotal($exception = true)
+    public function getTotal(bool $exception = true)
     {
         if (!in_array($this->dte, [110, 111, 112])) {
             return $this->total;
         }
         if (!$this->hasLocalXML()) {
             if ($exception) {
-                throw new \Exception('No es posible obtener el total de exportación sin el XML en LibreDTE');
+                throw new \Exception(
+                    'No es posible obtener el total de exportación sin el XML en LibreDTE.'
+                );
             } else {
                 return false;
             }
@@ -1666,25 +2012,35 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el detalle del DTE
-         * @version 2020-02-22
+     * Método que entrega el detalle del DTE.
      */
-    public function getDetalle()
+    public function getDetalle(): array
     {
-        $Detalle = $this->hasLocalXML() ? $this->getDatos()['Detalle'] : [];
+        $Detalle = $this->hasLocalXML()
+            ? $this->getDatos()['Detalle']
+            : []
+        ;
         return isset($Detalle[0]) ? $Detalle : [$Detalle];
     }
 
     /**
-     * Método que entrega el teléfono asociado al DTE, ya sea porque existe en el DTE o asociado directamente al receptor
-         * @version 2020-07-11
+     * Método que entrega el teléfono asociado al DTE, ya sea porque
+     * existe en el DTE o asociado directamente al receptor.
      */
-    public function getTelefono() {
+    public function getTelefono(): ?string
+    {
         if (!isset($this->_telefono)) {
             $this->_telefono = null;
-            if ($this->hasLocalXML() && !empty($this->getDatos()['Encabezado']['Receptor']['Contacto']) && $this->getDatos()['Encabezado']['Receptor']['Contacto'][0] == '+') {
+            if (
+                $this->hasLocalXML()
+                && !empty($this->getDatos()['Encabezado']['Receptor']['Contacto'])
+                && $this->getDatos()['Encabezado']['Receptor']['Contacto'][0] == '+'
+            ) {
                 $this->_telefono = $this->getDatos()['Encabezado']['Receptor']['Contacto'];
-            } else if (!empty($this->getReceptor()->telefono) && $this->getReceptor()->telefono[0] == '+') {
+            } else if (
+                !empty($this->getReceptor()->telefono)
+                && $this->getReceptor()->telefono[0] == '+'
+            ) {
                 $this->_telefono = $this->getReceptor()->telefono;
             }
         }
@@ -1693,13 +2049,16 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega el celular asociado al DTE si existe
-     * @warning Solo detecta como celular un número chileno (+56 9)
-         * @version 2020-03-24
+     * @warning Solo detecta como celular un número chileno (+56 9).
      */
-    public function getCelular() {
+    public function getCelular(): ?string
+    {
         if (!isset($this->_celular)) {
             $this->_celular = null;
-            if ($this->getTelefono() and strpos($this->getTelefono(), '+56 9') === 0) {
+            if (
+                $this->getTelefono()
+                && strpos($this->getTelefono(), '+56 9') === 0
+            ) {
                 $this->_celular = $this->getTelefono();
             }
         }
@@ -1707,32 +2066,53 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega los enlaces públicos del documento
-         * @version 2020-03-24
+     * Método que entrega los enlaces públicos del documento.
      */
-    public function getLinks()
+    public function getLinks(): array
     {
         $links = [];
-        $links['ver'] = url('/dte/dte_emitidos/ver/'.$this->dte.'/'.$this->folio);
-        $links['pdf'] = url('/dte/dte_emitidos/pdf/'.$this->dte.'/'.$this->folio.'/1/'.$this->emisor.'/'.$this->fecha.'/'.$this->total);
-        $links['xml'] = url('/dte/dte_emitidos/xml/'.$this->dte.'/'.$this->folio.'/'.$this->emisor.'/'.$this->fecha.'/'.$this->total);
+        $links['ver'] = url(
+            '/dte/dte_emitidos/ver/%d/%d',
+            $this->dte,
+            $this->folio
+        );
+        $links['pdf'] = url(
+            '/dte/dte_emitidos/pdf/%d/%d/1/%d/%s/%d',
+            $this->dte,
+            $this->folio,
+            $this->emisor,
+            $this->fecha,
+            $this->total
+        );
+        $links['xml'] = url(
+            '/dte/dte_emitidos/xml/%d/%d/%d/%s/%d',
+            $this->dte,
+            $this->folio,
+            $this->emisor,
+            $this->fecha,
+            $this->total
+        );
         $links['whatsapp'] = false;
         if ($this->getCelular()) {
-            $links['whatsapp'] = 'https://wa.me/'.(int)str_replace(['+',' '], '', $this->getCelular()).'?text='.urlencode(
-                '¡Hola! Soy de '.$this->getEmisor()->getNombre().'. '
-                .'Te adjunto el enlace al PDF de la '.$this->getTipo()->tipo.' N° '.$this->folio.': '.$links['pdf']
-            );
+            $celular = (int)str_replace(['+',' '], '', $this->getCelular());
+            $links['whatsapp'] = 'https://wa.me/' . $celular . '?text='
+                . urlencode(
+                    '¡Hola! Soy de ' . $this->getEmisor()->getNombre()
+                    . '. ' . 'Te adjunto el enlace al PDF de la '
+                    . $this->getTipo()->tipo . ' N° ' . $this->folio
+                    . ': ' . $links['pdf']
+                )
+            ;
         }
-        $links_trigger = \sowerphp\core\Trigger::run('dte_dte_emitido_links', $this, $links);
+        $links_trigger = Trigger::run('dte_dte_emitido_links', $this, $links);
         return $links_trigger ? $links_trigger : $links;
     }
 
     /**
-     * Método que indica si el estado de revisión del DTE en el envío al SII es
-     * un estado final o bien aun faltan estados por obtener
-         * @version 2019-10-11
+     * Método que indica si el estado de revisión del DTE en el envío al
+     * SII es un estado final o bien aun faltan estados por obtener.
      */
-    public function tieneEstadoRevisionEnvioSIIFinal()
+    public function tieneEstadoRevisionEnvioSIIFinal(): bool
     {
         if (!$this->revision_estado) {
             return false;
@@ -1746,15 +2126,14 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega posibles ayudas para los estados del envío al SII
-         * @version 2019-10-17
+     * Método que entrega posibles ayudas para los estados del envío al SII.
      */
-    public function getAyudaEstadoEnvioSII()
+    public function getAyudaEstadoEnvioSII(): ?string
     {
         if (empty($this->revision_estado) || empty($this->revision_detalle)) {
             return null;
         }
-        $estado = substr($this->revision_estado,0,3);
+        $estado = substr($this->revision_estado, 0, 3);
         if (!empty(self::$envio_sii_ayudas[$estado])) {
             // si es un arreglo, hay varias opciones para el estado reportado
             if (is_array(self::$envio_sii_ayudas[$estado])) {
@@ -1780,29 +2159,27 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que indica si el DTE emitido tiene un XML asociado (LibreDTE o
-     * MIPYME)
-         * @version 2020-02-21
+     * Método que indica si el DTE emitido tiene un XML asociado
+     * (en LibreDTE o MIPYME).
      */
-    public function hasXML()
+    public function hasXML(): bool
     {
         return $this->hasLocalXML() || $this->mipyme;
     }
 
     /**
-     * Método que indica si el DTE emitido tiene un XML en LibreDTE
-         * @version 2020-02-21
+     * Método que indica si el DTE emitido tiene un XML en LibreDTE.
      */
-    public function hasLocalXML()
+    public function hasLocalXML(): bool
     {
         return (bool)$this->xml;
     }
 
     /**
      * Método que entrega el XML del documento emitido.
-     * Entrega el XML que existe en LibreDTE o bien generado con el Portal
-     * MIPYME del SII.
-         * @version 2022-08-30
+     * Entrega el XML que existe en LibreDTE o bien generado con el
+     * Portal MIPYME del SII.
+     * @return string|false
      */
     public function getXML()
     {
@@ -1818,7 +2195,10 @@ class Model_DteEmitido extends Model_Base_Envio
             // WARNING 2: quizás se deba mantener siempre la codificación en
             // base64 (?) (base de datos está en UTF8)
             if ($this->xml !== false) {
-                if (substr($this->xml,0,5) != '<?xml' and substr($this->xml,0,4) != '<DTE') {
+                if (
+                    substr($this->xml, 0, 5) != '<?xml'
+                    && substr($this->xml, 0, 4) != '<DTE'
+                ) {
                     $this->xml = base64_decode($this->xml);
                 }
             }
@@ -1843,28 +2223,31 @@ class Model_DteEmitido extends Model_Base_Envio
                 if ($r['status']['code'] == 404) {
                     $this->xml = false;
                 } else {
-                    throw new \Exception('Error al obtener el XML: '.$r['body'], $r['status']['code']);
+                    throw new \Exception(
+                        'Error al obtener el XML: ' . $r['body'],
+                        $r['status']['code']
+                    );
                 }
             } else {
                 $XML = new \sasco\LibreDTE\XML();
                 $XML->loadXML($r['body']);
                 $this->xml =
-                    '<?xml version="1.0" encoding="ISO-8859-1"?>'."\n".
-                    $XML->saveXML($XML->getElementsByTagName('DTE')->item(0))
+                    '<?xml version="1.0" encoding="ISO-8859-1"?>' . "\n"
+                    . $XML->saveXML($XML->getElementsByTagName('DTE')->item(0))
                 ;
             }
             return $this->xml;
         }
-        // en caso que no exista el XML => false (ej: porque se eliminó el XML o nunca se tuvo)
+        // en caso que no exista el XML => false
+        // (ej: porque se eliminó el XML o nunca se tuvo)
         $this->xml = false;
         return $this->xml;
     }
 
     /**
-     * Método que entrega los datos extras del documento
-         * @version 2020-08-01
+     * Método que entrega los datos extras del documento.
      */
-    public function getExtra()
+    public function getExtra(): ?array
     {
         if (empty($this->extra)) {
             return null;
@@ -1876,45 +2259,66 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega la actividad económica asociada al documento
-         * @version 2020-08-04
+     * Método que entrega la actividad económica asociada al documento.
      */
-    public function getActividad($default = null)
+    public function getActividad(?string $default = null): ?string
     {
         $datos = $this->getDatos();
-        return !empty($datos['Encabezado']['Emisor']['Acteco']) ? $datos['Encabezado']['Emisor']['Acteco'] : $default;
+        return !empty($datos['Encabezado']['Emisor']['Acteco'])
+            ? $datos['Encabezado']['Emisor']['Acteco']
+            : $default
+        ;
     }
 
     /**
      * Método que entrega el PDF del documento emitido.
-     * Entrega el PDF que se ha generado con LibreDTE a partir del XML del DTE
-     * emitido o bien el PDF generado con el PortalMIPYME del SII.
-         * @version 2020-08-04
+     * Entrega el PDF que se ha generado con LibreDTE a partir del XML del
+     * DTE emitido o bien el PDF generado con el PortalMIPYME del SII.
      */
-    public function getPDF(array $config = [])
+    public function getPDF(array $config = []): string
     {
         // si no tiene XML error
         if (!$this->hasXML()) {
-            throw new \Exception('El DTE no tiene XML asociado para generar el PDF');
+            throw new \Exception(
+                'El DTE no tiene XML asociado para generar el PDF.'
+            );
         }
         // configuración por defecto para el PDF
         $config_emisor = $this->getEmisor()->getConfigPDF($this, $config);
         $default_config = [
             'cedible' => $this->getEmisor()->config_pdf_dte_cedible,
             'compress' => false,
-            'copias_tributarias' => $this->getEmisor()->config_pdf_copias_tributarias ? $this->getEmisor()->config_pdf_copias_tributarias : 1,
-            'copias_cedibles' => $this->getEmisor()->config_pdf_copias_cedibles ? $this->getEmisor()->config_pdf_copias_cedibles : $this->getEmisor()->config_pdf_dte_cedible,
-            'webVerificacion' => \sowerphp\core\Configure::read('dte.web_verificacion'),
+            'copias_tributarias' => $this->getEmisor()->config_pdf_copias_tributarias
+                ? $this->getEmisor()->config_pdf_copias_tributarias
+                : 1
+            ,
+            'copias_cedibles' => $this->getEmisor()->config_pdf_copias_cedibles
+                ? $this->getEmisor()->config_pdf_copias_cedibles
+                : $this->getEmisor()->config_pdf_dte_cedible
+            ,
+            'webVerificacion' => Configure::read('dte.web_verificacion'),
             'xml' => base64_encode($this->getXML()),
             'caratula' => [
-                'FchResol' => $this->certificacion ? $this->getEmisor()->config_ambiente_certificacion_fecha : $this->getEmisor()->config_ambiente_produccion_fecha,
-                'NroResol' => $this->certificacion ? 0 : $this->getEmisor()->config_ambiente_produccion_numero,
+                'FchResol' => $this->certificacion
+                    ? $this->getEmisor()->config_ambiente_certificacion_fecha
+                    : $this->getEmisor()->config_ambiente_produccion_fecha
+                ,
+                'NroResol' => $this->certificacion
+                    ? 0
+                    : $this->getEmisor()->config_ambiente_produccion_numero
+                ,
             ],
             'hash' => $this->getEmisor()->getUsuario()->hash,
             'extra' => (array)$this->getExtra(),
         ];
-        $default_config = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($config_emisor, $default_config);
-        $config = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($default_config, $config);
+        $default_config = Utility_Array::mergeRecursiveDistinct(
+            $config_emisor,
+            $default_config
+        );
+        $config = Utility_Array::mergeRecursiveDistinct(
+            $default_config,
+            $config
+        );
         // consultar servicio web del contribuyente
         $ApiDtePdfClient = $this->getEmisor()->getApiClient('dte_pdf');
         if ($ApiDtePdfClient) {
@@ -1924,24 +2328,39 @@ class Model_DteEmitido extends Model_Base_Envio
         // crear a partir de formato de PDF no estándar
         else if ($config['formato'] != 'estandar') {
             $apps = $this->getEmisor()->getApps('dtepdfs');
-            if (empty($apps[$config['formato']]) || empty($apps[$config['formato']]->getConfig()->disponible)) {
-                throw new \Exception('Formato de PDF '.$config['formato'].' no se encuentra disponible', 400);
+            if (
+                empty($apps[$config['formato']])
+                || empty($apps[$config['formato']]->getConfig()->disponible)
+            ) {
+                throw new \Exception(
+                    'Formato de PDF ' . $config['formato']
+                        . ' no se encuentra disponible.'
+                    ,
+                    400
+                );
             }
             $response = $apps[$config['formato']]->generar($config);
         }
         // consultar servicio web local de LibreDTE
         else {
-            $rest = new \sowerphp\core\Network_Http_Rest();
+            $rest = new Network_Http_Rest();
             $rest->setAuth($config['hash']);
             unset($config['hash']);
-            $response = $rest->post(url('/api/utilidades/documentos/generar_pdf'), $config);
+            $url = url('/api/utilidades/documentos/generar_pdf');
+            $response = $rest->post($url, $config);
             if ($response === false) {
-                throw new \Exception(implode("\n", $rest->getErrors()), 500);
+                throw new \Exception(
+                    implode("\n", $rest->getErrors()),
+                    500
+                );
             }
         }
         // procesar respuesta
         if ($response['status']['code'] != 200) {
-            throw new \Exception($response['body'], $response['status']['code']);
+            throw new \Exception(
+                $response['body'],
+                $response['status']['code']
+            );
         }
         // si dió código 200 se entrega la respuesta del servicio web
         return $response['body'];
@@ -1949,26 +2368,39 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega el código ESCPOS del documento emitido.
-         * @version 2021-02-21
      */
     public function getESCPOS(array $config = [])
     {
         // si no tiene XML error
         if (!$this->hasXML()) {
-            throw new \Exception('El DTE no tiene XML asociado para generar el código ESCPOS');
+            throw new \Exception(
+                'El DTE no tiene XML asociado para generar el código ESCPOS.'
+            );
         }
         // configuración por defecto para el código ESCPOS
         $default_config = [
             'formato' => 'estandar', // en el futuro podría salir de una configuración por DTE como los PDF
             'cedible' => $this->getEmisor()->config_pdf_dte_cedible,
             'compress' => false,
-            'copias_tributarias' => $this->getEmisor()->config_pdf_copias_tributarias ? $this->getEmisor()->config_pdf_copias_tributarias : 1,
-            'copias_cedibles' => $this->getEmisor()->config_pdf_copias_cedibles ? $this->getEmisor()->config_pdf_copias_cedibles : $this->getEmisor()->config_pdf_dte_cedible,
-            'webVerificacion' => \sowerphp\core\Configure::read('dte.web_verificacion'),
+            'copias_tributarias' => $this->getEmisor()->config_pdf_copias_tributarias
+                ? $this->getEmisor()->config_pdf_copias_tributarias
+                : 1
+            ,
+            'copias_cedibles' => $this->getEmisor()->config_pdf_copias_cedibles
+                ? $this->getEmisor()->config_pdf_copias_cedibles
+                : $this->getEmisor()->config_pdf_dte_cedible
+            ,
+            'webVerificacion' => Configure::read('dte.web_verificacion'),
             'xml' => base64_encode($this->getXML()),
             'caratula' => [
-                'FchResol' => $this->certificacion ? $this->getEmisor()->config_ambiente_certificacion_fecha : $this->getEmisor()->config_ambiente_produccion_fecha,
-                'NroResol' => $this->certificacion ? 0 : $this->getEmisor()->config_ambiente_produccion_numero,
+                'FchResol' => $this->certificacion
+                    ? $this->getEmisor()->config_ambiente_certificacion_fecha
+                    : $this->getEmisor()->config_ambiente_produccion_fecha
+                ,
+                'NroResol' => $this->certificacion
+                    ? 0
+                    : $this->getEmisor()->config_ambiente_produccion_numero
+                ,
             ],
             'papelContinuo' => 80,
             'profile' => 'default',
@@ -1980,10 +2412,18 @@ class Model_DteEmitido extends Model_Base_Envio
             'pdf417' => null,
             'extra' => (array)$this->getExtra(),
         ];
-        $config = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($default_config, $config);
+        $config = Utility_Array::mergeRecursiveDistinct(
+            $default_config,
+            $config
+        );
         $formatoEstandar = $this->getEmisor()->getApp('dtepdfs.estandar');
-        if (!empty($formatoEstandar) && !empty($formatoEstandar->getConfig()->continuo->logo->posicion)) {
-            $logo_file = DIR_STATIC.'/contribuyentes/'.$this->getEmisor()->rut.'/logo.png';
+        if (
+            !empty($formatoEstandar)
+            && !empty($formatoEstandar->getConfig()->continuo->logo->posicion)
+        ) {
+            $logo_file = DIR_STATIC . '/contribuyentes/'
+                . $this->getEmisor()->rut . '/logo.png'
+            ;
             if (is_readable($logo_file)) {
                 $config['logo'] = base64_encode(file_get_contents($logo_file));
             }
@@ -1992,35 +2432,52 @@ class Model_DteEmitido extends Model_Base_Envio
         $ApiDteEscPosClient = $this->getEmisor()->getApiClient('dte_escpos');
         if ($ApiDteEscPosClient) {
             unset($config['hash']);
-            $response = $ApiDteEscPosClient->post($ApiDteEscPosClient->url, $config);
+            $response = $ApiDteEscPosClient->post(
+                $ApiDteEscPosClient->url,
+                $config
+            );
         }
         // consultar aplicación de ESCPOS según el formato solicitado
         else if ($apps = $this->getEmisor()->getApps('dteescpos')) {
-            if (empty($apps[$config['formato']]) || empty($apps[$config['formato']]->getConfig()->disponible)) {
-                throw new \Exception('Formato de ESCPOS '.$config['formato'].' no se encuentra disponible', 400);
+            if (
+                empty($apps[$config['formato']])
+                || empty($apps[$config['formato']]->getConfig()->disponible)
+            ) {
+                throw new \Exception(
+                    'Formato de ESCPOS ' . $config['formato']
+                        . ' no se encuentra disponible.'
+                    ,
+                    400
+                );
             }
             $response = $apps[$config['formato']]->generar($config);
         }
         // consultar servicio web de LibreDTE
         else {
             unset($config['hash']);
-            $response = apigateway_consume('/libredte/dte/documentos/escpos', $config);
+            $response = apigateway_consume(
+                '/libredte/dte/documentos/escpos',
+                $config
+            );
         }
         if ($response['status']['code'] != 200) {
-            throw new \Exception($response['body'], 500);
+            throw new \Exception(
+                $response['body'],
+                $response['status']['code']
+            );
         }
         // si dió código 200 se entrega la respuesta del servicio web
         return $response['body'];
     }
 
     /**
-     * Método que entrega el Track ID del DTE o la glosa si tiene otro significado
-         * @version 2020-02-21
+     * Método que entrega el Track ID del DTE o la glosa si tiene otro
+     * significado.
      */
-    public function getTrackID()
+    public function getTrackID(): string
     {
         if ($this->mipyme) {
-            return 'MIPYME '.$this->mipyme;
+            return 'MIPYME ' . $this->mipyme;
         }
         if (!$this->track_id) {
             return 'No enviado';
@@ -2031,7 +2488,7 @@ class Model_DteEmitido extends Model_Base_Envio
                 -2 => 'SYNC',
             ][$this->track_id];
         }
-        return $this->track_id;
+        return (string)$this->track_id;
     }
 
 }
