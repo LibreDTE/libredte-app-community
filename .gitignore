@@ -1,8 +1,5 @@
 # contenido propio de la instancia
-env
-env.*
-data
-extensions
-tmp
-website/Vendor
 .vscode
+.env*
+storage
+vendor

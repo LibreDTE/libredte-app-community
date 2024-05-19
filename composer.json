@@ -1,0 +1,39 @@
+{
+    "name": "libredte/libredte-community",
+    "description": "LibreDTE: Aplicación Web - Edición Comunidad.",
+    "type": "project",
+    "keywords": ["libredte", "dte", "facturacion", "chile"],
+    "homepage": "https://www.libredte.cl",
+    "license": "AGPL-3.0+",
+    "authors": [
+        {
+            "name": "LibreDTE",
+            "homepage": "https://www.libredte.cl"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/libredte/libredte-app-community/issues",
+        "source": "https://github.com/libredte/libredte-app-community"
+    },
+    "autoload": {
+        "classmap": ["src/"]
+    },
+    "config": {
+        "platform": {
+            "php": "7.3"
+        }
+    },
+    "require": {
+        "php": "^7.3 || ^8.0",
+        "sasco/libredte": "~24.1.1",
+        "apigatewaycl/apigateway-api-client": "^2",
+        "kunalvarma05/dropbox-php-sdk": "0.4.1",
+        "sowerphp/sowerphp-framework": "dev-master"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../sowerphp-framework"
+        }
+    ]
+}

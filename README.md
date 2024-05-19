@@ -22,7 +22,7 @@ Términos y condiciones de uso
 
 Al utilizar este proyecto, total o parcialmente, automáticamente se acepta
 cumplir con los [términos y condiciones de uso](https://www.libredte.cl/legal)
-que rigen a LibreDTE. La [Licencia Pública General Affero de GNU (AGPL)](https://raw.githubusercontent.com/LibreDTE/libredte-webapp/master/COPYING)
+que rigen a LibreDTE. La [Licencia Pública General Affero de GNU (AGPL)](https://raw.githubusercontent.com/LibreDTE/libredte-app-community/master/COPYING)
 solo aplica para quienes respeten los términos y condiciones de uso. No existe
 una licencia comercial de LibreDTE, por lo cual no es posible usar el proyecto
 si no aceptas cumplir dichos términos y condiciones.
@@ -46,9 +46,9 @@ Contribuir al proyecto
 ----------------------
 
 Si deseas contribuir con el proyecto, especialmente resolviendo alguna de las
-[*issues* abiertas](https://github.com/LibreDTE/libredte-webapp/issues), debes:
+[*issues* abiertas](https://github.com/LibreDTE/libredte-app-community/issues), debes:
 
-1. Hacer fork del proyecto en [GitHub](https://github.com/LibreDTE/libredte-webapp)
+1. Hacer fork del proyecto en [GitHub](https://github.com/LibreDTE/libredte-app-community)
 2. Crear una *branch* para los cambios: git checkout -b nombre-branch
 3. Modificar código: git commit -am 'Se agrega...'
 4. Publicar cambios: git push origin nombre-branch

@@ -1,21 +1,11 @@
 #
-# SowerPHP: Minimalist Framework for PHP
-# Copyright (C) SowerPHP (http://sowerphp.org)
-#
-# Archivo de configuración para Apache
+# LibreDTE: Aplicación Web - Edición Comunidad.
+# Copyright (C) LibreDTE <https://www.libredte.cl>
 #
 
-# mod_rewrite es necesario (es obligatorio reescribir las URLs)
+# Habilitar la reescritura de URL
 RewriteEngine On
 
-# Si se utiliza mod_userdir para este sitio indicar la url para accederlo
-#RewriteBase /~usuario/ruta/al/proyecto/
-
-# Reglas para redireccionar las solicitudes al archivo index.php que despacha
-# la página
-RewriteRule (.*) website/webroot/$1 [L]
-RewriteRule ^$ website/webroot/ [L]
-
-# Evitar que se acceda a los directorios directamente (si no hay index.*)
-Options -Indexes
-
+# Redirigir las solicitudes al subdirectorio /public
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule ^(.*)$ public/$1 [L]
