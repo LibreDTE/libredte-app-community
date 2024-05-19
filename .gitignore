@@ -1,5 +1,5 @@
 # contenido propio de la instancia
+/.env*
+/storage
+/vendor
 .vscode
-.env*
-storage
-vendor
