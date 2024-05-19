@@ -33,9 +33,4 @@ Configure::write('nav.module', [
         'desc' => 'Módulo de configuraciones generales',
         'icon' => 'fa fa-cogs',
     ],
-    '/servidor' => [
-        'name' => 'Servidor',
-        'desc' => 'Estadísticas y administración del servidor',
-        'icon' => 'fas fa-server',
-    ],
 ]);
