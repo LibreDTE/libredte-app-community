@@ -24,7 +24,6 @@
 // namespace del modelo
 namespace website\Dte;
 
-use \sowerphp\core\Configure;
 use \sowerphp\core\Exception_Model_Datasource_Database as DatabaseException;
 use \sowerphp\core\Model_Datasource_Session as Session;
 use \sowerphp\core\Network_Email;
@@ -446,7 +445,7 @@ class Model_Contribuyente extends \Model_App
                 if ($mimetype != 'image/png') {
                     throw new \Exception('Formato del logo debe ser PNG.');
                 }
-                $config = Configure::read('dte.logos');
+                $config = config('dte.logos');
                 Utility_Image::resizeOnFile(
                     $_FILES['logo']['tmp_name'],
                     $config['width'],
@@ -594,7 +593,7 @@ class Model_Contribuyente extends \Model_App
         if ($attach) {
             $email->attach($attach);
         }
-        $app = Configure::read('page.body.title');
+        $app = config('page.body.title');
         $subject = __('[%(app)s] %(rut)s: %(asunto)s', [
             'app' => $app,
             'rut' => $this->rut . '-' . $this->dv,
@@ -786,7 +785,7 @@ class Model_Contribuyente extends \Model_App
         }
         // si la aplicación solo tiene configurada una empresa se verifican los
         // permisos normales (basados en grupos) de sowerphp
-        if (Configure::read('dte.empresa')) {
+        if (config('dte.empresa')) {
             foreach ($permisos as $permiso) {
                 if ($Usuario->auth($permiso)) {
                     return true;
@@ -879,7 +878,7 @@ class Model_Contribuyente extends \Model_App
                 ':usuario' => $Usuario->id,
             ]);
             // mapa de permisos definidos por la configuración y la empresa
-            $permisos = Configure::read('empresa.permisos');
+            $permisos = config('empresa.permisos');
             // asignar los grupos del sistema a los que se podría tener acceso
             // por el permisos de la empresa
             $admin_grupos = $this->getUsuario()->getGroups();
@@ -4588,7 +4587,7 @@ class Model_Contribuyente extends \Model_App
     {
         $links = $this->config_extra_links
             ? $this->config_extra_links
-            : (array)Configure::read('nav.contribuyente')
+            : (array)config('nav.contribuyente')
         ;
         foreach ($links as &$l) {
             if (empty($l->icono)) {
@@ -4740,7 +4739,7 @@ class Model_Contribuyente extends \Model_App
             $codigo = $app;
         }
         // cargar app si existe
-        $apps_config = Configure::read('apps_3rd_party.' . $namespace);
+        $apps_config = config('apps_3rd_party.' . $namespace);
         $App = (new Utility_Apps($apps_config))->getApp($codigo);
         if (!$App) {
             throw new \Exception('Aplicación solicitada "'.$app.'" no existe.', 404);
@@ -4775,7 +4774,7 @@ class Model_Contribuyente extends \Model_App
             unset($filtros[$key]);
         }
         // obtener aplicaciones según namespace y filtros
-        $apps_config = Configure::read('apps_3rd_party.' . $namespace);
+        $apps_config = config('apps_3rd_party.' . $namespace);
         $apps = (new Utility_Apps($apps_config))->getApps($filtros);
         // cargar variables por defecto (asociar contribuyente)
         foreach ($apps as $App) {
@@ -4894,7 +4893,7 @@ class Model_Contribuyente extends \Model_App
      */
     public function enCertificacion(): int
     {
-        $certificacion = Configure::read('dte.certificacion');
+        $certificacion = config('dte.certificacion');
         if ($certificacion !== null) {
             return (int)(bool)$certificacion;
         }

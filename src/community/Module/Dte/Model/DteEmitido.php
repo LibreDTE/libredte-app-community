@@ -24,7 +24,6 @@
 // namespace del modelo
 namespace website\Dte;
 
-use \sowerphp\core\Configure;
 use \sowerphp\core\Exception_Model_Datasource_Database as DatabaseException;
 use \sowerphp\core\Network_Http_Rest;
 use \sowerphp\core\Trigger;
@@ -1216,7 +1215,7 @@ class Model_DteEmitido extends Model_Base_Envio
         }
         // si es boleta y no hay límite de custodia fijado no se deja
         // borrar el XML (para qué? si no hay límite)
-        $limite = Configure::read('dte.custodia_boletas');
+        $limite = config('dte.custodia_boletas');
         if (!$limite) {
             throw new \Exception(
                 'No hay límite de custodia para el XML de boletas, no se permite borrar (no es necesario).'
@@ -1381,7 +1380,7 @@ class Model_DteEmitido extends Model_Base_Envio
         \sasco\LibreDTE\Sii::setAmbiente((int)$this->certificacion);
         // enviar boleta al SII
         if (in_array($this->dte, [39, 41])) {
-            $class = Configure::read('dte.clase_boletas');
+            $class = config('dte.clase_boletas');
             if (!$class || !class_exists($class)) {
                 throw new \Exception(
                     'El envío de boletas al SII no está disponible en este servidor de LibreDTE.'
@@ -1481,7 +1480,7 @@ class Model_DteEmitido extends Model_Base_Envio
         \sasco\LibreDTE\Sii::setAmbiente((int)$this->certificacion);
         // consultar estado de boleta
         if (in_array($this->dte, [39, 41])) {
-            $class = Configure::read('dte.clase_boletas');
+            $class = config('dte.clase_boletas');
             if (!$class || !class_exists($class)) {
                 throw new \Exception(
                     'Consulta de estado de envío de boletas al SII no está disponible en este servidor de LibreDTE.'
@@ -2296,7 +2295,7 @@ class Model_DteEmitido extends Model_Base_Envio
                 ? $this->getEmisor()->config_pdf_copias_cedibles
                 : $this->getEmisor()->config_pdf_dte_cedible
             ,
-            'webVerificacion' => Configure::read('dte.web_verificacion'),
+            'webVerificacion' => config('dte.web_verificacion'),
             'xml' => base64_encode($this->getXML()),
             'caratula' => [
                 'FchResol' => $this->certificacion
@@ -2390,7 +2389,7 @@ class Model_DteEmitido extends Model_Base_Envio
                 ? $this->getEmisor()->config_pdf_copias_cedibles
                 : $this->getEmisor()->config_pdf_dte_cedible
             ,
-            'webVerificacion' => Configure::read('dte.web_verificacion'),
+            'webVerificacion' => config('dte.web_verificacion'),
             'xml' => base64_encode($this->getXML()),
             'caratula' => [
                 'FchResol' => $this->certificacion

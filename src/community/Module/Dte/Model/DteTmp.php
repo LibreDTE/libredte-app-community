@@ -1144,7 +1144,7 @@ class Model_DteTmp extends \Model_App
             'compress' => false,
             'copias_tributarias' => 1,
             'copias_cedibles' => 0,
-            'webVerificacion' => \sowerphp\core\Configure::read('dte.web_verificacion'),
+            'webVerificacion' => config('dte.web_verificacion'),
             'caratula' => [
                 'FchResol' => $this->getEmisor()->enCertificacion()
                     ? $this->getEmisor()->config_ambiente_certificacion_fecha

@@ -60,7 +60,7 @@ class Controller_DteEmitidos extends \Controller_App
         try {
             $documentos_total = $Emisor->countDocumentosEmitidos($filtros);
             if (!empty($pagina)) {
-                $filtros['limit'] = \sowerphp\core\Configure::read('app.registers_per_page');
+                $filtros['limit'] = config('app.registers_per_page');
                 $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = $documentos_total ? ceil($documentos_total/$filtros['limit']) : 0;
                 if ($pagina != 1 && $pagina > $paginas) {
@@ -312,7 +312,7 @@ class Controller_DteEmitidos extends \Controller_App
         if ($Emisor->config_pdf_web_verificacion) {
             $webVerificacion = $Emisor->config_pdf_web_verificacion;
         } else {
-            $webVerificacion = \sowerphp\core\Configure::read('dte.web_verificacion');
+            $webVerificacion = config('dte.web_verificacion');
             if (!$webVerificacion) {
                 $webVerificacion = $this->request->url.'/boletas';
             }
@@ -478,7 +478,7 @@ class Controller_DteEmitidos extends \Controller_App
         if ($Emisor->config_pdf_web_verificacion) {
             $webVerificacion = $Emisor->config_pdf_web_verificacion;
         } else {
-            $webVerificacion = \sowerphp\core\Configure::read('dte.web_verificacion');
+            $webVerificacion = config('dte.web_verificacion');
             if (!$webVerificacion) {
                 $webVerificacion = $this->request->url.'/boletas';
             }
@@ -537,14 +537,21 @@ class Controller_DteEmitidos extends \Controller_App
                 $emails = $_POST['emails'];
             }
             if (!empty($_POST['para_extra'])) {
-                $emails = array_merge($emails, explode(',', str_replace(' ', '', $_POST['para_extra'])));
+                $emails = array_merge(
+                    $emails,
+                    explode(
+                        ',',
+                        str_replace(' ', '', $_POST['para_extra'])
+                    )
+                );
             }
             // enviar correo
             $Emisor = $this->getContribuyente();
-            $rest = new \sowerphp\core\Network_Http_Rest();
-            $rest->setAuth($this->Auth->User->hash);
-            $response = $rest->post(
-                $this->request->url.'/api/dte/dte_emitidos/enviar_email/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?_contribuyente_certificacion='.$Emisor->enCertificacion(),
+            $response = $this->consume(
+                '/api/dte/dte_emitidos/enviar_email/' . $dte . '/' . $folio
+                    . '/' . $Emisor->rut . '?_contribuyente_certificacion='
+                    . $Emisor->enCertificacion()
+                ,
                 [
                     'emails' => $emails,
                     'asunto' => $_POST['asunto'],
@@ -554,10 +561,16 @@ class Controller_DteEmitidos extends \Controller_App
                 ]
             );
             if ($response === false) {
-                \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
+                \sowerphp\core\Model_Datasource_Session::message(
+                    implode('<br/>', $rest->getErrors()),
+                    'error'
+                );
             }
             else if ($response['status']['code'] != 200) {
-                \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
+                \sowerphp\core\Model_Datasource_Session::message(
+                    $response['body'],
+                    'error'
+                );
             }
             else {
                 \sowerphp\core\Model_Datasource_Session::message(
@@ -1370,7 +1383,7 @@ class Controller_DteEmitidos extends \Controller_App
         if ($Emisor->config_pdf_web_verificacion) {
             $webVerificacion = $Emisor->config_pdf_web_verificacion;
         } else {
-            $webVerificacion = \sowerphp\core\Configure::read('dte.web_verificacion');
+            $webVerificacion = config('dte.web_verificacion');
             if (!$webVerificacion) {
                 $webVerificacion = $this->request->url.'/boletas';
             }
@@ -1893,7 +1906,7 @@ class Controller_DteEmitidos extends \Controller_App
         $this->set([
             'dtes' => (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->getList(),
             'dte' => isset($_POST['dte']) ? $_POST['dte'] : $dte,
-            'language' => \sowerphp\core\Configure::read('language'),
+            'language' => config('language'),
         ]);
         $this->layout .= '.min';
         // si se solicitó un documento se busca

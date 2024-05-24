@@ -64,7 +64,7 @@ class Controller_Contribuyentes extends \Controller_App
                             $Emisor->config_usuarios_auth2 == 1
                             && $Emisor->usuarioAutorizado($this->Auth->User, 'admin')
                         )
-                        
+
                     );
                     if ($auth2_required) {
                         \sowerphp\core\Model_Datasource_Session::message(__('Debe [habilitar el mecanismo de autenticación secundaria (2FA) en su perfil de usuario](%s) antes de poder ingresar a esta empresa.', url('/usuarios/perfil#auth:2fa')), 'error');
@@ -174,7 +174,7 @@ class Controller_Contribuyentes extends \Controller_App
             try {
                 $Contribuyente->save(true);
                 // guardar los DTE por defecto que la empresa podrá usar
-                $dtes = \sowerphp\core\Configure::read('dte.dtes');
+                $dtes = config('dte.dtes');
                 foreach ($dtes as $dte) {
                     $ContribuyenteDte = new \website\Dte\Admin\Mantenedores\Model_ContribuyenteDte(
                         $Contribuyente->rut, $dte
@@ -524,11 +524,11 @@ class Controller_Contribuyentes extends \Controller_App
             $this->redirect('/dte/contribuyentes/seleccionar');
         }
         // asignar variables para editar
-        $permisos_usuarios = \sowerphp\core\Configure::read('empresa.permisos');
+        $permisos_usuarios = config('empresa.permisos');
         $this->set([
             'Contribuyente' => $Contribuyente,
             'permisos_usuarios' => $permisos_usuarios,
-            'transferir_contribuyente' => (bool)\sowerphp\core\Configure::read('dte.transferir_contribuyente'),
+            'transferir_contribuyente' => (bool)config('dte.transferir_contribuyente'),
         ]);
         // editar usuarios autorizados
         if (isset($_POST['submit'])) {
@@ -720,7 +720,7 @@ class Controller_Contribuyentes extends \Controller_App
     {
         $Contribuyente = $this->getContribuyente();
         // verificar si es posible transferir la empresa
-        if (!(bool)\sowerphp\core\Configure::read('dte.transferir_contribuyente')) {
+        if (!(bool)config('dte.transferir_contribuyente')) {
             \sowerphp\core\Model_Datasource_Session::message('No es posible que usted transfiera la empresa, contacte a soporte para realizar esta acción.', 'error');
             $this->redirect('/dte/contribuyentes/usuarios#general');
         }

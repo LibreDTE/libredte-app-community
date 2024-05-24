@@ -91,7 +91,7 @@ class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
         }
         // obtener firma
         $Firma = false;
-        $rut_proveedor = \sowerphp\core\Configure::read('libredte.proveedor.rut');
+        $rut_proveedor = config('libredte.proveedor.rut');
         if ($rut_proveedor) {
             $Proveedor = new Model_Contribuyente($rut_proveedor);
             $Firma = $Proveedor->getFirma();

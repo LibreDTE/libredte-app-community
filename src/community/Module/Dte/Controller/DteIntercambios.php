@@ -54,7 +54,7 @@ class Controller_DteIntercambios extends \Controller_App
         try {
             $documentos_total = $Emisor->countDocumentosIntercambios($filtros);
             if (!empty($pagina)) {
-                $filtros['limit'] = \sowerphp\core\Configure::read('app.registers_per_page');
+                $filtros['limit'] = config('app.registers_per_page');
                 $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = $documentos_total ? ceil($documentos_total/$filtros['limit']) : 0;
                 if ($pagina != 1 && $pagina > $paginas) {
@@ -73,7 +73,7 @@ class Controller_DteIntercambios extends \Controller_App
             'Emisor' => $Emisor,
             'documentos' => $documentos,
             'documentos_total' => $documentos_total,
-            'paginas' => ceil($documentos_total / \sowerphp\core\Configure::read('app.registers_per_page')),
+            'paginas' => ceil($documentos_total / config('app.registers_per_page')),
             'pagina' => $pagina,
             'search' => $filtros,
             'soloPendientes' => $soloPendientes,

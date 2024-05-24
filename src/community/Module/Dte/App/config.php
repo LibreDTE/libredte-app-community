@@ -21,8 +21,12 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// título del módulo
-\sowerphp\core\Configure::write('module.title', 'Facturación electrónica');
+return [
 
-// Menú para el módulo
-\sowerphp\core\Configure::write('nav.module', array_slice(\sowerphp\core\Configure::read('nav.app.dte.menu'), 1));
+    // título del módulo
+    'module.title' => 'Facturación electrónica',
+
+    // Menú para el módulo
+    'nav.module' => array_slice(config('nav.app.dte.menu'), 1),
+
+];

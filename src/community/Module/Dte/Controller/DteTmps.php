@@ -60,7 +60,7 @@ class Controller_DteTmps extends \Controller_App
         try {
             $documentos_total = $Emisor->countDocumentosTemporales($filtros);
             if (!empty($pagina)) {
-                $filtros['limit'] = \sowerphp\core\Configure::read('app.registers_per_page');
+                $filtros['limit'] = config('app.registers_per_page');
                 $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = $documentos_total ? ceil($documentos_total/$filtros['limit']) : 0;
                 if ($pagina != 1 && $pagina > $paginas) {
@@ -431,7 +431,7 @@ class Controller_DteTmps extends \Controller_App
         if ($Emisor->config_pdf_web_verificacion) {
             $webVerificacion = $Emisor->config_pdf_web_verificacion;
         } else {
-            $webVerificacion = \sowerphp\core\Configure::read('dte.web_verificacion');
+            $webVerificacion = config('dte.web_verificacion');
             if (!$webVerificacion) {
                 $webVerificacion = $this->request->url.'/boletas';
             }

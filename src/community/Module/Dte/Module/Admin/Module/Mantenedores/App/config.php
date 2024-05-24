@@ -21,37 +21,41 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// título del módulo
-\sowerphp\core\Configure::write('module.title', 'Mantenedores módulo facturación');
+return [
 
-// Menú para el módulo
-Configure::write('nav.module', array(
-    '/contribuyentes/importar' => [
-        'name' => 'Importar contribuyentes',
-        'desc' => 'Importar datos de constribuyntes',
-        'icon' => 'fa fa-upload',
-    ],
-    '/contribuyente_dtes/listar/1/contribuyente/A' => [
-        'name' => 'DTE autorizados por contribuyente',
-        'desc' => 'DTE que los contribuyentes de LibreDTE tienen autorizado emitir en la aplicación',
-        'icon' => 'fa fa-list',
-    ],
-    '/dte_tipos/listar/1/codigo/A' => [
-        'name' => 'Documentos tributarios',
-        'desc' => 'Tipos de documentos tributarios (electrónicos y no electrónicos)',
-        'icon' => 'fa fa-list-alt',
-    ],
-    '/dte_referencia_tipos/listar/1/codigo/A' => [
-        'name' => 'Tipos de referencias',
-        'desc' => 'Tipos de referencias de los documentos tributarios',
-        'icon' => 'fa fa-list-alt',
-    ],
-    '/iva_no_recuperables/listar/1/codigo/A' => [
-        'name' => 'IVA no recuperable',
-        'icon' => 'fas fa-dollar-sign',
-    ],
-    '/impuesto_adicionales/listar/1/codigo/A' => [
-        'name' => 'Impuestos adicionales',
-        'icon' => 'fas fa-dollar-sign',
-    ],
-));
+    // título del módulo
+    'module.title' => 'Mantenedores módulo facturación',
+
+    // Menú para el módulo
+    'nav.module' => array(
+        '/contribuyentes/importar' => [
+            'name' => 'Importar contribuyentes',
+            'desc' => 'Importar datos de constribuyntes',
+            'icon' => 'fa fa-upload',
+        ],
+        '/contribuyente_dtes/listar/1/contribuyente/A' => [
+            'name' => 'DTE autorizados por contribuyente',
+            'desc' => 'DTE que los contribuyentes de LibreDTE tienen autorizado emitir en la aplicación',
+            'icon' => 'fa fa-list',
+        ],
+        '/dte_tipos/listar/1/codigo/A' => [
+            'name' => 'Documentos tributarios',
+            'desc' => 'Tipos de documentos tributarios (electrónicos y no electrónicos)',
+            'icon' => 'fa fa-list-alt',
+        ],
+        '/dte_referencia_tipos/listar/1/codigo/A' => [
+            'name' => 'Tipos de referencias',
+            'desc' => 'Tipos de referencias de los documentos tributarios',
+            'icon' => 'fa fa-list-alt',
+        ],
+        '/iva_no_recuperables/listar/1/codigo/A' => [
+            'name' => 'IVA no recuperable',
+            'icon' => 'fas fa-dollar-sign',
+        ],
+        '/impuesto_adicionales/listar/1/codigo/A' => [
+            'name' => 'Impuestos adicionales',
+            'icon' => 'fas fa-dollar-sign',
+        ],
+    ),
+
+];

@@ -21,34 +21,38 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// título del módulo
-\sowerphp\core\Configure::write('module.title', 'Panel de administración');
+return [
 
-// Menú para el módulo
-\sowerphp\core\Configure::write('nav.module', [
-    '/itemes/listar/1/codigo/A?search=activo:1' => [
-        'name' => 'Productos y servicios',
-        'desc' => 'Mantenedor de productos y/o servicios que se comercializan',
-        'icon' => 'fa fa-cubes',
+    // título del módulo
+    'module.title' => 'Panel de administración',
+
+    // Menú para el módulo
+    'nav.module' => [
+        '/itemes/listar/1/codigo/A?search=activo:1' => [
+            'name' => 'Productos y servicios',
+            'desc' => 'Mantenedor de productos y/o servicios que se comercializan',
+            'icon' => 'fa fa-cubes',
+        ],
+        '/dte_folios' => [
+            'name' => 'Folios',
+            'desc' => 'Mantenedor de códigos de autorización de folios',
+            'icon' => 'fa fa-cube',
+        ],
+        '/firma_electronicas' => [
+            'name' => 'Firma electrónica',
+            'desc' => 'Mantenedor para poder cargar la firma electrónica del usuario',
+            'icon' => 'fa fa-certificate',
+        ],
+        '/respaldos/exportar' => [
+            'name' => 'Exportar datos',
+            'desc' => 'Exportar datos del sistema para respaldo o migración',
+            'icon' => 'fa fa-download',
+        ],
+        '/mantenedores' => [
+            'name' => 'Mantenedores',
+            'desc' => 'Mantenedores de tablas generales',
+            'icon' => 'fa fa-list-alt',
+        ],
     ],
-    '/dte_folios' => [
-        'name' => 'Folios',
-        'desc' => 'Mantenedor de códigos de autorización de folios',
-        'icon' => 'fa fa-cube',
-    ],
-    '/firma_electronicas' => [
-        'name' => 'Firma electrónica',
-        'desc' => 'Mantenedor para poder cargar la firma electrónica del usuario',
-        'icon' => 'fa fa-certificate',
-    ],
-    '/respaldos/exportar' => [
-        'name' => 'Exportar datos',
-        'desc' => 'Exportar datos del sistema para respaldo o migración',
-        'icon' => 'fa fa-download',
-    ],
-    '/mantenedores' => [
-        'name' => 'Mantenedores',
-        'desc' => 'Mantenedores de tablas generales',
-        'icon' => 'fa fa-list-alt',
-    ],
-]);
+
+];

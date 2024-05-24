@@ -939,10 +939,10 @@ foreach($dtepdfs as $App) {
         <div class="card-body">
             <p>LibreDTE puede comunicarse con la aplicación de su empresa u otros sitios a través de notificaciones a servicios web.</p>
 <?php
-$api_servicios_disponibles = (array)\sowerphp\core\Configure::read('api_contribuyentes');
+$api_servicios_disponibles = (array)config('api_contribuyentes');
 $api = [];
 foreach ($api_servicios_disponibles as $api_codigo => $api_servicio) {
-    if (!empty($api_servicio['uses']) && !\sowerphp\core\Module::loaded($api_servicio['uses'])) {
+    if (!empty($api_servicio['uses']) && !app('module')->isModuleLoaded($api_servicio['uses'])) {
         continue;
     }
     $api[] = [

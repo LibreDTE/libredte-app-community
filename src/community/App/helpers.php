@@ -35,7 +35,7 @@ function is_libredte_enterprise(): bool
 function apigateway_consume(string $recurso, $datos = []): array
 {
     // configuración de la API para funcionalidades extras
-    $config = \sowerphp\core\Configure::read('proveedores.api.apigateway');
+    $config = config('proveedores.api.apigateway');
     if (!$config || (is_array($config) && empty($config['token']))) {
         throw new \Exception('Las funcionalidades extras no están disponibles en esta Edición Comunidad de LibreDTE. Para desbloquear las funcionalidades extras se debe [contratar un plan de www.apigateway.cl](https://www.apigateway.cl)', 402);
     }

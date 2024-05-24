@@ -198,7 +198,7 @@ class Controller_Iecv extends \Controller_App
             $LibroCompraVenta = new \sasco\LibreDTE\Sii\LibroCompraVenta();
             $LibroCompraVenta->loadXML(file_get_contents($_FILES['xml']['tmp_name']));
             $pdf = new \sasco\LibreDTE\Sii\Dte\PDF\LibroCompraVenta();
-            $pdf->setFooterText(\sowerphp\core\Configure::read('dte.pdf.footer'));
+            $pdf->setFooterText(config('dte.pdf.footer'));
             $pdf->agregar($LibroCompraVenta->toArray());
             $pdf->Output($LibroCompraVenta->getID().'.pdf', 'D');
             exit; // TODO: enviar usando $this->response->send() / LibroCompraVenta::Output() / PDF

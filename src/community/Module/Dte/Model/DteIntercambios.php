@@ -243,7 +243,7 @@ class Model_DteIntercambios extends \Model_Plural_App
         list($where, $vars, $col_documentos, $col_totales) = $this->crearFiltrosDocumentos($filtros);
         // armar limite
         if (!empty($filtros['p'])) {
-            $limit = \sowerphp\core\Configure::read('app.registers_per_page');
+            $limit = config('app.registers_per_page');
             $offset = ($filtros['p'] - 1) * $limit;
             $limit = 'LIMIT '.$limit.' OFFSET '.$offset;
         } else {

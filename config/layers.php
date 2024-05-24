@@ -24,22 +24,18 @@
 return [
     [
         'namespace' => 'website',
-        'location' => 'project',
-        'directory' => 'src/community',
+        'directory' => 'project:/src/community',
     ],
     [
         'namespace' => 'sowerphp\app',
-        'location' => 'framework',
-        'directory' => 'src/app',
+        'directory' => 'framework:/src/app',
     ],
     [
         'namespace' => 'sowerphp\general',
-        'location' => 'framework',
-        'directory' => 'src/general',
+        'directory' => 'framework:/src/general',
     ],
     [
         'namespace' => 'sowerphp\core',
-        'location' => 'framework',
-        'directory' => 'src/core',
+        'directory' => 'framework:/src/core',
     ],
 ];

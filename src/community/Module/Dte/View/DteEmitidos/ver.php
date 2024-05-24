@@ -24,7 +24,7 @@
             Copiar
         </a>
     </li>
-<?php if (\sowerphp\core\Module::loaded('Crm')) : ?>
+<?php if (app('module')->isModuleLoaded('Crm')) : ?>
     <li class="nav-item">
         <a href="<?=$_base?>/crm/clientes/ver/<?=$Receptor->rut?>" title="Ir al CRM de <?=$Receptor->razon_social?>" class="nav-link">
             <i class="fa fa-users"></i>

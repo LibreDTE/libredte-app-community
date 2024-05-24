@@ -1,13 +1,13 @@
 <ul class="nav nav-pills float-end">
 <?php if (isset($Obj)) : ?>
-<?php if (\sowerphp\core\Module::loaded('Inventario')) : ?>
+<?php if (app('module')->isModuleLoaded('Inventario')) : ?>
     <li class="nav-item">
         <a href="<?=$_base?>/inventario/inventario_itemes/editar/<?=$Obj->codigo?>/<?=$Obj->codigo_tipo?>" title="Editar item en el inventario" class="nav-link">
             <i class="fa fa-cubes"></i> Editar en inventario
         </a>
     </li>
 <?php endif; ?>
-<?php if (\sowerphp\core\Module::loaded('Tienda')) : ?>
+<?php if (app('module')->isModuleLoaded('Tienda')) : ?>
     <li class="nav-item">
         <a href="<?=$_base?>/tienda/admin/tienda_itemes/editar/<?=$Obj->codigo?>/<?=$Obj->codigo_tipo?>" title="Editar item la tienda" class="nav-link">
             <i class="fa fa-shopping-cart"></i> Editar en la tienda

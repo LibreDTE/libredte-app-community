@@ -122,7 +122,7 @@ abstract class Controller_Base_Libros extends \Controller_App
             $LibroCompraVenta = new \sasco\LibreDTE\Sii\LibroCompraVenta();
             $LibroCompraVenta->loadXML($xml);
             $pdf = new \sasco\LibreDTE\Sii\Dte\PDF\LibroCompraVenta();
-            $pdf->setFooterText(\sowerphp\core\Configure::read('dte.pdf.footer'));
+            $pdf->setFooterText(config('dte.pdf.footer'));
             $pdf->agregar($LibroCompraVenta->toArray());
             $pdf->Output($file, 'D');
             exit; // TODO: enviar usando $this->response->send() / LibroCompraVenta::Output() / PDF

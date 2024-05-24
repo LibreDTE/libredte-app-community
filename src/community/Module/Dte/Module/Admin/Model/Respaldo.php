@@ -128,7 +128,7 @@ class Model_Respaldo
     public function __construct()
     {
         $this->db = &\sowerphp\core\Model_Datasource_Database::get();
-        $extra = \sowerphp\core\Configure::read('app.respaldo.tablas');
+        $extra = config('app.respaldo.tablas');
         if ($extra) {
             $this->tablas += $extra;
         }

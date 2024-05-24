@@ -94,7 +94,7 @@ class Model_F29
             'pagos_electronicos_exento' => $pagos_electronicos['exento'],
             'pagos_electronicos_neto' => $pagos_electronicos['neto'],
         ];
-        if (\sowerphp\core\Module::loaded('Lce')) {
+        if (app('module')->isModuleLoaded('Lce')) {
             $this->datos['48'] = (new \libredte\enterprise\Lce\Model_LceCuenta(
                 $this->Emisor->rut, $this->Emisor->config_contabilidad_f29_48
             ))->getHaber($this->periodo);

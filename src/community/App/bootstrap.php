@@ -22,6 +22,6 @@
  */
 
 // no validar SSL de sitios del SII (solo en caso de problemas de certificado)
-if (\sowerphp\core\Configure::read('dte.verificar_ssl') === false) {
+if (config('dte.verificar_ssl') === false) {
     \sasco\LibreDTE\Sii::setVerificarSSL(false);
 }

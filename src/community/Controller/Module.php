@@ -39,8 +39,10 @@ class Controller_Module extends \sowerphp\general\Controller_Module
         $modulo = $this->request->params['module'];
         $nombre = \sowerphp\core\Utility_Inflector::underscore($modulo);
         $url = '/' . str_replace('.', '/', $nombre) . '/dashboard';
-        $class = app()->findClass('Controller_Dashboard', $modulo);
-        if ($class != 'Controller_Dashboard') {
+        $class = 'Controller_Dashboard';
+        $class = str_replace('.', '\\', $modulo) . '\\' . $class;
+        $class = '\\sowerphp\\magicload\\' . $class;
+        if (class_exists($class)) {
             if ($this->Auth->check($url)) {
                 $this->redirect($url);
             }

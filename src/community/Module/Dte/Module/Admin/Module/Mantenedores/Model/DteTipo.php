@@ -176,7 +176,7 @@ class Model_DteTipo extends \Model_App
      */
     public function permiteCobro(): bool
     {
-        return \sowerphp\core\Module::loaded('Pagos') && $this->operacion == 'S';
+        return app('module')->isModuleLoaded('Pagos') && $this->operacion == 'S';
     }
 
     /**

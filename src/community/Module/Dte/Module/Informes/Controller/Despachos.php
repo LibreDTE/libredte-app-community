@@ -43,7 +43,7 @@ class Controller_Despachos extends \Controller_App
             'sucursales' => $Emisor->getSucursales(),
             'sucursal' => $Emisor->getSucursalUsuario($this->Auth->User),
             'usuarios' => $Emisor->getListUsuarios(),
-            'google_api_key' => \sowerphp\core\Configure::read('proveedores.api.google.client'),
+            'google_api_key' => config('proveedores.api.google.client'),
         ]);
         if (!empty($_POST['fecha'])) {
             list($latitud, $longitud) = !empty($_POST['mapa'])

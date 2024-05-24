@@ -101,7 +101,7 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
     public function getDropboxClient($token = null)
     {
         // verificar si hay soporte para dropbox
-        $config = \sowerphp\core\Configure::read('module.Apps.Dropbox');
+        $config = config('module.Apps.Dropbox');
         if (!$config || !class_exists('\Kunnu\Dropbox\DropboxApp')) {
             return false;
         }

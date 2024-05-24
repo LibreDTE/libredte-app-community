@@ -580,7 +580,7 @@ class Controller_Documentos extends \Controller_App
             }
             // generar PDF
             $pdf = new \sasco\LibreDTE\Sii\Dte\PDF\Dte($papelContinuo);
-            $pdf->setFooterText(\sowerphp\core\Configure::read('dte.pdf.footer'));
+            $pdf->setFooterText(config('dte.pdf.footer'));
             if (!empty($Caratula['FchResol']) && isset($Caratula['NroResol'])) {
                 $pdf->setResolucion(['FchResol' => $Caratula['FchResol'], 'NroResol' => (int)$Caratula['NroResol']]);
             }

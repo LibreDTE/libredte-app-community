@@ -280,7 +280,7 @@ class Controller_Certificacion extends \Controller_App
             'DirOrigen' => $_POST['DirOrigen'],
             'CmnaOrigen' => (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna($_POST['CmnaOrigen']))->comuna,
         ];
-        $receptor_rut = \sowerphp\core\Configure::read('libredte.proveedor.rut');
+        $receptor_rut = config('libredte.proveedor.rut');
         if ($receptor_rut) {
             $ContribuyenteReceptor = new \website\Dte\Model_Contribuyente(
                 $receptor_rut

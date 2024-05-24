@@ -180,7 +180,7 @@ echo $f->input(['type' => 'hidden', 'name' => 'lista_precios', 'value' => 0]);
             ]); ?>
         </div>
     </div>
-    <?php if (\sowerphp\core\Module::loaded('Pos')) : ?>
+    <?php if (app('module')->isModuleLoaded('Pos')) : ?>
         <div class="card-footer text-muted small">
             <i class="fa-solid fa-cogs"></i>
             <a href="<?=$_base?>/dte/contribuyentes/modificar#pos">Active el punto de venta de exportación en la configuración</a> y tendrá disponibles todos los campos de aduana en ese <a href="<?=$_base?>/pos/exportacion">punto de venta especial para exportadores</a>.

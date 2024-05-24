@@ -188,51 +188,55 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
         </div>
         </nav>
         <div class="container main-container">
-<!-- BEGIN MAIN CONTENT -->
-<?php
-// mensaje si la empresa está en certificación
-if ($Contribuyente && $Contribuyente->enCertificacion()) {
-    echo '<div class="bg-info text-white text-center lead mt-2 mb-2" style="padding:0.5em"><strong>AMBIENTE DE CERTIFICACIÓN / PRUEBAS: '.$Contribuyente->razon_social.'</strong></div>',"\n";
-}
-// mensaje de sesión
-$messages = \sowerphp\core\Model_Datasource_Session::message();
-foreach ($messages as $message) {
-    $icons = [
-        'success' => 'ok',
-        'info' => 'info-sign',
-        'warning' => 'warning-sign',
-        'danger' => 'exclamation-sign',
-    ];
-    $message['text'] = message_format($message['text']);
-    echo '<div class="alert alert-',$message['type'],'" role="alert">',"\n";
-    echo '<div class="float-end"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button></div>',"\n";
-    echo '<span class="glyphicon glyphicon-',$icons[$message['type']],'" aria-hidden="true"></span>',"\n";
-    echo '<span class="visually-hidden">',$message['type'],': </span>',$message['text'],"\n";
-    echo '</div>'."\n";
-}
-// contenido de la página
-echo $_content;
-?>
-<!-- END MAIN CONTENT -->
+            <!-- BEGIN MAIN CONTENT -->
+            <?php
+                // mensaje si la empresa está en certificación
+                if ($Contribuyente && $Contribuyente->enCertificacion()) {
+                    echo '<div class="bg-info text-white text-center lead mt-2 mb-2" style="padding:0.5em"><strong>AMBIENTE DE CERTIFICACIÓN / PRUEBAS: '.$Contribuyente->razon_social.'</strong></div>',"\n";
+                }
+                // mensaje de sesión
+                $messages = \sowerphp\core\Model_Datasource_Session::message();
+                foreach ($messages as $message) {
+                    $icons = [
+                        'success' => 'ok',
+                        'info' => 'info-sign',
+                        'warning' => 'warning-sign',
+                        'danger' => 'exclamation-sign',
+                    ];
+                    $message['text'] = message_format($message['text']);
+                    echo '<div class="alert alert-',$message['type'],'" role="alert">',"\n";
+                    echo '<div class="float-end"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button></div>',"\n";
+                    echo '<span class="glyphicon glyphicon-',$icons[$message['type']],'" aria-hidden="true"></span>',"\n";
+                    echo '<span class="visually-hidden">',$message['type'],': </span>',$message['text'],"\n";
+                    echo '</div>'."\n";
+                }
+                // contenido de la página
+                echo $_content;
+            ?>
+            <!-- END MAIN CONTENT -->
             <div class="clearfix"></div>
             <br/>
         </div>
         <footer class="footer d-print-none">
             <div class="container">
                 <div class="float-start">
-                    <?=(is_array($_footer) ? $_footer['left']:$_footer)."\n"?>
+                    &copy; <?=date('Y')?> LibreDTE -
+                    <a href="<?=url('/consultar')?>" title="Consultar documentos (incluyendo boletas)">Consultar DTE</a><br/>
+                    <span class="small">
+                        Aplicación de facturación basada en <a href="https://www.libredte.cl">LibreDTE</a>
+                        que tiene como misión proveer facturación electrónica libre para Chile.
+                    </span>
                 </div>
                 <div class="float-end text-end">
-<?=!empty($_footer['right']) ? $_footer['right'].'<br/>'."\n":''?>
-<?php
-if (isset($_Auth) && $_Auth->logged()) {
-    echo '<span class="small">';
-    echo 'time: ',round(microtime(true)-TIME_START, 2),' [s] - ';
-    echo 'memory: ',round(memory_get_usage()/1024/1024,2),' [MiB] - ';
-    echo 'querys: ',\sowerphp\core\Model_Datasource_Database_Manager::$querysCount,' - ';
-    echo 'cache: ',\sowerphp\core\Cache::$setCount,'/',\sowerphp\core\Cache::$getCount,'</span>',"\n";
-}
-?>
+                <?php
+                    if (isset($_Auth) && $_Auth->logged()) {
+                        echo '<span class="small">';
+                        echo 'time: ',round(microtime(true)-TIME_START, 2),' [s] - ';
+                        echo 'memory: ',round(memory_get_usage()/1024/1024,2),' [MiB] - ';
+                        echo 'querys: ',\sowerphp\core\Model_Datasource_Database_Manager::$querysCount,' - ';
+                        echo 'cache: ',\sowerphp\core\Cache::$setCount,'/',\sowerphp\core\Cache::$getCount,'</span>',"\n";
+                    }
+                ?>
                 </div>
                 <div class="clearfix"></div>
             </div>

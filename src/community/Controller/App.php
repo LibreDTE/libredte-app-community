@@ -76,7 +76,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
             && !$this->Auth->allowedWithoutLogin()
         );
         $otros = false;
-        foreach ((array)\sowerphp\core\Configure::read('app.modulos_empresa') as $modulo) {
+        foreach ((array)config('app.modulos_empresa') as $modulo) {
             if (strpos($this->request->params['module'], $modulo) === 0) {
                 $otros = true;
                 break;

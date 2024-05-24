@@ -127,7 +127,7 @@ class Controller_Dashboard extends \Controller_App
         }
         // asignar variables a la vista
         $this->set([
-            'nav' => array_slice(\sowerphp\core\Configure::read('nav.module'), 1),
+            'nav' => array_slice(config('nav.module'), 1),
             'Emisor' => $Emisor,
             'Firma' => $Emisor->getFirma($this->Auth->User->id),
             'periodo_actual' => $periodo_actual,

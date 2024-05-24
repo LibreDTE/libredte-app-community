@@ -21,19 +21,23 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// título del módulo
-\sowerphp\core\Configure::write('module.title', 'Honorarios');
+return [
 
-// Menú para el módulo
-\sowerphp\core\Configure::write('nav.module', [
-    '/boleta_honorarios' => [
-        'name' => 'Boletas de Honorarios (BHE)',
-        'desc' => 'Ver boletas de honorarios recibidas por cada período',
-        'icon' => 'fas fa-user-tie',
+    // título del módulo
+    'module.title' => 'Honorarios',
+
+    // Menú para el módulo
+    'nav.module' => [
+        '/boleta_honorarios' => [
+            'name' => 'Boletas de Honorarios (BHE)',
+            'desc' => 'Ver boletas de honorarios recibidas por cada período',
+            'icon' => 'fas fa-user-tie',
+        ],
+        '/boleta_terceros' => [
+            'name' => 'Boletas de Terceros (BTE)',
+            'desc' => 'Ver boletas de terceros emitidas por cada período',
+            'icon' => 'fas fa-user-secret',
+        ],
     ],
-    '/boleta_terceros' => [
-        'name' => 'Boletas de Terceros (BTE)',
-        'desc' => 'Ver boletas de terceros emitidas por cada período',
-        'icon' => 'fas fa-user-secret',
-    ],
-]);
+
+];

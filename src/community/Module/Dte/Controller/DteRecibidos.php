@@ -55,7 +55,7 @@ class Controller_DteRecibidos extends \Controller_App
         try {
             $documentos_total = $Receptor->countDocumentosRecibidos($filtros);
             if (!empty($pagina)) {
-                $filtros['limit'] = \sowerphp\core\Configure::read('app.registers_per_page');
+                $filtros['limit'] = config('app.registers_per_page');
                 $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = ceil($documentos_total / $filtros['limit']);
                 if ($pagina != 1 && $pagina > $paginas) {
@@ -178,7 +178,7 @@ class Controller_DteRecibidos extends \Controller_App
             'DteRecibido' => $DteRecibido,
             'referenciados' => $DteRecibido->getReferenciados(),
             'DteIntercambio' => $DteRecibido->intercambio
-                ? $DteRecibido->getDteIntercambio() 
+                ? $DteRecibido->getDteIntercambio()
                 : null
             ,
         ]);
@@ -255,7 +255,7 @@ class Controller_DteRecibidos extends \Controller_App
                             : null
                         ,
                         'monto' => $_POST['impuesto_adicional_monto'][$i]
-                            ? $_POST['impuesto_adicional_monto'][$i] 
+                            ? $_POST['impuesto_adicional_monto'][$i]
                             : null
                         ,
                     ];
@@ -321,17 +321,17 @@ class Controller_DteRecibidos extends \Controller_App
                 + (int)$DteRecibido->iva
                 + $impuesto_adicional_monto_total
                 + (int)$DteRecibido->impuesto_sin_credito
-                + (int)$DteRecibido->impuesto_puros 
-                + (int)$DteRecibido->impuesto_cigarrillos 
-                + (int)$DteRecibido->impuesto_tabaco_elaborado 
+                + (int)$DteRecibido->impuesto_puros
+                + (int)$DteRecibido->impuesto_cigarrillos
+                + (int)$DteRecibido->impuesto_tabaco_elaborado
                 + (int)$DteRecibido->impuesto_vehiculos
         ;
         // si el DTE es de producción y es electrónico entonces se consultará su
         // estado antes de poder guardar, esto evitará agregar documentos que no
         // han sido recibidos en el SII o sus datos son incorrectos
         if (
-            !$Receptor->enCertificacion() 
-            && $DteRecibido->getTipo()->electronico 
+            !$Receptor->enCertificacion()
+            && $DteRecibido->getTipo()->electronico
             && !$Receptor->config_recepcion_omitir_verificacion_sii
         ) {
             // obtener firma
@@ -380,8 +380,8 @@ class Controller_DteRecibidos extends \Controller_App
         $Receptor = $this->getContribuyente();
         $DteRecibido = new Model_DteRecibido(
             (int)$emisor,
-            (int)$dte, 
-            (int)$folio, 
+            (int)$dte,
+            (int)$folio,
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists()) {
@@ -405,9 +405,9 @@ class Controller_DteRecibidos extends \Controller_App
         $Receptor = $this->getContribuyente();
         // obtener DTE recibido
         $DteRecibido = new Model_DteRecibido(
-            (int)$emisor, 
-            (int)$dte, 
-            (int)$folio, 
+            (int)$emisor,
+            (int)$dte,
+            (int)$folio,
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists()) {
@@ -440,9 +440,9 @@ class Controller_DteRecibidos extends \Controller_App
         $Receptor = $this->getContribuyente();
         // obtener DTE recibido
         $DteRecibido = new Model_DteRecibido(
-            (int)$emisor, 
-            (int)$dte, 
-            (int)$folio, 
+            (int)$emisor,
+            (int)$dte,
+            (int)$folio,
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists()) {
@@ -477,9 +477,9 @@ class Controller_DteRecibidos extends \Controller_App
         $Receptor = $this->getContribuyente();
         // obtener DTE recibido
         $DteRecibido = new Model_DteRecibido(
-            (int)$emisor, 
-            (int)$dte, 
-            (int)$folio, 
+            (int)$emisor,
+            (int)$dte,
+            (int)$folio,
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
@@ -539,9 +539,9 @@ class Controller_DteRecibidos extends \Controller_App
         $Receptor = $this->getContribuyente();
         // obtener DTE recibido
         $DteRecibido = new Model_DteRecibido(
-            (int)$emisor, 
-            (int)$dte, 
-            (int)$folio, 
+            (int)$emisor,
+            (int)$dte,
+            (int)$folio,
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
@@ -578,9 +578,9 @@ class Controller_DteRecibidos extends \Controller_App
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $DteRecibido = new Model_DteRecibido(
-            (int)$emisor, 
-            (int)$dte, 
-            (int)$folio, 
+            (int)$emisor,
+            (int)$dte,
+            (int)$folio,
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
@@ -635,9 +635,9 @@ class Controller_DteRecibidos extends \Controller_App
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $DteRecibido = new Model_DteRecibido(
-            (int)$emisor, 
-            (int)$dte, 
-            (int)$folio, 
+            (int)$emisor,
+            (int)$dte,
+            (int)$folio,
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
@@ -690,9 +690,9 @@ class Controller_DteRecibidos extends \Controller_App
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         $DteRecibido = new Model_DteRecibido(
-            (int)$emisor, 
-            (int)$dte, 
-            (int)$folio, 
+            (int)$emisor,
+            (int)$dte,
+            (int)$folio,
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
@@ -723,9 +723,9 @@ class Controller_DteRecibidos extends \Controller_App
             $this->Api->send('No existe firma asociada.', 506);
         }
         $DteRecibido = new Model_DteRecibido(
-            (int)$emisor, 
-            (int)$dte, 
-            (int)$folio, 
+            (int)$emisor,
+            (int)$dte,
+            (int)$folio,
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
@@ -761,9 +761,9 @@ class Controller_DteRecibidos extends \Controller_App
             $emisor = \sowerphp\app\Utility_Rut::normalizar($emisor);
         }
         $DteRecibido = new Model_DteRecibido(
-            (int)$emisor, 
-            (int)$dte, 
-            (int)$folio, 
+            (int)$emisor,
+            (int)$dte,
+            (int)$folio,
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists()) {
