@@ -141,7 +141,7 @@ class Controller_Documentos extends \Controller_App
             // realizar consulta a la API
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($this->Auth->User->hash);
-            $response = $rest->post($this->request->url.'/api/utilidades/documentos/generar_xml', $data);
+            $response = $rest->post($this->request->getFullUrlWithoutQuery().'/api/utilidades/documentos/generar_xml', $data);
             if ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message(
                     str_replace("\n", '<br/>', $response['body']), 'error'
@@ -185,7 +185,7 @@ class Controller_Documentos extends \Controller_App
             // realizar consulta a la API
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($this->Auth->User->hash);
-            $response = $rest->post($this->request->url.'/api/utilidades/documentos/generar_pdf', $data);
+            $response = $rest->post($this->request->getFullUrlWithoutQuery().'/api/utilidades/documentos/generar_pdf', $data);
             if ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
                 return;
@@ -273,7 +273,7 @@ class Controller_Documentos extends \Controller_App
                     $rest = new \sowerphp\core\Network_Http_Rest();
                     $rest->setAuth($this->Auth->User->hash);
                     $response = $rest->post(
-                        $this->request->url.'/api/utilidades/documentos/verificar_ted',
+                        $this->request->getFullUrlWithoutQuery().'/api/utilidades/documentos/verificar_ted',
                         json_encode(base64_encode($DTE->getTED()))
                     );
                     if ($response['status']['code'] != 200) {
@@ -337,7 +337,7 @@ class Controller_Documentos extends \Controller_App
                 \sowerphp\core\Model_Datasource_Session::message(
                     'No fue posible leer DTE desde el archivo.', 'error'
                 );
-                $this->redirect($this->request->request);
+                $this->redirect($this->request->getRequestUriDecoded());
             }
             // si hay solo un DTE se entrega directamente
             if (!isset($dtes[1])) {
@@ -361,7 +361,7 @@ class Controller_Documentos extends \Controller_App
                     \sowerphp\core\Model_Datasource_Session::message(
                         'No fue posible crear directorio temporal para DTE.', 'error'
                     );
-                    $this->redirect($this->request->request);
+                    $this->redirect($this->request->getRequestUriDecoded());
                 }
                 foreach ($dtes as $dte) {
                     $name = $dte['Encabezado']['Emisor']['RUTEmisor'].'_T'.$dte['Encabezado']['IdDoc']['TipoDTE'].'F'.$dte['Encabezado']['IdDoc']['Folio'].'.json';

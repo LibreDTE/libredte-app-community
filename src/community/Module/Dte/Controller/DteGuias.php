@@ -48,7 +48,7 @@ class Controller_DteGuias extends Controller_Base_Libros
         // si el periodo es mayor o igual al actual no se puede enviar
         if ($periodo >= date('Ym')) {
             \sowerphp\core\Model_Datasource_Session::message('No puede enviar el libro de guías del período '.$periodo.', debe esperar al mes siguiente del período.', 'error');
-            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->request));
+            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
         }
         // obtener guías
         $guias = $Emisor->getGuias($periodo);
@@ -99,7 +99,7 @@ class Controller_DteGuias extends Controller_Base_Libros
         $xml = $Libro->generar();
         if (!$xml) {
             \sowerphp\core\Model_Datasource_Session::message('No fue posible generar el libro de guías<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
-            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->request));
+            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
         }
         // enviar al SII
         $track_id = $Libro->enviar();
@@ -107,7 +107,7 @@ class Controller_DteGuias extends Controller_Base_Libros
             \sowerphp\core\Model_Datasource_Session::message(
                 'No fue posible enviar el libro de guías al SII<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
             );
-            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->request));
+            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
         }
         // guardar libro de ventas
         $DteGuia->documentos = $documentos;
@@ -119,7 +119,7 @@ class Controller_DteGuias extends Controller_Base_Libros
         \sowerphp\core\Model_Datasource_Session::message(
             'Libro de guías período '.$periodo.' envíado.', 'ok'
         );
-        $this->redirect(str_replace('enviar_sii', 'ver', $this->request->request));
+        $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
     }
 
     /**
@@ -135,9 +135,9 @@ class Controller_DteGuias extends Controller_Base_Libros
                 'guias' => (new Model_DteGuias())
                     ->setContribuyente($Emisor)
                     ->getSinFacturar(
-                        $_POST['desde'], 
-                        $_POST['hasta'], 
-                        $_POST['receptor'], 
+                        $_POST['desde'],
+                        $_POST['hasta'],
+                        $_POST['receptor'],
                         $_POST['con_referencia']
                     )
                 ,

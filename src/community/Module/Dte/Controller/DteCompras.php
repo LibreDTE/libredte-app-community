@@ -148,12 +148,12 @@ class Controller_DteCompras extends Controller_Base_Libros
         $DteCompra = new Model_DteCompra($Emisor->rut, $periodo, $Emisor->enCertificacion());
         if ($DteCompra->track_id && empty($_POST['CodAutRec']) && $DteCompra->getEstado() != 'LRH' && $DteCompra->track_id!=-1) {
             \sowerphp\core\Model_Datasource_Session::message('Libro del período '.$periodo.' ya fue enviado, ahora solo puede hacer rectificaciones.', 'error');
-            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->request));
+            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
         }
         // si el periodo es mayor o igual al actual no se puede enviar
         if ($periodo >= date('Ym')) {
             \sowerphp\core\Model_Datasource_Session::message('No puede enviar el libro de compras del período '.$periodo.'.Debe esperar al mes siguiente del período para poder enviar.', 'error');
-            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->request));
+            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
         }
         // obtener firma
         $Firma = $Emisor->getFirma($this->Auth->User->id);
@@ -193,7 +193,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         $xml = $Libro->generar();
         if (!$xml) {
             \sowerphp\core\Model_Datasource_Session::message('No fue posible generar el libro de compras<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
-            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->request));
+            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
         }
         // enviar al SII solo si el libro es de un período menor o igual al 201707
         // esto ya que desde 201708 se reemplaza por RCV
@@ -203,7 +203,7 @@ class Controller_DteCompras extends Controller_Base_Libros
             $revision_detalle = null;
             if (!$track_id) {
                 \sowerphp\core\Model_Datasource_Session::message('No fue posible enviar el libro de compras al SII<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
-                $this->redirect(str_replace('enviar_sii', 'ver', $this->request->request));
+                $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
             }
             \sowerphp\core\Model_Datasource_Session::message('Libro de compras período '.$periodo.' envíado al SII.', 'ok');
         } else {
@@ -219,7 +219,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         $DteCompra->revision_estado = $revision_estado;
         $DteCompra->revision_detalle = $revision_detalle;
         $DteCompra->save();
-        $this->redirect(str_replace('enviar_sii', 'ver', $this->request->request));
+        $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
     }
 
     /**
@@ -259,7 +259,7 @@ class Controller_DteCompras extends Controller_Base_Libros
             \sowerphp\core\Model_Datasource_Session::message(
                 'No hay compras caracterizadas para el período '.$periodo.'.', 'warning'
             );
-            $this->redirect(str_replace('descargar_tipo_transacciones', 'ver', $this->request->request));
+            $this->redirect(str_replace('descargar_tipo_transacciones', 'ver', $this->request->getRequestUriDecoded()));
         }
         array_unshift($datos, ['Rut-DV', 'Codigo_Tipo_Doc', 'Folio_Doc', 'TpoTranCompra', 'Codigo_IVA_E_Imptos']);
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($datos);
@@ -285,8 +285,8 @@ class Controller_DteCompras extends Controller_Base_Libros
         try {
             $resumen = $Emisor->getRCV([
                 'operacion' => 'COMPRA',
-                'periodo' => $periodo, 
-                'estado' => $estado, 
+                'periodo' => $periodo,
+                'estado' => $estado,
                 'detalle' => false,
             ]);
         } catch (\Exception $e) {
@@ -309,9 +309,9 @@ class Controller_DteCompras extends Controller_Base_Libros
         $Emisor = $this->getContribuyente();
         try {
             $detalle = $Emisor->getRCV([
-                'operacion' => 'COMPRA', 
-                'periodo' => $periodo, 
-                'dte' => $dte, 
+                'operacion' => 'COMPRA',
+                'periodo' => $periodo,
+                'dte' => $dte,
                 'estado' => $estado,
             ]);
         } catch (\Exception $e) {
@@ -341,9 +341,9 @@ class Controller_DteCompras extends Controller_Base_Libros
         // obtener documentos en el registro de compra del SII con estado REGISTRO
         try {
             $documentos_rc_todos = $Emisor->getRCV([
-                'operacion' => 'COMPRA', 
-                'periodo' => $periodo, 
-                'dte' => $dte, 
+                'operacion' => 'COMPRA',
+                'periodo' => $periodo,
+                'dte' => $dte,
                 'estado' => 'REGISTRO',
             ]);
         } catch (\Exception $e) {
@@ -409,7 +409,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         $datos = $DteCompra->getTiposTransacciones();
         if (!$datos) {
             \sowerphp\core\Model_Datasource_Session::message('No hay compras caracterizadas para el período '.$periodo.'.', 'warning');
-            $this->redirect(str_replace('rcv_sincronizar_tipo_transacciones', 'ver', $this->request->request));
+            $this->redirect(str_replace('rcv_sincronizar_tipo_transacciones', 'ver', $this->request->getRequestUriDecoded()));
         }
         // enviar al SII
         $r = apigateway_consume('/sii/rcv/compras/set_tipo_transaccion/'.$Emisor->rut.'-'.$Emisor->dv.'/'.$periodo.'?certificacion='.$Emisor->enCertificacion(), [

@@ -91,7 +91,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
             );
             $filterListar = !empty($_GET['listar']) ? base64_decode($_GET['listar']) : '';
             $this->redirect(
-                $this->module_url.$this->request->params['controller'].'/listar'.$filterListar
+                $this->module_url.$this->request->getParsedParams()['controller'].'/listar'.$filterListar
             );
         }
         parent::eliminar($Contribuyente->rut, $codigo);

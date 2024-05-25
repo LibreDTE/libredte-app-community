@@ -111,13 +111,13 @@ class Controller_Cobranzas extends \Controller_App
             \sowerphp\core\Model_Datasource_Session::message(
                 'El pago programado se encuentra pagado totalmente, no se puede eliminar.', 'error'
             );
-            $this->redirect(str_replace('/eliminar/', '/ver/', $this->request->request));
+            $this->redirect(str_replace('/eliminar/', '/ver/', $this->request->getRequestUriDecoded()));
         }
         if ($Pago->pagado) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'El pago programado tiene un abono, no se puede eliminar.', 'error'
             );
-            $this->redirect(str_replace('/eliminar/', '/ver/', $this->request->request));
+            $this->redirect(str_replace('/eliminar/', '/ver/', $this->request->getRequestUriDecoded()));
         }
         try {
             $Pago->delete();
@@ -129,7 +129,7 @@ class Controller_Cobranzas extends \Controller_App
             \sowerphp\core\Model_Datasource_Session::message(
                 'No fue posible eliminar el cobro programado: '.$e->getMessage(), 'error'
             );
-            $this->redirect(str_replace('/eliminar/', '/ver/', $this->request->request));
+            $this->redirect(str_replace('/eliminar/', '/ver/', $this->request->getRequestUriDecoded()));
         }
     }
 

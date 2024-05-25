@@ -51,7 +51,7 @@ class Controller_Dropbox extends \Controller_App
             // procesar codigo y estado de Dropbox para obtener token
             try {
                 $authHelper = $Dropbox->getAuthHelper();
-                $accessToken = $authHelper->getAccessToken($_GET['code'], $_GET['state'], $this->request->url.$this->request->request);
+                $accessToken = $authHelper->getAccessToken($_GET['code'], $_GET['state'], $this->request->getFullUrlWithoutQuery().$this->request->getRequestUriDecoded());
                 $token = $accessToken->getToken();
                 $Dropbox = $DropboxApp->getDropboxClient($token);
                 $account = $Dropbox->getCurrentAccount();

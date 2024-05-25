@@ -40,7 +40,7 @@ class Controller_DteRecibidos extends \Controller_App
     public function listar($pagina = 1)
     {
         if (!is_numeric($pagina)) {
-            $this->redirect('/dte/'.$this->request->params['controller'].'/listar');
+            $this->redirect('/dte/'.$this->request->getParsedParams()['controller'].'/listar');
         }
         $Receptor = $this->getContribuyente();
         $filtros = [];
@@ -59,7 +59,7 @@ class Controller_DteRecibidos extends \Controller_App
                 $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = ceil($documentos_total / $filtros['limit']);
                 if ($pagina != 1 && $pagina > $paginas) {
-                    $this->redirect('/dte/'.$this->request->params['controller'].'/listar'.$searchUrl);
+                    $this->redirect('/dte/'.$this->request->getParsedParams()['controller'].'/listar'.$searchUrl);
                 }
             }
             $documentos = $Receptor->getDocumentosRecibidos($filtros);
@@ -808,7 +808,7 @@ class Controller_DteRecibidos extends \Controller_App
         if (isset($_POST['submit'])) {
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($this->Auth->User->hash);
-            $response = $rest->post($this->request->url.'/api/dte/dte_recibidos/buscar/'.$Receptor->rut.'?_contribuyente_certificacion='.$Receptor->enCertificacion(), [
+            $response = $rest->post($this->request->getFullUrlWithoutQuery().'/api/dte/dte_recibidos/buscar/'.$Receptor->rut.'?_contribuyente_certificacion='.$Receptor->enCertificacion(), [
                 'dte' => $_POST['dte'],
                 'emisor' => $_POST['emisor'],
                 'fecha_desde' => $_POST['fecha_desde'],

@@ -117,7 +117,7 @@ class Controller_Contribuyentes extends \Controller_App
             $n_empresas = count((new Model_Contribuyentes())->getByUsuario($this->Auth->User->id));
             if ($n_empresas >= $this->Auth->User->config_contribuyentes_autorizados) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Ha llegado al límite de empresas que puede registrar ('.num($this->Auth->User->config_contribuyentes_autorizados).'). Si requiere una cantidad mayor <a href="'.$this->request->base.'/contacto">contáctenos</a>.', 'error'
+                    'Ha llegado al límite de empresas que puede registrar ('.num($this->Auth->User->config_contribuyentes_autorizados).'). Si requiere una cantidad mayor <a href="'.$this->request->getBaseUrlWithoutSlash().'/contacto">contáctenos</a>.', 'error'
                 );
                 $this->redirect('/dte/contribuyentes/seleccionar');
             }
@@ -153,7 +153,7 @@ class Controller_Contribuyentes extends \Controller_App
                     );
                 } else {
                     \sowerphp\core\Model_Datasource_Session::message(
-                        'La empresa ya está registrada a nombre del usuario '.$Contribuyente->getUsuario()->nombre.' ('.$Contribuyente->getUsuario()->email.'). Si cree que esto es un error o bien puede ser alguien suplantando la identidad de su empresa por favor <a href="'.$this->request->base.'/contacto" target="_blank">contáctenos</a>.', 'error'
+                        'La empresa ya está registrada a nombre del usuario '.$Contribuyente->getUsuario()->nombre.' ('.$Contribuyente->getUsuario()->email.'). Si cree que esto es un error o bien puede ser alguien suplantando la identidad de su empresa por favor <a href="'.$this->request->getBaseUrlWithoutSlash().'/contacto" target="_blank">contáctenos</a>.', 'error'
                     );
                 }
                 $this->redirect('/dte/contribuyentes/seleccionar');
@@ -449,7 +449,7 @@ class Controller_Contribuyentes extends \Controller_App
                     'nombre' => strip_tags($_POST['config_extra_links_nombre'][$i]),
                 ];
                 if (!empty($_POST['config_extra_links_enlace'][$i])) {
-                    $link['enlace'] = str_replace($this->request->url, '', strip_tags($_POST['config_extra_links_enlace'][$i]));
+                    $link['enlace'] = str_replace($this->request->getFullUrlWithoutQuery(), '', strip_tags($_POST['config_extra_links_enlace'][$i]));
                 }
                 if (!empty($_POST['config_extra_links_icono'][$i])) {
                     $link['icono'] = strip_tags($_POST['config_extra_links_icono'][$i]);
@@ -624,7 +624,7 @@ class Controller_Contribuyentes extends \Controller_App
             }
         } else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No puede acceder directamente a la página '.$this->request->request, 'error'
+                'No puede acceder directamente a la página '.$this->request->getRequestUriDecoded(), 'error'
             );
         }
         $this->redirect('/dte/contribuyentes/usuarios#dtes');
@@ -668,7 +668,7 @@ class Controller_Contribuyentes extends \Controller_App
             }
         } else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No puede acceder directamente a la página '.$this->request->request, 'error'
+                'No puede acceder directamente a la página '.$this->request->getRequestUriDecoded(), 'error'
             );
         }
         $this->redirect('/dte/contribuyentes/usuarios#sucursales');
@@ -707,7 +707,7 @@ class Controller_Contribuyentes extends \Controller_App
             }
         } else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No puede acceder directamente a la página '.$this->request->request, 'error'
+                'No puede acceder directamente a la página '.$this->request->getRequestUriDecoded(), 'error'
             );
         }
         $this->redirect('/dte/contribuyentes/usuarios#general');

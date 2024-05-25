@@ -57,7 +57,7 @@ class Controller_Formatos extends \Controller_App
                 );
             } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
-                $this->redirect($this->request->request);
+                $this->redirect($this->request->getRequestUriDecoded());
             }
             // descargar JSON
             $this->response->type('application/json', 'UTF-8');

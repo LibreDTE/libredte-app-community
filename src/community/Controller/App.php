@@ -66,18 +66,18 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
         parent::beforeFilter();
         // si la acción solicitada es de la API no se hace nada para forzar
         // contribuyente, ya que deberá ser validado en cada recurso de la API
-        if ($this->request->params['action'] == 'api') {
+        if ($this->request->getParsedParams()['action'] == 'api') {
             return;
         }
         // forzar obtener contribuyente
         $dte = (
-            strpos($this->request->params['module'], 'Dte') === 0
-            && $this->request->params['controller'] != 'contribuyentes'
+            strpos($this->request->getParsedParams()['module'], 'Dte') === 0
+            && $this->request->getParsedParams()['controller'] != 'contribuyentes'
             && !$this->Auth->allowedWithoutLogin()
         );
         $otros = false;
         foreach ((array)config('app.modulos_empresa') as $modulo) {
-            if (strpos($this->request->params['module'], $modulo) === 0) {
+            if (strpos($this->request->getParsedParams()['module'], $modulo) === 0) {
                 $otros = true;
                 break;
             }
@@ -87,7 +87,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
         }
         // redireccionar al dashboard general de la aplicación
         if (class_exists('Controller_Dashboard') && $this->Auth->logged()) {
-            if (in_array($this->request->request, ['/dte/contribuyentes/seleccionar'])) {
+            if (in_array($this->request->getRequestUriDecoded(), ['/dte/contribuyentes/seleccionar'])) {
                 $this->redirect('/dashboard#empresas');
             }
         }
@@ -116,8 +116,8 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
             $this->Contribuyente = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente');
             if (!$this->Contribuyente) {
                 if ($obligar) {
-                    \sowerphp\core\Model_Datasource_Session::message('Antes de acceder a '.$this->request->request.' debe seleccionar el contribuyente que usará durante la sesión de LibreDTE.', 'error');
-                    \sowerphp\core\Model_Datasource_Session::write('referer', $this->request->request);
+                    \sowerphp\core\Model_Datasource_Session::message('Antes de acceder a '.$this->request->getRequestUriDecoded().' debe seleccionar el contribuyente que usará durante la sesión de LibreDTE.', 'error');
+                    \sowerphp\core\Model_Datasource_Session::write('referer', $this->request->getRequestUriDecoded());
                     $this->redirect('/dte/contribuyentes/seleccionar');
                 }
             } else {

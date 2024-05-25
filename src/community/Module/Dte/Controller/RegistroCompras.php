@@ -218,7 +218,7 @@ class Controller_RegistroCompras extends \Controller_App
             $RCV = new \sasco\LibreDTE\Sii\RegistroCompraVenta($Firma);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
-            $this->redirect($this->request->request);
+            $this->redirect($this->request->getRequestUriDecoded());
         }
         // procesar formulario (antes de asignar variables para que se refleje en la vista)
         if (isset($_POST['submit'])) {

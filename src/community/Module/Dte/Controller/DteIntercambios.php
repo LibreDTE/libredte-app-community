@@ -36,7 +36,7 @@ class Controller_DteIntercambios extends \Controller_App
     public function listar($pagina = 1, $soloPendientes = false)
     {
         if (!is_numeric($pagina)) {
-            $this->redirect('/dte/'.$this->request->params['controller'].'/listar');
+            $this->redirect('/dte/'.$this->request->getParsedParams()['controller'].'/listar');
         }
         $Emisor = $this->getContribuyente();
         $filtros = [
@@ -58,7 +58,7 @@ class Controller_DteIntercambios extends \Controller_App
                 $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = $documentos_total ? ceil($documentos_total/$filtros['limit']) : 0;
                 if ($pagina != 1 && $pagina > $paginas) {
-                    $this->redirect('/dte/'.$this->request->params['controller'].'/listar'.$searchUrl);
+                    $this->redirect('/dte/'.$this->request->getParsedParams()['controller'].'/listar'.$searchUrl);
                 }
             }
             $documentos = $Emisor->getDocumentosIntercambios($filtros);
@@ -418,7 +418,7 @@ class Controller_DteIntercambios extends \Controller_App
             if (in_array($response['status']['code'], [401, 403, 404])) {
                 $this->redirect('/dte/dte_intercambios/listar');
             } else {
-                $this->redirect(str_replace('resultados_xml', 'ver', $this->request->request));
+                $this->redirect(str_replace('resultados_xml', 'ver', $this->request->getRequestUriDecoded()));
             }
         }
         // si dió código 200 se entrega la respuesta del servicio web
@@ -440,9 +440,9 @@ class Controller_DteIntercambios extends \Controller_App
         // si no se viene por post error
         if (!isset($_POST['submit'])) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No puede acceder de forma directa a '.$this->request->request, 'error'
+                'No puede acceder de forma directa a '.$this->request->getRequestUriDecoded(), 'error'
             );
-            $this->redirect(str_replace('responder', 'ver', $this->request->request));
+            $this->redirect(str_replace('responder', 'ver', $this->request->getRequestUriDecoded()));
         }
         // obtener objeto de intercambio
         $DteIntercambio = new Model_DteIntercambio($Emisor->rut, (int)$codigo, $Emisor->enCertificacion());
@@ -497,7 +497,7 @@ class Controller_DteIntercambios extends \Controller_App
             \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
         }
         // redireccionar
-        $this->redirect(str_replace('responder', 'ver', $this->request->request));
+        $this->redirect(str_replace('responder', 'ver', $this->request->getRequestUriDecoded()));
     }
 
     /**
@@ -536,7 +536,7 @@ class Controller_DteIntercambios extends \Controller_App
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($this->Auth->User->hash);
             $response = $rest->post(
-                $this->request->url.'/api/dte/dte_intercambios/buscar/'.$Receptor->rut.'?_contribuyente_certificacion='.$Receptor->enCertificacion(),
+                $this->request->getFullUrlWithoutQuery().'/api/dte/dte_intercambios/buscar/'.$Receptor->rut.'?_contribuyente_certificacion='.$Receptor->enCertificacion(),
                 $_POST
             );
             if ($response === false) {

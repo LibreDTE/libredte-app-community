@@ -45,7 +45,7 @@ class Controller_DteTmps extends \Controller_App
     public function listar($pagina = 1)
     {
         if (!is_numeric($pagina)) {
-            $this->redirect('/dte/'.$this->request->params['controller'].'/listar');
+            $this->redirect('/dte/'.$this->request->getParsedParams()['controller'].'/listar');
         }
         $Emisor = $this->getContribuyente();
         $filtros = [];
@@ -64,7 +64,7 @@ class Controller_DteTmps extends \Controller_App
                 $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = $documentos_total ? ceil($documentos_total/$filtros['limit']) : 0;
                 if ($pagina != 1 && $pagina > $paginas) {
-                    $this->redirect('/dte/'.$this->request->params['controller'].'/listar'.$searchUrl);
+                    $this->redirect('/dte/'.$this->request->getParsedParams()['controller'].'/listar'.$searchUrl);
                 }
             }
             $documentos = $Emisor->getDocumentosTemporales($filtros);
@@ -146,7 +146,7 @@ class Controller_DteTmps extends \Controller_App
         // realizar consulta a la API
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($Emisor->getUsuario()->hash);
-        $response = $rest->get($this->request->url.'/api/dte/dte_tmps/pdf/'.$receptor.'/'.$dte.'/'.$codigo.'/'.$Emisor->rut.'?cotizacion=1&formato='.$formato.'&papelContinuo='.$papelContinuo.'&compress='.$compress);
+        $response = $rest->get($this->request->getFullUrlWithoutQuery().'/api/dte/dte_tmps/pdf/'.$receptor.'/'.$dte.'/'.$codigo.'/'.$Emisor->rut.'?cotizacion=1&formato='.$formato.'&papelContinuo='.$papelContinuo.'&compress='.$compress);
         if ($response === false) {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
             $this->redirect('/dte/dte_tmps/listar');
@@ -193,7 +193,7 @@ class Controller_DteTmps extends \Controller_App
         // realizar consulta a la API
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($this->Auth->User->hash);
-        $response = $rest->get($this->request->url.'/api/dte/dte_tmps/pdf/'.$receptor.'/'.$dte.'/'.$codigo.'/'.$Emisor->rut.'?formato='.$formato.'&papelContinuo='.$papelContinuo.'&compress='.$compress);
+        $response = $rest->get($this->request->getFullUrlWithoutQuery().'/api/dte/dte_tmps/pdf/'.$receptor.'/'.$dte.'/'.$codigo.'/'.$Emisor->rut.'?formato='.$formato.'&papelContinuo='.$papelContinuo.'&compress='.$compress);
         if ($response === false) {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
             $this->redirect('/dte/dte_tmps/listar');
@@ -242,7 +242,7 @@ class Controller_DteTmps extends \Controller_App
         $email_html = $Emisor->getEmailFromTemplate('dte', $DteTmp);
         if (!$email_html) {
             \sowerphp\core\Model_Datasource_Session::message('No existe correo en HTML para el envío del documento.', 'error');
-            $this->redirect(str_replace('email_html', 'ver', $this->request->request));
+            $this->redirect(str_replace('email_html', 'ver', $this->request->getRequestUriDecoded()));
         }
         $this->response->send($email_html);
     }
@@ -266,7 +266,7 @@ class Controller_DteTmps extends \Controller_App
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($this->Auth->User->hash);
             $response = $rest->post(
-                $this->request->url.'/api/dte/dte_tmps/enviar_email/'.$receptor.'/'.$dte.'/'.$codigo.'/'.$Emisor->rut,
+                $this->request->getFullUrlWithoutQuery().'/api/dte/dte_tmps/enviar_email/'.$receptor.'/'.$dte.'/'.$codigo.'/'.$Emisor->rut,
                 [
                     'emails' => $emails,
                     'asunto' => $_POST['asunto'],
@@ -284,7 +284,7 @@ class Controller_DteTmps extends \Controller_App
                 );
             }
         }
-        $this->redirect(str_replace('enviar_email', 'ver', $this->request->request).'#email');
+        $this->redirect(str_replace('enviar_email', 'ver', $this->request->getRequestUriDecoded()).'#email');
     }
 
     /**
@@ -433,7 +433,7 @@ class Controller_DteTmps extends \Controller_App
         } else {
             $webVerificacion = config('dte.web_verificacion');
             if (!$webVerificacion) {
-                $webVerificacion = $this->request->url.'/boletas';
+                $webVerificacion = $this->request->getFullUrlWithoutQuery().'/boletas';
             }
         }
         $config['webVerificacion'] = in_array($DteTmp->dte, [39,41]) ? $webVerificacion : false;
@@ -632,7 +632,7 @@ class Controller_DteTmps extends \Controller_App
         $response = $rest->post(
             sprintf(
                 '%s/api/dte/dte_tmps/actualizar/%d/%d/%s/%d',
-                $this->request->url,
+                $this->request->getFullUrlWithoutQuery(),
                 $receptor,
                 $dte,
                 $codigo,
@@ -857,7 +857,7 @@ class Controller_DteTmps extends \Controller_App
             \sowerphp\core\Model_Datasource_Session::message(
                 'Solo el administrador de la empresa está autorizado a editar el JSON del documento temporal.', 'error'
             );
-            $this->redirect(str_replace('/editar_json/', '/ver/', $this->request->request));
+            $this->redirect(str_replace('/editar_json/', '/ver/', $this->request->getRequestUriDecoded()));
         }
         // verificar que el JSON sea correcto tratando de leerlo
         $datos = json_decode($_POST['datos']);
@@ -865,7 +865,7 @@ class Controller_DteTmps extends \Controller_App
             \sowerphp\core\Model_Datasource_Session::message(
                 'JSON es inválido, no se editó.', 'error'
             );
-            $this->redirect(str_replace('/editar_json/', '/ver/', $this->request->request));
+            $this->redirect(str_replace('/editar_json/', '/ver/', $this->request->getRequestUriDecoded()));
         }
         // guardar JSON
         $DteTmp->datos = json_encode($datos);
@@ -880,7 +880,7 @@ class Controller_DteTmps extends \Controller_App
                 'No fue posible guardar el nuevo JSON.', 'error'
             );
         }
-        $this->redirect(str_replace('/editar_json/', '/ver/', $this->request->request).'#avanzado');
+        $this->redirect(str_replace('/editar_json/', '/ver/', $this->request->getRequestUriDecoded()).'#avanzado');
     }
 
     /**
@@ -896,7 +896,7 @@ class Controller_DteTmps extends \Controller_App
         if (isset($_POST['submit'])) {
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($this->Auth->User->hash);
-            $response = $rest->post($this->request->url.'/api/dte/dte_tmps/buscar/'.$Emisor->rut, [
+            $response = $rest->post($this->request->getFullUrlWithoutQuery().'/api/dte/dte_tmps/buscar/'.$Emisor->rut, [
                 'dte' => $_POST['dte'],
                 'receptor' => $_POST['receptor'],
                 'fecha_desde' => $_POST['fecha_desde'],
