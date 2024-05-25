@@ -21,16 +21,20 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// Menú para el módulo
-Configure::write('nav.module', [
-    '/usuarios' => [
-        'name' => 'Usuarios del sistema',
-        'desc' => 'Mantenedor de usuarios y grupos del sistema',
-        'icon' => 'fa fa-users',
+return [
+
+    // Menú para el módulo
+    'nav.module' => [
+        '/usuarios' => [
+            'name' => 'Usuarios del sistema',
+            'desc' => 'Mantenedor de usuarios y grupos del sistema',
+            'icon' => 'fa fa-users',
+        ],
+        '/general' => [
+            'name' => 'Configuración general',
+            'desc' => 'Módulo de configuraciones generales',
+            'icon' => 'fa fa-cogs',
+        ],
     ],
-    '/general' => [
-        'name' => 'Configuración general',
-        'desc' => 'Módulo de configuraciones generales',
-        'icon' => 'fa fa-cogs',
-    ],
-]);
+
+];
