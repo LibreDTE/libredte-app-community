@@ -66,6 +66,7 @@ class Shell_Command_Indicadores_Uf extends \sowerphp\core\Shell_App
             $this->showValores($response['body']);
         }
         $this->showStats();
+        return 0;
     }
 
     /**

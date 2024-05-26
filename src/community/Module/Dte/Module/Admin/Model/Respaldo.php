@@ -152,7 +152,7 @@ class Model_Respaldo
      * @param tablas Arreglo con las tablas a respaldar.
      * @return string Ruta del directorio donde se dejó el respaldo recién creado.
      */
-    public function generar($rut, array $tablas = []): string
+    public function generar($rut, ?array $tablas = []): string
     {
         // si no se especificaron tablas se respaldarán todas
         if (!$tablas) {

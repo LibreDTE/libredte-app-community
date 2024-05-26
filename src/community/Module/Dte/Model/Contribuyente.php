@@ -4900,8 +4900,11 @@ class Model_Contribuyente extends \Model_App
         if (isset($_GET['_contribuyente_certificacion'])) {
             return (int)(bool)$_GET['_contribuyente_certificacion'];
         }
-        if (Session::check('dte.certificacion')) {
-            return (int)(bool)Session::read('dte.certificacion');
+        try {
+            if (Session::check('dte.certificacion')) {
+                return (int)(bool)Session::read('dte.certificacion');
+            }
+        } catch (\Exception $e) {
         }
         return (int)(bool)$this->config_ambiente_en_certificacion;
     }
