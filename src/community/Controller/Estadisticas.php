@@ -210,11 +210,12 @@ class Controller_Estadisticas extends \Controller_App
     }
 
     /**
-     * Método que determina la versión de LibreDTE a partir del último commit del proyecto.
+     * Método que determina la versión de LibreDTE a partir del último commit
+     * del proyecto.
      */
     protected function getVersionLibreDTE()
     {
-        $HEAD = DIR_PROJECT.'/.git/logs/HEAD';
+        $HEAD = app('layers')->getProjectDir('/.git/logs/HEAD');
         if (!file_exists($HEAD) || !is_readable($HEAD)) {
             return null;
         }

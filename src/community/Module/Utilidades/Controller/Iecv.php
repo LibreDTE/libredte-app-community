@@ -183,7 +183,7 @@ class Controller_Iecv extends \Controller_App
             return;
         }
         // descargar XML
-        $file = TMP.'/'.$LibroCompraVenta->getID().'.xml';
+        $file = DIR_TMP.'/'.$LibroCompraVenta->getID().'.xml';
         file_put_contents($file, $xml);
         \sasco\LibreDTE\File::compress($file, ['format' => 'zip', 'delete' => true]);
         exit; // TODO: enviar usando response()->send() / File::compress()

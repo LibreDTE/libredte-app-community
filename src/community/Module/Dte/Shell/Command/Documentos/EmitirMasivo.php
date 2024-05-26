@@ -134,7 +134,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
         // si se solicitó incluir los PDF se crea directorio para irlos generando
         $pdf = (bool)$pdf;
         if ($pdf) {
-            $dir = TMP.'/libredte_dte_emitido_pdf_'.$Emisor->rut.'_'.md5(date('U').$Usuario->ultimo_ingreso_hash);
+            $dir = DIR_TMP.'/libredte_dte_emitido_pdf_'.$Emisor->rut.'_'.md5(date('U').$Usuario->ultimo_ingreso_hash);
             if (file_exists($dir)) {
                 \sowerphp\general\Utility_File::rmdir($dir);
             }
@@ -254,9 +254,9 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
                 // enviar DTE real por correo al receptor
                 if ($email) {
                     $DteEmitido = new Model_DteEmitido(
-                        $response['body']['emisor'], 
-                        $response['body']['dte'], 
-                        $response['body']['folio'], 
+                        $response['body']['emisor'],
+                        $response['body']['dte'],
+                        $response['body']['folio'],
                         $Emisor->enCertificacion()
                     );
                     try {

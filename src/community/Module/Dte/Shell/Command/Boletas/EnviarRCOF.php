@@ -80,7 +80,7 @@ class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
                     continue;
                 }
                 $archivo = str_replace(['{rut}', '{dia}'], [$Contribuyente->rut.'-'.$Contribuyente->dv, $DteBoletaConsumo->dia], $filename);
-                $tmpfile = tempnam(TMP, 'rcof_');
+                $tmpfile = tempnam(DIR_TMP, 'rcof_');
                 file_put_contents($tmpfile, $xml);
                 // realizar envío al servidor remoto
                 try {
@@ -174,9 +174,9 @@ class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
                 AND (desde.valor IS NULL OR :dia >= desde.valor)
                 AND (hasta.valor IS NULL OR :dia <= hasta.valor)
         ', [
-            ':grupo' => $grupo, 
-            ':certificacion' => (int)$certificacion, 
-            ':dia' => $dia, 
+            ':grupo' => $grupo,
+            ':certificacion' => (int)$certificacion,
+            ':dia' => $dia,
             ':certificacion_t' => (int)$certificacion,
         ]);
     }

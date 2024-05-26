@@ -403,7 +403,7 @@ class Controller_Contribuyentes extends \Controller_App
         }
         // subir archivo de plantilla de correo de envío de dte
         if (!empty($_FILES['template_email_dte']) && !$_FILES['template_email_dte']['error']) {
-            $dir = DIR_PROJECT.'/data/static/contribuyentes/'.(int)$Contribuyente->rut.'/email';
+            $dir = DIR_STATIC . '/contribuyentes/' . (int)$Contribuyente->rut.'/email';
             if (!is_dir($dir)) {
                 mkdir($dir, 0777, true);
             }
@@ -765,7 +765,7 @@ class Controller_Contribuyentes extends \Controller_App
         $Contribuyente = new Model_Contribuyente(substr($rut, 0, -4));
         $logo = DIR_STATIC.'/contribuyentes/'.$Contribuyente->rut.'/logo.png';
         if (!is_readable($logo)) {
-            $logo = DIR_WEBSITE.'/webroot/img/logo.png';
+            $logo = app('layers')->getFilePath('/webroot/img/logo.png');
         }
         $filename = \sowerphp\core\Utility_String::normalize($Contribuyente->getNombre()).'.png';
         $this->response->type('image/png');

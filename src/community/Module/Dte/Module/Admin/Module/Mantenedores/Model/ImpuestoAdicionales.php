@@ -76,7 +76,7 @@ class Model_ImpuestoAdicionales extends \Model_Plural_App
      * Método que entrega el listado de impuesto adicionales filtrados para un
      * contribuyente.
      */
-    public function getListContribuyente(array $listado = []): array
+    public function getListContribuyente(?array $listado = []): array
     {
         if (!$listado) {
             return [];
@@ -100,7 +100,7 @@ class Model_ImpuestoAdicionales extends \Model_Plural_App
      * Método que entrega un arreglo con los objetos de impuesto adicionales
      * para un contribuyente.
      */
-    public function getObjectsContribuyente(array $listado = []): array
+    public function getObjectsContribuyente(?array $listado = []): array
     {
         if (!$listado) {
             return [];

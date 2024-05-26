@@ -106,7 +106,7 @@ class Controller_Guias extends \Controller_App
             return;
         }
         // descargar XML
-        $file = TMP.'/'.$LibroGuia->getID().'.xml';
+        $file = DIR_TMP.'/'.$LibroGuia->getID().'.xml';
         file_put_contents($file, $xml);
         \sasco\LibreDTE\File::compress($file, ['format' => 'zip', 'delete' => true]);
         exit; // TODO: enviar usando response()->send() / File::compress()

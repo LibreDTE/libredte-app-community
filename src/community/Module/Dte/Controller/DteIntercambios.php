@@ -384,7 +384,7 @@ class Controller_DteIntercambios extends \Controller_App
             $this->Api->send('No existen archivos de resultado generados, no se ha procesado aun el intercambio.', 400);
         }
         // agregar a archivo comprimido y entregar
-        $dir = TMP.'/resultado_intercambio_'.$Emisor->rut.'-'.$Emisor->dv.'_'.$DteIntercambio->codigo;
+        $dir = DIR_TMP.'/resultado_intercambio_'.$Emisor->rut.'-'.$Emisor->dv.'_'.$DteIntercambio->codigo;
         if (is_dir($dir)) {
             \sowerphp\general\Utility_File::rmdir($dir);
         }

@@ -273,7 +273,7 @@ class Model_Respaldo
      */
     private function mkdirRespaldo($rut, string $prefix = 'libredte_contribuyente'): string
     {
-        $dir = TMP.'/'.$prefix.'_'.$rut;
+        $dir = DIR_TMP.'/'.$prefix.'_'.$rut;
         if (file_exists($dir)) {
             \sowerphp\general\Utility_File::rmdir($dir);
         }

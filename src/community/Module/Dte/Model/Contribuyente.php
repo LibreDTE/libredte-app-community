@@ -561,8 +561,8 @@ class Model_Contribuyente extends \Model_App
             $this->db->query('DELETE FROM registro_compra WHERE receptor = :rut', $vars);
             $this->db->query('DELETE FROM boleta_honorario WHERE receptor = :rut', $vars);
             $this->db->query('DELETE FROM boleta_tercero WHERE emisor = :rut', $vars);
-            // eliminar archivos asociados al contribuyente (carpeta: data/static/contribuyentes/RUT)
-            // TODO
+            // eliminar archivos asociados al contribuyente (carpeta: /storage/static/contribuyentes/RUT)
+            // TODO: implementar eliminación.
         }
         // aplicar cambios
         return $this->db->commit();
@@ -4603,7 +4603,7 @@ class Model_Contribuyente extends \Model_App
     public function getEmailFromTemplate($template, $params = null)
     {
         // buscar plantilla
-        $file = DIR_PROJECT . '/data/static/contribuyentes/'
+        $file = DIR_STATIC . '/contribuyentes/'
             . (int)$this->rut . '/email/' . $template . '.html'
         ;
         if (!is_readable($file)) {
@@ -4739,7 +4739,7 @@ class Model_Contribuyente extends \Model_App
             $codigo = $app;
         }
         // cargar app si existe
-        $apps_config = config('apps_3rd_party.' . $namespace);
+        $apps_config = (array)config('apps_3rd_party.' . $namespace);
         $App = (new Utility_Apps($apps_config))->getApp($codigo);
         if (!$App) {
             throw new \Exception('Aplicación solicitada "'.$app.'" no existe.', 404);
@@ -4774,7 +4774,7 @@ class Model_Contribuyente extends \Model_App
             unset($filtros[$key]);
         }
         // obtener aplicaciones según namespace y filtros
-        $apps_config = config('apps_3rd_party.' . $namespace);
+        $apps_config = (array)config('apps_3rd_party.' . $namespace);
         $apps = (new Utility_Apps($apps_config))->getApps($filtros);
         // cargar variables por defecto (asociar contribuyente)
         foreach ($apps as $App) {

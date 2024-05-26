@@ -185,7 +185,7 @@ class Controller_Certificacion extends \Controller_App
             $this->redirect('/certificacion/set_pruebas#ventas');
         }
         // descargar XML
-        $file = TMP.'/'.$LibroCompraVenta->getID().'.xml';
+        $file = DIR_TMP.'/'.$LibroCompraVenta->getID().'.xml';
         file_put_contents($file, $xml);
         \sasco\LibreDTE\File::compress($file, ['format' => 'zip', 'delete' => true]);
         exit; // TODO: enviar usando response()->send() / File::compress()
@@ -253,7 +253,7 @@ class Controller_Certificacion extends \Controller_App
             }
         }
         // directorio temporal
-        $dir = TMP.'/set_boletas_'.$_POST['RUTEmisor'];
+        $dir = DIR_TMP.'/set_boletas_'.$_POST['RUTEmisor'];
         if (is_dir($dir)) {
             \sowerphp\general\Utility_File::rmdir($dir);
         }
@@ -648,7 +648,7 @@ class Controller_Certificacion extends \Controller_App
             return;
         }
         // aquí se tienen los 3 XML, se guardan en un único directorio
-        $dir = TMP.'/intercambio_'.$Caratula['RutEmisor'].'_'.date('U');
+        $dir = DIR_TMP.'/intercambio_'.$Caratula['RutEmisor'].'_'.date('U');
         if (!mkdir($dir)) {
             \sowerphp\core\Model_Datasource_Session::message(
                 'No fue posible generar el archivo comprimido con los XML.', 'error'

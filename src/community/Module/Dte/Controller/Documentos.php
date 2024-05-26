@@ -1234,7 +1234,7 @@ class Controller_Documentos extends \Controller_App
             $cmd .= ' '.escapeshellcmd((int)$_POST['email']);
             $cmd .= ' '.escapeshellcmd((int)$_POST['pdf']);
             $cmd .= ' -v';
-            $log = TMP.'/screen_documentos_emitir_masivo_'.$Emisor->rut.'_'.date('YmdHis').'.log';
+            $log = DIR_TMP.'/screen_documentos_emitir_masivo_'.$Emisor->rut.'_'.date('YmdHis').'.log';
             if ($this->shell($cmd, $log)) {
                 \sowerphp\core\Model_Datasource_Session::message(
                     'No fue posible programar la emisión masiva.', 'error'
