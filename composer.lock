@@ -2946,12 +2946,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sascocl/sowerphp.git",
-                "reference": "6e857759e68c431abe5946a445f5da79aaebee4e"
+                "reference": "18f6a25ccef1e40eb90292cbbb1e62d8cf987f1e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sascocl/sowerphp/zipball/6e857759e68c431abe5946a445f5da79aaebee4e",
-                "reference": "6e857759e68c431abe5946a445f5da79aaebee4e",
+                "url": "https://api.github.com/repos/sascocl/sowerphp/zipball/18f6a25ccef1e40eb90292cbbb1e62d8cf987f1e",
+                "reference": "18f6a25ccef1e40eb90292cbbb1e62d8cf987f1e",
                 "shasum": ""
             },
             "require": {
@@ -3000,7 +3000,7 @@
                 "issues": "https://github.com/sascocl/sowerphp/issues",
                 "source": "https://github.com/sascocl/sowerphp"
             },
-            "time": "2024-05-26T08:08:17+00:00"
+            "time": "2024-05-26T08:57:05+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
