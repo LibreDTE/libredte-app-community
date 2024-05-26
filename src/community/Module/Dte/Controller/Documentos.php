@@ -1439,7 +1439,7 @@ class Controller_Documentos extends \Controller_App
             }
             // descargar archivo con resultados
             $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($datos);
-            $this->response->sendContent($csv, substr($_FILES['archivo']['name'], 0, -4).'_resultado_buscar_masivo.csv');
+            $this->response->sendAndExit($csv, substr($_FILES['archivo']['name'], 0, -4).'_resultado_buscar_masivo.csv');
         }
     }
 

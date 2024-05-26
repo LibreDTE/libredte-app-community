@@ -98,7 +98,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         array_unshift($detalle, $class::$libro_cols);
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($detalle);
-        $this->response->sendContent($csv, strtolower($this->config['model']['plural']).'_'.$Emisor->rut.'-'.$Emisor->dv.'_'.$periodo.'.csv');
+        $this->response->sendAndExit($csv, strtolower($this->config['model']['plural']).'_'.$Emisor->rut.'-'.$Emisor->dv.'_'.$periodo.'.csv');
     }
 
     /**
@@ -125,7 +125,7 @@ abstract class Controller_Base_Libros extends \Controller_App
             $pdf->setFooterText(config('dte.pdf.footer'));
             $pdf->agregar($LibroCompraVenta->toArray());
             $pdf->Output($file, 'D');
-            exit; // TODO: enviar usando $this->response->send() / LibroCompraVenta::Output() / PDF
+            exit; // TODO: enviar usando response()->send() / LibroCompraVenta::Output() / PDF
         }
         // entregar libro de guías
         else {
@@ -155,7 +155,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $this->response->type('application/xml', 'ISO-8859-1');
         $this->response->header('Content-Length', strlen($xml));
         $this->response->header('Content-Disposition', 'attachement; filename="'.$file.'"');
-        $this->response->send($xml);
+        $this->response->sendAndExit($xml);
     }
 
     /**

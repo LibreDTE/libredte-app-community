@@ -57,7 +57,7 @@ class Controller_Xml extends \Controller_App
             $this->response->type('application/xml', $XML->encoding);
             $this->response->header('Content-Length', strlen($xmlSigned));
             $this->response->header('Content-Disposition', 'attachement; filename="'.$id.'_firmado.xml"');
-            $this->response->send($xmlSigned);
+            $this->response->sendAndExit($xmlSigned);
         }
     }
 

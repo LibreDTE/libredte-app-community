@@ -97,7 +97,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
         $this->response->type('application/xml', 'ISO-8859-1');
         $this->response->header('Content-Length', strlen($xml));
         $this->response->header('Content-Disposition', 'attachement; filename="'.$file.'"');
-        $this->response->send($xml);
+        $this->response->sendAndExit($xml);
     }
 
     /**

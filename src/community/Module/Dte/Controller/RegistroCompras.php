@@ -93,7 +93,7 @@ class Controller_RegistroCompras extends \Controller_App
         }
         array_unshift($documentos, array_keys($documentos[0]));
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($documentos);
-        $this->response->sendContent($csv, $Receptor->rut.'-'.$Receptor->dv.'_recibidos_'.date('YmdHis').'.csv');
+        $this->response->sendAndExit($csv, $Receptor->rut.'-'.$Receptor->dv.'_recibidos_'.date('YmdHis').'.csv');
     }
 
     /**
@@ -112,7 +112,7 @@ class Controller_RegistroCompras extends \Controller_App
         }
         array_unshift($resumen, array_keys($resumen[0]));
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($resumen);
-        $this->response->sendContent($csv, $Receptor->rut.'-'.$Receptor->dv.'_resumen_recibidos_pendientes_'.date('YmdHis').'.csv');
+        $this->response->sendAndExit($csv, $Receptor->rut.'-'.$Receptor->dv.'_resumen_recibidos_pendientes_'.date('YmdHis').'.csv');
     }
 
     /**

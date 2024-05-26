@@ -327,7 +327,7 @@ class Controller_DteFolios extends \Controller_App
         $this->response->type('application/xml', 'ISO-8859-1');
         $this->response->header('Content-Length', strlen($xml));
         $this->response->header('Content-Disposition', 'attachement; filename="'.$file.'"');
-        $this->response->send($xml);
+        $this->response->sendAndExit($xml);
     }
 
     /**
@@ -602,9 +602,9 @@ class Controller_DteFolios extends \Controller_App
         $Emisor = $this->getContribuyente();
         $r = $this->consume('/api/dte/admin/dte_folios/anular/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?formato=html');
         if ($r['status']['code'] != 200) {
-            $this->response->send($r['body']);
+            $this->response->sendAndExit($r['body']);
         }
-        $this->response->send($r['body']);
+        $this->response->sendAndExit($r['body']);
     }
 
     /**
@@ -633,7 +633,7 @@ class Controller_DteFolios extends \Controller_App
         }
         array_unshift($detalle, ['Folio inicial', 'Folio final', 'Cantidad de folios']);
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($detalle);
-        $this->response->sendContent($csv, 'folios_'.$estado.'_'.$Emisor->rut.'_'.$dte.'_'.$folio.'_'.date('Y-m-d').'.csv');
+        $this->response->sendAndExit($csv, 'folios_'.$estado.'_'.$Emisor->rut.'_'.$dte.'_'.$folio.'_'.date('Y-m-d').'.csv');
     }
 
     /**

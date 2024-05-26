@@ -95,7 +95,7 @@ class Controller_DteBoletas extends \Controller_App
         $this->response->type('application/xml', 'ISO-8859-1');
         $this->response->header('Content-Length', strlen($xml));
         $this->response->header('Content-Disposition', 'attachement; filename="'.$file.'"');
-        $this->response->send($xml);
+        $this->response->sendAndExit($xml);
     }
 
     /**
@@ -133,7 +133,7 @@ class Controller_DteBoletas extends \Controller_App
             array_unshift($detalle, array_keys($detalle[0]));
         }
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($detalle);
-        $this->response->sendContent($csv, $file.'.csv');
+        $this->response->sendAndExit($csv, $file.'.csv');
     }
 
 }

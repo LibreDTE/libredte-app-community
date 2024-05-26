@@ -79,7 +79,7 @@ class Controller_Factoring extends \Controller_App
             $this->response->type('application/xml', 'ISO-8859-1');
             $this->response->header('Content-Length', strlen($xml));
             $this->response->header('Content-Disposition', 'attachement; filename="aec_'.$Cesion->getCedente()['RUT'].'_'.$Cesion->getCesionario()['RUT'].'_'.date('U').'.xml"');
-            $this->response->send($xml);
+            $this->response->sendAndExit($xml);
         }
     }
 

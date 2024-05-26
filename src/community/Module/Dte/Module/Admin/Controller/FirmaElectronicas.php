@@ -158,7 +158,7 @@ class Controller_FirmaElectronicas extends \Controller_App
         $this->response->type('application/x-pkcs12');
         $this->response->header('Content-Length', strlen($firma));
         $this->response->header('Content-Disposition', 'attachement; filename="'.$file.'"');
-        $this->response->send($firma);
+        $this->response->sendAndExit($firma);
     }
 
 }

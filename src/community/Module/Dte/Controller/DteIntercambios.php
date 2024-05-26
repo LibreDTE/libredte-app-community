@@ -299,7 +299,7 @@ class Controller_DteIntercambios extends \Controller_App
                 $this->response->header($header, $response['header'][$header]);
             }
         }
-        $this->response->send($response['body']);
+        $this->response->sendAndExit($response['body']);
     }
 
     /**
@@ -350,7 +350,7 @@ class Controller_DteIntercambios extends \Controller_App
                 $this->response->header($header, $response['header'][$header]);
             }
         }
-        $this->response->send($response['body']);
+        $this->response->sendAndExit($response['body']);
     }
 
     /**
@@ -428,7 +428,7 @@ class Controller_DteIntercambios extends \Controller_App
                 $this->response->header($header, $response['header'][$header]);
             }
         }
-        $this->response->send($response['body']);
+        $this->response->sendAndExit($response['body']);
     }
 
     /**

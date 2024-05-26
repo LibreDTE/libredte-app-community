@@ -123,7 +123,7 @@ class Controller_DteRecibidos extends \Controller_App
         }
         array_unshift($recibidos, $cols);
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($recibidos);
-        $this->response->sendContent($csv, 'recibidos_'.$Emisor->rut.'_'.$desde.'_'.$hasta.'.csv');
+        $this->response->sendAndExit($csv, 'recibidos_'.$Emisor->rut.'_'.$desde.'_'.$hasta.'.csv');
     }
 
     /**

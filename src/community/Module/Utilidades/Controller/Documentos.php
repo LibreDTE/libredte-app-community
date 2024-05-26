@@ -155,7 +155,7 @@ class Controller_Documentos extends \Controller_App
                     $this->response->header($header, $response['header'][$header]);
                 }
             }
-            $this->response->send($response['body']);
+            $this->response->sendAndExit($response['body']);
         }
     }
 
@@ -196,7 +196,7 @@ class Controller_Documentos extends \Controller_App
                     $this->response->header($header, $response['header'][$header]);
                 }
             }
-            $this->response->send($response['body']);
+            $this->response->sendAndExit($response['body']);
         }
     }
 
@@ -343,7 +343,8 @@ class Controller_Documentos extends \Controller_App
             if (!isset($dtes[1])) {
                 $name = $dtes[0]['Encabezado']['Emisor']['RUTEmisor'].'_T'.$dtes[0]['Encabezado']['IdDoc']['TipoDTE'].'F'.$dtes[0]['Encabezado']['IdDoc']['Folio'].'.json';
                 $json = json_encode($dtes[0], JSON_PRETTY_PRINT);
-                $this->response->sendFile([
+                $this->autoRender = false;
+                $this->response->prepareFileResponse([
                     'name' =>  $name,
                     'type' => 'application/json',
                     'size' => strlen($json),
@@ -649,10 +650,10 @@ class Controller_Documentos extends \Controller_App
         }
         // si solo es un archivo y se pidió no comprimir se entrega directamente
         if (empty($this->Api->data['compress']) && !isset($Documentos[1]) && $cedible != 2) {
+            $this->autoRender = false;
             $disposition = !$Emisor->config_pdf_disposition ? 'attachement' : 'inline';
-            $this->response->sendFile($file, ['disposition' => $disposition, 'exit' => false]);
+            $this->response->prepareFileResponse($file, ['disposition' => $disposition]);
             \sowerphp\general\Utility_File::rmdir($dir);
-            exit; // TODO: enviar usando $this->response->send() / File::rmdir()
         }
         // entregar archivo comprimido que incluirá cada uno de los DTE
         else {

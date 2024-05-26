@@ -109,7 +109,7 @@ class Controller_Guias extends \Controller_App
         $file = TMP.'/'.$LibroGuia->getID().'.xml';
         file_put_contents($file, $xml);
         \sasco\LibreDTE\File::compress($file, ['format' => 'zip', 'delete' => true]);
-        exit; // TODO: enviar usando $this->response->send() / File::compress()
+        exit; // TODO: enviar usando response()->send() / File::compress()
     }
 
 }

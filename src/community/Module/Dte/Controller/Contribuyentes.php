@@ -771,7 +771,7 @@ class Controller_Contribuyentes extends \Controller_App
         $this->response->type('image/png');
         $this->response->header('Content-Length', filesize($logo));
         $this->response->header('Content-Disposition', 'inline; filename="'.$filename.'"');
-        $this->response->send(file_get_contents($logo));
+        $this->response->sendAndExit(file_get_contents($logo));
     }
 
     /**
@@ -782,11 +782,11 @@ class Controller_Contribuyentes extends \Controller_App
         $Contribuyente = $this->getContribuyente();
         // verificar que el usuario sea el administrador o de soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            $this->response->send('Usted no es el administrador de la empresa solicitada.');
+            $this->response->sendAndExit('Usted no es el administrador de la empresa solicitada.');
         }
         // verificar protocolo
         if (!in_array($protocol, ['smtp', 'imap'])) {
-            $this->response->send('El protocolo debe ser "smtp" o "imap"');
+            $this->response->sendAndExit('El protocolo debe ser "smtp" o "imap"');
         }
         // datos pasados por GET al servicio web
         extract($this->getQuery([
@@ -797,7 +797,7 @@ class Controller_Contribuyentes extends \Controller_App
             try {
                 $Email = $Contribuyente->getEmailSender($email, $debug);
             } catch (\Exception $e) {
-                $this->response->send($e->getMessage());
+                $this->response->sendAndExit($e->getMessage());
             }
             if ($Contribuyente->{'config_email_'.$email.'_replyto'}) {
                 $Email->replyTo($Contribuyente->{'config_email_'.$email.'_replyto'});
@@ -807,12 +807,12 @@ class Controller_Contribuyentes extends \Controller_App
             try {
                 $status = $Email->send('Esto es un mensaje de prueba desde LibreDTE');
             } catch (\Exception $e) {
-                $this->response->send($e->getMessage());
+                $this->response->sendAndExit($e->getMessage());
             }
             if ($status === true) {
-                $this->response->send('Mensaje enviado.');
+                $this->response->sendAndExit('Mensaje enviado.');
             } else {
-                $this->response->send($status['message']);
+                $this->response->sendAndExit($status['message']);
             }
         }
         // hacer test IMAP
@@ -820,12 +820,12 @@ class Controller_Contribuyentes extends \Controller_App
             try {
                 $Email = $Contribuyente->getEmailReceiver($email);
             } catch (\Exception $e) {
-                $this->response->send($e->getMessage());
+                $this->response->sendAndExit($e->getMessage());
             }
             if (!$Email) {
-                $this->response->send('No se logró la conexión al proveedor de entrada.');
+                $this->response->sendAndExit('No se logró la conexión al proveedor de entrada.');
             }
-            $this->response->send('La casilla tiene '.num($Email->countUnreadMessages()).' mensajes sin leer de un total de '.num($Email->countMessages()).' mensajes.');
+            $this->response->sendAndExit('La casilla tiene '.num($Email->countUnreadMessages()).' mensajes sin leer de un total de '.num($Email->countMessages()).' mensajes.');
         }
     }
 

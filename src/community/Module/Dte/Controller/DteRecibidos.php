@@ -429,7 +429,7 @@ class Controller_DteRecibidos extends \Controller_App
         $this->response->type('application/xml', 'ISO-8859-1');
         $this->response->header('Content-Length', strlen($xml));
         $this->response->header('Content-Disposition', 'attachement; filename="'.$file.'"');
-        $this->response->send($xml);
+        $this->response->sendAndExit($xml);
     }
 
     /**
@@ -466,7 +466,7 @@ class Controller_DteRecibidos extends \Controller_App
         $this->response->type('application/json');
         $this->response->header('Content-Length', strlen($json));
         $this->response->header('Content-Disposition', 'attachement; filename="'.$file.'"');
-        $this->response->send($json);
+        $this->response->sendAndExit($json);
     }
 
     /**
@@ -527,7 +527,7 @@ class Controller_DteRecibidos extends \Controller_App
         $this->response->type('application/'.$ext);
         $this->response->header('Content-Disposition', $disposition.'; filename="'.$file_name.'"');
         $this->response->header('Content-Length', strlen($pdf));
-        $this->response->send($pdf);
+        $this->response->sendAndExit($pdf);
     }
 
     /**

@@ -141,7 +141,7 @@ class Controller_DteEmitidos extends \Controller_App
         }
         array_unshift($emitidos, $cols);
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($emitidos);
-        $this->response->sendContent($csv, 'emitidos_'.$Emisor->rut.'_'.$desde.'_'.$hasta.'.csv');
+        $this->response->sendAndExit($csv, 'emitidos_'.$Emisor->rut.'_'.$desde.'_'.$hasta.'.csv');
     }
 
     /**

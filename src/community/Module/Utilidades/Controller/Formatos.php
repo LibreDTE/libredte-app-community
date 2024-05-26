@@ -63,7 +63,7 @@ class Controller_Formatos extends \Controller_App
             $this->response->type('application/json', 'UTF-8');
             $this->response->header('Content-Length', strlen($json));
             $this->response->header('Content-Disposition', 'attachement; filename="'.$_FILES['archivo']['name'].'.json"');
-            $this->response->send($json);
+            $this->response->sendAndExit($json);
         }
     }
 

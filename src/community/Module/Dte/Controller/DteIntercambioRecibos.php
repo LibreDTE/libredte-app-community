@@ -50,7 +50,7 @@ class Controller_DteIntercambioRecibos extends \Controller_App
         $this->response->type('application/xml', 'ISO-8859-1');
         $this->response->header('Content-Length', strlen($xml));
         $this->response->header('Content-Disposition', 'attachement; filename="'.$DteIntercambioRecibo->responde.'_'.$DteIntercambioRecibo->codigo.'.xml"');
-        $this->response->send($xml);
+        $this->response->sendAndExit($xml);
     }
 
 }

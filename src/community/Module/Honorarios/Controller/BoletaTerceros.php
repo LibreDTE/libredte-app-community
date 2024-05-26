@@ -198,7 +198,7 @@ class Controller_BoletaTerceros extends \Controller_App
         }
         array_unshift($boletas, array_keys($boletas[0]));
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($boletas);
-        $this->response->sendContent($csv, $Emisor->rut.'-'.$Emisor->dv.'_bte_'.(int)$periodo.'.csv');
+        $this->response->sendAndExit($csv, $Emisor->rut.'-'.$Emisor->dv.'_bte_'.(int)$periodo.'.csv');
     }
 
     /**

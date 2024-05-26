@@ -186,7 +186,7 @@ class Controller_Iecv extends \Controller_App
         $file = TMP.'/'.$LibroCompraVenta->getID().'.xml';
         file_put_contents($file, $xml);
         \sasco\LibreDTE\File::compress($file, ['format' => 'zip', 'delete' => true]);
-        exit; // TODO: enviar usando $this->response->send() / File::compress()
+        exit; // TODO: enviar usando response()->send() / File::compress()
     }
 
     /**
@@ -201,7 +201,7 @@ class Controller_Iecv extends \Controller_App
             $pdf->setFooterText(config('dte.pdf.footer'));
             $pdf->agregar($LibroCompraVenta->toArray());
             $pdf->Output($LibroCompraVenta->getID().'.pdf', 'D');
-            exit; // TODO: enviar usando $this->response->send() / LibroCompraVenta::Output() / PDF
+            exit; // TODO: enviar usando response()->send() / LibroCompraVenta::Output() / PDF
         }
     }
 

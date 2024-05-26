@@ -176,7 +176,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
         }
         array_unshift($clasificaciones, array_keys($clasificaciones[0]));
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($clasificaciones);
-        $this->response->sendContent($csv, 'item_clasificaciones_'.$Contribuyente->rut.'.csv');
+        $this->response->sendAndExit($csv, 'item_clasificaciones_'.$Contribuyente->rut.'.csv');
     }
 
     /**

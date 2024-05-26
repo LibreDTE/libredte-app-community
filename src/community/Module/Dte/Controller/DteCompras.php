@@ -244,7 +244,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         $columnas['tipo_transaccion'] = 'Tipo Transaccion';
         array_unshift($compras, $columnas);
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($compras);
-        $this->response->sendContent($csv, 'rc_'.$Emisor->rut.'-'.$Emisor->dv.'_'.$periodo.'.csv');
+        $this->response->sendAndExit($csv, 'rc_'.$Emisor->rut.'-'.$Emisor->dv.'_'.$periodo.'.csv');
     }
 
     /**
@@ -263,7 +263,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         }
         array_unshift($datos, ['Rut-DV', 'Codigo_Tipo_Doc', 'Folio_Doc', 'TpoTranCompra', 'Codigo_IVA_E_Imptos']);
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($datos);
-        $this->response->sendContent($csv, 'rc_tipo_transacciones_'.$periodo.'.csv');
+        $this->response->sendAndExit($csv, 'rc_tipo_transacciones_'.$periodo.'.csv');
     }
 
     /**
@@ -484,11 +484,11 @@ class Controller_DteCompras extends Controller_Base_Libros
             $this->redirect('/dte/dte_compras/ver/'.$periodo);
         }
         if ($tipo == 'rcv_csv') {
-            $this->response->sendContent($detalle, 'rc_'.$Emisor->rut.'_'.$periodo.'_'.$estado.'_'.$tipo.'.csv');
+            $this->response->sendAndExit($detalle, 'rc_'.$Emisor->rut.'_'.$periodo.'_'.$estado.'_'.$tipo.'.csv');
         } else {
             array_unshift($detalle, array_keys($detalle[0]));
             $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($detalle);
-            $this->response->sendContent($csv, 'rc_'.$Emisor->rut.'_'.$periodo.'_'.$estado.'_'.$tipo.'.csv');
+            $this->response->sendAndExit($csv, 'rc_'.$Emisor->rut.'_'.$periodo.'_'.$estado.'_'.$tipo.'.csv');
         }
     }
 

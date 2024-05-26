@@ -188,7 +188,7 @@ class Controller_Certificacion extends \Controller_App
         $file = TMP.'/'.$LibroCompraVenta->getID().'.xml';
         file_put_contents($file, $xml);
         \sasco\LibreDTE\File::compress($file, ['format' => 'zip', 'delete' => true]);
-        exit; // TODO: enviar usando $this->response->send() / File::compress()
+        exit; // TODO: enviar usando response()->send() / File::compress()
     }
 
     /**
@@ -524,7 +524,7 @@ class Controller_Certificacion extends \Controller_App
         }
         // descargar archivo comprimido con los XML
         \sasco\LibreDTE\File::compress($dir, ['format' => 'zip', 'delete' => true]);
-        exit; // TODO: enviar usando $this->response->send() / File::compress()
+        exit; // TODO: enviar usando response()->send() / File::compress()
     }
 
     /**

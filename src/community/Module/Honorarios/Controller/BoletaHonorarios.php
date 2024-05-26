@@ -192,7 +192,7 @@ class Controller_BoletaHonorarios extends \Controller_App
         }
         array_unshift($boletas, array_keys($boletas[0]));
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($boletas);
-        $this->response->sendContent($csv, $Receptor->rut.'-'.$Receptor->dv.'_bhe_'.(int)$periodo.'.csv');
+        $this->response->sendAndExit($csv, $Receptor->rut.'-'.$Receptor->dv.'_bhe_'.(int)$periodo.'.csv');
     }
 
     /**

@@ -55,7 +55,7 @@ class Controller_Sii extends \Controller_App
                     ],
                 ]
             );
-            $this->response->send($response['body']);
+            $this->response->sendAndExit($response['body']);
         }
         // se redirecciona al SII
         catch (\Exception $e) {
@@ -91,7 +91,7 @@ class Controller_Sii extends \Controller_App
                     ],
                 ]
             );
-            $this->response->send($response['body']);
+            $this->response->sendAndExit($response['body']);
         }
         // se redirecciona al SII
         catch (\Exception $e) {
@@ -112,7 +112,7 @@ class Controller_Sii extends \Controller_App
             $response = apigateway_consume(
                 '/sii/dte/contribuyentes/autorizado/'.$rut.'?formato=html&certificacion='.$certificacion
             );
-            $this->response->send($response['body']);
+            $this->response->sendAndExit($response['body']);
         }
         // se redirecciona al SII
         catch (\Exception $e) {
@@ -130,7 +130,7 @@ class Controller_Sii extends \Controller_App
             $response = apigateway_consume(
                 '/sii/contribuyentes/situacion_tributaria/tercero/'.$rut.'?formato=html'
             );
-            $this->response->send($response['body']);
+            $this->response->sendAndExit($response['body']);
         }
         // se redirecciona al SII
         catch (\Exception $e) {
@@ -162,7 +162,7 @@ class Controller_Sii extends \Controller_App
                     ],
                 ]
             );
-            $this->response->send($response['body']);
+            $this->response->sendAndExit($response['body']);
         }
         // se crea enlace directo al SII
         catch (\Exception $e) {
@@ -280,7 +280,7 @@ class Controller_Sii extends \Controller_App
                     ],
                 ]
             );
-            $this->response->send($response['body']);
+            $this->response->sendAndExit($response['body']);
         }
         // se crea enlace directo al SII
         catch (\Exception $e) {
@@ -312,7 +312,7 @@ class Controller_Sii extends \Controller_App
                     ],
                 ]
             );
-            $this->response->send($response['body']);
+            $this->response->sendAndExit($response['body']);
         }
         // se crea enlace directo al SII
         catch (\Exception $e) {
