@@ -6,7 +6,7 @@
     <div class="row">
         <div class="offset-md-3 col-md-6">
 <?php
-$messages = \sowerphp\core\Model_Datasource_Session::message();
+$messages = \sowerphp\core\SessionMessage::flush();
 foreach ($messages as $message) {
     $icons = [
         'success' => 'ok',

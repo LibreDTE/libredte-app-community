@@ -23,6 +23,6 @@
         "sasco/libredte": "~24.1.1",
         "apigatewaycl/apigateway-api-client": "^2",
         "kunalvarma05/dropbox-php-sdk": "0.4.1",
-        "sowerphp/sowerphp-framework": "dev-master"
+        "sowerphp/sowerphp-framework": "dev-master || dev-main"
     }
 }

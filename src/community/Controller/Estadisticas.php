@@ -57,7 +57,7 @@ class Controller_Estadisticas extends \Controller_App
     {
         $response = $this->consume('/api/estadisticas/'.($certificacion?'certificacion':'produccion'));
         if ($response['status']['code'] != 200) {
-            \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
+            \sowerphp\core\SessionMessage::write($response['body'], 'error');
             $this->redirect('/');
         }
         $this->set($response['body']);
@@ -215,7 +215,7 @@ class Controller_Estadisticas extends \Controller_App
      */
     protected function getVersionLibreDTE()
     {
-        $HEAD = app('layers')->getProjectDir('/.git/logs/HEAD');
+        $HEAD = app('layers')->getProjectPath('/.git/logs/HEAD');
         if (!file_exists($HEAD) || !is_readable($HEAD)) {
             return null;
         }

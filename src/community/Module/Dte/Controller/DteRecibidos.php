@@ -64,7 +64,7 @@ class Controller_DteRecibidos extends \Controller_App
             }
             $documentos = $Receptor->getDocumentosRecibidos($filtros);
         } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'Error al recuperar los documentos:<br/>'.$e->getMessage(), 'error'
             );
             $documentos_total = 0;
@@ -124,7 +124,7 @@ class Controller_DteRecibidos extends \Controller_App
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || $DteRecibido->receptor != $Receptor->rut) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'DTE recibido solicitado no existe', 'error'
             );
             $this->redirect('/dte/dte_recibidos/listar');
@@ -165,7 +165,7 @@ class Controller_DteRecibidos extends \Controller_App
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || $DteRecibido->receptor != $Receptor->rut) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'DTE recibido solicitado no existe.', 'error'
             );
             $this->redirect('/dte/dte_recibidos/listar');
@@ -193,7 +193,7 @@ class Controller_DteRecibidos extends \Controller_App
         // revisar datos minimos
         foreach(['emisor', 'dte', 'folio', 'fecha', 'tasa'] as $attr) {
             if (!isset($_POST[$attr][0])) {
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'Debe indicar '.$attr.'.', 'error'
                 );
                 return;
@@ -341,18 +341,18 @@ class Controller_DteRecibidos extends \Controller_App
                     'No existe una firma electrónica asociada a la empresa que se pueda utilizar para guardar el documento. Se requiere para consultar el estado del documento al SII antes de que sea guardado. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
                     url('/dte/admin/firma_electronicas/agregar')
                 );
-                \sowerphp\core\Model_Datasource_Session::message($message, 'error');
+                \sowerphp\core\SessionMessage::write($message, 'error');
                 $this->redirect('/dte/admin/firma_electronicas/agregar');
             }
             // consultar estado dte
             $estado = $DteRecibido->getEstado($Firma);
             if ($estado === false) {
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'No se pudo obtener el estado del DTE.<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
                 );
                 return;
             } else if (in_array($estado['ESTADO'], ['DNK', 'FAU', 'FNA', 'EMP'])) {
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'Estado DTE: '.(is_array($estado) ? implode('. ', $estado) : $estado), 'error'
                 );
                 return;
@@ -361,12 +361,12 @@ class Controller_DteRecibidos extends \Controller_App
         // todo ok con el dte así que se agrega a los dte recibidos
         try {
             $DteRecibido->save();
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'DTE recibido guardado.', 'ok'
             );
             $this->redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
         } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No fue posible guardar el DTE: '.$e->getMessage(), 'error'
             );
         }
@@ -385,12 +385,12 @@ class Controller_DteRecibidos extends \Controller_App
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists()) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No fue posible eliminar, el DTE recibido solicitado no existe.', 'warning'
             );
         } else {
             $DteRecibido->delete();
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'Se eliminó el DTE T'.$DteRecibido->dte.'F'.$DteRecibido->folio.' recibido de '.\sowerphp\app\Utility_Rut::addDV($DteRecibido->emisor), 'ok'
             );
         }
@@ -411,14 +411,14 @@ class Controller_DteRecibidos extends \Controller_App
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists()) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No existe el DTE recibido solicitado.', 'error'
             );
             $this->redirect('/dte/dte_recibidos/listar');
         }
         // si no tiene XML error
         if (!$DteRecibido->hasXML()) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'El DTE no tiene XML asociado.', 'error'
             );
             $this->redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
@@ -446,14 +446,14 @@ class Controller_DteRecibidos extends \Controller_App
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists()) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No existe el DTE recibido solicitado.', 'error'
             );
             $this->redirect('/dte/dte_recibidos/listar');
         }
         // si no tiene XML error
         if (!$DteRecibido->hasXML()) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'El DTE no tiene XML asociado, no es posible obtener JSON.', 'error'
             );
             $this->redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
@@ -483,7 +483,7 @@ class Controller_DteRecibidos extends \Controller_App
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No fue posible obtener el PDF, el DTE recibido solicitado no existe o bien no tiene intercambio asociado.', 'error'
             );
             $this->redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
@@ -516,7 +516,7 @@ class Controller_DteRecibidos extends \Controller_App
         try {
             $pdf = $DteRecibido->getPDF($config);
         } catch (\Exception $e) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 $e->getMessage(), 'error'
             );
             $this->redirect('/dte/dte_recibidos/listar');
@@ -817,10 +817,10 @@ class Controller_DteRecibidos extends \Controller_App
                 'total_hasta' => $_POST['total_hasta'],
             ]);
             if ($response === false) {
-                \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
+                \sowerphp\core\SessionMessage::write(implode('<br/>', $rest->getErrors()), 'error');
             }
             else if ($response['status']['code'] != 200) {
-                \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
+                \sowerphp\core\SessionMessage::write($response['body'], 'error');
             }
             else {
                 $this->set([

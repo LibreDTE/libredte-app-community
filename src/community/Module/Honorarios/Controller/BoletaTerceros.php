@@ -58,11 +58,11 @@ class Controller_BoletaTerceros extends \Controller_App
             // obtener PDF desde servicio web
             $r = $this->consume('/api/honorarios/boleta_terceros/buscar/'.$Emisor->rut, $_POST);
             if ($r['status']['code'] != 200) {
-                \sowerphp\core\Model_Datasource_Session::message($r['body'], 'error');
+                \sowerphp\core\SessionMessage::write($r['body'], 'error');
                 return;
             }
             if (empty($r['body'])) {
-                \sowerphp\core\Model_Datasource_Session::message('No se encontraron boletas para la búsqueda solicitada.', 'warning');
+                \sowerphp\core\SessionMessage::write('No se encontraron boletas para la búsqueda solicitada.', 'warning');
             }
             $this->set('boletas', $r['body']);
         }
@@ -111,13 +111,13 @@ class Controller_BoletaTerceros extends \Controller_App
         $Emisor = $this->getContribuyente();
         $BoletaTercero = new Model_BoletaTercero($Emisor->rut, $numero);
         if (!$BoletaTercero->exists()) {
-            \sowerphp\core\Model_Datasource_Session::message('No existe la boleta solicitada.', 'error');
+            \sowerphp\core\SessionMessage::write('No existe la boleta solicitada.', 'error');
             $this->redirect('/honorarios/boleta_terceros');
         }
         // obtener PDF desde servicio web
         $r = $this->consume('/api/honorarios/boleta_terceros/html/'.$BoletaTercero->numero.'/'.$BoletaTercero->emisor);
         if ($r['status']['code'] != 200) {
-            \sowerphp\core\Model_Datasource_Session::message($r['body'], 'error');
+            \sowerphp\core\SessionMessage::write($r['body'], 'error');
             $this->redirect('/honorarios/boleta_terceros');
         }
         $this->Api->response()->type('text/html');
@@ -172,7 +172,7 @@ class Controller_BoletaTerceros extends \Controller_App
         $Emisor = $this->getContribuyente();
         $boletas = (new Model_BoletaTerceros())->setContribuyente($Emisor)->buscar(['periodo' => $periodo]);
         if (empty($boletas)) {
-            \sowerphp\core\Model_Datasource_Session::message('No existen boletas para el período solicitado.', 'error');
+            \sowerphp\core\SessionMessage::write('No existen boletas para el período solicitado.', 'error');
             $this->redirect('/honorarios/boleta_terceros');
         }
         $this->set([
@@ -190,7 +190,7 @@ class Controller_BoletaTerceros extends \Controller_App
         $Emisor = $this->getContribuyente();
         $boletas = (new Model_BoletaTerceros())->setContribuyente($Emisor)->buscar(['periodo' => $periodo]);
         if (empty($boletas)) {
-            \sowerphp\core\Model_Datasource_Session::message('No existen boletas para el período solicitado.', 'error');
+            \sowerphp\core\SessionMessage::write('No existen boletas para el período solicitado.', 'error');
             $this->redirect('/honorarios/boleta_terceros');
         }
         foreach ($boletas as &$b) {
@@ -210,9 +210,9 @@ class Controller_BoletaTerceros extends \Controller_App
         $Emisor = $this->getContribuyente();
         try {
             (new Model_BoletaTerceros())->setContribuyente($Emisor)->sincronizar($meses);
-            \sowerphp\core\Model_Datasource_Session::message('Boletas actualizadas.', 'ok');
+            \sowerphp\core\SessionMessage::write('Boletas actualizadas.', 'ok');
         } catch (\Exception $e) {
-            \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
+            \sowerphp\core\SessionMessage::write($e->getMessage(), 'error');
         }
         $this->redirect('/honorarios/boleta_terceros');
     }
@@ -261,7 +261,7 @@ class Controller_BoletaTerceros extends \Controller_App
             // emitir boleta y bajar HTML de boleta
             $r = $this->consume('/api/honorarios/boleta_terceros/emitir', $boleta);
             if ($r['status']['code'] != 200) {
-                \sowerphp\core\Model_Datasource_Session::message($r['body'], 'error');
+                \sowerphp\core\SessionMessage::write($r['body'], 'error');
                 $this->redirect('/honorarios/boleta_terceros/emitir');
             }
             // obtener html

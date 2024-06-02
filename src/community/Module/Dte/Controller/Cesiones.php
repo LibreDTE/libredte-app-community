@@ -62,7 +62,7 @@ class Controller_Cesiones extends \Controller_App
             }
             $documentos = $Emisor->getDocumentosEmitidos($filtros);
         } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'Error al recuperar los documentos:<br/>'.$e->getMessage(), 'error'
             );
             $documentos_total = 0;
@@ -89,7 +89,7 @@ class Controller_Cesiones extends \Controller_App
     public function buscar($consulta = null)
     {
         if (!in_array($consulta, ['deudor', 'cedente', 'cesionario'])) {
-            \sowerphp\core\Model_Datasource_Session::message('Búsqueda por "'.$consulta.'" no existe.', 'error');
+            \sowerphp\core\SessionMessage::write('Búsqueda por "'.$consulta.'" no existe.', 'error');
             $this->redirect('/dte/cesiones/listar');
         }
         $Contribuyente = $this->getContribuyente();
@@ -120,15 +120,15 @@ class Controller_Cesiones extends \Controller_App
                     ]
                 );
             } catch (\Exception $e) {
-                \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
+                \sowerphp\core\SessionMessage::write($e->getMessage(), 'error');
                 return;
             }
             if ($response['status']['code'] != 200) {
-                \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
+                \sowerphp\core\SessionMessage::write($response['body'], 'error');
                 return;
             }
             if (empty($response['body'])) {
-                \sowerphp\core\Model_Datasource_Session::message('No se encontraron documentos cedidos en el período de búsqueda.', 'info');
+                \sowerphp\core\SessionMessage::write('No se encontraron documentos cedidos en el período de búsqueda.', 'info');
                 return;
             }
             $this->set([

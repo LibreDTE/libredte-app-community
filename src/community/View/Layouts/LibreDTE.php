@@ -1,4 +1,4 @@
-<?php $Contribuyente = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente'); ?>
+<?php $Contribuyente =session('dte.Contribuyente'); ?>
 <!--
 LibreDTE: Edición Comunidad (2015 - 2024).
 Copyright (C) LibreDTE <https://www.libredte.cl>
@@ -195,7 +195,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                     echo '<div class="bg-info text-white text-center lead mt-2 mb-2" style="padding:0.5em"><strong>AMBIENTE DE CERTIFICACIÓN / PRUEBAS: '.$Contribuyente->razon_social.'</strong></div>',"\n";
                 }
                 // mensaje de sesión
-                $messages = \sowerphp\core\Model_Datasource_Session::message();
+                $messages = \sowerphp\core\SessionMessage::flush();
                 foreach ($messages as $message) {
                     $icons = [
                         'success' => 'ok',

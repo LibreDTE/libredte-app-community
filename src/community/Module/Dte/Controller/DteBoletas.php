@@ -56,7 +56,7 @@ class Controller_DteBoletas extends \Controller_App
                 'No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
                 url('/dte/admin/firma_electronicas/agregar')
             );
-            \sowerphp\core\Model_Datasource_Session::message($message, 'error');
+            \sowerphp\core\SessionMessage::write($message, 'error');
             $this->redirect('/dte/dte_boletas');
         }
         $Libro->setFirma($Firma);
@@ -85,7 +85,7 @@ class Controller_DteBoletas extends \Controller_App
         ]);
         $xml = $Libro->generar();
         if (!$Libro->schemaValidate()) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No fue posible generar el libro de boletas<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
             );
             $this->redirect('/dte/dte_boletas');

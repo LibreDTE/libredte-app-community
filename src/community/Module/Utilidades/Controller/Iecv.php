@@ -56,7 +56,7 @@ class Controller_Iecv extends \Controller_App
         ];
         foreach ($campos as $campo) {
             if (!strlen($_POST[$campo])) {
-                 \sowerphp\core\Model_Datasource_Session::message(
+                 \sowerphp\core\SessionMessage::write(
                     $campo.' no puede estar en blanco.', 'error'
                 );
                 return;
@@ -64,14 +64,14 @@ class Controller_Iecv extends \Controller_App
         }
         // si no se pasó el archivo error
         if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'Debes enviar el archivo CSV con el detalle de las compras o ventas al que deseas generar su XML.', 'error'
             );
             return;
         }
         // si no se pasó la firma error
         if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'Debes enviar el archivo con la firma digital.', 'error'
             );
             return;
@@ -83,7 +83,7 @@ class Controller_Iecv extends \Controller_App
                 'pass' => $_POST['contrasenia'],
             ]);
         } catch (\Exception $e) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No fue posible abrir la firma digital, quizás contraseña incorrecta.', 'error'
             );
             return;
@@ -173,13 +173,13 @@ class Controller_Iecv extends \Controller_App
         try {
             $xml = $LibroCompraVenta->generar();
         } catch (\Exception $e) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No fue posible generar el XML del libro, quizás hay caracteres especiales (ej: eñes o tildes).', 'error'
             );
             return;
         }
         if (!$LibroCompraVenta->schemaValidate()) {
-            \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
+            \sowerphp\core\SessionMessage::write(implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
             return;
         }
         // descargar XML

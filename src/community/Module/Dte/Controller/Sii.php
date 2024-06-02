@@ -39,7 +39,7 @@ class Controller_Sii extends \Controller_App
         try {
             $Emisor = (new Model_Contribuyentes())->get($rut);
             if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-                \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada.', 'error');
+                \sowerphp\core\SessionMessage::write('Usted no es el administrador de la empresa solicitada.', 'error');
                 $this->redirect('/dte/contribuyentes/seleccionar');
             }
             $Firma = $Emisor->getFirma($this->Auth->User->id);
@@ -72,7 +72,7 @@ class Controller_Sii extends \Controller_App
         try {
             $Emisor = (new Model_Contribuyentes())->get($rut);
             if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-                \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada.', 'error');
+                \sowerphp\core\SessionMessage::write('Usted no es el administrador de la empresa solicitada.', 'error');
                 $this->redirect('/dte/contribuyentes/seleccionar');
             }
             $Firma = $Emisor->getFirma($this->Auth->User->id);
@@ -197,7 +197,7 @@ class Controller_Sii extends \Controller_App
         $Emisor = $this->getContribuyente();
         $Firma = $Emisor->getFirma($this->Auth->User->id);
         if (!$Firma) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No existe firma asociada.', 'error'
             );
             $this->redirect('/dte/dte_emitidos/listar');
@@ -228,7 +228,7 @@ class Controller_Sii extends \Controller_App
         $Contribuyente = $this->getContribuyente();
         $Firma = $Contribuyente->getFirma($this->Auth->User->id);
         if (!$Firma) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No existe firma asociada.', 'error'
             );
             $this->redirect('/dte');

@@ -47,7 +47,7 @@ class Controller_DteGuias extends Controller_Base_Libros
         $DteGuia = new Model_DteGuia($Emisor->rut, $periodo, $Emisor->enCertificacion());
         // si el periodo es mayor o igual al actual no se puede enviar
         if ($periodo >= date('Ym')) {
-            \sowerphp\core\Model_Datasource_Session::message('No puede enviar el libro de guías del período '.$periodo.', debe esperar al mes siguiente del período.', 'error');
+            \sowerphp\core\SessionMessage::write('No puede enviar el libro de guías del período '.$periodo.', debe esperar al mes siguiente del período.', 'error');
             $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
         }
         // obtener guías
@@ -61,7 +61,7 @@ class Controller_DteGuias extends Controller_Base_Libros
                 'No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
                 url('/dte/admin/firma_electronicas/agregar')
             );
-            \sowerphp\core\Model_Datasource_Session::message($message, 'error');
+            \sowerphp\core\SessionMessage::write($message, 'error');
             $this->redirect('/dte/admin/firma_electronicas/agregar');
         }
         // agregar detalle
@@ -98,13 +98,13 @@ class Controller_DteGuias extends Controller_Base_Libros
         // obtener XML
         $xml = $Libro->generar();
         if (!$xml) {
-            \sowerphp\core\Model_Datasource_Session::message('No fue posible generar el libro de guías<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
+            \sowerphp\core\SessionMessage::write('No fue posible generar el libro de guías<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
             $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
         }
         // enviar al SII
         $track_id = $Libro->enviar();
         if (!$track_id) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No fue posible enviar el libro de guías al SII<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
             );
             $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
@@ -116,7 +116,7 @@ class Controller_DteGuias extends Controller_Base_Libros
         $DteGuia->revision_estado = null;
         $DteGuia->revision_detalle = null;
         $DteGuia->save();
-        \sowerphp\core\Model_Datasource_Session::message(
+        \sowerphp\core\SessionMessage::write(
             'Libro de guías período '.$periodo.' envíado.', 'ok'
         );
         $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
@@ -167,7 +167,7 @@ class Controller_DteGuias extends Controller_Base_Libros
                     ])
                 ]);
             } catch (\Exception $e) {
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'No fue posible facturar las guías seleccionadas:'.$e->getMessage(), 'error'
                 );
                 $this->redirect('/dte/dte_guias');

@@ -47,7 +47,7 @@ abstract class Model_Plural_App extends \sowerphp\app\Model_Plural
     public function getContribuyente(bool $readSession = true)
     {
         if (!isset($this->Contribuyente) && $readSession) {
-            $this->Contribuyente = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente');
+            $this->Contribuyente =session('dte.Contribuyente');
         }
         return $this->Contribuyente;
     }

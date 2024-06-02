@@ -40,7 +40,7 @@ class Controller_DteIntercambioRecibos extends \Controller_App
         // obtener Recibo
         $DteIntercambioRecibo = new Model_DteIntercambioRecibo($responde, $Emisor->rut, $codigo);
         if (!$DteIntercambioRecibo->exists()) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No existe el recibo solicitado.', 'error'
             );
             $this->redirect('/dte/dte_intercambios');

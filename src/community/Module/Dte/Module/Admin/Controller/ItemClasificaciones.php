@@ -86,7 +86,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
         $Contribuyente = $this->getContribuyente();
         $Clasificacion = new Model_ItemClasificacion($Contribuyente->rut, $codigo);
         if ($Clasificacion->enUso()) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No es posible eliminar la clasificacion '.$Clasificacion->clasificacion.' ya que existen items que la usan.', 'error'
             );
             $filterListar = !empty($_GET['listar']) ? base64_decode($_GET['listar']) : '';
@@ -106,7 +106,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
         if (isset($_POST['submit'])) {
             // verificar que se haya podido subir el archivo con el libro
             if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'Ocurrió un error al subir el listado de clasificaciones de items.', 'error'
                 );
                 return;
@@ -143,14 +143,14 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
             }
             // mostrar errores o redireccionar
             if (!empty($resumen['error'])) {
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'No se pudieron guardar todas las clasificaciones:<br/>- nuevas: '.implode(', ', $resumen['nuevas']).
                         '<br/>- editadas: '.implode(', ', $resumen['editadas']).
                         '<br/>- con error: '.implode(', ', $resumen['error']),
                     ((empty($resumen['nuevas']) && empty($resumen['editadas'])) ? 'error' : 'warning')
                 );
             } else {
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'Se importó el archivo de clasificaciones de items.', 'ok'
                 );
                 $this->redirect('/dte/admin/item_clasificaciones/listar');
@@ -169,7 +169,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
             ->exportar()
         ;
         if (!$clasificaciones) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No hay clasificaciones de items que exportar.', 'warning'
             );
             $this->redirect('/dte/admin/item_clasificaciones/listar');

@@ -88,7 +88,7 @@ class Controller_RegistroCompras extends \Controller_App
             ->getDetalle($filtros)
         ;
         if (!$documentos) {
-            \sowerphp\core\Model_Datasource_Session::message('No hay documentos recibidos en SII para la búsqueda realizada.');
+            \sowerphp\core\SessionMessage::write('No hay documentos recibidos en SII para la búsqueda realizada.');
             $this->redirect('/dte/registro_compras');
         }
         array_unshift($documentos, array_keys($documentos[0]));
@@ -107,7 +107,7 @@ class Controller_RegistroCompras extends \Controller_App
             ->getResumenPendientes()
         ;
         if (!$resumen) {
-            \sowerphp\core\Model_Datasource_Session::message('No hay documentos recibidos pendientes en SII.');
+            \sowerphp\core\SessionMessage::write('No hay documentos recibidos pendientes en SII.');
             $this->redirect('/dte');
         }
         array_unshift($resumen, array_keys($resumen[0]));
@@ -131,11 +131,11 @@ class Controller_RegistroCompras extends \Controller_App
             // obtener PDF desde servicio web
             $r = $this->consume('/api/dte/registro_compras/buscar/'.$Receptor->rut, $filtros);
             if ($r['status']['code'] != 200) {
-                \sowerphp\core\Model_Datasource_Session::message($r['body'], 'error');
+                \sowerphp\core\SessionMessage::write($r['body'], 'error');
                 return;
             }
             if (empty($r['body'])) {
-                \sowerphp\core\Model_Datasource_Session::message(__('No hay documentos recibidos en SII para la búsqueda realizada.'), 'warning');
+                \sowerphp\core\SessionMessage::write(__('No hay documentos recibidos en SII para la búsqueda realizada.'), 'warning');
             }
             $this->set([
                 'filtros' => $filtros,
@@ -191,9 +191,9 @@ class Controller_RegistroCompras extends \Controller_App
                 ->setContribuyente($Receptor)
                 ->sincronizar($estado, $meses)
             ;
-            \sowerphp\core\Model_Datasource_Session::message(__('Documentos recibidos con estado %s actualizados.', $estado), 'ok');
+            \sowerphp\core\SessionMessage::write(__('Documentos recibidos con estado %s actualizados.', $estado), 'ok');
         } catch (\Exception $e) {
-            \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
+            \sowerphp\core\SessionMessage::write($e->getMessage(), 'error');
         }
         $this->redirect('/dte/registro_compras');
     }
@@ -208,7 +208,7 @@ class Controller_RegistroCompras extends \Controller_App
         $Contribuyente = $this->getContribuyente();
         $Firma = $Contribuyente->getFirma($this->Auth->User->id);
         if (!$Firma) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No existe firma asociada.', 'error'
             );
             $this->redirect('/dte/registro_compras/pendientes');
@@ -217,7 +217,7 @@ class Controller_RegistroCompras extends \Controller_App
         try {
             $RCV = new \sasco\LibreDTE\Sii\RegistroCompraVenta($Firma);
         } catch (\Exception $e) {
-            \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
+            \sowerphp\core\SessionMessage::write($e->getMessage(), 'error');
             $this->redirect($this->request->getRequestUriDecoded());
         }
         // procesar formulario (antes de asignar variables para que se refleje en la vista)
@@ -225,7 +225,7 @@ class Controller_RegistroCompras extends \Controller_App
             try {
                 $r = $RCV->ingresarAceptacionReclamoDoc($emisor_rut, $emisor_dv, $dte, $folio, $_POST['accion']);
                 if ($r) {
-                    \sowerphp\core\Model_Datasource_Session::message(
+                    \sowerphp\core\SessionMessage::write(
                         $r['glosa'],
                         in_array($r['codigo'], [0,7]) ? 'ok' : 'error'
                     );
@@ -245,10 +245,10 @@ class Controller_RegistroCompras extends \Controller_App
                         }
                     }
                 } else {
-                    \sowerphp\core\Model_Datasource_Session::message('No fue posible ingresar la acción del DTE al SII.', 'error');
+                    \sowerphp\core\SessionMessage::write('No fue posible ingresar la acción del DTE al SII.', 'error');
                 }
             } catch (\Exception $e) {
-                \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
+                \sowerphp\core\SessionMessage::write($e->getMessage(), 'error');
             }
         }
         // asignar variables para la vista
@@ -265,7 +265,7 @@ class Controller_RegistroCompras extends \Controller_App
                 'fecha_recepcion' => $fecha_recepcion !== false ? $fecha_recepcion : null,
             ]);
         } catch (\Exception $e) {
-            \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
+            \sowerphp\core\SessionMessage::write($e->getMessage(), 'error');
             $this->redirect('/dte/registro_compras/pendientes');
         }
     }

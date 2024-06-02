@@ -72,7 +72,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
      */
     public function editar($pk)
     {
-        \sowerphp\core\Model_Datasource_Session::message(
+        \sowerphp\core\SessionMessage::write(
             'No se permite la edición de registros.', 'error'
         );
         $this->redirect('/dte/dte_boleta_consumos/listar/1/dia/D');
@@ -87,7 +87,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
         $DteBoletaConsumo = new Model_DteBoletaConsumo($Emisor->rut, $dia, $Emisor->enCertificacion());
         $xml = $DteBoletaConsumo->getXML();
         if (!$xml) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No fue posible generar el reporte de consumo de folios<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
             );
             $this->redirect('/dte/dte_boleta_consumos/listar');
@@ -111,16 +111,16 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
         try {
             $track_id = $DteBoletaConsumo->enviar($this->Auth->User->id);
             if (!$track_id) {
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'No fue posible enviar el reporte de consumo de folios al SII<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
                 );
             } else {
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'Reporte de consumo de folios del día '.$dia.' fue envíado al SII. Ahora debe consultar su estado con el Track ID '.$track_id.'.', 'ok'
                 );
         }
         } catch (\Exception $e) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No fue posible enviar el reporte de consumo de folios al SII: '.$e->getMessage(), 'error'
             );
         }
@@ -140,14 +140,14 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
         // obtener reporte enviado
         $DteBoletaConsumo = new Model_DteBoletaConsumo($Emisor->rut, $dia, $Emisor->enCertificacion());
         if (!$DteBoletaConsumo->exists()) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No existe el reporte de consumo de folios solicitado.', 'error'
             );
             $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
         }
         // si no tiene track id error
         if (!$DteBoletaConsumo->track_id) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'Reporte de consumo de folios no tiene Track ID, primero debe enviarlo al SII.', 'error'
             );
             $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
@@ -155,11 +155,11 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
         // actualizar estado
         try {
             $DteBoletaConsumo->actualizarEstado($this->Auth->User->id, $usarWebservice);
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'Se actualizó el estado del reporte de consumo de folios.', 'ok'
             );
         } catch (\Exception $e) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'Estado del reporte de consumo de folios no pudo ser obtenido: '.$e->getMessage(), 'error'
             );
         }
@@ -177,18 +177,18 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
         // obtener reporte enviado
         $DteBoletaConsumo = new Model_DteBoletaConsumo($Emisor->rut, $dia, $Emisor->enCertificacion());
         if (!$DteBoletaConsumo->exists()) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No existe el reporte de consumo de folios solicitado.', 'error'
             );
             $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
         }
         try {
             $DteBoletaConsumo->solicitarRevision($this->Auth->User->id);
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'Se solicitó revisión del consumo de folios.', 'ok'
             );
         } catch (\Exception $e) {
-            \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
+            \sowerphp\core\SessionMessage::write($e->getMessage(), 'error');
         }
         // redireccionar
         $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
@@ -203,24 +203,24 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
         $Emisor = $this->getContribuyente();
         // solo administrador pueden borrar el rcof
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Solo el administrador de la empresa puede eliminar el RCOF.', 'error');
+            \sowerphp\core\SessionMessage::write('Solo el administrador de la empresa puede eliminar el RCOF.', 'error');
             $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
         }
         // obtener reporte enviado
         $DteBoletaConsumo = new Model_DteBoletaConsumo($Emisor->rut, $dia, $Emisor->enCertificacion());
         if (!$DteBoletaConsumo->exists()) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No existe el reporte de consumo de folios solicitado.', 'error'
             );
             $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
         }
         try {
             $DteBoletaConsumo->delete();
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'Se eliminó el RCOF del día '.\sowerphp\general\Utility_Date::format($dia), 'ok'
             );
         } catch (\Exception $e) {
-            \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
+            \sowerphp\core\SessionMessage::write($e->getMessage(), 'error');
         }
         // redireccionar
         $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
@@ -235,7 +235,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
         $Emisor = $this->getContribuyente();
         $pendientes = (new Model_DteBoletaConsumos())->setContribuyente($Emisor)->getPendientes();
         if (!$pendientes) {
-            \sowerphp\core\Model_Datasource_Session::message('No existen días pendientes por enviar entre el primer día enviado y ayer.', 'ok');
+            \sowerphp\core\SessionMessage::write('No existen días pendientes por enviar entre el primer día enviado y ayer.', 'ok');
             $this->redirect('/dte/dte_boleta_consumos/listar/1/dia/D');
         }
         $this->set([

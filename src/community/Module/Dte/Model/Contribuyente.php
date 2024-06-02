@@ -4901,8 +4901,8 @@ class Model_Contribuyente extends \Model_App
             return (int)(bool)$_GET['_contribuyente_certificacion'];
         }
         try {
-            if (Session::check('dte.certificacion')) {
-                return (int)(bool)Session::read('dte.certificacion');
+            if (session()->has('dte.certificacion')) {
+                return (int)(bool)session('dte.certificacion');
             }
         } catch (\Exception $e) {
         }

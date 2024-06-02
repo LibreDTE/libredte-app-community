@@ -64,11 +64,11 @@ class Controller_Dropbox extends \Controller_App
                     ]
                 ]);
                 $Contribuyente->save();
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'Dropbox se ha conectado correctamente con LibreDTE.', 'ok'
                 );
             } catch (\Exception $e) {
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'No fue posible conectar LibreDTE con Dropbox: '.$e->getMessage(), 'error'
                 );
             }
@@ -111,11 +111,11 @@ class Controller_Dropbox extends \Controller_App
         if ($borrado === true) {
             $Contribuyente->set(['config_apps_dropbox' => null]);
             $Contribuyente->save();
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'Dropbox se ha desconectado correctamente de LibreDTE.', 'ok'
             );
         } else {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'Dropbox no pudo ser desconectado: '.$borrado, 'error'
             );
         }

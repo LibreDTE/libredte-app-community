@@ -38,18 +38,18 @@ class Controller_Contribuyentes extends \Controller_App
      */
     public function seleccionar($rut = null, $url = null)
     {
-        $redirect = \sowerphp\core\Model_Datasource_Session::read('referer');
+        $redirect =session('referer');
         // si se está pidiendo una empresa en particular se tratará de usar
         if ($rut) {
             // se crea el emisor y se busca si está registrado (con usuario asociado)
             $Emisor = new $this->Contribuyente_class($rut);
             if (!$Emisor->usuario) {
-                \sowerphp\core\Model_Datasource_Session::message('Empresa solicitada no está registrada.', 'error');
+                \sowerphp\core\SessionMessage::write('Empresa solicitada no está registrada.', 'error');
                 $this->redirect('/dte/contribuyentes/seleccionar');
             }
             // verificar que el usuario tenga acceso al emisor solicitado
             if (!$Emisor->usuarioAutorizado($this->Auth->User)) {
-                \sowerphp\core\Model_Datasource_Session::message('No está autorizado a operar con la empresa solicitada.', 'error');
+                \sowerphp\core\SessionMessage::write('No está autorizado a operar con la empresa solicitada.', 'error');
                 $this->redirect('/dte/contribuyentes/seleccionar');
             }
             // verificar si se requiere auth2 en el usuario para poder usar la empresa
@@ -67,7 +67,7 @@ class Controller_Contribuyentes extends \Controller_App
 
                     );
                     if ($auth2_required) {
-                        \sowerphp\core\Model_Datasource_Session::message(__('Debe [habilitar el mecanismo de autenticación secundaria (2FA) en su perfil de usuario](%s) antes de poder ingresar a esta empresa.', url('/usuarios/perfil#auth:2fa')), 'error');
+                        \sowerphp\core\SessionMessage::write(__('Debe [habilitar el mecanismo de autenticación secundaria (2FA) en su perfil de usuario](%s) antes de poder ingresar a esta empresa.', url('/usuarios/perfil#auth:2fa')), 'error');
                         $this->redirect('/dte/contribuyentes/seleccionar');
                     }
                 }
@@ -78,10 +78,10 @@ class Controller_Contribuyentes extends \Controller_App
             $this->Auth->saveCache();
             // determinar página de redirección y mensaje si corresponde
             if (!$url) {
-                \sowerphp\core\Model_Datasource_Session::message('Desde ahora estará operando con '.$Emisor->razon_social.'.');
+                \sowerphp\core\SessionMessage::write('Desde ahora estará operando con '.$Emisor->razon_social.'.');
             }
             if ($redirect) {
-                \sowerphp\core\Model_Datasource_Session::delete('referer');
+                session()->forget('referer');
             }
             else if ($url) {
                 $redirect = base64_decode($url);
@@ -116,7 +116,7 @@ class Controller_Contribuyentes extends \Controller_App
         if ($this->Auth->User->config_contribuyentes_autorizados !== null) {
             $n_empresas = count((new Model_Contribuyentes())->getByUsuario($this->Auth->User->id));
             if ($n_empresas >= $this->Auth->User->config_contribuyentes_autorizados) {
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'Ha llegado al límite de empresas que puede registrar ('.num($this->Auth->User->config_contribuyentes_autorizados).'). Si requiere una cantidad mayor <a href="'.$this->request->getBaseUrlWithoutSlash().'/contacto">contáctenos</a>.', 'error'
                 );
                 $this->redirect('/dte/contribuyentes/seleccionar');
@@ -148,11 +148,11 @@ class Controller_Contribuyentes extends \Controller_App
             $Contribuyente = new $class($rut);
             if ($Contribuyente->usuario) {
                 if ($Contribuyente->usuario == $this->Auth->User->id) {
-                    \sowerphp\core\Model_Datasource_Session::message(
+                    \sowerphp\core\SessionMessage::write(
                         'Ya tiene asociada la empresa a su usuario.'
                     );
                 } else {
-                    \sowerphp\core\Model_Datasource_Session::message(
+                    \sowerphp\core\SessionMessage::write(
                         'La empresa ya está registrada a nombre del usuario '.$Contribuyente->getUsuario()->nombre.' ('.$Contribuyente->getUsuario()->email.'). Si cree que esto es un error o bien puede ser alguien suplantando la identidad de su empresa por favor <a href="'.$this->request->getBaseUrlWithoutSlash().'/contacto" target="_blank">contáctenos</a>.', 'error'
                     );
                 }
@@ -162,7 +162,7 @@ class Controller_Contribuyentes extends \Controller_App
             try {
                 $this->prepararDatosContribuyente($Contribuyente);
             } catch (\Exception $e) {
-                \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
+                \sowerphp\core\SessionMessage::write($e->getMessage(), 'error');
                 $this->redirect('/dte/contribuyentes/registrar');
             }
             $Contribuyente->set($_POST);
@@ -184,10 +184,10 @@ class Controller_Contribuyentes extends \Controller_App
                     } catch (\sowerphp\core\Exception_Model_Datasource_Database $e){}
                 }
                 // redireccionar
-                \sowerphp\core\Model_Datasource_Session::message('Empresa '.$Contribuyente->razon_social.' registrada y asociada a su usuario.', 'ok');
+                \sowerphp\core\SessionMessage::write('Empresa '.$Contribuyente->razon_social.' registrada y asociada a su usuario.', 'ok');
                 $this->redirect('/dte/contribuyentes/seleccionar');
             } catch (\Exception $e) {
-                \sowerphp\core\Model_Datasource_Session::message('No fue posible registrar la empresa:<br/>'.$e->getMessage(), 'error');
+                \sowerphp\core\SessionMessage::write('No fue posible registrar la empresa:<br/>'.$e->getMessage(), 'error');
             }
         }
         // renderizar vista
@@ -203,7 +203,7 @@ class Controller_Contribuyentes extends \Controller_App
         $Contribuyente = $this->getContribuyente();
         // verificar que el usuario sea el administrador o de soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada.', 'error');
+            \sowerphp\core\SessionMessage::write('Usted no es el administrador de la empresa solicitada.', 'error');
             $this->redirect('/dte/contribuyentes/seleccionar');
         }
         // asignar variables para editar
@@ -232,14 +232,14 @@ class Controller_Contribuyentes extends \Controller_App
             try {
                 $this->prepararDatosContribuyente($Contribuyente);
             } catch (\Exception $e) {
-                \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
+                \sowerphp\core\SessionMessage::write($e->getMessage(), 'error');
                 $this->redirect('/dte/contribuyentes/modificar');
             }
             $Contribuyente->set($_POST);
             $Contribuyente->modificado = date('Y-m-d H:i:s');
             try {
                 $Contribuyente->save(true);
-                \sowerphp\core\Model_Datasource_Session::message('Empresa '.$Contribuyente->razon_social.' ha sido modificada.', 'ok');
+                \sowerphp\core\SessionMessage::write('Empresa '.$Contribuyente->razon_social.' ha sido modificada.', 'ok');
                 $ContribuyenteSeleccionado = $this->getContribuyente(false);
                 if ($ContribuyenteSeleccionado && $ContribuyenteSeleccionado->rut == $Contribuyente->rut) {
                     $this->redirect('/dte/contribuyentes/seleccionar/'.$Contribuyente->rut);
@@ -247,7 +247,7 @@ class Controller_Contribuyentes extends \Controller_App
                     $this->redirect('/dte/contribuyentes/seleccionar');
                 }
             } catch (\Exception $e) {
-                \sowerphp\core\Model_Datasource_Session::message('No fue posible modificar la empresa:<br/>'.$e->getMessage(), 'error');
+                \sowerphp\core\SessionMessage::write('No fue posible modificar la empresa:<br/>'.$e->getMessage(), 'error');
             }
         }
         // renderizar vista
@@ -488,7 +488,7 @@ class Controller_Contribuyentes extends \Controller_App
         $Contribuyente = $this->getContribuyente();
         // verificar que el usuario sea el administrador o sea soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada.', 'error');
+            \sowerphp\core\SessionMessage::write('Usted no es el administrador de la empresa solicitada.', 'error');
             $this->redirect('/dte/contribuyentes/seleccionar');
         }
         // verificar ambiente solicitado
@@ -503,12 +503,12 @@ class Controller_Contribuyentes extends \Controller_App
             ],
         ];
         if (!isset($ambientes[$ambiente])) {
-            \sowerphp\core\Model_Datasource_Session::message('Ambiente solicitado no es válido.', 'error');
+            \sowerphp\core\SessionMessage::write('Ambiente solicitado no es válido.', 'error');
             $this->redirect('/dte/contribuyentes/seleccionar');
         }
         // asignar ambiente
-        \sowerphp\core\Model_Datasource_Session::write('dte.certificacion', (bool)$ambientes[$ambiente]['codigo']);
-        \sowerphp\core\Model_Datasource_Session::message('Se cambió el ambiente de la sesión a '.$ambientes[$ambiente]['glosa'].'.', 'ok');
+        session(['dte.certificacion' => (bool)$ambientes[$ambiente]['codigo']]);
+        \sowerphp\core\SessionMessage::write('Se cambió el ambiente de la sesión a '.$ambientes[$ambiente]['glosa'].'.', 'ok');
         $this->redirect('/dte');
     }
 
@@ -520,7 +520,7 @@ class Controller_Contribuyentes extends \Controller_App
         $Contribuyente = $this->getContribuyente();
         // verificar que el usuario sea el administrador o sea soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada.', 'error');
+            \sowerphp\core\SessionMessage::write('Usted no es el administrador de la empresa solicitada.', 'error');
             $this->redirect('/dte/contribuyentes/seleccionar');
         }
         // asignar variables para editar
@@ -551,7 +551,7 @@ class Controller_Contribuyentes extends \Controller_App
                     }
                 }
                 if (!$usuarios) {
-                    \sowerphp\core\Model_Datasource_Session::message(
+                    \sowerphp\core\SessionMessage::write(
                         'No indicaron permisos para ningún usuario.', 'warning'
                     );
                     return;
@@ -559,15 +559,15 @@ class Controller_Contribuyentes extends \Controller_App
             }
             try {
                 $Contribuyente->setUsuarios($usuarios);
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'Se editaron los usuarios autorizados de la empresa.', 'ok'
                 );
             } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'No fue posible editar los usuarios autorizados<br/>'.$e->getMessage(), 'error'
                 );
             } catch (\Exception $e) {
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     $e->getMessage(), 'error'
                 );
             }
@@ -583,7 +583,7 @@ class Controller_Contribuyentes extends \Controller_App
         $Contribuyente = $this->getContribuyente();
         // verificar que el usuario sea el administrador o sea soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada.', 'error');
+            \sowerphp\core\SessionMessage::write('Usted no es el administrador de la empresa solicitada.', 'error');
             $this->redirect('/dte/contribuyentes/seleccionar');
         }
         // editar documentos de usuario
@@ -610,20 +610,20 @@ class Controller_Contribuyentes extends \Controller_App
             }
             try {
                 $Contribuyente->setDocumentosAutorizadosPorUsuario($usuarios);
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'Se editaron los documentos autorizados por usuario de la empresa.', 'ok'
                 );
             } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'No fue posible editar los usuarios autorizados<br/>'.$e->getMessage(), 'error'
                 );
             } catch (\Exception $e) {
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     $e->getMessage(), 'error'
                 );
             }
         } else {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No puede acceder directamente a la página '.$this->request->getRequestUriDecoded(), 'error'
             );
         }
@@ -638,7 +638,7 @@ class Controller_Contribuyentes extends \Controller_App
         $Contribuyente = $this->getContribuyente();
         // verificar que el usuario sea el administrador o sea soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada.', 'error');
+            \sowerphp\core\SessionMessage::write('Usted no es el administrador de la empresa solicitada.', 'error');
             $this->redirect('/dte/contribuyentes/seleccionar');
         }
         // editar sucursales por defecto
@@ -654,20 +654,20 @@ class Controller_Contribuyentes extends \Controller_App
             }
             try {
                 $Contribuyente->setSucursalesPorUsuario($usuarios);
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'Se editaron las sucursales por defecto de los usuarios de la empresa.', 'ok'
                 );
             } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'No fue posible editar las sucursales por defecto de los usuarios<br/>'.$e->getMessage(), 'error'
                 );
             } catch (\Exception $e) {
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     $e->getMessage(), 'error'
                 );
             }
         } else {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No puede acceder directamente a la página '.$this->request->getRequestUriDecoded(), 'error'
             );
         }
@@ -682,7 +682,7 @@ class Controller_Contribuyentes extends \Controller_App
         $Contribuyente = $this->getContribuyente();
         // verificar que el usuario sea el administrador o sea soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message('Usted no es el administrador de la empresa solicitada.', 'error');
+            \sowerphp\core\SessionMessage::write('Usted no es el administrador de la empresa solicitada.', 'error');
             $this->redirect('/dte/contribuyentes/seleccionar');
         }
         // editar configuración de usuarios
@@ -701,12 +701,12 @@ class Controller_Contribuyentes extends \Controller_App
             $Contribuyente->modificado = date('Y-m-d H:i:s');
             try {
                 $Contribuyente->save();
-                \sowerphp\core\Model_Datasource_Session::message('Configuración general de usuarios de la empresa ha sido modificada. ', 'ok');
+                \sowerphp\core\SessionMessage::write('Configuración general de usuarios de la empresa ha sido modificada. ', 'ok');
             } catch (\Exception $e) {
-                \sowerphp\core\Model_Datasource_Session::message('No fue posible modificar la configuración de usuarios de la empresa:<br/>'.$e->getMessage(), 'error');
+                \sowerphp\core\SessionMessage::write('No fue posible modificar la configuración de usuarios de la empresa:<br/>'.$e->getMessage(), 'error');
             }
         } else {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No puede acceder directamente a la página '.$this->request->getRequestUriDecoded(), 'error'
             );
         }
@@ -721,36 +721,36 @@ class Controller_Contribuyentes extends \Controller_App
         $Contribuyente = $this->getContribuyente();
         // verificar si es posible transferir la empresa
         if (!(bool)config('dte.transferir_contribuyente')) {
-            \sowerphp\core\Model_Datasource_Session::message('No es posible que usted transfiera la empresa, contacte a soporte para realizar esta acción.', 'error');
+            \sowerphp\core\SessionMessage::write('No es posible que usted transfiera la empresa, contacte a soporte para realizar esta acción.', 'error');
             $this->redirect('/dte/contribuyentes/usuarios#general');
         }
         // debe venir usuario
         if (empty($_POST['usuario'])) {
-            \sowerphp\core\Model_Datasource_Session::message('Debe especificar el nuevo usuario administrador.', 'error');
+            \sowerphp\core\SessionMessage::write('Debe especificar el nuevo usuario administrador.', 'error');
             $this->redirect('/dte/contribuyentes/usuarios#general');
         }
         // verificar que el usuario sea el administrador
         if ($Contribuyente->usuario != $this->Auth->User->id) {
-            \sowerphp\core\Model_Datasource_Session::message('Solo el usuario que tiene la empresa registrada puede cambiar el administrador.', 'error');
+            \sowerphp\core\SessionMessage::write('Solo el usuario que tiene la empresa registrada puede cambiar el administrador.', 'error');
             $this->redirect('/dte/contribuyentes/usuarios#general');
         }
         // transferir al nuevo usuario administrador
         $Usuario = new \sowerphp\app\Sistema\Usuarios\Model_Usuario($_POST['usuario']);
         if (!$Usuario->exists()) {
-            \sowerphp\core\Model_Datasource_Session::message('Usuario '.$_POST['usuario'].' no existe', 'error');
+            \sowerphp\core\SessionMessage::write('Usuario '.$_POST['usuario'].' no existe', 'error');
             $this->redirect('/dte/contribuyentes/usuarios#general');
         }
         if ($Contribuyente->usuario == $Usuario->id) {
-            \sowerphp\core\Model_Datasource_Session::message('El usuario administrador ya es '.$_POST['usuario'], 'warning');
+            \sowerphp\core\SessionMessage::write('El usuario administrador ya es '.$_POST['usuario'], 'warning');
             $this->redirect('/dte/contribuyentes/usuarios#general');
         }
         $Contribuyente->usuario = $Usuario->id;
         if ($Contribuyente->save()) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'Se actualizó el usuario administrador a '.$_POST['usuario'].'.', 'ok'
             );
         } else {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'No fue posible cambiar el administrador de la empresa.', 'error'
             );
         }

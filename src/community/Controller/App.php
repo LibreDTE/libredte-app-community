@@ -99,8 +99,8 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
     protected function setContribuyente($Contribuyente)
     {
         if ($Contribuyente instanceof $this->Contribuyente_class) {
-            \sowerphp\core\Model_Datasource_Session::write('dte.Contribuyente', $Contribuyente);
-            \sowerphp\core\Model_Datasource_Session::delete('dte.certificacion');
+            session(['dte.Contribuyente' => $Contribuyente]);
+            session()->forget('dte.certificacion');
         }
     }
 
@@ -113,11 +113,11 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
     protected function getContribuyente(bool $obligar = true)
     {
         if (!isset($this->Contribuyente)) {
-            $this->Contribuyente = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente');
+            $this->Contribuyente =session('dte.Contribuyente');
             if (!$this->Contribuyente) {
                 if ($obligar) {
-                    \sowerphp\core\Model_Datasource_Session::message('Antes de acceder a '.$this->request->getRequestUriDecoded().' debe seleccionar el contribuyente que usará durante la sesión de LibreDTE.', 'error');
-                    \sowerphp\core\Model_Datasource_Session::write('referer', $this->request->getRequestUriDecoded());
+                    \sowerphp\core\SessionMessage::write('Antes de acceder a '.$this->request->getRequestUriDecoded().' debe seleccionar el contribuyente que usará durante la sesión de LibreDTE.', 'error');
+                    session(['referer' => $this->request->getRequestUriDecoded()]);
                     $this->redirect('/dte/contribuyentes/seleccionar');
                 }
             } else {

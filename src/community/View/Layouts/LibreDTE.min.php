@@ -1,4 +1,4 @@
-<?php $Contribuyente = \sowerphp\core\Model_Datasource_Session::read('dte.Contribuyente'); ?>
+<?php $Contribuyente =session('dte.Contribuyente'); ?>
 <!--
 LibreDTE: Edición Comunidad (2015 - 2024).
 Copyright (C) LibreDTE <https://www.libredte.cl>

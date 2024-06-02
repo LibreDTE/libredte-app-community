@@ -37,7 +37,7 @@ class Controller_Respaldos extends \Controller_App
     {
         $Emisor = $this->getContribuyente();
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Model_Datasource_Session::message(
+            \sowerphp\core\SessionMessage::write(
                 'Solo el administrador de la empresa puede descargar un respaldo.', 'error'
             );
             $this->redirect('/dte/admin');
@@ -62,7 +62,7 @@ class Controller_Respaldos extends \Controller_App
                     $dir, ['format' => 'zip', 'delete' => true]
                 );
             } catch (\Exception $e) {
-                \sowerphp\core\Model_Datasource_Session::message(
+                \sowerphp\core\SessionMessage::write(
                     'No fue posible exportar los datos: '.$e->getMessage(), 'error'
                 );
             }
