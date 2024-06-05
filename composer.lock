@@ -3726,12 +3726,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sascocl/sowerphp.git",
-                "reference": "5a9af93ccf9b3ea15fae95f662476c4e2ad11399"
+                "reference": "192396fe2de1b3e74313ae8531b4b4906bb0de10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sascocl/sowerphp/zipball/5a9af93ccf9b3ea15fae95f662476c4e2ad11399",
-                "reference": "5a9af93ccf9b3ea15fae95f662476c4e2ad11399",
+                "url": "https://api.github.com/repos/sascocl/sowerphp/zipball/192396fe2de1b3e74313ae8531b4b4906bb0de10",
+                "reference": "192396fe2de1b3e74313ae8531b4b4906bb0de10",
                 "shasum": ""
             },
             "require": {
@@ -3783,7 +3783,7 @@
                 "issues": "https://github.com/sascocl/sowerphp/issues",
                 "source": "https://github.com/sascocl/sowerphp"
             },
-            "time": "2024-06-05T06:54:11+00:00"
+            "time": "2024-06-05T07:44:04+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
