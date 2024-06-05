@@ -116,7 +116,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
             $this->Contribuyente =session('dte.Contribuyente');
             if (!$this->Contribuyente) {
                 if ($obligar) {
-                    \sowerphp\core\SessionMessage::write('Antes de acceder a '.$this->request->getRequestUriDecoded().' debe seleccionar el contribuyente que usará durante la sesión de LibreDTE.', 'error');
+                    \sowerphp\core\Facade_Session_Message::write('Antes de acceder a '.$this->request->getRequestUriDecoded().' debe seleccionar el contribuyente que usará durante la sesión de LibreDTE.', 'error');
                     session(['referer' => $this->request->getRequestUriDecoded()]);
                     $this->redirect('/dte/contribuyentes/seleccionar');
                 }

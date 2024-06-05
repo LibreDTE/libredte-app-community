@@ -211,7 +211,7 @@ class Controller_Itemes extends \Controller_Maintainer
         if (isset($_POST['submit'])) {
             // verificar que se haya podido subir el archivo con el libro
             if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
-                \sowerphp\core\SessionMessage::write(
+                \sowerphp\core\Facade_Session_Message::write(
                     'Ocurrió un error al subir el archivo con los items.', 'error'
                 );
                 return;
@@ -221,7 +221,7 @@ class Controller_Itemes extends \Controller_Maintainer
             try {
                 $items = \sowerphp\general\Utility_Spreadsheet::read($_FILES['archivo']);
             } catch (\Exception $e) {
-                \sowerphp\core\SessionMessage::write($e->getMessage(), 'error');
+                \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
                 return;
             }
             array_shift($items);
@@ -294,21 +294,21 @@ class Controller_Itemes extends \Controller_Maintainer
                     ? __('Se agregó un item.')
                     : __('Se agregaron %s items.', $resumen['nuevos'])
                 ;
-                \sowerphp\core\SessionMessage::write($msg, 'ok');
+                \sowerphp\core\Facade_Session_Message::write($msg, 'ok');
             }
             if ($resumen['editados']) {
                 $msg = $resumen['editados'] == 1
                     ? __('Se editó un item.')
                     : __('Se editaron %s items.', $resumen['editados'])
                 ;
-                \sowerphp\core\SessionMessage::write($msg, 'ok');
+                \sowerphp\core\Facade_Session_Message::write($msg, 'ok');
             }
             if ($resumen['error']) {
                 $msg = $resumen['error'] == 1
                     ? __('Se encontró un item con error (detalle en tabla de items).')
                     : __('Se encontraron %s items con error (detalle en tabla de items).', $resumen['error'])
                 ;
-                \sowerphp\core\SessionMessage::write($msg, 'error');
+                \sowerphp\core\Facade_Session_Message::write($msg, 'error');
             }
             // mostrar resultado de lo realizado
             $cols[] = 'Guardado';
@@ -329,7 +329,7 @@ class Controller_Itemes extends \Controller_Maintainer
         $Contribuyente = $this->getContribuyente();
         $items = (new Model_Itemes())->setContribuyente($Contribuyente)->exportar();
         if (!$items) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No hay items que exportar.', 'warning'
             );
             $this->redirect('/dte/admin/itemes/listar');

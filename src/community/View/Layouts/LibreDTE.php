@@ -195,21 +195,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                     echo '<div class="bg-info text-white text-center lead mt-2 mb-2" style="padding:0.5em"><strong>AMBIENTE DE CERTIFICACIÓN / PRUEBAS: '.$Contribuyente->razon_social.'</strong></div>',"\n";
                 }
                 // mensaje de sesión
-                $messages = \sowerphp\core\SessionMessage::flush();
-                foreach ($messages as $message) {
-                    $icons = [
-                        'success' => 'ok',
-                        'info' => 'info-sign',
-                        'warning' => 'warning-sign',
-                        'danger' => 'exclamation-sign',
-                    ];
-                    $message['text'] = message_format($message['text']);
-                    echo '<div class="alert alert-',$message['type'],'" role="alert">',"\n";
-                    echo '<div class="float-end"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button></div>',"\n";
-                    echo '<span class="glyphicon glyphicon-',$icons[$message['type']],'" aria-hidden="true"></span>',"\n";
-                    echo '<span class="visually-hidden">',$message['type'],': </span>',$message['text'],"\n";
-                    echo '</div>'."\n";
-                }
+                echo \sowerphp\core\Facade_Session_Message::getMessagesAsString();
                 // contenido de la página
                 echo $_content;
             ?>

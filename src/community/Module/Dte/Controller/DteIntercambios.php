@@ -63,7 +63,7 @@ class Controller_DteIntercambios extends \Controller_App
             }
             $documentos = $Emisor->getDocumentosIntercambios($filtros);
         } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'Error al recuperar los documentos:<br/>'.$e->getMessage(), 'error'
             );
             $documentos_total = 0;
@@ -93,7 +93,7 @@ class Controller_DteIntercambios extends \Controller_App
             $Emisor->rut, (int)$codigo, $Emisor->enCertificacion()
         );
         if (!$DteIntercambio->exists()) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No existe el intercambio solicitado.', 'error'
             );
             $this->redirect('/dte/dte_intercambios/listar');
@@ -105,7 +105,7 @@ class Controller_DteIntercambios extends \Controller_App
                 'No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción, ya que se requiere consultar el estado del DTE al SII para poder ver el intercambio. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
                 url('/dte/admin/firma_electronicas/agregar')
             );
-            \sowerphp\core\SessionMessage::write($message, 'error');
+            \sowerphp\core\Facade_Session_Message::write($message, 'error');
             $this->redirect('/dte/admin/firma_electronicas/agregar');
         }
         // asignar variables para la vista
@@ -133,21 +133,21 @@ class Controller_DteIntercambios extends \Controller_App
             $Emisor->rut, (int)$codigo, $Emisor->enCertificacion()
         );
         if (!$DteIntercambio->exists()) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No existe el intercambio solicitado.', 'error'
             );
             $this->redirect('/dte/dte_intercambios/listar');
         }
         // verificar que el intercambio no esté en uso en los documentos recibidos
         if ($DteIntercambio->recibido()) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'El intercambio tiene a lo menos un DTE recibido asociado, no se puede eliminar.', 'error'
             );
             $this->redirect('/dte/dte_intercambios/ver/'.$codigo);
         }
         // eliminar el intercambio y redireccionar
         $DteIntercambio->delete();
-        \sowerphp\core\SessionMessage::write(
+        \sowerphp\core\Facade_Session_Message::write(
             'Intercambio '.$codigo.' eliminado.', 'ok'
         );
         $this->redirect('/dte/dte_intercambios/listar');
@@ -163,7 +163,7 @@ class Controller_DteIntercambios extends \Controller_App
             $Emisor->rut, (int)$codigo, $Emisor->enCertificacion()
         );
         if (!$DteIntercambio->exists()) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No existe el intercambio solicitado.', 'error'
             );
             $this->redirect('/dte/dte_intercambios/listar');
@@ -186,7 +186,7 @@ class Controller_DteIntercambios extends \Controller_App
         try {
             $resultado = $Emisor->actualizarBandejaIntercambio($dias);
         } catch (\Exception $e) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 $e->getMessage(), ($e->getCode() == 500 ? 'error' : 'info')
             );
             $this->redirect('/dte/dte_intercambios/listar');
@@ -197,11 +197,11 @@ class Controller_DteIntercambios extends \Controller_App
         } else {
             $encontrados = 'Se encontró '.num($n_uids).' correo.';
         }
-        \sowerphp\core\SessionMessage::write(
+        \sowerphp\core\Facade_Session_Message::write(
             $encontrados.': EnvioDTE='.num($n_EnvioDTE).',  EnvioRecibos='.num($n_EnvioRecibos).', RecepcionEnvio='.num($n_RecepcionEnvio).', ResultadoDTE='.num($n_ResultadoDTE).' y Omitidos='.num($omitidos), 'ok'
         );
         if (!empty($errores)) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'Se encontraron algunos problemas al procesar ciertos correos:<br/>- '.implode('<br/>- ',$errores), 'warning'
             );
         }
@@ -283,7 +283,7 @@ class Controller_DteIntercambios extends \Controller_App
         $url = '/api/dte/dte_intercambios/pdf/'.$codigo.'/'.$Receptor->rut.'/'.(int)$cedible.'/'.(int)$emisor.'/'.(int)$dte.'/'.(int)$folio.'?'.$get_query;
         $response = $this->consume($url);
         if ($response['status']['code'] != 200) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 $response['body'], 'error'
             );
             $this->redirect('/dte/dte_intercambios/listar');
@@ -338,7 +338,7 @@ class Controller_DteIntercambios extends \Controller_App
         $Receptor = $this->getContribuyente();
         $response = $this->consume('/api/dte/dte_intercambios/xml/'.$codigo.'/'.$Receptor->rut);
         if ($response['status']['code'] != 200) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 $response['body'], 'error'
             );
             $this->redirect('/dte/dte_intercambios/listar');
@@ -412,7 +412,7 @@ class Controller_DteIntercambios extends \Controller_App
         $Emisor = $this->getContribuyente();
         $response = $this->consume('/api/dte/dte_intercambios/resultados_xml/'.$codigo.'/'.$Emisor->rut);
         if ($response['status']['code'] != 200) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 $response['body'], 'error'
             );
             if (in_array($response['status']['code'], [401, 403, 404])) {
@@ -439,7 +439,7 @@ class Controller_DteIntercambios extends \Controller_App
         $Emisor = $this->getContribuyente();
         // si no se viene por post error
         if (!isset($_POST['submit'])) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No puede acceder de forma directa a '.$this->request->getRequestUriDecoded(), 'error'
             );
             $this->redirect(str_replace('responder', 'ver', $this->request->getRequestUriDecoded()));
@@ -447,7 +447,7 @@ class Controller_DteIntercambios extends \Controller_App
         // obtener objeto de intercambio
         $DteIntercambio = new Model_DteIntercambio($Emisor->rut, (int)$codigo, $Emisor->enCertificacion());
         if (!$DteIntercambio->exists()) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No existe el intercambio solicitado.', 'error'
             );
             $this->redirect('/dte/dte_intercambios/listar');
@@ -485,16 +485,16 @@ class Controller_DteIntercambios extends \Controller_App
                 if ($resultado['rc']['estado']) {
                     $msg .= '<br/><br/>- '.implode('<br/> -', $resultado['rc']['estado']);
                 }
-                \sowerphp\core\SessionMessage::write($msg, 'ok');
+                \sowerphp\core\Facade_Session_Message::write($msg, 'ok');
             } else {
                 $msg = 'Se procesaron DTE de intercambio, pero no fue posible enviar el email, por favor intente nuevamente.<br /><em>'.$resultado['email']['message'].'</em>';
                 if ($resultado['rc']['estado']) {
                     $msg .= '<br/><br/>- '.implode('<br/> -', $resultado['rc']['estado']);
                 }
-                \sowerphp\core\SessionMessage::write($msg, 'warning');
+                \sowerphp\core\Facade_Session_Message::write($msg, 'warning');
             }
         } catch (\Exception $e) {
-            \sowerphp\core\SessionMessage::write($e->getMessage(), 'error');
+            \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
         }
         // redireccionar
         $this->redirect(str_replace('responder', 'ver', $this->request->getRequestUriDecoded()));
@@ -540,10 +540,10 @@ class Controller_DteIntercambios extends \Controller_App
                 $_POST
             );
             if ($response === false) {
-                \sowerphp\core\SessionMessage::write(implode('<br/>', $rest->getErrors()), 'error');
+                \sowerphp\core\Facade_Session_Message::write(implode('<br/>', $rest->getErrors()), 'error');
             }
             else if ($response['status']['code'] != 200) {
-                \sowerphp\core\SessionMessage::write($response['body'], 'error');
+                \sowerphp\core\Facade_Session_Message::write($response['body'], 'error');
             }
             else {
                 $this->set([

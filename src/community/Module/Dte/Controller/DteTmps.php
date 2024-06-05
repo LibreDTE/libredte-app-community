@@ -69,7 +69,7 @@ class Controller_DteTmps extends \Controller_App
             }
             $documentos = $Emisor->getDocumentosTemporales($filtros);
         } catch (\Exception $e) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'Error al recuperar los documentos:<br/>'.$e->getMessage(), 'error'
             );
             $documentos_total = 0;
@@ -99,7 +99,7 @@ class Controller_DteTmps extends \Controller_App
         // obtener datos JSON del DTE
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No existe el documento temporal solicitado.', 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
@@ -127,7 +127,7 @@ class Controller_DteTmps extends \Controller_App
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
-            \sowerphp\core\SessionMessage::write('No existe el documento temporal solicitado.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('No existe el documento temporal solicitado.', 'error');
             $this->redirect('/dte/dte_tmps/listar');
         }
         // datos por defecto
@@ -148,11 +148,11 @@ class Controller_DteTmps extends \Controller_App
         $rest->setAuth($Emisor->getUsuario()->hash);
         $response = $rest->get($this->request->getFullUrlWithoutQuery().'/api/dte/dte_tmps/pdf/'.$receptor.'/'.$dte.'/'.$codigo.'/'.$Emisor->rut.'?cotizacion=1&formato='.$formato.'&papelContinuo='.$papelContinuo.'&compress='.$compress);
         if ($response === false) {
-            \sowerphp\core\SessionMessage::write(implode('<br/>', $rest->getErrors()), 'error');
+            \sowerphp\core\Facade_Session_Message::write(implode('<br/>', $rest->getErrors()), 'error');
             $this->redirect('/dte/dte_tmps/listar');
         }
         if ($response['status']['code'] != 200) {
-            \sowerphp\core\SessionMessage::write($response['body'], 'error');
+            \sowerphp\core\Facade_Session_Message::write($response['body'], 'error');
             $this->redirect('/dte/dte_tmps/listar');
         }
         // si dió código 200 se entrega la respuesta del servicio web
@@ -174,7 +174,7 @@ class Controller_DteTmps extends \Controller_App
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
-            \sowerphp\core\SessionMessage::write('No existe el documento temporal solicitado.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('No existe el documento temporal solicitado.', 'error');
             $this->redirect('/dte/dte_tmps/listar');
         }
         // datos por defecto
@@ -195,11 +195,11 @@ class Controller_DteTmps extends \Controller_App
         $rest->setAuth($this->Auth->User->hash);
         $response = $rest->get($this->request->getFullUrlWithoutQuery().'/api/dte/dte_tmps/pdf/'.$receptor.'/'.$dte.'/'.$codigo.'/'.$Emisor->rut.'?formato='.$formato.'&papelContinuo='.$papelContinuo.'&compress='.$compress);
         if ($response === false) {
-            \sowerphp\core\SessionMessage::write(implode('<br/>', $rest->getErrors()), 'error');
+            \sowerphp\core\Facade_Session_Message::write(implode('<br/>', $rest->getErrors()), 'error');
             $this->redirect('/dte/dte_tmps/listar');
         }
         if ($response['status']['code'] != 200) {
-            \sowerphp\core\SessionMessage::write($response['body'], 'error');
+            \sowerphp\core\Facade_Session_Message::write($response['body'], 'error');
             $this->redirect('/dte/dte_tmps/listar');
         }
         // si dió código 200 se entrega la respuesta del servicio web
@@ -233,7 +233,7 @@ class Controller_DteTmps extends \Controller_App
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No existe el documento temporal solicitado.', 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
@@ -241,7 +241,7 @@ class Controller_DteTmps extends \Controller_App
         // tratar de obtener email
         $email_html = $Emisor->getEmailFromTemplate('dte', $DteTmp);
         if (!$email_html) {
-            \sowerphp\core\SessionMessage::write('No existe correo en HTML para el envío del documento.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('No existe correo en HTML para el envío del documento.', 'error');
             $this->redirect(str_replace('email_html', 'ver', $this->request->getRequestUriDecoded()));
         }
         $this->response->sendAndExit($email_html);
@@ -275,11 +275,11 @@ class Controller_DteTmps extends \Controller_App
                 ]
             );
             if ($response === false) {
-                \sowerphp\core\SessionMessage::write(implode('<br/>', $rest->getErrors()), 'error');
+                \sowerphp\core\Facade_Session_Message::write(implode('<br/>', $rest->getErrors()), 'error');
             } else if ($response['status']['code'] != 200) {
-                \sowerphp\core\SessionMessage::write($response['body'], 'error');
+                \sowerphp\core\Facade_Session_Message::write($response['body'], 'error');
             } else {
-                \sowerphp\core\SessionMessage::write(
+                \sowerphp\core\Facade_Session_Message::write(
                     'Se envió el PDF a: '.implode(', ', $emails), 'ok'
                 );
             }
@@ -462,7 +462,7 @@ class Controller_DteTmps extends \Controller_App
         // obtener datos JSON del DTE
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No existe el documento temporal solicitado.', 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
@@ -470,7 +470,7 @@ class Controller_DteTmps extends \Controller_App
         // armar xml a partir de datos del dte temporal
         $xml = $DteTmp->getEnvioDte()->generar();
         if (!$xml) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No fue posible crear el XML para previsualización:<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
@@ -510,7 +510,7 @@ class Controller_DteTmps extends \Controller_App
         // obtener datos JSON del DTE
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No existe el documento temporal solicitado.', 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
@@ -531,7 +531,7 @@ class Controller_DteTmps extends \Controller_App
         $Emisor = $this->getContribuyente();
         // solo administrador puede eliminar masivamente los temporales
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'Solo el administrador de la empresa está autorizado a eliminar masivamente los documentos temporales.', 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
@@ -542,13 +542,13 @@ class Controller_DteTmps extends \Controller_App
                 'La opción para eliminación masiva de documentos temporales está desactivada en su empresa. Debe [activar la opción en la configuración](%s) para que pueda ser usada.',
                 url('/dte/contribuyentes/modificar#facturacion:config_temporales_eliminarField')
             );
-            \sowerphp\core\SessionMessage::write($message, 'error');
+            \sowerphp\core\Facade_Session_Message::write($message, 'error');
             $this->redirect('/dte/dte_tmps/listar');
         }
         // eliminar los documentos
         (new Model_DteTmps())->setContribuyente($Emisor)->eliminar();
         // todo ok
-        \sowerphp\core\SessionMessage::write(
+        \sowerphp\core\Facade_Session_Message::write(
             'Se eliminaron todos los documentos temporales del emisor.', 'ok'
         );
         $this->redirect('/dte/dte_tmps/listar');
@@ -563,14 +563,14 @@ class Controller_DteTmps extends \Controller_App
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No existe el documento temporal solicitado.', 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
         // verificar que el usuario pueda trabajar con el tipo de dte
         if (!$Emisor->documentoAutorizado($DteTmp->dte, $this->Auth->User)) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No está autorizado a eliminar el tipo de documento '.$DteTmp->dte, 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
@@ -578,12 +578,12 @@ class Controller_DteTmps extends \Controller_App
         // eliminar
         try {
             $DteTmp->delete();
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'Documento temporal eliminado.', 'ok'
             );
             $this->redirect('/dte/dte_tmps/listar');
         } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No fue posible eliminar el documento temporal: '.$e->getMessage()
             );
             $this->redirect('/dte/dte_tmps/listar');
@@ -656,13 +656,13 @@ class Controller_DteTmps extends \Controller_App
             ]
         );
         if ($response === false) {
-            \sowerphp\core\SessionMessage::write(implode('<br/>', $rest->getErrors()), 'error');
+            \sowerphp\core\Facade_Session_Message::write(implode('<br/>', $rest->getErrors()), 'error');
         }
         else if ($response['status']['code'] != 200) {
-            \sowerphp\core\SessionMessage::write($response['body'], 'error');
+            \sowerphp\core\Facade_Session_Message::write($response['body'], 'error');
         }
         else {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'Se actualizó el documento temporal', 'ok'
             );
         }
@@ -828,7 +828,7 @@ class Controller_DteTmps extends \Controller_App
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No existe el documento temporal solicitado.', 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
@@ -847,14 +847,14 @@ class Controller_DteTmps extends \Controller_App
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No existe el documento temporal solicitado.', 'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
         // solo administrador puede editar el JSON
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'Solo el administrador de la empresa está autorizado a editar el JSON del documento temporal.', 'error'
             );
             $this->redirect(str_replace('/editar_json/', '/ver/', $this->request->getRequestUriDecoded()));
@@ -862,7 +862,7 @@ class Controller_DteTmps extends \Controller_App
         // verificar que el JSON sea correcto tratando de leerlo
         $datos = json_decode($_POST['datos']);
         if (!$datos) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'JSON es inválido, no se editó.', 'error'
             );
             $this->redirect(str_replace('/editar_json/', '/ver/', $this->request->getRequestUriDecoded()));
@@ -872,11 +872,11 @@ class Controller_DteTmps extends \Controller_App
         $extra = json_decode($_POST['extra']);
         $DteTmp->extra = $extra ? json_encode($extra) : null;
         if ($DteTmp->save()) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'JSON guardado.', 'ok'
             );
         } else {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No fue posible guardar el nuevo JSON.', 'error'
             );
         }
@@ -905,10 +905,10 @@ class Controller_DteTmps extends \Controller_App
                 'total_hasta' => $_POST['total_hasta'],
             ]);
             if ($response === false) {
-                \sowerphp\core\SessionMessage::write(implode('<br/>', $rest->getErrors()), 'error');
+                \sowerphp\core\Facade_Session_Message::write(implode('<br/>', $rest->getErrors()), 'error');
             }
             else if ($response['status']['code'] != 200) {
-                \sowerphp\core\SessionMessage::write($response['body'], 'error');
+                \sowerphp\core\Facade_Session_Message::write($response['body'], 'error');
             }
             else {
                 $this->set([

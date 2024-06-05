@@ -499,7 +499,7 @@ class Controller_Documentos extends \Controller_App
         // verificar que tenga a lo menos un tipo de DTE autorizado el usuario para emitir
         $tipos_dte_autorizados = $Emisor->getDocumentosAutorizados($this->Auth->User);
         if (empty($tipos_dte_autorizados)) {
-            \sowerphp\core\SessionMessage::write('No está autorizado a emitir DTE.', 'warning');
+            \sowerphp\core\Facade_Session_Message::write('No está autorizado a emitir DTE.', 'warning');
             $this->redirect('/dte');
         }
         // si hay un DTE de referencia se arman datos para poder copiar
@@ -514,7 +514,7 @@ class Controller_Documentos extends \Controller_App
                     $Emisor->enCertificacion()
                 );
                 if (!$DocumentoOriginal->exists()) {
-                    \sowerphp\core\SessionMessage::write(
+                    \sowerphp\core\Facade_Session_Message::write(
                         'Documento T'.$referencia_dte.'F'.$referencia_folio.' no existe, no se puede referenciar.', 'error'
                     );
                     $this->redirect('/dte/dte_emitidos/listar');
@@ -523,7 +523,7 @@ class Controller_Documentos extends \Controller_App
                     try {
                         $DocumentoOriginal->esReferenciable();
                     } catch (\Exception $e) {
-                        \sowerphp\core\SessionMessage::write($e->getMessage(), 'error');
+                        \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
                         $this->redirect('/dte/dte_emitidos/ver/'.$referencia_dte.'/'.$referencia_folio.'#referencias');
                     }
                     $this->set([
@@ -540,7 +540,7 @@ class Controller_Documentos extends \Controller_App
                         $referencia_dte,
                         $referencia_folio
                     );
-                    \sowerphp\core\SessionMessage::write($message, 'error');
+                    \sowerphp\core\Facade_Session_Message::write($message, 'error');
                     $this->redirect('/dte/dte_emitidos/ver/'.$referencia_dte.'/'.$referencia_folio.'#referencias');
                 }
             }
@@ -549,7 +549,7 @@ class Controller_Documentos extends \Controller_App
                 list($codigo, $receptor) = explode('-', $referencia_folio);
                 $DocumentoOriginal = new Model_DteTmp($Emisor->rut, $receptor, $referencia_dte, $codigo);
                 if (!$DocumentoOriginal->exists()) {
-                    \sowerphp\core\SessionMessage::write(
+                    \sowerphp\core\Facade_Session_Message::write(
                         'Documento '.$DocumentoOriginal->getFolio().' no existe, no se puede referenciar.', 'error'
                     );
                     $this->redirect('/dte/dte_tmps/listar');
@@ -643,14 +643,14 @@ class Controller_Documentos extends \Controller_App
         $Emisor = $this->getContribuyente();
         // si no se viene por POST redirigir
         if (!isset($_POST['submit'])) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No puede acceder de forma directa a la previsualización.', 'error'
             );
             $this->redirect('/dte/documentos/emitir');
         }
         // si no está autorizado a emitir el tipo de documento redirigir
         if (!$Emisor->documentoAutorizado($_POST['TpoDoc'])) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No está autorizado a emitir el tipo de documento '.$_POST['TpoDoc'].'.', 'error'
             );
             $this->redirect('/dte/documentos/emitir');
@@ -661,7 +661,7 @@ class Controller_Documentos extends \Controller_App
         $_POST['CmnaOrigen'] = (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->get($sucursal->comuna)->comuna;
         // si no se indicó el tipo de documento error
         if (empty($_POST['TpoDoc'])) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'Debe indicar el tipo de documento a emitir.'
             );
             $this->redirect('/dte/documentos/emitir');
@@ -674,7 +674,7 @@ class Controller_Documentos extends \Controller_App
         }
         foreach ($datos_minimos as $attr) {
             if (empty($_POST[$attr])) {
-                \sowerphp\core\SessionMessage::write(
+                \sowerphp\core\Facade_Session_Message::write(
                     'Error al recibir campos mínimos, falta: '.$attr.'.'
                 );
                 $this->redirect('/dte/documentos/emitir');
@@ -878,7 +878,7 @@ class Controller_Documentos extends \Controller_App
                         'No es posible generar una boleta que tenga impuestos adicionales mediante la plataforma web de LibreDTE. Este es un caso de uso no considerado. Si tiene dudas con esta opción por favor [contáctenos](%).',
                         url('/contacto')
                     );
-                    \sowerphp\core\SessionMessage::write($message, 'error');
+                    \sowerphp\core\Facade_Session_Message::write($message, 'error');
                     $this->redirect('/dte/documentos/emitir');
                     //$tasa = $_POST['impuesto_adicional_tasa_'.$detalle['CodImpAdic']];
                     //$adicional = round($detalle['PrcItem'] * ($_POST['impuesto_adicional_tasa_'.$detalle['CodImpAdic']]/100));
@@ -991,11 +991,11 @@ class Controller_Documentos extends \Controller_App
             }
             $response = $this->consume('/api/dte/documentos/emitir?'.http_build_query($query_data), $dte);
         } catch (\Exception $e) {
-            \sowerphp\core\SessionMessage::write($e->getMessage(), 'error');
+            \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
             $this->redirect('/dte/documentos/emitir');
         }
         if ($response['status']['code'] != 200) {
-            \sowerphp\core\SessionMessage::write($response['body'], 'error');
+            \sowerphp\core\Facade_Session_Message::write($response['body'], 'error');
             $this->redirect('/dte/documentos/emitir');
         }
         if (
@@ -1005,7 +1005,7 @@ class Controller_Documentos extends \Controller_App
             || empty($response['body']['codigo'])
         ) {
             $msg = is_string($response['body']) ? $response['body'] : json_encode($response['body']);
-            \sowerphp\core\SessionMessage::write('Hubo problemas al generar el documento temporal: '.$msg, 'error');
+            \sowerphp\core\Facade_Session_Message::write('Hubo problemas al generar el documento temporal: '.$msg, 'error');
             $this->redirect('/dte/documentos/emitir');
         }
         // enviar DTE automáticaente sin previsualizar
@@ -1122,7 +1122,7 @@ class Controller_Documentos extends \Controller_App
             'codigo' => $codigo,
         ]);
         if ($response['status']['code'] != 200) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 $response['body'], 'error'
             );
             $this->redirect('/dte/dte_tmps/ver/'.$receptor.'/'.$dte.'/'.$codigo);
@@ -1130,16 +1130,16 @@ class Controller_Documentos extends \Controller_App
         $DteEmitido = (new Model_DteEmitido())->set($response['body']);
         if (!in_array($DteEmitido->dte, [39, 41])) {
             if ($DteEmitido->track_id) {
-                \sowerphp\core\SessionMessage::write(
+                \sowerphp\core\Facade_Session_Message::write(
                     'Documento emitido y envíado al SII, ahora debe verificar estado del envío. TrackID: '.$DteEmitido->track_id.'.', 'ok'
                 );
             } else {
-                \sowerphp\core\SessionMessage::write(
+                \sowerphp\core\Facade_Session_Message::write(
                     'El documento fue emitido, pero no fue envíado al SII, debe enviarlo manualmente desde la página del documento.<br/><br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'warning'
                 );
             }
         } else {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'Documento emitido.', 'ok'
             );
         }
@@ -1216,12 +1216,12 @@ class Controller_Documentos extends \Controller_App
         ]);
         if (isset($_POST['submit'])) {
             if (empty($_FILES['archivo']) || $_FILES['archivo']['error']) {
-                \sowerphp\core\SessionMessage::write('No fue posible subir el archivo con los documentos.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('No fue posible subir el archivo con los documentos.', 'error');
                 return;
             }
             $mimetype = \sowerphp\general\Utility_File::mimetype($_FILES['archivo']['tmp_name']);
             if (!in_array($mimetype, ['text/csv', 'text/plain'])) {
-                \sowerphp\core\SessionMessage::write('Formato '.$mimetype.' del archivo '.$_FILES['archivo']['name'].' es incorrecto. Debe ser un archivo CSV.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('Formato '.$mimetype.' del archivo '.$_FILES['archivo']['name'].' es incorrecto. Debe ser un archivo CSV.', 'error');
                 return;
             }
             $archivo = tempnam('/tmp', $Emisor->rut.'_dte_masivo_pendiente_');
@@ -1236,11 +1236,11 @@ class Controller_Documentos extends \Controller_App
             $cmd .= ' -v';
             $log = DIR_TMP.'/screen_documentos_emitir_masivo_'.$Emisor->rut.'_'.date('YmdHis').'.log';
             if ($this->shell($cmd, $log)) {
-                \sowerphp\core\SessionMessage::write(
+                \sowerphp\core\Facade_Session_Message::write(
                     'No fue posible programar la emisión masiva.', 'error'
                 );
             } else {
-                \sowerphp\core\SessionMessage::write(
+                \sowerphp\core\Facade_Session_Message::write(
                     'La emisión masiva está siendo procesada, se notificará vía correo electrónico el resultado.', 'ok'
                 );
             }
@@ -1257,7 +1257,7 @@ class Controller_Documentos extends \Controller_App
         // definir parámetro de búsqueda
         $q = !empty($_GET['q']) ? $_GET['q'] : $q;
         if (!$q) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'Debe indicar un documento a buscar.', 'warning'
             );
             $this->redirect('/dte');
@@ -1273,7 +1273,7 @@ class Controller_Documentos extends \Controller_App
             try {
                 $documentos = $DteEmitidos->getObjects();
             } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
-                \sowerphp\core\SessionMessage::write(
+                \sowerphp\core\Facade_Session_Message::write(
                     $e->getMessage(), 'error'
                 );
                 $this->redirect('/dte');
@@ -1307,7 +1307,7 @@ class Controller_Documentos extends \Controller_App
             if (count($aux) == 2) {
                 $codigo = strtolower($aux[1]);
                 if (!is_numeric($aux[0]) || strlen($codigo) != 7) {
-                    \sowerphp\core\SessionMessage::write(
+                    \sowerphp\core\Facade_Session_Message::write(
                         'Código del documento temporal no es válido.', 'error'
                     );
                     $this->redirect('/dte');
@@ -1320,7 +1320,7 @@ class Controller_Documentos extends \Controller_App
                 $documentos = $DteTmps->getObjects();
                 if (isset($documentos[0])) {
                     if (isset($documentos[1])) {
-                        \sowerphp\core\SessionMessage::write(
+                        \sowerphp\core\Facade_Session_Message::write(
                             'Se encontró más de un documento temporal que coincide con la búsqueda, buscar en el listado completo.', 'warning'
                         );
                         $this->redirect('/dte');
@@ -1330,7 +1330,7 @@ class Controller_Documentos extends \Controller_App
             }
         }
         // no se encontró el documento
-        \sowerphp\core\SessionMessage::write(
+        \sowerphp\core\Facade_Session_Message::write(
             'No se encontró el documento solicitado.', 'warning'
         );
         $this->redirect('/dte');
@@ -1347,12 +1347,12 @@ class Controller_Documentos extends \Controller_App
         ]);
         if (isset($_POST['submit'])) {
             if (empty($_FILES['archivo']) || $_FILES['archivo']['error']) {
-                \sowerphp\core\SessionMessage::write('No fue posible subir el archivo con los documentos.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('No fue posible subir el archivo con los documentos.', 'error');
                 return;
             }
             $mimetype = \sowerphp\general\Utility_File::mimetype($_FILES['archivo']['tmp_name']);
             if (!in_array($mimetype, ['text/csv', 'text/plain'])) {
-                \sowerphp\core\SessionMessage::write('Formato '.$mimetype.' del archivo '.$_FILES['archivo']['name'].' es incorrecto. Debe ser un archivo CSV.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('Formato '.$mimetype.' del archivo '.$_FILES['archivo']['name'].' es incorrecto. Debe ser un archivo CSV.', 'error');
                 return;
             }
             $datos = \sowerphp\general\Utility_Spreadsheet_CSV::read($_FILES['archivo']['tmp_name']);
@@ -1365,25 +1365,25 @@ class Controller_Documentos extends \Controller_App
                     continue;
                 }
                 if (empty($datos[$i][2])) {
-                    \sowerphp\core\SessionMessage::write(
+                    \sowerphp\core\Facade_Session_Message::write(
                         'Falta fecha de emisión en documento T'.$datos[$i][0].'F'.$datos[$i][1].'.', 'error'
                     );
                     return;
                 }
                 if (!\sowerphp\general\Utility_Date::check($datos[$i][2])) {
-                    \sowerphp\core\SessionMessage::write(
+                    \sowerphp\core\Facade_Session_Message::write(
                         'Formato no válido para fecha de emisión en documento T'.$datos[$i][0].'F'.$datos[$i][1].'.', 'error'
                     );
                     return;
                 }
                 if (empty($datos[$i][4])) {
-                    \sowerphp\core\SessionMessage::write(
+                    \sowerphp\core\Facade_Session_Message::write(
                         'Falta RUT del receptor en documento T'.$datos[$i][0].'F'.$datos[$i][1].'.', 'error'
                     );
                     return;
                 }
                 if (!\sowerphp\app\Utility_Rut::check($datos[$i][4])) {
-                    \sowerphp\core\SessionMessage::write(
+                    \sowerphp\core\Facade_Session_Message::write(
                         'Formato no válido para RUT del receptor en documento T'.$datos[$i][0].'F'.$datos[$i][1].'.', 'error'
                     );
                     return;
@@ -1401,7 +1401,7 @@ class Controller_Documentos extends \Controller_App
                             'receptor' => $receptor,
                         ]);
                     } catch (\Exception $e) {
-                        \sowerphp\core\SessionMessage::write(
+                        \sowerphp\core\Facade_Session_Message::write(
                             $e->getMessage(), 'error'
                         );
                         return;
@@ -1423,7 +1423,7 @@ class Controller_Documentos extends \Controller_App
                     try {
                         $documentos = $DteTmps->getTable();
                     } catch (\Exception $e) {
-                        \sowerphp\core\SessionMessage::write(
+                        \sowerphp\core\Facade_Session_Message::write(
                             $e->getMessage(), 'error'
                         );
                         return;

@@ -61,7 +61,7 @@ class Controller_Documentos extends \Controller_App
             }
             foreach (['RUTEmisor', 'RznSoc', 'GiroEmis', 'Acteco', 'DirOrigen', 'CmnaOrigen'] as $attr) {
                 if (empty($Emisor[$attr])) {
-                    \sowerphp\core\SessionMessage::write(
+                    \sowerphp\core\Facade_Session_Message::write(
                         'Debe especificar el campo '.$attr.'.', 'error'
                     );
                     return;
@@ -76,7 +76,7 @@ class Controller_Documentos extends \Controller_App
             }
             foreach (['RUTRecep', 'RznSocRecep', 'GiroRecep', 'DirRecep', 'CmnaRecep'] as $attr) {
                 if (empty($Receptor[$attr])) {
-                    \sowerphp\core\SessionMessage::write(
+                    \sowerphp\core\Facade_Session_Message::write(
                         'Debe especificar el campo '.$attr.'.', 'error'
                     );
                     return;
@@ -86,14 +86,14 @@ class Controller_Documentos extends \Controller_App
             // documentos
             $documentos_json = trim($_POST['documentos']);
             if (empty($documentos_json)) {
-                \sowerphp\core\SessionMessage::write(
+                \sowerphp\core\Facade_Session_Message::write(
                     'Debe enviar los datos JSON con los documentos.', 'error'
                 );
                 return;
             }
             $documentos = json_decode($documentos_json);
             if (!$documentos) {
-                \sowerphp\core\SessionMessage::write(
+                \sowerphp\core\Facade_Session_Message::write(
                     'No fue posible procesar los datos JSON con los documentos, posible error de sintaxis.', 'error'
                 );
                 return;
@@ -109,14 +109,14 @@ class Controller_Documentos extends \Controller_App
                 }
             }
             if (empty($folios)) {
-                \sowerphp\core\SessionMessage::write(
+                \sowerphp\core\Facade_Session_Message::write(
                     'Debe enviar a lo menos un archivo CAF con folios.', 'error'
                 );
                 return;
             }
             // firma
             if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
-                \sowerphp\core\SessionMessage::write(
+                \sowerphp\core\Facade_Session_Message::write(
                     'Hubo algún problema al subir la firma electrónica.', 'error'
                 );
                 return;
@@ -143,7 +143,7 @@ class Controller_Documentos extends \Controller_App
             $rest->setAuth($this->Auth->User->hash);
             $response = $rest->post($this->request->getFullUrlWithoutQuery().'/api/utilidades/documentos/generar_xml', $data);
             if ($response['status']['code'] != 200) {
-                \sowerphp\core\SessionMessage::write(
+                \sowerphp\core\Facade_Session_Message::write(
                     str_replace("\n", '<br/>', $response['body']), 'error'
                 );
                 return;
@@ -168,7 +168,7 @@ class Controller_Documentos extends \Controller_App
         if (isset($_POST['submit'])) {
             // si hubo problemas al subir el archivo error
             if (!isset($_FILES['xml']) || $_FILES['xml']['error']) {
-                \sowerphp\core\SessionMessage::write('Hubo algún problema al recibir el archivo XML con el EnvioDTE.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('Hubo algún problema al recibir el archivo XML con el EnvioDTE.', 'error');
                 return;
             }
             // armar datos con archivo XML y flag para indicar si es cedible o no
@@ -187,7 +187,7 @@ class Controller_Documentos extends \Controller_App
             $rest->setAuth($this->Auth->User->hash);
             $response = $rest->post($this->request->getFullUrlWithoutQuery().'/api/utilidades/documentos/generar_pdf', $data);
             if ($response['status']['code'] != 200) {
-                \sowerphp\core\SessionMessage::write($response['body'], 'error');
+                \sowerphp\core\Facade_Session_Message::write($response['body'], 'error');
                 return;
             }
             // si dió código 200 se entrega la respuesta del servicio web
@@ -209,13 +209,13 @@ class Controller_Documentos extends \Controller_App
             $EnvioDTE = new \sasco\LibreDTE\Sii\EnvioDte();
             $EnvioDTE->loadXML(file_get_contents($_FILES['xml']['tmp_name']));
             if ($EnvioDTE->esBoleta() === null) {
-                \sowerphp\core\SessionMessage::write('Archivo XML EnvioDTE no válido.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('Archivo XML EnvioDTE no válido.', 'error');
                 return;
             }
             $certificacion = (int)(bool)!$EnvioDTE->getCaratula()['NroResol'];
             // verificar la firma de cada documento
             if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
-                \sowerphp\core\SessionMessage::write(
+                \sowerphp\core\Facade_Session_Message::write(
                     'Hubo algún problema al subir la firma electrónica.', 'error'
                 );
                 return;
@@ -226,7 +226,7 @@ class Controller_Documentos extends \Controller_App
             ]);
             $cert_data = $Firma->getCertificate();
             if (!$cert_data) {
-                \sowerphp\core\SessionMessage::write('No hay firma electrónica por defecto asignada en LibreDTE o no pudo ser cargada.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('No hay firma electrónica por defecto asignada en LibreDTE o no pudo ser cargada.', 'error');
                 return;
             }
             $pkey_data = $Firma->getPrivateKey();
@@ -334,7 +334,7 @@ class Controller_Documentos extends \Controller_App
             }
             // si no hay DTE error
             if (!isset($dtes[0])) {
-                \sowerphp\core\SessionMessage::write(
+                \sowerphp\core\Facade_Session_Message::write(
                     'No fue posible leer DTE desde el archivo.', 'error'
                 );
                 $this->redirect($this->request->getRequestUriDecoded());
@@ -359,7 +359,7 @@ class Controller_Documentos extends \Controller_App
                 if (is_dir($dir))
                     \sasco\LibreDTE\File::rmdir($dir);
                 if (!mkdir($dir)) {
-                    \sowerphp\core\SessionMessage::write(
+                    \sowerphp\core\Facade_Session_Message::write(
                         'No fue posible crear directorio temporal para DTE.', 'error'
                     );
                     $this->redirect($this->request->getRequestUriDecoded());

@@ -43,7 +43,7 @@ class Controller_FirmaElectronica extends \Controller_App
             $this->set('Firma', $Firma);
             $logs = \sasco\LibreDTE\Log::readAll();
             if ($logs) {
-                \sowerphp\core\SessionMessage::write(implode('<br/>', $logs), 'error');
+                \sowerphp\core\Facade_Session_Message::write(implode('<br/>', $logs), 'error');
             }
         }
     }

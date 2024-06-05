@@ -40,7 +40,7 @@ class Controller_DteIntercambioRecepciones extends \Controller_App
         // obtener Recepción
         $DteIntercambioRecepcion = new Model_DteIntercambioRecepcion($responde, $Emisor->rut, $codigo);
         if (!$DteIntercambioRecepcion->exists()) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No existe la recepción solicitada.', 'error'
             );
             $this->redirect('/dte/dte_intercambios');

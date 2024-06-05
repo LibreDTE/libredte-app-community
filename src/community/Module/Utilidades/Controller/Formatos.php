@@ -40,7 +40,7 @@ class Controller_Formatos extends \Controller_App
         $formatos = $this->getFormatos();
         // si no es formato soportado error
         if ($formato && !in_array($formato, array_keys($formatos))) {
-            \sowerphp\core\SessionMessage::write('Formato '.$formato.' no está soportado.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('Formato '.$formato.' no está soportado.', 'error');
             $this->redirect('/utilidades/formatos');
         }
         // variables para la vista
@@ -56,7 +56,7 @@ class Controller_Formatos extends \Controller_App
                     $_POST['formato'], file_get_contents($_FILES['archivo']['tmp_name'])
                 );
             } catch (\Exception $e) {
-                \sowerphp\core\SessionMessage::write($e->getMessage(), 'error');
+                \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
                 $this->redirect($this->request->getRequestUriDecoded());
             }
             // descargar JSON

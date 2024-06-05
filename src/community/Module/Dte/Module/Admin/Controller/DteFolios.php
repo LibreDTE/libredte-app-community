@@ -58,7 +58,7 @@ class Controller_DteFolios extends \Controller_App
         if (isset($_POST['submit'])) {
             // verificar que esté autorizado a cargar folios del tipo de dte
             if (!$Emisor->documentoAutorizado($_POST['dte'])) {
-                \sowerphp\core\SessionMessage::write('La empresa no tiene habilitado en LibreDTE el documento de tipo '.$_POST['dte'].'. Contacte al área de soporte para que sea habilitado este tipo de documento.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('La empresa no tiene habilitado en LibreDTE el documento de tipo '.$_POST['dte'].'. Contacte al área de soporte para que sea habilitado este tipo de documento.', 'error');
                 return;
             }
             // crear mantenedor del folio
@@ -70,12 +70,12 @@ class Controller_DteFolios extends \Controller_App
                 try {
                     $DteFolio->save();
                 } catch (\Exception $e) {
-                    \sowerphp\core\SessionMessage::write('No fue posible crear el mantenedor del folio: '.$e->getMessage(), 'error');
+                    \sowerphp\core\Facade_Session_Message::write('No fue posible crear el mantenedor del folio: '.$e->getMessage(), 'error');
                     return;
                 }
             }
             // si todo fue bien se redirecciona a la página de carga de CAF
-            \sowerphp\core\SessionMessage::write('Ahora debe subir un archivo CAF para el tipo de documento '.mb_strtolower($DteFolio->getTipo()->tipo).'.');
+            \sowerphp\core\Facade_Session_Message::write('Ahora debe subir un archivo CAF para el tipo de documento '.mb_strtolower($DteFolio->getTipo()->tipo).'.');
             $this->redirect('/dte/admin/dte_folios/subir_caf');
         }
     }
@@ -96,7 +96,7 @@ class Controller_DteFolios extends \Controller_App
             if (!isset($_FILES['caf']) || $_FILES['caf']['error']) {
                 $e = new \sowerphp\general\Exception_File_Upload($_FILES['caf']['error']);
                 $message = __('Error al subir el archivo XML del CAF. %s', $e->getMessage());
-                \sowerphp\core\SessionMessage::write($message, 'error');
+                \sowerphp\core\Facade_Session_Message::write($message, 'error');
                 return;
             }
             $mimetype = \sowerphp\general\Utility_File::mimetype($_FILES['caf']['tmp_name']);
@@ -109,7 +109,7 @@ class Controller_DteFolios extends \Controller_App
                         ? 'https://maullin.sii.cl/cvc_cgi/dte/of_solicita_folios'
                         : 'https://palena.sii.cl/cvc_cgi/dte/of_solicita_folios',
                 );
-                \sowerphp\core\SessionMessage::write($message, 'error');
+                \sowerphp\core\Facade_Session_Message::write($message, 'error');
                 return;
             }
             $caf = file_get_contents($_FILES['caf']['tmp_name']);
@@ -123,7 +123,7 @@ class Controller_DteFolios extends \Controller_App
                         ? 'https://maullin.sii.cl/cvc_cgi/dte/of_solicita_folios'
                         : 'https://palena.sii.cl/cvc_cgi/dte/of_solicita_folios',
                 );
-                \sowerphp\core\SessionMessage::write($message, 'error');
+                \sowerphp\core\Facade_Session_Message::write($message, 'error');
                 return;
             }
             // buscar el mantenedor de folios del CAF, si no existe se tratará de crear el mantenedor
@@ -136,7 +136,7 @@ class Controller_DteFolios extends \Controller_App
                         strtolower($DteFolio->getTipo()->tipo),
                         url('/contacto')
                     );
-                    \sowerphp\core\SessionMessage::write($message, 'error');
+                    \sowerphp\core\Facade_Session_Message::write($message, 'error');
                     return;
                 }
                 // determinar alerta
@@ -159,7 +159,7 @@ class Controller_DteFolios extends \Controller_App
                         url('/dte/admin/dte_folios/agregar'),
                         url('/dte/admin/dte_folios/subir_caf')
                     );
-                    \sowerphp\core\SessionMessage::write($message, 'error');
+                    \sowerphp\core\Facade_Session_Message::write($message, 'error');
                     return;
                 }
             }
@@ -174,10 +174,10 @@ class Controller_DteFolios extends \Controller_App
                     $DteFolio->siguiente,
                     url('/dte/admin/dte_folios/modificar/'.$Folios->getTipo())
                 );
-                \sowerphp\core\SessionMessage::write($message, 'ok');
+                \sowerphp\core\Facade_Session_Message::write($message, 'ok');
                 $this->redirect('/dte/admin/dte_folios/ver/'.$Folios->getTipo());
             } catch (\Exception $e) {
-                \sowerphp\core\SessionMessage::write($e->getMessage(), 'error');
+                \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
                 return;
             }
         }
@@ -191,7 +191,7 @@ class Controller_DteFolios extends \Controller_App
         $Emisor = $this->getContribuyente();
         $DteFolio = new Model_DteFolio($Emisor->rut, (int)$dte, $Emisor->enCertificacion());
         if (!$DteFolio->exists()) {
-            \sowerphp\core\SessionMessage::write('No existe el mantenedor de folios solicitado.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('No existe el mantenedor de folios solicitado.', 'error');
             $this->redirect('/dte/admin/dte_folios');
         }
         $this->set([
@@ -210,7 +210,7 @@ class Controller_DteFolios extends \Controller_App
         $Emisor = $this->getContribuyente();
         $DteFolio = new Model_DteFolio($Emisor->rut, (int)$dte, $Emisor->enCertificacion());
         if (!$DteFolio->exists()) {
-            \sowerphp\core\SessionMessage::write('No existe el mantenedor de folios solicitado.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('No existe el mantenedor de folios solicitado.', 'error');
             $this->redirect('/dte/admin/dte_folios');
         }
         $this->set([
@@ -228,7 +228,7 @@ class Controller_DteFolios extends \Controller_App
         $Emisor = $this->getContribuyente();
         $DteFolio = new Model_DteFolio($Emisor->rut, (int)$dte, $Emisor->enCertificacion());
         if (!$DteFolio->exists()) {
-            \sowerphp\core\SessionMessage::write('No existe el mantenedor de folios solicitado.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('No existe el mantenedor de folios solicitado.', 'error');
             $this->redirect('/dte/admin/dte_folios');
         }
         $this->set([
@@ -239,7 +239,7 @@ class Controller_DteFolios extends \Controller_App
             // validar que campos existan y asignar
             foreach (['siguiente', 'alerta'] as $attr) {
                 if (empty($_POST[$attr])) {
-                    \sowerphp\core\SessionMessage::write('Debe especificar el campo: '.$attr.'.', 'error');
+                    \sowerphp\core\Facade_Session_Message::write('Debe especificar el campo: '.$attr.'.', 'error');
                     return;
                 }
                 $DteFolio->$attr = $_POST[$attr];
@@ -248,34 +248,34 @@ class Controller_DteFolios extends \Controller_App
             try {
                 $Caf = $DteFolio->getCaf();
             } catch (\Exception $e) {
-                \sowerphp\core\SessionMessage::write('No fue posible abrir el XML del CAF que contiene el folio '.$DteFolio->siguiente.'. Por lo que no se pudo editar el mantenedor de folios. Se recomienda eliminar el XML del CAF que contiene al folio '.$DteFolio->siguiente.', volverlo a cargar y luego intentar modificar el mantenedor de folios.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('No fue posible abrir el XML del CAF que contiene el folio '.$DteFolio->siguiente.'. Por lo que no se pudo editar el mantenedor de folios. Se recomienda eliminar el XML del CAF que contiene al folio '.$DteFolio->siguiente.', volverlo a cargar y luego intentar modificar el mantenedor de folios.', 'error');
                 return;
             }
             if (!$Caf) {
-                \sowerphp\core\SessionMessage::write('No se encontró un CAF que contenga el folio '.$DteFolio->siguiente.'.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('No se encontró un CAF que contenga el folio '.$DteFolio->siguiente.'.', 'error');
                 return;
             }
             if (!$Caf->vigente()) {
-                \sowerphp\core\SessionMessage::write('El CAF que contiene el folio '.$DteFolio->siguiente.' está vencido, no se puede asignar, debe asignar uno vigente.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('El CAF que contiene el folio '.$DteFolio->siguiente.' está vencido, no se puede asignar, debe asignar uno vigente.', 'error');
                 return;
             }
             // verificar que el folio siguiente que se está asignando no esté siendo usado actualmente por otro DTE ya emitido
             $DteEmitido = new \website\Dte\Model_DteEmitido($DteFolio->emisor, $DteFolio->dte, $DteFolio->siguiente, (int)$DteFolio->certificacion);
             if ($DteEmitido->exists()) {
-                \sowerphp\core\SessionMessage::write('El folio '.$DteFolio->siguiente.' se encuentra usado en LibreDTE, no se puede asignar como folio siguiente. Debe asignar un folio no usado, ni en LibreDTE, ni en otro sistema.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('El folio '.$DteFolio->siguiente.' se encuentra usado en LibreDTE, no se puede asignar como folio siguiente. Debe asignar un folio no usado, ni en LibreDTE, ni en otro sistema.', 'error');
                 return;
             }
             // guardar y redireccionar
             try {
                 if (!$DteFolio->calcularDisponibles()) {
-                    \sowerphp\core\SessionMessage::write('No fue posible actualizar el mantenedor de folios.', 'error');
+                    \sowerphp\core\Facade_Session_Message::write('No fue posible actualizar el mantenedor de folios.', 'error');
                     return;
                 }
-                \sowerphp\core\SessionMessage::write('El mantenedor de folios para tipo '.$DteFolio->dte.' ha sido actualizado.', 'ok'
+                \sowerphp\core\Facade_Session_Message::write('El mantenedor de folios para tipo '.$DteFolio->dte.' ha sido actualizado.', 'ok'
                 );
                 $this->redirect('/dte/admin/dte_folios');
             } catch (\Exception $e) {
-                \sowerphp\core\SessionMessage::write('No fue posible actualizar el mantenedor de folios: '.$e->getMessage(), 'error');
+                \sowerphp\core\Facade_Session_Message::write('No fue posible actualizar el mantenedor de folios: '.$e->getMessage(), 'error');
                 return;
             }
         }
@@ -288,21 +288,21 @@ class Controller_DteFolios extends \Controller_App
     {
         $Emisor = $this->getContribuyente();
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\SessionMessage::write('Solo un administrador de la empresa puede eliminar un mantenedor de folios.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('Solo un administrador de la empresa puede eliminar un mantenedor de folios.', 'error');
             $this->redirect('/dte/admin/dte_folios');
         }
         $DteFolio = new Model_DteFolio($Emisor->rut, (int)$dte, $Emisor->enCertificacion());
         if (!$DteFolio->exists()) {
-            \sowerphp\core\SessionMessage::write('No existe el mantenedor de folios solicitado.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('No existe el mantenedor de folios solicitado.', 'error');
             $this->redirect('/dte/admin/dte_folios');
         }
         $cafs = $DteFolio->getCafs();
         if (!empty($cafs)) {
-            \sowerphp\core\SessionMessage::write('No es posible eliminar el mantenedor de folios, ya que tiene archivos CAF asociados. Debe eliminar primero cada uno de los CAF y luego eliminar el mantenedor de folios.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('No es posible eliminar el mantenedor de folios, ya que tiene archivos CAF asociados. Debe eliminar primero cada uno de los CAF y luego eliminar el mantenedor de folios.', 'error');
             $this->redirect('/dte/admin/dte_folios/ver/'.$dte);
         }
         $DteFolio->delete();
-        \sowerphp\core\SessionMessage::write('El mantenedor de folios de '.$DteFolio->getTipo()->tipo.' ha sido eliminado.', 'ok');
+        \sowerphp\core\Facade_Session_Message::write('El mantenedor de folios de '.$DteFolio->getTipo()->tipo.' ha sido eliminado.', 'ok');
         $this->redirect('/dte/admin/dte_folios');
     }
 
@@ -313,12 +313,12 @@ class Controller_DteFolios extends \Controller_App
     {
         $Emisor = $this->getContribuyente();
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\SessionMessage::write('Solo un administrador de la empresa puede descargar los archivos XML de los CAF desde LibreDTE.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('Solo un administrador de la empresa puede descargar los archivos XML de los CAF desde LibreDTE.', 'error');
             $this->redirect('/dte/admin/dte_folios/ver/'.$dte);
         }
         $DteCaf = new Model_DteCaf($Emisor->rut, $dte, $Emisor->enCertificacion(), $desde);
         if (!$DteCaf->exists()) {
-            \sowerphp\core\SessionMessage::write('No existe el archivo CAF solicitado.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('No existe el archivo CAF solicitado.', 'error');
             $this->redirect('/dte/admin/dte_folios');
         }
         // entregar XML
@@ -337,29 +337,29 @@ class Controller_DteFolios extends \Controller_App
     {
         $Emisor = $this->getContribuyente();
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\SessionMessage::write('Solo un administrador de la empresa puede eliminar los archivos CAF.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('Solo un administrador de la empresa puede eliminar los archivos CAF.', 'error');
             $this->redirect('/dte/admin/dte_folios');
         }
         $DteFolio = new Model_DteFolio($Emisor->rut, (int)$dte, $Emisor->enCertificacion());
         if (!$DteFolio->exists()) {
-            \sowerphp\core\SessionMessage::write('No existe el mantenedor de folios solicitado.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('No existe el mantenedor de folios solicitado.', 'error');
             $this->redirect('/dte/admin/dte_folios');
         }
         $DteCaf = new Model_DteCaf($Emisor->rut, $dte, $Emisor->enCertificacion(), $desde);
         if (!$DteCaf->exists()) {
-            \sowerphp\core\SessionMessage::write('No existe el archivo CAF solicitado.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('No existe el archivo CAF solicitado.', 'error');
             $this->redirect('/dte/admin/dte_folios/ver/'.$dte);
         }
         $Caf = $DteCaf->getCAF();
         $vigente = $Caf ? $Caf->vigente() : false;
         $usado = $DteCaf->usado();
         if ($vigente && $usado) {
-            \sowerphp\core\SessionMessage::write('No es posible eliminar un XML de un CAF vigente y con folios usados en LibreDTE. Debe esperar a que el CAF esté vencido y ahí lo podrá eliminar.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('No es posible eliminar un XML de un CAF vigente y con folios usados en LibreDTE. Debe esperar a que el CAF esté vencido y ahí lo podrá eliminar.', 'error');
             $this->redirect('/dte/admin/dte_folios/ver/'.$dte);
         }
         $DteCaf->delete();
         $DteFolio->calcularDisponibles();
-        \sowerphp\core\SessionMessage::write('El XML del CAF de '.$DteCaf->getTipo()->tipo.' que inicia en '.$DteCaf->desde.' ha sido eliminado.', 'ok');
+        \sowerphp\core\Facade_Session_Message::write('El XML del CAF de '.$DteCaf->getTipo()->tipo.' que inicia en '.$DteCaf->desde.' ha sido eliminado.', 'ok');
         $this->redirect('/dte/admin/dte_folios/ver/'.$dte);
     }
 
@@ -384,7 +384,7 @@ class Controller_DteFolios extends \Controller_App
                     strtolower($DteFolio->getTipo()->tipo),
                     url('/dte/admin/dte_folios/agregar')
                 );
-                \sowerphp\core\SessionMessage::write($message, 'error');
+                \sowerphp\core\Facade_Session_Message::write($message, 'error');
                 return;
             }
             // recuperar firma electrónica
@@ -394,7 +394,7 @@ class Controller_DteFolios extends \Controller_App
                     'No ha sido posible obtener el listado de CAF solicitados en el SII, pues no hay una firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe [agregar su firma](%s) antes de utilizar esta opción.',
                     url('/dte/admin/firma_electronicas')
                 );
-                \sowerphp\core\SessionMessage::write($message, 'error');
+                \sowerphp\core\Facade_Session_Message::write($message, 'error');
                 return;
             }
             // consultar listado de solicitudes
@@ -410,12 +410,12 @@ class Controller_DteFolios extends \Controller_App
                 ]
             );
             if ($r['status']['code'] != 200) {
-                \sowerphp\core\SessionMessage::write('No fue posible obtener el listado de CAFs solicitados en SII: '.$r['body'], 'error');
+                \sowerphp\core\Facade_Session_Message::write('No fue posible obtener el listado de CAFs solicitados en SII: '.$r['body'], 'error');
                 return;
             }
             // no hay folios timbrados en SII
             if (empty($r['body'])) {
-                \sowerphp\core\SessionMessage::write('No se encontraron folios para el tipo de documento '.$DteFolio->dte.' en SII.', 'warning');
+                \sowerphp\core\Facade_Session_Message::write('No se encontraron folios para el tipo de documento '.$DteFolio->dte.' en SII.', 'warning');
                 return;
             }
             // armar listado de solicitudes de folios que no están en LibreDTE
@@ -428,7 +428,7 @@ class Controller_DteFolios extends \Controller_App
             }
             // si todo está cargado -> ok
             if (empty($solicitudes)) {
-                \sowerphp\core\SessionMessage::write('Todos los folios encontrados en el SII se encuentran cargados en LibreDTE.', 'ok');
+                \sowerphp\core\Facade_Session_Message::write('Todos los folios encontrados en el SII se encuentran cargados en LibreDTE.', 'ok');
                 return;
             }
             // asignar variables para la vista
@@ -449,13 +449,13 @@ class Controller_DteFolios extends \Controller_App
         // buscar el mantenedor de folios del CAF
         $DteFolio = new Model_DteFolio($Emisor->rut, (int)$dte, $Emisor->enCertificacion());
         if (!$DteFolio->exists()) {
-            \sowerphp\core\SessionMessage::write('Primero debe crear el mantenedor de los folios de tipo '.$dte.'.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('Primero debe crear el mantenedor de los folios de tipo '.$dte.'.', 'error');
             $this->redirect('/dte/admin/dte_folios');
         }
         // si ya existe un caf no se vuelve a cargar
         $DteCaf = new Model_DteCaf($Emisor->rut, $DteFolio->dte, $Emisor->enCertificacion(), $folio_inicial);
         if ($DteCaf->hasta) {
-            \sowerphp\core\SessionMessage::write('El CAF solicitado ya se encontraba cargado.', 'ok');
+            \sowerphp\core\Facade_Session_Message::write('El CAF solicitado ya se encontraba cargado.', 'ok');
             $this->redirect('/dte/admin/dte_folios/reobtener_caf/'.$DteFolio->dte);
         }
         // recuperar firma electrónica
@@ -465,7 +465,7 @@ class Controller_DteFolios extends \Controller_App
                 'No ha sido posible reobtener el XML del CAF, pues no hay una firma electrónica asociada a la empresa (o bien no se pudo cargar). Debe [agregar su firma](%s) antes de utilizar esta opción.',
                 url('/dte/admin/firma_electronicas')
             );
-            \sowerphp\core\SessionMessage::write($message, 'error');
+            \sowerphp\core\Facade_Session_Message::write($message, 'error');
             $this->redirect('/dte/admin/dte_folios/reobtener_caf/'.$DteFolio->dte);
         }
         // consultar listado de solicitudes
@@ -489,14 +489,14 @@ class Controller_DteFolios extends \Controller_App
                     : 'https://palena.sii.cl/cvc_cgi/dte/rf_reobtencion1_folios',
                 url('/dte/admin/dte_folios/subir_caf')
             );
-            \sowerphp\core\SessionMessage::write($message, 'error');
+            \sowerphp\core\Facade_Session_Message::write($message, 'error');
             $this->redirect('/dte/admin/dte_folios/reobtener_caf/'.$DteFolio->dte);
         }
         // guardar el CAF
         try {
             $DteFolio->guardarFolios($r['body']);
             $Folios = new \sasco\LibreDTE\Sii\Folios($r['body']);
-            \sowerphp\core\SessionMessage::write('El XML del CAF para el documento de tipo '.$Folios->getTipo().' que inicia en '.$Folios->getDesde().' fue cargado. El siguiente folio disponible es '.$DteFolio->siguiente.'.', 'ok');
+            \sowerphp\core\Facade_Session_Message::write('El XML del CAF para el documento de tipo '.$Folios->getTipo().' que inicia en '.$Folios->getDesde().' fue cargado. El siguiente folio disponible es '.$DteFolio->siguiente.'.', 'ok');
             $this->redirect('/dte/admin/dte_folios/reobtener_caf/'.$DteFolio->dte);
         } catch (\Exception $e) {
             $message = __(
@@ -507,7 +507,7 @@ class Controller_DteFolios extends \Controller_App
                     : 'https://palena.sii.cl/cvc_cgi/dte/rf_reobtencion1_folios',
                 url('/dte/admin/dte_folios/subir_caf')
             );
-            \sowerphp\core\SessionMessage::write($message, 'error');
+            \sowerphp\core\Facade_Session_Message::write($message, 'error');
             $this->redirect('/dte/admin/dte_folios/reobtener_caf/'.$DteFolio->dte);
         }
     }
@@ -528,12 +528,12 @@ class Controller_DteFolios extends \Controller_App
             // buscar el mantenedor de folios del CAF
             $DteFolio = new Model_DteFolio($Emisor->rut, $_POST['dte'], $Emisor->enCertificacion());
             if (!$DteFolio->exists()) {
-                \sowerphp\core\SessionMessage::write('Primero debe crear el mantenedor de los folios de tipo '.$_POST['dte'].'.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('Primero debe crear el mantenedor de los folios de tipo '.$_POST['dte'].'.', 'error');
                 return;
             }
             // solicitar timbraje
             if ($_POST['cantidad'] <= 0) {
-                \sowerphp\core\SessionMessage::write('La cantidad de folios solicitados debe ser mayor a 0.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('La cantidad de folios solicitados debe ser mayor a 0.', 'error');
                 return;
             }
             try {
@@ -547,13 +547,13 @@ class Controller_DteFolios extends \Controller_App
                         : 'https://palena.sii.cl/cvc_cgi/dte/of_solicita_folios',
                     url('/dte/admin/dte_folios/subir_caf')
                 );
-                \sowerphp\core\SessionMessage::write($message, 'error');
+                \sowerphp\core\Facade_Session_Message::write($message, 'error');
                 return;
             }
             // guardar timbraje
             try {
                 $Folios = $DteFolio->guardarFolios($xml);
-                \sowerphp\core\SessionMessage::write(
+                \sowerphp\core\Facade_Session_Message::write(
                     'El CAF para el documento de tipo '.$Folios->getTipo().' que inicia en '.$Folios->getDesde().' fue cargado. El siguiente folio disponible es '.$DteFolio->siguiente.'.', 'ok'
                 );
                 $this->redirect('/dte/admin/dte_folios');
@@ -569,7 +569,7 @@ class Controller_DteFolios extends \Controller_App
                         : 'https://palena.sii.cl/cvc_cgi/dte/of_solicita_folios',
                     url('/dte/admin/dte_folios/subir_caf')
                 );
-                \sowerphp\core\SessionMessage::write($message, 'error');
+                \sowerphp\core\Facade_Session_Message::write($message, 'error');
                 return;
             }
         }
@@ -615,20 +615,20 @@ class Controller_DteFolios extends \Controller_App
         $Emisor = $this->getContribuyente();
         $DteCaf = new Model_DteCaf($Emisor->rut, $dte, $Emisor->enCertificacion(), $folio);
         if (!$DteCaf->exists()) {
-            \sowerphp\core\SessionMessage::write('No existe el CAF solicitado.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('No existe el CAF solicitado.', 'error');
             $this->redirect('/dte/admin/dte_folios/ver/'.$dte);
         }
         try {
             $detalle = $DteCaf->{'getFolios'.ucfirst($estado)}();
         } catch(\sowerphp\core\Exception_Object_Method_Missing $e) {
-            \sowerphp\core\SessionMessage::write('No fue posible descargar el estado de folios '.$estado.'.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('No fue posible descargar el estado de folios '.$estado.'.', 'error');
             $this->redirect('/dte/admin/dte_folios/ver/'.$dte);
         } catch(\Exception $e) {
-            \sowerphp\core\SessionMessage::write($e->getMessage(), 'error');
+            \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
             $this->redirect('/dte/admin/dte_folios/ver/'.$dte);
         }
         if (!$detalle) {
-            \sowerphp\core\SessionMessage::write('No se encontraron folios con el estado \''.$estado.'\' en el SII para el CAF que inicia en '.$folio.'.', 'warning');
+            \sowerphp\core\Facade_Session_Message::write('No se encontraron folios con el estado \''.$estado.'\' en el SII para el CAF que inicia en '.$folio.'.', 'warning');
             $this->redirect('/dte/admin/dte_folios/ver/'.$dte);
         }
         array_unshift($detalle, ['Folio inicial', 'Folio final', 'Cantidad de folios']);
@@ -656,19 +656,19 @@ class Controller_DteFolios extends \Controller_App
         if (isset($_POST['submit'])) {
             // si no hay documentos error
             if (empty($_POST['documentos'])) {
-                \sowerphp\core\SessionMessage::write('Debe seleccionar al menos un tipo de documento para obtener el estado.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('Debe seleccionar al menos un tipo de documento para obtener el estado.', 'error');
                 return;
             }
             if (empty($_POST['estados'])) {
-                \sowerphp\core\SessionMessage::write('Debe seleccionar al menos un estado a obtener.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('Debe seleccionar al menos un estado a obtener.', 'error');
                 return;
             }
             // lanzar comando
             $cmd = 'Dte.Admin.DteFolios_Estados '.escapeshellcmd((int)$Emisor->rut).' '.escapeshellcmd(implode(',',$_POST['documentos'])).' '.escapeshellcmd(implode(',',$_POST['estados'])).' '.escapeshellcmd((int)$this->Auth->User->id).' -v';
             if ($this->shell($cmd)) {
-                \sowerphp\core\SessionMessage::write('Error al tratar de generar su informe, por favor reintentar.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('Error al tratar de generar su informe, por favor reintentar.', 'error');
             } else {
-                \sowerphp\core\SessionMessage::write('Su informe está siendo generado, será enviado a su correo cuando esté listo.', 'ok');
+                \sowerphp\core\Facade_Session_Message::write('Su informe está siendo generado, será enviado a su correo cuando esté listo.', 'ok');
             }
             $this->redirect('/dte/admin/dte_folios');
         }

@@ -40,7 +40,7 @@ class Controller_Dashboard extends \Controller_App
         $periodo_actual = date('Ym');
         $periodo = !empty($_GET['periodo']) ? (int)$_GET['periodo'] : $periodo_actual;
         if (!\sowerphp\general\Utility_Date::validPeriod6($periodo)) {
-            \sowerphp\core\SessionMessage::write('Período ingresado no es válido.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('Período ingresado no es válido.', 'error');
             $this->redirect($this->request->getRequestUriDecoded());
         }
         $periodo_anterior = \sowerphp\general\Utility_Date::previousPeriod($periodo);

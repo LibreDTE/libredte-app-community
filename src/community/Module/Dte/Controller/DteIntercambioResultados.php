@@ -40,7 +40,7 @@ class Controller_DteIntercambioResultados extends \Controller_App
         // obtener Resultado
         $DteIntercambioResultado = new Model_DteIntercambioResultado($responde, $Emisor->rut, $codigo);
         if (!$DteIntercambioResultado->exists()) {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'No existe el resultado solicitado.', 'error'
             );
             $this->redirect('/dte/dte_intercambios');

@@ -44,13 +44,13 @@ class Controller_Boletas extends \Controller_App
                     'pass' => $_POST['contrasenia'],
                 ]);
             } catch (\Exception $e) {
-                \sowerphp\core\SessionMessage::write('No fue posible abrir la firma digital, quizás contraseña incorrecta.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('No fue posible abrir la firma digital, quizás contraseña incorrecta.', 'error');
             }
             // cargar archivo
             $datos = \sowerphp\general\Utility_Spreadsheet_CSV::read($_FILES['detalle']['tmp_name']);
             unset($datos[0]);
             if (!$datos) {
-                \sowerphp\core\SessionMessage::write('Archivo sin detalle.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('Archivo sin detalle.', 'error');
                 return;
             }
             // determinar tipos de documentos incluidos
@@ -71,7 +71,7 @@ class Controller_Boletas extends \Controller_App
                 \sasco\LibreDTE\File::rmdir($dir);
             }
             if (!mkdir($dir)) {
-                \sowerphp\core\SessionMessage::write('No fue posible crear directorio temporal para los consumos de folios.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('No fue posible crear directorio temporal para los consumos de folios.', 'error');
                 return;
             }
             // crear rcof para cada día (si es un solo día o se pidió el total se hará en una pasada)
@@ -125,7 +125,7 @@ class Controller_Boletas extends \Controller_App
                 $ConsumoFolio->setCaratula($caratula);
                 $xml = $ConsumoFolio->generar();
                 if (!$ConsumoFolio->schemaValidate()) {
-                    \sowerphp\core\SessionMessage::write('No fue posible generar el XML del RCOF '.$_POST['salida'].':<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
+                    \sowerphp\core\Facade_Session_Message::write('No fue posible generar el XML del RCOF '.$_POST['salida'].':<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
                     return;
                 }
                 unset($dias[$dia]);

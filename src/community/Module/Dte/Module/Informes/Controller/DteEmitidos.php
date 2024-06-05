@@ -255,7 +255,7 @@ class Controller_DteEmitidos extends \Controller_App
             : false
         ;
         if ($desde && $hasta && !$documentos) {
-            \sowerphp\core\SessionMessage::write('No existen documentos pendientes de enviar en el rango de fechas consultado ('.\sowerphp\general\Utility_Date::format($desde).' al '.\sowerphp\general\Utility_Date::format($hasta).').', 'warning');
+            \sowerphp\core\Facade_Session_Message::write('No existen documentos pendientes de enviar en el rango de fechas consultado ('.\sowerphp\general\Utility_Date::format($desde).' al '.\sowerphp\general\Utility_Date::format($hasta).').', 'warning');
             $this->redirect('/dte/informes/dte_emitidos/sin_intercambio');
         }
         $this->set([
@@ -331,7 +331,7 @@ class Controller_DteEmitidos extends \Controller_App
             : false
         ;
         if ($desde && $hasta && !$documentos) {
-            \sowerphp\core\SessionMessage::write('No existen boletas pendientes de enviar por email en el rango de fechas consultado ('.\sowerphp\general\Utility_Date::format($desde).' al '.\sowerphp\general\Utility_Date::format($hasta).')', 'warning');
+            \sowerphp\core\Facade_Session_Message::write('No existen boletas pendientes de enviar por email en el rango de fechas consultado ('.\sowerphp\general\Utility_Date::format($desde).' al '.\sowerphp\general\Utility_Date::format($hasta).')', 'warning');
             $this->redirect('/dte/informes/dte_emitidos/boletas_sin_email');
         }
         $this->set([

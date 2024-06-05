@@ -54,7 +54,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         $n_detalles = $Emisor->{'count'.$this->config['model']['plural']}((int)$periodo);
         if (!$n_detalles && !$Libro->exists()) {
-            \sowerphp\core\SessionMessage::write('No hay documentos ni libro del período '.$periodo.'.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('No hay documentos ni libro del período '.$periodo.'.', 'error');
             $this->redirect('/dte/'.$this->request->getParsedParams()['controller']);
         }
         $resumen = $Libro->getResumen();
@@ -89,7 +89,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $Emisor = $this->getContribuyente();
         $detalle = $Emisor->{'get'.$this->config['model']['plural']}((int)$periodo);
         if (!$detalle) {
-            \sowerphp\core\SessionMessage::write('No hay documentos en el período '.$periodo.'.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('No hay documentos en el período '.$periodo.'.', 'error');
             $this->redirect('/dte/'.$this->request->getParsedParams()['controller']);
         }
         foreach ($detalle as &$d) {
@@ -111,7 +111,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         if (!$Libro->exists()) {
-            \sowerphp\core\SessionMessage::write('Aún no se ha generado el XML del período '.$periodo.'. Debe generar el XML antes de poder descargar el PDF del período.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('Aún no se ha generado el XML del período '.$periodo.'. Debe generar el XML antes de poder descargar el PDF del período.', 'error');
             $this->redirect(str_replace('pdf', 'ver', $this->request->getRequestUriDecoded()));
         }
         // definir xml y nombre archivo
@@ -129,7 +129,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         }
         // entregar libro de guías
         else {
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'Libro en PDF no está implementado.', 'error'
             );
             $this->redirect(str_replace('pdf', 'ver', $this->request->getRequestUriDecoded()));
@@ -146,7 +146,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         if (!$Libro->exists()) {
-            \sowerphp\core\SessionMessage::write('Aun no se ha generado el XML del período '.$periodo.'.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('Aun no se ha generado el XML del período '.$periodo.'.', 'error');
             $this->redirect(str_replace('xml', 'ver', $this->request->getRequestUriDecoded()));
         }
         // entregar XML
@@ -175,7 +175,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         if (!$Libro->exists()) {
-            \sowerphp\core\SessionMessage::write('No ha enviado el libro del período '.$periodo.' al SII, no puede rectificar. Debe hacer un envío normal del libro.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('No ha enviado el libro del período '.$periodo.' al SII, no puede rectificar. Debe hacer un envío normal del libro.', 'error');
             $this->redirect(str_replace('enviar_rectificacion', 'ver', $this->request->getRequestUriDecoded()));
         }
         // asignar variables vista
@@ -195,7 +195,7 @@ abstract class Controller_Base_Libros extends \Controller_App
             // verificar período
             $periodo = (int)$_POST['periodo'];
             if (strlen($_POST['periodo'])!=6 || !$periodo) {
-                \sowerphp\core\SessionMessage::write('Período no es correcto, usar formato AAAAMM.', 'error');
+                \sowerphp\core\Facade_Session_Message::write('Período no es correcto, usar formato AAAAMM.', 'error');
                 return;
             }
             // redirigir a la página que envía el libro sin movimientos
@@ -213,17 +213,17 @@ abstract class Controller_Base_Libros extends \Controller_App
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         if (!$Libro->exists()) {
-            \sowerphp\core\SessionMessage::write('Aún no se ha generado el libro del período '.$periodo.'.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('Aún no se ha generado el libro del período '.$periodo.'.', 'error');
             $this->redirect(str_replace('solicitar_revision', 'ver', $this->request->getRequestUriDecoded()));
         }
         // solicitar envío de nueva revisión
         $estado = $Libro->solicitarRevision($this->Auth->User->id);
         if ($estado === false) {
-            \sowerphp\core\SessionMessage::write('No fue posible solicitar una nueva revisión del libro.<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
+            \sowerphp\core\Facade_Session_Message::write('No fue posible solicitar una nueva revisión del libro.<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
         } else if ((int)$estado->xpath('/SII:RESPUESTA/SII:RESP_HDR/SII:ESTADO')[0]) {
-            \sowerphp\core\SessionMessage::write('No fue posible solicitar una nueva revisión del libro: '.$estado->xpath('/SII:RESPUESTA/SII:RESP_HDR/SII:GLOSA')[0], 'error');
+            \sowerphp\core\Facade_Session_Message::write('No fue posible solicitar una nueva revisión del libro: '.$estado->xpath('/SII:RESPUESTA/SII:RESP_HDR/SII:GLOSA')[0], 'error');
         } else {
-            \sowerphp\core\SessionMessage::write('Se solicitó nueva revisión del libro, verificar estado en unos segundos.', 'ok');
+            \sowerphp\core\Facade_Session_Message::write('Se solicitó nueva revisión del libro, verificar estado en unos segundos.', 'ok');
         }
         // redireccionar
         $this->redirect(str_replace('solicitar_revision', 'ver', $this->request->getRequestUriDecoded()));
@@ -242,20 +242,20 @@ abstract class Controller_Base_Libros extends \Controller_App
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         if (!$Libro->exists()) {
-            \sowerphp\core\SessionMessage::write('Aún no se ha generado el libro del período '.$periodo.'.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('Aún no se ha generado el libro del período '.$periodo.'.', 'error');
             $this->redirect(str_replace('actualizar_estado', 'ver', $this->request->getRequestUriDecoded()));
         }
         // si no tiene track id error
         if (!$Libro->track_id) {
-            \sowerphp\core\SessionMessage::write('Libro del período '.$periodo.' no tiene Track ID. Primero debe enviarlo al SII.', 'error');
+            \sowerphp\core\Facade_Session_Message::write('Libro del período '.$periodo.' no tiene Track ID. Primero debe enviarlo al SII.', 'error');
             $this->redirect(str_replace('actualizar_estado', 'ver', $this->request->getRequestUriDecoded()));
         }
         // actualizar estado
         try {
             $Libro->actualizarEstado($this->Auth->User->id, $usarWebservice);
-            \sowerphp\core\SessionMessage::write('Se actualizó el estado del libro.', 'ok');
+            \sowerphp\core\Facade_Session_Message::write('Se actualizó el estado del libro.', 'ok');
         } catch (\Exception $e) {
-            \sowerphp\core\SessionMessage::write('Error al actualizar el estado del libro: '.$e->getMessage(), 'error');
+            \sowerphp\core\Facade_Session_Message::write('Error al actualizar el estado del libro: '.$e->getMessage(), 'error');
         }
         // redireccionar
         $this->redirect(str_replace('actualizar_estado', 'ver', $this->request->getRequestUriDecoded()));

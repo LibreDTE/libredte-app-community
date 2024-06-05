@@ -100,7 +100,7 @@ class Controller_Contribuyentes extends \Controller_Maintainer
                     }
                 }
             }
-            \sowerphp\core\SessionMessage::write(
+            \sowerphp\core\Facade_Session_Message::write(
                 'Se actualizaron '.num($actualizados).' contribuyentes', 'ok'
             );
         }

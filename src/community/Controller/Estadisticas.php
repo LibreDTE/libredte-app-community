@@ -57,7 +57,7 @@ class Controller_Estadisticas extends \Controller_App
     {
         $response = $this->consume('/api/estadisticas/'.($certificacion?'certificacion':'produccion'));
         if ($response['status']['code'] != 200) {
-            \sowerphp\core\SessionMessage::write($response['body'], 'error');
+            \sowerphp\core\Facade_Session_Message::write($response['body'], 'error');
             $this->redirect('/');
         }
         $this->set($response['body']);
