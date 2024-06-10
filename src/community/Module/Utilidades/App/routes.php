@@ -21,8 +21,11 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// rutas para convertir formatos a json
-\sowerphp\core\Routing_Router::connect('/utilidades/formatos/*', [
+// Instancia del servicio de enrutamiento.
+$router = router();
+
+// Rutas para convertir formatos a JSON.
+$router->connect('/utilidades/formatos/*', [
     'module' => 'Utilidades',
     'controller' => 'formatos',
     'action' => 'index',

@@ -36,7 +36,7 @@ class Controller_Module extends \sowerphp\general\Controller_Module
      */
     public function display()
     {
-        $modulo = $this->request->getParsedParams()['module'];
+        $modulo = $this->request->getRouteConfig()['module'];
         $nombre = \sowerphp\core\Utility_Inflector::underscore($modulo);
         $url = '/' . str_replace('.', '/', $nombre) . '/dashboard';
         $class = 'Controller_Dashboard';

@@ -66,18 +66,18 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
         parent::beforeFilter();
         // si la acción solicitada es de la API no se hace nada para forzar
         // contribuyente, ya que deberá ser validado en cada recurso de la API
-        if ($this->request->getParsedParams()['action'] == 'api') {
+        if ($this->request->getRouteConfig()['action'] == 'api') {
             return;
         }
         // forzar obtener contribuyente
         $dte = (
-            strpos($this->request->getParsedParams()['module'], 'Dte') === 0
-            && $this->request->getParsedParams()['controller'] != 'contribuyentes'
+            strpos($this->request->getRouteConfig()['module'], 'Dte') === 0
+            && $this->request->getRouteConfig()['controller'] != 'contribuyentes'
             && !$this->Auth->allowedWithoutLogin()
         );
         $otros = false;
         foreach ((array)config('app.modulos_empresa') as $modulo) {
-            if (strpos($this->request->getParsedParams()['module'], $modulo) === 0) {
+            if (strpos($this->request->getRouteConfig()['module'], $modulo) === 0) {
                 $otros = true;
                 break;
             }

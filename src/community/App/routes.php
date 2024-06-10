@@ -21,39 +21,42 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// rutas para servicios web de módulos asociados a empresas
-\sowerphp\core\Routing_Router::connect('/api/dte/:controller/*', [
+// Instancia del servicio de enrutamiento.
+$router = router();
+
+// Rutas para servicios web de módulos asociados a empresas.
+$router->connect('/api/dte/:controller/*', [
     'module' => 'Dte',
     'action' => 'api',
 ]);
-\sowerphp\core\Routing_Router::connect('/api/dte/admin/:controller/*', [
+$router->connect('/api/dte/admin/:controller/*', [
     'module' => 'Dte.Admin',
     'action' => 'api',
 ]);
-\sowerphp\core\Routing_Router::connect('/api/honorarios/:controller/*', [
+$router->connect('/api/honorarios/:controller/*', [
     'module' => 'Honorarios',
     'action' => 'api',
 ]);
 
-// rutas para consultar DTE
-\sowerphp\core\Routing_Router::connect('/consultar', [
+// Rutas para consultar DTE.
+$router->connect('/consultar', [
     'module' => 'Dte',
     'controller' => 'DteEmitidos',
     'action' => 'consultar',
 ]);
-\sowerphp\core\Routing_Router::connect('/boletas', [
+$router->connect('/boletas', [
     'module' => 'Dte',
     'controller' => 'DteEmitidos',
     'action' => 'consultar',
     39,
 ]);
 
-// rutas para utilidades (no asociadas a empresas)
-\sowerphp\core\Routing_Router::connect('/api/utilidades/:controller/*', [
+// Rutas para utilidades (no asociadas a empresas).
+$router->connect('/api/utilidades/:controller/*', [
     'module' => 'Utilidades',
     'action' => 'api',
 ]);
-\sowerphp\core\Routing_Router::connect('/utilidades', [
+$router->connect('/utilidades', [
   'module' => 'Utilidades',
   'controller' => 'module',
   'action' => 'index'

@@ -55,7 +55,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $n_detalles = $Emisor->{'count'.$this->config['model']['plural']}((int)$periodo);
         if (!$n_detalles && !$Libro->exists()) {
             \sowerphp\core\Facade_Session_Message::write('No hay documentos ni libro del período '.$periodo.'.', 'error');
-            $this->redirect('/dte/'.$this->request->getParsedParams()['controller']);
+            $this->redirect('/dte/'.$this->request->getRouteConfig()['controller']);
         }
         $resumen = $Libro->getResumen();
         $operaciones = [];
@@ -90,7 +90,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $detalle = $Emisor->{'get'.$this->config['model']['plural']}((int)$periodo);
         if (!$detalle) {
             \sowerphp\core\Facade_Session_Message::write('No hay documentos en el período '.$periodo.'.', 'error');
-            $this->redirect('/dte/'.$this->request->getParsedParams()['controller']);
+            $this->redirect('/dte/'.$this->request->getRouteConfig()['controller']);
         }
         foreach ($detalle as &$d) {
             unset($d['tipo_transaccion']);
@@ -199,7 +199,7 @@ abstract class Controller_Base_Libros extends \Controller_App
                 return;
             }
             // redirigir a la página que envía el libro sin movimientos
-            $this->redirect('/dte/'.$this->request->getParsedParams()['controller'].'/enviar_sii/'.$periodo);
+            $this->redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/enviar_sii/'.$periodo);
         }
     }
 
