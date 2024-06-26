@@ -5,19 +5,19 @@
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
- * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
- * publicada por la Fundación para el Software Libre, ya sea la versión
- * 3 de la Licencia, o (a su elección) cualquier versión posterior de la
- * misma.
+ * modificarlo bajo los términos de la Licencia Pública General Affero
+ * de GNU publicada por la Fundación para el Software Libre, ya sea la
+ * versión 3 de la Licencia, o (a su elección) cualquier versión
+ * posterior de la misma.
  *
  * Este programa se distribuye con la esperanza de que sea útil, pero
  * SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita
  * MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO.
- * Consulte los detalles de la Licencia Pública General Affero de GNU para
- * obtener una información más detallada.
+ * Consulte los detalles de la Licencia Pública General Affero de GNU
+ * para obtener una información más detallada.
  *
- * Debería haber recibido una copia de la Licencia Pública General Affero de GNU
- * junto a este programa.
+ * Debería haber recibido una copia de la Licencia Pública General
+ * Affero de GNU junto a este programa.
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
@@ -133,7 +133,7 @@ class Controller_Documentos extends \Controller_App
      */
     public function _api_emitir_POST()
     {
-        extract($this->getQuery([
+        extract($this->request->queries([
             'formato' => 'json',
             'normalizar' => true,
             'links' => false,
@@ -465,7 +465,7 @@ class Controller_Documentos extends \Controller_App
             } else {
                 $this->Api->send('No fue posible guardar el DTE temporal', 507);
             }
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+        } catch (\sowerphp\core\Exception_Database $e) {
             $this->Api->send('No fue posible guardar el DTE temporal: '.$e->getMessage(), 507);
         }
         // enviar por correo el DTE temporal si así se solicitó
@@ -603,7 +603,7 @@ class Controller_Documentos extends \Controller_App
         }
         // variables para la vista
         $this->set([
-            '_header_extra' => ['js' => ['/dte/js/dte.js'], 'css' => ['/dte/css/dte.css']],
+            '__view_header' => ['js' => ['/dte/js/dte.js'], 'css' => ['/dte/css/dte.css']],
             'Emisor' => $Emisor,
             'sucursales_actividades' => $Emisor->getSucursalesActividades(),
             'actividades_economicas' => $Emisor->getListActividades(),
@@ -1036,7 +1036,7 @@ class Controller_Documentos extends \Controller_App
      */
     public function _api_generar_POST()
     {
-        extract($this->getQuery([
+        extract($this->request->queries([
             'getXML' => false,
             'email' => false,
             'links' => false,
@@ -1272,7 +1272,7 @@ class Controller_Documentos extends \Controller_App
             );
             try {
                 $documentos = $DteEmitidos->getObjects();
-            } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+            } catch (\sowerphp\core\Exception_Database $e) {
                 \sowerphp\core\Facade_Session_Message::write(
                     $e->getMessage(), 'error'
                 );

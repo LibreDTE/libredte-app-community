@@ -18,7 +18,7 @@
 
 <div class="row mb-4">
     <div class="col-md-4 mb-4">
-        <a href="https://www.libredte.cl/shop/category/libredte-certificacion-dte-1" title="Solicitar Servicio de Certificación">
+        <a href="https://www.libredte.cl/certificacion-dte" title="Solicitar Servicio de Certificación de DTE" target="_blank">
             <img src="https://libredte.cl/img/precios/libredte-certificacion-dte.jpg" alt="Con nosotros puedes certificar tus documentos ante el SII para ocupar tu propio sistema" class="img-fluid img-thumbnail" />
         </a>
     </div>
@@ -29,10 +29,10 @@
                     <h1 class="display-4">¿Complicada la Certificación?</h1>
                     <p class="lead">Déjanos este tedioso proceso a nosotros. Somos expertos en hacerla.</p>
                     <hr class="my-4">
-                    <p>Si ya tienes un software de mercado para emitir documentos tributarios electrónicos, pero falta que tu empresa tenga la autorización del SII, con este servicio quedará habilitada. Desde 30.000 pesos según los documentos que requieras certificar.</p>
+                    <p>Si ya tienes un software de mercado para emitir documentos tributarios electrónicos, pero falta que tu empresa tenga la autorización del SII, con este servicio quedará habilitada y lista para utilizar LibreDTE u otro software de mercado.</p>
                     <p>
-                        <a class="btn btn-primary col-12 btn-lg" href="https://www.libredte.cl/shop/category/libredte-certificacion-dte-1" role="button">
-                            Solicitar Certificación de DTE
+                        <a class="btn btn-primary col-12 btn-lg" href="https://www.libredte.cl/certificacion-dte" role="button" target="_blank">
+                            Solicitar Servicio de Certificación de DTE
                         </a>
                     </p>
                 </div>

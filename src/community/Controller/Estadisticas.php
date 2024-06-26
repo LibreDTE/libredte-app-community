@@ -5,19 +5,19 @@
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
- * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
- * publicada por la Fundación para el Software Libre, ya sea la versión
- * 3 de la Licencia, o (a su elección) cualquier versión posterior de la
- * misma.
+ * modificarlo bajo los términos de la Licencia Pública General Affero
+ * de GNU publicada por la Fundación para el Software Libre, ya sea la
+ * versión 3 de la Licencia, o (a su elección) cualquier versión
+ * posterior de la misma.
  *
  * Este programa se distribuye con la esperanza de que sea útil, pero
  * SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita
  * MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO.
- * Consulte los detalles de la Licencia Pública General Affero de GNU para
- * obtener una información más detallada.
+ * Consulte los detalles de la Licencia Pública General Affero de GNU
+ * para obtener una información más detallada.
  *
- * Debería haber recibido una copia de la Licencia Pública General Affero de GNU
- * junto a este programa.
+ * Debería haber recibido una copia de la Licencia Pública General
+ * Affero de GNU junto a este programa.
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
@@ -42,9 +42,9 @@ class Controller_Estadisticas extends \Controller_App
     /**
      * Método para permitir acciones sin estar autenticado.
      */
-    public function beforeFilter()
+    public function boot()
     {
-        parent::beforeFilter();
+        parent::boot();
     }
 
     /**
@@ -129,7 +129,7 @@ class Controller_Estadisticas extends \Controller_App
         $Usuarios = new \sowerphp\app\Sistema\Usuarios\Model_Usuarios();
         $Usuarios->setWhereStatement(['activo = true']);
         // agregar contribuyentes activos solo si se pide
-        extract($this->getQuery([
+        extract($this->request->queries([
             'contribuyentes_activos' => null,
         ]));
         $enterprise = is_libredte_enterprise();
@@ -144,7 +144,7 @@ class Controller_Estadisticas extends \Controller_App
                     }
                     unset($c['ambiente']);
                 }
-            } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+            } catch (\sowerphp\core\Exception_Database $e) {
                 $this->Api->send($e->getMessage(), 500);
             }
         }

@@ -5,19 +5,19 @@
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
- * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
- * publicada por la Fundación para el Software Libre, ya sea la versión
- * 3 de la Licencia, o (a su elección) cualquier versión posterior de la
- * misma.
+ * modificarlo bajo los términos de la Licencia Pública General Affero
+ * de GNU publicada por la Fundación para el Software Libre, ya sea la
+ * versión 3 de la Licencia, o (a su elección) cualquier versión
+ * posterior de la misma.
  *
  * Este programa se distribuye con la esperanza de que sea útil, pero
  * SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita
  * MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO.
- * Consulte los detalles de la Licencia Pública General Affero de GNU para
- * obtener una información más detallada.
+ * Consulte los detalles de la Licencia Pública General Affero de GNU
+ * para obtener una información más detallada.
  *
- * Debería haber recibido una copia de la Licencia Pública General Affero de GNU
- * junto a este programa.
+ * Debería haber recibido una copia de la Licencia Pública General
+ * Affero de GNU junto a este programa.
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
@@ -61,9 +61,9 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
      * Método que fuerza la selección de un contribuyente si estamos en alguno
      * de los módulos que requieren uno para poder funcionar.
      */
-    public function beforeFilter()
+    public function boot()
     {
-        parent::beforeFilter();
+        parent::boot();
         // si la acción solicitada es de la API no se hace nada para forzar
         // contribuyente, ya que deberá ser validado en cada recurso de la API
         if ($this->request->getRouteConfig()['action'] == 'api') {
@@ -76,7 +76,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
             && !$this->Auth->allowedWithoutLogin()
         );
         $otros = false;
-        foreach ((array)config('app.modulos_empresa') as $modulo) {
+        foreach ((array)config('libredte.modulos_empresa') as $modulo) {
             if (strpos($this->request->getRouteConfig()['module'], $modulo) === 0) {
                 $otros = true;
                 break;
@@ -113,7 +113,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
     protected function getContribuyente(bool $obligar = true)
     {
         if (!isset($this->Contribuyente)) {
-            $this->Contribuyente =session('dte.Contribuyente');
+            $this->Contribuyente = session('dte.Contribuyente');
             if (!$this->Contribuyente) {
                 if ($obligar) {
                     \sowerphp\core\Facade_Session_Message::write('Antes de acceder a '.$this->request->getRequestUriDecoded().' debe seleccionar el contribuyente que usará durante la sesión de LibreDTE.', 'error');

@@ -610,19 +610,19 @@ try {
 }
 ?>
 <script>
-<?php if ($TransferenciaApp && $TransferenciaApp->getConfig()->disponible and  $TransferenciaApp->getConfig()->rut == $Emisor->getRUT()) : ?>
+<?php if ($TransferenciaApp && $TransferenciaApp->getConfig()->disponible &&  $TransferenciaApp->getConfig()->rut == $Emisor->getRUT()) : ?>
     var BcoPago = "<?=mb_substr((new \website\Sistema\General\Model_Bancos())->get($TransferenciaApp->getConfig()->banco)->banco,0,40)?>";
     var TpoCtaPago = "<?=['C' => 'CORRIENTE', 'V' => 'VISTA', 'A' => 'AHORRO'][$TransferenciaApp->getConfig()->tipo]?>";
     var NumCtaPago = "<?=mb_substr($TransferenciaApp->getConfig()->numero,0,20)?>";
 <?php else : ?>
-    var BcoPago = "";
-    var TpoCtaPago = "";
-    var NumCtaPago = "";
+    var BcoPago = '';
+    var TpoCtaPago = '';
+    var NumCtaPago = '';
 <?php endif; ?>
-$( '#TpoDocField' ).select2( {
-    theme: "bootstrap-5",
-    placeholder: $( this ).data( 'placeholder' ),
-} );
+$('#TpoDocField').select2({
+    theme: 'bootstrap-5',
+    placeholder: $(this).data('placeholder'),
+});
 window.addEventListener('load', function() {
     var eliminarButton = document.querySelectorAll('.detalle_eliminar');
     for (var i = 0; i < eliminarButton.length; i++) {

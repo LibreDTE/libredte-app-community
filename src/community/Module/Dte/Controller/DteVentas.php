@@ -5,19 +5,19 @@
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
- * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
- * publicada por la Fundación para el Software Libre, ya sea la versión
- * 3 de la Licencia, o (a su elección) cualquier versión posterior de la
- * misma.
+ * modificarlo bajo los términos de la Licencia Pública General Affero
+ * de GNU publicada por la Fundación para el Software Libre, ya sea la
+ * versión 3 de la Licencia, o (a su elección) cualquier versión
+ * posterior de la misma.
  *
  * Este programa se distribuye con la esperanza de que sea útil, pero
  * SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita
  * MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO.
- * Consulte los detalles de la Licencia Pública General Affero de GNU para
- * obtener una información más detallada.
+ * Consulte los detalles de la Licencia Pública General Affero de GNU
+ * para obtener una información más detallada.
  *
- * Debería haber recibido una copia de la Licencia Pública General Affero de GNU
- * junto a este programa.
+ * Debería haber recibido una copia de la Licencia Pública General
+ * Affero de GNU junto a este programa.
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
@@ -42,10 +42,10 @@ class Controller_DteVentas extends Controller_Base_Libros
     /**
      * Método para permitir acciones sin estar autenticado.
      */
-    public function beforeFilter()
+    public function boot()
     {
         $this->Auth->allow('_api_historial_GET');
-        parent::beforeFilter();
+        parent::boot();
     }
 
     /**
@@ -402,7 +402,7 @@ class Controller_DteVentas extends Controller_Base_Libros
      */
     public function _api_historial_GET($receptor, $fecha, $emisor, $dte = null, $folio = null, $total = null)
     {
-        extract($this->getQuery([
+        extract($this->request->queries([
             'formato' => 'json',
             'periodo_glosa' => true,
             'periodos' => 12,

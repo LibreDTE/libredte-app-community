@@ -1,4 +1,4 @@
-<?php $__block_title = 'Consultar Documento Emitido en LibreDTE'; ?>
+<?php $__view_title = 'Consultar Documento Emitido en LibreDTE'; ?>
 <div class="container">
     <div class="text-center mt-4 mb-4">
         <a href="<?=$_base?>/"><img src="<?=$_base?>/img/logo.png" alt="Logo" class="img-fluid" style="max-width: 200px" /></a>

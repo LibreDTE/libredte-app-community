@@ -5,19 +5,19 @@
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
- * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
- * publicada por la Fundación para el Software Libre, ya sea la versión
- * 3 de la Licencia, o (a su elección) cualquier versión posterior de la
- * misma.
+ * modificarlo bajo los términos de la Licencia Pública General Affero
+ * de GNU publicada por la Fundación para el Software Libre, ya sea la
+ * versión 3 de la Licencia, o (a su elección) cualquier versión
+ * posterior de la misma.
  *
  * Este programa se distribuye con la esperanza de que sea útil, pero
  * SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita
  * MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO.
- * Consulte los detalles de la Licencia Pública General Affero de GNU para
- * obtener una información más detallada.
+ * Consulte los detalles de la Licencia Pública General Affero de GNU
+ * para obtener una información más detallada.
  *
- * Debería haber recibido una copia de la Licencia Pública General Affero de GNU
- * junto a este programa.
+ * Debería haber recibido una copia de la Licencia Pública General
+ * Affero de GNU junto a este programa.
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
@@ -33,10 +33,10 @@ class Controller_DteTmps extends \Controller_App
     /**
      * Se permite descargar las cotizaciones sin estar logueado.
      */
-    public function beforeFilter()
+    public function boot()
     {
         $this->Auth->allow('cotizacion');
-        parent::beforeFilter();
+        parent::boot();
     }
 
     /**
@@ -60,7 +60,7 @@ class Controller_DteTmps extends \Controller_App
         try {
             $documentos_total = $Emisor->countDocumentosTemporales($filtros);
             if (!empty($pagina)) {
-                $filtros['limit'] = config('app.registers_per_page');
+                $filtros['limit'] = config('app.ui.pagination.registers');
                 $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = $documentos_total ? ceil($documentos_total/$filtros['limit']) : 0;
                 if ($pagina != 1 && $pagina > $paginas) {
@@ -105,7 +105,7 @@ class Controller_DteTmps extends \Controller_App
             $this->redirect('/dte/dte_tmps/listar');
         }
         $this->set([
-            '_header_extra' => ['js' => ['/dte/js/dte.js']],
+            '__view_header' => ['js' => ['/dte/js/dte.js']],
             'Emisor' => $Emisor,
             'Receptor' => $DteTmp->getReceptor(),
             'DteTmp' => $DteTmp,
@@ -132,7 +132,7 @@ class Controller_DteTmps extends \Controller_App
         }
         // datos por defecto
         $formatoPDF = $Emisor->getConfigPDF($DteTmp);
-        extract($this->getQuery([
+        extract($this->request->queries([
             'formato' => isset($_POST['formato'])
                 ? $_POST['formato']
                 : $formatoPDF['formato']
@@ -179,7 +179,7 @@ class Controller_DteTmps extends \Controller_App
         }
         // datos por defecto
         $formatoPDF = $Emisor->getConfigPDF($DteTmp);
-        extract($this->getQuery([
+        extract($this->request->queries([
             'formato' => isset($_POST['formato'])
                 ? $_POST['formato']
                 : $formatoPDF['formato']
@@ -363,7 +363,7 @@ class Controller_DteTmps extends \Controller_App
         }
         // datos por defecto
         $formatoPDF = $Emisor->getConfigPDF($DteTmp);
-        $config = $this->getQuery([
+        $config = $this->request->queries([
             'cotizacion' => 0,
             'formato' => $formatoPDF['formato'],
             'papelContinuo' => $formatoPDF['papelContinuo'],
@@ -416,7 +416,7 @@ class Controller_DteTmps extends \Controller_App
             $this->Api->send('No existe el documento temporal solicitado.', 404);
         }
         // datos por defecto
-        $config = $this->getQuery([
+        $config = $this->request->queries([
             'cotizacion' => 0,
             'base64' => false,
             'cedible' => $Emisor->config_pdf_dte_cedible,
@@ -431,10 +431,10 @@ class Controller_DteTmps extends \Controller_App
         if ($Emisor->config_pdf_web_verificacion) {
             $webVerificacion = $Emisor->config_pdf_web_verificacion;
         } else {
-            $webVerificacion = config('dte.web_verificacion');
-            if (!$webVerificacion) {
-                $webVerificacion = $this->request->getFullUrlWithoutQuery().'/boletas';
-            }
+            $webVerificacion = config(
+                'modules.Dte.boletas.web_verificacion',
+                url('/boletas')
+            );
         }
         $config['webVerificacion'] = in_array($DteTmp->dte, [39,41]) ? $webVerificacion : false;
         // generar código ESCPOS
@@ -582,7 +582,7 @@ class Controller_DteTmps extends \Controller_App
                 'Documento temporal eliminado.', 'ok'
             );
             $this->redirect('/dte/dte_tmps/listar');
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+        } catch (\sowerphp\core\Exception_Database $e) {
             \sowerphp\core\Facade_Session_Message::write(
                 'No fue posible eliminar el documento temporal: '.$e->getMessage()
             );
@@ -964,7 +964,7 @@ class Controller_DteTmps extends \Controller_App
         if (!$DteTmp->exists()) {
             $this->Api->send('No existe el documento temporal solicitado.', 404);
         }
-        extract($this->getQuery([
+        extract($this->request->queries([
             'getDetalle' => false,
             'getDatosDte' => false,
             'getEmailEnviados' => false,

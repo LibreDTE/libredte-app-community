@@ -5,19 +5,19 @@
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
- * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
- * publicada por la Fundación para el Software Libre, ya sea la versión
- * 3 de la Licencia, o (a su elección) cualquier versión posterior de la
- * misma.
+ * modificarlo bajo los términos de la Licencia Pública General Affero
+ * de GNU publicada por la Fundación para el Software Libre, ya sea la
+ * versión 3 de la Licencia, o (a su elección) cualquier versión
+ * posterior de la misma.
  *
  * Este programa se distribuye con la esperanza de que sea útil, pero
  * SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita
  * MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO.
- * Consulte los detalles de la Licencia Pública General Affero de GNU para
- * obtener una información más detallada.
+ * Consulte los detalles de la Licencia Pública General Affero de GNU
+ * para obtener una información más detallada.
  *
- * Debería haber recibido una copia de la Licencia Pública General Affero de GNU
- * junto a este programa.
+ * Debería haber recibido una copia de la Licencia Pública General
+ * Affero de GNU junto a este programa.
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
@@ -33,10 +33,10 @@ class Controller_DteEmitidos extends \Controller_App
     /**
      * Método para permitir acciones sin estar autenticado.
      */
-    public function beforeFilter()
+    public function boot()
     {
         $this->Auth->allow('pdf', 'xml', 'consultar');
-        parent::beforeFilter();
+        parent::boot();
     }
 
     /**
@@ -60,7 +60,7 @@ class Controller_DteEmitidos extends \Controller_App
         try {
             $documentos_total = $Emisor->countDocumentosEmitidos($filtros);
             if (!empty($pagina)) {
-                $filtros['limit'] = config('app.registers_per_page');
+                $filtros['limit'] = config('app.ui.pagination.registers');
                 $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = $documentos_total ? ceil($documentos_total/$filtros['limit']) : 0;
                 if ($pagina != 1 && $pagina > $paginas) {
@@ -68,7 +68,7 @@ class Controller_DteEmitidos extends \Controller_App
                 }
             }
             $documentos = $Emisor->getDocumentosEmitidos($filtros);
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+        } catch (\sowerphp\core\Exception_Database $e) {
             \sowerphp\core\Facade_Session_Message::write(
                 'Error al recuperar los documentos:<br/>'.$e->getMessage(), 'error'
             );
@@ -150,7 +150,7 @@ class Controller_DteEmitidos extends \Controller_App
         $cedible = ($DteEmitido->getTipo()->cedible && $DteEmitido->hasLocalXML());
         // asignar variables para la vista
         $this->set([
-            '_header_extra' => ['js' => ['/dte/js/dte.js']],
+            '__view_header' => ['js' => ['/dte/js/dte.js']],
             'Emisor' => $Emisor,
             'DteEmitido' => $DteEmitido,
             'datos' => $DteEmitido->hasLocalXML() ? $DteEmitido->getDatos() : [],
@@ -277,7 +277,7 @@ class Controller_DteEmitidos extends \Controller_App
             }
         }
         // datos por defecto y recibidos por GET
-        extract($this->getQuery([
+        extract($this->request->queries([
             'cedible' => isset($_POST['copias_cedibles'])
                 ? (int)(bool)$_POST['copias_cedibles']
                 : $cedible
@@ -312,10 +312,10 @@ class Controller_DteEmitidos extends \Controller_App
         if ($Emisor->config_pdf_web_verificacion) {
             $webVerificacion = $Emisor->config_pdf_web_verificacion;
         } else {
-            $webVerificacion = config('dte.web_verificacion');
-            if (!$webVerificacion) {
-                $webVerificacion = $this->request->getFullUrlWithoutQuery().'/boletas';
-            }
+            $webVerificacion = config(
+                'modules.Dte.boletas.web_verificacion',
+                url('/boletas')
+            );
         }
         $formatoPDF = $Emisor->getConfigPDF($DteEmitido);
         $config = [
@@ -458,7 +458,7 @@ class Controller_DteEmitidos extends \Controller_App
             $this->Api->send('No existe el DTE solicitado.', 400);
         }
         // datos por defecto
-        $config = $this->getQuery([
+        $config = $this->request->queries([
             'base64' => false,
             'cedible' => $Emisor->config_pdf_dte_cedible,
             'compress' => false,
@@ -478,10 +478,10 @@ class Controller_DteEmitidos extends \Controller_App
         if ($Emisor->config_pdf_web_verificacion) {
             $webVerificacion = $Emisor->config_pdf_web_verificacion;
         } else {
-            $webVerificacion = config('dte.web_verificacion');
-            if (!$webVerificacion) {
-                $webVerificacion = $this->request->getFullUrlWithoutQuery().'/boletas';
-            }
+            $webVerificacion = config(
+                'modules.Dte.boletas.web_verificacion',
+                url('/boletas')
+            );
         }
         $config['webVerificacion'] = in_array($DteEmitido->dte, [39,41]) ? $webVerificacion : false;
         // generar código ESCPOS
@@ -1095,7 +1095,7 @@ class Controller_DteEmitidos extends \Controller_App
         }
         // obtener DTE
         $Emisor = new Model_Contribuyente($emisor);
-        extract($this->getQuery([
+        extract($this->request->queries([
             'certificacion' => $Emisor->enCertificacion(),
         ]));
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, (int)$certificacion);
@@ -1251,7 +1251,7 @@ class Controller_DteEmitidos extends \Controller_App
         if (!$DteEmitido->exists()) {
             $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio.'.', 404);
         }
-        extract($this->getQuery([
+        extract($this->request->queries([
             'getXML' => false,
             'getDetalle' => false,
             'getDatosDte' => false,
@@ -1364,7 +1364,7 @@ class Controller_DteEmitidos extends \Controller_App
         }
         // datos por defecto
         $formatoPDF = $Emisor->getConfigPDF($DteEmitido);
-        $config = $this->getQuery([
+        $config = $this->request->queries([
             'formato' => $formatoPDF['formato'],
             'papelContinuo' => $formatoPDF['papelContinuo'],
             'base64' => false,
@@ -1383,10 +1383,10 @@ class Controller_DteEmitidos extends \Controller_App
         if ($Emisor->config_pdf_web_verificacion) {
             $webVerificacion = $Emisor->config_pdf_web_verificacion;
         } else {
-            $webVerificacion = config('dte.web_verificacion');
-            if (!$webVerificacion) {
-                $webVerificacion = $this->request->getFullUrlWithoutQuery().'/boletas';
-            }
+            $webVerificacion = config(
+                'modules.Dte.boletas.web_verificacion',
+                url('/boletas')
+            );
         }
         $config['webVerificacion'] = in_array($DteEmitido->dte, [39,41])
             ? $webVerificacion
@@ -1442,7 +1442,7 @@ class Controller_DteEmitidos extends \Controller_App
      */
     public function _api_ted_GET($dte, $folio, $emisor)
     {
-        extract($this->getQuery(['formato' => 'png', 'ecl' => 5, 'size' => 1]));
+        extract($this->request->queries(['formato' => 'png', 'ecl' => 5, 'size' => 1]));
         $User = $this->Api->getAuthUser();
         if (is_string($User)) {
             $this->Api->send($User, 401);
@@ -1507,7 +1507,7 @@ class Controller_DteEmitidos extends \Controller_App
         if (!$Firma) {
             $this->Api->send('No existe firma asociada.', 506);
         }
-        extract($this->getQuery([
+        extract($this->request->queries([
             'avanzado' => false,
             'certificacion' => (int)$Emisor->enCertificacion(),
         ]));
@@ -1534,7 +1534,7 @@ class Controller_DteEmitidos extends \Controller_App
      */
     public function _api_actualizar_estado_GET($dte, $folio, $emisor)
     {
-        extract($this->getQuery(['usarWebservice' => true]));
+        extract($this->request->queries(['usarWebservice' => true]));
         // verificar permisos y crear DteEmitido
         $User = $this->Api->getAuthUser();
         if (is_string($User)) {
@@ -1906,7 +1906,7 @@ class Controller_DteEmitidos extends \Controller_App
         $this->set([
             'dtes' => (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->getList(),
             'dte' => isset($_POST['dte']) ? $_POST['dte'] : $dte,
-            'language' => config('language'),
+            'language' => config('app.locale'),
         ]);
         $this->layout .= '.min';
         // si se solicitó un documento se busca
@@ -1938,7 +1938,7 @@ class Controller_DteEmitidos extends \Controller_App
      */
     public function _api_consultar_POST()
     {
-        extract($this->getQuery([
+        extract($this->request->queries([
             'getXML' => false,
         ]));
         // verificar si se pasaron credenciales de un usuario

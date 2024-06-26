@@ -5,19 +5,19 @@
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
- * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
- * publicada por la Fundación para el Software Libre, ya sea la versión
- * 3 de la Licencia, o (a su elección) cualquier versión posterior de la
- * misma.
+ * modificarlo bajo los términos de la Licencia Pública General Affero
+ * de GNU publicada por la Fundación para el Software Libre, ya sea la
+ * versión 3 de la Licencia, o (a su elección) cualquier versión
+ * posterior de la misma.
  *
  * Este programa se distribuye con la esperanza de que sea útil, pero
  * SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita
  * MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO.
- * Consulte los detalles de la Licencia Pública General Affero de GNU para
- * obtener una información más detallada.
+ * Consulte los detalles de la Licencia Pública General Affero de GNU
+ * para obtener una información más detallada.
  *
- * Debería haber recibido una copia de la Licencia Pública General Affero de GNU
- * junto a este programa.
+ * Debería haber recibido una copia de la Licencia Pública General
+ * Affero de GNU junto a este programa.
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
@@ -31,7 +31,7 @@ class Shell_Command_DteEmitidos_EventosReceptor extends \Shell_App
 
     public function main($grupo = null, $certificacion = 0, $meses = 2)
     {
-        $this->db = \sowerphp\core\Model_Datasource_Database::get();
+        $this->db = database()
         try {
             $this->actualizarEventosReceptor($meses, $grupo, $certificacion);
         } catch(\Exception $e) {
@@ -66,7 +66,7 @@ class Shell_Command_DteEmitidos_EventosReceptor extends \Shell_App
                     AND e.receptor_evento IS NULL
                     AND e.fecha  >=  (CURRENT_DATE - INTERVAL \''.(int)$meses.' MONTHS\')
             ', [
-                ':certificacion' => (int)$certificacion, 
+                ':certificacion' => (int)$certificacion,
                 ':grupo' => $grupo,
             ]);
         }

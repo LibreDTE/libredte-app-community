@@ -5,19 +5,19 @@
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
- * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
- * publicada por la Fundación para el Software Libre, ya sea la versión
- * 3 de la Licencia, o (a su elección) cualquier versión posterior de la
- * misma.
+ * modificarlo bajo los términos de la Licencia Pública General Affero
+ * de GNU publicada por la Fundación para el Software Libre, ya sea la
+ * versión 3 de la Licencia, o (a su elección) cualquier versión
+ * posterior de la misma.
  *
  * Este programa se distribuye con la esperanza de que sea útil, pero
  * SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita
  * MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO.
- * Consulte los detalles de la Licencia Pública General Affero de GNU para
- * obtener una información más detallada.
+ * Consulte los detalles de la Licencia Pública General Affero de GNU
+ * para obtener una información más detallada.
  *
- * Debería haber recibido una copia de la Licencia Pública General Affero de GNU
- * junto a este programa.
+ * Debería haber recibido una copia de la Licencia Pública General
+ * Affero de GNU junto a este programa.
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
@@ -97,7 +97,7 @@ class Model_DteEmitidos extends \Model_Plural_App
                 t.tipo,
                 e.folio,
                 e.fecha,
-                '.$this->db->concat('r.rut', '-', 'r.dv').' AS rut,
+                r.rut || \'-\' || r.dv AS rut,
                 '.$razon_social.',
                 e.exento,
                 e.neto,
@@ -233,8 +233,11 @@ class Model_DteEmitidos extends \Model_Plural_App
     {
         $hora = $this->db->xml('xml', '/*/SetDTE/Caratula/TmstFirmaEnv', 'http://www.sii.cl/SiiDte');
         return $this->db->getTable('
-            SELECT ('.$this->db->concat('SUBSTR('.$hora.', 12, 2)', '\':00\'').') AS hora, COUNT(*) AS total
-            FROM dte_emitido
+            SELECT
+                SUBSTR('.$hora.', 12, 2) || \':00\' AS hora,
+                COUNT(*) AS total
+            FROM
+                dte_emitido
             WHERE
                 emisor = :emisor
                 AND certificacion = :certificacion

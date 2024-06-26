@@ -1,26 +1,41 @@
 #
-# Variables de entorno Aplicación Web de LibreDTE Edición Comunidad
+# Variables de entorno Aplicación Web de LibreDTE Edición Comunidad.
 #
 
-# configuración de la base de datos
-#LIBREDTE_APP_DATABASE_DEFAULT_HOST="localhost"
-#LIBREDTE_APP_DATABASE_DEFAULT_PORT=5432
-#LIBREDTE_APP_DATABASE_DEFAULT_USER="libredte"
-LIBREDTE_APP_DATABASE_DEFAULT_PASS=""
-#LIBREDTE_APP_DATABASE_DEFAULT_NAME="libredte"
+# URL donde se está ejecutando la aplicación.
+#APP_URL="http://localhost:8000/libredte-community"
 
-# configuración del correo electrónico
-#LIBREDTE_APP_EMAIL_DEFAULT_HOST="ssl://smtp.gmail.com"
-#LIBREDTE_APP_EMAIL_DEFAULT_PORT=465
-#LIBREDTE_APP_EMAIL_DEFAULT_USER=""
-#LIBREDTE_APP_EMAIL_DEFAULT_PASS=""
-#LIBREDTE_APP_EMAIL_DEFAULT_FROM_EMAIL=""
-#LIBREDTE_APP_EMAIL_DEFAULT_FROM_NAME="LibreDTE"
-#LIBREDTE_APP_EMAIL_DEFAULT_TO=""
+# Clave de encriptación.
+APP_KEY=""
 
-# configuración del módulo de facturación electrónica
-LIBREDTE_APP_DTE_PKEY=""
+# Configuración de base de datos (PostgreSQL).
+#DB_HOST="host.docker.internal"
+#DB_USERNAME="libredte"
+DB_PASSWORD=""
+#DB_DATABASE="libredte"
 
-# token de API Gateway para desbloquear funcionalidades extras
-# contrata un plan en: https://www.apigateway.cl
-#LIBREDTE_APP_PROVEEDORES_API_APIGATEWAY_TOKEN=""
+# Configuración de caché (Redis).
+#REDIS_HOST="host.docker.internal"
+
+# Configuración de correo electrónico.
+#MAIL_HOST="ssl://smtp.gmail.com"
+#MAIL_PORT="465"
+#MAIL_ENCRYPTION="ssl"
+MAIL_USERNAME=""
+MAIL_PASSWORD=""
+#MAIL_FROM_EMAIL=""
+#MAIL_FROM_NAME="No Responder LibreDTE"
+#MAIL_TO_EMAIL=""
+
+# Configuración del servicio de API Gateway.
+# Token de API Gateway para desbloquear funcionalidades extras.
+# Contrata un plan en: https://www.apigateway.cl
+SERVICES_APIGATEWAY_TOKEN=""
+
+# Configuración del servicio reCAPTCHA.
+#SERVICES_RECAPTCHA_PUBLIC_KEY=""
+#SERVICES_RECAPTCHA_PRIVATE_KEY=""
+
+# Configuración del servicio Dropbox.
+#SERVICES_DROPBOX_KEY=""
+#SERVICES_DROPBOX_SECRET=""

@@ -16,7 +16,7 @@
 
 <div class="row mb-4">
     <div class="col-md-4 mb-4">
-        <a href="https://contafi.cl" title="Ir a www.contafi.cl">
+        <a href="https://www.contafi.cl" title="Ir a www.contafi.cl" target="_blank">
             <img src="https://contafi.cl/static/img/banners/contafi_banner_500x500.png" alt="Boletas de Terceros en ContaFi" class="img-fluid img-thumbnail" />
         </a>
     </div>
@@ -32,7 +32,7 @@
                 <li>Emite BTE masivamente de manera sencilla y rápida.</li>
             </ul>
             <p>
-                <a class="btn btn-primary col-12 btn-lg" href="https://contafi.cl" role="button">
+                <a class="btn btn-primary col-12 btn-lg" href="https://www.contafi.cl" role="button" target="_blank">
                     Ir a www.contafi.cl
                 </a>
             </p>
@@ -45,7 +45,7 @@
         ¿Buscas emisión de Boletas de Honorarios en 2<sup>da</sup> categoría? ¡Revisa BHExpress!
     </div>
     <div class="card-body text-center">
-        <a href="https://bhexpress.cl">
+        <a href="https://www.bhexpress.cl" target="_blank">
             <img src="https://bhexpress.cl/static/img/banners/bhexpress_banner_750x110.png" alt="BHExpress" class="img-fluid" />
         </a>
     </div>

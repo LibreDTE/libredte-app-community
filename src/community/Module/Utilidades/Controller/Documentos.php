@@ -5,19 +5,19 @@
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
- * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
- * publicada por la Fundación para el Software Libre, ya sea la versión
- * 3 de la Licencia, o (a su elección) cualquier versión posterior de la
- * misma.
+ * modificarlo bajo los términos de la Licencia Pública General Affero
+ * de GNU publicada por la Fundación para el Software Libre, ya sea la
+ * versión 3 de la Licencia, o (a su elección) cualquier versión
+ * posterior de la misma.
  *
  * Este programa se distribuye con la esperanza de que sea útil, pero
  * SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita
  * MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO.
- * Consulte los detalles de la Licencia Pública General Affero de GNU para
- * obtener una información más detallada.
+ * Consulte los detalles de la Licencia Pública General Affero de GNU
+ * para obtener una información más detallada.
  *
- * Debería haber recibido una copia de la Licencia Pública General Affero de GNU
- * junto a este programa.
+ * Debería haber recibido una copia de la Licencia Pública General
+ * Affero de GNU junto a este programa.
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
@@ -41,12 +41,12 @@ class Controller_Documentos extends \Controller_App
     public function xml()
     {
         // variables para el formulario
-        $documentos_json =session('documentos_json');
+        $documentos_json = session('documentos_json');
         if ($documentos_json) {
             session()->forget('documentos_json');
         }
         $this->set([
-            '_header_extra' => ['js' => ['/utilidades/js/utilidades.js', '/dte/js/dte.js']],
+            '__view_header' => ['js' => ['/utilidades/js/utilidades.js', '/dte/js/dte.js']],
             'actividades_economicas' => (new Model_ActividadEconomicas())->getList(),
             'comunas' => (new Model_Comunas())->getList(),
             'documentos_json' => $documentos_json,
@@ -581,7 +581,7 @@ class Controller_Documentos extends \Controller_App
             }
             // generar PDF
             $pdf = new \sasco\LibreDTE\Sii\Dte\PDF\Dte($papelContinuo);
-            $pdf->setFooterText(config('dte.pdf.footer'));
+            $pdf->setFooterText(config('modules.Dte.pdf.footer'));
             if (!empty($Caratula['FchResol']) && isset($Caratula['NroResol'])) {
                 $pdf->setResolucion(['FchResol' => $Caratula['FchResol'], 'NroResol' => (int)$Caratula['NroResol']]);
             }
@@ -804,7 +804,7 @@ class Controller_Documentos extends \Controller_App
         $Emisor->modificado = date('Y-m-d H:i:s');
         try {
             return $Emisor->save();
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+        } catch (\sowerphp\core\Exception_Database $e) {
             return false;
         }
     }
@@ -856,7 +856,7 @@ class Controller_Documentos extends \Controller_App
         $Receptor->modificado = date('Y-m-d H:i:s');
         try {
             return $Receptor->save() ? $Receptor : false;
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+        } catch (\sowerphp\core\Exception_Database $e) {
             return false;
         }
     }

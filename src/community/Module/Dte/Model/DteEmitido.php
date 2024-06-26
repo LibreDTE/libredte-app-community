@@ -5,26 +5,26 @@
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
- * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
- * publicada por la Fundación para el Software Libre, ya sea la versión
- * 3 de la Licencia, o (a su elección) cualquier versión posterior de la
- * misma.
+ * modificarlo bajo los términos de la Licencia Pública General Affero
+ * de GNU publicada por la Fundación para el Software Libre, ya sea la
+ * versión 3 de la Licencia, o (a su elección) cualquier versión
+ * posterior de la misma.
  *
  * Este programa se distribuye con la esperanza de que sea útil, pero
  * SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita
  * MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO.
- * Consulte los detalles de la Licencia Pública General Affero de GNU para
- * obtener una información más detallada.
+ * Consulte los detalles de la Licencia Pública General Affero de GNU
+ * para obtener una información más detallada.
  *
- * Debería haber recibido una copia de la Licencia Pública General Affero de GNU
- * junto a este programa.
+ * Debería haber recibido una copia de la Licencia Pública General
+ * Affero de GNU junto a este programa.
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
 // namespace del modelo
 namespace website\Dte;
 
-use \sowerphp\core\Exception_Model_Datasource_Database as DatabaseException;
+use \sowerphp\core\Exception_Database as DatabaseException;
 use \sowerphp\core\Network_Http_Rest;
 use \sowerphp\core\Trigger;
 use \sowerphp\core\Utility_Array;
@@ -429,7 +429,7 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que realiza verificaciones a campos antes de guardar.
      */
-    public function save()
+    public function save(): bool
     {
         // corregir datos
         $this->anulado = (int)$this->anulado;
@@ -484,12 +484,12 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que inserta un registro nuevo en la base de datos.
      */
-    public function insert()
+    public function insert(): bool
     {
         if (!$this->fecha_hora_creacion) {
             $this->fecha_hora_creacion = date('Y-m-d H:i:s');
         }
-        parent::insert();
+        return parent::insert();
     }
 
     /**
@@ -1123,7 +1123,7 @@ class Model_DteEmitido extends Model_Base_Envio
      * Método que elimina el DTE, y si no hay DTE posterior del mismo tipo,
      * restaura el folio para que se volver a utilizar.
      */
-    public function delete($Usuario = null)
+    public function delete($Usuario = null): bool
     {
         $this->canBeDeleted($Usuario);
         $this->db->beginTransaction(true);
@@ -1173,7 +1173,7 @@ class Model_DteEmitido extends Model_Base_Envio
         // necesario esto, pero al haber datos antiguo malos no se puede
         // agregar la FK hasta corregir primero esos datos. Este DELETE
         // evitará nuevos casos con el error por la falta de la FK.
-        $this->db->query('
+        $this->db->executeRawQuery('
             DELETE
             FROM dte_referencia
             WHERE
@@ -1215,7 +1215,7 @@ class Model_DteEmitido extends Model_Base_Envio
         }
         // si es boleta y no hay límite de custodia fijado no se deja
         // borrar el XML (para qué? si no hay límite)
-        $limite = config('dte.custodia_boletas');
+        $limite = config('modulos.Dte.boletas.custodia');
         if (!$limite) {
             throw new \Exception(
                 'No hay límite de custodia para el XML de boletas, no se permite borrar (no es necesario).'
@@ -1380,7 +1380,7 @@ class Model_DteEmitido extends Model_Base_Envio
         \sasco\LibreDTE\Sii::setAmbiente((int)$this->certificacion);
         // enviar boleta al SII
         if (in_array($this->dte, [39, 41])) {
-            $class = config('dte.clase_boletas');
+            $class = config('modulos.Dte.boletas.envio_class');
             if (!$class || !class_exists($class)) {
                 throw new \Exception(
                     'El envío de boletas al SII no está disponible en este servidor de LibreDTE.'
@@ -1480,7 +1480,7 @@ class Model_DteEmitido extends Model_Base_Envio
         \sasco\LibreDTE\Sii::setAmbiente((int)$this->certificacion);
         // consultar estado de boleta
         if (in_array($this->dte, [39, 41])) {
-            $class = config('dte.clase_boletas');
+            $class = config('modulos.Dte.boletas.envio_class');
             if (!$class || !class_exists($class)) {
                 throw new \Exception(
                     'Consulta de estado de envío de boletas al SII no está disponible en este servidor de LibreDTE.'
@@ -1898,7 +1898,7 @@ class Model_DteEmitido extends Model_Base_Envio
             $fecha_hora = date('Y-m-d H:i:s');
             foreach ($to as $dest) {
                 try {
-                    $this->db->query('
+                    $this->db->executeRawQuery('
                         INSERT INTO dte_emitido_email
                         VALUES (
                             :emisor,
@@ -2295,7 +2295,10 @@ class Model_DteEmitido extends Model_Base_Envio
                 ? $this->getEmisor()->config_pdf_copias_cedibles
                 : $this->getEmisor()->config_pdf_dte_cedible
             ,
-            'webVerificacion' => config('dte.web_verificacion'),
+            'webVerificacion' => config(
+                'modules.Dte.boletas.web_verificacion',
+                url('/boletas')
+            ),
             'xml' => base64_encode($this->getXML()),
             'caratula' => [
                 'FchResol' => $this->certificacion
@@ -2389,7 +2392,10 @@ class Model_DteEmitido extends Model_Base_Envio
                 ? $this->getEmisor()->config_pdf_copias_cedibles
                 : $this->getEmisor()->config_pdf_dte_cedible
             ,
-            'webVerificacion' => config('dte.web_verificacion'),
+            'webVerificacion' => config(
+                'modules.Dte.boletas.web_verificacion',
+                url('/boletas')
+            ),
             'xml' => base64_encode($this->getXML()),
             'caratula' => [
                 'FchResol' => $this->certificacion

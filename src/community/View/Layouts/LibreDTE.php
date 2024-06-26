@@ -1,4 +1,4 @@
-<?php $Contribuyente =session('dte.Contribuyente'); ?>
+<?php $Contribuyente = session('dte.Contribuyente'); ?>
 <!--
 LibreDTE: Edición Comunidad (2015 - 2024).
 Copyright (C) LibreDTE <https://www.libredte.cl>
@@ -13,7 +13,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
         <meta name="author" content="LibreDTE" />
         <meta name="description" content="LibreDTE Edición Comunidad." />
         <meta name="keywords" content="facturas, boletas, sii, dte" />
-        <title><?=$_header_title?></title>
+        <title><?=$__view_title?></title>
         <link rel="shortcut icon" href="<?=$_base?>/img/favicon.png" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.2.0/css/all.css">
         <link href="https://fonts.googleapis.com/css?family=Oswald|Raleway" rel="stylesheet">
@@ -48,12 +48,12 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-<?=$_header_extra?>
+<?=$__view_header?>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg bg-light mb-4">
         <div class="container">
-            <a class="navbar-brand" href="<?=$_base?>/"><?=$_body_title?></a>
+            <a class="navbar-brand" href="<?=$_base?>/"><?=config('app.name')?></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -219,7 +219,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                         echo '<span class="small">';
                         echo 'time: ',round(microtime(true)-TIME_START, 2),' [s] - ';
                         echo 'memory: ',round(memory_get_usage()/1024/1024,2),' [MiB] - ';
-                        echo 'querys: ',\sowerphp\core\Model_Datasource_Database_Manager::$querysCount,' - ';
+                        echo 'queries: ',database()->getQueriesCount(),' - ';
                         echo 'cache: ',\sowerphp\core\Cache::$setCount,'/',\sowerphp\core\Cache::$getCount,'</span>',"\n";
                     }
                 ?>

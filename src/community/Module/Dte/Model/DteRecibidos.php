@@ -5,19 +5,19 @@
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
- * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
- * publicada por la Fundación para el Software Libre, ya sea la versión
- * 3 de la Licencia, o (a su elección) cualquier versión posterior de la
- * misma.
+ * modificarlo bajo los términos de la Licencia Pública General Affero
+ * de GNU publicada por la Fundación para el Software Libre, ya sea la
+ * versión 3 de la Licencia, o (a su elección) cualquier versión
+ * posterior de la misma.
  *
  * Este programa se distribuye con la esperanza de que sea útil, pero
  * SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita
  * MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO.
- * Consulte los detalles de la Licencia Pública General Affero de GNU para
- * obtener una información más detallada.
+ * Consulte los detalles de la Licencia Pública General Affero de GNU
+ * para obtener una información más detallada.
  *
- * Debería haber recibido una copia de la Licencia Pública General Affero de GNU
- * junto a este programa.
+ * Debería haber recibido una copia de la Licencia Pública General
+ * Affero de GNU junto a este programa.
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
@@ -174,8 +174,8 @@ class Model_DteRecibidos extends \Model_Plural_App
         }
         $where = ['d.receptor = :receptor', 'd.fecha BETWEEN :fecha_desde AND :fecha_hasta'];
         $vars = [
-            ':receptor' => $this->getContribuyente()->rut, 
-            ':fecha_desde' => $fecha_desde, 
+            ':receptor' => $this->getContribuyente()->rut,
+            ':fecha_desde' => $fecha_desde,
             ':fecha_hasta' => $fecha_hasta,
         ];
         // filtro emisor
@@ -242,7 +242,7 @@ class Model_DteRecibidos extends \Model_Plural_App
                 t.tipo,
                 r.folio,
                 r.fecha,
-                '.$this->db->concat('e.rut', '-', 'e.dv').' AS rut,
+                e.rut || \'-\' || e.dv AS rut,
                 e.razon_social,
                 r.exento,
                 r.neto,
@@ -270,9 +270,9 @@ class Model_DteRecibidos extends \Model_Plural_App
                 AND r.fecha BETWEEN :desde AND :hasta
             ORDER BY r.fecha, r.dte, r.folio
         ', [
-            ':receptor' => $this->getContribuyente()->rut, 
-            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
-            ':desde' => $desde, 
+            ':receptor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
             ':hasta' => $hasta,
         ]);
         foreach ($datos as &$dato) {
@@ -323,9 +323,9 @@ class Model_DteRecibidos extends \Model_Plural_App
             GROUP BY t.tipo
             ORDER BY total DESC
         ', [
-            ':receptor' => $this->getContribuyente()->rut, 
-            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
-            ':desde' => $desde, 
+            ':receptor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
             ':hasta' => $hasta,
         ]);
     }
@@ -345,9 +345,9 @@ class Model_DteRecibidos extends \Model_Plural_App
             GROUP BY fecha
             ORDER BY fecha
         ', [
-            ':receptor' => $this->getContribuyente()->rut, 
-            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
-            ':desde' => $desde, 
+            ':receptor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
             ':hasta' => $hasta,
         ]);
     }
@@ -367,9 +367,9 @@ class Model_DteRecibidos extends \Model_Plural_App
             GROUP BY sucursal
             ORDER BY total DESC
         ', [
-            ':receptor' => $this->getContribuyente()->rut, 
-            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
-            ':desde' => $desde, 
+            ':receptor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
             ':hasta' => $hasta,
         ]);
         foreach($datos as &$d) {
@@ -394,8 +394,8 @@ class Model_DteRecibidos extends \Model_Plural_App
             ORDER BY total DESC
         ', [
             ':receptor' => $this->getContribuyente()->rut,
-            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
-            ':desde' => $desde, 
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
             ':hasta' => $hasta,
         ]);
     }

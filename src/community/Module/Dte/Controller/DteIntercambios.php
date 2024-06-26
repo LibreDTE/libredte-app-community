@@ -5,19 +5,19 @@
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
- * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
- * publicada por la Fundación para el Software Libre, ya sea la versión
- * 3 de la Licencia, o (a su elección) cualquier versión posterior de la
- * misma.
+ * modificarlo bajo los términos de la Licencia Pública General Affero
+ * de GNU publicada por la Fundación para el Software Libre, ya sea la
+ * versión 3 de la Licencia, o (a su elección) cualquier versión
+ * posterior de la misma.
  *
  * Este programa se distribuye con la esperanza de que sea útil, pero
  * SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita
  * MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO.
- * Consulte los detalles de la Licencia Pública General Affero de GNU para
- * obtener una información más detallada.
+ * Consulte los detalles de la Licencia Pública General Affero de GNU
+ * para obtener una información más detallada.
  *
- * Debería haber recibido una copia de la Licencia Pública General Affero de GNU
- * junto a este programa.
+ * Debería haber recibido una copia de la Licencia Pública General
+ * Affero de GNU junto a este programa.
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
@@ -54,7 +54,7 @@ class Controller_DteIntercambios extends \Controller_App
         try {
             $documentos_total = $Emisor->countDocumentosIntercambios($filtros);
             if (!empty($pagina)) {
-                $filtros['limit'] = config('app.registers_per_page');
+                $filtros['limit'] = config('app.ui.pagination.registers');
                 $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = $documentos_total ? ceil($documentos_total/$filtros['limit']) : 0;
                 if ($pagina != 1 && $pagina > $paginas) {
@@ -62,7 +62,7 @@ class Controller_DteIntercambios extends \Controller_App
                 }
             }
             $documentos = $Emisor->getDocumentosIntercambios($filtros);
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+        } catch (\sowerphp\core\Exception_Database $e) {
             \sowerphp\core\Facade_Session_Message::write(
                 'Error al recuperar los documentos:<br/>'.$e->getMessage(), 'error'
             );
@@ -73,7 +73,7 @@ class Controller_DteIntercambios extends \Controller_App
             'Emisor' => $Emisor,
             'documentos' => $documentos,
             'documentos_total' => $documentos_total,
-            'paginas' => ceil($documentos_total / config('app.registers_per_page')),
+            'paginas' => ceil($documentos_total / config('app.ui.pagination.registers')),
             'pagina' => $pagina,
             'search' => $filtros,
             'soloPendientes' => $soloPendientes,
@@ -229,7 +229,7 @@ class Controller_DteIntercambios extends \Controller_App
             $this->Api->send('No existe el intercambio solicitado.', 404);
         }
         // armar configuración del PDF
-        extract($this->getQuery([
+        extract($this->request->queries([
             'papelContinuo' => false,
         ]));
         $config = [
@@ -276,7 +276,7 @@ class Controller_DteIntercambios extends \Controller_App
      */
     public function pdf($codigo, $cedible = false, $emisor = null, $dte = null, $folio = null)
     {
-        $get_query = http_build_query($this->getQuery([
+        $get_query = http_build_query($this->request->queries([
             'papelContinuo' => false,
         ]));
         $Receptor = $this->getContribuyente();
@@ -595,7 +595,7 @@ class Controller_DteIntercambios extends \Controller_App
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // buscar documentos
-        $filtros = $this->getQuery([
+        $filtros = $this->request->queries([
             'soloPendientes' => true,
             'emisor' => null,
             'folio' => null,

@@ -5,19 +5,19 @@
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
- * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
- * publicada por la Fundación para el Software Libre, ya sea la versión
- * 3 de la Licencia, o (a su elección) cualquier versión posterior de la
- * misma.
+ * modificarlo bajo los términos de la Licencia Pública General Affero
+ * de GNU publicada por la Fundación para el Software Libre, ya sea la
+ * versión 3 de la Licencia, o (a su elección) cualquier versión
+ * posterior de la misma.
  *
  * Este programa se distribuye con la esperanza de que sea útil, pero
  * SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita
  * MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO.
- * Consulte los detalles de la Licencia Pública General Affero de GNU para
- * obtener una información más detallada.
+ * Consulte los detalles de la Licencia Pública General Affero de GNU
+ * para obtener una información más detallada.
  *
- * Debería haber recibido una copia de la Licencia Pública General Affero de GNU
- * junto a este programa.
+ * Debería haber recibido una copia de la Licencia Pública General
+ * Affero de GNU junto a este programa.
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
@@ -37,7 +37,7 @@ class Controller_Iecv extends \Controller_App
     public function xml()
     {
         $this->set([
-            '_header_extra' => ['js' => ['/utilidades/js/utilidades.js']],
+            '__view_header' => ['js' => ['/utilidades/js/utilidades.js']],
         ]);
         // si no se viene por post terminar
         if (!isset($_POST['submit'])) {
@@ -198,7 +198,7 @@ class Controller_Iecv extends \Controller_App
             $LibroCompraVenta = new \sasco\LibreDTE\Sii\LibroCompraVenta();
             $LibroCompraVenta->loadXML(file_get_contents($_FILES['xml']['tmp_name']));
             $pdf = new \sasco\LibreDTE\Sii\Dte\PDF\LibroCompraVenta();
-            $pdf->setFooterText(config('dte.pdf.footer'));
+            $pdf->setFooterText(config('modules.Dte.pdf.footer'));
             $pdf->agregar($LibroCompraVenta->toArray());
             $pdf->Output($LibroCompraVenta->getID().'.pdf', 'D');
             exit; // TODO: enviar usando response()->send() / LibroCompraVenta::Output() / PDF

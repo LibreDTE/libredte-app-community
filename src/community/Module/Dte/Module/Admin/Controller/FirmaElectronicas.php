@@ -5,19 +5,19 @@
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
- * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
- * publicada por la Fundación para el Software Libre, ya sea la versión
- * 3 de la Licencia, o (a su elección) cualquier versión posterior de la
- * misma.
+ * modificarlo bajo los términos de la Licencia Pública General Affero
+ * de GNU publicada por la Fundación para el Software Libre, ya sea la
+ * versión 3 de la Licencia, o (a su elección) cualquier versión
+ * posterior de la misma.
  *
  * Este programa se distribuye con la esperanza de que sea útil, pero
  * SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita
  * MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO.
- * Consulte los detalles de la Licencia Pública General Affero de GNU para
- * obtener una información más detallada.
+ * Consulte los detalles de la Licencia Pública General Affero de GNU
+ * para obtener una información más detallada.
  *
- * Debería haber recibido una copia de la Licencia Pública General Affero de GNU
- * junto a este programa.
+ * Debería haber recibido una copia de la Licencia Pública General
+ * Affero de GNU junto a este programa.
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
@@ -102,7 +102,7 @@ class Controller_FirmaElectronicas extends \Controller_App
                     'Se asoció la firma electrónica de '.$Firma->getName().' ('.$Firma->getID().') al usuario '.$this->Auth->User->usuario.'.', 'ok'
                 );
                 $this->redirect('/dte/admin/firma_electronicas');
-            } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+            } catch (\sowerphp\core\Exception_Database $e) {
                 \sowerphp\core\Facade_Session_Message::write(
                     'Ocurrió un error al guardar la firma.<br/>'.$e->getMessage(), 'error'
                 );
@@ -131,7 +131,7 @@ class Controller_FirmaElectronicas extends \Controller_App
                 'Se eliminó la firma electrónica asociada a su usuario.', 'ok'
             );
             $this->redirect('/dte/admin/firma_electronicas');
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+        } catch (\sowerphp\core\Exception_Database $e) {
             \sowerphp\core\Facade_Session_Message::write(
                 'No fue posible eliminar la firma electrónica:<br/>'.$e->getMessage(), 'error'
             );

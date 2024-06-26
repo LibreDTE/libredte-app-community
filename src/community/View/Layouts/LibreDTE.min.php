@@ -1,4 +1,4 @@
-<?php $Contribuyente =session('dte.Contribuyente'); ?>
+<?php $Contribuyente = session('dte.Contribuyente'); ?>
 <!--
 LibreDTE: Edición Comunidad (2015 - 2024).
 Copyright (C) LibreDTE <https://www.libredte.cl>
@@ -13,7 +13,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
         <meta name="author" content="LibreDTE" />
         <meta name="description" content="LibreDTE Edición Comunidad." />
         <meta name="keywords" content="facturas, boletas, sii, dte" />
-        <title><?=$_header_title?></title>
+        <title><?=$__view_title?></title>
         <link rel="shortcut icon" href="<?=$_base?>/img/favicon.png" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.2.0/css/all.css">
         <link href="https://fonts.googleapis.com/css?family=Oswald|Raleway" rel="stylesheet">

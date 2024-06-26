@@ -5,26 +5,26 @@
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
- * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
- * publicada por la Fundación para el Software Libre, ya sea la versión
- * 3 de la Licencia, o (a su elección) cualquier versión posterior de la
- * misma.
+ * modificarlo bajo los términos de la Licencia Pública General Affero
+ * de GNU publicada por la Fundación para el Software Libre, ya sea la
+ * versión 3 de la Licencia, o (a su elección) cualquier versión
+ * posterior de la misma.
  *
  * Este programa se distribuye con la esperanza de que sea útil, pero
  * SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita
  * MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO.
- * Consulte los detalles de la Licencia Pública General Affero de GNU para
- * obtener una información más detallada.
+ * Consulte los detalles de la Licencia Pública General Affero de GNU
+ * para obtener una información más detallada.
  *
- * Debería haber recibido una copia de la Licencia Pública General Affero de GNU
- * junto a este programa.
+ * Debería haber recibido una copia de la Licencia Pública General
+ * Affero de GNU junto a este programa.
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
 // namespace del modelo
 namespace website\Dte;
 
-use \sowerphp\core\Exception_Model_Datasource_Database as DatabaseException;
+use \sowerphp\core\Exception_Database as DatabaseException;
 use \sowerphp\core\Model_Datasource_Session as Session;
 use \sowerphp\core\Network_Email;
 use \sowerphp\core\Network_Email_Imap;
@@ -303,7 +303,7 @@ class Model_Contribuyente extends \Model_App
             return null;
         }
         if ($this->config === null) {
-            $config = $this->db->getAssociativeArray('
+            $config = $this->getDB()->getTableWithAssociativeIndex('
                 SELECT configuracion, variable, valor, json
                 FROM contribuyente_config
                 WHERE contribuyente = :contribuyente
@@ -423,7 +423,7 @@ class Model_Contribuyente extends \Model_App
      * guardando es uno registrado por un usuario (se validan otros datos).
      * @param bool no_modificar =true Evita que se modifiquen ciertos contribuyentes reservados.
      */
-    public function save($registrado = false, $no_modificar = true)
+    public function save($registrado = false, $no_modificar = true): bool
     {
         // si no se debe guardar se entrega true (se hace creer que se guardó)
         if ($no_modificar && in_array($this->rut, self::$reservados)) {
@@ -445,7 +445,7 @@ class Model_Contribuyente extends \Model_App
                 if ($mimetype != 'image/png') {
                     throw new \Exception('Formato del logo debe ser PNG.');
                 }
-                $config = config('dte.logos');
+                $config = config('modules.Dte.contribuyentes.logos');
                 Utility_Image::resizeOnFile(
                     $_FILES['logo']['tmp_name'],
                     $config['width'],
@@ -510,7 +510,7 @@ class Model_Contribuyente extends \Model_App
      * Los datos del contribuyente de documentos emitidos, recibidos, config
      * extra, etc no se eliminan por defecto, se debe solicitar específicamente.
      */
-    public function delete(bool $all = false)
+    public function delete(bool $all = false): bool
     {
         $this->db->beginTransaction();
         // desasociar contribuyente del usuario
@@ -530,7 +530,7 @@ class Model_Contribuyente extends \Model_App
                 }
             }
             $vars = [':rut' => $this->rut];
-            $this->db->query('
+            $this->db->executeRawQuery('
                 DELETE
                 FROM contribuyente_config
                 WHERE contribuyente = :rut
@@ -540,27 +540,27 @@ class Model_Contribuyente extends \Model_App
                 return false;
             }
             // módulo Dte
-            $this->db->query('DELETE FROM contribuyente_dte WHERE contribuyente = :rut', $vars);
-            $this->db->query('DELETE FROM contribuyente_usuario WHERE contribuyente = :rut', $vars);
-            $this->db->query('DELETE FROM contribuyente_usuario_dte WHERE contribuyente = :rut', $vars);
-            $this->db->query('DELETE FROM contribuyente_usuario_sucursal WHERE contribuyente = :rut', $vars);
-            $this->db->query('DELETE FROM dte_boleta_consumo WHERE emisor = :rut', $vars);
-            $this->db->query('DELETE FROM dte_compra WHERE receptor = :rut', $vars);
-            $this->db->query('DELETE FROM dte_emitido WHERE emisor = :rut', $vars); // borra: dte_emitido_email, cobranza
-            $this->db->query('DELETE FROM dte_folio WHERE emisor = :rut', $vars); // borra: dte_caf
-            $this->db->query('DELETE FROM dte_guia WHERE emisor = :rut', $vars);
-            $this->db->query('DELETE FROM dte_recibido WHERE receptor = :rut', $vars);
-            $this->db->query('DELETE FROM dte_intercambio WHERE receptor = :rut', $vars);
-            $this->db->query('DELETE FROM dte_intercambio_recepcion WHERE recibe = :rut', $vars); // borra: dte_intercambio_recepcion_dte
-            $this->db->query('DELETE FROM dte_intercambio_recibo WHERE recibe = :rut', $vars); // borra: dte_intercambio_recibo_dte
-            $this->db->query('DELETE FROM dte_intercambio_resultado WHERE recibe = :rut', $vars); // borra: dte_intercambio_resultado_dte
-            $this->db->query('DELETE FROM dte_referencia WHERE emisor = :rut', $vars);
-            $this->db->query('DELETE FROM dte_tmp WHERE emisor = :rut', $vars); // borra: dte_tmp_email
-            $this->db->query('DELETE FROM dte_venta WHERE emisor = :rut', $vars);
-            $this->db->query('DELETE FROM item_clasificacion WHERE contribuyente = :rut', $vars); // borra: item
-            $this->db->query('DELETE FROM registro_compra WHERE receptor = :rut', $vars);
-            $this->db->query('DELETE FROM boleta_honorario WHERE receptor = :rut', $vars);
-            $this->db->query('DELETE FROM boleta_tercero WHERE emisor = :rut', $vars);
+            $this->db->executeRawQuery('DELETE FROM contribuyente_dte WHERE contribuyente = :rut', $vars);
+            $this->db->executeRawQuery('DELETE FROM contribuyente_usuario WHERE contribuyente = :rut', $vars);
+            $this->db->executeRawQuery('DELETE FROM contribuyente_usuario_dte WHERE contribuyente = :rut', $vars);
+            $this->db->executeRawQuery('DELETE FROM contribuyente_usuario_sucursal WHERE contribuyente = :rut', $vars);
+            $this->db->executeRawQuery('DELETE FROM dte_boleta_consumo WHERE emisor = :rut', $vars);
+            $this->db->executeRawQuery('DELETE FROM dte_compra WHERE receptor = :rut', $vars);
+            $this->db->executeRawQuery('DELETE FROM dte_emitido WHERE emisor = :rut', $vars); // borra: dte_emitido_email, cobranza
+            $this->db->executeRawQuery('DELETE FROM dte_folio WHERE emisor = :rut', $vars); // borra: dte_caf
+            $this->db->executeRawQuery('DELETE FROM dte_guia WHERE emisor = :rut', $vars);
+            $this->db->executeRawQuery('DELETE FROM dte_recibido WHERE receptor = :rut', $vars);
+            $this->db->executeRawQuery('DELETE FROM dte_intercambio WHERE receptor = :rut', $vars);
+            $this->db->executeRawQuery('DELETE FROM dte_intercambio_recepcion WHERE recibe = :rut', $vars); // borra: dte_intercambio_recepcion_dte
+            $this->db->executeRawQuery('DELETE FROM dte_intercambio_recibo WHERE recibe = :rut', $vars); // borra: dte_intercambio_recibo_dte
+            $this->db->executeRawQuery('DELETE FROM dte_intercambio_resultado WHERE recibe = :rut', $vars); // borra: dte_intercambio_resultado_dte
+            $this->db->executeRawQuery('DELETE FROM dte_referencia WHERE emisor = :rut', $vars);
+            $this->db->executeRawQuery('DELETE FROM dte_tmp WHERE emisor = :rut', $vars); // borra: dte_tmp_email
+            $this->db->executeRawQuery('DELETE FROM dte_venta WHERE emisor = :rut', $vars);
+            $this->db->executeRawQuery('DELETE FROM item_clasificacion WHERE contribuyente = :rut', $vars); // borra: item
+            $this->db->executeRawQuery('DELETE FROM registro_compra WHERE receptor = :rut', $vars);
+            $this->db->executeRawQuery('DELETE FROM boleta_honorario WHERE receptor = :rut', $vars);
+            $this->db->executeRawQuery('DELETE FROM boleta_tercero WHERE emisor = :rut', $vars);
             // eliminar archivos asociados al contribuyente (carpeta: /storage/static/contribuyentes/RUT)
             // TODO: implementar eliminación.
         }
@@ -593,7 +593,7 @@ class Model_Contribuyente extends \Model_App
         if ($attach) {
             $email->attach($attach);
         }
-        $app = config('page.body.title');
+        $app = config('app.name');
         $subject = __('[%(app)s] %(rut)s: %(asunto)s', [
             'app' => $app,
             'rut' => $this->rut . '-' . $this->dv,
@@ -640,7 +640,7 @@ class Model_Contribuyente extends \Model_App
             $where[] = ':a'.$key;
             $vars[':a'.$key] = $a;
         }
-        return $this->db->getAssociativeArray('
+        return $this->db->getTableWithAssociativeIndex('
             SELECT codigo, actividad_economica
             FROM actividad_economica
             WHERE codigo IN ('.implode(',', $where).')
@@ -674,7 +674,7 @@ class Model_Contribuyente extends \Model_App
     public function setUsuarios(array $usuarios): bool
     {
         $this->db->beginTransaction();
-        $this->db->query('
+        $this->db->executeRawQuery('
             DELETE
             FROM contribuyente_usuario
             WHERE contribuyente = :rut
@@ -732,7 +732,7 @@ class Model_Contribuyente extends \Model_App
      */
     public function getUsuarios(): array
     {
-        $usuarios = $this->db->getAssociativeArray('
+        $usuarios = $this->db->getTableWithAssociativeIndex('
             SELECT u.usuario, c.permiso
             FROM usuario AS u, contribuyente_usuario AS c
             WHERE u.id = c.usuario AND c.contribuyente = :rut
@@ -767,37 +767,29 @@ class Model_Contribuyente extends \Model_App
     }
 
     /**
-     * Método que determina si el usuario está o no autorizado a trabajar con el
-     * contribuyente.
+     * Método que determina si el usuario está o no autorizado a trabajar con
+     * el contribuyente.
+     *
      * @param Model_Usuario $Usuario con el usuario a verificar.
-     * @param string|array $permisos Permisos que se desean verificar que tenga el usuario
+     * @param string|array $permisos Permisos que se desean verificar que tenga
+     * el usuario.
      * @return bool =true si está autorizado.
      */
     public function usuarioAutorizado($Usuario, $permisos = []): bool
     {
-        // si es el usuario que registró la empresa se le autoriza
+        // Si es el usuario que registró la empresa se le autoriza.
         if ($this->usuario == $Usuario->id) {
             return true;
         }
-        // normalizar permisos
+        // Normalizar permisos.
         if (!is_array($permisos)) {
             $permisos = [$permisos];
         }
-        // si la aplicación solo tiene configurada una empresa se verifican los
-        // permisos normales (basados en grupos) de sowerphp
-        if (config('dte.empresa')) {
-            foreach ($permisos as $permiso) {
-                if ($Usuario->auth($permiso)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        // ver si el usuario es del grupo de soporte
+        // Ver si el usuario es del grupo de soporte.
         if ($this->config_app_soporte && $Usuario->inGroup(['soporte'])) {
             return true;
         }
-        // ver si el usuario tiene acceso a la empresa
+        // Ver si el usuario tiene acceso a la empresa.
         $usuario_permisos = $this->db->getCol('
             SELECT permiso
             FROM contribuyente_usuario
@@ -809,30 +801,30 @@ class Model_Contribuyente extends \Model_App
         if (!$usuario_permisos) {
             return false;
         }
-        // si se está buscando por un recurso en particular entonces se
-        // valida contra los permisos del sistema
+        // Si se está buscando por un recurso en particular entonces se valida
+        // contra los permisos del sistema.
         if (isset($permisos[0]) && $permisos[0][0] == '/') {
-            // actualizar permisos del usuario (útil cuando la llamada es vía API)
+            // Actualizar permisos del usuario (útil para llamada vía API).
             $this->setPermisos($Usuario);
-            // verificar permisos
+            // Verificar permisos.
             foreach ($permisos as $permiso) {
                 if ($Usuario->auth($permiso)) {
                     return true;
                 }
             }
         }
-        // se está pidiendo un permiso por tipo de permiso
-        // (agrupación, se verifica si pertenece)
+        // Se está pidiendo un permiso por tipo de permiso.
+        // Agrupación, se verifica si pertenece.
         else {
-            // si no se está pidiendo ningún permiso en particular, solo se
-            // quiere saber si el usuario tiene acceso a la empresa
+            // Si no se está pidiendo ningún permiso en particular, solo se
+            // quiere saber si el usuario tiene acceso a la empresa.
             if (!$permisos) {
                 if ($usuario_permisos) {
                     return true;
                 }
             }
-            // si se está pidiendo algún permiso en particular,
-            // se verifica si existe
+            // Si se está pidiendo algún permiso en particular,
+            // se verifica si existe.
             else {
                 foreach ($permisos as $p) {
                     if (in_array($p, $usuario_permisos)) {
@@ -841,12 +833,13 @@ class Model_Contribuyente extends \Model_App
                 }
             }
         }
-        // si no se logró determinar el permiso no se autoriza
+        // Si no se logró determinar el permiso no se autoriza.
         return false;
     }
 
     /**
      * Método que asigna los permisos al usuario.
+     *
      * @param Model_Usuario $Usuario Usuario al que se asignarán permisos.
      */
     public function setPermisos(&$Usuario)
@@ -878,7 +871,7 @@ class Model_Contribuyente extends \Model_App
                 ':usuario' => $Usuario->id,
             ]);
             // mapa de permisos definidos por la configuración y la empresa
-            $permisos = config('empresa.permisos');
+            $permisos = config('modules.Dte.contribuyentes.permisos');
             // asignar los grupos del sistema a los que se podría tener acceso
             // por el permisos de la empresa
             $admin_grupos = $this->getUsuario()->getGroups();
@@ -1029,7 +1022,7 @@ class Model_Contribuyente extends \Model_App
      */
     public function getDocumentosAutorizadosPorUsuario(): array
     {
-        $autorizados = $this->db->getAssociativeArray('
+        $autorizados = $this->db->getTableWithAssociativeIndex('
             SELECT
                 u.usuario,
                 d.dte
@@ -1056,7 +1049,7 @@ class Model_Contribuyente extends \Model_App
     public function setDocumentosAutorizadosPorUsuario(array $usuarios)
     {
         $this->db->beginTransaction();
-        $this->db->query('
+        $this->db->executeRawQuery('
             DELETE
             FROM contribuyente_usuario_dte
             WHERE contribuyente = :rut
@@ -2036,7 +2029,7 @@ class Model_Contribuyente extends \Model_App
                 e.folio,
                 e.tasa,
                 e.fecha,
-                '.$this->db->concat('r.rut', '-', 'r.dv').' AS rut,
+                r.rut || \'-\' || r.dv AS rut,
                 e.exento,
                 e.neto,
                 e.iva,
@@ -2268,7 +2261,7 @@ class Model_Contribuyente extends \Model_App
             SELECT
                 e.dte,
                 e.folio,
-                '.$this->db->concat('r.rut', '-', 'r.dv').' AS rut,
+                r.rut || \'-\' || r.dv AS rut,
                 e.tasa,
                 '.$razon_social.',
                 e.fecha,
@@ -2645,7 +2638,7 @@ class Model_Contribuyente extends \Model_App
                 1 AS operacion,
                 '.$tipo_col.' AS tipo,
                 e.fecha,
-                '.$this->db->concat('r.rut', '-', 'r.dv').' AS rut,
+                r.rut || \'-\' || r.dv AS rut,
                 r.razon_social,
                 e.neto,
                 e.tasa,
@@ -3122,7 +3115,7 @@ class Model_Contribuyente extends \Model_App
                 SELECT
                     r.dte,
                     r.folio,
-                    ' . $this->db->concat('e.rut', '-', 'e.dv') . ' AS rut,
+                    e.rut || \'-\' || e.dv AS rut,
                     r.tasa,
                     e.razon_social,
                     r.impuesto_tipo,
@@ -3194,7 +3187,7 @@ class Model_Contribuyente extends \Model_App
                 SELECT
                     r.dte,
                     r.folio,
-                    ' . $this->db->concat('e.rut', '-', 'e.dv') . ' AS rut,
+                    e.rut || \'-\' || e.dv AS rut,
                     r.tasa,
                     e.razon_social,
                     NULL AS impuesto_tipo,
@@ -3662,7 +3655,7 @@ class Model_Contribuyente extends \Model_App
         $this->db->beginTransaction();
         // Se eliminan todas las sucursales, para dejar solo lo que
         // viene en el arreglo.
-        $this->db->query('
+        $this->db->executeRawQuery('
             DELETE
             FROM contribuyente_usuario_sucursal
             WHERE contribuyente = :rut
@@ -3679,7 +3672,7 @@ class Model_Contribuyente extends \Model_App
             if (!$Sucursal->codigo) {
                 continue;
             }
-            $this->db->query('
+            $this->db->executeRawQuery('
                 INSERT INTO contribuyente_usuario_sucursal
                 VALUES (:rut, :usuario, :sucursal)
             ', [
@@ -3696,7 +3689,7 @@ class Model_Contribuyente extends \Model_App
      */
     public function getSucursalesPorUsuario(): array
     {
-        return $this->db->getAssociativeArray('
+        return $this->db->getTableWithAssociativeIndex('
             SELECT
                 u.usuario,
                 s.sucursal_sii
@@ -4739,7 +4732,7 @@ class Model_Contribuyente extends \Model_App
             $codigo = $app;
         }
         // cargar app si existe
-        $apps_config = (array)config('apps_3rd_party.' . $namespace);
+        $apps_config = (array)config('libredte.apps.' . $namespace);
         $App = (new Utility_Apps($apps_config))->getApp($codigo);
         if (!$App) {
             throw new \Exception('Aplicación solicitada "'.$app.'" no existe.', 404);
@@ -4774,7 +4767,7 @@ class Model_Contribuyente extends \Model_App
             unset($filtros[$key]);
         }
         // obtener aplicaciones según namespace y filtros
-        $apps_config = (array)config('apps_3rd_party.' . $namespace);
+        $apps_config = (array)config('libredte.apps.' . $namespace);
         $apps = (new Utility_Apps($apps_config))->getApps($filtros);
         // cargar variables por defecto (asociar contribuyente)
         foreach ($apps as $App) {
@@ -4893,7 +4886,7 @@ class Model_Contribuyente extends \Model_App
      */
     public function enCertificacion(): int
     {
-        $certificacion = config('dte.certificacion');
+        $certificacion = config('modules.Dte.sii.certificacion');
         if ($certificacion !== null) {
             return (int)(bool)$certificacion;
         }

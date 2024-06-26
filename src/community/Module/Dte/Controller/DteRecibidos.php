@@ -5,19 +5,19 @@
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
- * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
- * publicada por la Fundación para el Software Libre, ya sea la versión
- * 3 de la Licencia, o (a su elección) cualquier versión posterior de la
- * misma.
+ * modificarlo bajo los términos de la Licencia Pública General Affero
+ * de GNU publicada por la Fundación para el Software Libre, ya sea la
+ * versión 3 de la Licencia, o (a su elección) cualquier versión
+ * posterior de la misma.
  *
  * Este programa se distribuye con la esperanza de que sea útil, pero
  * SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita
  * MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO.
- * Consulte los detalles de la Licencia Pública General Affero de GNU para
- * obtener una información más detallada.
+ * Consulte los detalles de la Licencia Pública General Affero de GNU
+ * para obtener una información más detallada.
  *
- * Debería haber recibido una copia de la Licencia Pública General Affero de GNU
- * junto a este programa.
+ * Debería haber recibido una copia de la Licencia Pública General
+ * Affero de GNU junto a este programa.
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
@@ -55,7 +55,7 @@ class Controller_DteRecibidos extends \Controller_App
         try {
             $documentos_total = $Receptor->countDocumentosRecibidos($filtros);
             if (!empty($pagina)) {
-                $filtros['limit'] = config('app.registers_per_page');
+                $filtros['limit'] = config('app.ui.pagination.registers');
                 $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = ceil($documentos_total / $filtros['limit']);
                 if ($pagina != 1 && $pagina > $paginas) {
@@ -63,7 +63,7 @@ class Controller_DteRecibidos extends \Controller_App
                 }
             }
             $documentos = $Receptor->getDocumentosRecibidos($filtros);
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+        } catch (\sowerphp\core\Exception_Database $e) {
             \sowerphp\core\Facade_Session_Message::write(
                 'Error al recuperar los documentos:<br/>'.$e->getMessage(), 'error'
             );
@@ -93,7 +93,7 @@ class Controller_DteRecibidos extends \Controller_App
         $tipo_transacciones = \sasco\LibreDTE\Sii\RegistroCompraVenta::$tipo_transacciones;
         unset($tipo_transacciones[5], $tipo_transacciones[6]);
         $this->set([
-            '_header_extra' => ['js' => ['/dte/js/dte.js']],
+            '__view_header' => ['js' => ['/dte/js/dte.js']],
             'Receptor' => $Receptor,
             'tipos_documentos' => (new Model_DteTipos())->getList(true),
             'iva_no_recuperables' => (new Model_IvaNoRecuperables())->getList(),
@@ -133,7 +133,7 @@ class Controller_DteRecibidos extends \Controller_App
         $tipo_transacciones = \sasco\LibreDTE\Sii\RegistroCompraVenta::$tipo_transacciones;
         unset($tipo_transacciones[5], $tipo_transacciones[6]);
         $this->set([
-            '_header_extra' => ['js' => ['/dte/js/dte.js']],
+            '__view_header' => ['js' => ['/dte/js/dte.js']],
             'Receptor' => $Receptor,
             'DteRecibido' => $DteRecibido,
             'tipos_documentos' => (new Model_DteTipos())->getList(true),
@@ -172,7 +172,7 @@ class Controller_DteRecibidos extends \Controller_App
         }
         // agregar variables para la vista
         $this->set([
-            '_header_extra' => ['js' => ['/dte/js/dte.js']],
+            '__view_header' => ['js' => ['/dte/js/dte.js']],
             'Receptor' => $Receptor,
             'Emisor' => $DteRecibido->getEmisor(),
             'DteRecibido' => $DteRecibido,
@@ -365,7 +365,7 @@ class Controller_DteRecibidos extends \Controller_App
                 'DTE recibido guardado.', 'ok'
             );
             $this->redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+        } catch (\sowerphp\core\Exception_Database $e) {
             \sowerphp\core\Facade_Session_Message::write(
                 'No fue posible guardar el DTE: '.$e->getMessage(), 'error'
             );
@@ -490,7 +490,7 @@ class Controller_DteRecibidos extends \Controller_App
         }
         // datos por defecto y recibidos por GET
         $formatoPDF = $DteRecibido->getEmisor()->getConfigPDF($DteRecibido);
-        $config = $this->getQuery([
+        $config = $this->request->queries([
             'cedible' => isset($_POST['copias_cedibles'])
                 ? (int)(bool)$_POST['copias_cedibles']
                 : $cedible
@@ -588,7 +588,7 @@ class Controller_DteRecibidos extends \Controller_App
         }
         // datos por defecto
         $formatoPDF = $DteRecibido->getEmisor()->getConfigPDF($DteRecibido);
-        $config = $this->getQuery([
+        $config = $this->request->queries([
             'formato' => $formatoPDF['formato'],
             'papelContinuo' => $formatoPDF['papelContinuo'],
             'base64' => false,
@@ -644,7 +644,7 @@ class Controller_DteRecibidos extends \Controller_App
             $this->Api->send('No existe el documento recibido solicitado T'.$dte.'F'.$folio.' del emisor '.$emisor, 404);
         }
         // datos por defecto
-        $config = $this->getQuery([
+        $config = $this->request->queries([
             'base64' => false,
             'cedible' => false,
             'compress' => false,
@@ -706,7 +706,7 @@ class Controller_DteRecibidos extends \Controller_App
      */
     public function _api_estado_GET($emisor, $dte, $folio, $receptor)
     {
-        extract($this->getQuery(['avanzado' => false]));
+        extract($this->request->queries(['avanzado' => false]));
         $User = $this->Api->getAuthUser();
         if (is_string($User)) {
             $this->Api->send($User, 401);
@@ -772,7 +772,7 @@ class Controller_DteRecibidos extends \Controller_App
         if ($DteRecibido->receptor != $Receptor->rut) {
             $this->Api->send('RUT del receptor no corresponde al DTE T'.$dte.'F'.$folio, 400);
         }
-        extract($this->getQuery([
+        extract($this->request->queries([
             'getXML' => false,
             'getDetalle' => false,
             'getDatosDte' => false,
@@ -873,7 +873,7 @@ class Controller_DteRecibidos extends \Controller_App
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // buscar documentos
-        $filtros = $this->getQuery([
+        $filtros = $this->request->queries([
             'fecha_desde' => date('Y-m-01'),
             'fecha_hasta' => date('Y-m-d'),
             'fecha' => null,

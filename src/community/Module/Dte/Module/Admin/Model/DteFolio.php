@@ -5,19 +5,19 @@
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
- * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
- * publicada por la Fundación para el Software Libre, ya sea la versión
- * 3 de la Licencia, o (a su elección) cualquier versión posterior de la
- * misma.
+ * modificarlo bajo los términos de la Licencia Pública General Affero
+ * de GNU publicada por la Fundación para el Software Libre, ya sea la
+ * versión 3 de la Licencia, o (a su elección) cualquier versión
+ * posterior de la misma.
  *
  * Este programa se distribuye con la esperanza de que sea útil, pero
  * SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita
  * MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO.
- * Consulte los detalles de la Licencia Pública General Affero de GNU para
- * obtener una información más detallada.
+ * Consulte los detalles de la Licencia Pública General Affero de GNU
+ * para obtener una información más detallada.
  *
- * Debería haber recibido una copia de la Licencia Pública General Affero de GNU
- * junto a este programa.
+ * Debería haber recibido una copia de la Licencia Pública General
+ * Affero de GNU junto a este programa.
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
@@ -137,7 +137,7 @@ class Model_DteFolio extends \Model_App
      * Método para guardar el mantenedor del folio usando una transacción
      * serializable.
      */
-    public function save($exitOnFailTransaction = true)
+    public function save($exitOnFailTransaction = true): bool
     {
         if (!$this->db->beginTransaction(true) && $exitOnFailTransaction) {
             return false;
@@ -355,7 +355,7 @@ class Model_DteFolio extends \Model_App
         $DteCaf->xml = \website\Dte\Utility_Data::encrypt($xml);
         try {
             $DteCaf->save();
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+        } catch (\sowerphp\core\Exception_Database $e) {
             throw new \Exception('No fue posible guardar el CAF: '.$e->getMessage());
         }
         // actualizar mantenedor de folios
@@ -368,7 +368,7 @@ class Model_DteFolio extends \Model_App
         $this->alertado = 'f';
         try {
             $this->save();
-        } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+        } catch (\sowerphp\core\Exception_Database $e) {
             throw new \Exception('El CAF se guardó, pero no fue posible actualizar el mantenedor de folios, deberá actualizar manualmente. '.$e->getMessage());
         }
         return $Folios;

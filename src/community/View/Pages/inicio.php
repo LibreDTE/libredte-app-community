@@ -1,4 +1,4 @@
-<?php $__block_title = 'Facturas y Boletas Electrónicas con LibreDTE Edición Comunidad'; ?>
+<?php $__view_title = 'Facturas y Boletas Electrónicas con LibreDTE Edición Comunidad'; ?>
 
 <div class="row mb-4">
     <div class="col-sm-12">
@@ -98,7 +98,7 @@
 </div>
 
 <div class="text-center mt-4 mb-4">
-    <a href="https://www.billmysales.com">
+    <a href="https://www.billmysales.com" target="_blank">
         <img src="https://billmysales.com/static/img/banners/billmysales_banner_750x110.png" alt="Banner BillMySales">
     </a>
 </div>

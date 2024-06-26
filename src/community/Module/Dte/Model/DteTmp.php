@@ -5,19 +5,19 @@
  * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
- * modificarlo bajo los términos de la Licencia Pública General Affero de GNU
- * publicada por la Fundación para el Software Libre, ya sea la versión
- * 3 de la Licencia, o (a su elección) cualquier versión posterior de la
- * misma.
+ * modificarlo bajo los términos de la Licencia Pública General Affero
+ * de GNU publicada por la Fundación para el Software Libre, ya sea la
+ * versión 3 de la Licencia, o (a su elección) cualquier versión
+ * posterior de la misma.
  *
  * Este programa se distribuye con la esperanza de que sea útil, pero
  * SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita
  * MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO.
- * Consulte los detalles de la Licencia Pública General Affero de GNU para
- * obtener una información más detallada.
+ * Consulte los detalles de la Licencia Pública General Affero de GNU
+ * para obtener una información más detallada.
  *
- * Debería haber recibido una copia de la Licencia Pública General Affero de GNU
- * junto a este programa.
+ * Debería haber recibido una copia de la Licencia Pública General
+ * Affero de GNU junto a este programa.
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
@@ -622,7 +622,7 @@ class Model_DteTmp extends \Model_App
                             $pagos = $DteEmitidoReferencia->getPagosProgramados();
                             if ($pagos) {
                                 try {
-                                    $this->db->query('
+                                    $this->db->executeRawQuery('
                                         DELETE
                                         FROM cobranza
                                         WHERE
@@ -704,7 +704,7 @@ class Model_DteTmp extends \Model_App
     /**
      * Método que realiza verificaciones a campos antes de guardar.
      */
-    public function save()
+    public function save(): bool
     {
         // trigger al guardar el DTE temporal
         \sowerphp\core\Trigger::run('dte_dte_tmp_guardar', $this);
@@ -861,7 +861,7 @@ class Model_DteTmp extends \Model_App
             $fecha_hora = date('Y-m-d H:i:s');
             foreach ($to as $dest) {
                 try {
-                    $this->db->query('
+                    $this->db->executeRawQuery('
                         INSERT INTO dte_tmp_email
                         VALUES (:emisor, :receptor, :dte, :codigo, :email, :fecha_hora)
                     ', [
@@ -1144,7 +1144,10 @@ class Model_DteTmp extends \Model_App
             'compress' => false,
             'copias_tributarias' => 1,
             'copias_cedibles' => 0,
-            'webVerificacion' => config('dte.web_verificacion'),
+            'webVerificacion' => config(
+                'modules.Dte.boletas.web_verificacion',
+                url('/boletas')
+            ),
             'caratula' => [
                 'FchResol' => $this->getEmisor()->enCertificacion()
                     ? $this->getEmisor()->config_ambiente_certificacion_fecha
