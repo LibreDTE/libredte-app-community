@@ -72,7 +72,7 @@ class Shell_Command_Sii_Sincronizar extends \Shell_App
 
     private function getContribuyentes($grupo)
     {
-        $db = database()
+        $db = database();
         return $db->getCol('
             SELECT DISTINCT c.rut
             FROM

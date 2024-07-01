@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
 namespace website\Dte\Admin;
 
 /**
@@ -43,7 +42,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
     {
         $Contribuyente = $this->getContribuyente();
         $this->forceSearch(['contribuyente' => $Contribuyente->rut]);
-        parent::listar($page, $orderby, $order);
+        return parent::listar($page, $orderby, $order);
     }
 
     /**
@@ -59,7 +58,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
                 ->getList()
             ,
         ]);
-        parent::crear();
+        return parent::crear();
     }
 
     /**
@@ -75,7 +74,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
                 ->getList()
             ,
         ]);
-        parent::editar($Contribuyente->rut, $codigo);
+        return parent::editar($Contribuyente->rut, $codigo);
     }
 
     /**
@@ -94,7 +93,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
                 $this->module_url.$this->request->getRouteConfig()['controller'].'/listar'.$filterListar
             );
         }
-        parent::eliminar($Contribuyente->rut, $codigo);
+        return parent::eliminar($Contribuyente->rut, $codigo);
     }
 
     /**

@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
 namespace website\Honorarios;
 
 use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;

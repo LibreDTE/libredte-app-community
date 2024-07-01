@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
 namespace website\Dte\Informes;
 
 /**

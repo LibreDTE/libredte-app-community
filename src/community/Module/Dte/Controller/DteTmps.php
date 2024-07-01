@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
 namespace website\Dte;
 
 /**
@@ -33,7 +32,7 @@ class Controller_DteTmps extends \Controller_App
     /**
      * Se permite descargar las cotizaciones sin estar logueado.
      */
-    public function boot()
+    public function boot(): void
     {
         $this->Auth->allow('cotizacion');
         parent::boot();

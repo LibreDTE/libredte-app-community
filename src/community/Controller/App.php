@@ -61,7 +61,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
      * Método que fuerza la selección de un contribuyente si estamos en alguno
      * de los módulos que requieren uno para poder funcionar.
      */
-    public function boot()
+    public function boot(): void
     {
         parent::boot();
         // si la acción solicitada es de la API no se hace nada para forzar

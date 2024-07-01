@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
 namespace website\Dte;
 
 use \sowerphp\core\Exception_Database as DatabaseException;
@@ -1215,7 +1214,7 @@ class Model_DteEmitido extends Model_Base_Envio
         }
         // si es boleta y no hay límite de custodia fijado no se deja
         // borrar el XML (para qué? si no hay límite)
-        $limite = config('modulos.Dte.boletas.custodia');
+        $limite = config('modules.Dte.boletas.custodia');
         if (!$limite) {
             throw new \Exception(
                 'No hay límite de custodia para el XML de boletas, no se permite borrar (no es necesario).'
@@ -1380,7 +1379,7 @@ class Model_DteEmitido extends Model_Base_Envio
         \sasco\LibreDTE\Sii::setAmbiente((int)$this->certificacion);
         // enviar boleta al SII
         if (in_array($this->dte, [39, 41])) {
-            $class = config('modulos.Dte.boletas.envio_class');
+            $class = config('modules.Dte.boletas.envio_class');
             if (!$class || !class_exists($class)) {
                 throw new \Exception(
                     'El envío de boletas al SII no está disponible en este servidor de LibreDTE.'
@@ -1480,7 +1479,7 @@ class Model_DteEmitido extends Model_Base_Envio
         \sasco\LibreDTE\Sii::setAmbiente((int)$this->certificacion);
         // consultar estado de boleta
         if (in_array($this->dte, [39, 41])) {
-            $class = config('modulos.Dte.boletas.envio_class');
+            $class = config('modules.Dte.boletas.envio_class');
             if (!$class || !class_exists($class)) {
                 throw new \Exception(
                     'Consulta de estado de envío de boletas al SII no está disponible en este servidor de LibreDTE.'

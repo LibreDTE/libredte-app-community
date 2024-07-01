@@ -21,7 +21,8 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// no validar SSL de sitios del SII (solo en caso de problemas de certificado)
+// No validar SSL de sitios del SII (solo en caso de problemas de
+// certificado).
 if (config('modules.Dte.sii.verificar_ssl') === false) {
     \sasco\LibreDTE\Sii::setVerificarSSL(false);
 }

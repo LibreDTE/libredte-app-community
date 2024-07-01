@@ -23,6 +23,8 @@
 
 /**
  * Función que indica si la instancia de LibreDTE es Edición Enterprise o no.
+ *
+ * @return bool =true si es LibreDTE Edición Enterprise.
  */
 function is_libredte_enterprise(): bool
 {
@@ -30,11 +32,12 @@ function is_libredte_enterprise(): bool
 }
 
 /**
- * Función para consumir Servicios Web de API Gateway que se contratan en www.apigateway.cl
+ * Función para consumir Servicios Web de API Gateway que se contratan en
+ * www.apigateway.cl para funcionalidades extras de LibreDTE.
  */
 function apigateway_consume(string $recurso, $datos = []): array
 {
-    // configuración de la API para funcionalidades extras
+    // Configuración de la API para funcionalidades extras.
     $config = config('services.apigateway');
     if (!$config || (is_array($config) && empty($config['token']))) {
         throw new \Exception('Las funcionalidades extras no están disponibles en esta Edición Comunidad de LibreDTE. Para desbloquear las funcionalidades extras se debe [contratar un plan de www.apigateway.cl](https://www.apigateway.cl)', 402);
@@ -45,8 +48,8 @@ function apigateway_consume(string $recurso, $datos = []): array
             'token' => $config,
         ];
     }
-    // verificar si se pueden hacer consultas a la API o la cuenta se encuentra
-    // en pausa por haber alcanzado el número máximo de consultas
+    // Verificar si se pueden hacer consultas a la API o la cuenta se encuentra
+    // en pausa por haber alcanzado el número máximo de consultas.
     $message_429 = 'Las consultas a API Gateway se encuentran en pausa ya que se alcanzó el límite de la cuota permitida. Se podrán volver a realizar consultas después del %s. Recuperará el acceso a las funcionalidades extras de LibreDTE una vez se restablezca la cuota de consultas. Si se requiere aumentar la cantidad de consultas de manera inmediata se debe [contratar un plan superior de www.apigateway.cl](https://www.apigateway.cl)';
     $Cache = new \sowerphp\core\Cache();
     $Cache->setPrefix('libredte:apigateway:');
@@ -67,12 +70,12 @@ function apigateway_consume(string $recurso, $datos = []): array
             throw new \Exception($error_message, $error_code);
         }
     }
-    // realizar consulta a la API
+    // Realizar consulta a la API.
     $Client = new \apigatewaycl\api_client\ApiClient($config['token'], $config['url']);
     try {
         $Client->consume($recurso, $datos);
     } catch (\apigatewaycl\api_client\ApiException $e) {
-        // si falló por error 423 o 429, se pone en pausa las consultas a la API
+        // Si falló por error 423 o 429, se pone en pausa las consultas a la API
         // hasta que se pueda volver a consultar (hasta que se reestablezca la cuota)
         // en estricto rigor 423 es bloqueo de la cuenta, pero se procesa como si
         // fuese un 429 porque en teoría no se debería llegar a un error 423

@@ -23,28 +23,35 @@
 
 return [
 
-    // Menú para el módulo
-    'nav.module' => array(
-        '/moneda_cambios/listar/1/fecha/D' => array(
-            'name' => 'Cambios de moneda',
-            'desc' => 'Listado de tipos de cambio de monedas',
-            'icon' => 'far fa-money-bill-alt',
-        ),
-        '/actividad_economicas/listar' => array(
-            'name' => 'Actividad económica',
-            'desc' => 'Listado de actividades económicas del SII',
-            'icon' => 'fas fa-dollar-sign',
-        ),
-        '/bancos/listar' => array(
-            'name' => 'Bancos',
-            'desc' => 'Listado de bancos de Chile',
-            'icon' => 'fas fa-university',
-        ),
-        '/division_geopolitica' => array(
-            'name' => 'División geopolítica',
-            'desc' => 'Regiones, provincias y comunas del país',
-            'icon' => 'fa fa-globe',
-        ),
-    ),
+    'modules.Sistema.General' => [
+
+        // Título del módulo.
+        'title' => 'Configuración general del sistema',
+
+        // Menú para el módulo.
+        'nav' => [
+            '/moneda_cambios/listar/1/fecha/D' => [
+                'name' => 'Cambios de moneda',
+                'desc' => 'Listado de tipos de cambio de monedas',
+                'icon' => 'fa-regular fa-money-bill-alt',
+            ],
+            '/actividad_economicas/listar' => [
+                'name' => 'Actividad económica',
+                'desc' => 'Listado de actividades económicas del SII',
+                'icon' => 'fa-solid fa-dollar-sign',
+            ],
+            '/bancos/listar' => [
+                'name' => 'Bancos',
+                'desc' => 'Listado de bancos de Chile',
+                'icon' => 'fa-solid fa-university',
+            ],
+            '/division_geopolitica' => [
+                'name' => 'División geopolítica',
+                'desc' => 'Regiones, provincias y comunas del país',
+                'icon' => 'fa-solid fa-globe',
+            ],
+        ],
+
+    ],
 
 ];

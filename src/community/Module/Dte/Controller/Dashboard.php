@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
 namespace website\Dte;
 
 /**
@@ -127,7 +126,7 @@ class Controller_Dashboard extends \Controller_App
         }
         // asignar variables a la vista
         $this->set([
-            'nav' => array_slice(config('nav.module'), 1),
+            'nav' => array_slice(config('modules.Dte.nav'), 1),
             'Emisor' => $Emisor,
             'Firma' => $Emisor->getFirma($this->Auth->User->id),
             'periodo_actual' => $periodo_actual,

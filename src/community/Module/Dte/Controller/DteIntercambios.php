@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
 namespace website\Dte;
 
 /**
@@ -105,7 +104,7 @@ class Controller_DteIntercambios extends \Controller_App
                 'No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción, ya que se requiere consultar el estado del DTE al SII para poder ver el intercambio. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
                 url('/dte/admin/firma_electronicas/agregar')
             );
-            \sowerphp\core\Facade_Session_Message::write($message, 'error');
+            \sowerphp\core\Facade_Session_Message::error($message);
             $this->redirect('/dte/admin/firma_electronicas/agregar');
         }
         // asignar variables para la vista

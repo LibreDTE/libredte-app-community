@@ -23,14 +23,14 @@
 
 return [
 
-    // Título del módulo.
-    'modules' => [
-        'Dte' => [
-            'title' => 'Facturación',
-        ],
-    ],
+    'modules.Dte' => [
 
-    // Menú para el módulo.
-    'nav.module' => array_slice(config('nav.app.dte.menu'), 1),
+        // Título del módulo.
+        'title' => 'Facturación',
+
+        // Menú para el módulo.
+        'nav' => array_slice(config('nav.app.dte.menu'), 1),
+
+    ],
 
 ];

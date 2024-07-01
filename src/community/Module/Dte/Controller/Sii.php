@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
 namespace website\Dte;
 
 /**
@@ -213,10 +212,9 @@ class Controller_Sii extends \Controller_App
             $url .= '&amp;'.$k.'='.$v;
         }
         // renderizar vista
-        $this->set('url', $url);
+        $this->set(['url' => $url]);
         $this->layout = null;
-        $this->autoRender = false;
-        $this->render('Sii/query');
+        return $this->render('Sii/query');
     }
 
     /**
@@ -250,9 +248,8 @@ class Controller_Sii extends \Controller_App
                 'fecha_recepcion' => $fecha_recepcion !== false ? $fecha_recepcion : null,
             ]);
         } catch (\Exception $e) {
-            $this->set('error', $e->getMessage());
-            $this->autoRender = false;
-            $this->render('Sii/dte_rcv_error');
+            $this->set(['error' => $e->getMessage()]);
+            return $this->render('Sii/dte_rcv_error');
         }
     }
 

@@ -152,7 +152,7 @@ class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
         if (is_numeric($grupo)) {
             return [$grupo];
         }
-        $db = database()
+        $db = database();
         return $db->getCol('
             SELECT DISTINCT c.rut
             FROM

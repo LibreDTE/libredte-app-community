@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
 namespace website\Dte;
 
 use \website\Dte\Admin\Mantenedores\Model_DteTipos;
@@ -106,8 +105,7 @@ class Controller_DteRecibidos extends \Controller_App
         if (isset($_POST['submit'])) {
             $this->save();
         }
-        $this->autoRender = false;
-        $this->render('DteRecibidos/agregar_modificar');
+        return $this->render('DteRecibidos/agregar_modificar');
     }
 
     /**
@@ -147,8 +145,7 @@ class Controller_DteRecibidos extends \Controller_App
         if (isset($_POST['submit'])) {
             $this->save();
         }
-        $this->autoRender = false;
-        $this->render('DteRecibidos/agregar_modificar');
+        return $this->render('DteRecibidos/agregar_modificar');
     }
 
     /**

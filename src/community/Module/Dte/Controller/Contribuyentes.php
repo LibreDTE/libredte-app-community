@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
 namespace website\Dte;
 
 use \sowerphp\core\Facade_Session_Message as SessionMessage;
@@ -193,8 +192,7 @@ class Controller_Contribuyentes extends \Controller_App
             }
         }
         // renderizar vista
-        $this->autoRender = false;
-        $this->render('Contribuyentes/registrar_modificar');
+        return $this->render('Contribuyentes/registrar_modificar');
     }
 
     /**
@@ -253,8 +251,7 @@ class Controller_Contribuyentes extends \Controller_App
             }
         }
         // renderizar vista
-        $this->autoRender = false;
-        $this->render('Contribuyentes/registrar_modificar');
+        return $this->render('Contribuyentes/registrar_modificar');
     }
 
     /**

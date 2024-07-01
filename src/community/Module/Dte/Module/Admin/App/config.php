@@ -23,40 +23,40 @@
 
 return [
 
-    // Título del módulo.
-    'modules' => [
-        'Dte.Admin' => [
-            'title' => 'Administración módulo facturación',
-        ],
-    ],
+    'modules.Dte.Admin' => [
 
-    // Menú para el módulo.
-    'nav.module' => [
-        '/itemes/listar/1/codigo/A?search=activo:1' => [
-            'name' => 'Productos y servicios',
-            'desc' => 'Mantenedor de productos y/o servicios que se comercializan',
-            'icon' => 'fa fa-cubes',
+        // Título del módulo.
+        'title' => 'Administración módulo facturación',
+
+        // Menú para el módulo.
+        'nav' => [
+            '/itemes/listar/1/codigo/A?search=activo:1' => [
+                'name' => 'Productos y servicios',
+                'desc' => 'Mantenedor de productos y/o servicios que se comercializan',
+                'icon' => 'fa fa-cubes',
+            ],
+            '/dte_folios' => [
+                'name' => 'Folios',
+                'desc' => 'Mantenedor de códigos de autorización de folios',
+                'icon' => 'fa fa-cube',
+            ],
+            '/firma_electronicas' => [
+                'name' => 'Firma electrónica',
+                'desc' => 'Mantenedor para poder cargar la firma electrónica del usuario',
+                'icon' => 'fa fa-certificate',
+            ],
+            '/respaldos/exportar' => [
+                'name' => 'Exportar datos',
+                'desc' => 'Exportar datos del sistema para respaldo o migración',
+                'icon' => 'fa fa-download',
+            ],
+            '/mantenedores' => [
+                'name' => 'Mantenedores',
+                'desc' => 'Mantenedores de tablas generales',
+                'icon' => 'fa fa-list-alt',
+            ],
         ],
-        '/dte_folios' => [
-            'name' => 'Folios',
-            'desc' => 'Mantenedor de códigos de autorización de folios',
-            'icon' => 'fa fa-cube',
-        ],
-        '/firma_electronicas' => [
-            'name' => 'Firma electrónica',
-            'desc' => 'Mantenedor para poder cargar la firma electrónica del usuario',
-            'icon' => 'fa fa-certificate',
-        ],
-        '/respaldos/exportar' => [
-            'name' => 'Exportar datos',
-            'desc' => 'Exportar datos del sistema para respaldo o migración',
-            'icon' => 'fa fa-download',
-        ],
-        '/mantenedores' => [
-            'name' => 'Mantenedores',
-            'desc' => 'Mantenedores de tablas generales',
-            'icon' => 'fa fa-list-alt',
-        ],
+
     ],
 
 ];

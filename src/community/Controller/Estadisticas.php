@@ -21,8 +21,9 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
 namespace website;
+
+use \sowerphp\core\Facade_Session_Message as SessionMessage;
 
 /**
  * Controlador para mostrar estadísticas públicas del sitio.
@@ -42,7 +43,7 @@ class Controller_Estadisticas extends \Controller_App
     /**
      * Método para permitir acciones sin estar autenticado.
      */
-    public function boot()
+    public function boot(): void
     {
         parent::boot();
     }
@@ -57,12 +58,11 @@ class Controller_Estadisticas extends \Controller_App
     {
         $response = $this->consume('/api/estadisticas/'.($certificacion?'certificacion':'produccion'));
         if ($response['status']['code'] != 200) {
-            \sowerphp\core\Facade_Session_Message::write($response['body'], 'error');
+            SessionMessage::error($response['body']);
             $this->redirect('/');
         }
         $this->set($response['body']);
-        $this->autoRender = false;
-        $this->render('Estadisticas/index');
+        return $this->render('Estadisticas/index');
     }
 
     /**

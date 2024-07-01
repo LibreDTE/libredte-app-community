@@ -115,7 +115,7 @@ class Shell_Command_Respaldos_Dropbox extends \Shell_App
         if (is_numeric($grupo)) {
             return [$grupo];
         }
-        $db = database()
+        $db = database();
         return $db->getCol('
             SELECT c.rut
             FROM

@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
 namespace website\Dte;
 
 /**
@@ -33,7 +32,7 @@ class Controller_DteEmitidos extends \Controller_App
     /**
      * Método para permitir acciones sin estar autenticado.
      */
-    public function boot()
+    public function boot(): void
     {
         $this->Auth->allow('pdf', 'xml', 'consultar');
         parent::boot();

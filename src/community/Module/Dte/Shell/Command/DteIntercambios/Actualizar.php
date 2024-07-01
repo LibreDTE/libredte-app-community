@@ -100,7 +100,7 @@ class Shell_Command_DteIntercambios_Actualizar extends \Shell_App
         if (is_numeric($grupo)) {
             return [$grupo];
         }
-        $db = database()
+        $db = database();
         $where = ['(cc1.valor IS NOT NULL OR cc2.valor IS NOT NULL)'];
         $vars = [];
         if ($grupo) {

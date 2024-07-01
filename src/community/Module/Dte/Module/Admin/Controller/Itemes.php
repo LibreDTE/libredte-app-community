@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
 namespace website\Dte\Admin;
 
 use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
@@ -44,7 +43,7 @@ class Controller_Itemes extends \Controller_Maintainer
     {
         $Contribuyente = $this->getContribuyente();
         $this->forceSearch(['contribuyente' => $Contribuyente->rut]);
-        parent::listar($page, $orderby, $order);
+        return parent::listar($page, $orderby, $order);
     }
 
     /**
@@ -61,7 +60,7 @@ class Controller_Itemes extends \Controller_Maintainer
                 ->getListContribuyente($Contribuyente->config_extra_impuestos_adicionales)
             ,
         ]);
-        parent::crear();
+        return parent::crear();
     }
 
     /**
@@ -78,7 +77,7 @@ class Controller_Itemes extends \Controller_Maintainer
                 ->getListContribuyente($Contribuyente->config_extra_impuestos_adicionales)
             ,
         ]);
-        parent::editar($Contribuyente->rut, urldecode($tipo), urldecode($codigo));
+        return parent::editar($Contribuyente->rut, urldecode($tipo), urldecode($codigo));
     }
 
     /**
@@ -87,7 +86,7 @@ class Controller_Itemes extends \Controller_Maintainer
     public function eliminar($codigo, $tipo = 'INT1')
     {
         $Contribuyente = $this->getContribuyente();
-        parent::eliminar($Contribuyente->rut, urldecode($tipo), urldecode($codigo));
+        return parent::eliminar($Contribuyente->rut, urldecode($tipo), urldecode($codigo));
     }
 
     /**

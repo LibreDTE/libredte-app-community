@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
 namespace website\Dte;
 
 /**
@@ -51,7 +50,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
             //'rcof_reparos_secuencia' => $rcof_reparos_secuencia,
         ]);
         $this->forceSearch(['emisor' => $Emisor->rut, 'certificacion' => $Emisor->enCertificacion()]);
-        parent::listar($page, $orderby, $order);
+        return parent::listar($page, $orderby, $order);
     }
 
     /**

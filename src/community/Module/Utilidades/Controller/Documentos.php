@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
 namespace website\Utilidades;
 
 use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna;
@@ -343,8 +342,7 @@ class Controller_Documentos extends \Controller_App
             if (!isset($dtes[1])) {
                 $name = $dtes[0]['Encabezado']['Emisor']['RUTEmisor'].'_T'.$dtes[0]['Encabezado']['IdDoc']['TipoDTE'].'F'.$dtes[0]['Encabezado']['IdDoc']['Folio'].'.json';
                 $json = json_encode($dtes[0], JSON_PRETTY_PRINT);
-                $this->autoRender = false;
-                $this->response->prepareFileResponse([
+                return $this->response->prepareFileResponse([
                     'name' =>  $name,
                     'type' => 'application/json',
                     'size' => strlen($json),
@@ -651,7 +649,10 @@ class Controller_Documentos extends \Controller_App
         // si solo es un archivo y se pidió no comprimir se entrega directamente
         if (empty($this->Api->data['compress']) && !isset($Documentos[1]) && $cedible != 2) {
             $this->autoRender = false;
-            $disposition = !$Emisor->config_pdf_disposition ? 'attachement' : 'inline';
+            $disposition = !$Emisor->config_pdf_disposition
+                ? 'attachement'
+                : 'inline'
+            ;
             $this->response->prepareFileResponse($file, ['disposition' => $disposition]);
             \sowerphp\general\Utility_File::rmdir($dir);
         }

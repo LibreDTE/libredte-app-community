@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
 namespace website\Dte;
 
 use \sowerphp\core\Exception_Database as DatabaseException;

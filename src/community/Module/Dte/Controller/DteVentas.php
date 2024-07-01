@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
 namespace website\Dte;
 
 use \website\Dte\Admin\Mantenedores\Model_DteTipos;
@@ -42,7 +41,7 @@ class Controller_DteVentas extends Controller_Base_Libros
     /**
      * Método para permitir acciones sin estar autenticado.
      */
-    public function boot()
+    public function boot(): void
     {
         $this->Auth->allow('_api_historial_GET');
         parent::boot();

@@ -23,18 +23,22 @@
 
 return [
 
-    // Menú para el módulo
-    'nav.module' => [
-        '/usuarios' => [
-            'name' => 'Usuarios del sistema',
-            'desc' => 'Mantenedor de usuarios y grupos del sistema',
-            'icon' => 'fa fa-users',
+    'modules.Sistema' => [
+
+        // Menú para el módulo.
+        'nav' => [
+            '/usuarios' => [
+                'name' => 'Usuarios del sistema',
+                'desc' => 'Mantenedor de usuarios y grupos del sistema',
+                'icon' => 'fa fa-users',
+            ],
+            '/general' => [
+                'name' => 'Configuración general',
+                'desc' => 'Módulo de configuraciones generales',
+                'icon' => 'fa fa-cogs',
+            ],
         ],
-        '/general' => [
-            'name' => 'Configuración general',
-            'desc' => 'Módulo de configuraciones generales',
-            'icon' => 'fa fa-cogs',
-        ],
+
     ],
 
 ];

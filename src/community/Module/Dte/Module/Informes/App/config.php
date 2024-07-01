@@ -23,90 +23,90 @@
 
 return [
 
-    // Título del módulo.
-    'modules' => [
-        'Dte.Informes' => [
-            'title' => 'Informes facturación',
-        ],
-    ],
+    'modules.Dte.Informes' => [
 
-    // Menú para el módulo.
-    'nav.module' => [
-        '/dte_emitidos' => [
-            'name' => 'Gráficos y detalle documentos emitidos',
-            'desc' => 'Informe de documentos emitidos',
-            'icon' => 'fa-solid fa-sign-out-alt',
+        // Título del módulo.
+        'title' => 'Informes facturación',
+
+        // Menú para el módulo.
+        'nav' => [
+            '/dte_emitidos' => [
+                'name' => 'Gráficos y detalle documentos emitidos',
+                'desc' => 'Informe de documentos emitidos',
+                'icon' => 'fa-solid fa-sign-out-alt',
+            ],
+            '/dte_recibidos' => [
+                'name' => 'Gráficos y detalle documentos recibidos',
+                'desc' => 'Informe de documentos recibidos',
+                'icon' => 'fa-solid fa-sign-in-alt',
+            ],
+            '/documentos_usados' => [
+                'name' => 'Documentos usados',
+                'desc' => 'Estadística de documentos usados, tanto emitidos como recibidos y el uso de sobre cuota',
+                'icon' => 'fa-solid fa-calculator',
+            ],
+            '/dte_emitidos/diario' => [
+                'name' => 'Resumen diario emitidos',
+                'desc' => 'Documentos emitidos por día',
+                'icon' => 'fa-solid fa-list-alt',
+            ],
+            '/despachos' => [
+                'name' => 'Despachos diarios',
+                'desc' => 'Informe diario de guías de despachos',
+                'icon' => 'fa-solid fa-map',
+            ],
+            '/compras/activos_fijos' => [
+                'name' => 'Compras de activos fijos',
+                'desc' => 'Informe con listado de documentos de compras de activos fijos según IEC',
+                'icon' => 'fa-solid fa-list',
+            ],
+            '/compras/supermercado' => [
+                'name' => 'Compras de supermercado',
+                'desc' => 'Informe con listado de documentos de supermercado según IEC',
+                'icon' => 'fa-solid fa-shopping-cart',
+            ],
+            '/dte_emitidos/sin_intercambio' => [
+                'name' => 'DTE sin intercambio',
+                'desc' => 'Documentos emitidos que no han sido enviados en el proceso de intercambio',
+                'icon' => 'fa-regular fa-envelope',
+            ],
+            '/dte_emitidos/intercambio' => [
+                'name' => 'Intercambio DTE emitidos',
+                'desc' => 'Respuestas del proceso de intercambio para DTE emitidos a clientes',
+                'icon' => 'fa-solid fa-exchange-alt',
+            ],
+            '/dte_emitidos/eventos' => [
+                'name' => 'Eventos DTE emitidos',
+                'desc' => 'Eventos registrados por los receptores de los documentos emitidos',
+                'icon' => 'fa-solid fa-user-secret',
+            ],
+            '/dte_emitidos/boletas_sin_email' => [
+                'name' => 'Boletas sin email al receptor',
+                'desc' => 'Boletas emitidas que no han sido enviadas por email al receptor',
+                'icon' => 'fa-regular fa-envelope',
+            ],
+            '/dte_emitidos/sin_enviar' => [
+                'name' => 'DTE sin enviar al SII',
+                'desc' => 'Documentos emitidos y que no han sido envíados al SII',
+                'icon' => 'fa-regular fa-paper-plane',
+            ],
+            '/dte_emitidos/estados' => [
+                'name' => 'Estado envío DTE al SII',
+                'desc' => 'Estados de documentos emitidos y envíados al SII',
+                'icon' => 'fa-regular fa-copy',
+            ],
+            '/dte_recibidos/sin_xml' => [
+                'name' => 'Documentos recibidos sin XML',
+                'desc' => 'Documentos recibidos que no tienen asociado un XML (sin intercambio asociado)',
+                'icon' => 'fa-solid fa-code',
+            ],
+            '/impuestos/propuesta_f29' => [
+                'name' => 'Propuesta formulario 29',
+                'desc' => 'Propuesta para el formulario 29',
+                'icon' => 'fa-solid fa-file',
+            ],
         ],
-        '/dte_recibidos' => [
-            'name' => 'Gráficos y detalle documentos recibidos',
-            'desc' => 'Informe de documentos recibidos',
-            'icon' => 'fa-solid fa-sign-in-alt',
-        ],
-        '/documentos_usados' => [
-            'name' => 'Documentos usados',
-            'desc' => 'Estadística de documentos usados, tanto emitidos como recibidos y el uso de sobre cuota',
-            'icon' => 'fa-solid fa-calculator',
-        ],
-        '/dte_emitidos/diario' => [
-            'name' => 'Resumen diario emitidos',
-            'desc' => 'Documentos emitidos por día',
-            'icon' => 'fa-solid fa-list-alt',
-        ],
-        '/despachos' => [
-            'name' => 'Despachos diarios',
-            'desc' => 'Informe diario de guías de despachos',
-            'icon' => 'fa-solid fa-map',
-        ],
-        '/compras/activos_fijos' => [
-            'name' => 'Compras de activos fijos',
-            'desc' => 'Informe con listado de documentos de compras de activos fijos según IEC',
-            'icon' => 'fa-solid fa-list',
-        ],
-        '/compras/supermercado' => [
-            'name' => 'Compras de supermercado',
-            'desc' => 'Informe con listado de documentos de supermercado según IEC',
-            'icon' => 'fa-solid fa-shopping-cart',
-        ],
-        '/dte_emitidos/sin_intercambio' => [
-            'name' => 'DTE sin intercambio',
-            'desc' => 'Documentos emitidos que no han sido enviados en el proceso de intercambio',
-            'icon' => 'fa-regular fa-envelope',
-        ],
-        '/dte_emitidos/intercambio' => [
-            'name' => 'Intercambio DTE emitidos',
-            'desc' => 'Respuestas del proceso de intercambio para DTE emitidos a clientes',
-            'icon' => 'fa-solid fa-exchange-alt',
-        ],
-        '/dte_emitidos/eventos' => [
-            'name' => 'Eventos DTE emitidos',
-            'desc' => 'Eventos registrados por los receptores de los documentos emitidos',
-            'icon' => 'fa-solid fa-user-secret',
-        ],
-        '/dte_emitidos/boletas_sin_email' => [
-            'name' => 'Boletas sin email al receptor',
-            'desc' => 'Boletas emitidas que no han sido enviadas por email al receptor',
-            'icon' => 'fa-regular fa-envelope',
-        ],
-        '/dte_emitidos/sin_enviar' => [
-            'name' => 'DTE sin enviar al SII',
-            'desc' => 'Documentos emitidos y que no han sido envíados al SII',
-            'icon' => 'fa-regular fa-paper-plane',
-        ],
-        '/dte_emitidos/estados' => [
-            'name' => 'Estado envío DTE al SII',
-            'desc' => 'Estados de documentos emitidos y envíados al SII',
-            'icon' => 'fa-regular fa-copy',
-        ],
-        '/dte_recibidos/sin_xml' => [
-            'name' => 'Documentos recibidos sin XML',
-            'desc' => 'Documentos recibidos que no tienen asociado un XML (sin intercambio asociado)',
-            'icon' => 'fa-solid fa-code',
-        ],
-        '/impuestos/propuesta_f29' => [
-            'name' => 'Propuesta formulario 29',
-            'desc' => 'Propuesta para el formulario 29',
-            'icon' => 'fa-solid fa-file',
-        ],
+
     ],
 
 ];

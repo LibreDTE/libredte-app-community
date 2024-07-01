@@ -23,25 +23,25 @@
 
 return [
 
-    // Título del módulo.
-    'modules' => [
-        'Honorarios' => [
-            'title' => 'Honorarios',
-        ],
-    ],
+    'modules.Honorarios' => [
 
-    // Menú para el módulo.
-    'nav.module' => [
-        '/boleta_honorarios' => [
-            'name' => 'Boletas de Honorarios (BHE)',
-            'desc' => 'Ver boletas de honorarios recibidas por cada período',
-            'icon' => 'fa-solid fa-user-tie',
+        // Título del módulo.
+        'title' => 'Honorarios',
+
+        // Menú para el módulo.
+        'nav' => [
+            '/boleta_honorarios' => [
+                'name' => 'Boletas de Honorarios (BHE)',
+                'desc' => 'Ver boletas de honorarios recibidas por cada período',
+                'icon' => 'fa-solid fa-user-tie',
+            ],
+            '/boleta_terceros' => [
+                'name' => 'Boletas de Terceros (BTE)',
+                'desc' => 'Ver boletas de terceros emitidas por cada período',
+                'icon' => 'fa-solid fa-user-secret',
+            ],
         ],
-        '/boleta_terceros' => [
-            'name' => 'Boletas de Terceros (BTE)',
-            'desc' => 'Ver boletas de terceros emitidas por cada período',
-            'icon' => 'fa-solid fa-user-secret',
-        ],
+
     ],
 
 ];
