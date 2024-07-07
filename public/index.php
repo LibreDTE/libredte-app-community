@@ -26,4 +26,5 @@ require __DIR__ . '/../vendor/autoload.php';
 
 // Ejecutar la aplicación.
 $app = \sowerphp\core\App::getInstance();
-$app->run();
+$result = $app ? $app->run() : 1;
+exit($result);
