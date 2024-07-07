@@ -26,7 +26,7 @@ namespace website\Utilidades;
 /**
  * Controlador para utilidades asociadas a boletas electrónicas.
  */
-class Controller_Boletas extends \Controller_App
+class Controller_Boletas extends \Controller
 {
 
     /**

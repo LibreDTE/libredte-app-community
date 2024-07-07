@@ -26,7 +26,7 @@ namespace website\Dte\Informes;
 /**
  * Clase para informes de los despachos asociados al contribuyente.
  */
-class Controller_Despachos extends \Controller_App
+class Controller_Despachos extends \Controller
 {
 
     /**

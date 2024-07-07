@@ -63,17 +63,17 @@ class Controller_DteVentas extends Controller_Base_Libros
             && $DteVenta->track_id != -1
         ) {
             \sowerphp\core\Facade_Session_Message::write('Libro del período '.$periodo.' ya fue enviado, ahora solo puede hacer rectificaciones.', 'error');
-            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
         }
         // si el periodo es mayor o igual al actual no se puede enviar
         if ($periodo >= date('Ym')) {
             \sowerphp\core\Facade_Session_Message::write('No puede enviar el libro de ventas del período '.$periodo.'. Debe esperar al mes siguiente del período para poder enviar.', 'error');
-            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
         }
         // verificar que no existen documentos rechazados sin estado en el periodo
         if ($DteVenta->countDteSinEstadoEnvioSII()) {
             \sowerphp\core\Facade_Session_Message::write('Existen documentos sin el estado de envío al SII en el libro de ventas del período '.$periodo.'. Debe actualizar los estados de todos los documentos antes de poder generar el libro.', 'error');
-            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
         }
         // verificar que no existan documentos rechazados en el período
         if ($DteVenta->countDteRechazadosSII()) {
@@ -83,7 +83,7 @@ class Controller_DteVentas extends Controller_Base_Libros
                 url('/dte/informes/dte_emitidos/estados')
             );
             \sowerphp\core\Facade_Session_Message::write($message, 'error');
-            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
         }
         // obtener firma
         $Firma = $Emisor->getFirma($this->Auth->User->id);
@@ -93,7 +93,7 @@ class Controller_DteVentas extends Controller_Base_Libros
                 url('/dte/admin/firma_electronicas/agregar')
             );
             \sowerphp\core\Facade_Session_Message::write($message, 'error');
-            $this->redirect('/dte/admin/firma_electronicas/agregar');
+            return redirect('/dte/admin/firma_electronicas/agregar');
         }
         // agregar carátula al libro
         $caratula = [
@@ -154,7 +154,7 @@ class Controller_DteVentas extends Controller_Base_Libros
         $xml = $Libro->generar();
         if (!$xml) {
             \sowerphp\core\Facade_Session_Message::write('No fue posible generar el libro de ventas<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
-            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
         }
         // enviar al SII solo si el libro es de un período menor o igual al 201707
         // esto ya que desde 201708 se reemplaza por RCV
@@ -164,7 +164,7 @@ class Controller_DteVentas extends Controller_Base_Libros
             $revision_detalle = null;
             if (!$track_id) {
                 \sowerphp\core\Facade_Session_Message::write('No fue posible enviar el libro de ventas al SII<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
-                $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+                return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
             }
             \sowerphp\core\Facade_Session_Message::write('Libro de ventas período '.$periodo.' envíado al SII.', 'ok');
         }
@@ -219,7 +219,7 @@ class Controller_DteVentas extends Controller_Base_Libros
         $DteVenta->revision_estado = $revision_estado;
         $DteVenta->revision_detalle = $revision_detalle;
         $DteVenta->save();
-        $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+        return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
     }
 
     /**
@@ -234,7 +234,7 @@ class Controller_DteVentas extends Controller_Base_Libros
             \sowerphp\core\Facade_Session_Message::write(
                 'No hay documentos de venta del período '.$periodo.'.', 'warning'
             );
-            $this->redirect(str_replace('descargar_registro_venta', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('descargar_registro_venta', 'ver', $this->request->getRequestUriDecoded()));
         }
         foreach ($ventas as &$v) {
             unset($v['anulado']);
@@ -258,7 +258,7 @@ class Controller_DteVentas extends Controller_Base_Libros
             \sowerphp\core\Facade_Session_Message::write(
                 'Aun no se ha generado el XML del período '.$periodo.'.', 'error'
             );
-            $this->redirect(str_replace('descargar_resumenes', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('descargar_resumenes', 'ver', $this->request->getRequestUriDecoded()));
         }
         $xml = base64_decode($Libro->xml);
         $LibroCompraVenta = new \sasco\LibreDTE\Sii\LibroCompraVenta();
@@ -268,7 +268,7 @@ class Controller_DteVentas extends Controller_Base_Libros
             \sowerphp\core\Facade_Session_Message::write(
                 'No hay resúmenes para el período '.$periodo.'.', 'warning'
             );
-            $this->redirect(str_replace('descargar_resumenes', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('descargar_resumenes', 'ver', $this->request->getRequestUriDecoded()));
         }
         // generar CSV
         $datos = [['Tipo Docto', 'Numero de Doctos', 'Operaciones Exentas', 'Monto Exento', 'Montos Netos', 'Montos de IVA', 'Monto IVA Propio', 'Monto IVA Terceros', 'Ley 18.211', 'Monto Total']];
@@ -296,7 +296,7 @@ class Controller_DteVentas extends Controller_Base_Libros
     public function registro_ventas()
     {
         if (!empty($_POST['periodo'])) {
-            $this->redirect('/dte/dte_ventas/rcv_resumen/'.$_POST['periodo']);
+            return redirect('/dte/dte_ventas/rcv_resumen/'.$_POST['periodo']);
         }
     }
 
@@ -310,7 +310,7 @@ class Controller_DteVentas extends Controller_Base_Libros
             $resumen = $Emisor->getRCV(['operacion' => 'VENTA', 'periodo' => $periodo, 'estado' => 'REGISTRO', 'detalle' => false]);
         } catch (\Exception $e) {
             \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
-            $this->redirect('/dte/dte_ventas/ver/'.$periodo);
+            return redirect('/dte/dte_ventas/ver/'.$periodo);
         }
         $this->set([
             'Emisor' => $Emisor,
@@ -334,11 +334,11 @@ class Controller_DteVentas extends Controller_Base_Libros
             ]);
         } catch (\Exception $e) {
             \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
-            $this->redirect('/dte/dte_ventas/ver/'.$periodo);
+            return redirect('/dte/dte_ventas/ver/'.$periodo);
         }
         if (!$detalle) {
             \sowerphp\core\Facade_Session_Message::write('No hay detalle para el período y estado solicitados.', 'warning');
-            $this->redirect('/dte/dte_ventas/ver/'.$periodo);
+            return redirect('/dte/dte_ventas/ver/'.$periodo);
         }
         $this->set([
             'Emisor' => $Emisor,
@@ -375,7 +375,7 @@ class Controller_DteVentas extends Controller_Base_Libros
     {
         $Emisor = $this->getContribuyente();
         if (!empty($_POST['anio'])) {
-            $this->redirect('/dte/dte_ventas/resumen/'.(int)$_POST['anio']);
+            return redirect('/dte/dte_ventas/resumen/'.(int)$_POST['anio']);
         }
         if ($anio) {
             // obtener libros de cada mes con su resumen
@@ -518,11 +518,11 @@ class Controller_DteVentas extends Controller_Base_Libros
             ]);
         } catch (\Exception $e) {
             \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
-            $this->redirect('/dte/dte_ventas/ver/'.$periodo);
+            return redirect('/dte/dte_ventas/ver/'.$periodo);
         }
         if (!$detalle) {
             \sowerphp\core\Facade_Session_Message::write('No hay detalle para el período y estado solicitados.', 'warning');
-            $this->redirect('/dte/dte_ventas/ver/'.$periodo);
+            return redirect('/dte/dte_ventas/ver/'.$periodo);
         }
         if ($tipo == 'rcv_csv') {
             $this->response->sendAndExit($detalle, 'rv_'.$Emisor->rut.'_'.$periodo.'_'.$tipo.'.csv');

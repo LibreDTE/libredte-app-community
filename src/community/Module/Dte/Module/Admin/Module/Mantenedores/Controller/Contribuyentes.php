@@ -95,7 +95,7 @@ class Controller_Contribuyentes extends \Controller_Maintainer
                         if ($Contribuyente->save()) {
                             $actualizados++;
                         }
-                    } catch (\sowerphp\core\Exception_Database $e) {
+                    } catch (\Exception $e) {
                     }
                 }
             }

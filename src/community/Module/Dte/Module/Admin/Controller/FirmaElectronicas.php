@@ -27,7 +27,7 @@ namespace website\Dte\Admin;
  * Clase para el controlador asociado a la tabla firma_electronica de la base de
  * datos.
  */
-class Controller_FirmaElectronicas extends \Controller_App
+class Controller_FirmaElectronicas extends \Controller
 {
 
     /**
@@ -100,8 +100,8 @@ class Controller_FirmaElectronicas extends \Controller_App
                 \sowerphp\core\Facade_Session_Message::write(
                     'Se asoció la firma electrónica de '.$Firma->getName().' ('.$Firma->getID().') al usuario '.$this->Auth->User->usuario.'.', 'ok'
                 );
-                $this->redirect('/dte/admin/firma_electronicas');
-            } catch (\sowerphp\core\Exception_Database $e) {
+                return redirect('/dte/admin/firma_electronicas');
+            } catch (\Exception $e) {
                 \sowerphp\core\Facade_Session_Message::write(
                     'Ocurrió un error al guardar la firma.<br/>'.$e->getMessage(), 'error'
                 );
@@ -121,7 +121,7 @@ class Controller_FirmaElectronicas extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'Usted no tiene una firma electrónica registrada en el sistema. Solo puede eliminar su firma previamente cargada.'
             );
-            $this->redirect('/dte/admin/firma_electronicas');
+            return redirect('/dte/admin/firma_electronicas');
         }
         // eliminar firma
         try {
@@ -129,12 +129,12 @@ class Controller_FirmaElectronicas extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'Se eliminó la firma electrónica asociada a su usuario.', 'ok'
             );
-            $this->redirect('/dte/admin/firma_electronicas');
-        } catch (\sowerphp\core\Exception_Database $e) {
+            return redirect('/dte/admin/firma_electronicas');
+        } catch (\Exception $e) {
             \sowerphp\core\Facade_Session_Message::write(
                 'No fue posible eliminar la firma electrónica:<br/>'.$e->getMessage(), 'error'
             );
-            $this->redirect('/dte/admin/firma_electronicas');
+            return redirect('/dte/admin/firma_electronicas');
         }
     }
 
@@ -149,7 +149,7 @@ class Controller_FirmaElectronicas extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'Usted no tiene una firma electrónica registrada en el sistema, solo puede descargar su firma previamente cargada.',
             );
-            $this->redirect('/dte/admin/firma_electronicas');
+            return redirect('/dte/admin/firma_electronicas');
         }
         // descargar la firma
         $file = $FirmaElectronica->run.'.p12';

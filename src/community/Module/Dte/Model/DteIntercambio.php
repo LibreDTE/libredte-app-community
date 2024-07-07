@@ -350,7 +350,7 @@ class Model_DteIntercambio extends \Model_App
                 $status = parent::save();
                 $this->db->commit();
                 return $status;
-            } catch (\sowerphp\core\Exception_Database $e) {
+            } catch (\Exception $e) {
                 $this->db->rollback();
                 throw new \Exception('Error al guardar el archivo \''.$this->archivo.'\' del intercambio enviado por '.$this->de.' con el asunto \''.$this->asunto.'\' del día '.$this->fecha_hora_email.' / '.$e->getMessage());
             }
@@ -985,7 +985,7 @@ class Model_DteIntercambio extends \Model_App
                 $EmisorIntercambio->modificado = date('Y-m-d H:i:s');
                 try {
                     $EmisorIntercambio->save();
-                } catch (\sowerphp\core\Exception_Database $e) {
+                } catch (\Exception $e) {
                 }
             }
             // guardar documentos que han sido aceptados como dte recibidos

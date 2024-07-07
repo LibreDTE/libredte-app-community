@@ -718,7 +718,7 @@ class Model_DteTmp extends \Model_App
     /**
      * Método que borra el DTE temporal y su cobro asociado si existe.
      */
-    public function delete($borrarCobro = true)
+    public function delete($borrarCobro = true): bool
     {
         $this->db->beginTransaction();
         if ($borrarCobro && $this->getEmisor()->config_pagos_habilitado) {

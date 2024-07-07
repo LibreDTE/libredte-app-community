@@ -26,7 +26,7 @@ namespace website\Dte\Informes;
 /**
  * Clase para informes de los documentos usados.
  */
-class Controller_DocumentosUsados extends \Controller_App
+class Controller_DocumentosUsados extends \Controller
 {
 
     /**

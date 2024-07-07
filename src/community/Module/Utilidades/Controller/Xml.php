@@ -26,7 +26,7 @@ namespace website\Utilidades;
 /**
  * Controlador para utilidades asociadas a archivos XML.
  */
-class Controller_Xml extends \Controller_App
+class Controller_Xml extends \Controller
 {
 
     /**

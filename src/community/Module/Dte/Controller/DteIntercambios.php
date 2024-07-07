@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Controlador para intercambio entre contribuyentes.
  */
-class Controller_DteIntercambios extends \Controller_App
+class Controller_DteIntercambios extends \Controller
 {
 
     /**
@@ -35,7 +35,7 @@ class Controller_DteIntercambios extends \Controller_App
     public function listar($pagina = 1, $soloPendientes = false)
     {
         if (!is_numeric($pagina)) {
-            $this->redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar');
+            return redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar');
         }
         $Emisor = $this->getContribuyente();
         $filtros = [
@@ -57,11 +57,11 @@ class Controller_DteIntercambios extends \Controller_App
                 $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = $documentos_total ? ceil($documentos_total/$filtros['limit']) : 0;
                 if ($pagina != 1 && $pagina > $paginas) {
-                    $this->redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar'.$searchUrl);
+                    return redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar'.$searchUrl);
                 }
             }
             $documentos = $Emisor->getDocumentosIntercambios($filtros);
-        } catch (\sowerphp\core\Exception_Database $e) {
+        } catch (\Exception $e) {
             \sowerphp\core\Facade_Session_Message::write(
                 'Error al recuperar los documentos:<br/>'.$e->getMessage(), 'error'
             );
@@ -95,7 +95,7 @@ class Controller_DteIntercambios extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el intercambio solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_intercambios/listar');
+            return redirect('/dte/dte_intercambios/listar');
         }
         // obtener firma
         $Firma = $Emisor->getFirma($this->Auth->User->id);
@@ -105,7 +105,7 @@ class Controller_DteIntercambios extends \Controller_App
                 url('/dte/admin/firma_electronicas/agregar')
             );
             \sowerphp\core\Facade_Session_Message::error($message);
-            $this->redirect('/dte/admin/firma_electronicas/agregar');
+            return redirect('/dte/admin/firma_electronicas/agregar');
         }
         // asignar variables para la vista
         $this->set([
@@ -135,21 +135,21 @@ class Controller_DteIntercambios extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el intercambio solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_intercambios/listar');
+            return redirect('/dte/dte_intercambios/listar');
         }
         // verificar que el intercambio no esté en uso en los documentos recibidos
         if ($DteIntercambio->recibido()) {
             \sowerphp\core\Facade_Session_Message::write(
                 'El intercambio tiene a lo menos un DTE recibido asociado, no se puede eliminar.', 'error'
             );
-            $this->redirect('/dte/dte_intercambios/ver/'.$codigo);
+            return redirect('/dte/dte_intercambios/ver/'.$codigo);
         }
         // eliminar el intercambio y redireccionar
         $DteIntercambio->delete();
         \sowerphp\core\Facade_Session_Message::write(
             'Intercambio '.$codigo.' eliminado.', 'ok'
         );
-        $this->redirect('/dte/dte_intercambios/listar');
+        return redirect('/dte/dte_intercambios/listar');
     }
 
     /**
@@ -165,7 +165,7 @@ class Controller_DteIntercambios extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el intercambio solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_intercambios/listar');
+            return redirect('/dte/dte_intercambios/listar');
         }
         $this->layout = null;
         $html = $DteIntercambio->getEmailHtml();
@@ -188,7 +188,7 @@ class Controller_DteIntercambios extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 $e->getMessage(), ($e->getCode() == 500 ? 'error' : 'info')
             );
-            $this->redirect('/dte/dte_intercambios/listar');
+            return redirect('/dte/dte_intercambios/listar');
         }
         extract($resultado);
         if ($n_uids>1) {
@@ -204,7 +204,7 @@ class Controller_DteIntercambios extends \Controller_App
                 'Se encontraron algunos problemas al procesar ciertos correos:<br/>- '.implode('<br/>- ',$errores), 'warning'
             );
         }
-        $this->redirect('/dte/dte_intercambios/listar');
+        return redirect('/dte/dte_intercambios/listar');
     }
 
     /**
@@ -285,7 +285,7 @@ class Controller_DteIntercambios extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 $response['body'], 'error'
             );
-            $this->redirect('/dte/dte_intercambios/listar');
+            return redirect('/dte/dte_intercambios/listar');
         }
         // si dió código 200 se entrega la respuesta del servicio web
         $this->response->type('application/pdf');
@@ -340,7 +340,7 @@ class Controller_DteIntercambios extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 $response['body'], 'error'
             );
-            $this->redirect('/dte/dte_intercambios/listar');
+            return redirect('/dte/dte_intercambios/listar');
         }
         // si dió código 200 se entrega la respuesta del servicio web
         $this->response->type('application/xml', 'ISO-8859-1');
@@ -415,9 +415,9 @@ class Controller_DteIntercambios extends \Controller_App
                 $response['body'], 'error'
             );
             if (in_array($response['status']['code'], [401, 403, 404])) {
-                $this->redirect('/dte/dte_intercambios/listar');
+                return redirect('/dte/dte_intercambios/listar');
             } else {
-                $this->redirect(str_replace('resultados_xml', 'ver', $this->request->getRequestUriDecoded()));
+                return redirect(str_replace('resultados_xml', 'ver', $this->request->getRequestUriDecoded()));
             }
         }
         // si dió código 200 se entrega la respuesta del servicio web
@@ -441,7 +441,7 @@ class Controller_DteIntercambios extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No puede acceder de forma directa a '.$this->request->getRequestUriDecoded(), 'error'
             );
-            $this->redirect(str_replace('responder', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('responder', 'ver', $this->request->getRequestUriDecoded()));
         }
         // obtener objeto de intercambio
         $DteIntercambio = new Model_DteIntercambio($Emisor->rut, (int)$codigo, $Emisor->enCertificacion());
@@ -449,7 +449,7 @@ class Controller_DteIntercambios extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el intercambio solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_intercambios/listar');
+            return redirect('/dte/dte_intercambios/listar');
         }
         // armar documentos con sus respuestas
         $documentos = [];
@@ -496,7 +496,7 @@ class Controller_DteIntercambios extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
         }
         // redireccionar
-        $this->redirect(str_replace('responder', 'ver', $this->request->getRequestUriDecoded()));
+        return redirect(str_replace('responder', 'ver', $this->request->getRequestUriDecoded()));
     }
 
     /**

@@ -29,7 +29,7 @@ use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
  * Clase para el controlador asociado a la tabla boleta_tercero de la base de
  * datos.
  */
-class Controller_BoletaTerceros extends \Controller_App
+class Controller_BoletaTerceros extends \Controller
 {
 
     /**
@@ -111,13 +111,13 @@ class Controller_BoletaTerceros extends \Controller_App
         $BoletaTercero = new Model_BoletaTercero($Emisor->rut, $numero);
         if (!$BoletaTercero->exists()) {
             \sowerphp\core\Facade_Session_Message::write('No existe la boleta solicitada.', 'error');
-            $this->redirect('/honorarios/boleta_terceros');
+            return redirect('/honorarios/boleta_terceros');
         }
         // obtener PDF desde servicio web
         $r = $this->consume('/api/honorarios/boleta_terceros/html/'.$BoletaTercero->numero.'/'.$BoletaTercero->emisor);
         if ($r['status']['code'] != 200) {
             \sowerphp\core\Facade_Session_Message::write($r['body'], 'error');
-            $this->redirect('/honorarios/boleta_terceros');
+            return redirect('/honorarios/boleta_terceros');
         }
         $this->Api->response()->type('text/html');
         $this->Api->response()->header('Content-Disposition', 'attachment; filename=bte_'.$BoletaTercero->emisor.'_'.$BoletaTercero->numero.'.html');
@@ -172,7 +172,7 @@ class Controller_BoletaTerceros extends \Controller_App
         $boletas = (new Model_BoletaTerceros())->setContribuyente($Emisor)->buscar(['periodo' => $periodo]);
         if (empty($boletas)) {
             \sowerphp\core\Facade_Session_Message::write('No existen boletas para el período solicitado.', 'error');
-            $this->redirect('/honorarios/boleta_terceros');
+            return redirect('/honorarios/boleta_terceros');
         }
         $this->set([
             'Emisor' => $Emisor,
@@ -190,7 +190,7 @@ class Controller_BoletaTerceros extends \Controller_App
         $boletas = (new Model_BoletaTerceros())->setContribuyente($Emisor)->buscar(['periodo' => $periodo]);
         if (empty($boletas)) {
             \sowerphp\core\Facade_Session_Message::write('No existen boletas para el período solicitado.', 'error');
-            $this->redirect('/honorarios/boleta_terceros');
+            return redirect('/honorarios/boleta_terceros');
         }
         foreach ($boletas as &$b) {
             unset($b['codigo']);
@@ -213,7 +213,7 @@ class Controller_BoletaTerceros extends \Controller_App
         } catch (\Exception $e) {
             \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
         }
-        $this->redirect('/honorarios/boleta_terceros');
+        return redirect('/honorarios/boleta_terceros');
     }
 
     /**
@@ -261,7 +261,7 @@ class Controller_BoletaTerceros extends \Controller_App
             $r = $this->consume('/api/honorarios/boleta_terceros/emitir', $boleta);
             if ($r['status']['code'] != 200) {
                 \sowerphp\core\Facade_Session_Message::write($r['body'], 'error');
-                $this->redirect('/honorarios/boleta_terceros/emitir');
+                return redirect('/honorarios/boleta_terceros/emitir');
             }
             // obtener html
             try {

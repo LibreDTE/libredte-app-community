@@ -89,7 +89,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
                 'No es posible eliminar la clasificacion '.$Clasificacion->clasificacion.' ya que existen items que la usan.', 'error'
             );
             $filterListar = !empty($_GET['listar']) ? base64_decode($_GET['listar']) : '';
-            $this->redirect(
+            return redirect(
                 $this->module_url.$this->request->getRouteConfig()['controller'].'/listar'.$filterListar
             );
         }
@@ -136,7 +136,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
                     } else {
                         $resumen['error'][] = $Clasificacion->codigo;
                     }
-                } catch (\sowerphp\core\Exception_Database $e) {
+                } catch (\Exception $e) {
                     $resumen['error'][] = $Clasificacion->codigo;
                 }
             }
@@ -152,7 +152,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
                 \sowerphp\core\Facade_Session_Message::write(
                     'Se importó el archivo de clasificaciones de items.', 'ok'
                 );
-                $this->redirect('/dte/admin/item_clasificaciones/listar');
+                return redirect('/dte/admin/item_clasificaciones/listar');
             }
         }
     }
@@ -171,7 +171,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
             \sowerphp\core\Facade_Session_Message::write(
                 'No hay clasificaciones de items que exportar.', 'warning'
             );
-            $this->redirect('/dte/admin/item_clasificaciones/listar');
+            return redirect('/dte/admin/item_clasificaciones/listar');
         }
         array_unshift($clasificaciones, array_keys($clasificaciones[0]));
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($clasificaciones);

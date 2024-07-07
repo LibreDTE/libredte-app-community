@@ -62,7 +62,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
         $day_before = strtotime('yesterday', $from_unix_time);
         $this->set('dia', date('Y-m-d', $day_before));
         if (isset($_POST['submit'])) {
-            $this->redirect('/dte/dte_boleta_consumos/enviar_sii/'.$_POST['dia'].'?listar='.$_GET['listar']);
+            return redirect('/dte/dte_boleta_consumos/enviar_sii/'.$_POST['dia'].'?listar='.$_GET['listar']);
         }
     }
 
@@ -74,7 +74,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
         \sowerphp\core\Facade_Session_Message::write(
             'No se permite la edición de registros.', 'error'
         );
-        $this->redirect('/dte/dte_boleta_consumos/listar/1/dia/D');
+        return redirect('/dte/dte_boleta_consumos/listar/1/dia/D');
     }
 
     /**
@@ -89,7 +89,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
             \sowerphp\core\Facade_Session_Message::write(
                 'No fue posible generar el reporte de consumo de folios<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
             );
-            $this->redirect('/dte/dte_boleta_consumos/listar');
+            return redirect('/dte/dte_boleta_consumos/listar');
         }
         // entregar XML
         $file = 'consumo_folios_'.$Emisor->rut.'-'.$Emisor->dv.'_'.$dia.'.xml';
@@ -123,7 +123,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
                 'No fue posible enviar el reporte de consumo de folios al SII: '.$e->getMessage(), 'error'
             );
         }
-        $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
+        return redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
     }
 
     /**
@@ -142,14 +142,14 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el reporte de consumo de folios solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
+            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
         }
         // si no tiene track id error
         if (!$DteBoletaConsumo->track_id) {
             \sowerphp\core\Facade_Session_Message::write(
                 'Reporte de consumo de folios no tiene Track ID, primero debe enviarlo al SII.', 'error'
             );
-            $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
+            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
         }
         // actualizar estado
         try {
@@ -163,7 +163,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
             );
         }
         // redireccionar
-        $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
+        return redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
     }
 
     /**
@@ -179,7 +179,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el reporte de consumo de folios solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
+            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
         }
         try {
             $DteBoletaConsumo->solicitarRevision($this->Auth->User->id);
@@ -190,7 +190,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
             \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
         }
         // redireccionar
-        $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
+        return redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
     }
 
     /**
@@ -203,7 +203,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
         // solo administrador pueden borrar el rcof
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
             \sowerphp\core\Facade_Session_Message::write('Solo el administrador de la empresa puede eliminar el RCOF.', 'error');
-            $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
+            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
         }
         // obtener reporte enviado
         $DteBoletaConsumo = new Model_DteBoletaConsumo($Emisor->rut, $dia, $Emisor->enCertificacion());
@@ -211,7 +211,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el reporte de consumo de folios solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
+            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
         }
         try {
             $DteBoletaConsumo->delete();
@@ -222,7 +222,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
             \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
         }
         // redireccionar
-        $this->redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
+        return redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
     }
 
     /**
@@ -235,7 +235,7 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
         $pendientes = (new Model_DteBoletaConsumos())->setContribuyente($Emisor)->getPendientes();
         if (!$pendientes) {
             \sowerphp\core\Facade_Session_Message::write('No existen días pendientes por enviar entre el primer día enviado y ayer.', 'ok');
-            $this->redirect('/dte/dte_boleta_consumos/listar/1/dia/D');
+            return redirect('/dte/dte_boleta_consumos/listar/1/dia/D');
         }
         $this->set([
             'Emisor' => $Emisor,

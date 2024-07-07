@@ -26,7 +26,7 @@ namespace website\Dte\Admin;
 /**
  * Clase exportar e importar datos de un contribuyente.
  */
-class Controller_Respaldos extends \Controller_App
+class Controller_Respaldos extends \Controller
 {
 
     /**
@@ -39,7 +39,7 @@ class Controller_Respaldos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'Solo el administrador de la empresa puede descargar un respaldo.', 'error'
             );
-            $this->redirect('/dte/admin');
+            return redirect('/dte/admin');
         }
         $Respaldo = new Model_Respaldo();
         $tablas = $Respaldo->getTablas();

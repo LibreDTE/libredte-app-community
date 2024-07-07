@@ -30,7 +30,7 @@ use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
 /**
  * Controlador de dte recibidos.
  */
-class Controller_DteRecibidos extends \Controller_App
+class Controller_DteRecibidos extends \Controller
 {
 
     /**
@@ -39,7 +39,7 @@ class Controller_DteRecibidos extends \Controller_App
     public function listar($pagina = 1)
     {
         if (!is_numeric($pagina)) {
-            $this->redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar');
+            return redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar');
         }
         $Receptor = $this->getContribuyente();
         $filtros = [];
@@ -58,11 +58,11 @@ class Controller_DteRecibidos extends \Controller_App
                 $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = ceil($documentos_total / $filtros['limit']);
                 if ($pagina != 1 && $pagina > $paginas) {
-                    $this->redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar'.$searchUrl);
+                    return redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar'.$searchUrl);
                 }
             }
             $documentos = $Receptor->getDocumentosRecibidos($filtros);
-        } catch (\sowerphp\core\Exception_Database $e) {
+        } catch (\Exception $e) {
             \sowerphp\core\Facade_Session_Message::write(
                 'Error al recuperar los documentos:<br/>'.$e->getMessage(), 'error'
             );
@@ -125,7 +125,7 @@ class Controller_DteRecibidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'DTE recibido solicitado no existe', 'error'
             );
-            $this->redirect('/dte/dte_recibidos/listar');
+            return redirect('/dte/dte_recibidos/listar');
         }
         // agregar variables para la vista
         $tipo_transacciones = \sasco\LibreDTE\Sii\RegistroCompraVenta::$tipo_transacciones;
@@ -165,7 +165,7 @@ class Controller_DteRecibidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'DTE recibido solicitado no existe.', 'error'
             );
-            $this->redirect('/dte/dte_recibidos/listar');
+            return redirect('/dte/dte_recibidos/listar');
         }
         // agregar variables para la vista
         $this->set([
@@ -339,7 +339,7 @@ class Controller_DteRecibidos extends \Controller_App
                     url('/dte/admin/firma_electronicas/agregar')
                 );
                 \sowerphp\core\Facade_Session_Message::write($message, 'error');
-                $this->redirect('/dte/admin/firma_electronicas/agregar');
+                return redirect('/dte/admin/firma_electronicas/agregar');
             }
             // consultar estado dte
             $estado = $DteRecibido->getEstado($Firma);
@@ -361,8 +361,8 @@ class Controller_DteRecibidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'DTE recibido guardado.', 'ok'
             );
-            $this->redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
-        } catch (\sowerphp\core\Exception_Database $e) {
+            return redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
+        } catch (\Exception $e) {
             \sowerphp\core\Facade_Session_Message::write(
                 'No fue posible guardar el DTE: '.$e->getMessage(), 'error'
             );
@@ -391,7 +391,7 @@ class Controller_DteRecibidos extends \Controller_App
                 'Se eliminó el DTE T'.$DteRecibido->dte.'F'.$DteRecibido->folio.' recibido de '.\sowerphp\app\Utility_Rut::addDV($DteRecibido->emisor), 'ok'
             );
         }
-        $this->redirect('/dte/dte_recibidos/listar');
+        return redirect('/dte/dte_recibidos/listar');
     }
 
     /**
@@ -411,14 +411,14 @@ class Controller_DteRecibidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el DTE recibido solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_recibidos/listar');
+            return redirect('/dte/dte_recibidos/listar');
         }
         // si no tiene XML error
         if (!$DteRecibido->hasXML()) {
             \sowerphp\core\Facade_Session_Message::write(
                 'El DTE no tiene XML asociado.', 'error'
             );
-            $this->redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
+            return redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
         }
         // entregar XML
         $file = 'dte_'.$DteRecibido->getEmisor()->rut.'-'.$DteRecibido->getEmisor()->dv.'_T'.$DteRecibido->dte.'F'.$DteRecibido->folio.'.xml';
@@ -446,14 +446,14 @@ class Controller_DteRecibidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el DTE recibido solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_recibidos/listar');
+            return redirect('/dte/dte_recibidos/listar');
         }
         // si no tiene XML error
         if (!$DteRecibido->hasXML()) {
             \sowerphp\core\Facade_Session_Message::write(
                 'El DTE no tiene XML asociado, no es posible obtener JSON.', 'error'
             );
-            $this->redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
+            return redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
         }
         // entregar XML
         $file = 'dte_'.$DteRecibido->getEmisor()->rut.'-'.$DteRecibido->getEmisor()->dv.'_T'.$DteRecibido->dte.'F'.$DteRecibido->folio.'.json';
@@ -483,7 +483,7 @@ class Controller_DteRecibidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No fue posible obtener el PDF, el DTE recibido solicitado no existe o bien no tiene intercambio asociado.', 'error'
             );
-            $this->redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
+            return redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
         }
         // datos por defecto y recibidos por GET
         $formatoPDF = $DteRecibido->getEmisor()->getConfigPDF($DteRecibido);
@@ -516,7 +516,7 @@ class Controller_DteRecibidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 $e->getMessage(), 'error'
             );
-            $this->redirect('/dte/dte_recibidos/listar');
+            return redirect('/dte/dte_recibidos/listar');
         }
         $ext = $config['compress'] ? 'zip' : 'pdf';
         $file_name = 'LibreDTE_'.$DteRecibido->emisor.'_T'.$DteRecibido->dte.'F'.$DteRecibido->folio.'.'.$ext;

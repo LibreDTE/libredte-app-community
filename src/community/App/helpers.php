@@ -28,7 +28,7 @@
  */
 function is_libredte_enterprise(): bool
 {
-    return class_exists('libredte\enterprise\Controller_App');
+    return class_exists('libredte\enterprise\Controller');
 }
 
 /**
@@ -51,15 +51,14 @@ function apigateway_consume(string $recurso, $datos = []): array
     // Verificar si se pueden hacer consultas a la API o la cuenta se encuentra
     // en pausa por haber alcanzado el número máximo de consultas.
     $message_429 = 'Las consultas a API Gateway se encuentran en pausa ya que se alcanzó el límite de la cuota permitida. Se podrán volver a realizar consultas después del %s. Recuperará el acceso a las funcionalidades extras de LibreDTE una vez se restablezca la cuota de consultas. Si se requiere aumentar la cantidad de consultas de manera inmediata se debe [contratar un plan superior de www.apigateway.cl](https://www.apigateway.cl)';
-    $Cache = new \sowerphp\core\Cache();
-    $Cache->setPrefix('libredte:apigateway:');
-    $retry_time = $Cache->get('retry_time');
+    $Cache = cache();
+    $retry_time = $Cache->get('apigateway:retry_time');
     if ($retry_time) {
         if (date('U') >= $retry_time) {
-            $Cache->delete('retry_time');
-            $Cache->delete('retry_message');
+            $Cache->forget('apigateway:retry_time');
+            $Cache->forget('apigateway:retry_message');
         } else {
-            $retry_message = $Cache->get('retry_message');
+            $retry_message = $Cache->get('apigateway:retry_message');
             if ($retry_message) {
                 $error_message = $retry_message;
                 $error_code = 423;
@@ -86,12 +85,12 @@ function apigateway_consume(string $recurso, $datos = []): array
             $headers = $Client->toArray()['header'];
             if (!empty($headers['Retry-After'])) {
                 $retry_time = date('U') + $headers['Retry-After'];
-                $Cache->set('retry_time', $retry_time, 172800); // se guarda por 48 horas el valor
+                $Cache->set('apigateway:retry_time', $retry_time, 172800); // se guarda por 48 horas el valor
                 if ($e->getCode() == 429) {
                     $error_message = sprintf($message_429, date('d/m/Y H:i:s', $retry_time));
                 } else {
                     $retry_message = $e->getMessage();
-                    $Cache->set('retry_message', $retry_message, 172800); // se guarda por 48 horas el valor
+                    $Cache->set('apigateway:retry_message', $retry_message, 172800); // se guarda por 48 horas el valor
                     $error_message = $retry_message;
                 }
                 throw new \Exception($error_message, $e->getCode());

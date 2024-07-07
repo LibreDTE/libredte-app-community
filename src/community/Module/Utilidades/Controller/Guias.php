@@ -26,7 +26,7 @@ namespace website\Utilidades;
 /**
  * Controlador para utilidades asociadas a las guías de despacho.
  */
-class Controller_Guias extends \Controller_App
+class Controller_Guias extends \Controller
 {
 
     /**

@@ -219,8 +219,8 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                         echo '<span class="small">';
                         echo 'time: ',round(microtime(true)-TIME_START, 2),' [s] - ';
                         echo 'memory: ',round(memory_get_usage()/1024/1024,2),' [MiB] - ';
-                        echo 'queries: ',database()->getQueriesCount(),' - ';
-                        echo 'cache: ',\sowerphp\core\Cache::$setCount,'/',\sowerphp\core\Cache::$getCount,'</span>',"\n";
+                        echo 'queries: ',database()->getStats()['queries'],' - ';
+                        echo 'cache: ',(cache()->getStats()['hitsRatio']*100),'%</span>',"\n";
                     }
                 ?>
                 </div>

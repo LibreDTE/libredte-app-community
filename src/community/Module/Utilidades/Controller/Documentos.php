@@ -30,7 +30,7 @@ use \website\Sistema\General\Model_ActividadEconomicas;
 /**
  * Controlador para utilidades asociadas a documentos tributarios electrónicos (DTE).
  */
-class Controller_Documentos extends \Controller_App
+class Controller_Documentos extends \Controller
 {
 
     /**
@@ -336,7 +336,7 @@ class Controller_Documentos extends \Controller_App
                 \sowerphp\core\Facade_Session_Message::write(
                     'No fue posible leer DTE desde el archivo.', 'error'
                 );
-                $this->redirect($this->request->getRequestUriDecoded());
+                return redirect($this->request->getRequestUriDecoded());
             }
             // si hay solo un DTE se entrega directamente
             if (!isset($dtes[1])) {
@@ -360,7 +360,7 @@ class Controller_Documentos extends \Controller_App
                     \sowerphp\core\Facade_Session_Message::write(
                         'No fue posible crear directorio temporal para DTE.', 'error'
                     );
-                    $this->redirect($this->request->getRequestUriDecoded());
+                    return redirect($this->request->getRequestUriDecoded());
                 }
                 foreach ($dtes as $dte) {
                     $name = $dte['Encabezado']['Emisor']['RUTEmisor'].'_T'.$dte['Encabezado']['IdDoc']['TipoDTE'].'F'.$dte['Encabezado']['IdDoc']['Folio'].'.json';
@@ -648,12 +648,13 @@ class Controller_Documentos extends \Controller_App
         }
         // si solo es un archivo y se pidió no comprimir se entrega directamente
         if (empty($this->Api->data['compress']) && !isset($Documentos[1]) && $cedible != 2) {
-            $this->autoRender = false;
             $disposition = !$Emisor->config_pdf_disposition
                 ? 'attachement'
                 : 'inline'
             ;
-            $this->response->prepareFileResponse($file, ['disposition' => $disposition]);
+            $this->response->prepareFileResponse($file, [
+                'disposition' => $disposition,
+            ]);
             \sowerphp\general\Utility_File::rmdir($dir);
         }
         // entregar archivo comprimido que incluirá cada uno de los DTE
@@ -805,7 +806,7 @@ class Controller_Documentos extends \Controller_App
         $Emisor->modificado = date('Y-m-d H:i:s');
         try {
             return $Emisor->save();
-        } catch (\sowerphp\core\Exception_Database $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -857,7 +858,7 @@ class Controller_Documentos extends \Controller_App
         $Receptor->modificado = date('Y-m-d H:i:s');
         try {
             return $Receptor->save() ? $Receptor : false;
-        } catch (\sowerphp\core\Exception_Database $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

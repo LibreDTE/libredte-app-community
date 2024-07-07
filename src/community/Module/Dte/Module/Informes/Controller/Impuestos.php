@@ -26,7 +26,7 @@ namespace website\Dte\Informes;
 /**
  * Clase para informes de impuestos.
  */
-class Controller_Impuestos extends \Controller_App
+class Controller_Impuestos extends \Controller
 {
 
     /**

@@ -26,7 +26,7 @@ namespace website\Dte\Informes;
 /**
  * Clase para informes de los documentos recibidos.
  */
-class Controller_DteRecibidos extends \Controller_App
+class Controller_DteRecibidos extends \Controller
 {
 
     /**

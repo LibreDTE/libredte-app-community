@@ -354,7 +354,7 @@ class Model_DteFolio extends \Model_App
         $DteCaf->xml = \website\Dte\Utility_Data::encrypt($xml);
         try {
             $DteCaf->save();
-        } catch (\sowerphp\core\Exception_Database $e) {
+        } catch (\Exception $e) {
             throw new \Exception('No fue posible guardar el CAF: '.$e->getMessage());
         }
         // actualizar mantenedor de folios
@@ -367,7 +367,7 @@ class Model_DteFolio extends \Model_App
         $this->alertado = 'f';
         try {
             $this->save();
-        } catch (\sowerphp\core\Exception_Database $e) {
+        } catch (\Exception $e) {
             throw new \Exception('El CAF se guardó, pero no fue posible actualizar el mantenedor de folios, deberá actualizar manualmente. '.$e->getMessage());
         }
         return $Folios;

@@ -27,7 +27,7 @@ namespace website\Honorarios;
  * Clase para el controlador asociado a la tabla boleta_honorario de la base de
  * datos.
  */
-class Controller_BoletaHonorarios extends \Controller_App
+class Controller_BoletaHonorarios extends \Controller
 {
 
     /**
@@ -105,13 +105,13 @@ class Controller_BoletaHonorarios extends \Controller_App
         $BoletaHonorario = new Model_BoletaHonorario($emisor, $numero);
         if (!$BoletaHonorario->exists() || $BoletaHonorario->receptor != $Receptor->rut) {
             \sowerphp\core\Facade_Session_Message::write('No existe la boleta solicitada.', 'error');
-            $this->redirect('/honorarios/boleta_honorarios');
+            return redirect('/honorarios/boleta_honorarios');
         }
         // obtener PDF desde servicio web
         $r = $this->consume('/api/honorarios/boleta_honorarios/pdf/'.$BoletaHonorario->emisor.'/'.$BoletaHonorario->numero.'/'.$Receptor->rut);
         if ($r['status']['code'] != 200) {
             \sowerphp\core\Facade_Session_Message::write($r['body'], 'error');
-            $this->redirect('/honorarios/boleta_honorarios');
+            return redirect('/honorarios/boleta_honorarios');
         }
         $this->Api->response()->type('application/pdf');
         $this->Api->response()->header('Content-Disposition', 'attachment; filename=bhe_'.$BoletaHonorario->emisor.'_'.$BoletaHonorario->numero.'.pdf');
@@ -166,7 +166,7 @@ class Controller_BoletaHonorarios extends \Controller_App
         $boletas = (new Model_BoletaHonorarios())->setContribuyente($Receptor)->buscar(['periodo' => $periodo]);
         if (empty($boletas)) {
             \sowerphp\core\Facade_Session_Message::write('No existen boletas para el período solicitado.', 'error');
-            $this->redirect('/honorarios/boleta_honorarios');
+            return redirect('/honorarios/boleta_honorarios');
         }
         $this->set([
             'Receptor' => $Receptor,
@@ -184,7 +184,7 @@ class Controller_BoletaHonorarios extends \Controller_App
         $boletas = (new Model_BoletaHonorarios())->setContribuyente($Receptor)->buscar(['periodo' => $periodo]);
         if (empty($boletas)) {
             \sowerphp\core\Facade_Session_Message::write('No existen boletas para el período solicitado.', 'error');
-            $this->redirect('/honorarios/boleta_honorarios');
+            return redirect('/honorarios/boleta_honorarios');
         }
         foreach ($boletas as &$b) {
             unset($b['codigo']);
@@ -207,7 +207,7 @@ class Controller_BoletaHonorarios extends \Controller_App
         } catch (\Exception $e) {
             \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
         }
-        $this->redirect('/honorarios/boleta_honorarios');
+        return redirect('/honorarios/boleta_honorarios');
     }
 
 }

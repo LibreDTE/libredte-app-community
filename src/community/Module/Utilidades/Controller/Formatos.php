@@ -27,7 +27,7 @@ namespace website\Utilidades;
  * Controlador para utilidades que permiten convertir de los formatos soportados
  * por LibreDTE a JSON.
  */
-class Controller_Formatos extends \Controller_App
+class Controller_Formatos extends \Controller
 {
 
     /**
@@ -40,7 +40,7 @@ class Controller_Formatos extends \Controller_App
         // si no es formato soportado error
         if ($formato && !in_array($formato, array_keys($formatos))) {
             \sowerphp\core\Facade_Session_Message::write('Formato '.$formato.' no está soportado.', 'error');
-            $this->redirect('/utilidades/formatos');
+            return redirect('/utilidades/formatos');
         }
         // variables para la vista
         $this->set([
@@ -56,7 +56,7 @@ class Controller_Formatos extends \Controller_App
                 );
             } catch (\Exception $e) {
                 \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
-                $this->redirect($this->request->getRequestUriDecoded());
+                return redirect($this->request->getRequestUriDecoded());
             }
             // descargar JSON
             $this->response->type('application/json', 'UTF-8');

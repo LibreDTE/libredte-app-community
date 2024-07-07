@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Controlador de dte emitidos.
  */
-class Controller_DteEmitidos extends \Controller_App
+class Controller_DteEmitidos extends \Controller
 {
 
     /**
@@ -44,7 +44,7 @@ class Controller_DteEmitidos extends \Controller_App
     public function listar($pagina = 1)
     {
         if (!is_numeric($pagina)) {
-            $this->redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar');
+            return redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar');
         }
         $Emisor = $this->getContribuyente();
         $filtros = [];
@@ -63,11 +63,11 @@ class Controller_DteEmitidos extends \Controller_App
                 $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = $documentos_total ? ceil($documentos_total/$filtros['limit']) : 0;
                 if ($pagina != 1 && $pagina > $paginas) {
-                    $this->redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar'.$searchUrl);
+                    return redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar'.$searchUrl);
                 }
             }
             $documentos = $Emisor->getDocumentosEmitidos($filtros);
-        } catch (\sowerphp\core\Exception_Database $e) {
+        } catch (\Exception $e) {
             \sowerphp\core\Facade_Session_Message::write(
                 'Error al recuperar los documentos:<br/>'.$e->getMessage(), 'error'
             );
@@ -107,7 +107,7 @@ class Controller_DteEmitidos extends \Controller_App
         else {
             \sowerphp\core\Facade_Session_Message::write('Se eliminó el DTE', 'ok');
         }
-        $this->redirect('/dte/dte_emitidos/listar');
+        return redirect('/dte/dte_emitidos/listar');
     }
 
     /**
@@ -128,7 +128,7 @@ class Controller_DteEmitidos extends \Controller_App
         else {
             \sowerphp\core\Facade_Session_Message::write('Se eliminó el XML del DTE', 'ok');
         }
-        $this->redirect('/dte/dte_emitidos/ver/'.$dte.'/'.$folio);
+        return redirect('/dte/dte_emitidos/ver/'.$dte.'/'.$folio);
     }
 
     /**
@@ -143,7 +143,7 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el DTE solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_emitidos/listar');
+            return redirect('/dte/dte_emitidos/listar');
         }
         // si el documento es cedible se buscan factoring recomendados
         $cedible = ($DteEmitido->getTipo()->cedible && $DteEmitido->hasLocalXML());
@@ -191,7 +191,7 @@ class Controller_DteEmitidos extends \Controller_App
         else {
             \sowerphp\core\Facade_Session_Message::write('Se envió el DTE al SII.', 'ok');
         }
-        $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+        return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
     }
 
     /**
@@ -206,7 +206,7 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el DTE solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_emitidos/listar');
+            return redirect('/dte/dte_emitidos/listar');
         }
         // solicitar revision
         try {
@@ -228,7 +228,7 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
         }
         // redireccionar
-        $this->redirect(str_replace('solicitar_revision', 'ver', $this->request->getRequestUriDecoded()));
+        return redirect(str_replace('solicitar_revision', 'ver', $this->request->getRequestUriDecoded()));
     }
 
     /**
@@ -243,16 +243,17 @@ class Controller_DteEmitidos extends \Controller_App
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($this->Auth->User->hash);
         $response = $rest->get($this->request->getFullUrlWithoutQuery().'/api/dte/dte_emitidos/actualizar_estado/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?usarWebservice='.(int)$usarWebservice.'&_contribuyente_certificacion='.$Emisor->enCertificacion());
+        $redirect = redirect()->back();
         if ($response === false) {
-            \sowerphp\core\Facade_Session_Message::write(implode('<br/>', $rest->getErrors()), 'error');
+            $redirect->withError(implode('<br/>', $rest->getErrors()));
         }
         else if ($response['status']['code'] != 200) {
-            \sowerphp\core\Facade_Session_Message::write($response['body'], 'error');
+            $redirect->withError($response['body']);
         }
         else {
-            \sowerphp\core\Facade_Session_Message::write('Se actualizó el estado del DTE.', 'ok');
+            $redirect->withSuccess('Se actualizó el estado del DTE.');
         }
-        $this->redirect(str_replace('actualizar_estado', 'ver', $this->request->getRequestUriDecoded()));
+        return $redirect;
     }
 
     /**
@@ -272,7 +273,7 @@ class Controller_DteEmitidos extends \Controller_App
                 \sowerphp\core\Facade_Session_Message::write(
                     'Emisor no está registrado en la aplicación.', 'error'
                 );
-                $this->redirect($this->Auth->logged() ? '/dte/dte_emitidos/consultar' : '/');
+                return redirect($this->Auth->logged() ? '/dte/dte_emitidos/consultar' : '/');
             }
         }
         // datos por defecto y recibidos por GET
@@ -297,7 +298,7 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el DTE solicitado.', 'error'
             );
-            $this->redirect($this->Auth->logged() ? '/dte/dte_emitidos/listar' : '/');
+            return redirect($this->Auth->logged() ? '/dte/dte_emitidos/listar' : '/');
         }
         // si se está pidiendo con un emisor por parámetro se debe verificar
         // fecha de emisión y monto total del dte
@@ -305,7 +306,7 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'DTE existe, pero fecha y/o monto no coinciden con los registrados.', 'error'
             );
-            $this->redirect($this->Auth->logged() ? '/dte/dte_emitidos/listar' : '/dte/dte_emitidos/consultar');
+            return redirect($this->Auth->logged() ? '/dte/dte_emitidos/listar' : '/dte/dte_emitidos/consultar');
         }
         // armar datos con archivo XML
         if ($Emisor->config_pdf_web_verificacion) {
@@ -345,7 +346,7 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 $e->getMessage(), 'error'
             );
-            $this->redirect($this->Auth->logged() ? '/dte/dte_emitidos/ver/'.$dte.'/'.$folio : '/');
+            return redirect($this->Auth->logged() ? '/dte/dte_emitidos/ver/'.$dte.'/'.$folio : '/');
         }
     }
 
@@ -366,7 +367,7 @@ class Controller_DteEmitidos extends \Controller_App
                 \sowerphp\core\Facade_Session_Message::write(
                     'Emisor no está registrado en la aplicación.', 'error'
                 );
-                $this->redirect($this->Auth->logged() ? '/dte/dte_emitidos/consultar' : '/');
+                return redirect($this->Auth->logged() ? '/dte/dte_emitidos/consultar' : '/');
             }
         }
         // obtener DTE emitido
@@ -375,14 +376,14 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el DTE solicitado.', 'error'
             );
-            $this->redirect($this->Auth->logged() ? '/dte/dte_emitidos/listar' : '/');
+            return redirect($this->Auth->logged() ? '/dte/dte_emitidos/listar' : '/');
         }
         // si no tiene XML error
         if (!$DteEmitido->hasXML()) {
             \sowerphp\core\Facade_Session_Message::write(
                 'El DTE no tiene XML asociado.', 'error'
             );
-            $this->redirect($this->Auth->logged() ? '/dte/dte_emitidos/ver/'.$dte.'/'.$folio : '/');
+            return redirect($this->Auth->logged() ? '/dte/dte_emitidos/ver/'.$dte.'/'.$folio : '/');
         }
         // si se está pidiendo con un emisor por parámetro se debe verificar
         // fecha de emisión y monto total del dte
@@ -390,7 +391,7 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'DTE existe, pero fecha y/o monto no coinciden con los registrados.', 'error'
             );
-            $this->redirect($this->Auth->logged() ? '/dte/dte_emitidos/listar' : '/dte/dte_emitidos/consultar');
+            return redirect($this->Auth->logged() ? '/dte/dte_emitidos/listar' : '/dte/dte_emitidos/consultar');
         }
         // entregar XML
         $file = 'dte_'.$Emisor->rut.'-'.$Emisor->dv.'_T'.$DteEmitido->dte.'F'.$DteEmitido->folio.'.xml';
@@ -413,14 +414,14 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el DTE solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_emitidos/listar');
+            return redirect('/dte/dte_emitidos/listar');
         }
         // si no tiene XML error
         if (!$DteEmitido->hasXML()) {
             \sowerphp\core\Facade_Session_Message::write(
                 'El DTE no tiene XML asociado para convertir a JSON.', 'error'
             );
-            $this->redirect('/dte/dte_emitidos/ver/'.$dte.'/'.$folio);
+            return redirect('/dte/dte_emitidos/ver/'.$dte.'/'.$folio);
         }
         // entregar JSON
         $file = 'dte_'.$Emisor->rut.'-'.$Emisor->dv.'_T'.$DteEmitido->dte.'F'.$DteEmitido->folio.'.json';
@@ -513,13 +514,13 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el DTE solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_emitidos/listar');
+            return redirect('/dte/dte_emitidos/listar');
         }
         // tratar de obtener email
         $email_html = $Emisor->getEmailFromTemplate('dte', $DteEmitido);
         if (!$email_html) {
             \sowerphp\core\Facade_Session_Message::write('No existe correo en HTML para el envío del documento.', 'error');
-            $this->redirect(str_replace('email_html', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('email_html', 'ver', $this->request->getRequestUriDecoded()));
         }
         $this->response->sendAndExit($email_html);
     }
@@ -577,7 +578,7 @@ class Controller_DteEmitidos extends \Controller_App
                 );
             }
         }
-        $this->redirect(str_replace('enviar_email', 'ver', $this->request->getRequestUriDecoded()).'#email');
+        return redirect(str_replace('enviar_email', 'ver', $this->request->getRequestUriDecoded()).'#email');
     }
 
     /**
@@ -589,7 +590,7 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'Debe enviar el formulario para poder realizar la cesión.', 'error'
             );
-            $this->redirect(str_replace('ceder', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
+            return redirect(str_replace('ceder', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
         }
         $Emisor = $this->getContribuyente();
         // obtener DTE emitido
@@ -598,28 +599,28 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el DTE solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_emitidos/listar');
+            return redirect('/dte/dte_emitidos/listar');
         }
         // verificar que sea documento cedible
         if (!$DteEmitido->getTipo()->cedible) {
             \sowerphp\core\Facade_Session_Message::write(
                 'Documento no es cedible.', 'error'
             );
-            $this->redirect(str_replace('ceder', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('ceder', 'ver', $this->request->getRequestUriDecoded()));
         }
         // verificar que no esté cedido (enviado al SII)
         if ($DteEmitido->cesion_track_id) {
             \sowerphp\core\Facade_Session_Message::write(
                 'Documento ya fue enviado al SII para cesión.', 'error'
             );
-            $this->redirect(str_replace('ceder', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
+            return redirect(str_replace('ceder', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
         }
         // verificar que no se esté cediendo al mismo rut del emisor del DTE
         if ($DteEmitido->getEmisor()->getRUT() == $_POST['cesionario_rut']) {
             \sowerphp\core\Facade_Session_Message::write(
                 'No puede ceder el DTE a la empresa emisora.', 'error'
             );
-            $this->redirect(str_replace('ceder', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
+            return redirect(str_replace('ceder', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
         }
         // objeto de firma electrónica
         $Firma = $Emisor->getFirma($this->Auth->User->id);
@@ -629,7 +630,7 @@ class Controller_DteEmitidos extends \Controller_App
                 url('/dte/admin/firma_electronicas/agregar')
             );
             \sowerphp\core\Facade_Session_Message::write($message, 'error');
-            $this->redirect(str_replace('ceder', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
+            return redirect(str_replace('ceder', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
         }
         // armar el DTE cedido
         $DteCedido = new \sasco\LibreDTE\Sii\Factoring\DteCedido($DteEmitido->getDte());
@@ -667,7 +668,7 @@ class Controller_DteEmitidos extends \Controller_App
         } else {
             \sowerphp\core\Facade_Session_Message::write(implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
         }
-        $this->redirect(str_replace('ceder', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
+        return redirect(str_replace('ceder', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
     }
 
     /**
@@ -682,21 +683,21 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el DTE solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_emitidos/listar');
+            return redirect('/dte/dte_emitidos/listar');
         }
         // verificar que sea documento cedible
         if (!$DteEmitido->getTipo()->cedible) {
             \sowerphp\core\Facade_Session_Message::write(
                 'Documento no es cedible.', 'error'
             );
-            $this->redirect(str_replace('receder', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('receder', 'ver', $this->request->getRequestUriDecoded()));
         }
         // verificar que no esté cargada una cesión
         if ($DteEmitido->cesion_track_id) {
             \sowerphp\core\Facade_Session_Message::write(
                 'Debe respaldar el XML del AEC actual y eliminar de LibreDTE antes de receder el DTE.', 'error'
             );
-            $this->redirect(str_replace('receder', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
+            return redirect(str_replace('receder', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
         }
         // variables para la vista
         $this->set([
@@ -710,7 +711,7 @@ class Controller_DteEmitidos extends \Controller_App
                 \sowerphp\core\Facade_Session_Message::write(
                     'No puede ceder el DTE a la empresa emisora.', 'error'
                 );
-                $this->redirect(str_replace('receder', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
+                return redirect(str_replace('receder', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
             }
             // cargar AEC con las cesiones previas
             $xml_original = file_get_contents($_FILES['cesion_xml']['tmp_name']);
@@ -765,7 +766,7 @@ class Controller_DteEmitidos extends \Controller_App
             } else {
                 \sowerphp\core\Facade_Session_Message::write(implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
             }
-            $this->redirect(str_replace('receder', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
+            return redirect(str_replace('receder', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
         }
     }
 
@@ -778,7 +779,7 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'Debe enviar el formulario para poder realizar en envío del a cesión.', 'error'
             );
-            $this->redirect(str_replace('cesion_email', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
+            return redirect(str_replace('cesion_email', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
         }
         $Emisor = $this->getContribuyente();
         // obtener DTE emitido
@@ -787,14 +788,14 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el DTE solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_emitidos/listar');
+            return redirect('/dte/dte_emitidos/listar');
         }
         // verificar que esté cedido (enviado al SII)
         if (!$DteEmitido->cesion_track_id) {
             \sowerphp\core\Facade_Session_Message::write(
                 'Documento no ha sido enviado al SII para cesión.', 'error'
             );
-            $this->redirect(str_replace('cesion_email', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
+            return redirect(str_replace('cesion_email', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
         }
         // enviar correo con el XML de la cesión
         $Email = $Emisor->getEmailSender('intercambio');
@@ -815,7 +816,7 @@ class Controller_DteEmitidos extends \Controller_App
                 'No fue posible enviar el correo electrónico.', 'error'
             );
         }
-        $this->redirect(str_replace('cesion_email', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
+        return redirect(str_replace('cesion_email', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
     }
 
     /**
@@ -830,14 +831,14 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el DTE solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_emitidos/listar');
+            return redirect('/dte/dte_emitidos/listar');
         }
         // verificar que exista XML
         if (!$DteEmitido->cesion_xml) {
             \sowerphp\core\Facade_Session_Message::write(
                 'DTE no tiene XML de AEC asociado.', 'error'
             );
-            $this->redirect(str_replace('cesion_xml', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
+            return redirect(str_replace('cesion_xml', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
         }
         // entregar XML
         $file = 'cesion_'.$Emisor->rut.'-'.$Emisor->dv.'_T'.$DteEmitido->dte.'F'.$DteEmitido->folio.'.xml';
@@ -860,21 +861,21 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el DTE solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_emitidos/listar');
+            return redirect('/dte/dte_emitidos/listar');
         }
         // verificar que exista track ID asociado al envio
         if (!$DteEmitido->cesion_track_id) {
             \sowerphp\core\Facade_Session_Message::write(
                 'DTE no tiene Track ID de AEC asociado.', 'error'
             );
-            $this->redirect(str_replace('cesion_eliminar', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
+            return redirect(str_replace('cesion_eliminar', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
         }
         // verificar que el usuario puede eliminar la cesión
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
             \sowerphp\core\Facade_Session_Message::write(
                 'No está autorizado a eliminar el archivo de cesión.', 'error'
             );
-            $this->redirect(str_replace('cesion_eliminar', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
+            return redirect(str_replace('cesion_eliminar', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
         }
         // eliminar cesión
         $servidor_sii = \sasco\LibreDTE\Sii::getServidor();
@@ -882,7 +883,7 @@ class Controller_DteEmitidos extends \Controller_App
         $DteEmitido->cesion_track_id = null;
         $DteEmitido->save();
         \sowerphp\core\Facade_Session_Message::write('Archivo de cesión eliminado de LibreDTE. Recuerde anular la cesión del DTE en la oficina del SII usando el formulario 2117.', 'ok');
-        $this->redirect(str_replace('cesion_eliminar', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
+        return redirect(str_replace('cesion_eliminar', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
     }
 
     /**
@@ -897,14 +898,14 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el DTE solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_emitidos/listar');
+            return redirect('/dte/dte_emitidos/listar');
         }
         // verificar que sea documento que se puede marcar como fuera de plazo
         if ($DteEmitido->dte!=61) {
             \sowerphp\core\Facade_Session_Message::write(
                 'Solo es posible marcar IVA fuera de plazo en notas de crédito.', 'error'
             );
-            $this->redirect(str_replace('avanzado_iva_fuera_plazo', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('avanzado_iva_fuera_plazo', 'ver', $this->request->getRequestUriDecoded()));
         }
         // marcar IVA como fuera de plazo
         $DteEmitido->iva_fuera_plazo = (int)$_POST['iva_fuera_plazo'];
@@ -914,7 +915,7 @@ class Controller_DteEmitidos extends \Controller_App
             : 'IVA marcado como recuperable.'
         ;
         \sowerphp\core\Facade_Session_Message::write($msg, 'ok');
-        $this->redirect(str_replace('avanzado_iva_fuera_plazo', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
+        return redirect(str_replace('avanzado_iva_fuera_plazo', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
     }
 
     /**
@@ -929,14 +930,14 @@ class Controller_DteEmitidos extends \Controller_App
                 str_replace("\n", '<br/>', $r['body']), 'error'
             );
             if ($r['status']['code'] == 404) {
-                $this->redirect('/dte/dte_emitidos/listar');
+                return redirect('/dte/dte_emitidos/listar');
             } else {
-                $this->redirect(str_replace('avanzado_anular', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
+                return redirect(str_replace('avanzado_anular', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
             }
         }
         $msg = $r['body'] ? 'DTE anulado.' : 'DTE ya no está anulado.';
         \sowerphp\core\Facade_Session_Message::write($msg, 'ok');
-        $this->redirect(str_replace('avanzado_anular', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
+        return redirect(str_replace('avanzado_anular', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
     }
 
     /**
@@ -980,13 +981,13 @@ class Controller_DteEmitidos extends \Controller_App
                 str_replace("\n", '<br/>', $r['body']), 'error'
             );
             if ($r['status']['code'] == 404) {
-                $this->redirect('/dte/dte_emitidos/listar');
+                return redirect('/dte/dte_emitidos/listar');
             } else {
-                $this->redirect(str_replace('avanzado_sucursal', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
+                return redirect(str_replace('avanzado_sucursal', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
             }
         }
         \sowerphp\core\Facade_Session_Message::write('Se cambió la sucursal.', 'ok');
-        $this->redirect(str_replace('avanzado_sucursal', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
+        return redirect(str_replace('avanzado_sucursal', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
     }
 
     /**
@@ -1028,26 +1029,26 @@ class Controller_DteEmitidos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el DTE solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_emitidos/listar');
+            return redirect('/dte/dte_emitidos/listar');
         }
         // verificar que sea de exportación
         if (!$DteEmitido->getTipo()->esExportacion()) {
             \sowerphp\core\Facade_Session_Message::write(
                 'Documento no es de exportación.', 'error'
             );
-            $this->redirect(str_replace('avanzado_tipo_cambio', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
+            return redirect(str_replace('avanzado_tipo_cambio', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
         }
         //
         if (!$DteEmitido->hasLocalXML()) {
             \sowerphp\core\Facade_Session_Message::write(
                 'Documento no tiene un XML en LibreDTE.', 'error'
             );
-            $this->redirect(str_replace('avanzado_tipo_cambio', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('avanzado_tipo_cambio', 'ver', $this->request->getRequestUriDecoded()));
         }
         // solo administrador puede cambiar el tipo de cambio
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
             \sowerphp\core\Facade_Session_Message::write('Solo el administrador de la empresa puede cambiar el tipo de cambio.', 'error');
-            $this->redirect(str_replace('avanzado_tipo_cambio', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('avanzado_tipo_cambio', 'ver', $this->request->getRequestUriDecoded()));
         }
         // cambiar monto total
         $DteEmitido->exento = $DteEmitido->total = abs(round(
@@ -1055,7 +1056,7 @@ class Controller_DteEmitidos extends \Controller_App
         ));
         $DteEmitido->save();
         \sowerphp\core\Facade_Session_Message::write('Monto en pesos (CLP) del DTE actualizado.', 'ok');
-        $this->redirect(str_replace('avanzado_tipo_cambio', 'ver', $this->request->getRequestUriDecoded()));
+        return redirect(str_replace('avanzado_tipo_cambio', 'ver', $this->request->getRequestUriDecoded()));
     }
 
     /**
@@ -1073,13 +1074,13 @@ class Controller_DteEmitidos extends \Controller_App
                 str_replace("\n", '<br/>', $r['body']), 'error'
             );
             if ($r['status']['code'] == 404) {
-                $this->redirect('/dte/dte_emitidos/listar');
+                return redirect('/dte/dte_emitidos/listar');
             } else {
-                $this->redirect(str_replace('avanzado_track_id', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
+                return redirect(str_replace('avanzado_track_id', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
             }
         }
         \sowerphp\core\Facade_Session_Message::write('Track ID actualizado', 'ok');
-        $this->redirect(str_replace('avanzado_track_id', 'ver', $this->request->getRequestUriDecoded()));
+        return redirect(str_replace('avanzado_track_id', 'ver', $this->request->getRequestUriDecoded()));
     }
 
     /**

@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Controlador registro de ventas.
  */
-class Controller_RegistroVentas extends \Controller_App
+class Controller_RegistroVentas extends \Controller
 {
 
     /**

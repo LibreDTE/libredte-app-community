@@ -197,7 +197,7 @@ class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
                 $Contribuyente->modificado = date('Y-m-d H:i:s');
                 try {
                     $Contribuyente->save();
-                } catch (\sowerphp\core\Exception_Database $e) {
+                } catch (\Exception $e) {
                     if ($this->verbose) {
                         $this->out('<error>Contribuyente '.$c[1].' no pudo ser guardado en la base de datos.</error>');
                     }

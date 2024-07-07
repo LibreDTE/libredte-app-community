@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para las acciones asociadas al libro de boletas electrónicas.
  */
-class Controller_DteBoletas extends \Controller_App
+class Controller_DteBoletas extends \Controller
 {
 
     /**
@@ -56,7 +56,7 @@ class Controller_DteBoletas extends \Controller_App
                 url('/dte/admin/firma_electronicas/agregar')
             );
             \sowerphp\core\Facade_Session_Message::write($message, 'error');
-            $this->redirect('/dte/dte_boletas');
+            return redirect('/dte/dte_boletas');
         }
         $Libro->setFirma($Firma);
         foreach ($boletas as $boleta) {
@@ -87,7 +87,7 @@ class Controller_DteBoletas extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No fue posible generar el libro de boletas<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
             );
-            $this->redirect('/dte/dte_boletas');
+            return redirect('/dte/dte_boletas');
         }
         // entregar XML
         $file = 'boletas_'.$Emisor->rut.'-'.$Emisor->dv.'_'.$periodo.'.xml';

@@ -376,7 +376,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
                 'revision_estado' => $this->revision_estado,
                 'revision_detalle' => $this->revision_detalle,
             ];
-        } catch (\sowerphp\core\Exception_Database $e) {
+        } catch (\Exception $e) {
             throw new \Exception('El estado se obtuvo pero no fue posible guardarlo en la base de datos<br/>'.$e->getMessage());
         }
     }
@@ -439,7 +439,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
                         'revision_estado' => $this->revision_estado,
                         'revision_detalle' => $this->revision_detalle,
                     ];
-                } catch (\sowerphp\core\Exception_Database $e) {
+                } catch (\Exception $e) {
                     throw new \Exception(
                         'El estado se obtuvo pero no fue posible guardarlo en la base de datos<br/>'.$e->getMessage()
                     );

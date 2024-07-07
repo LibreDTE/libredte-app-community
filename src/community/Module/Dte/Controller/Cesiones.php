@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Controlador de cesiones.
  */
-class Controller_Cesiones extends \Controller_App
+class Controller_Cesiones extends \Controller
 {
 
     /**
@@ -36,7 +36,7 @@ class Controller_Cesiones extends \Controller_App
     public function listar($pagina = 1)
     {
         if (!is_numeric($pagina)) {
-            $this->redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar');
+            return redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar');
         }
         $Emisor = $this->getContribuyente();
         $filtros = [];
@@ -56,11 +56,11 @@ class Controller_Cesiones extends \Controller_App
                 $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
                 $paginas = $documentos_total ? ceil($documentos_total/$filtros['limit']) : 0;
                 if ($pagina != 1 && $pagina > $paginas) {
-                    $this->redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar'.$searchUrl);
+                    return redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar'.$searchUrl);
                 }
             }
             $documentos = $Emisor->getDocumentosEmitidos($filtros);
-        } catch (\sowerphp\core\Exception_Database $e) {
+        } catch (\Exception $e) {
             \sowerphp\core\Facade_Session_Message::write(
                 'Error al recuperar los documentos:<br/>'.$e->getMessage(), 'error'
             );
@@ -89,7 +89,7 @@ class Controller_Cesiones extends \Controller_App
     {
         if (!in_array($consulta, ['deudor', 'cedente', 'cesionario'])) {
             \sowerphp\core\Facade_Session_Message::write('Búsqueda por "'.$consulta.'" no existe.', 'error');
-            $this->redirect('/dte/cesiones/listar');
+            return redirect('/dte/cesiones/listar');
         }
         $Contribuyente = $this->getContribuyente();
         $this->set([

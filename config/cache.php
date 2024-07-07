@@ -100,6 +100,6 @@ return [
     | Por eso definimos un prefijo para evitar colisiones de claves.
     |
     */
-    'prefix' => env('CACHE_PREFIX', 'libredte_cache_'),
+    'prefix' => env('CACHE_PREFIX', 'libredte_community'),
 
 ];

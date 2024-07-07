@@ -337,12 +337,14 @@ class Model_DteIntercambios extends \Model_Plural_App
                 : $this->getContribuyente()->getEmailReceiver()
             ;
         } catch (\Exception $e) {
-            throw new \sowerphp\core\Exception($e->getMessage(), 500);
+            throw new \Exception($e->getMessage(), 500);
         }
         if (!$Imap) {
-            throw new \sowerphp\core\Exception(
-                'No fue posible conectar mediante IMAP a '.$this->getContribuyente()->config_email_intercambio_imap.', verificar mailbox, usuario y/o contraseña de correo de intercambio:<br/>'.implode('<br/>', imap_errors()), 500
-            );
+            throw new \Exception(__(
+                'No fue posible conectar mediante IMAP a %s, verificar mailbox, usuario y/o contraseña de correo de intercambio:<br/>%s',
+                $this->getContribuyente()->config_email_intercambio_imap,
+                implode('<br/>', imap_errors())
+            ), 500);
         }
         // obtener mensajes sin leer
         if ($dias) {
@@ -354,9 +356,12 @@ class Model_DteIntercambios extends \Model_Plural_App
         }
         if (!$uids) {
             if ($dias) {
-                throw new \sowerphp\core\Exception('No se encontraron documentos sin leer en los últimos '.num($dias).' días en el correo de intercambio.', 204);
+                throw new \Exception(__(
+                    'No se encontraron documentos sin leer en los últimos %s días en el correo de intercambio.',
+                    num($dias)
+                ), 204);
             } else {
-                throw new \sowerphp\core\Exception('No se encontraron documentos sin leer en el correo de intercambio.', 204);
+                throw new \Exception('No se encontraron documentos sin leer en el correo de intercambio.', 204);
             }
         }
         // procesar cada mensaje sin leer

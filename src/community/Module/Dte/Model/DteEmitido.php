@@ -23,7 +23,6 @@
 
 namespace website\Dte;
 
-use \sowerphp\core\Exception_Database as DatabaseException;
 use \sowerphp\core\Network_Http_Rest;
 use \sowerphp\core\Trigger;
 use \sowerphp\core\Utility_Array;
@@ -1142,7 +1141,7 @@ class Model_DteEmitido extends Model_Base_Envio
                     $this->db->rollback();
                     return false;
                 }
-            } catch (DatabaseException $e) {
+            } catch (\Exception $e) {
                 $this->db->rollback();
                 return false;
             }
@@ -1566,7 +1565,7 @@ class Model_DteEmitido extends Model_Base_Envio
                 'revision_estado' => $this->revision_estado,
                 'revision_detalle' => $this->revision_detalle,
             ];
-        } catch (DatabaseException $e) {
+        } catch (\Exception $e) {
             throw new \Exception(
                 'El estado se obtuvo pero no fue posible guardarlo en la base de datos<br/>'
                     . $e->getMessage()
@@ -1638,7 +1637,7 @@ class Model_DteEmitido extends Model_Base_Envio
                         'revision_estado' => $estado,
                         'revision_detalle' => $detalle
                     ];
-                } catch (DatabaseException $e) {
+                } catch (\Exception $e) {
                     throw new \Exception(
                         'El estado se obtuvo pero no fue posible guardarlo en la base de datos<br/>'
                             . $e->getMessage()

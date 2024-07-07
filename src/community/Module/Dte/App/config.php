@@ -29,7 +29,9 @@ return [
         'title' => 'Facturación',
 
         // Menú para el módulo.
-        'nav' => array_slice(config('nav.app.dte.menu'), 1),
+        'nav' => function() {
+            return array_slice(config('nav.app.dte.menu'), 1);
+        },
 
     ],
 

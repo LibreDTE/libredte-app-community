@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Controlador para acciones del SII.
  */
-class Controller_Sii extends \Controller_App
+class Controller_Sii extends \Controller
 {
 
     /**
@@ -39,7 +39,7 @@ class Controller_Sii extends \Controller_App
             $Emisor = (new Model_Contribuyentes())->get($rut);
             if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
                 \sowerphp\core\Facade_Session_Message::write('Usted no es el administrador de la empresa solicitada.', 'error');
-                $this->redirect('/dte/contribuyentes/seleccionar');
+                return redirect('/dte/contribuyentes/seleccionar');
             }
             $Firma = $Emisor->getFirma($this->Auth->User->id);
             $certificacion = $Emisor->enCertificacion();
@@ -58,7 +58,7 @@ class Controller_Sii extends \Controller_App
         }
         // se redirecciona al SII
         catch (\Exception $e) {
-            $this->redirect('https://'.\sasco\LibreDTE\Sii::getServidor().'.sii.cl/cvc_cgi/dte/ad_empresa1');
+            return redirect('https://'.\sasco\LibreDTE\Sii::getServidor().'.sii.cl/cvc_cgi/dte/ad_empresa1');
         }
     }
 
@@ -72,7 +72,7 @@ class Controller_Sii extends \Controller_App
             $Emisor = (new Model_Contribuyentes())->get($rut);
             if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
                 \sowerphp\core\Facade_Session_Message::write('Usted no es el administrador de la empresa solicitada.', 'error');
-                $this->redirect('/dte/contribuyentes/seleccionar');
+                return redirect('/dte/contribuyentes/seleccionar');
             }
             $Firma = $Emisor->getFirma($this->Auth->User->id);
             if (!$Firma) {
@@ -94,7 +94,7 @@ class Controller_Sii extends \Controller_App
         }
         // se redirecciona al SII
         catch (\Exception $e) {
-            $this->redirect('https://'.\sasco\LibreDTE\Sii::getServidor().'.sii.cl/cvc_cgi/dte/eu_enrola_usuarios');
+            return redirect('https://'.\sasco\LibreDTE\Sii::getServidor().'.sii.cl/cvc_cgi/dte/eu_enrola_usuarios');
         }
     }
 
@@ -115,7 +115,7 @@ class Controller_Sii extends \Controller_App
         }
         // se redirecciona al SII
         catch (\Exception $e) {
-            $this->redirect('https://'.\sasco\LibreDTE\Sii::getServidor($certificacion).'.sii.cl/cvc/dte/ee_empresas_dte.html');
+            return redirect('https://'.\sasco\LibreDTE\Sii::getServidor($certificacion).'.sii.cl/cvc/dte/ee_empresas_dte.html');
         }
     }
 
@@ -133,7 +133,7 @@ class Controller_Sii extends \Controller_App
         }
         // se redirecciona al SII
         catch (\Exception $e) {
-            $this->redirect('https://zeus.sii.cl/cvc/stc/stc.html');
+            return redirect('https://zeus.sii.cl/cvc/stc/stc.html');
         }
     }
 
@@ -199,7 +199,7 @@ class Controller_Sii extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe firma asociada.', 'error'
             );
-            $this->redirect('/dte/dte_emitidos/listar');
+            return redirect('/dte/dte_emitidos/listar');
         }
         list($rutQuery, $dvQuery) = explode('-', $Firma->getId());
         $servidor = \sasco\LibreDTE\Sii::getServidor();
@@ -229,7 +229,7 @@ class Controller_Sii extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe firma asociada.', 'error'
             );
-            $this->redirect('/dte');
+            return redirect('/dte');
         }
         $this->layout .= '.min';
         $this->set([
@@ -281,7 +281,7 @@ class Controller_Sii extends \Controller_App
         }
         // se crea enlace directo al SII
         catch (\Exception $e) {
-            $this->redirect('https://'.\sasco\LibreDTE\Sii::getServidor().'.sii.cl/rtc/RTC/RTCAnotConsulta.html');
+            return redirect('https://'.\sasco\LibreDTE\Sii::getServidor().'.sii.cl/rtc/RTC/RTCAnotConsulta.html');
         }
     }
 
@@ -313,7 +313,7 @@ class Controller_Sii extends \Controller_App
         }
         // se crea enlace directo al SII
         catch (\Exception $e) {
-            $this->redirect('https://'.\sasco\LibreDTE\Sii::getServidor().'.sii.cl/rtc/RTC/RTCObtCertif.html');
+            return redirect('https://'.\sasco\LibreDTE\Sii::getServidor().'.sii.cl/rtc/RTC/RTCObtCertif.html');
         }
     }
 

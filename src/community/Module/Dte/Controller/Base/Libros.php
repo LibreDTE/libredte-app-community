@@ -29,7 +29,7 @@ use \website\Dte\Admin\Mantenedores\Model_DteTipo;
 /**
  * Controlador base para libros.
  */
-abstract class Controller_Base_Libros extends \Controller_App
+abstract class Controller_Base_Libros extends \Controller
 {
 
     /**
@@ -55,7 +55,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $n_detalles = $Emisor->{'count'.$this->config['model']['plural']}((int)$periodo);
         if (!$n_detalles && !$Libro->exists()) {
             SessionMessage::write('No hay documentos ni libro del período '.$periodo.'.', 'error');
-            $this->redirect('/dte/'.$this->request->getRouteConfig()['controller']);
+            return redirect('/dte/'.$this->request->getRouteConfig()['controller']);
         }
         $resumen = $Libro->getResumen();
         $operaciones = [];
@@ -90,7 +90,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $detalle = $Emisor->{'get'.$this->config['model']['plural']}((int)$periodo);
         if (!$detalle) {
             SessionMessage::write('No hay documentos en el período '.$periodo.'.', 'error');
-            $this->redirect('/dte/'.$this->request->getRouteConfig()['controller']);
+            return redirect('/dte/'.$this->request->getRouteConfig()['controller']);
         }
         foreach ($detalle as &$d) {
             unset($d['tipo_transaccion']);
@@ -112,7 +112,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         if (!$Libro->exists()) {
             SessionMessage::write('Aún no se ha generado el XML del período '.$periodo.'. Debe generar el XML antes de poder descargar el PDF del período.', 'error');
-            $this->redirect(str_replace('pdf', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('pdf', 'ver', $this->request->getRequestUriDecoded()));
         }
         // definir xml y nombre archivo
         $xml = base64_decode($Libro->xml);
@@ -130,7 +130,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         // entregar libro de guías
         else {
             SessionMessage::error('Libro en PDF no está implementado.');
-            $this->redirect(str_replace('pdf', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('pdf', 'ver', $this->request->getRequestUriDecoded()));
         }
     }
 
@@ -145,7 +145,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         if (!$Libro->exists()) {
             SessionMessage::write('Aun no se ha generado el XML del período '.$periodo.'.', 'error');
-            $this->redirect(str_replace('xml', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('xml', 'ver', $this->request->getRequestUriDecoded()));
         }
         // entregar XML
         $file = strtolower($this->config['model']['plural']).'_'.$Emisor->rut.'-'.$Emisor->dv.'_'.$periodo.'.xml';
@@ -174,7 +174,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         if (!$Libro->exists()) {
             SessionMessage::write('No ha enviado el libro del período '.$periodo.' al SII, no puede rectificar. Debe hacer un envío normal del libro.', 'error');
-            $this->redirect(str_replace('enviar_rectificacion', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('enviar_rectificacion', 'ver', $this->request->getRequestUriDecoded()));
         }
         // asignar variables vista
         $this->set([
@@ -197,7 +197,7 @@ abstract class Controller_Base_Libros extends \Controller_App
                 return;
             }
             // redirigir a la página que envía el libro sin movimientos
-            $this->redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/enviar_sii/'.$periodo);
+            return redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/enviar_sii/'.$periodo);
         }
     }
 
@@ -212,7 +212,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         if (!$Libro->exists()) {
             SessionMessage::write('Aún no se ha generado el libro del período '.$periodo.'.', 'error');
-            $this->redirect(str_replace('solicitar_revision', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('solicitar_revision', 'ver', $this->request->getRequestUriDecoded()));
         }
         // solicitar envío de nueva revisión
         $estado = $Libro->solicitarRevision($this->Auth->User->id);
@@ -224,7 +224,7 @@ abstract class Controller_Base_Libros extends \Controller_App
             SessionMessage::write('Se solicitó nueva revisión del libro, verificar estado en unos segundos.', 'ok');
         }
         // redireccionar
-        $this->redirect(str_replace('solicitar_revision', 'ver', $this->request->getRequestUriDecoded()));
+        return redirect(str_replace('solicitar_revision', 'ver', $this->request->getRequestUriDecoded()));
     }
 
     /**
@@ -241,12 +241,12 @@ abstract class Controller_Base_Libros extends \Controller_App
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         if (!$Libro->exists()) {
             SessionMessage::write('Aún no se ha generado el libro del período '.$periodo.'.', 'error');
-            $this->redirect(str_replace('actualizar_estado', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('actualizar_estado', 'ver', $this->request->getRequestUriDecoded()));
         }
         // si no tiene track id error
         if (!$Libro->track_id) {
             SessionMessage::write('Libro del período '.$periodo.' no tiene Track ID. Primero debe enviarlo al SII.', 'error');
-            $this->redirect(str_replace('actualizar_estado', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('actualizar_estado', 'ver', $this->request->getRequestUriDecoded()));
         }
         // actualizar estado
         try {
@@ -256,7 +256,7 @@ abstract class Controller_Base_Libros extends \Controller_App
             SessionMessage::write('Error al actualizar el estado del libro: '.$e->getMessage(), 'error');
         }
         // redireccionar
-        $this->redirect(str_replace('actualizar_estado', 'ver', $this->request->getRequestUriDecoded()));
+        return redirect(str_replace('actualizar_estado', 'ver', $this->request->getRequestUriDecoded()));
     }
 
     /**

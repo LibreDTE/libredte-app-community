@@ -108,9 +108,7 @@ return [
     'Sistema',
     'Sistema.General',
     'Sistema.General.DivisionGeopolitica',
-    'Sistema.Usuarios' => [
-        'autoload' => true,
-    ],
+    'Sistema.Usuarios',
 
     /*
     |--------------------------------------------------------------------------

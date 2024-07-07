@@ -23,8 +23,6 @@
 
 namespace website\Dte;
 
-use \sowerphp\core\Exception_Database as DatabaseException;
-use \sowerphp\core\Model_Datasource_Session as Session;
 use \sowerphp\core\Network_Email;
 use \sowerphp\core\Network_Email_Imap;
 use \sowerphp\core\Network_Http_Rest;
@@ -285,7 +283,7 @@ class Model_Contribuyente extends \Model_App
                 }
             }
         }
-        catch (DatabaseException $e) {
+        catch (\Exception $e) {
         }
         catch (\Exception $e) {
         }
@@ -1213,7 +1211,7 @@ class Model_Contribuyente extends \Model_App
                     $this->db->rollback();
                     return false;
                 }
-            } catch (DatabaseException $e) {
+            } catch (\Exception $e) {
                 $this->db->rollback();
                 return false;
             }

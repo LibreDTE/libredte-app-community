@@ -58,6 +58,6 @@ $router->connect('/api/utilidades/:controller/*', [
 ]);
 $router->connect('/utilidades', [
     'module' => 'Utilidades',
-    'controller' => 'module',
-    'action' => 'index'
+    'controller' => 'app',
+    'action' => 'module'
 ]);

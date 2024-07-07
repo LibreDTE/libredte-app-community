@@ -27,7 +27,7 @@ namespace website\Dte;
  * Clase para el controlador asociado a la tabla dte_intercambio_recepcion de la base de
  * datos.
  */
-class Controller_DteIntercambioRecepciones extends \Controller_App
+class Controller_DteIntercambioRecepciones extends \Controller
 {
 
     /**
@@ -42,7 +42,7 @@ class Controller_DteIntercambioRecepciones extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe la recepción solicitada.', 'error'
             );
-            $this->redirect('/dte/dte_intercambios');
+            return redirect('/dte/dte_intercambios');
         }
         // entregar XML
         $xml = base64_decode($DteIntercambioRecepcion->xml);

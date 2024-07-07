@@ -27,7 +27,7 @@ namespace website\Dte;
  * Clase para el controlador asociado a la tabla dte_intercambio_recibo de la base de
  * datos.
  */
-class Controller_DteIntercambioRecibos extends \Controller_App
+class Controller_DteIntercambioRecibos extends \Controller
 {
 
     /**
@@ -42,7 +42,7 @@ class Controller_DteIntercambioRecibos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe el recibo solicitado.', 'error'
             );
-            $this->redirect('/dte/dte_intercambios');
+            return redirect('/dte/dte_intercambios');
         }
         // entregar XML
         $xml = base64_decode($DteIntercambioRecibo->xml);

@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para todas las acciones asociadas a documentos (incluyendo API).
  */
-class Controller_Documentos extends \Controller_App
+class Controller_Documentos extends \Controller
 {
 
     private $IndTraslado = [
@@ -464,7 +464,7 @@ class Controller_Documentos extends \Controller_App
             } else {
                 $this->Api->send('No fue posible guardar el DTE temporal', 507);
             }
-        } catch (\sowerphp\core\Exception_Database $e) {
+        } catch (\Exception $e) {
             $this->Api->send('No fue posible guardar el DTE temporal: '.$e->getMessage(), 507);
         }
         // enviar por correo el DTE temporal si así se solicitó
@@ -499,7 +499,7 @@ class Controller_Documentos extends \Controller_App
         $tipos_dte_autorizados = $Emisor->getDocumentosAutorizados($this->Auth->User);
         if (empty($tipos_dte_autorizados)) {
             \sowerphp\core\Facade_Session_Message::write('No está autorizado a emitir DTE.', 'warning');
-            $this->redirect('/dte');
+            return redirect('/dte');
         }
         // si hay un DTE de referencia se arman datos para poder copiar
         if ($referencia_dte && $referencia_folio) {
@@ -516,14 +516,14 @@ class Controller_Documentos extends \Controller_App
                     \sowerphp\core\Facade_Session_Message::write(
                         'Documento T'.$referencia_dte.'F'.$referencia_folio.' no existe, no se puede referenciar.', 'error'
                     );
-                    $this->redirect('/dte/dte_emitidos/listar');
+                    return redirect('/dte/dte_emitidos/listar');
                 }
                 if ($referencia_tipo == 'referencia') {
                     try {
                         $DocumentoOriginal->esReferenciable();
                     } catch (\Exception $e) {
                         \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
-                        $this->redirect('/dte/dte_emitidos/ver/'.$referencia_dte.'/'.$referencia_folio.'#referencias');
+                        return redirect('/dte/dte_emitidos/ver/'.$referencia_dte.'/'.$referencia_folio.'#referencias');
                     }
                     $this->set([
                         'referenciar_documento' => 'T'.$DocumentoOriginal->dte.'F'.$DocumentoOriginal->folio,
@@ -540,7 +540,7 @@ class Controller_Documentos extends \Controller_App
                         $referencia_folio
                     );
                     \sowerphp\core\Facade_Session_Message::write($message, 'error');
-                    $this->redirect('/dte/dte_emitidos/ver/'.$referencia_dte.'/'.$referencia_folio.'#referencias');
+                    return redirect('/dte/dte_emitidos/ver/'.$referencia_dte.'/'.$referencia_folio.'#referencias');
                 }
             }
             // si el folio de referencia es alfanumérico se busca un DTE temporal
@@ -551,7 +551,7 @@ class Controller_Documentos extends \Controller_App
                     \sowerphp\core\Facade_Session_Message::write(
                         'Documento '.$DocumentoOriginal->getFolio().' no existe, no se puede referenciar.', 'error'
                     );
-                    $this->redirect('/dte/dte_tmps/listar');
+                    return redirect('/dte/dte_tmps/listar');
                 }
                 if (isset($_GET['reemplazar'])) {
                     $CobroOriginal = $DocumentoOriginal->getCobro(false);
@@ -645,14 +645,14 @@ class Controller_Documentos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No puede acceder de forma directa a la previsualización.', 'error'
             );
-            $this->redirect('/dte/documentos/emitir');
+            return redirect('/dte/documentos/emitir');
         }
         // si no está autorizado a emitir el tipo de documento redirigir
         if (!$Emisor->documentoAutorizado($_POST['TpoDoc'])) {
             \sowerphp\core\Facade_Session_Message::write(
                 'No está autorizado a emitir el tipo de documento '.$_POST['TpoDoc'].'.', 'error'
             );
-            $this->redirect('/dte/documentos/emitir');
+            return redirect('/dte/documentos/emitir');
         }
         // obtener dirección y comuna emisor
         $sucursal = $Emisor->getSucursal($_POST['CdgSIISucur']);
@@ -663,7 +663,7 @@ class Controller_Documentos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'Debe indicar el tipo de documento a emitir.'
             );
-            $this->redirect('/dte/documentos/emitir');
+            return redirect('/dte/documentos/emitir');
         }
         // revisar datos mínimos
         $datos_minimos = ['FchEmis', 'GiroEmis', 'Acteco', 'DirOrigen', 'CmnaOrigen', 'RUTRecep', 'RznSocRecep', 'DirRecep', 'NmbItem'];
@@ -676,7 +676,7 @@ class Controller_Documentos extends \Controller_App
                 \sowerphp\core\Facade_Session_Message::write(
                     'Error al recibir campos mínimos, falta: '.$attr.'.'
                 );
-                $this->redirect('/dte/documentos/emitir');
+                return redirect('/dte/documentos/emitir');
             }
         }
         // crear receptor
@@ -878,7 +878,7 @@ class Controller_Documentos extends \Controller_App
                         url('/contacto')
                     );
                     \sowerphp\core\Facade_Session_Message::write($message, 'error');
-                    $this->redirect('/dte/documentos/emitir');
+                    return redirect('/dte/documentos/emitir');
                     //$tasa = $_POST['impuesto_adicional_tasa_'.$detalle['CodImpAdic']];
                     //$adicional = round($detalle['PrcItem'] * ($_POST['impuesto_adicional_tasa_'.$detalle['CodImpAdic']]/100));
                     //unset($detalle['CodImpAdic']);
@@ -991,11 +991,11 @@ class Controller_Documentos extends \Controller_App
             $response = $this->consume('/api/dte/documentos/emitir?'.http_build_query($query_data), $dte);
         } catch (\Exception $e) {
             \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
-            $this->redirect('/dte/documentos/emitir');
+            return redirect('/dte/documentos/emitir');
         }
         if ($response['status']['code'] != 200) {
             \sowerphp\core\Facade_Session_Message::write($response['body'], 'error');
-            $this->redirect('/dte/documentos/emitir');
+            return redirect('/dte/documentos/emitir');
         }
         if (
             empty($response['body']['emisor'])
@@ -1005,11 +1005,11 @@ class Controller_Documentos extends \Controller_App
         ) {
             $msg = is_string($response['body']) ? $response['body'] : json_encode($response['body']);
             \sowerphp\core\Facade_Session_Message::write('Hubo problemas al generar el documento temporal: '.$msg, 'error');
-            $this->redirect('/dte/documentos/emitir');
+            return redirect('/dte/documentos/emitir');
         }
         // enviar DTE automáticaente sin previsualizar
         if ($Emisor->config_sii_envio_automatico) {
-            $this->redirect('/dte/documentos/generar/'.$response['body']['receptor'].'/'.$response['body']['dte'].'/'.$response['body']['codigo']);
+            return redirect('/dte/documentos/generar/'.$response['body']['receptor'].'/'.$response['body']['dte'].'/'.$response['body']['codigo']);
         }
         // mostrar previsualización y botón para envío manual
         else {
@@ -1124,7 +1124,7 @@ class Controller_Documentos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 $response['body'], 'error'
             );
-            $this->redirect('/dte/dte_tmps/ver/'.$receptor.'/'.$dte.'/'.$codigo);
+            return redirect('/dte/dte_tmps/ver/'.$receptor.'/'.$dte.'/'.$codigo);
         }
         $DteEmitido = (new Model_DteEmitido())->set($response['body']);
         if (!in_array($DteEmitido->dte, [39, 41])) {
@@ -1142,7 +1142,7 @@ class Controller_Documentos extends \Controller_App
                 'Documento emitido.', 'ok'
             );
         }
-        $this->redirect('/dte/dte_emitidos/ver/'.$DteEmitido->dte.'/'.$DteEmitido->folio);
+        return redirect('/dte/dte_emitidos/ver/'.$DteEmitido->dte.'/'.$DteEmitido->folio);
     }
 
     /**
@@ -1243,7 +1243,7 @@ class Controller_Documentos extends \Controller_App
                     'La emisión masiva está siendo procesada, se notificará vía correo electrónico el resultado.', 'ok'
                 );
             }
-            $this->redirect('/dte/documentos/emitir_masivo');
+            return redirect('/dte/documentos/emitir_masivo');
         }
     }
 
@@ -1259,7 +1259,7 @@ class Controller_Documentos extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'Debe indicar un documento a buscar.', 'warning'
             );
-            $this->redirect('/dte');
+            return redirect('/dte');
         }
         // si es solo un número se busca si existe solo un DTE que coincida con la búsqueda
         // si hay más de uno se redirige a la página de documentos emitidos filtrado por folio
@@ -1271,20 +1271,20 @@ class Controller_Documentos extends \Controller_App
             );
             try {
                 $documentos = $DteEmitidos->getObjects();
-            } catch (\sowerphp\core\Exception_Database $e) {
+            } catch (\Exception $e) {
                 \sowerphp\core\Facade_Session_Message::write(
                     $e->getMessage(), 'error'
                 );
-                $this->redirect('/dte');
+                return redirect('/dte');
             }
             if (isset($documentos[0])) {
                 // se encontró más de un DTE -> se redirige a búsqueda
                 if (isset($documentos[1])) {
-                    $this->redirect('/dte/dte_emitidos/listar?search=folio:'.$q);
+                    return redirect('/dte/dte_emitidos/listar?search=folio:'.$q);
                 }
                 // se encontró solo un DTE -> se redirige a la página del DTE
                 else {
-                    $this->redirect($documentos[0]->getLinks()['ver']);
+                    return redirect($documentos[0]->getLinks()['ver']);
                 }
             }
         }
@@ -1296,7 +1296,7 @@ class Controller_Documentos extends \Controller_App
                 $folio = (int)$aux[1];
                 $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
                 if ($DteEmitido->exists()) {
-                    $this->redirect($DteEmitido->getLinks()['ver']);
+                    return redirect($DteEmitido->getLinks()['ver']);
                 }
             }
         }
@@ -1309,7 +1309,7 @@ class Controller_Documentos extends \Controller_App
                     \sowerphp\core\Facade_Session_Message::write(
                         'Código del documento temporal no es válido.', 'error'
                     );
-                    $this->redirect('/dte');
+                    return redirect('/dte');
                 }
                 $DteTmps = new Model_DteTmps();
                 $DteTmps->setWhereStatement(
@@ -1322,9 +1322,9 @@ class Controller_Documentos extends \Controller_App
                         \sowerphp\core\Facade_Session_Message::write(
                             'Se encontró más de un documento temporal que coincide con la búsqueda, buscar en el listado completo.', 'warning'
                         );
-                        $this->redirect('/dte');
+                        return redirect('/dte');
                     }
-                    $this->redirect($documentos[0]->getLinks()['ver']);
+                    return redirect($documentos[0]->getLinks()['ver']);
                 }
             }
         }
@@ -1332,7 +1332,7 @@ class Controller_Documentos extends \Controller_App
         \sowerphp\core\Facade_Session_Message::write(
             'No se encontró el documento solicitado.', 'warning'
         );
-        $this->redirect('/dte');
+        return redirect('/dte');
     }
 
     /**

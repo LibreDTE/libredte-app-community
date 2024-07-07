@@ -26,7 +26,7 @@ namespace website\Apps;
 /**
  * Controlador para aplicación de Dropbox.
  */
-class Controller_Dropbox extends \Controller_App
+class Controller_Dropbox extends \Controller
 {
 
     /**
@@ -72,7 +72,7 @@ class Controller_Dropbox extends \Controller_App
                     'No fue posible conectar LibreDTE con Dropbox: '.$e->getMessage(), 'error'
                 );
             }
-            $this->redirect('/dte/contribuyentes/modificar#apps');
+            return redirect('/dte/contribuyentes/modificar#apps');
         }
     }
 
@@ -119,7 +119,7 @@ class Controller_Dropbox extends \Controller_App
                 'Dropbox no pudo ser desconectado: '.$borrado, 'error'
             );
         }
-        $this->redirect('/dte/contribuyentes/modificar#apps');
+        return redirect('/dte/contribuyentes/modificar#apps');
     }
 
     /**

@@ -28,7 +28,7 @@ use \sowerphp\core\Facade_Session_Message as SessionMessage;
 /**
  * Controlador para mostrar estadísticas públicas del sitio.
  */
-class Controller_Estadisticas extends \Controller_App
+class Controller_Estadisticas extends \Controller
 {
 
     protected $allowedActions = [
@@ -59,7 +59,7 @@ class Controller_Estadisticas extends \Controller_App
         $response = $this->consume('/api/estadisticas/'.($certificacion?'certificacion':'produccion'));
         if ($response['status']['code'] != 200) {
             SessionMessage::error($response['body']);
-            $this->redirect('/');
+            return redirect('/');
         }
         $this->set($response['body']);
         return $this->render('Estadisticas/index');
@@ -144,7 +144,7 @@ class Controller_Estadisticas extends \Controller_App
                     }
                     unset($c['ambiente']);
                 }
-            } catch (\sowerphp\core\Exception_Database $e) {
+            } catch (\Exception $e) {
                 $this->Api->send($e->getMessage(), 500);
             }
         }

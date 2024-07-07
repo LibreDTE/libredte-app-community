@@ -91,7 +91,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
         $this->revision_detalle = (string)$estado_up->xpath('/SII:RESPUESTA/SII:RESP_HDR/NUM_ATENCION')[0];
         try {
             $this->save();
-        } catch (\sowerphp\core\Exception_Database $e) {
+        } catch (\Exception $e) {
             throw new \Exception(
                 'El estado del libro se obtuvo pero no fue posible guardarlo en la base de datos<br/>'.$e->getMessage()
             );
@@ -166,7 +166,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
         try {
             $this->save();
             return true;
-        } catch (\sowerphp\core\Exception_Database $e) {
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
     }

@@ -26,7 +26,7 @@ namespace website\Dte\Informes;
 /**
  * Clase para informes de las compras.
  */
-class Controller_Compras extends \Controller_App
+class Controller_Compras extends \Controller
 {
 
     /**

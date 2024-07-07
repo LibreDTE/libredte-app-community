@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para el Dashboard del módulo de facturación.
  */
-class Controller_Dashboard extends \Controller_App
+class Controller_Dashboard extends \Controller
 {
 
     /**
@@ -40,7 +40,7 @@ class Controller_Dashboard extends \Controller_App
         $periodo = !empty($_GET['periodo']) ? (int)$_GET['periodo'] : $periodo_actual;
         if (!\sowerphp\general\Utility_Date::validPeriod6($periodo)) {
             \sowerphp\core\Facade_Session_Message::write('Período ingresado no es válido.', 'error');
-            $this->redirect($this->request->getRequestUriDecoded());
+            return redirect($this->request->getRequestUriDecoded());
         }
         $periodo_anterior = \sowerphp\general\Utility_Date::previousPeriod($periodo);
         $periodo_siguiente = \sowerphp\general\Utility_Date::nextPeriod($periodo);

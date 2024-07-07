@@ -47,7 +47,7 @@ class Controller_DteGuias extends Controller_Base_Libros
         // si el periodo es mayor o igual al actual no se puede enviar
         if ($periodo >= date('Ym')) {
             \sowerphp\core\Facade_Session_Message::write('No puede enviar el libro de guías del período '.$periodo.', debe esperar al mes siguiente del período.', 'error');
-            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
         }
         // obtener guías
         $guias = $Emisor->getGuias($periodo);
@@ -61,7 +61,7 @@ class Controller_DteGuias extends Controller_Base_Libros
                 url('/dte/admin/firma_electronicas/agregar')
             );
             \sowerphp\core\Facade_Session_Message::write($message, 'error');
-            $this->redirect('/dte/admin/firma_electronicas/agregar');
+            return redirect('/dte/admin/firma_electronicas/agregar');
         }
         // agregar detalle
         $documentos = 0;
@@ -98,7 +98,7 @@ class Controller_DteGuias extends Controller_Base_Libros
         $xml = $Libro->generar();
         if (!$xml) {
             \sowerphp\core\Facade_Session_Message::write('No fue posible generar el libro de guías<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
-            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
         }
         // enviar al SII
         $track_id = $Libro->enviar();
@@ -106,7 +106,7 @@ class Controller_DteGuias extends Controller_Base_Libros
             \sowerphp\core\Facade_Session_Message::write(
                 'No fue posible enviar el libro de guías al SII<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
             );
-            $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
         }
         // guardar libro de ventas
         $DteGuia->documentos = $documentos;
@@ -118,7 +118,7 @@ class Controller_DteGuias extends Controller_Base_Libros
         \sowerphp\core\Facade_Session_Message::write(
             'Libro de guías período '.$periodo.' envíado.', 'ok'
         );
-        $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+        return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
     }
 
     /**
@@ -169,7 +169,7 @@ class Controller_DteGuias extends Controller_Base_Libros
                 \sowerphp\core\Facade_Session_Message::write(
                     'No fue posible facturar las guías seleccionadas:'.$e->getMessage(), 'error'
                 );
-                $this->redirect('/dte/dte_guias');
+                return redirect('/dte/dte_guias');
             }
         }
     }

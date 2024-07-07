@@ -26,7 +26,7 @@ namespace website;
 /**
  * Controlador base de la aplicación.
  */
-abstract class Controller_App extends \sowerphp\app\Controller_App
+abstract class Controller extends \sowerphp\app\Controller
 {
 
     public $components = [
@@ -85,12 +85,6 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
         if ($dte || $otros) {
             $this->getContribuyente();
         }
-        // redireccionar al dashboard general de la aplicación
-        if (class_exists('Controller_Dashboard') && $this->Auth->logged()) {
-            if (in_array($this->request->getRequestUriDecoded(), ['/dte/contribuyentes/seleccionar'])) {
-                $this->redirect('/dashboard#empresas');
-            }
-        }
     }
 
     /**
@@ -108,7 +102,8 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
      * Método que entrega el objeto del contribuyente que ha sido seleccionado
      * para ser usado en la sesión. Si no hay uno seleccionado se fuerza a
      * seleccionar.
-     * @return Object Objeto con el contribuyente.
+     *
+     * @return object Objeto con el contribuyente.
      */
     protected function getContribuyente(bool $obligar = true)
     {
@@ -116,9 +111,14 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
             $this->Contribuyente = session('dte.Contribuyente');
             if (!$this->Contribuyente) {
                 if ($obligar) {
-                    \sowerphp\core\Facade_Session_Message::write('Antes de acceder a '.$this->request->getRequestUriDecoded().' debe seleccionar el contribuyente que usará durante la sesión de LibreDTE.', 'error');
                     session(['referer' => $this->request->getRequestUriDecoded()]);
-                    $this->redirect('/dte/contribuyentes/seleccionar');
+                    redirect('/dte/contribuyentes/seleccionar')
+                        ->withError(__(
+                            'Antes de acceder a %s debe seleccionar el contribuyente que usará durante la sesión de LibreDTE.',
+                            $this->request->getRequestUriDecoded()
+                        ))
+                        ->now()
+                    ;
                 }
             } else {
                 if (!($this->Contribuyente instanceof $this->Contribuyente_class)) {

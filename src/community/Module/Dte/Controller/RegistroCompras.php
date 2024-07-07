@@ -27,7 +27,7 @@ namespace website\Dte;
  * Clase para el controlador asociado a la tabla registro_compra de la base de
  * datos.
  */
-class Controller_RegistroCompras extends \Controller_App
+class Controller_RegistroCompras extends \Controller
 {
 
     /**
@@ -36,7 +36,7 @@ class Controller_RegistroCompras extends \Controller_App
      */
     public function index()
     {
-        $this->redirect('/dte/registro_compras/pendientes');
+        return redirect('/dte/registro_compras/pendientes');
     }
 
     /**
@@ -88,7 +88,7 @@ class Controller_RegistroCompras extends \Controller_App
         ;
         if (!$documentos) {
             \sowerphp\core\Facade_Session_Message::write('No hay documentos recibidos en SII para la búsqueda realizada.');
-            $this->redirect('/dte/registro_compras');
+            return redirect('/dte/registro_compras');
         }
         array_unshift($documentos, array_keys($documentos[0]));
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($documentos);
@@ -107,7 +107,7 @@ class Controller_RegistroCompras extends \Controller_App
         ;
         if (!$resumen) {
             \sowerphp\core\Facade_Session_Message::write('No hay documentos recibidos pendientes en SII.');
-            $this->redirect('/dte');
+            return redirect('/dte');
         }
         array_unshift($resumen, array_keys($resumen[0]));
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($resumen);
@@ -194,7 +194,7 @@ class Controller_RegistroCompras extends \Controller_App
         } catch (\Exception $e) {
             \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
         }
-        $this->redirect('/dte/registro_compras');
+        return redirect('/dte/registro_compras');
     }
 
     /**
@@ -210,14 +210,14 @@ class Controller_RegistroCompras extends \Controller_App
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe firma asociada.', 'error'
             );
-            $this->redirect('/dte/registro_compras/pendientes');
+            return redirect('/dte/registro_compras/pendientes');
         }
         // hacer conexión al SII para obtener estado actual del registro de compras
         try {
             $RCV = new \sasco\LibreDTE\Sii\RegistroCompraVenta($Firma);
         } catch (\Exception $e) {
             \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
-            $this->redirect($this->request->getRequestUriDecoded());
+            return redirect($this->request->getRequestUriDecoded());
         }
         // procesar formulario (antes de asignar variables para que se refleje en la vista)
         if (isset($_POST['submit'])) {
@@ -239,7 +239,7 @@ class Controller_RegistroCompras extends \Controller_App
                             ) {
                                 $RegistroCompra->delete();
                             }
-                            $this->redirect('/dte/registro_compras/pendientes');
+                            return redirect('/dte/registro_compras/pendientes');
                         } catch (\Exception $e) {
                         }
                     }
@@ -265,7 +265,7 @@ class Controller_RegistroCompras extends \Controller_App
             ]);
         } catch (\Exception $e) {
             \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
-            $this->redirect('/dte/registro_compras/pendientes');
+            return redirect('/dte/registro_compras/pendientes');
         }
     }
 

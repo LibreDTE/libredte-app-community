@@ -28,7 +28,7 @@ use \website\Dte\Model_DteEmitidos;
 /**
  * Clase para informes de los documentos emitidos.
  */
-class Controller_DteEmitidos extends \Controller_App
+class Controller_DteEmitidos extends \Controller
 {
 
     /**
@@ -150,7 +150,7 @@ class Controller_DteEmitidos extends \Controller_App
     {
         // si existen datos por post se redirecciona para usar siempre por get
         if (isset($_POST['submit'])) {
-            $this->redirect('/dte/informes/dte_emitidos/estados/'.$_POST['desde'].'/'.$_POST['hasta']);
+            return redirect('/dte/informes/dte_emitidos/estados/'.$_POST['desde'].'/'.$_POST['hasta']);
         }
         // obtener datos
         $Emisor = $this->getContribuyente();
@@ -190,7 +190,7 @@ class Controller_DteEmitidos extends \Controller_App
     {
         // si existen datos por post se redirecciona para usar siempre por get
         if (isset($_POST['submit'])) {
-            $this->redirect('/dte/informes/dte_emitidos/eventos/'.$_POST['desde'].'/'.$_POST['hasta']);
+            return redirect('/dte/informes/dte_emitidos/eventos/'.$_POST['desde'].'/'.$_POST['hasta']);
         }
         // obtener datos
         $Emisor = $this->getContribuyente();
@@ -243,7 +243,7 @@ class Controller_DteEmitidos extends \Controller_App
     {
         // si existen datos por post se redirecciona para usar siempre por get
         if (isset($_POST['submit'])) {
-            $this->redirect('/dte/informes/dte_emitidos/sin_intercambio/'.$_POST['desde'].'/'.$_POST['hasta']);
+            return redirect('/dte/informes/dte_emitidos/sin_intercambio/'.$_POST['desde'].'/'.$_POST['hasta']);
         }
         // obtener datos
         $Emisor = $this->getContribuyente();
@@ -255,7 +255,7 @@ class Controller_DteEmitidos extends \Controller_App
         ;
         if ($desde && $hasta && !$documentos) {
             \sowerphp\core\Facade_Session_Message::write('No existen documentos pendientes de enviar en el rango de fechas consultado ('.\sowerphp\general\Utility_Date::format($desde).' al '.\sowerphp\general\Utility_Date::format($hasta).').', 'warning');
-            $this->redirect('/dte/informes/dte_emitidos/sin_intercambio');
+            return redirect('/dte/informes/dte_emitidos/sin_intercambio');
         }
         $this->set([
             'Emisor' => $Emisor,
@@ -272,7 +272,7 @@ class Controller_DteEmitidos extends \Controller_App
     {
         // si existen datos por post se redirecciona para usar siempre por get
         if (isset($_POST['submit'])) {
-            $this->redirect('/dte/informes/dte_emitidos/intercambio/'.$_POST['desde'].'/'.$_POST['hasta']);
+            return redirect('/dte/informes/dte_emitidos/intercambio/'.$_POST['desde'].'/'.$_POST['hasta']);
         }
         // obtener datos
         $Emisor = $this->getContribuyente();
@@ -319,7 +319,7 @@ class Controller_DteEmitidos extends \Controller_App
     {
         // si existen datos por post se redirecciona para usar siempre por get
         if (isset($_POST['submit'])) {
-            $this->redirect('/dte/informes/dte_emitidos/boletas_sin_email/'.$_POST['desde'].'/'.$_POST['hasta']);
+            return redirect('/dte/informes/dte_emitidos/boletas_sin_email/'.$_POST['desde'].'/'.$_POST['hasta']);
         }
         // obtener datos
         $Emisor = $this->getContribuyente();
@@ -331,7 +331,7 @@ class Controller_DteEmitidos extends \Controller_App
         ;
         if ($desde && $hasta && !$documentos) {
             \sowerphp\core\Facade_Session_Message::write('No existen boletas pendientes de enviar por email en el rango de fechas consultado ('.\sowerphp\general\Utility_Date::format($desde).' al '.\sowerphp\general\Utility_Date::format($hasta).')', 'warning');
-            $this->redirect('/dte/informes/dte_emitidos/boletas_sin_email');
+            return redirect('/dte/informes/dte_emitidos/boletas_sin_email');
         }
         $this->set([
             'Emisor' => $Emisor,

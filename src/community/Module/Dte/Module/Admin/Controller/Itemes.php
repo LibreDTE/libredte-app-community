@@ -281,7 +281,7 @@ class Controller_Itemes extends \Controller_Maintainer
                         $item[] = 'No';
                         $item[] = 'Error al guardar.';
                     }
-                } catch (\sowerphp\core\Exception_Database $e) {
+                } catch (\Exception $e) {
                     $resumen['error']++;
                     $item[] = 'No';
                     $item[] = $e->getMessage();
@@ -331,7 +331,7 @@ class Controller_Itemes extends \Controller_Maintainer
             \sowerphp\core\Facade_Session_Message::write(
                 'No hay items que exportar.', 'warning'
             );
-            $this->redirect('/dte/admin/itemes/listar');
+            return redirect('/dte/admin/itemes/listar');
         }
         array_unshift($items, array_keys($items[0]));
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($items);
