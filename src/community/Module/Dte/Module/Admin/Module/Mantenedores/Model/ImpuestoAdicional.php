@@ -26,7 +26,7 @@ namespace website\Dte\Admin\Mantenedores;
 /**
  * Clase para mapear la tabla impuesto_adicional de la base de datos.
  */
-class Model_ImpuestoAdicional extends \Model_App
+class Model_ImpuestoAdicional extends \sowerphp\autoload\Model_App
 {
 
     // Datos para la conexión a la base de datos

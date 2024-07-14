@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla dte_compra de la base de datos.
  */
-class Model_DteCompras extends \Model_Plural_App
+class Model_DteCompras extends \sowerphp\autoload\Model_Plural_App
 {
 
     // Datos para la conexión a la base de datos
@@ -413,7 +413,7 @@ class Model_DteCompras extends \Model_Plural_App
         // sincronizar periodos
         foreach ($periodos as $periodo) {
             // obtener documentos recibidos en el portal mipyme
-            $r = apigateway_consume(
+            $r = apigateway(
                 '/sii/mipyme/recibidos/documentos/'.$this->getContribuyente()->getRUT().'?formato=json',
                 [
                     'auth' => $this->getContribuyente()->getSiiAuthUser(),

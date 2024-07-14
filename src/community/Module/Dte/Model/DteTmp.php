@@ -31,7 +31,7 @@ use \website\Dte\Admin\Mantenedores\Model_DteTipos;
 /**
  * Clase para mapear la tabla dte_tmp de la base de datos.
  */
-class Model_DteTmp extends \Model_App
+class Model_DteTmp extends \sowerphp\autoload\Model_App
 {
 
     // Datos para la conexión a la base de datos
@@ -679,16 +679,16 @@ class Model_DteTmp extends \Model_App
                 }
             }
         }
-        // enviar al SII
+        // Enviar DTE al SII.
         try {
             $DteEmitido->enviar($user_id, $retry, $gzip);
         } catch (\Exception $e) {
         }
-        // ejecutar trigger asociado a la generación del DTE real
-        \sowerphp\core\Trigger::run('dte_documento_generado', $this, $DteEmitido);
-        // eliminar DTE temporal
+        // Despachar evento asociado a la generación del DTE real.
+        event('dte_documento_generado', [$this, $DteEmitido]);
+        // Eliminar DTE temporal.
         $this->delete();
-        // entregar DTE emitido
+        // Entregar DTE emitido.
         return $DteEmitido;
     }
 
@@ -705,13 +705,14 @@ class Model_DteTmp extends \Model_App
      */
     public function save(): bool
     {
-        // trigger al guardar el DTE temporal
-        \sowerphp\core\Trigger::run('dte_dte_tmp_guardar', $this);
-        // si los datos extras existen y son un arreglo se convierte antes de guardar
+        // Evento al guardar el DTE temporal.
+        event('dte_dte_tmp_guardar', [$this]);
+        // Si los datos extras existen y son un arreglo se convierte antes de
+        // guardar.
         if (!empty($this->extra) && is_array($this->extra)) {
             $this->extra = json_encode($this->extra);
         }
-        // guardar DTE temporal
+        // Guardar DTE temporal.
         return parent::save();
     }
 
@@ -783,8 +784,8 @@ class Model_DteTmp extends \Model_App
         ) {
             $emails['Usuario LibreDTE'] = strtolower($this->getReceptor()->getUsuario()->email);
         }
-        $emails_trigger = \sowerphp\core\Trigger::run('dte_dte_tmp_emails', $this, $emails);
-        return $emails_trigger ? $emails_trigger : $emails;
+        $emails_event = event('dte_dte_tmp_emails', [$this, $emails], true);
+        return $emails_event ?: $emails;
     }
 
     /**
@@ -922,7 +923,7 @@ class Model_DteTmp extends \Model_App
      */
     public function getCobro(bool $crearSiNoExiste = true)
     {
-        if (!is_libredte_enterprise()) {
+        if (!libredte()->isEnterpriseEdition()) {
             return false;
         }
         /*if (!$this->getTipo()->permiteCobro()) {
@@ -962,8 +963,8 @@ class Model_DteTmp extends \Model_App
         $links = [];
         $links['ver'] = url('/dte/dte_tmps/ver/'.$this->receptor.'/'.$this->dte.'/'.$this->codigo);
         $links['pdf'] = url('/dte/dte_tmps/cotizacion/'.$this->receptor.'/'.$this->dte.'/'.$this->codigo.'/'.$this->emisor);
-        $links_trigger = \sowerphp\core\Trigger::run('dte_dte_tmp_links', $this, $links);
-        return $links_trigger ? $links_trigger : $links;
+        $links_event = event('dte_dte_tmp_links', [$this, $links], true);
+        return $links_event ?: $links;
     }
 
     /**
@@ -1206,7 +1207,7 @@ class Model_DteTmp extends \Model_App
         // consultar servicio web de LibreDTE
         else {
             unset($config['hash']);
-            $response = apigateway_consume('/libredte/dte/documentos/escpos', $config);
+            $response = apigateway('/libredte/dte/documentos/escpos', $config);
         }
         if ($response['status']['code'] != 200) {
             throw new \Exception($response['body'], 500);

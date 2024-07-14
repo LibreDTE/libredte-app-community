@@ -27,7 +27,7 @@ namespace website\Utilidades;
  * Controlador para utilidades que permiten convertir de los formatos soportados
  * por LibreDTE a JSON.
  */
-class Controller_Formatos extends \Controller
+class Controller_Formatos extends \sowerphp\autoload\Controller
 {
 
     /**

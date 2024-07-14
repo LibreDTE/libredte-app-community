@@ -27,9 +27,7 @@ namespace website\Dte\Admin\Mantenedores;
  * Clase para el controlador asociado a la tabla iva_no_recuperable de la base de
  * datos.
  */
-class Controller_IvaNoRecuperables extends \Controller_Maintainer
+class Controller_IvaNoRecuperables extends \sowerphp\autoload\Controller_Model
 {
-
-    protected $namespace = __NAMESPACE__; ///< Namespace del controlador y modelos asociados
 
 }

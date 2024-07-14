@@ -30,7 +30,7 @@ use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
 /**
  * Controlador de dte recibidos.
  */
-class Controller_DteRecibidos extends \Controller
+class Controller_DteRecibidos extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -38,10 +38,17 @@ class Controller_DteRecibidos extends \Controller
      */
     public function listar($pagina = 1)
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Validr página solicitada.
         if (!is_numeric($pagina)) {
             return redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar');
         }
-        $Receptor = $this->getContribuyente();
+        // Armar filtros.
         $filtros = [];
         if (isset($_GET['search'])) {
             foreach (explode(',', $_GET['search']) as $filtro) {
@@ -87,11 +94,20 @@ class Controller_DteRecibidos extends \Controller
      */
     public function agregar()
     {
-        $Receptor = $this->getContribuyente();
-        // asignar variables para la vista
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Procesar formulario si se pasó.
+        if (isset($_POST['submit'])) {
+            $this->save();
+        }
+        // Renderizar vista.
         $tipo_transacciones = \sasco\LibreDTE\Sii\RegistroCompraVenta::$tipo_transacciones;
         unset($tipo_transacciones[5], $tipo_transacciones[6]);
-        $this->set([
+        return $this->render('DteRecibidos/agregar_modificar', [
             '__view_header' => ['js' => ['/dte/js/dte.js']],
             'Receptor' => $Receptor,
             'tipos_documentos' => (new Model_DteTipos())->getList(true),
@@ -101,11 +117,6 @@ class Controller_DteRecibidos extends \Controller
             'sucursales' => $Receptor->getSucursales(),
             'tipo_transacciones' => $tipo_transacciones,
         ]);
-        // procesar formulario si se pasó
-        if (isset($_POST['submit'])) {
-            $this->save();
-        }
-        return $this->render('DteRecibidos/agregar_modificar');
     }
 
     /**
@@ -113,8 +124,13 @@ class Controller_DteRecibidos extends \Controller
      */
     public function modificar($emisor, $dte, $folio)
     {
-        $Receptor = $this->getContribuyente();
-        // obtener dte recibido
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener DTE recibido.
         $DteRecibido = new Model_DteRecibido(
             (int)$emisor,
             (int)$dte,
@@ -122,15 +138,18 @@ class Controller_DteRecibidos extends \Controller
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || $DteRecibido->receptor != $Receptor->rut) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'DTE recibido solicitado no existe', 'error'
+            return redirect('/dte/dte_recibidos/listar')->withError(
+                'DTE recibido solicitado no existe.'
             );
-            return redirect('/dte/dte_recibidos/listar');
         }
-        // agregar variables para la vista
+        // Procesar formulario si se pasó.
+        if (isset($_POST['submit'])) {
+            $this->save();
+        }
+        // Renderizar vista.
         $tipo_transacciones = \sasco\LibreDTE\Sii\RegistroCompraVenta::$tipo_transacciones;
         unset($tipo_transacciones[5], $tipo_transacciones[6]);
-        $this->set([
+        return $this->render('DteRecibidos/agregar_modificar', [
             '__view_header' => ['js' => ['/dte/js/dte.js']],
             'Receptor' => $Receptor,
             'DteRecibido' => $DteRecibido,
@@ -141,11 +160,6 @@ class Controller_DteRecibidos extends \Controller
             'sucursales' => $Receptor->getSucursales(),
             'tipo_transacciones' => $tipo_transacciones,
         ]);
-        // procesar formulario si se pasó
-        if (isset($_POST['submit'])) {
-            $this->save();
-        }
-        return $this->render('DteRecibidos/agregar_modificar');
     }
 
     /**
@@ -153,8 +167,13 @@ class Controller_DteRecibidos extends \Controller
      */
     public function ver($emisor, $dte, $folio)
     {
-        $Receptor = $this->getContribuyente();
-        // obtener dte recibido
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener DTE recibido.
         $DteRecibido = new Model_DteRecibido(
             (int)$emisor,
             (int)$dte,
@@ -162,13 +181,12 @@ class Controller_DteRecibidos extends \Controller
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || $DteRecibido->receptor != $Receptor->rut) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'DTE recibido solicitado no existe.', 'error'
+            return redirect('/dte/dte_recibidos/listar')->withError(
+                'DTE recibido solicitado no existe.'
             );
-            return redirect('/dte/dte_recibidos/listar');
         }
-        // agregar variables para la vista
-        $this->set([
+        // Renderizar vista.
+        return $this->render(null, [
             '__view_header' => ['js' => ['/dte/js/dte.js']],
             'Receptor' => $Receptor,
             'Emisor' => $DteRecibido->getEmisor(),
@@ -186,8 +204,9 @@ class Controller_DteRecibidos extends \Controller
      */
     private function save()
     {
-        $Receptor = $this->getContribuyente();
-        // revisar datos minimos
+        // Obtener contribuyente que se está utilizando en la sesión.
+        $Receptor = libredte()->getSessionContribuyente();
+        // Revisar datos minimos.
         foreach(['emisor', 'dte', 'folio', 'fecha', 'tasa'] as $attr) {
             if (!isset($_POST[$attr][0])) {
                 \sowerphp\core\Facade_Session_Message::write(
@@ -374,7 +393,13 @@ class Controller_DteRecibidos extends \Controller
      */
     public function eliminar($emisor, $dte, $folio)
     {
-        $Receptor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener DTE recibido.
         $DteRecibido = new Model_DteRecibido(
             (int)$emisor,
             (int)$dte,
@@ -399,8 +424,13 @@ class Controller_DteRecibidos extends \Controller
      */
     public function xml($emisor, $dte, $folio)
     {
-        $Receptor = $this->getContribuyente();
-        // obtener DTE recibido
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener DTE recibido.
         $DteRecibido = new Model_DteRecibido(
             (int)$emisor,
             (int)$dte,
@@ -434,8 +464,13 @@ class Controller_DteRecibidos extends \Controller
      */
     public function json($emisor, $dte, $folio)
     {
-        $Receptor = $this->getContribuyente();
-        // obtener DTE recibido
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener DTE recibido.
         $DteRecibido = new Model_DteRecibido(
             (int)$emisor,
             (int)$dte,
@@ -443,19 +478,17 @@ class Controller_DteRecibidos extends \Controller
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No existe el DTE recibido solicitado.', 'error'
+            return redirect('/dte/dte_recibidos/listar')->withError(
+                'No existe el DTE recibido solicitado.'
             );
-            return redirect('/dte/dte_recibidos/listar');
         }
-        // si no tiene XML error
+        // Si no tiene XML -> error.
         if (!$DteRecibido->hasXML()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'El DTE no tiene XML asociado, no es posible obtener JSON.', 'error'
+            return redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio)->withError(
+                'El DTE no tiene XML asociado, no es posible obtener JSON.'
             );
-            return redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
         }
-        // entregar XML
+        // Entregar XML.
         $file = 'dte_'.$DteRecibido->getEmisor()->rut.'-'.$DteRecibido->getEmisor()->dv.'_T'.$DteRecibido->dte.'F'.$DteRecibido->folio.'.json';
         $datos = $DteRecibido->getDatos();
         unset($datos['@attributes'], $datos['TED'], $datos['TmstFirma']);
@@ -471,8 +504,13 @@ class Controller_DteRecibidos extends \Controller
      */
     public function pdf($emisor, $dte, $folio, $cedible = false)
     {
-        $Receptor = $this->getContribuyente();
-        // obtener DTE recibido
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener DTE recibido.
         $DteRecibido = new Model_DteRecibido(
             (int)$emisor,
             (int)$dte,
@@ -480,14 +518,13 @@ class Controller_DteRecibidos extends \Controller
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible obtener el PDF, el DTE recibido solicitado no existe o bien no tiene intercambio asociado.', 'error'
+            return redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio)->withError(
+                'No fue posible obtener el PDF, el DTE recibido solicitado no existe o bien no tiene intercambio asociado.'
             );
-            return redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
         }
         // datos por defecto y recibidos por GET
         $formatoPDF = $DteRecibido->getEmisor()->getConfigPDF($DteRecibido);
-        $config = $this->request->queries([
+        $config = $this->request->getValidatedData([
             'cedible' => isset($_POST['copias_cedibles'])
                 ? (int)(bool)$_POST['copias_cedibles']
                 : $cedible
@@ -513,10 +550,9 @@ class Controller_DteRecibidos extends \Controller
         try {
             $pdf = $DteRecibido->getPDF($config);
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write(
-                $e->getMessage(), 'error'
+            return redirect('/dte/dte_recibidos/listar')->withError(
+                $e->getMessage()
             );
-            return redirect('/dte/dte_recibidos/listar');
         }
         $ext = $config['compress'] ? 'zip' : 'pdf';
         $file_name = 'LibreDTE_'.$DteRecibido->emisor.'_T'.$DteRecibido->dte.'F'.$DteRecibido->folio.'.'.$ext;
@@ -533,8 +569,13 @@ class Controller_DteRecibidos extends \Controller
      */
     public function verificar_datos_avanzado($emisor, $dte, $folio)
     {
-        $Receptor = $this->getContribuyente();
-        // obtener DTE recibido
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener DTE recibido.
         $DteRecibido = new Model_DteRecibido(
             (int)$emisor,
             (int)$dte,
@@ -549,7 +590,7 @@ class Controller_DteRecibidos extends \Controller
             die('Error al obtener el estado: '.$r['body']);
         }
         $this->layout .= '.min';
-        $this->set([
+        return $this->render(null, [
             'Emisor' => $DteRecibido->getEmisor(),
             'Receptor' => $Receptor,
             'DteTipo' => $DteRecibido->getTipo(),
@@ -585,7 +626,7 @@ class Controller_DteRecibidos extends \Controller
         }
         // datos por defecto
         $formatoPDF = $DteRecibido->getEmisor()->getConfigPDF($DteRecibido);
-        $config = $this->request->queries([
+        $config = $this->request->getValidatedData([
             'formato' => $formatoPDF['formato'],
             'papelContinuo' => $formatoPDF['papelContinuo'],
             'base64' => false,
@@ -641,7 +682,7 @@ class Controller_DteRecibidos extends \Controller
             $this->Api->send('No existe el documento recibido solicitado T'.$dte.'F'.$folio.' del emisor '.$emisor, 404);
         }
         // datos por defecto
-        $config = $this->request->queries([
+        $config = $this->request->getValidatedData([
             'base64' => false,
             'cedible' => false,
             'compress' => false,
@@ -703,7 +744,7 @@ class Controller_DteRecibidos extends \Controller
      */
     public function _api_estado_GET($emisor, $dte, $folio, $receptor)
     {
-        extract($this->request->queries(['avanzado' => false]));
+        extract($this->request->getValidatedData(['avanzado' => false]));
         $User = $this->Api->getAuthUser();
         if (is_string($User)) {
             $this->Api->send($User, 401);
@@ -769,7 +810,7 @@ class Controller_DteRecibidos extends \Controller
         if ($DteRecibido->receptor != $Receptor->rut) {
             $this->Api->send('RUT del receptor no corresponde al DTE T'.$dte.'F'.$folio, 400);
         }
-        extract($this->request->queries([
+        extract($this->request->getValidatedData([
             'getXML' => false,
             'getDetalle' => false,
             'getDatosDte' => false,
@@ -797,15 +838,22 @@ class Controller_DteRecibidos extends \Controller
      */
     public function buscar()
     {
-        $Receptor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Asignar variables para la vista.
         $this->set([
             'Receptor' => $Receptor,
             'tipos_dte' => (new Model_DteTipos())->getList(),
         ]);
+        // Procesar formulario.
         if (isset($_POST['submit'])) {
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($this->Auth->User->hash);
-            $response = $rest->post($this->request->getFullUrlWithoutQuery().'/api/dte/dte_recibidos/buscar/'.$Receptor->rut.'?_contribuyente_certificacion='.$Receptor->enCertificacion(), [
+            $response = $rest->post(url('/api/dte/dte_recibidos/buscar/'.$Receptor->rut.'?_contribuyente_certificacion='.$Receptor->enCertificacion()), [
                 'dte' => $_POST['dte'],
                 'emisor' => $_POST['emisor'],
                 'fecha_desde' => $_POST['fecha_desde'],
@@ -870,7 +918,7 @@ class Controller_DteRecibidos extends \Controller
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // buscar documentos
-        $filtros = $this->request->queries([
+        $filtros = $this->request->getValidatedData([
             'fecha_desde' => date('Y-m-01'),
             'fecha_hasta' => date('Y-m-d'),
             'fecha' => null,

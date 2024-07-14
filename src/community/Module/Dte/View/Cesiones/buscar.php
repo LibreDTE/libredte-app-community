@@ -57,6 +57,6 @@ if (isset($cesiones)) {
     $t->setExport(true);
     echo $t->generate($cesiones);
 ?>
-<script type="text/javascript"> $(document).ready(function(){ dataTable("#cesion_<?=$Contribuyente->rut?>_<?=$_POST['desde']?>_<?=$_POST['hasta']?>_<?=$consulta?>"); }); </script>
+<script> $(document).ready(function(){ dataTable("#cesion_<?=$Contribuyente->rut?>_<?=$_POST['desde']?>_<?=$_POST['hasta']?>_<?=$consulta?>"); }); </script>
 <?php
 }

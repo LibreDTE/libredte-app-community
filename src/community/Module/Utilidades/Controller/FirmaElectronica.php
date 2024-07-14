@@ -26,7 +26,7 @@ namespace website\Utilidades;
 /**
  * Controlador para utilidades asociadas a la firma electrónica.
  */
-class Controller_FirmaElectronica extends \Controller
+class Controller_FirmaElectronica extends \sowerphp\autoload\Controller
 {
 
     /**

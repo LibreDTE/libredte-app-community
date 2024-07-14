@@ -23,100 +23,105 @@
 
 namespace website;
 
-use \sowerphp\core\Facade_Session_Message as SessionMessage;
-
 /**
  * Controlador para mostrar estadísticas públicas del sitio.
  */
-class Controller_Estadisticas extends \Controller
+class Controller_Estadisticas extends \sowerphp\autoload\Controller
 {
 
-    protected $allowedActions = [
-        'index',
-        'produccion',
-        'certificacion',
-        '_api_produccion_GET',
-        '_api_certificacion_GET',
-        '_api_version_GET',
-    ];
-
     /**
-     * Método para permitir acciones sin estar autenticado.
+     * Inicialización del controlador.
      */
     public function boot(): void
     {
+        app('auth')->allowActionsWithoutLogin(
+            'index',
+            'produccion',
+            'certificacion',
+            '_api_produccion_GET',
+            '_api_certificacion_GET',
+            '_api_version_GET',
+        );
         parent::boot();
     }
 
     /**
      * Acción que muestra la página principal de estadísticas.
-     * @param certificacion =true se generan estadísticas para el ambiente de certificación.
-     * @param desde Desde cuando considerar la actividad de los contribuyentes.
-     * @param hasta Hasta cuando considerar la actividad de los contribuyentes.
+     *
+     * @param boot $certificacion =true se generan estadísticas para el
+     * ambiente de certificación.
+     * @param int $desde Desde cuando considerar actividad de los contribuyentes.
+     * @param int $hasta Hasta cuando considerar actividad de los contribuyentes.
      */
-    public function index($certificacion = false, $desde = 1, $hasta = 0)
+    public function index(bool $certificacion = false, int $desde = 1, int $hasta = 0)
     {
-        $response = $this->consume('/api/estadisticas/'.($certificacion?'certificacion':'produccion'));
+        $ambiente = $certificacion ? 'certificacion' : 'produccion';
+        $url = '/api/estadisticas/' . $ambiente;
+        $response = $this->consume($url);
         if ($response['status']['code'] != 200) {
-            SessionMessage::error($response['body']);
-            return redirect('/');
+            return redirect('/')->withError($response['body']);
         }
-        $this->set($response['body']);
-        return $this->render('Estadisticas/index');
+        return $this->render('Estadisticas/index', $response['body']);
     }
 
     /**
      * Acción que muestra la página principal de estadísticas para ambiente de
      * producción.
-     * @param desde Desde cuando considerar la actividad de los contribuyentes.
-     * @param hasta Hasta cuando considerar la actividad de los contribuyentes.
+     *
+     * @param int $desde Desde cuando considerar actividad de los contribuyentes.
+     * @param int $hasta Hasta cuando considerar actividad de los contribuyentes.
      */
-    public function produccion($desde = 1, $hasta = 0)
+    public function produccion(int $desde = 1, $hasta = 0)
     {
-        $this->index(false, $desde, $hasta);
+        return $this->index(false, $desde, $hasta);
     }
 
     /**
      * Acción que muestra la página principal de estadísticas para ambiente de
      * certificación.
-     * @param desde Desde cuando considerar la actividad de los contribuyentes.
-     * @param hasta Hasta cuando considerar la actividad de los contribuyentes.
+     *
+     * @param int $desde Desde cuando considerar actividad de los contribuyentes.
+     * @param int $hasta Hasta cuando considerar actividad de los contribuyentes.
      */
-    public function certificacion($desde = 1, $hasta = 0)
+    public function certificacion(int $desde = 1, int $hasta = 0)
     {
-        $this->index(true, $desde, $hasta);
+        return $this->index(true, $desde, $hasta);
     }
 
     /**
      * API que muestra la página principal de estadísticas para ambiente de
      * producción.
-     * @param desde Desde cuando considerar la actividad de los contribuyentes.
-     * @param hasta Hasta cuando considerar la actividad de los contribuyentes.
+     *
+     * @param int $desde Desde cuando considerar actividad de los contribuyentes.
+     * @param int $hasta Hasta cuando considerar actividad de los contribuyentes.
      */
-    public function _api_produccion_GET($desde = 1, $hasta = 0)
+    public function _api_produccion_GET(int $desde = 1, int $hasta = 0)
     {
-        $this->getEstadistica(false, $desde, $hasta);
+        return $this->getEstadistica(false, $desde, $hasta);
     }
 
     /**
      * API que muestra la página principal de estadísticas para ambiente de
      * certificación.
-     * @param desde Desde cuando considerar la actividad de los contribuyentes.
-     * @param hasta Hasta cuando considerar la actividad de los contribuyentes.
+     *
+     * @param int $desde Desde cuando considerar actividad de los contribuyentes.
+     * @param int $hasta Hasta cuando considerar actividad de los contribuyentes.
      */
-    public function _api_certificacion_GET($desde = 1, $hasta = 0)
+    public function _api_certificacion_GET(int $desde = 1, int $hasta = 0)
     {
-        $this->getEstadistica(true, $desde, $hasta);
+        return $this->getEstadistica(true, $desde, $hasta);
     }
 
     /**
      * Método que genera la estadística para las API de producción y
      * certificación.
-     * @param certificacion =true se generan estadísticas para el ambiente de certificación.
-     * @param desde Desde cuando considerar la actividad de los contribuyentes.
-     * @param hasta Hasta cuando considerar la actividad de los contribuyentes.
+     *
+     * @param bool $certificacion =true se generan estadísticas para el
+     * ambiente de certificación.
+     * @param int $desde Desde cuando considerar actividad de los contribuyentes.
+     * @param int $hasta Hasta cuando considerar actividad de los contribuyentes.
      */
-    protected function getEstadistica($certificacion, $desde, $hasta)
+    protected function getEstadistica(bool $certificacion, int $desde, int $hasta)
     {
         $Contribuyentes = new \website\Dte\Model_Contribuyentes();
         $contribuyentes_sii = $Contribuyentes->count();
@@ -128,11 +133,11 @@ class Controller_Estadisticas extends \Controller
         );
         $Usuarios = new \sowerphp\app\Sistema\Usuarios\Model_Usuarios();
         $Usuarios->setWhereStatement(['activo = true']);
-        // agregar contribuyentes activos solo si se pide
-        extract($this->request->queries([
+        // Agregar contribuyentes activos solo si se pide.
+        extract($this->request->getValidatedData([
             'contribuyentes_activos' => null,
         ]));
-        $enterprise = is_libredte_enterprise();
+        $enterprise = libredte()->isEnterpriseEdition();
         if (!$enterprise && $contribuyentes_activos) {
             try {
                 $contribuyentes_activos = $Contribuyentes->getConMovimientos(
@@ -145,11 +150,11 @@ class Controller_Estadisticas extends \Controller
                     unset($c['ambiente']);
                 }
             } catch (\Exception $e) {
-                $this->Api->send($e->getMessage(), 500);
+                return response()->json($e->getMessage(), 500);
             }
         }
-        // entregar resultados
-        $this->Api->send([
+        // Entregar resultados.
+        return response()->json([
             'version' => $this->getVersion(),
             'certificacion' => (int)$certificacion,
             'contribuyentes_sii' => (int)$contribuyentes_sii,
@@ -161,7 +166,7 @@ class Controller_Estadisticas extends \Controller
             'contribuyentes_por_comuna' => $Contribuyentes->countByComuna($certificacion),
             'contribuyentes_por_actividad' => $Contribuyentes->countByActividadEconomica($certificacion),
             'contribuyentes_activos' => $contribuyentes_activos,
-        ], 200);
+        ]);
     }
 
     /**
@@ -169,27 +174,30 @@ class Controller_Estadisticas extends \Controller
      */
     public function _api_version_GET()
     {
-        $this->Api->send($this->getVersion(), 200);
+        return response()->json($this->getVersion());
     }
 
     /**
      * Método que determina la versión de LibreDTE que se está ejecutando.
      */
-    protected function getVersion()
+    protected function getVersion(): array
     {
-        $enterprise = is_libredte_enterprise();
+        $enterprise = libredte()->isEnterpriseEdition();
         return [
-            'linux' => (!$enterprise and PHP_OS == 'Linux') ? $this->getLinuxInfo()['PRETTY_NAME'] : null,
+            'linux' => (!$enterprise and PHP_OS == 'Linux')
+                ? $this->getLinuxInfo()['PRETTY_NAME']
+                : null
+            ,
             'php' => !$enterprise ? phpversion() : null,
             'libredte' => $this->getVersionLibreDTE(),
         ];
     }
 
     /**
-     * Método que determina la información sobre la versión de Linux del sistema.
+     * Determina la información sobre la versión de Linux del sistema.
      * @author https://stackoverflow.com/a/26863768
      */
-    protected function getLinuxInfo()
+    protected function getLinuxInfo(): array
     {
         $vars = [];
         $files = glob('/etc/*-release');
@@ -213,7 +221,7 @@ class Controller_Estadisticas extends \Controller
      * Método que determina la versión de LibreDTE a partir del último commit
      * del proyecto.
      */
-    protected function getVersionLibreDTE()
+    protected function getVersionLibreDTE(): array
     {
         $HEAD = app('layers')->getProjectPath('/.git/logs/HEAD');
         if (!file_exists($HEAD) || !is_readable($HEAD)) {

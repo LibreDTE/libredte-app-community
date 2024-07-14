@@ -48,6 +48,24 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Entorno de la Aplicación
+    |--------------------------------------------------------------------------
+    |
+    | Este valor determina el "entorno" en el que se está ejecutando tu
+    | aplicación. Esto puede influir en cómo prefieres configurar varios
+    | servicios que la aplicación utiliza. Establece este valor en tu archivo
+    | ".env".
+    |
+    | Valores comunes:
+    |   - 'local'       : Indica un entorno de desarrollo.
+    |   - 'production'  : Indica un entorno de producción.
+    |   - 'testing'     : Indica un entorno de pruebas.
+    |
+    */
+    'env' => env('APP_ENV', 'local'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Modo Debug de la Aplicación
     |--------------------------------------------------------------------------
     |
@@ -97,40 +115,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Configuración del Handler para Triggers
-    |--------------------------------------------------------------------------
-    |
-    | Configuración que permite especificar un manejador para los triggers que
-    | se ejecutarán en la aplicación.
-    |
-    */
-    'trigger_handler' => env('APP_TRIGGER_HANDLER'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Configuraciones de Usuarios
-    |--------------------------------------------------------------------------
-    |
-    | Configuraciones relacionadas con los usuarios de la aplicación.
-    |
-    */
-    'users' => [
-        // Configuración para auto registro de usuarios.
-        'self_register' => [
-            'enabled' => env('APP_USERS_SELF_REGISTER_ENABLED', false),
-            'groups' => ['usuarios', 'dte_plus'],
-            'terms' => 'https://www.libredte.cl/legal',
-        ],
-        // Configuración que permite utilizar preautenticación en la
-        // aplicación. Esto permite generar un enlace y enviar al usuario con
-        // la sesión ya iniciada al momento de ingresar a la aplicación.
-        'preauth' => [
-            'enabled' => env('APP_USERS_PREAUTH_ENABLED', false),
-        ],
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
     | Configuraciones de Interfaz de Usuario
     |--------------------------------------------------------------------------
     |
@@ -163,21 +147,6 @@ return [
                 'csv' => 'Planilla CSV',
                 'pdf' => 'Documento PDF',
             ],
-        ],
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Configuración de la API
-    |--------------------------------------------------------------------------
-    |
-    | Configuraciones de los servicios web (API) de la aplicación.
-    |
-    */
-    'api' => [
-        'auth' => [
-            'required' => true,
-            'default_token' => env('APP_API_AUTH_DEFAULT_TOKEN'),
         ],
     ],
 

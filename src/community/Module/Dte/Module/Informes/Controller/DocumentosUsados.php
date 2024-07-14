@@ -26,7 +26,7 @@ namespace website\Dte\Informes;
 /**
  * Clase para informes de los documentos usados.
  */
-class Controller_DocumentosUsados extends \Controller
+class Controller_DocumentosUsados extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -34,8 +34,14 @@ class Controller_DocumentosUsados extends \Controller
      */
     public function index()
     {
-        $Emisor = $this->getContribuyente();
-        $this->set([
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Renderizar vista.
+        return $this->render(null, [
             'Emisor' => $Emisor,
             'documentos' => $Emisor->getDocumentosUsados(),
         ]);

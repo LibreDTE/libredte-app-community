@@ -24,5 +24,11 @@
         "apigatewaycl/apigateway-api-client": "^2",
         "kunalvarma05/dropbox-php-sdk": "0.4.1",
         "sowerphp/sowerphp-framework": "dev-master || dev-main"
-    }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../sowerphp-framework"
+        }
+    ]
 }

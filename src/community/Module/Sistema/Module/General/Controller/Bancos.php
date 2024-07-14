@@ -27,9 +27,7 @@ namespace website\Sistema\General;
  * Clase para el controlador asociado a la tabla banco de la base de
  * datos.
  */
-class Controller_Bancos extends \Controller_Maintainer
+class Controller_Bancos extends \sowerphp\autoload\Controller_Model
 {
-
-    protected $namespace = __NAMESPACE__; ///< Namespace del controlador y modelos asociados
 
 }

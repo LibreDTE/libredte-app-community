@@ -27,7 +27,7 @@ namespace website\Dte\Admin;
  * Clase para el controlador asociado a la tabla firma_electronica de la base de
  * datos.
  */
-class Controller_FirmaElectronicas extends \Controller
+class Controller_FirmaElectronicas extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -35,8 +35,14 @@ class Controller_FirmaElectronicas extends \Controller
      */
     public function index()
     {
-        $Emisor = $this->getContribuyente();
-        $this->set([
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Renderizar la vista.
+        return $this->render(null, [
             'Emisor' => $Emisor,
             'firmas' => $Emisor->getFirmas(),
         ]);
@@ -116,25 +122,22 @@ class Controller_FirmaElectronicas extends \Controller
     public function eliminar()
     {
         $FirmaElectronica = (new Model_FirmaElectronicas())->getByUser($this->Auth->User->id);
-        // si el usuario no tiene firma electrónica no se elimina :-)
+        // Si el usuario no tiene firma electrónica no se elimina,
         if (!$FirmaElectronica) {
-            \sowerphp\core\Facade_Session_Message::write(
+            return redirect('/dte/admin/firma_electronicas')->withInfo(
                 'Usted no tiene una firma electrónica registrada en el sistema. Solo puede eliminar su firma previamente cargada.'
             );
-            return redirect('/dte/admin/firma_electronicas');
         }
-        // eliminar firma
+        // Eliminar firma.
         try {
             $FirmaElectronica->delete();
-            \sowerphp\core\Facade_Session_Message::write(
-                'Se eliminó la firma electrónica asociada a su usuario.', 'ok'
+            return redirect('/dte/admin/firma_electronicas')->withSuccess(
+                'Se eliminó la firma electrónica asociada a su usuario.'
             );
-            return redirect('/dte/admin/firma_electronicas');
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible eliminar la firma electrónica:<br/>'.$e->getMessage(), 'error'
+            return redirect('/dte/admin/firma_electronicas')->withError(
+                'No fue posible eliminar la firma electrónica:<br/>'.$e->getMessage()
             );
-            return redirect('/dte/admin/firma_electronicas');
         }
     }
 
@@ -146,10 +149,9 @@ class Controller_FirmaElectronicas extends \Controller
         $FirmaElectronica = (new Model_FirmaElectronicas())->getByUser($this->Auth->User->id);
         // si el usuario no tiene firma electrónica no hay algo que descargar
         if (!$FirmaElectronica) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'Usted no tiene una firma electrónica registrada en el sistema, solo puede descargar su firma previamente cargada.',
+            return redirect('/dte/admin/firma_electronicas')->withInfo(
+                'Usted no tiene una firma electrónica registrada en el sistema, solo puede descargar su firma previamente cargada.'
             );
-            return redirect('/dte/admin/firma_electronicas');
         }
         // descargar la firma
         $file = $FirmaElectronica->run.'.p12';

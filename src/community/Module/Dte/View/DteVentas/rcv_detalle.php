@@ -22,4 +22,4 @@ foreach ($keys as &$k) {
 array_unshift($detalle, $keys);
 new \sowerphp\general\View_Helper_Table($detalle, 'rv_detalle_'.$periodo.'_'.$DteTipo->codigo, true);
 ?>
-<script type="text/javascript"> $(document).ready(function(){ dataTable("#<?='rv_detalle_'.$periodo.'_'.$DteTipo->codigo?>"); }); </script>
+<script> $(document).ready(function(){ dataTable("#<?='rv_detalle_'.$periodo.'_'.$DteTipo->codigo?>"); }); </script>

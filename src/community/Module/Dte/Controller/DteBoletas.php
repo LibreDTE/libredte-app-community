@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para las acciones asociadas al libro de boletas electrónicas.
  */
-class Controller_DteBoletas extends \Controller
+class Controller_DteBoletas extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -34,8 +34,14 @@ class Controller_DteBoletas extends \Controller
      */
     public function index()
     {
-        $Emisor = $this->getContribuyente();
-        $this->set([
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Renderizar vista.
+        return $this->render(null, [
             'Emisor' => $Emisor,
             'periodos' => $Emisor->getResumenBoletasPeriodos(),
         ]);
@@ -46,7 +52,13 @@ class Controller_DteBoletas extends \Controller
      */
     public function xml($periodo, $FolioNotificacion = 1)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Buscar boletas.
         $boletas = $Emisor->getBoletas($periodo);
         $Libro = new \sasco\LibreDTE\Sii\LibroBoleta();
         $Firma = $Emisor->getFirma();
@@ -102,7 +114,13 @@ class Controller_DteBoletas extends \Controller
      */
     public function csv($periodo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener boletas.
         $boletas = $Emisor->getBoletas($periodo);
         $Libro = new \sasco\LibreDTE\Sii\LibroBoleta();
         foreach ($boletas as $boleta) {

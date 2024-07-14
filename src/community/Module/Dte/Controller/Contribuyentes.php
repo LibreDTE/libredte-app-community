@@ -23,13 +23,14 @@
 
 namespace website\Dte;
 
+use \sowerphp\core\Network_Request as Request;
 use \sowerphp\core\Facade_Session_Message as SessionMessage;
 
 /**
  * Clase para el controlador asociado a la tabla contribuyente de la base de
  * datos.
  */
-class Controller_Contribuyentes extends \Controller
+class Controller_Contribuyentes extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -37,50 +38,58 @@ class Controller_Contribuyentes extends \Controller
      * @param rut Si se pasa un RUT se tratará de seleccionar.
      * @param url URL a la que redirigir después de seleccionar el contribuyente.
      */
-    public function seleccionar($rut = null, $url = null)
+    public function seleccionar(Request $request, $rut = null, ?string $url = null)
     {
-        $redirect = session('referer');
-        // si se está pidiendo una empresa en particular se tratará de usar
+        $auth = app('auth');
+        // Obtener usuario autenticado en la aplicación.
+        $user = $request->user();
+        // Si se está pidiendo una empresa en particular se tratará de usar.
         if ($rut) {
-            // se crea el emisor y se busca si está registrado (con usuario asociado)
-            $Emisor = new $this->Contribuyente_class($rut);
-            if (!$Emisor->usuario) {
-                SessionMessage::write('Empresa solicitada no está registrada.', 'error');
-                return redirect('/dte/contribuyentes/seleccionar');
+            // Obtener contribuyente para usar en la aplicación.
+            try {
+                $Contribuyente = libredte()->authenticate($rut, $user);
+            } catch (\Exception $e) {
+                return redirect('/dte/contribuyentes/seleccionar')->withError(
+                    $e->getMessage()
+                );
             }
-            // verificar que el usuario tenga acceso al emisor solicitado
-            if (!$Emisor->usuarioAutorizado($this->Auth->User)) {
-                SessionMessage::write('No está autorizado a operar con la empresa solicitada.', 'error');
-                return redirect('/dte/contribuyentes/seleccionar');
-            }
-            // verificar si se requiere auth2 en el usuario para poder usar la empresa
-            if ($Emisor->config_usuarios_auth2) {
-                $auth2_enabled = (bool)$this->Auth->User->getAuth2();
+            // Verificar si se requiere auth2 en el usuario para poder usar la
+            // empresa.
+            if ($Contribuyente->config_usuarios_auth2) {
+                $auth2_enabled = (bool)$user->getAuth2();
                 if (!$auth2_enabled) {
                     $auth2_required = (
-                        // todos obligados a usar auth2
-                        $Emisor->config_usuarios_auth2 == 2
-                        // admin obligados a usar auth2
+                        // Todos los usuarios obligados a usar Auth2.
+                        $Contribuyente->config_usuarios_auth2 == 2
+                        // Los usuarios admin obligados a usar Auth2.
                         || (
-                            $Emisor->config_usuarios_auth2 == 1
-                            && $Emisor->usuarioAutorizado($this->Auth->User, 'admin')
+                            $Contribuyente->config_usuarios_auth2 == 1
+                            && $Contribuyente->usuarioAutorizado($user, 'admin')
                         )
-
                     );
                     if ($auth2_required) {
-                        SessionMessage::write(__('Debe [habilitar el mecanismo de autenticación secundaria (2FA) en su perfil de usuario](%s) antes de poder ingresar a esta empresa.', url('/usuarios/perfil#auth:2fa')), 'error');
-                        return redirect('/dte/contribuyentes/seleccionar');
+                        return redirect('/dte/contribuyentes/seleccionar')
+                            ->withError(__(
+                                'Debe [habilitar el mecanismo de autenticación secundaria (2FA) en su perfil de usuario](%s) antes de poder ingresar al contribuyente %s.',
+                                url('/usuarios/perfil#auth:2fa'),
+                                $Contribuyente->getNombre()
+                            ))
+                        ;
                     }
                 }
             }
-            // si se guarda el emisor en la sesión
-            $this->setContribuyente($Emisor);
-            $Emisor->setPermisos($this->Auth->User);
-            $this->Auth->saveCache();
-            // determinar página de redirección y mensaje si corresponde
+            // Se guarda el emisor en la sesión y se actualiza el usuario.
+            libredte()->setSessionContribuyente($Contribuyente);
+            $Contribuyente->setPermisos($user);
+            auth()->save();
+            // Determinar página de redirección y mensaje si corresponde.
             if (!$url) {
-                SessionMessage::write('Desde ahora estará operando con '.$Emisor->razon_social.'.');
+                SessionMessage::info(__(
+                    'Desde ahora estará operando con %s.',
+                    $Contribuyente->getNombre()
+                ));
             }
+            $redirect = session('referer');
             if ($redirect) {
                 session()->forget('referer');
             }
@@ -88,37 +97,45 @@ class Controller_Contribuyentes extends \Controller
                 $redirect = base64_decode($url);
             }
             else {
-                $trigger_referer = \sowerphp\core\Trigger::run(
-                    'contribuyente_seleccionar_redirect', $Emisor, $redirect, $this->Auth
+                $event_referer = event(
+                    'contribuyente_seleccionar_redirect',
+                    [$Contribuyente, $redirect],
+                    true
                 );
-                if ($trigger_referer) {
-                    $redirect = $trigger_referer;
+                if ($event_referer) {
+                    $redirect = $event_referer;
                 } else {
-                    $redirect = $this->Auth->check('/dte') ? '/dte' : '/';
+                    $redirect = $auth->checkResourcePermission('/dte')
+                        ? '/dte'
+                        : '/'
+                    ;
                 }
             }
-            // redireccionar
+            // Redireccionar.
             return redirect($redirect);
         }
-        // asignar variables para la vista
-        $this->set([
-            'empresas' => (new Model_Contribuyentes())->getByUsuario($this->Auth->User->id),
-            'registrar_empresa' => $this->Auth->check('/dte/contribuyentes/registrar'),
-            'soporte' => $this->Auth->User->inGroup(['soporte']),
+        // Asignar variables para la vista.
+        return $this->render(null, [
+            'empresas' => (new Model_Contribuyentes())->getByUsuario($user->id),
+            'registrar_empresa' => $auth->checkResourcePermission(
+                '/dte/contribuyentes/registrar'
+            ),
+            'soporte' => $user->inGroup(['soporte']),
         ]);
     }
 
     /**
      * Método que permite registrar un nuevo contribuyente y asociarlo a un usuario.
      */
-    public function registrar()
+    public function registrar(Request $request)
     {
+        $user = $request->user();
         // verificar si el usuario puede registrar más empresas (solo si está definido el valor
-        if ($this->Auth->User->config_contribuyentes_autorizados !== null) {
-            $n_empresas = count((new Model_Contribuyentes())->getByUsuario($this->Auth->User->id));
-            if ($n_empresas >= $this->Auth->User->config_contribuyentes_autorizados) {
+        if ($user->config_contribuyentes_autorizados !== null) {
+            $n_empresas = count((new Model_Contribuyentes())->getByUsuario($user->id));
+            if ($n_empresas >= $user->config_contribuyentes_autorizados) {
                 SessionMessage::write(
-                    'Ha llegado al límite de empresas que puede registrar ('.num($this->Auth->User->config_contribuyentes_autorizados).'). Si requiere una cantidad mayor <a href="'.$this->request->getBaseUrlWithoutSlash().'/contacto">contáctenos</a>.', 'error'
+                    'Ha llegado al límite de empresas que puede registrar ('.num($user->config_contribuyentes_autorizados).'). Si requiere una cantidad mayor <a href="'.url('/contacto').'">contáctenos</a>.', 'error'
                 );
                 return redirect('/dte/contribuyentes/seleccionar');
             }
@@ -145,16 +162,15 @@ class Controller_Contribuyentes extends \Controller
         if (isset($_POST['submit'])) {
             // crear objeto del contribuyente con el rut y verificar que no esté ya asociada a un usuario
             list($rut, $dv) = explode('-', str_replace('.', '', $_POST['rut']));
-            $class = $this->Contribuyente_class;
-            $Contribuyente = new $class($rut);
-            if ($Contribuyente->usuario) {
-                if ($Contribuyente->usuario == $this->Auth->User->id) {
+            $Contribuyente = libredte()->contribuyente($rut);
+            if ($Contribuyente && $Contribuyente->usuario) {
+                if ($Contribuyente->usuario == $user->id) {
                     SessionMessage::write(
                         'Ya tiene asociada la empresa a su usuario.'
                     );
                 } else {
                     SessionMessage::write(
-                        'La empresa ya está registrada a nombre del usuario '.$Contribuyente->getUsuario()->nombre.' ('.$Contribuyente->getUsuario()->email.'). Si cree que esto es un error o bien puede ser alguien suplantando la identidad de su empresa por favor <a href="'.$this->request->getBaseUrlWithoutSlash().'/contacto" target="_blank">contáctenos</a>.', 'error'
+                        'La empresa ya está registrada a nombre del usuario '.$Contribuyente->getUsuario()->nombre.' ('.$Contribuyente->getUsuario()->email.'). Si cree que esto es un error o bien puede ser alguien suplantando la identidad de su empresa por favor <a href="'.url('/contacto').'" target="_blank">contáctenos</a>.', 'error'
                     );
                 }
                 return redirect('/dte/contribuyentes/seleccionar');
@@ -169,7 +185,7 @@ class Controller_Contribuyentes extends \Controller
             $Contribuyente->set($_POST);
             $Contribuyente->rut = $rut;
             $Contribuyente->dv = $dv;
-            $Contribuyente->usuario = $this->Auth->User->id;
+            $Contribuyente->usuario = $user->id;
             $Contribuyente->modificado = date('Y-m-d H:i:s');
             // guardar contribuyente
             try {
@@ -182,7 +198,9 @@ class Controller_Contribuyentes extends \Controller
                     );
                     try {
                         $ContribuyenteDte->save();
-                    } catch (\Exception $e){}
+                    } catch (\Exception $e) {
+                        // Fallar silenciosamente.
+                    }
                 }
                 // redireccionar
                 SessionMessage::write('Empresa '.$Contribuyente->razon_social.' registrada y asociada a su usuario.', 'ok');
@@ -200,7 +218,12 @@ class Controller_Contribuyentes extends \Controller
      */
     public function modificar()
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // verificar que el usuario sea el administrador o de soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
             SessionMessage::write('Usted no es el administrador de la empresa solicitada.', 'error');
@@ -448,7 +471,11 @@ class Controller_Contribuyentes extends \Controller
                     'nombre' => strip_tags($_POST['config_extra_links_nombre'][$i]),
                 ];
                 if (!empty($_POST['config_extra_links_enlace'][$i])) {
-                    $link['enlace'] = str_replace($this->request->getFullUrlWithoutQuery(), '', strip_tags($_POST['config_extra_links_enlace'][$i]));
+                    $link['enlace'] = str_replace(
+                        url(),
+                        '',
+                        strip_tags($_POST['config_extra_links_enlace'][$i])
+                    );
                 }
                 if (!empty($_POST['config_extra_links_icono'][$i])) {
                     $link['icono'] = strip_tags($_POST['config_extra_links_icono'][$i]);
@@ -484,7 +511,12 @@ class Controller_Contribuyentes extends \Controller
      */
     public function ambiente($ambiente)
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // verificar que el usuario sea el administrador o sea soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
             SessionMessage::write('Usted no es el administrador de la empresa solicitada.', 'error');
@@ -516,7 +548,12 @@ class Controller_Contribuyentes extends \Controller
      */
     public function usuarios()
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // verificar que el usuario sea el administrador o sea soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
             SessionMessage::error('Usted no es el administrador de la empresa solicitada.');
@@ -579,7 +616,12 @@ class Controller_Contribuyentes extends \Controller
      */
     public function usuarios_dtes()
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // verificar que el usuario sea el administrador o sea soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
             SessionMessage::write('Usted no es el administrador de la empresa solicitada.', 'error');
@@ -634,7 +676,12 @@ class Controller_Contribuyentes extends \Controller
      */
     public function usuarios_sucursales()
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // verificar que el usuario sea el administrador o sea soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
             SessionMessage::write('Usted no es el administrador de la empresa solicitada.', 'error');
@@ -678,7 +725,12 @@ class Controller_Contribuyentes extends \Controller
      */
     public function usuarios_general()
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // verificar que el usuario sea el administrador o sea soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
             SessionMessage::write('Usted no es el administrador de la empresa solicitada.', 'error');
@@ -717,7 +769,12 @@ class Controller_Contribuyentes extends \Controller
      */
     public function transferir()
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // verificar si es posible transferir la empresa
         if (!(bool)config('modules.Dte.contribuyentes.transferir')) {
             SessionMessage::error('No es posible que usted transfiera la empresa, contacte a soporte para realizar esta acción.');
@@ -778,7 +835,12 @@ class Controller_Contribuyentes extends \Controller
      */
     public function config_email_test($email, $protocol = 'smtp')
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // verificar que el usuario sea el administrador o de soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
             $this->response->sendAndExit('Usted no es el administrador de la empresa solicitada.');
@@ -788,7 +850,7 @@ class Controller_Contribuyentes extends \Controller
             $this->response->sendAndExit('El protocolo debe ser "smtp" o "imap"');
         }
         // datos pasados por GET al servicio web
-        extract($this->request->queries([
+        extract($this->request->getValidatedData([
             'debug' => 3,
         ]));
         // hacer test SMTP
@@ -839,7 +901,7 @@ class Controller_Contribuyentes extends \Controller
             $this->Api->send($User, 401);
         }
         // datos pasados por GET al servicio web
-        extract($this->request->queries([
+        extract($this->request->getValidatedData([
             'tipo' => 'contribuyente',
         ]));
         if (!in_array($tipo, ['contribuyente', 'emisor', 'receptor'])) {
@@ -892,11 +954,13 @@ class Controller_Contribuyentes extends \Controller
             if (!$Emisor->usuarioAutorizado($User)) {
                 $this->Api->send('No está autorizado a operar con el emisor seleccionado para el tipo de búsqueda '.$tipo.'.', 404);
             }
-            $datos_trigger = \sowerphp\core\Trigger::run(
-                'contribuyente_info', $Contribuyente, $tipo, $Emisor, $User, $datos
+            $datos_event = event(
+                'contribuyente_info',
+                [$Contribuyente, $tipo, $Emisor, $User, $datos],
+                true
             );
-            if (!empty($datos_trigger)) {
-                $datos = $datos_trigger;
+            if (!empty($datos_event)) {
+                $datos = $datos_event;
             }
         }
         // se quita el usuario de los atributos (por seguridad)

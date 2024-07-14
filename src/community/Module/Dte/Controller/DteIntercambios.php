@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Controlador para intercambio entre contribuyentes.
  */
-class Controller_DteIntercambios extends \Controller
+class Controller_DteIntercambios extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -34,14 +34,22 @@ class Controller_DteIntercambios extends \Controller
      */
     public function listar($pagina = 1, $soloPendientes = false)
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Validar $pagina.
         if (!is_numeric($pagina)) {
             return redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar');
         }
-        $Emisor = $this->getContribuyente();
+        // Filtros.
         $filtros = [
             'soloPendientes' => $soloPendientes,
             'p' => $pagina,
         ];
+        // Buscar documentos.
         if (isset($_GET['search'])) {
             foreach (explode(',', $_GET['search']) as $filtro) {
                 list($var, $val) = explode(':', $filtro);
@@ -86,7 +94,12 @@ class Controller_DteIntercambios extends \Controller
      */
     public function ver($codigo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener DTE intercambiado
         $DteIntercambio = new Model_DteIntercambio(
             $Emisor->rut, (int)$codigo, $Emisor->enCertificacion()
@@ -126,7 +139,12 @@ class Controller_DteIntercambios extends \Controller
      */
     public function eliminar($codigo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener DTE intercambiado
         $DteIntercambio = new Model_DteIntercambio(
             $Emisor->rut, (int)$codigo, $Emisor->enCertificacion()
@@ -157,7 +175,12 @@ class Controller_DteIntercambios extends \Controller
      */
     public function html($codigo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         $DteIntercambio = new Model_DteIntercambio(
             $Emisor->rut, (int)$codigo, $Emisor->enCertificacion()
         );
@@ -181,7 +204,13 @@ class Controller_DteIntercambios extends \Controller
      */
     public function actualizar($dias = 7)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Actualizar bandeja de intercambio.
         try {
             $resultado = $Emisor->actualizarBandejaIntercambio($dias);
         } catch (\Exception $e) {
@@ -228,7 +257,7 @@ class Controller_DteIntercambios extends \Controller
             $this->Api->send('No existe el intercambio solicitado.', 404);
         }
         // armar configuración del PDF
-        extract($this->request->queries([
+        extract($this->request->getValidatedData([
             'papelContinuo' => false,
         ]));
         $config = [
@@ -275,17 +304,22 @@ class Controller_DteIntercambios extends \Controller
      */
     public function pdf($codigo, $cedible = false, $emisor = null, $dte = null, $folio = null)
     {
-        $get_query = http_build_query($this->request->queries([
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Consumir servicio de PDF.
+        $get_query = http_build_query($this->request->getValidatedData([
             'papelContinuo' => false,
         ]));
-        $Receptor = $this->getContribuyente();
         $url = '/api/dte/dte_intercambios/pdf/'.$codigo.'/'.$Receptor->rut.'/'.(int)$cedible.'/'.(int)$emisor.'/'.(int)$dte.'/'.(int)$folio.'?'.$get_query;
         $response = $this->consume($url);
         if ($response['status']['code'] != 200) {
-            \sowerphp\core\Facade_Session_Message::write(
-                $response['body'], 'error'
+            return redirect('/dte/dte_intercambios/listar')->withError(
+                $response['body']
             );
-            return redirect('/dte/dte_intercambios/listar');
         }
         // si dió código 200 se entrega la respuesta del servicio web
         $this->response->type('application/pdf');
@@ -334,7 +368,13 @@ class Controller_DteIntercambios extends \Controller
      */
     public function xml($codigo)
     {
-        $Receptor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener XML.
         $response = $this->consume('/api/dte/dte_intercambios/xml/'.$codigo.'/'.$Receptor->rut);
         if ($response['status']['code'] != 200) {
             \sowerphp\core\Facade_Session_Message::write(
@@ -342,7 +382,7 @@ class Controller_DteIntercambios extends \Controller
             );
             return redirect('/dte/dte_intercambios/listar');
         }
-        // si dió código 200 se entrega la respuesta del servicio web
+        // Si dió código 200 se entrega la respuesta del servicio web.
         $this->response->type('application/xml', 'ISO-8859-1');
         foreach (['Content-Disposition', 'Content-Length'] as $header) {
             if (isset($response['header'][$header])) {
@@ -408,8 +448,14 @@ class Controller_DteIntercambios extends \Controller
      */
     public function resultados_xml($codigo)
     {
-        $Emisor = $this->getContribuyente();
-        $response = $this->consume('/api/dte/dte_intercambios/resultados_xml/'.$codigo.'/'.$Emisor->rut);
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Consumir servicio web de XML.
+        $response = $this->consume('/api/dte/dte_intercambios/resultados_xml/'.$codigo.'/'.$Receptor->rut);
         if ($response['status']['code'] != 200) {
             \sowerphp\core\Facade_Session_Message::write(
                 $response['body'], 'error'
@@ -435,7 +481,12 @@ class Controller_DteIntercambios extends \Controller
      */
     public function responder($codigo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // si no se viene por post error
         if (!isset($_POST['submit'])) {
             \sowerphp\core\Facade_Session_Message::write(
@@ -444,12 +495,15 @@ class Controller_DteIntercambios extends \Controller
             return redirect(str_replace('responder', 'ver', $this->request->getRequestUriDecoded()));
         }
         // obtener objeto de intercambio
-        $DteIntercambio = new Model_DteIntercambio($Emisor->rut, (int)$codigo, $Emisor->enCertificacion());
+        $DteIntercambio = new Model_DteIntercambio(
+            $Receptor->rut,
+            (int)$codigo,
+            $Receptor->enCertificacion()
+        );
         if (!$DteIntercambio->exists()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No existe el intercambio solicitado.', 'error'
+            return redirect('/dte/dte_intercambios/listar')->withError(
+                'No existe el intercambio solicitado.'
             );
-            return redirect('/dte/dte_intercambios/listar');
         }
         // armar documentos con sus respuestas
         $documentos = [];
@@ -505,7 +559,13 @@ class Controller_DteIntercambios extends \Controller
      */
     public function buscar()
     {
-        $Receptor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Asignar variables para la vista.
         $usuarios = array_keys($Receptor->getUsuarios());
         $this->set([
             'Receptor' => $Receptor,
@@ -513,6 +573,7 @@ class Controller_DteIntercambios extends \Controller
             'usuarios' => array_combine($usuarios, $usuarios),
             'values_xml' => [],
         ]);
+        // Procesar búsqueda.
         if (isset($_POST['submit'])) {
             $_POST['xml'] = [];
             $values_xml = [];
@@ -535,7 +596,7 @@ class Controller_DteIntercambios extends \Controller
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($this->Auth->User->hash);
             $response = $rest->post(
-                $this->request->getFullUrlWithoutQuery().'/api/dte/dte_intercambios/buscar/'.$Receptor->rut.'?_contribuyente_certificacion='.$Receptor->enCertificacion(),
+                url('/api/dte/dte_intercambios/buscar/'.$Receptor->rut.'?_contribuyente_certificacion='.$Receptor->enCertificacion()),
                 $_POST
             );
             if ($response === false) {
@@ -594,7 +655,7 @@ class Controller_DteIntercambios extends \Controller
             $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
         }
         // buscar documentos
-        $filtros = $this->request->queries([
+        $filtros = $this->request->getValidatedData([
             'soloPendientes' => true,
             'emisor' => null,
             'folio' => null,
@@ -614,8 +675,14 @@ class Controller_DteIntercambios extends \Controller
      */
     public function probar_xml()
     {
-        $Emisor = $this->getContribuyente();
-        $this->set('Emisor', $Emisor);
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Asignar variables para la vista y procesar archivo.
+        $this->set('Receptor', $Receptor);
         if (!empty($_FILES['archivo'])) {
             $n_archivos = count($_FILES['archivo']['name']);
             $archivos = [];
@@ -637,7 +704,7 @@ class Controller_DteIntercambios extends \Controller
                 // tratar de procesar como EnvioDTE
                 try {
                     $procesarEnvioDTE = (new Model_DteIntercambios())
-                        ->setContribuyente($Emisor)
+                        ->setContribuyente($Receptor)
                         ->procesarEnvioDTE($file)
                     ;
                     if ($procesarEnvioDTE !== null) {
@@ -653,7 +720,7 @@ class Controller_DteIntercambios extends \Controller
                 // tratar de procesar como Recibo
                 try {
                     $procesarRecibo = (new Model_DteIntercambioRecibo())
-                        ->saveXML($this->getContribuyente(), $file['data'])
+                        ->saveXML($Receptor, $file['data'])
                     ;
                     if ($procesarRecibo !== null) {
                         $archivo['estado'] = 'Recibo: procesado y guardado.';
@@ -668,7 +735,7 @@ class Controller_DteIntercambios extends \Controller
                 // tratar de procesar como Recepción
                 try {
                     $procesarRecepcion = (new Model_DteIntercambioRecepcion())
-                        ->saveXML($this->getContribuyente(), $file['data'])
+                        ->saveXML($Receptor, $file['data'])
                     ;
                     if ($procesarRecepcion !== null) {
                         $archivo['estado'] = 'Recepción: procesado y guardado.';
@@ -683,7 +750,7 @@ class Controller_DteIntercambios extends \Controller
                 // tratar de procesar como Resultado
                 try {
                     $procesarResultado = (new Model_DteIntercambioResultado())
-                        ->saveXML($this->getContribuyente(), $file['data'])
+                        ->saveXML($Receptor, $file['data'])
                     ;
                     if ($procesarResultado !== null) {
                         $archivo['estado'] = 'Resultado: procesado y guardado.';

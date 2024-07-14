@@ -41,6 +41,13 @@ class Controller_DteCompras extends Controller_Base_Libros
      */
     public function importar()
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Procesar formulario.
         if (isset($_POST['submit'])) {
             // verificar que se haya podido subir el archivo con el libro
             if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
@@ -52,8 +59,7 @@ class Controller_DteCompras extends Controller_Base_Libros
                 \sowerphp\core\Facade_Session_Message::write('Formato '.$mimetype.' del archivo '.$_FILES['archivo']['name'].' es incorrecto. Debe ser un archivo CSV.', 'error');
                 return;
             }
-            // obtener receptor (contribuyente operando)
-            $Receptor = $this->getContribuyente();
+            // Obtener libro.
             $Libro = new \sasco\LibreDTE\Sii\LibroCompraVenta();
             try {
                 $Libro->agregarComprasCSV($_FILES['archivo']['tmp_name']);
@@ -142,7 +148,12 @@ class Controller_DteCompras extends Controller_Base_Libros
      */
     public function enviar_sii($periodo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // si el libro fue enviado y no es rectifica error
         $DteCompra = new Model_DteCompra($Emisor->rut, $periodo, $Emisor->enCertificacion());
         if ($DteCompra->track_id && empty($_POST['CodAutRec']) && $DteCompra->getEstado() != 'LRH' && $DteCompra->track_id!=-1) {
@@ -227,7 +238,13 @@ class Controller_DteCompras extends Controller_Base_Libros
      */
     public function descargar_registro_compra($periodo, $electronico = null)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Buscar compras.
         $compras = $Emisor->getCompras($periodo, is_numeric($electronico) ? $electronico : null);
         if (!$compras) {
             \sowerphp\core\Facade_Session_Message::write(
@@ -251,7 +268,13 @@ class Controller_DteCompras extends Controller_Base_Libros
      */
     public function descargar_tipo_transacciones($periodo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Buscar compras.
         $DteCompra = new Model_DteCompra($Emisor->rut, $periodo, $Emisor->enCertificacion());
         $datos = $DteCompra->getTiposTransacciones();
         if (!$datos) {
@@ -280,7 +303,13 @@ class Controller_DteCompras extends Controller_Base_Libros
      */
     public function rcv_resumen($periodo, $estado = 'REGISTRO')
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener el resumen del RCV.
         try {
             $resumen = $Emisor->getRCV([
                 'operacion' => 'COMPRA',
@@ -305,7 +334,13 @@ class Controller_DteCompras extends Controller_Base_Libros
      */
     public function rcv_detalle($periodo, $dte, $estado = 'REGISTRO')
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener el detalle del RCV.
         try {
             $detalle = $Emisor->getRCV([
                 'operacion' => 'COMPRA',
@@ -335,7 +370,13 @@ class Controller_DteCompras extends Controller_Base_Libros
      */
     public function rcv_diferencias($periodo, $dte)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener las compras.
         $documentos_libredte_todos = $Emisor->getCompras($periodo, [$dte]);
         // obtener documentos en el registro de compra del SII con estado REGISTRO
         try {
@@ -402,8 +443,13 @@ class Controller_DteCompras extends Controller_Base_Libros
      */
     public function rcv_sincronizar_tipo_transacciones($periodo)
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener tipos de transacciones
-        $Emisor = $this->getContribuyente();
         $DteCompra = new Model_DteCompra($Emisor->rut, $periodo, $Emisor->enCertificacion());
         $datos = $DteCompra->getTiposTransacciones();
         if (!$datos) {
@@ -411,7 +457,7 @@ class Controller_DteCompras extends Controller_Base_Libros
             return redirect(str_replace('rcv_sincronizar_tipo_transacciones', 'ver', $this->request->getRequestUriDecoded()));
         }
         // enviar al SII
-        $r = apigateway_consume('/sii/rcv/compras/set_tipo_transaccion/'.$Emisor->rut.'-'.$Emisor->dv.'/'.$periodo.'?certificacion='.$Emisor->enCertificacion(), [
+        $r = apigateway('/sii/rcv/compras/set_tipo_transaccion/'.$Emisor->rut.'-'.$Emisor->dv.'/'.$periodo.'?certificacion='.$Emisor->enCertificacion(), [
             'auth' => [
                 'pass' => [
                     'rut' => $Emisor->rut.'-'.$Emisor->dv,
@@ -442,10 +488,17 @@ class Controller_DteCompras extends Controller_Base_Libros
      */
     public function tipo_transacciones_asignar($periodo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Variables para la vista.
         $this->set([
             'periodo' => $periodo,
         ]);
+        // Procesar formulario.
         if (isset($_POST['submit'])) {
             $documentos = $Emisor->getDocumentosRecibidos($_POST + ['periodo' => $periodo, 'dte' => [33, 34, 43, 46, 56, 61]]);
             if (!$documentos) {
@@ -465,7 +518,13 @@ class Controller_DteCompras extends Controller_Base_Libros
      */
     public function rcv_csv($periodo, $estado = 'REGISTRO', $tipo = 'rcv')
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener el CSV del RCV.
         try {
             $detalle = $Emisor->getRCV([
                 'operacion' => 'COMPRA',
@@ -496,7 +555,13 @@ class Controller_DteCompras extends Controller_Base_Libros
      */
     public function resumen($anio = null)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener el resumen de compras de un año.
         if (!empty($_POST['anio'])) {
             return redirect('/dte/dte_compras/resumen/'.(int)$_POST['anio']);
         }

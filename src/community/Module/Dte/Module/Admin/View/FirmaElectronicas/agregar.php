@@ -7,7 +7,7 @@
     </li>
 </ul>
 <div class="page-header"><h1>Subir firma electrónica</h1></div>
-<p>Aquí podrá subir y asociar una firma electrónica a su usuario <?=$_Auth->User->usuario?>.</p>
+<p>Aquí podrá subir y asociar una firma electrónica a su usuario <?=$user->usuario?>.</p>
 <div class="row">
     <div class="col-md-8">
 <?php

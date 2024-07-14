@@ -26,7 +26,7 @@ namespace website\Apps;
 /**
  * Controlador para aplicación de Dropbox.
  */
-class Controller_Dropbox extends \Controller
+class Controller_Dropbox extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -34,8 +34,14 @@ class Controller_Dropbox extends \Controller
      */
     public function pair()
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Procesar pareo.
         if (isset($_GET['code']) && isset($_GET['state'])) {
-            $Contribuyente = $this->getContribuyente();
             // cargar dropbox
             $DropboxApp = $Contribuyente->getApp('apps.dropbox');
             if (!$DropboxApp) {
@@ -51,7 +57,11 @@ class Controller_Dropbox extends \Controller
             // procesar codigo y estado de Dropbox para obtener token
             try {
                 $authHelper = $Dropbox->getAuthHelper();
-                $accessToken = $authHelper->getAccessToken($_GET['code'], $_GET['state'], $this->request->getFullUrlWithoutQuery().$this->request->getRequestUriDecoded());
+                $accessToken = $authHelper->getAccessToken(
+                    $_GET['code'],
+                    $_GET['state'],
+                    url($this->request->getRequestUriDecoded())
+                );
                 $token = $accessToken->getToken();
                 $Dropbox = $DropboxApp->getDropboxClient($token);
                 $account = $Dropbox->getCurrentAccount();
@@ -81,7 +91,12 @@ class Controller_Dropbox extends \Controller
      */
     public function unpair()
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // cargar dropbox
         $DropboxApp = $Contribuyente->getApp('apps.dropbox');
         if (!$DropboxApp) {
@@ -127,7 +142,12 @@ class Controller_Dropbox extends \Controller
      */
     public function info()
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // cargar dropbox
         $DropboxApp = $Contribuyente->getApp('apps.dropbox');
         if (!$DropboxApp) {

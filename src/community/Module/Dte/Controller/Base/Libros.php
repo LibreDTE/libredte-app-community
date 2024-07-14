@@ -29,7 +29,7 @@ use \website\Dte\Admin\Mantenedores\Model_DteTipo;
 /**
  * Controlador base para libros.
  */
-abstract class Controller_Base_Libros extends \Controller
+abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -37,8 +37,14 @@ abstract class Controller_Base_Libros extends \Controller
      */
     public function index()
     {
-        $Emisor = $this->getContribuyente();
-        $this->set([
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Renderizar vista.
+        return $this->render(null, [
             'Emisor' => $Emisor,
             'periodos' => $Emisor->{'getResumen'.$this->config['model']['plural'].'Periodos'}(),
         ]);
@@ -49,7 +55,13 @@ abstract class Controller_Base_Libros extends \Controller
      */
     public function ver($periodo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener libro.
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         $n_detalles = $Emisor->{'count'.$this->config['model']['plural']}((int)$periodo);
@@ -86,7 +98,13 @@ abstract class Controller_Base_Libros extends \Controller
      */
     public function csv($periodo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Generar datos del CSV.
         $detalle = $Emisor->{'get'.$this->config['model']['plural']}((int)$periodo);
         if (!$detalle) {
             SessionMessage::write('No hay documentos en el período '.$periodo.'.', 'error');
@@ -97,6 +115,7 @@ abstract class Controller_Base_Libros extends \Controller
         }
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         array_unshift($detalle, $class::$libro_cols);
+        // Generar archivo CSV.
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($detalle);
         $this->response->sendAndExit($csv, strtolower($this->config['model']['plural']).'_'.$Emisor->rut.'-'.$Emisor->dv.'_'.$periodo.'.csv');
     }
@@ -106,7 +125,12 @@ abstract class Controller_Base_Libros extends \Controller
      */
     public function pdf($periodo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // crear objeto del libro
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
@@ -139,7 +163,12 @@ abstract class Controller_Base_Libros extends \Controller
      */
     public function xml($periodo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // crear objeto del libro
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
@@ -168,7 +197,12 @@ abstract class Controller_Base_Libros extends \Controller
      */
     public function enviar_rectificacion($periodo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // crear objeto del libro
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
@@ -206,7 +240,12 @@ abstract class Controller_Base_Libros extends \Controller
      */
     public function solicitar_revision($periodo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener libro envíado
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
@@ -232,7 +271,13 @@ abstract class Controller_Base_Libros extends \Controller
      */
     public function actualizar_estado($periodo, $usarWebservice = null)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Definir si se debe usar servicio web o no para obtene estado.
         if ($usarWebservice === null) {
             $usarWebservice = $Emisor->config_sii_estado_dte_webservice;
         }
@@ -260,7 +305,8 @@ abstract class Controller_Base_Libros extends \Controller
     }
 
     /**
-     * Recurso de la API que entrega el código de reemplazo de libro para cierto período.
+     * Recurso de la API que entrega el código de reemplazo de libro para
+     * cierto período.
      */
     public function _api_codigo_reemplazo_GET($periodo, $contribuyente)
     {
@@ -288,7 +334,7 @@ abstract class Controller_Base_Libros extends \Controller
         $operacion = $datos['LibroCompraVenta']['EnvioLibro']['Caratula']['TipoOperacion'];
         $tipo_libro = $datos['LibroCompraVenta']['EnvioLibro']['Caratula']['TipoLibro'];
         $url = '/sii/dte/iecv/codigo_reemplazo/'.$Contribuyente->getRUT().'/'.$periodo.'/'.$operacion.'/'.$tipo_libro.'/'.$Libro->track_id.'?certificacion='.$Contribuyente->enCertificacion();
-        $response = apigateway_consume($url, [
+        $response = apigateway($url, [
             'auth' => [
                 'cert' => [
                     'cert-data' => $Firma->getCertificate(),

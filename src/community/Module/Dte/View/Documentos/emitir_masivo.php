@@ -61,7 +61,7 @@ new \sowerphp\general\View_Helper_Table([
 ]);
 ?>
 <p class="mt-3">Si el documento tiene más de un item o referencia, se agrega una nueva fila donde solo van las columnas correspondientes al item o la referencia, y las demás vacías.</p>
-<p>El archivo subido se procesará de manera asíncrona y se notificará vía correo electrónico a <?=$_Auth->User->email?> cuando el proceso esté completo. El correo incluirá el mismo archivo CSV que se subió a la plataforma con 2 columnas nuevas que incluirán el código del resultado de la operación para ese documento y la glosa asociada a dicho estado. El significado macro de cada código de estado es:</p>
+<p>El archivo subido se procesará de manera asíncrona y se notificará vía correo electrónico a <?=$user->email?> cuando el proceso esté completo. El correo incluirá el mismo archivo CSV que se subió a la plataforma con 2 columnas nuevas que incluirán el código del resultado de la operación para ese documento y la glosa asociada a dicho estado. El significado macro de cada código de estado es:</p>
 <?php
 new \sowerphp\general\View_Helper_Table([
     ['Código de resultado', 'Descripción macro del resultado'],

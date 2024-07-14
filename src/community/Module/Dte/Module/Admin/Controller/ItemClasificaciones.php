@@ -27,10 +27,9 @@ namespace website\Dte\Admin;
  * Clase para el controlador asociado a la tabla item_clasificacion de la base de
  * datos.
  */
-class Controller_ItemClasificaciones extends \Controller_Maintainer
+class Controller_ItemClasificaciones extends \sowerphp\autoload\Controller_Model
 {
 
-    protected $namespace = __NAMESPACE__; ///< Namespace del controlador y modelos asociados
     protected $columnsView = [
         'listar' => ['codigo', 'clasificacion', 'superior', 'activa']
     ]; ///< Columnas que se deben mostrar en las vistas
@@ -40,7 +39,13 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
      */
     public function listar($page = 1, $orderby = null, $order = 'A')
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Llamar al método padre.
         $this->forceSearch(['contribuyente' => $Contribuyente->rut]);
         return parent::listar($page, $orderby, $order);
     }
@@ -50,7 +55,13 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
      */
     public function crear()
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Asignar variables para la vista.
         $_POST['contribuyente'] = $Contribuyente->rut;
         $this->set([
             'clasificaciones' => (new Model_ItemClasificaciones())
@@ -58,6 +69,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
                 ->getList()
             ,
         ]);
+        // Llamar al método padre.
         return parent::crear();
     }
 
@@ -66,7 +78,13 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
      */
     public function editar($codigo)
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Asignar variables para la vista.
         $_POST['contribuyente'] = $Contribuyente->rut;
         $this->set([
             'clasificaciones' => (new Model_ItemClasificaciones())
@@ -74,6 +92,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
                 ->getList()
             ,
         ]);
+        // Llamar al método padre.
         return parent::editar($Contribuyente->rut, $codigo);
     }
 
@@ -82,17 +101,22 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
      */
     public function eliminar($codigo)
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Buscar clasificación.
         $Clasificacion = new Model_ItemClasificacion($Contribuyente->rut, $codigo);
         if ($Clasificacion->enUso()) {
             \sowerphp\core\Facade_Session_Message::write(
                 'No es posible eliminar la clasificacion '.$Clasificacion->clasificacion.' ya que existen items que la usan.', 'error'
             );
             $filterListar = !empty($_GET['listar']) ? base64_decode($_GET['listar']) : '';
-            return redirect(
-                $this->module_url.$this->request->getRouteConfig()['controller'].'/listar'.$filterListar
-            );
+            return redirect('/dte/admin/item_clasificaciones/listar' . $filterListar);
         }
+        // Llamar al método padre.
         return parent::eliminar($Contribuyente->rut, $codigo);
     }
 
@@ -102,6 +126,13 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
      */
     public function importar()
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Procesar formulario.
         if (isset($_POST['submit'])) {
             // verificar que se haya podido subir el archivo con el libro
             if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
@@ -111,7 +142,6 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
                 return;
             }
             // agregar cada clasificación
-            $Contribuyente = $this->getContribuyente();
             $clasificaciones = \sowerphp\general\Utility_Spreadsheet::read($_FILES['archivo']);
             array_shift($clasificaciones);
             $resumen = ['nuevas' => [], 'editadas' => [], 'error' => []];
@@ -162,16 +192,21 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
      */
     public function exportar()
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Buscar clasificaciones.
         $clasificaciones = (new Model_ItemClasificaciones())
             ->setContribuyente($Contribuyente)
             ->exportar()
         ;
         if (!$clasificaciones) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No hay clasificaciones de items que exportar.', 'warning'
+            return redirect('/dte/admin/item_clasificaciones/listar')->withWarning(
+                'No hay clasificaciones de items que exportar.'
             );
-            return redirect('/dte/admin/item_clasificaciones/listar');
         }
         array_unshift($clasificaciones, array_keys($clasificaciones[0]));
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($clasificaciones);

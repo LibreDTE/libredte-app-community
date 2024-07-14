@@ -26,7 +26,7 @@ namespace website\Dte\Admin;
 /**
  * Clase exportar e importar datos de un contribuyente.
  */
-class Controller_Respaldos extends \Controller
+class Controller_Respaldos extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -34,13 +34,19 @@ class Controller_Respaldos extends \Controller
      */
     public function exportar($all = false)
     {
-        $Emisor = $this->getContribuyente();
-        if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'Solo el administrador de la empresa puede descargar un respaldo.', 'error'
-            );
-            return redirect('/dte/admin');
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
         }
+        // Validar acceso de administrador.
+        if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
+            return redirect('/dte/admin')->withError(
+                'Solo el administrador de la empresa puede descargar un respaldo.'
+            );
+        }
+        // Preparar respaldo.
         $Respaldo = new Model_Respaldo();
         $tablas = $Respaldo->getTablas();
         $this->set([
@@ -53,7 +59,7 @@ class Controller_Respaldos extends \Controller
                 $_POST['tablas'][] = $t[0];
             }
         }
-        // respaldo normal, se descarga inmediatamente
+        // Respaldo normal, se descarga inmediatamente.
         if (isset($_POST['tablas'])) {
             try {
                 $dir = $Respaldo->generar($Emisor->rut, $_POST['tablas']);

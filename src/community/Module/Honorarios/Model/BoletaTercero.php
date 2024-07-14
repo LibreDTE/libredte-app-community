@@ -26,7 +26,7 @@ namespace website\Honorarios;
 /**
  * Clase para mapear la tabla boleta_tercero de la base de datos.
  */
-class Model_BoletaTercero extends \Model_App
+class Model_BoletaTercero extends \sowerphp\autoload\Model_App
 {
 
     // Datos para la conexión a la base de datos
@@ -200,7 +200,7 @@ class Model_BoletaTercero extends \Model_App
      */
     public function getHTML()
     {
-        $r = apigateway_consume('/sii/bte/emitidas/html/'.$this->codigo, [
+        $r = apigateway('/sii/bte/emitidas/html/'.$this->codigo, [
             'auth' => [
                 'pass' => [
                     'rut' => $this->getEmisor()->getRUT(),

@@ -27,7 +27,7 @@ namespace website\Honorarios;
  * Clase para el controlador asociado a la tabla boleta_honorario de la base de
  * datos.
  */
-class Controller_BoletaHonorarios extends \Controller
+class Controller_BoletaHonorarios extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -35,9 +35,20 @@ class Controller_BoletaHonorarios extends \Controller
      */
     public function index()
     {
-        $Receptor = $this->getContribuyente();
-        $periodos = (new Model_BoletaHonorarios())->setContribuyente($Receptor)->getPeriodos();
-        $this->set('periodos', $periodos);
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Renderizar vista.
+        $periodos = (new Model_BoletaHonorarios())
+            ->setContribuyente($Receptor)
+            ->getPeriodos()
+        ;
+        return $this->render(null, [
+            'periodos' => $periodos,
+        ]);
     }
 
     /**
@@ -45,7 +56,13 @@ class Controller_BoletaHonorarios extends \Controller
      */
     public function buscar()
     {
-        $Receptor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Procesar formulario.
         if (isset($_POST['submit'])) {
             unset($_POST['submit']);
             // obtener PDF desde servicio web
@@ -101,17 +118,28 @@ class Controller_BoletaHonorarios extends \Controller
      */
     public function pdf($emisor, $numero)
     {
-        $Receptor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener boleta de honorarios.
         $BoletaHonorario = new Model_BoletaHonorario($emisor, $numero);
-        if (!$BoletaHonorario->exists() || $BoletaHonorario->receptor != $Receptor->rut) {
-            \sowerphp\core\Facade_Session_Message::write('No existe la boleta solicitada.', 'error');
-            return redirect('/honorarios/boleta_honorarios');
+        if (
+            !$BoletaHonorario->exists()
+            || $BoletaHonorario->receptor != $Receptor->rut
+        ) {
+            return redirect('/honorarios/boleta_honorarios')->withError(
+                'No existe la boleta solicitada.'
+            );
         }
         // obtener PDF desde servicio web
         $r = $this->consume('/api/honorarios/boleta_honorarios/pdf/'.$BoletaHonorario->emisor.'/'.$BoletaHonorario->numero.'/'.$Receptor->rut);
         if ($r['status']['code'] != 200) {
-            \sowerphp\core\Facade_Session_Message::write($r['body'], 'error');
-            return redirect('/honorarios/boleta_honorarios');
+            return redirect('/honorarios/boleta_honorarios')->withError(
+                $r['body']
+            );
         }
         $this->Api->response()->type('application/pdf');
         $this->Api->response()->header('Content-Disposition', 'attachment; filename=bhe_'.$BoletaHonorario->emisor.'_'.$BoletaHonorario->numero.'.pdf');
@@ -162,13 +190,24 @@ class Controller_BoletaHonorarios extends \Controller
      */
     public function ver($periodo)
     {
-        $Receptor = $this->getContribuyente();
-        $boletas = (new Model_BoletaHonorarios())->setContribuyente($Receptor)->buscar(['periodo' => $periodo]);
-        if (empty($boletas)) {
-            \sowerphp\core\Facade_Session_Message::write('No existen boletas para el período solicitado.', 'error');
-            return redirect('/honorarios/boleta_honorarios');
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
         }
-        $this->set([
+        // Buscar boletas de un período.
+        $boletas = (new Model_BoletaHonorarios())
+            ->setContribuyente($Receptor)
+            ->buscar(['periodo' => $periodo])
+        ;
+        if (empty($boletas)) {
+            return redirect('/honorarios/boleta_honorarios')->withInfo(
+                'No existen boletas para el período solicitado.'
+            );
+        }
+        // Renderizar vista.
+        return $this->render(null, [
             'Receptor' => $Receptor,
             'periodo' => $periodo,
             'boletas' => $boletas,
@@ -180,16 +219,27 @@ class Controller_BoletaHonorarios extends \Controller
      */
     public function csv($periodo)
     {
-        $Receptor = $this->getContribuyente();
-        $boletas = (new Model_BoletaHonorarios())->setContribuyente($Receptor)->buscar(['periodo' => $periodo]);
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Buscar boletas de un período.
+        $boletas = (new Model_BoletaHonorarios())
+            ->setContribuyente($Receptor)
+            ->buscar(['periodo' => $periodo])
+        ;
         if (empty($boletas)) {
-            \sowerphp\core\Facade_Session_Message::write('No existen boletas para el período solicitado.', 'error');
-            return redirect('/honorarios/boleta_honorarios');
+            return redirect('/honorarios/boleta_honorarios')->withInfo(
+                'No existen boletas para el período solicitado.'
+            );
         }
         foreach ($boletas as &$b) {
             unset($b['codigo']);
         }
         array_unshift($boletas, array_keys($boletas[0]));
+        // Entregar archivo CSV.
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($boletas);
         $this->response->sendAndExit($csv, $Receptor->rut.'-'.$Receptor->dv.'_bhe_'.(int)$periodo.'.csv');
     }
@@ -199,13 +249,22 @@ class Controller_BoletaHonorarios extends \Controller
      */
     public function actualizar()
     {
-        $meses = 2;
-        $Receptor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
         try {
-            (new Model_BoletaHonorarios())->setContribuyente($Receptor)->sincronizar($meses);
-            \sowerphp\core\Facade_Session_Message::write('Boletas actualizadas.', 'ok');
+            $Receptor = libredte()->getSessionContribuyente();
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Sincronizar con SII las boletas.
+        $meses = 2;
+        try {
+            (new Model_BoletaHonorarios())
+                ->setContribuyente($Receptor)
+                ->sincronizar($meses)
+            ;
+            \sowerphp\core\Facade_Session_Message::success('Boletas actualizadas.');
+        } catch (\Exception $e) {
+            \sowerphp\core\Facade_Session_Message::error($e->getMessage());
         }
         return redirect('/honorarios/boleta_honorarios');
     }

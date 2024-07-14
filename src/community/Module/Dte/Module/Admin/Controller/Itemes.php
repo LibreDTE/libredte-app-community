@@ -28,10 +28,9 @@ use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
 /**
  * Clase para las acciones asociadas a items.
  */
-class Controller_Itemes extends \Controller_Maintainer
+class Controller_Itemes extends \sowerphp\autoload\Controller_Model
 {
 
-    protected $namespace = __NAMESPACE__; ///< Namespace del controlador y modelos asociados
     protected $columnsView = [
         'listar' => ['codigo', 'item', 'precio', 'moneda', 'bruto', 'clasificacion', 'activo']
     ]; ///< Columnas que se deben mostrar en las vistas
@@ -41,7 +40,13 @@ class Controller_Itemes extends \Controller_Maintainer
      */
     public function listar($page = 1, $orderby = null, $order = 'A')
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Llamar al método padre.
         $this->forceSearch(['contribuyente' => $Contribuyente->rut]);
         return parent::listar($page, $orderby, $order);
     }
@@ -51,15 +56,25 @@ class Controller_Itemes extends \Controller_Maintainer
      */
     public function crear()
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Asignar variables para la vista.
         $_POST['contribuyente'] = $Contribuyente->rut;
         $this->set([
             'Contribuyente' => $Contribuyente,
-            'clasificaciones' => (new Model_ItemClasificaciones())->setContribuyente($Contribuyente)->getList(),
+            'clasificaciones' => (new Model_ItemClasificaciones())
+                ->setContribuyente($Contribuyente)
+                ->getList()
+            ,
             'impuesto_adicionales' => (new Model_ImpuestoAdicionales())
                 ->getListContribuyente($Contribuyente->config_extra_impuestos_adicionales)
             ,
         ]);
+        // Llamar al método padre.
         return parent::crear();
     }
 
@@ -68,15 +83,25 @@ class Controller_Itemes extends \Controller_Maintainer
      */
     public function editar($codigo, $tipo = 'INT1')
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Asignar variables para la vista.
         $_POST['contribuyente'] = $Contribuyente->rut;
         $this->set([
             'Contribuyente' => $Contribuyente,
-            'clasificaciones' => (new Model_ItemClasificaciones())->setContribuyente($Contribuyente)->getList(),
+            'clasificaciones' => (new Model_ItemClasificaciones())
+                ->setContribuyente($Contribuyente)
+                ->getList()
+            ,
             'impuesto_adicionales' => (new Model_ImpuestoAdicionales())
                 ->getListContribuyente($Contribuyente->config_extra_impuestos_adicionales)
             ,
         ]);
+        // Llamar al método padre.
         return parent::editar($Contribuyente->rut, urldecode($tipo), urldecode($codigo));
     }
 
@@ -85,7 +110,13 @@ class Controller_Itemes extends \Controller_Maintainer
      */
     public function eliminar($codigo, $tipo = 'INT1')
     {
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Llamar al método padre.
         return parent::eliminar($Contribuyente->rut, urldecode($tipo), urldecode($codigo));
     }
 
@@ -96,7 +127,7 @@ class Controller_Itemes extends \Controller_Maintainer
      */
     public function _api_info_GET($empresa, $codigo)
     {
-        $options = $this->request->queries([
+        $options = $this->request->getValidatedData([
             'tipo' => null,
             'bruto' => false,
             'moneda' => 'CLP',
@@ -133,7 +164,7 @@ class Controller_Itemes extends \Controller_Maintainer
         else {
             if ($campo == 'libredte') {
                 $Item = (new Model_Itemes())->get($Empresa->rut, $codigo, $tipo);
-            } else if (is_libredte_enterprise()) {
+            } else if (libredte()->isEnterpriseEdition()) {
                 $Item = (new \libredte\enterprise\Inventario\Model_InventarioItemes())
                     ->setContribuyente($Empresa)
                     ->getItemFacturacion($codigo, $tipo, $campo)
@@ -145,7 +176,11 @@ class Controller_Itemes extends \Controller_Maintainer
                 $this->Api->send('Item solicitado no existe o está inactivo.', 404);
             }
             try {
-                $datos_trigger = (array)\sowerphp\core\Trigger::run('dte_item_info', $Item, $options);
+                $datos_event = (array)event(
+                    'dte_item_info',
+                    [$Item, $options],
+                    true
+                );
             } catch (\Exception $e) {
                 $this->Api->send($e->getMessage(), $e->getCode() ? $e->getCode() : 500);
             }
@@ -169,7 +204,7 @@ class Controller_Itemes extends \Controller_Maintainer
                     ? \sasco\LibreDTE\Sii\ImpuestosAdicionales::getTasa($Item->impuesto_adicional)
                     : 0
                 ,
-            ], $datos_trigger), 200);
+            ], $datos_event), 200);
         }
     }
 
@@ -207,6 +242,13 @@ class Controller_Itemes extends \Controller_Maintainer
      */
     public function importar()
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Procesar formulario de importación.
         if (isset($_POST['submit'])) {
             // verificar que se haya podido subir el archivo con el libro
             if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
@@ -216,7 +258,6 @@ class Controller_Itemes extends \Controller_Maintainer
                 return;
             }
             // procesar cada item
-            $Contribuyente = $this->getContribuyente();
             try {
                 $items = \sowerphp\general\Utility_Spreadsheet::read($_FILES['archivo']);
             } catch (\Exception $e) {
@@ -325,13 +366,21 @@ class Controller_Itemes extends \Controller_Maintainer
      */
     public function exportar()
     {
-        $Contribuyente = $this->getContribuyente();
-        $items = (new Model_Itemes())->setContribuyente($Contribuyente)->exportar();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Buscar items para exportar.
+        $items = (new Model_Itemes())
+            ->setContribuyente($Contribuyente)
+            ->exportar()
+        ;
         if (!$items) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No hay items que exportar.', 'warning'
+            return redirect('/dte/admin/itemes/listar')->withWarning(
+                'No hay items que exportar.'
             );
-            return redirect('/dte/admin/itemes/listar');
         }
         array_unshift($items, array_keys($items[0]));
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($items);

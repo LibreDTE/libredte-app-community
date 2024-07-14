@@ -26,7 +26,7 @@ namespace website\Dte\Informes;
 /**
  * Clase para informes de los despachos asociados al contribuyente.
  */
-class Controller_Despachos extends \Controller
+class Controller_Despachos extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -35,7 +35,13 @@ class Controller_Despachos extends \Controller
      */
     public function index()
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Variables para la vista.
         $this->set([
             'Emisor' => $Emisor,
             'fecha' => !empty($_POST['fecha']) ? $_POST['fecha'] : date('Y-m-d'),
@@ -44,6 +50,7 @@ class Controller_Despachos extends \Controller
             'usuarios' => $Emisor->getListUsuarios(),
             'google_api_key' => config('services.google.api_key'),
         ]);
+        // Procesar formulario.
         if (!empty($_POST['fecha'])) {
             list($latitud, $longitud) = !empty($_POST['mapa'])
                 ? $Emisor->getCoordenadas($_POST['sucursal'])

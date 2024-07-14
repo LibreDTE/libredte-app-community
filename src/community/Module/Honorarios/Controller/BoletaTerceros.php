@@ -29,7 +29,7 @@ use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
  * Clase para el controlador asociado a la tabla boleta_tercero de la base de
  * datos.
  */
-class Controller_BoletaTerceros extends \Controller
+class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -37,9 +37,20 @@ class Controller_BoletaTerceros extends \Controller
      */
     public function index()
     {
-        $Emisor = $this->getContribuyente();
-        $periodos = (new Model_BoletaTerceros())->setContribuyente($Emisor)->getPeriodos();
-        $this->set('periodos', $periodos);
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Renderizar vista.
+        $periodos = (new Model_BoletaTerceros())
+            ->setContribuyente($Emisor)
+            ->getPeriodos()
+        ;
+        return $this->render([
+            'periodos' => $periodos,
+        ]);
     }
 
     /**
@@ -47,11 +58,18 @@ class Controller_BoletaTerceros extends \Controller
      */
     public function buscar()
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Variables para la vista.
         $this->set([
             'Emisor' => $Emisor,
             'sucursales' => $Emisor->getSucursales(),
         ]);
+        // Procesar formulario.
         if (isset($_POST['submit'])) {
             unset($_POST['submit']);
             // obtener PDF desde servicio web
@@ -107,23 +125,37 @@ class Controller_BoletaTerceros extends \Controller
      */
     public function html($numero)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener boleta.
         $BoletaTercero = new Model_BoletaTercero($Emisor->rut, $numero);
         if (!$BoletaTercero->exists()) {
-            \sowerphp\core\Facade_Session_Message::write('No existe la boleta solicitada.', 'error');
-            return redirect('/honorarios/boleta_terceros');
+            return redirect('/honorarios/boleta_terceros')->withError(
+                'No existe la boleta solicitada.'
+            );
         }
         // obtener PDF desde servicio web
         $r = $this->consume('/api/honorarios/boleta_terceros/html/'.$BoletaTercero->numero.'/'.$BoletaTercero->emisor);
         if ($r['status']['code'] != 200) {
-            \sowerphp\core\Facade_Session_Message::write($r['body'], 'error');
-            return redirect('/honorarios/boleta_terceros');
+            return redirect('/honorarios/boleta_terceros')->withError(
+                $r['body']
+            );
         }
-        $this->Api->response()->type('text/html');
-        $this->Api->response()->header('Content-Disposition', 'attachment; filename=bte_'.$BoletaTercero->emisor.'_'.$BoletaTercero->numero.'.html');
-        $this->Api->response()->header('Pragma', 'no-cache');
-        $this->Api->response()->header('Expires', 0);
-        $this->Api->send($r['body']);
+        // Entregar HTML.
+        $filename = 'bte_'.$BoletaTercero->emisor.'_'.$BoletaTercero->numero.'.html';
+        $response = response();
+        $response->type('text/html');
+        $response->header(
+            'Content-Disposition',
+            'attachment; filename=' . $filename
+        );
+        $response->header('Pragma', 'no-cache');
+        $response->header('Expires', 0);
+        return $response->json($r['body']);
     }
 
     /**
@@ -168,13 +200,24 @@ class Controller_BoletaTerceros extends \Controller
      */
     public function ver($periodo)
     {
-        $Emisor = $this->getContribuyente();
-        $boletas = (new Model_BoletaTerceros())->setContribuyente($Emisor)->buscar(['periodo' => $periodo]);
-        if (empty($boletas)) {
-            \sowerphp\core\Facade_Session_Message::write('No existen boletas para el período solicitado.', 'error');
-            return redirect('/honorarios/boleta_terceros');
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
         }
-        $this->set([
+        // Obter boletas del período.
+        $boletas = (new Model_BoletaTerceros())
+            ->setContribuyente($Emisor)
+            ->buscar(['periodo' => $periodo])
+        ;
+        if (empty($boletas)) {
+            return redirect('/honorarios/boleta_terceros')->withInfo(
+                'No existen boletas para el período solicitado.'
+            );
+        }
+        // Renderizar vista.
+        return $this->render(null, [
             'Emisor' => $Emisor,
             'periodo' => $periodo,
             'boletas' => $boletas,
@@ -186,16 +229,27 @@ class Controller_BoletaTerceros extends \Controller
      */
     public function csv($periodo)
     {
-        $Emisor = $this->getContribuyente();
-        $boletas = (new Model_BoletaTerceros())->setContribuyente($Emisor)->buscar(['periodo' => $periodo]);
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener boletas del período.
+        $boletas = (new Model_BoletaTerceros())
+            ->setContribuyente($Emisor)
+            ->buscar(['periodo' => $periodo])
+        ;
         if (empty($boletas)) {
-            \sowerphp\core\Facade_Session_Message::write('No existen boletas para el período solicitado.', 'error');
-            return redirect('/honorarios/boleta_terceros');
+            return redirect('/honorarios/boleta_terceros')->withInfo(
+                'No existen boletas para el período solicitado.'
+            );
         }
         foreach ($boletas as &$b) {
             unset($b['codigo']);
         }
         array_unshift($boletas, array_keys($boletas[0]));
+        // Entregar archivo CSV.
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($boletas);
         $this->response->sendAndExit($csv, $Emisor->rut.'-'.$Emisor->dv.'_bte_'.(int)$periodo.'.csv');
     }
@@ -205,10 +259,19 @@ class Controller_BoletaTerceros extends \Controller
      */
     public function actualizar()
     {
-        $meses = 2;
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
         try {
-            (new Model_BoletaTerceros())->setContribuyente($Emisor)->sincronizar($meses);
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Sincronizar boletas con el SII.
+        $meses = 2;
+        try {
+            (new Model_BoletaTerceros())
+                ->setContribuyente($Emisor)
+                ->sincronizar($meses)
+            ;
             \sowerphp\core\Facade_Session_Message::write('Boletas actualizadas.', 'ok');
         } catch (\Exception $e) {
             \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
@@ -221,13 +284,20 @@ class Controller_BoletaTerceros extends \Controller
      */
     public function emitir()
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Variables para la vista.
         $this->set([
             'Emisor' => $Emisor,
             'sucursales' => $Emisor->getSucursales(),
             'comunas' => (new Model_Comunas())->getList(),
             'tasas_retencion' => (new Model_BoletaTerceros())->getTasasRetencion(),
         ]);
+        // Procesar formulario.
         if (isset($_POST['submit'])) {
             // armar arreglo con los datos de la boleta
             $boleta = [

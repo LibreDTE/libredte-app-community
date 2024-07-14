@@ -26,7 +26,7 @@ namespace website\Dte\Informes;
 /**
  * Clase para informes de impuestos.
  */
-class Controller_Impuestos extends \Controller
+class Controller_Impuestos extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -35,12 +35,18 @@ class Controller_Impuestos extends \Controller
      */
     public function propuesta_f29($periodo = null)
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Determinar período y procesar.
         $periodo = $periodo
             ? $periodo
             : (isset($_POST['periodo']) ? $_POST['periodo'] : null)
         ;
         if (isset($periodo)) {
-            $Emisor = $this->getContribuyente();
             $compras = $Emisor->getCompras($periodo);
             $ventas = $Emisor->getVentas($periodo);
             $F29 = new Model_F29($Emisor, $periodo);

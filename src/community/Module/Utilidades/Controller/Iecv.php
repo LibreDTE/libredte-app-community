@@ -26,7 +26,7 @@ namespace website\Utilidades;
 /**
  * Controlador para utilides asociadas a los libros de compra y venta.
  */
-class Controller_Iecv extends \Controller
+class Controller_Iecv extends \sowerphp\autoload\Controller
 {
 
     /**

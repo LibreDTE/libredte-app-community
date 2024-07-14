@@ -28,7 +28,7 @@ use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
 /**
  * Clase para mapear la tabla dte_intercambio de la base de datos.
  */
-class Model_DteIntercambio extends \Model_App
+class Model_DteIntercambio extends \sowerphp\autoload\Model_App
 {
 
     // Datos para la conexión a la base de datos
@@ -556,17 +556,23 @@ class Model_DteIntercambio extends \Model_App
                     }
                 }
             }
-            // llamar al trigger de aceptación/rechazo de los intercambios, y si corresponde aceptar o reclamar el DTE
-            // si el trigger entrega 'null' (no existe handler para el trigger o bien el trigger retornó 'null') se deja
-            // sin procesar la acción.
-            // se llama solo si no se logró determinar la acción usando el servicio web del contribuyente
+            // Despachar evento de aceptación/rechazo de los intercambios, y si
+            // corresponde aceptar o reclamar el DTE. Si el evento entrega
+            // 'null' (no existe handler para el evento o bien el evento
+            // retornó 'null') se deja sin procesar la acción. Se despacha el
+            // evento solo si no se logró determinar la acción usando el
+            // servicio web del contribuyente.
             if ($accion === null) {
-                $accion = \sowerphp\core\Trigger::run('dte_dte_intercambio_responder', $this);
+                $accion = event('dte_dte_intercambio_responder', [$this], true);
             }
-            // ejecutar acción según se haya indicado
+            // Ejecutar acción según se haya indicado.
             if ($accion !== null) {
                 try {
-                    if (is_array($accion) && isset($accion['accion']) && isset($accion['config'])) {
+                    if (
+                        is_array($accion)
+                        && isset($accion['accion'])
+                        && isset($accion['config'])
+                    ) {
                         $config = $accion['config'];
                         $accion = $accion['accion'];
                     } else {
@@ -575,8 +581,10 @@ class Model_DteIntercambio extends \Model_App
                     $config['user_id'] = $this->getReceptor()->getUsuario()->id;
                     $respondido = $this->responder($accion, $config);
                 } catch (\Exception $e) {
-                    // se puede fallar de forma silenciosa (si falla -> $respondido es falso y se notificará como DTE por responder)
-                    // si no se solicitó de manera silenciosa, entonces se generará error
+                    // Se puede fallar de forma silenciosa. Si falla entonces
+                    // $respondido es false y se notificará como DTE por
+                    // responder. Si no se solicitó de manera silenciosa,
+                    // entonces se lanzará una excepción.
                     if (!$silenciosa) {
                         throw new \Exception($e->getMessage());
                     }

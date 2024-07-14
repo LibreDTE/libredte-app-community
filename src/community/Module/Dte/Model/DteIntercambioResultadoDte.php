@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla dte_intercambio_resultado_dte de la base de datos.
  */
-class Model_DteIntercambioResultadoDte extends \Model_App
+class Model_DteIntercambioResultadoDte extends \sowerphp\autoload\Model_App
 {
 
     // Datos para la conexión a la base de datos

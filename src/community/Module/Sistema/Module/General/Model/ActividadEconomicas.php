@@ -26,7 +26,7 @@ namespace website\Sistema\General;
 /**
  * Clase para mapear la tabla actividad_economica de la base de datos.
  */
-class Model_ActividadEconomicas extends \Model_Plural_App
+class Model_ActividadEconomicas extends \sowerphp\autoload\Model_Plural_App
 {
 
     // Datos para la conexión a la base de datos

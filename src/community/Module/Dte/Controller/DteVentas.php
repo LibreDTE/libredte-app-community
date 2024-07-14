@@ -39,11 +39,11 @@ class Controller_DteVentas extends Controller_Base_Libros
     ]; ///< Configuración para las acciones del controlador
 
     /**
-     * Método para permitir acciones sin estar autenticado.
+     * Inicialización del controlador.
      */
     public function boot(): void
     {
-        $this->Auth->allow('_api_historial_GET');
+        app('auth')->allowActionsWithoutLogin('_api_historial_GET');
         parent::boot();
     }
 
@@ -53,7 +53,12 @@ class Controller_DteVentas extends Controller_Base_Libros
      */
     public function enviar_sii($periodo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // si el libro fue enviado y no es rectifica error
         $DteVenta = new Model_DteVenta($Emisor->rut, $periodo, $Emisor->enCertificacion());
         if (
@@ -176,7 +181,7 @@ class Controller_DteVentas extends Controller_Base_Libros
                 $resumenes_errores = [];
                 foreach ($resumenes as $resumen) {
                     try {
-                        $r = apigateway_consume('/sii/rcv/ventas/set_resumen/'.$Emisor->rut.'-'.$Emisor->dv.'/'.$periodo.'?certificacion='.$Emisor->enCertificacion(), [
+                        $r = apigateway('/sii/rcv/ventas/set_resumen/'.$Emisor->rut.'-'.$Emisor->dv.'/'.$periodo.'?certificacion='.$Emisor->enCertificacion(), [
                             'auth' => [
                                 'cert' => [
                                     'cert-data' => $Firma->getCertificate(),
@@ -228,7 +233,13 @@ class Controller_DteVentas extends Controller_Base_Libros
      */
     public function descargar_registro_venta($periodo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener ventas.
         $ventas = $Emisor->getVentas($periodo);
         if (!$ventas) {
             \sowerphp\core\Facade_Session_Message::write(
@@ -252,7 +263,13 @@ class Controller_DteVentas extends Controller_Base_Libros
      */
     public function descargar_resumenes($periodo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener libro.
         $Libro = new Model_DteVenta($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         if (!$Libro->exists()) {
             \sowerphp\core\Facade_Session_Message::write(
@@ -305,7 +322,13 @@ class Controller_DteVentas extends Controller_Base_Libros
      */
     public function rcv_resumen($periodo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener resumen RCV.
         try {
             $resumen = $Emisor->getRCV(['operacion' => 'VENTA', 'periodo' => $periodo, 'estado' => 'REGISTRO', 'detalle' => false]);
         } catch (\Exception $e) {
@@ -324,7 +347,13 @@ class Controller_DteVentas extends Controller_Base_Libros
      */
     public function rcv_detalle($periodo, $dte)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener detalle RCV.
         try {
             $detalle = $Emisor->getRCV([
                 'operacion' => 'VENTA',
@@ -353,7 +382,13 @@ class Controller_DteVentas extends Controller_Base_Libros
      */
     public function eventos_receptor($periodo, $evento)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener eventos del receptor.
         $DteVenta = new Model_DteVenta($Emisor->rut, $periodo, $Emisor->enCertificacion());
         $this->set([
             'Emisor' => $Emisor,
@@ -373,7 +408,13 @@ class Controller_DteVentas extends Controller_Base_Libros
      */
     public function resumen($anio = null)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener las ventas del año.
         if (!empty($_POST['anio'])) {
             return redirect('/dte/dte_ventas/resumen/'.(int)$_POST['anio']);
         }
@@ -401,7 +442,7 @@ class Controller_DteVentas extends Controller_Base_Libros
      */
     public function _api_historial_GET($receptor, $fecha, $emisor, $dte = null, $folio = null, $total = null)
     {
-        extract($this->request->queries([
+        extract($this->request->getValidatedData([
             'formato' => 'json',
             'periodo_glosa' => true,
             'periodos' => 12,
@@ -508,7 +549,13 @@ class Controller_DteVentas extends Controller_Base_Libros
      */
     public function rcv_csv($periodo, $tipo = 'rcv')
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener CSV del RCV.
         try {
             $detalle = $Emisor->getRCV([
                 'operacion' => 'VENTA',

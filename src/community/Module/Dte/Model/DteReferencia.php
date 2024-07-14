@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla dte_referencia de la base de datos.
  */
-class Model_DteReferencia extends \Model_App
+class Model_DteReferencia extends \sowerphp\autoload\Model_App
 {
 
     // Datos para la conexión a la base de datos

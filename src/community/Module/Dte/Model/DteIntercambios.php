@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla dte_intercambio de la base de datos.
  */
-class Model_DteIntercambios extends \Model_Plural_App
+class Model_DteIntercambios extends \sowerphp\autoload\Model_Plural_App
 {
 
     // Datos para la conexión a la base de datos
@@ -313,10 +313,16 @@ class Model_DteIntercambios extends \Model_Plural_App
      */
     public function actualizar(int $dias = 7): array
     {
-        // ejecutar trigger para verificar cosas previo a actualizar bandeja
-        $trigger_actualizar = \sowerphp\core\Trigger::run('dte_dte_intercambio_actualizar', $this->getContribuyente());
-        // si el trigger entrega false la bandeja no se actualizará de manera silenciosa
-        if ($trigger_actualizar === false) {
+        // Despachar evento para verificar cosas previo a actualizar la bandeja
+        // de intercambio del contribuyente.
+        $event_actualizar = event(
+            'dte_dte_intercambio_actualizar',
+            [$this->getContribuyente()],
+            true
+        );
+        // Si el evento entrega false la bandeja no se actualizará y el error
+        // será de manera silenciosa.
+        if ($event_actualizar === false) {
             return [
                 'n_uids' => 0,
                 'omitidos' => 0,
@@ -326,14 +332,15 @@ class Model_DteIntercambios extends \Model_Plural_App
                 'n_ResultadoDTE' => 0,
             ];
         }
-        // si el trigger entrega un arreglo es el resultado de la actualización de la bandeja
-        else if (is_array($trigger_actualizar)) {
-            return $trigger_actualizar;
+        // Si el evento entrega un arreglo es el resultado de la actualización
+        // de la bandeja de intercambio.
+        else if (is_array($event_actualizar)) {
+            return $event_actualizar;
         }
-        // obtener correo
+        // Obtener correo.
         try {
-            $Imap = is_object($trigger_actualizar)
-                ? $trigger_actualizar
+            $Imap = is_object($event_actualizar)
+                ? $event_actualizar
                 : $this->getContribuyente()->getEmailReceiver()
             ;
         } catch (\Exception $e) {

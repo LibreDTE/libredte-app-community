@@ -27,7 +27,7 @@ namespace website\Dte;
  * Clase para el controlador asociado a la tabla cobranza de la base de
  * datos.
  */
-class Controller_Cobranzas extends \Controller
+class Controller_Cobranzas extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -35,10 +35,17 @@ class Controller_Cobranzas extends \Controller
      */
     public function buscar()
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Variables para la vista.
         $this->set([
             'cobranza_resumen' => (new Model_Cobranzas())->setContribuyente($Emisor)->getResumen(),
         ]);
+        // Filtros.
         $filtros = [];
         foreach (['desde', 'hasta', 'receptor'] as $filtro) {
             if (!empty($_POST[$filtro])) {
@@ -50,6 +57,7 @@ class Controller_Cobranzas extends \Controller
                 $filtros[$estado] = $_GET[$estado];
             }
         }
+        // Realizar búsqueda.
         if (!empty($filtros)) {
             $this->set([
                 'cobranza' => (new Model_Cobranzas())->setContribuyente($Emisor)->getPendientes($filtros),
@@ -62,7 +70,13 @@ class Controller_Cobranzas extends \Controller
      */
     public function ver($dte, $folio, $fecha)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener cobro programado.
         $Pago = new Model_Cobranza($Emisor->rut, $dte, $folio, $Emisor->enCertificacion(), $fecha);
         if (!$Pago->exists()) {
             \sowerphp\core\Facade_Session_Message::write(
@@ -98,7 +112,13 @@ class Controller_Cobranzas extends \Controller
      */
     public function eliminar($dte, $folio, $fecha)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener cobro programado.
         $Pago = new Model_Cobranza($Emisor->rut, $dte, $folio, $Emisor->enCertificacion(), $fecha);
         if (!$Pago->exists()) {
             \sowerphp\core\Facade_Session_Message::write(

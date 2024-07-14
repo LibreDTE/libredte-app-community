@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Controlador de cesiones.
  */
-class Controller_Cesiones extends \Controller
+class Controller_Cesiones extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -35,10 +35,16 @@ class Controller_Cesiones extends \Controller
      */
     public function listar($pagina = 1)
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Procesar.
         if (!is_numeric($pagina)) {
             return redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar');
         }
-        $Emisor = $this->getContribuyente();
         $filtros = [];
         if (isset($_GET['search'])) {
             foreach (explode(',', $_GET['search']) as $filtro) {
@@ -87,11 +93,19 @@ class Controller_Cesiones extends \Controller
      */
     public function buscar($consulta = null)
     {
-        if (!in_array($consulta, ['deudor', 'cedente', 'cesionario'])) {
-            \sowerphp\core\Facade_Session_Message::write('Búsqueda por "'.$consulta.'" no existe.', 'error');
-            return redirect('/dte/cesiones/listar');
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
         }
-        $Contribuyente = $this->getContribuyente();
+        // Validar el tipo de búsqueda que se desea realizar.
+        if (!in_array($consulta, ['deudor', 'cedente', 'cesionario'])) {
+            return redirect('/dte/cesiones/listar')->withError(
+                'Búsqueda por "'.$consulta.'" no existe.'
+            );
+        }
+        // Asignar variables a la vista.
         $this->set([
             'Contribuyente' => $Contribuyente,
             'consulta' => $consulta,
@@ -107,7 +121,7 @@ class Controller_Cesiones extends \Controller
             ][$consulta];
             $certificacion = $Contribuyente->enCertificacion();
             try {
-                $response = apigateway_consume(
+                $response = apigateway(
                     '/sii/rtc/cesiones/documentos/'.$_POST['desde'].'/'.$_POST['hasta'].'/'.$consulta_codigo.'?formato=json&certificacion='.$certificacion,
                     [
                         'auth' => [

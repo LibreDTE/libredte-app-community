@@ -6,7 +6,7 @@ echo $f->input([
     'name' => 'cedente_email',
     'label' => 'Email cedente',
     'check' => 'notempty email',
-    'value' => $_Auth->User->email,
+    'value' => $user->email,
 ]);
 echo $f->input([
     'name' => 'cesionario_rut',

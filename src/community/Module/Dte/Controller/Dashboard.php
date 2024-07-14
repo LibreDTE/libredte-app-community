@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para el Dashboard del módulo de facturación.
  */
-class Controller_Dashboard extends \Controller
+class Controller_Dashboard extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -34,7 +34,12 @@ class Controller_Dashboard extends \Controller
      */
     public function index()
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // contadores
         $periodo_actual = date('Ym');
         $periodo = !empty($_GET['periodo']) ? (int)$_GET['periodo'] : $periodo_actual;

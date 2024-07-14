@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Controlador de dte temporales.
  */
-class Controller_DteTmps extends \Controller
+class Controller_DteTmps extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -34,7 +34,7 @@ class Controller_DteTmps extends \Controller
      */
     public function boot(): void
     {
-        $this->Auth->allow('cotizacion');
+        app('auth')->allowActionsWithoutLogin('cotizacion');
         parent::boot();
     }
 
@@ -43,10 +43,17 @@ class Controller_DteTmps extends \Controller
      */
     public function listar($pagina = 1)
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Validar formato de $pagina.
         if (!is_numeric($pagina)) {
             return redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar');
         }
-        $Emisor = $this->getContribuyente();
+        // Filtros.
         $filtros = [];
         if (isset($_GET['search'])) {
             foreach (explode(',', $_GET['search']) as $filtro) {
@@ -94,7 +101,12 @@ class Controller_DteTmps extends \Controller
      */
     public function ver($receptor, $dte, $codigo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener datos JSON del DTE
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
@@ -131,7 +143,7 @@ class Controller_DteTmps extends \Controller
         }
         // datos por defecto
         $formatoPDF = $Emisor->getConfigPDF($DteTmp);
-        extract($this->request->queries([
+        extract($this->request->getValidatedData([
             'formato' => isset($_POST['formato'])
                 ? $_POST['formato']
                 : $formatoPDF['formato']
@@ -145,7 +157,7 @@ class Controller_DteTmps extends \Controller
         // realizar consulta a la API
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($Emisor->getUsuario()->hash);
-        $response = $rest->get($this->request->getFullUrlWithoutQuery().'/api/dte/dte_tmps/pdf/'.$receptor.'/'.$dte.'/'.$codigo.'/'.$Emisor->rut.'?cotizacion=1&formato='.$formato.'&papelContinuo='.$papelContinuo.'&compress='.$compress);
+        $response = $rest->get(url('/api/dte/dte_tmps/pdf/'.$receptor.'/'.$dte.'/'.$codigo.'/'.$Emisor->rut.'?cotizacion=1&formato='.$formato.'&papelContinuo='.$papelContinuo.'&compress='.$compress));
         if ($response === false) {
             \sowerphp\core\Facade_Session_Message::write(implode('<br/>', $rest->getErrors()), 'error');
             return redirect('/dte/dte_tmps/listar');
@@ -169,7 +181,12 @@ class Controller_DteTmps extends \Controller
      */
     public function pdf($receptor, $dte, $codigo, $disposition = 'attachment')
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
@@ -178,7 +195,7 @@ class Controller_DteTmps extends \Controller
         }
         // datos por defecto
         $formatoPDF = $Emisor->getConfigPDF($DteTmp);
-        extract($this->request->queries([
+        extract($this->request->getValidatedData([
             'formato' => isset($_POST['formato'])
                 ? $_POST['formato']
                 : $formatoPDF['formato']
@@ -192,7 +209,7 @@ class Controller_DteTmps extends \Controller
         // realizar consulta a la API
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($this->Auth->User->hash);
-        $response = $rest->get($this->request->getFullUrlWithoutQuery().'/api/dte/dte_tmps/pdf/'.$receptor.'/'.$dte.'/'.$codigo.'/'.$Emisor->rut.'?formato='.$formato.'&papelContinuo='.$papelContinuo.'&compress='.$compress);
+        $response = $rest->get(url('/api/dte/dte_tmps/pdf/'.$receptor.'/'.$dte.'/'.$codigo.'/'.$Emisor->rut.'?formato='.$formato.'&papelContinuo='.$papelContinuo.'&compress='.$compress));
         if ($response === false) {
             \sowerphp\core\Facade_Session_Message::write(implode('<br/>', $rest->getErrors()), 'error');
             return redirect('/dte/dte_tmps/listar');
@@ -228,7 +245,12 @@ class Controller_DteTmps extends \Controller
      */
     public function email_html($receptor, $dte, $codigo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
@@ -251,6 +273,13 @@ class Controller_DteTmps extends \Controller
      */
     public function enviar_email($receptor, $dte, $codigo)
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Procesar formulario.
         if (isset($_POST['submit'])) {
             // armar emails a enviar
             $emails = [];
@@ -261,11 +290,10 @@ class Controller_DteTmps extends \Controller
                 $emails = array_merge($emails, explode(',', str_replace(' ', '', $_POST['para_extra'])));
             }
             // enviar correo
-            $Emisor = $this->getContribuyente();
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($this->Auth->User->hash);
             $response = $rest->post(
-                $this->request->getFullUrlWithoutQuery().'/api/dte/dte_tmps/enviar_email/'.$receptor.'/'.$dte.'/'.$codigo.'/'.$Emisor->rut,
+                url('/api/dte/dte_tmps/enviar_email/'.$receptor.'/'.$dte.'/'.$codigo.'/'.$Emisor->rut),
                 [
                     'emails' => $emails,
                     'asunto' => $_POST['asunto'],
@@ -362,7 +390,7 @@ class Controller_DteTmps extends \Controller
         }
         // datos por defecto
         $formatoPDF = $Emisor->getConfigPDF($DteTmp);
-        $config = $this->request->queries([
+        $config = $this->request->getValidatedData([
             'cotizacion' => 0,
             'formato' => $formatoPDF['formato'],
             'papelContinuo' => $formatoPDF['papelContinuo'],
@@ -415,7 +443,7 @@ class Controller_DteTmps extends \Controller
             $this->Api->send('No existe el documento temporal solicitado.', 404);
         }
         // datos por defecto
-        $config = $this->request->queries([
+        $config = $this->request->getValidatedData([
             'cotizacion' => 0,
             'base64' => false,
             'cedible' => $Emisor->config_pdf_dte_cedible,
@@ -457,7 +485,12 @@ class Controller_DteTmps extends \Controller
      */
     public function xml($receptor, $dte, $codigo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener datos JSON del DTE
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
@@ -505,7 +538,12 @@ class Controller_DteTmps extends \Controller
      */
     public function json($receptor, $dte, $codigo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener datos JSON del DTE
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
@@ -527,7 +565,12 @@ class Controller_DteTmps extends \Controller
      */
     public function eliminar_masivo()
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // solo administrador puede eliminar masivamente los temporales
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
             \sowerphp\core\Facade_Session_Message::write(
@@ -558,7 +601,12 @@ class Controller_DteTmps extends \Controller
      */
     public function eliminar($receptor, $dte, $codigo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
@@ -625,13 +673,19 @@ class Controller_DteTmps extends \Controller
      */
     public function actualizar($receptor, $dte, $codigo, $fecha = null, $actualizar_precios = true)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Consumir servicio para actualizar DTE temporal.
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($this->Auth->User->hash);
         $response = $rest->post(
             sprintf(
                 '%s/api/dte/dte_tmps/actualizar/%d/%d/%s/%d',
-                $this->request->getFullUrlWithoutQuery(),
+                url(),
                 $receptor,
                 $dte,
                 $codigo,
@@ -823,7 +877,12 @@ class Controller_DteTmps extends \Controller
      */
     public function vale($receptor, $dte, $codigo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
@@ -842,7 +901,12 @@ class Controller_DteTmps extends \Controller
      */
     public function editar_json($receptor, $dte, $codigo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener documento temporal
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
@@ -888,14 +952,20 @@ class Controller_DteTmps extends \Controller
      */
     public function buscar()
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Procesar búsqueda.
         $this->set([
             'tipos_dte' => $Emisor->getDocumentosAutorizados(),
         ]);
         if (isset($_POST['submit'])) {
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($this->Auth->User->hash);
-            $response = $rest->post($this->request->getFullUrlWithoutQuery().'/api/dte/dte_tmps/buscar/'.$Emisor->rut, [
+            $response = $rest->post(url('/api/dte/dte_tmps/buscar/'.$Emisor->rut), [
                 'dte' => $_POST['dte'],
                 'receptor' => $_POST['receptor'],
                 'fecha_desde' => $_POST['fecha_desde'],
@@ -963,7 +1033,7 @@ class Controller_DteTmps extends \Controller
         if (!$DteTmp->exists()) {
             $this->Api->send('No existe el documento temporal solicitado.', 404);
         }
-        extract($this->request->queries([
+        extract($this->request->getValidatedData([
             'getDetalle' => false,
             'getDatosDte' => false,
             'getEmailEnviados' => false,

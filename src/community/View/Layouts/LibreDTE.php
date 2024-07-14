@@ -89,11 +89,11 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                     ?>
                 </ul>
                 <ul class="nav navbar-nav ms-auto">
-                    <?php if (!$_Auth->logged()) : ?>
+                    <?php if (!$user) : ?>
                         <li class="nav-item"><a href="<?=$_base?>/usuarios/ingresar" class="nav-link"><span class="fas fa-sign-in-alt" aria-hidden="true"></span> Iniciar sesión</a></li>
                     <?php else : ?>
                     <?php
-                    $Account = $_Auth->User->getEmailAccount();
+                    $Account = $user->getEmailAccount();
                     if ($Account) {
                         $emails = $Account->countUnreadMessages();
                         echo '<li class="nav-item"><a href="'.$Account->getUserUrl().'" class="nav-link"><i class="far fa-envelope"></i> '.($emails?' <span class="badge bg-primary">'.num($emails).'</span>':'').'</a></li>',"\n";
@@ -115,7 +115,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                                                 $n_links = 0;
                                             } else {
                                                 if ($l->enlace[0] == '/') {
-                                                    if ($_Auth->check($l->enlace)) {
+                                                    if ($auth->checkResourcePermission($l->enlace)) {
                                                         $n_links++;
                                                         echo '<a href="',$_base,$l->enlace,'" class="dropdown-item"><i class="'.$l->icono.' fa-fw"></i> '.$l->nombre.'</a>',"\n";
                                                     }
@@ -126,7 +126,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                                             }
                                         }
                                     ?>
-                                    <?php if ($Contribuyente->usuarioAutorizado($_Auth->User, 'admin')) : ?>
+                                    <?php if ($Contribuyente->usuarioAutorizado($user, 'admin')) : ?>
                                         <div class="dropdown-divider"></div>
                                         <a href="<?=$_base?>/dte/contribuyentes/modificar" class="dropdown-item">
                                             <i class="fas fa-edit fa-fw"></i> Configuración de la empresa
@@ -143,7 +143,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                                 <?php $anio = date('Y'); $dia = date('Y-m-d'); ?>
                                 <?php foreach ($_nav_app as $module => $nav) : ?>
-                                <?php if ($_Auth->check($nav['link'])) : ?>
+                                <?php if ($auth->checkResourcePermission($nav['link'])) : ?>
                                     <?php if (isset($nav['menu'])) : ?>
                                         <li class="dropstart">
                                         <a type="button" class="dropdown-item" data-bs-toggle="dropdown" aria-expanded="false">
@@ -152,7 +152,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                                         <ul class="dropdown-menu dropdown-submenu dropdown-submenu-left">
                                             <?php foreach ($nav['menu'] as $link => $menu) : ?>
                                                 <?php $link = str_replace(['{anio}', '{dia}'], [$anio, $dia], $link); ?>
-                                                <?php if ($_Auth->check($nav['link'].$link)) : ?>
+                                                <?php if ($auth->checkResourcePermission($nav['link'].$link)) : ?>
                                                 <li>
                                                     <a href="<?=$_base.$nav['link'].$link?>" class="dropdown-item" title="<?=!empty($menu['desc']) ? $menu['desc'] : ''?>">
                                                         <i class="<?=$menu['icon']?> fa-fw"></i>
@@ -169,7 +169,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                                 <?php endif; ?>
                                 <?php endforeach; ?>
                                 <div class="dropdown-divider"></div>
-                                <?php if ($_Auth->User->inGroup('soporte')) : ?>
+                                <?php if ($user->inGroup('soporte')) : ?>
                                     <li><a class="dropdown-item" href="<?=$_base?>/sistema"><span class="fa fa-cogs fa-fw" aria-hidden="true"></span> Sistema</a></li>
                                 <?php endif; ?>
                                 <li><a href="<?=$_base?>/usuarios/perfil" class="dropdown-item">
@@ -215,7 +215,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                 </div>
                 <div class="float-end text-end">
                 <?php
-                    if (isset($_Auth) && $_Auth->logged()) {
+                    if ($user) {
                         echo '<span class="small">';
                         echo 'time: ',round(microtime(true)-TIME_START, 2),' [s] - ';
                         echo 'memory: ',round(memory_get_usage()/1024/1024,2),' [MiB] - ';

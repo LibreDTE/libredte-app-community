@@ -24,7 +24,7 @@ echo $f->input([
     'name' => 'cedente_email',
     'label' => 'Correo contacto',
     'check' => 'notempty email',
-    'value' => $_Auth->User->email,
+    'value' => $user->email,
     'help' => 'Correo electrónico del usuario responsable en '.$Emisor->getNombre().' de la cesión que se está realizando',
 ]);
 echo $f->input([

@@ -26,7 +26,7 @@ namespace website\Honorarios;
 /**
  * Clase para mapear la tabla boleta_honorario de la base de datos.
  */
-class Model_BoletaHonorario extends \Model_App
+class Model_BoletaHonorario extends \sowerphp\autoload\Model_App
 {
 
     // Datos para la conexión a la base de datos
@@ -176,7 +176,7 @@ class Model_BoletaHonorario extends \Model_App
      */
     public function getPDF()
     {
-        $r = apigateway_consume('/sii/bhe/recibidas/pdf/'.$this->codigo, [
+        $r = apigateway('/sii/bhe/recibidas/pdf/'.$this->codigo, [
             'auth' => [
                 'pass' => [
                     'rut' => $this->getReceptor()->getRUT(),

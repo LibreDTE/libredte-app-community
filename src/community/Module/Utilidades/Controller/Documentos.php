@@ -30,7 +30,7 @@ use \website\Sistema\General\Model_ActividadEconomicas;
 /**
  * Controlador para utilidades asociadas a documentos tributarios electrónicos (DTE).
  */
-class Controller_Documentos extends \Controller
+class Controller_Documentos extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -140,7 +140,7 @@ class Controller_Documentos extends \Controller
             // realizar consulta a la API
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($this->Auth->User->hash);
-            $response = $rest->post($this->request->getFullUrlWithoutQuery().'/api/utilidades/documentos/generar_xml', $data);
+            $response = $rest->post(url('/api/utilidades/documentos/generar_xml'), $data);
             if ($response['status']['code'] != 200) {
                 \sowerphp\core\Facade_Session_Message::write(
                     str_replace("\n", '<br/>', $response['body']), 'error'
@@ -184,7 +184,7 @@ class Controller_Documentos extends \Controller
             // realizar consulta a la API
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($this->Auth->User->hash);
-            $response = $rest->post($this->request->getFullUrlWithoutQuery().'/api/utilidades/documentos/generar_pdf', $data);
+            $response = $rest->post(url('/api/utilidades/documentos/generar_pdf'), $data);
             if ($response['status']['code'] != 200) {
                 \sowerphp\core\Facade_Session_Message::write($response['body'], 'error');
                 return;
@@ -233,7 +233,7 @@ class Controller_Documentos extends \Controller
             foreach ($EnvioDTE->getDocumentos() as $DTE) {
                 // verificar DTE con funcionalidad avanzada
                 try {
-                    $r = apigateway_consume(
+                    $r = apigateway(
                         '/sii/dte/emitidos/verificar?certificacion='.$certificacion,
                         [
                             'auth' => [
@@ -272,7 +272,7 @@ class Controller_Documentos extends \Controller
                     $rest = new \sowerphp\core\Network_Http_Rest();
                     $rest->setAuth($this->Auth->User->hash);
                     $response = $rest->post(
-                        $this->request->getFullUrlWithoutQuery().'/api/utilidades/documentos/verificar_ted',
+                        url('/api/utilidades/documentos/verificar_ted'),
                         json_encode(base64_encode($DTE->getTED()))
                     );
                     if ($response['status']['code'] != 200) {
@@ -342,7 +342,7 @@ class Controller_Documentos extends \Controller
             if (!isset($dtes[1])) {
                 $name = $dtes[0]['Encabezado']['Emisor']['RUTEmisor'].'_T'.$dtes[0]['Encabezado']['IdDoc']['TipoDTE'].'F'.$dtes[0]['Encabezado']['IdDoc']['Folio'].'.json';
                 $json = json_encode($dtes[0], JSON_PRETTY_PRINT);
-                return $this->response->prepareFileResponse([
+                return response()->file([
                     'name' =>  $name,
                     'type' => 'application/json',
                     'size' => strlen($json),
@@ -652,7 +652,7 @@ class Controller_Documentos extends \Controller
                 ? 'attachement'
                 : 'inline'
             ;
-            $this->response->prepareFileResponse($file, [
+            response()->file($file, [
                 'disposition' => $disposition,
             ]);
             \sowerphp\general\Utility_File::rmdir($dir);

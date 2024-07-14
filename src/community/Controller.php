@@ -26,36 +26,8 @@ namespace website;
 /**
  * Controlador base de la aplicación.
  */
-abstract class Controller extends \sowerphp\app\Controller
+abstract class Controller extends \sowerphp\core\Controller
 {
-
-    public $components = [
-        'Auth' => [
-            'redirect' => [
-                'login' => '/dte/contribuyentes/seleccionar',
-            ],
-        ],
-        'Api' => [
-            'log' => LOG_UUCP,
-        ],
-        'Log' => [
-            'report' => [
-                LOG_USER => [
-                    LOG_DEBUG => ['file'],
-                ],
-                LOG_UUCP => [
-                    LOG_INFO => ['file'],
-                ],
-            ],
-            'report_email' => [
-                'attach' => true,
-            ],
-        ],
-        'Notify',
-    ]; ///< Componentes usados por el controlador
-
-    protected $Contribuyente_class = '\website\Dte\Model_Contribuyente'; ///< Clase para instanciar el contribuyente
-    private $Contribuyente = null; ///< Contribuyente con el que se está trabajando
 
     /**
      * Método que fuerza la selección de un contribuyente si estamos en alguno
@@ -64,70 +36,35 @@ abstract class Controller extends \sowerphp\app\Controller
     public function boot(): void
     {
         parent::boot();
-        // si la acción solicitada es de la API no se hace nada para forzar
-        // contribuyente, ya que deberá ser validado en cada recurso de la API
-        if ($this->request->getRouteConfig()['action'] == 'api') {
-            return;
-        }
-        // forzar obtener contribuyente
-        $dte = (
-            strpos($this->request->getRouteConfig()['module'], 'Dte') === 0
-            && $this->request->getRouteConfig()['controller'] != 'contribuyentes'
-            && !$this->Auth->allowedWithoutLogin()
-        );
-        $otros = false;
-        foreach ((array)config('libredte.modulos_empresa') as $modulo) {
-            if (strpos($this->request->getRouteConfig()['module'], $modulo) === 0) {
-                $otros = true;
-                break;
+        // Solo forzar que exista un contribuyente si la acción solicitada no
+        // es de la API. Si es de la API, se validará en cada recurso.
+        $action = $this->request->getRouteConfig()['action'];
+        if ($action != 'api') {
+            $controller = $this->request->getRouteConfig()['controller'];
+            $module = $this->request->getRouteConfig()['module'];
+            $isDteModule = (
+                strpos($module, 'Dte') === 0
+                && $controller != 'contribuyentes'
+                && !app('auth')->isActionAllowedWithoutLogin($action)
+            );
+            $isOtherModule = false;
+            foreach ((array)config('libredte.modulos_empresa') as $modulo) {
+                if (strpos($module, $modulo) === 0) {
+                    $isOtherModule = true;
+                    break;
+                }
             }
-        }
-        if ($dte || $otros) {
-            $this->getContribuyente();
-        }
-    }
-
-    /**
-     * Método que asigna el objeto del contribuyente para ser "recordado".
-     */
-    protected function setContribuyente($Contribuyente)
-    {
-        if ($Contribuyente instanceof $this->Contribuyente_class) {
-            session(['dte.Contribuyente' => $Contribuyente]);
-            session()->forget('dte.certificacion');
-        }
-    }
-
-    /**
-     * Método que entrega el objeto del contribuyente que ha sido seleccionado
-     * para ser usado en la sesión. Si no hay uno seleccionado se fuerza a
-     * seleccionar.
-     *
-     * @return object Objeto con el contribuyente.
-     */
-    protected function getContribuyente(bool $obligar = true)
-    {
-        if (!isset($this->Contribuyente)) {
-            $this->Contribuyente = session('dte.Contribuyente');
-            if (!$this->Contribuyente) {
-                if ($obligar) {
-                    session(['referer' => $this->request->getRequestUriDecoded()]);
+            if ($isDteModule || $isOtherModule) {
+                try {
+                    libredte()->getSessionContribuyente();
+                } catch (\Exception $e) {
                     redirect('/dte/contribuyentes/seleccionar')
-                        ->withError(__(
-                            'Antes de acceder a %s debe seleccionar el contribuyente que usará durante la sesión de LibreDTE.',
-                            $this->request->getRequestUriDecoded()
-                        ))
+                        ->withError($e->getMessage())
                         ->now()
                     ;
                 }
-            } else {
-                if (!($this->Contribuyente instanceof $this->Contribuyente_class)) {
-                    $this->Contribuyente = new $this->Contribuyente_class($this->Contribuyente->rut);
-                }
-                \sasco\LibreDTE\Sii::setAmbiente($this->Contribuyente->enCertificacion());
             }
         }
-        return $this->Contribuyente;
     }
 
 }

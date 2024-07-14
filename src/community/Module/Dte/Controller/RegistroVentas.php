@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Controlador registro de ventas.
  */
-class Controller_RegistroVentas extends \Controller
+class Controller_RegistroVentas extends \sowerphp\autoload\Controller
 {
 
     /**

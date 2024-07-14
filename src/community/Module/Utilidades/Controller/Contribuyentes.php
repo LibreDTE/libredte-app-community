@@ -26,7 +26,7 @@ namespace website\Utilidades;
 /**
  * Controlador para utilidades asociadas a contribuyentes.
  */
-class Controller_Contribuyentes extends \Controller
+class Controller_Contribuyentes extends \sowerphp\autoload\Controller
 {
 
     /**

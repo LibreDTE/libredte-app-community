@@ -26,7 +26,7 @@ namespace website\Dte\Admin;
 /**
  * Clase para mapear la tabla dte_caf de la base de datos.
  */
-class Model_DteCaf extends \Model_App
+class Model_DteCaf extends \sowerphp\autoload\Model_App
 {
 
     // Datos para la conexión a la base de datos
@@ -171,7 +171,7 @@ class Model_DteCaf extends \Model_App
             throw new \Exception('No hay firma electrónica.');
         }
         // solicitar listado de folios según estado
-        $r = apigateway_consume(
+        $r = apigateway(
             '/sii/dte/caf/estados/'.$Emisor->getRUT().'/'.$this->dte.'/'.$this->desde.'/'.$this->hasta.'/'.$estado.'?certificacion='.(int)$this->certificacion,
             [
                 'auth' => [

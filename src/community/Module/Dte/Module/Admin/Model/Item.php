@@ -28,7 +28,7 @@ use \sowerphp\app\Sistema\General\Model_MonedaCambios;
 /**
  * Clase para mapear la tabla item de la base de datos.
  */
-class Model_Item extends \Model_App
+class Model_Item extends \sowerphp\autoload\Model_App
 {
 
     // Datos para la conexión a la base de datos
@@ -363,7 +363,7 @@ class Model_Item extends \Model_App
      */
     public function getItemInventario()
     {
-        if (!is_libredte_enterprise()) {
+        if (!libredte()->isEnterpriseEdition()) {
             return null;
         }
         if (!isset($this->ItemInventario)) {
@@ -380,7 +380,7 @@ class Model_Item extends \Model_App
      */
     public function getItemTienda($tienda = null)
     {
-        if (!is_libredte_enterprise()) {
+        if (!libredte()->isEnterpriseEdition()) {
             return null;
         }
         if (!isset($this->ItemTienda)) {

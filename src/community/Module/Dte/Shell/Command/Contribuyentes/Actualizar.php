@@ -106,7 +106,7 @@ class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
         }
         $pkey_data = $Firma->getPrivateKey();
         // obtener contribuyentes desde el servicio web de API Gateway
-        $response = apigateway_consume(
+        $response = apigateway(
             '/sii/dte/contribuyentes/autorizados?dia='.$dia.'&certificacion='.$ambiente.'&formato=csv_sii',
             [
                 'auth' => [

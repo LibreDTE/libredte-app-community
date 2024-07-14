@@ -24,7 +24,6 @@
 namespace website\Dte;
 
 use \sowerphp\core\Network_Http_Rest;
-use \sowerphp\core\Trigger;
 use \sowerphp\core\Utility_Array;
 use \sowerphp\general\Utility_Date;
 use \sowerphp\app\Sistema\General\Model_MonedaCambio;
@@ -432,8 +431,8 @@ class Model_DteEmitido extends Model_Base_Envio
         // corregir datos
         $this->anulado = (int)$this->anulado;
         $this->iva_fuera_plazo = (int)$this->iva_fuera_plazo;
-        // trigger al guardar el DTE emitido
-        Trigger::run('dte_dte_emitido_guardar', $this);
+        // Evento al guardar el DTE emitido.
+        event('dte_dte_emitido_guardar', [$this]);
         // corregir XML para solo guardar en caso que sea de LibreDTE
         // y guardar codificado en base64
         if ($this->xml) {
@@ -750,8 +749,8 @@ class Model_DteEmitido extends Model_Base_Envio
                 $this->getReceptor()->getUsuario()->email
             );
         }
-        $emails_trigger = Trigger::run('dte_dte_emitido_emails', $this, $emails);
-        return $emails_trigger ? $emails_trigger : $emails;
+        $emails_event = event('dte_dte_emitido_emails', [$this, $emails], true);
+        return $emails_event ?: $emails;
     }
 
     /**
@@ -1125,7 +1124,7 @@ class Model_DteEmitido extends Model_Base_Envio
     {
         $this->canBeDeleted($Usuario);
         $this->db->beginTransaction(true);
-        Trigger::run('dte_dte_emitido_eliminar', $this);
+        event('dte_dte_emitido_eliminar', [$this]);
         // retroceder folio si corresponde hacerlo
         // (solo cuando este dte es el último emitido)
         $DteFolio = new Model_DteFolio(
@@ -1963,7 +1962,7 @@ class Model_DteEmitido extends Model_Base_Envio
      */
     public function getCobro($crearSiNoExiste = true)
     {
-        if (!is_libredte_enterprise()) {
+        if (!libredte()->isEnterpriseEdition()) {
             return false;
         }
         /*if (!$this->getTipo()->permiteCobro()) {
@@ -2101,8 +2100,8 @@ class Model_DteEmitido extends Model_Base_Envio
                 )
             ;
         }
-        $links_trigger = Trigger::run('dte_dte_emitido_links', $this, $links);
-        return $links_trigger ? $links_trigger : $links;
+        $links_event = event('dte_dte_emitido_links', [$this, $links], true);
+        return $links_event ?: $links;
     }
 
     /**
@@ -2205,7 +2204,7 @@ class Model_DteEmitido extends Model_Base_Envio
         // si no hay XML en la base de datos, se busca si es un DTE del Portal
         // MIPYME en cuyo casi se obtiene el XML directo desde el SII
         else if ($this->mipyme) {
-            $r = apigateway_consume(
+            $r = apigateway(
                 sprintf(
                     '/sii/mipyme/emitidos/xml/%s/%d/%d',
                     $this->getEmisor()->getRUT(),
@@ -2458,7 +2457,7 @@ class Model_DteEmitido extends Model_Base_Envio
         // consultar servicio web de LibreDTE
         else {
             unset($config['hash']);
-            $response = apigateway_consume(
+            $response = apigateway(
                 '/libredte/dte/documentos/escpos',
                 $config
             );

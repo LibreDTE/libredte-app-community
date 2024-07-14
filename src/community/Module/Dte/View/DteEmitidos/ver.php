@@ -689,7 +689,7 @@ $f->setStyle('horizontal');
         <!--<a class="btn btn-primary btn-sm col-12 mb-4" href="<?=$_base?>/dte/dte_emitidos/receder/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
             Receder DTE
         </a>-->
-<?php if ($Emisor->usuarioAutorizado($_Auth->User, 'admin')) : ?>
+<?php if ($Emisor->usuarioAutorizado($user, 'admin')) : ?>
         <a class="btn btn-danger btn-sm col-12" href="<?=$_base?>/dte/dte_emitidos/cesion_eliminar/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button" onclick="return __.confirm(this, '¿Está seguro de eliminar la cesión de LibreDTE?\nSi continúa ¡perderá el archivo AEC!')">
             Eliminar cesión
         </a>
@@ -714,7 +714,7 @@ echo $f->input([
     'name' => 'cedente_email',
     'label' => 'Correo contacto',
     'check' => 'notempty email',
-    'value' => $_Auth->User->email,
+    'value' => $user->email,
     'help' => 'Correo electrónico del usuario responsable en '.$Emisor->getNombre().' de la cesión que se está realizando',
 ]);
 ?>
@@ -830,7 +830,7 @@ echo $f->end('Guardar');
 <?php endif; ?>
 <?php
 // si es exportación permitir cambiar tipo de cambio (solo si es usuario administrador)
-if ($Emisor->usuarioAutorizado($_Auth->User, 'admin') && $DteEmitido->getTipo()->esExportacion() && $DteEmitido->hasLocalXML()) :
+if ($Emisor->usuarioAutorizado($user, 'admin') && $DteEmitido->getTipo()->esExportacion() && $DteEmitido->hasLocalXML()) :
 ?>
 <div class="card mt-4" id="avanzado_tipo-cambio-card">
     <div class="card-header">

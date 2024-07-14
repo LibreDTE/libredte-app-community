@@ -32,7 +32,7 @@ use \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos;
 /**
  * Clase para mapear la tabla dte_recibido de la base de datos.
  */
-class Model_DteRecibido extends \Model_App
+class Model_DteRecibido extends \sowerphp\autoload\Model_App
 {
 
     // Datos para la conexión a la base de datos
@@ -535,21 +535,21 @@ class Model_DteRecibido extends \Model_App
      */
     public function save(): bool
     {
-        // si el emisor no existe con esto se creará
+        // Si el emisor no existe con esto se creará.
         $this->getEmisor();
-        // campo emisor solo en nc y nd
+        // Campo emisor solo en NC y ND.
         if (!in_array($this->dte, [55, 56, 60, 61])) {
             $this->emisor_nc_nd_fc = null;
         }
-        // trigger al guardar el DTE recibido
-        \sowerphp\core\Trigger::run('dte_dte_recibido_guardar', $this);
-        // se guarda el documento
+        // Evento al guardar el DTE recibido.
+        event('dte_dte_recibido_guardar', [$this]);
+        // Se guarda el documento.
         $status = parent::save();
-        // si se pudo guardar y existe tipo transacción se notifica al SII
+        // Si se pudo guardar y existe tipo transacción se notifica al SII.
         if ($status) {
             $this->setTipoTransaccionSII();
         }
-        // entregar estado
+        // Entregar estado.
         return $status;
     }
 
@@ -602,7 +602,7 @@ class Model_DteRecibido extends \Model_App
             }
             // enviar al SII
             try {
-                $r = apigateway_consume(
+                $r = apigateway(
                     '/sii/rcv/compras/set_tipo_transaccion/'.$this->getReceptor()->rut.'-'.$this->getReceptor()->dv.'/'.$this->getPeriodo().'?certificacion='.$this->getReceptor()->enCertificacion(),
                     [
                         'auth' => [
@@ -927,7 +927,7 @@ class Model_DteRecibido extends \Model_App
         // si no hay XML en la base de datos, se busca si es un DTE del Portal
         // MIPYME en cuyo casi se obtiene el XML directo desde el SII
         if ($this->mipyme) {
-            $r = apigateway_consume(
+            $r = apigateway(
                 sprintf(
                     '/sii/mipyme/recibidos/xml/%s/%s/%d/%d',
                     $this->getReceptor()->getRUT(),
@@ -1010,7 +1010,7 @@ class Model_DteRecibido extends \Model_App
         );
         // si es un DTE del portal MIPYME se busca el PDF ahí
         if ($this->mipyme) {
-            $r = apigateway_consume(
+            $r = apigateway(
                 sprintf(
                     '/sii/mipyme/recibidos/pdf/%s/%s/%d',
                     $this->getReceptor()->getRUT(),
@@ -1143,7 +1143,7 @@ class Model_DteRecibido extends \Model_App
         // consultar servicio web de LibreDTE
         else {
             unset($config['hash']);
-            $response = apigateway_consume('/libredte/dte/documentos/escpos', $config);
+            $response = apigateway('/libredte/dte/documentos/escpos', $config);
         }
         if ($response['status']['code'] != 200) {
             throw new \Exception($response['body'], 500);

@@ -146,14 +146,14 @@ echo '<div class="col-md-6">',"\n";
 echo $f->input([
     'name' => 'NmbContacto',
     'label' => 'Contacto',
-    'value' => substr($_Auth->User->nombre, 0, 40),
+    'value' => substr($user->nombre, 0, 40),
     'attr' => 'maxlength="40"',
     'check' => 'notempty',
 ]);
 echo $f->input([
     'name' => 'MailContacto',
     'label' => 'Correo',
-    'value' => substr($_Auth->User->email, 0, 80),
+    'value' => substr($user->email, 0, 80),
     'attr' => 'maxlength="80"',
     'check' => 'notempty email',
 ]);

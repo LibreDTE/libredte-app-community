@@ -23,8 +23,8 @@
                 Cargar firma electrónica
             </h1>
             <p class="fs-4">
-                <?php if ($Emisor->getUsuario()->usuario == $_Auth->User->usuario) : ?>
-                    Su usuario <code><?=$_Auth->User->usuario?></code> es el administrador principal de la empresa <strong><?=$Emisor->getNombre()?></strong>, por lo que si sube su firma será usada por todos los usuarios para la emisión de documentos y otras acciones asociadas al SII.
+                <?php if ($Emisor->getUsuario()->usuario == $user->usuario) : ?>
+                    Su usuario <code><?=$user->usuario?></code> es el administrador principal de la empresa <strong><?=$Emisor->getNombre()?></strong>, por lo que si sube su firma será usada por todos los usuarios para la emisión de documentos y otras acciones asociadas al SII.
                 <?php else : ?>
                     El administrador principal de la empresa <strong><?=$Emisor->getNombre()?></strong> es el usuario <code><?=$Emisor->getUsuario()->usuario?></code>, lo recomendado es que la firma electrónica la suba ese usuario. Así todos los asociados a la empresa la podrán usar de manera centralizada y transparente en LibreDTE.
                 <?php endif; ?>

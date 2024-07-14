@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla registro_compra de la base de datos.
  */
-class Model_RegistroCompra extends \Model_App
+class Model_RegistroCompra extends \sowerphp\autoload\Model_App
 {
 
     // Datos para la conexión a la base de datos

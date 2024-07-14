@@ -27,7 +27,7 @@ namespace website\Dte;
  * Clase para el controlador asociado a la tabla dte_intercambio_resultado de la base de
  * datos.
  */
-class Controller_DteIntercambioResultados extends \Controller
+class Controller_DteIntercambioResultados extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -35,7 +35,12 @@ class Controller_DteIntercambioResultados extends \Controller
      */
     public function xml($responde, $codigo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener Resultado
         $DteIntercambioResultado = new Model_DteIntercambioResultado($responde, $Emisor->rut, $codigo);
         if (!$DteIntercambioResultado->exists()) {

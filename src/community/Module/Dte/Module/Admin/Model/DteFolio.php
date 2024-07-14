@@ -26,7 +26,7 @@ namespace website\Dte\Admin;
 /**
  * Clase para mapear la tabla dte_folio de la base de datos.
  */
-class Model_DteFolio extends \Model_App
+class Model_DteFolio extends \sowerphp\autoload\Model_App
 {
 
     // Datos para la conexión a la base de datos
@@ -301,7 +301,7 @@ class Model_DteFolio extends \Model_App
             throw new \Exception('No hay firma electrónica.');
         }
         // solicitar timbraje
-        $r = apigateway_consume(
+        $r = apigateway(
             '/sii/dte/caf/solicitar/'.$Emisor->getRUT().'/'.$this->dte.'/'.$cantidad.'?certificacion='.(int)$this->certificacion,
             [
                 'auth' => [

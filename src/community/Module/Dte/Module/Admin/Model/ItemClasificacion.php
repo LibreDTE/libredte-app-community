@@ -26,7 +26,7 @@ namespace website\Dte\Admin;
 /**
  * Clase para mapear la tabla item_clasificacion de la base de datos.
  */
-class Model_ItemClasificacion extends \Model_App
+class Model_ItemClasificacion extends \sowerphp\autoload\Model_App
 {
 
     // Datos para la conexión a la base de datos

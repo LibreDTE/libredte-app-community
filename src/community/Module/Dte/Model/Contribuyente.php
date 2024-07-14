@@ -26,7 +26,6 @@ namespace website\Dte;
 use \sowerphp\core\Network_Email;
 use \sowerphp\core\Network_Email_Imap;
 use \sowerphp\core\Network_Http_Rest;
-use \sowerphp\core\Trigger;
 use \sowerphp\core\Utility_Array;
 use \sowerphp\app\Utility_Apps;
 use \sowerphp\app\Utility_Rut;
@@ -44,7 +43,7 @@ use \website\Sistema\General\Model_ActividadEconomica;
 /**
  * Clase para mapear la tabla contribuyente de la base de datos.
  */
-class Model_Contribuyente extends \Model_App
+class Model_Contribuyente extends \sowerphp\autoload\Model_App
 {
 
     // Datos para la conexión a la base de datos
@@ -258,7 +257,7 @@ class Model_Contribuyente extends \Model_App
         }
         try {
             $url = '/sii/contribuyentes/situacion_tributaria/tercero/' . $this->rut . '-' . $this->dv;
-            $response = apigateway_consume($url);
+            $response = apigateway($url);
             if ($response['status']['code'] == 200) {
                 $info = $response['body'];
                 if (empty($this->razon_social) && !empty($info['razon_social'])) {
@@ -1860,16 +1859,19 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que crea el objeto para enviar correo.
-     * @param email Email que se quiere obtener: intercambio o sii.
+     *
+     * @param string $email Email que se quiere obtener: intercambio o sii.
      * @return Network_Email
      */
-    public function getEmailSender(string $email = 'intercambio', bool $debug = false): Network_Email
+    public function getEmailSender(
+        string $email = 'intercambio',
+        bool $debug = false
+    ): Network_Email
     {
-        $Sender = Trigger::run(
+        $Sender = event(
             'dte_contribuyente_email_sender',
-            $this,
-            $email,
-            ['debug' => $debug]
+            [$this, $email, ['debug' => $debug]],
+            true
         );
         if ($Sender) {
             return $Sender;
@@ -1879,15 +1881,18 @@ class Model_Contribuyente extends \Model_App
 
     /**
      * Método que crea el objeto para recibir correo.
-     * @param email Email que se quiere obtener: intercambio o sii.
+     *
+     * @param string $email Email que se quiere obtener: intercambio o sii.
      * @return Network_Email_Imap
      */
-    public function getEmailReceiver(string $email = 'intercambio'): Network_Email_Imap
+    public function getEmailReceiver(
+        string $email = 'intercambio'
+    ): Network_Email_Imap
     {
-        $Receiver = Trigger::run(
+        $Receiver = event(
             'dte_contribuyente_email_receiver',
-            $this,
-            $email
+            [$this, $email],
+            true
         );
         if ($Receiver) {
             return $Receiver;
@@ -3717,7 +3722,7 @@ class Model_Contribuyente extends \Model_App
     public function getClientes(array $filtros = []): array
     {
         // Si es edición enterprise se saca del CRM.
-        if (is_libredte_enterprise()) {
+        if (libredte()->isEnterpriseEdition()) {
             return (new \libredte\enterprise\Crm\Model_Clientes())
                 ->setContribuyente($this)
                 ->getListado($filtros)
@@ -4458,7 +4463,7 @@ class Model_Contribuyente extends \Model_App
                     $this->enCertificacion()
                 );
             }
-            $r = apigateway_consume($url, ['auth' => $auth]);
+            $r = apigateway($url, ['auth' => $auth]);
             if ($r['status']['code'] != 200) {
                 throw new \Exception('Error al obtener el resumen del RCV: '.$r['body']);
             }
@@ -4508,7 +4513,7 @@ class Model_Contribuyente extends \Model_App
                         $filtros['tipo']
                     );
                 }
-                $r = apigateway_consume($url, ['auth' => $auth]);
+                $r = apigateway($url, ['auth' => $auth]);
                 if ($r['status']['code'] != 200) {
                     throw new \Exception('Error al obtener el detalle del RCV: ' . $r['body']);
                 }

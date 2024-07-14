@@ -34,7 +34,7 @@ if (isset($solicitudes)) {
             <div class="card-body">
                 <i class="fa-solid fa-question-circle fa-fw text-warning mb-4"></i>
                 <strong>¿Puedo reobtener cualquier folio?</strong><br/>
-                Solo si la firma electrónica que el usuario <?=$_Auth->User->usuario?> puede utilizar es del usuario administrador de la empresa en SII. En caso contrario, podrá reobtener solo los folios que se hayan obtenido con la firma electrónica.
+                Solo si la firma electrónica que el usuario <?=$user->usuario?> puede utilizar es del usuario administrador de la empresa en SII. En caso contrario, podrá reobtener solo los folios que se hayan obtenido con la firma electrónica.
             </div>
         </div>
     </div>

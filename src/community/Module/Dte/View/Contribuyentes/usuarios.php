@@ -188,7 +188,7 @@ echo $f->end('Guardar sucursales por usuarios');
 <?php
 $usuarios = [['Usuario', 'Nombre', 'Correo', 'Último ingreso', 'Estado']];
 foreach (array_merge([$Contribuyente->getUsuario()->usuario=>null], $Contribuyente->getUsuarios()) as $u => $p) {
-    $Usuario = new $_Auth->settings['model']($u);
+    $Usuario = new \sowerphp\app\Sistema\Usuarios\Model_Usuario($u);
     $usuarios[] = [
         $Usuario->usuario,
         $Usuario->nombre,

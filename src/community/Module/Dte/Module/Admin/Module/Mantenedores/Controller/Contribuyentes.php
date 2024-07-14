@@ -26,10 +26,9 @@ namespace website\Dte\Admin\Mantenedores;
 /**
  * Controlador para las acciones de administración de los contribuyentes.
  */
-class Controller_Contribuyentes extends \Controller_Maintainer
+class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
 {
 
-    protected $namespace = 'website\Dte'; ///< Namespace del controlador y modelos asociados
     protected $columnsView = [
         'listar' => ['rut', 'razon_social', 'telefono', 'email', 'comuna', 'usuario']
     ]; ///< Columnas que se deben mostrar en las vistas

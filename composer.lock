@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d09373d2985a6db3ac8b29233ef50dd2",
+    "content-hash": "edef0e48a00f4a709bbb5da6839f5d69",
     "packages": [
         {
             "name": "apigatewaycl/apigateway-api-client",
@@ -196,16 +196,16 @@
         },
         {
             "name": "dflydev/dot-access-data",
-            "version": "v3.0.2",
+            "version": "v3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dflydev/dflydev-dot-access-data.git",
-                "reference": "f41715465d65213d644d3141a6a93081be5d3549"
+                "reference": "a23a2bf4f31d3518f3ecb38660c95715dfead60f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dflydev/dflydev-dot-access-data/zipball/f41715465d65213d644d3141a6a93081be5d3549",
-                "reference": "f41715465d65213d644d3141a6a93081be5d3549",
+                "url": "https://api.github.com/repos/dflydev/dflydev-dot-access-data/zipball/a23a2bf4f31d3518f3ecb38660c95715dfead60f",
+                "reference": "a23a2bf4f31d3518f3ecb38660c95715dfead60f",
                 "shasum": ""
             },
             "require": {
@@ -265,9 +265,9 @@
             ],
             "support": {
                 "issues": "https://github.com/dflydev/dflydev-dot-access-data/issues",
-                "source": "https://github.com/dflydev/dflydev-dot-access-data/tree/v3.0.2"
+                "source": "https://github.com/dflydev/dflydev-dot-access-data/tree/v3.0.3"
             },
-            "time": "2022-10-27T11:44:00+00:00"
+            "time": "2024-07-08T12:26:09+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -4055,16 +4055,10 @@
         {
             "name": "sowerphp/sowerphp-framework",
             "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sascocl/sowerphp.git",
-                "reference": "ba18c21a5d14b1cd1607db13ce928f5772be01de"
-            },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sascocl/sowerphp/zipball/ba18c21a5d14b1cd1607db13ce928f5772be01de",
-                "reference": "ba18c21a5d14b1cd1607db13ce928f5772be01de",
-                "shasum": ""
+                "type": "path",
+                "url": "../sowerphp-framework",
+                "reference": "ba18c21a5d14b1cd1607db13ce928f5772be01de"
             },
             "require": {
                 "clue/graph": "~0.9.3",
@@ -4093,14 +4087,12 @@
                 "twig/twig": "^3.10",
                 "vlucas/phpdotenv": "^5.6.0"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "classmap": [
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AGPL-3.0+"
             ],
@@ -4120,7 +4112,9 @@
                 "issues": "https://github.com/sascocl/sowerphp/issues",
                 "source": "https://github.com/sascocl/sowerphp"
             },
-            "time": "2024-07-07T22:11:57+00:00"
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "swiftmailer/swiftmailer",

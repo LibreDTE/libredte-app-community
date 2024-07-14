@@ -23,10 +23,12 @@
 
 namespace website\Dte;
 
+use \sowerphp\core\Network_Request as Request;
+
 /**
  * Clase para todas las acciones asociadas a documentos (incluyendo API).
  */
-class Controller_Documentos extends \Controller
+class Controller_Documentos extends \sowerphp\autoload\Controller
 {
 
     private $IndTraslado = [
@@ -130,9 +132,9 @@ class Controller_Documentos extends \Controller
      * enviado al SII. Luego se debe usar la función generar de la API para
      * generar el DTE final y enviarlo al SII.
      */
-    public function _api_emitir_POST()
+    public function _api_emitir_POST(Request $request)
     {
-        extract($this->request->queries([
+        extract($request->getValidatedData([
             'formato' => 'json',
             'normalizar' => true,
             'links' => false,
@@ -380,11 +382,16 @@ class Controller_Documentos extends \Controller
                 }
             }
         }
-        // ejecutar trigger previo a procesar los datos del DTE para la emisión (ya sean normalizados o que se deban normalizar)
-        $dte_trigger = \sowerphp\core\Trigger::run('dte_datos_documento_pre_emision', $Emisor, $dte, (bool)$normalizar);
-        if ($dte_trigger) {
-            $dte = $dte_trigger;
-            unset($dte_trigger);
+        // Ejecutar evento previo a procesar los datos del DTE para la emisión
+        // (ya sean normalizados o que se deban normalizar).
+        $dte_event = event(
+            'dte_datos_documento_pre_emision',
+            [$Emisor, $dte, (bool)$normalizar],
+            true
+        );
+        if ($dte_event) {
+            $dte = $dte_event;
+            unset($dte_event);
         }
         // crear objeto Dte y documento temporal asignando valores
         $Dte = new \sasco\LibreDTE\Sii\Dte($dte, (bool)$normalizar);
@@ -393,9 +400,12 @@ class Controller_Documentos extends \Controller
         if ($datos_dte === false || $datos_json === false) {
             $this->Api->send('No fue posible recuperar los datos del DTE para guardarlos como JSON en el DTE temporal. '.implode('. ', \sasco\LibreDTE\Log::readAll()).'.', 507);
         }
-        // verificar los datos del DTE normalizado con trigger antes de emitir
+        // Verificar los datos del DTE normalizado con trigger antes de emitir.
         try {
-            \sowerphp\core\Trigger::run('dte_documento_normalizado', $Emisor, $datos_dte);
+            event(
+                'dte_documento_normalizado',
+                [$Emisor, $datos_dte]
+            );
         } catch (\Exception $e) {
             $this->Api->send($e->getMessage(), $e->getCode() >= 400 ? $e->getCode() : 400);
         }
@@ -456,13 +466,13 @@ class Controller_Documentos extends \Controller
             }
             $DteTmp->total = round($total);
         }
-        // guardar DTE temporal
+        // Guardar DTE temporal.
         try {
             if ($DteTmp->save()) {
-                // ejecutar trigger asociado a la emisión del DTE temporal
-                \sowerphp\core\Trigger::run('dte_documento_emitido', $DteTmp);
+                // Despachar evento asociado a la emisión del DTE temporal.
+                event('dte_documento_emitido', [$DteTmp]);
             } else {
-                $this->Api->send('No fue posible guardar el DTE temporal', 507);
+                $this->Api->send('No fue posible guardar el DTE temporal.', 507);
             }
         } catch (\Exception $e) {
             $this->Api->send('No fue posible guardar el DTE temporal: '.$e->getMessage(), 507);
@@ -494,7 +504,12 @@ class Controller_Documentos extends \Controller
      */
     public function emitir($referencia_dte = null, $referencia_folio = null, $dte_defecto = null, $referencia_codigo = '', $referencia_razon = '')
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // verificar que tenga a lo menos un tipo de DTE autorizado el usuario para emitir
         $tipos_dte_autorizados = $Emisor->getDocumentosAutorizados($this->Auth->User);
         if (empty($tipos_dte_autorizados)) {
@@ -639,7 +654,12 @@ class Controller_Documentos extends \Controller
      */
     public function previsualizacion()
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // si no se viene por POST redirigir
         if (!isset($_POST['submit'])) {
             \sowerphp\core\Facade_Session_Message::write(
@@ -1035,7 +1055,7 @@ class Controller_Documentos extends \Controller
      */
     public function _api_generar_POST()
     {
-        extract($this->request->queries([
+        extract($this->request->getValidatedData([
             'getXML' => false,
             'email' => false,
             'links' => false,
@@ -1113,7 +1133,13 @@ class Controller_Documentos extends \Controller
      */
     public function generar($receptor, $dte, $codigo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Generar documento real mediante servicio web.
         $response = $this->consume('/api/dte/documentos/generar', [
             'emisor' => $Emisor->rut,
             'receptor' => $receptor,
@@ -1205,7 +1231,13 @@ class Controller_Documentos extends \Controller
      */
     public function emitir_masivo()
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Variables para la vista.
         $this->set([
             'Emisor' => $Emisor,
             'codigos_referencias' => array_map(
@@ -1213,6 +1245,7 @@ class Controller_Documentos extends \Controller
                 (new \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos())->getList()
             ),
         ]);
+        // Procesar formulario.
         if (isset($_POST['submit'])) {
             if (empty($_FILES['archivo']) || $_FILES['archivo']['error']) {
                 \sowerphp\core\Facade_Session_Message::write('No fue posible subir el archivo con los documentos.', 'error');
@@ -1252,7 +1285,12 @@ class Controller_Documentos extends \Controller
      */
     public function buscar($q = null)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // definir parámetro de búsqueda
         $q = !empty($_GET['q']) ? $_GET['q'] : $q;
         if (!$q) {
@@ -1340,10 +1378,17 @@ class Controller_Documentos extends \Controller
      */
     public function buscar_masivo()
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Variables para la vista.
         $this->set([
             'Emisor' => $Emisor,
         ]);
+        // Procesar formulario.
         if (isset($_POST['submit'])) {
             if (empty($_FILES['archivo']) || $_FILES['archivo']['error']) {
                 \sowerphp\core\Facade_Session_Message::write('No fue posible subir el archivo con los documentos.', 'error');

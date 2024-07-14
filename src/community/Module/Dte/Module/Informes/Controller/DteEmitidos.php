@@ -28,7 +28,7 @@ use \website\Dte\Model_DteEmitidos;
 /**
  * Clase para informes de los documentos emitidos.
  */
-class Controller_DteEmitidos extends \Controller
+class Controller_DteEmitidos extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -36,7 +36,13 @@ class Controller_DteEmitidos extends \Controller
      */
     public function index()
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Variables para la vista.
         $desde = isset($_POST['desde']) ? $_POST['desde'] : date('Y-m-01');
         $hasta = isset($_POST['hasta']) ? $_POST['hasta'] : date('Y-m-d');
         $this->set([
@@ -44,6 +50,7 @@ class Controller_DteEmitidos extends \Controller
             'desde' => $desde,
             'hasta' => $hasta,
         ]);
+        // Procesar formulario.
         if (isset($_POST['submit'])) {
             $DteEmitidos = (new Model_DteEmitidos())->setContribuyente($Emisor);
             $emitidos_por_hora = $DteEmitidos->getPorHora($desde, $hasta);
@@ -67,10 +74,17 @@ class Controller_DteEmitidos extends \Controller
      */
     public function csv($desde, $hasta)
     {
-        extract($this->request->queries([
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Filtros.
+        extract($this->request->getValidatedData([
             'detalle' => false,
         ]));
-        $Emisor = $this->getContribuyente();
+        // Columnas.
         $cols = [
             'ID',
             'Documento',
@@ -139,6 +153,7 @@ class Controller_DteEmitidos extends \Controller
             $emitidos = $aux;
         }
         array_unshift($emitidos, $cols);
+        // Entregar CSV.
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($emitidos);
         $this->response->sendAndExit($csv, 'emitidos_'.$Emisor->rut.'_'.$desde.'_'.$hasta.'.csv');
     }
@@ -148,13 +163,18 @@ class Controller_DteEmitidos extends \Controller
      */
     public function estados($desde = null, $hasta = null)
     {
-        // si existen datos por post se redirecciona para usar siempre por get
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Si existen datos por POST se redirecciona para usar siempre por GET.
         if (isset($_POST['submit'])) {
             return redirect('/dte/informes/dte_emitidos/estados/'.$_POST['desde'].'/'.$_POST['hasta']);
         }
-        // obtener datos
-        $Emisor = $this->getContribuyente();
-        $this->set([
+        // Renderizar vista.
+        return $this->render(null, [
             'Emisor' => $Emisor,
             'desde' => $desde ? $desde : date('Y-m-01'),
             'hasta' => $hasta ? $hasta : date('Y-m-d'),
@@ -170,9 +190,15 @@ class Controller_DteEmitidos extends \Controller
      */
     public function estados_detalle($desde, $hasta, $estado = null)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Renderizar vista.
         $estado = urldecode($estado);
-        $this->set([
+        return $this->render(null, [
             'Emisor' => $Emisor,
             'desde' => $desde,
             'hasta' => $hasta,
@@ -188,13 +214,18 @@ class Controller_DteEmitidos extends \Controller
      */
     public function eventos($desde = null, $hasta = null)
     {
-        // si existen datos por post se redirecciona para usar siempre por get
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Si existen datos por POST se redirecciona para usar siempre por GET.
         if (isset($_POST['submit'])) {
             return redirect('/dte/informes/dte_emitidos/eventos/'.$_POST['desde'].'/'.$_POST['hasta']);
         }
-        // obtener datos
-        $Emisor = $this->getContribuyente();
-        $this->set([
+        // Renderizar vista.
+        return $this->render(null, [
             'Emisor' => $Emisor,
             'desde' => $desde ? $desde : date('Y-m-01'),
             'hasta' => $hasta ? $hasta : date('Y-m-d'),
@@ -210,9 +241,15 @@ class Controller_DteEmitidos extends \Controller
      */
     public function eventos_detalle($desde, $hasta, $evento = null)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Renderizar vista.
         $evento = urldecode($evento);
-        $this->set([
+        return $this->render(null, [
             'Emisor' => $Emisor,
             'desde' => $desde,
             'hasta' => $hasta,
@@ -229,8 +266,14 @@ class Controller_DteEmitidos extends \Controller
      */
     public function sin_enviar()
     {
-        $Emisor = $this->getContribuyente();
-        $this->set([
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Renderizar vista.
+        return $this->render(null, [
             'Emisor' => $Emisor,
             'documentos' => $Emisor->getDocumentosEmitidosSinEnviar(),
         ]);
@@ -241,12 +284,17 @@ class Controller_DteEmitidos extends \Controller
      */
     public function sin_intercambio($desde = null, $hasta = null)
     {
-        // si existen datos por post se redirecciona para usar siempre por get
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Si existen datos por POST se redirecciona para usar siempre por GET.
         if (isset($_POST['submit'])) {
             return redirect('/dte/informes/dte_emitidos/sin_intercambio/'.$_POST['desde'].'/'.$_POST['hasta']);
         }
-        // obtener datos
-        $Emisor = $this->getContribuyente();
+        // Obtener datos.
         $documentos = ($desde && $hasta)
             ? (new Model_DteEmitidos())
                 ->setContribuyente($Emisor)
@@ -254,10 +302,16 @@ class Controller_DteEmitidos extends \Controller
             : false
         ;
         if ($desde && $hasta && !$documentos) {
-            \sowerphp\core\Facade_Session_Message::write('No existen documentos pendientes de enviar en el rango de fechas consultado ('.\sowerphp\general\Utility_Date::format($desde).' al '.\sowerphp\general\Utility_Date::format($hasta).').', 'warning');
-            return redirect('/dte/informes/dte_emitidos/sin_intercambio');
+            return redirect('/dte/informes/dte_emitidos/sin_intercambio')
+                ->withWarning(__(
+                    'No existen documentos pendientes de enviar en el rango de fechas consultado (%s al %s).',
+                    \sowerphp\general\Utility_Date::format($desde),
+                    \sowerphp\general\Utility_Date::format($hasta)
+                ))
+            ;
         }
-        $this->set([
+        // Renderizar vista.
+        return $this->render(null, [
             'Emisor' => $Emisor,
             'desde' => $desde ? $desde : date('Y-m-01'),
             'hasta' => $hasta ? $hasta : date('Y-m-d'),
@@ -270,18 +324,26 @@ class Controller_DteEmitidos extends \Controller
      */
     public function intercambio($desde = null, $hasta = null)
     {
-        // si existen datos por post se redirecciona para usar siempre por get
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Si existen datos por POST se redirecciona para usar siempre por GET.
         if (isset($_POST['submit'])) {
             return redirect('/dte/informes/dte_emitidos/intercambio/'.$_POST['desde'].'/'.$_POST['hasta']);
         }
-        // obtener datos
-        $Emisor = $this->getContribuyente();
-        $this->set([
+        // Renderizar vista.
+        return $this->render(null, [
             'Emisor' => $Emisor,
             'desde' => $desde ? $desde : date('Y-m-01'),
             'hasta' => $hasta ? $hasta : date('Y-m-d'),
             'documentos' => ($desde && $hasta)
-                ? $Emisor->getDocumentosEmitidosResumenEstadoIntercambio($desde, $hasta)
+                ? $Emisor->getDocumentosEmitidosResumenEstadoIntercambio(
+                    $desde,
+                    $hasta
+                )
                 : false
             ,
         ]);
@@ -292,18 +354,26 @@ class Controller_DteEmitidos extends \Controller
      */
     public function intercambio_detalle($desde, $hasta, $recibo = null, $recepcion = null, $resultado = null)
     {
-        $Emisor = $this->getContribuyente();
-        $this->set([
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Renderizar vista.
+        return $this->render(null, [
             'Emisor' => $Emisor,
             'desde' => $desde,
             'hasta' => $hasta,
             'recibo' => $recibo ? 'si' : 'no',
             'recepcion' => $recepcion !== null
-                ? \sasco\LibreDTE\Sii\RespuestaEnvio::$estados['envio'][$recepcion] ?? $recepcion
+                ? \sasco\LibreDTE\Sii\RespuestaEnvio::$estados['envio'][$recepcion]
+                    ?? $recepcion
                 : null
             ,
             'resultado' => $resultado !== null
-                ? \sasco\LibreDTE\Sii\RespuestaEnvio::$estados['respuesta_documento'][$resultado] ?? $resultado
+                ? \sasco\LibreDTE\Sii\RespuestaEnvio::$estados['respuesta_documento'][$resultado]
+                    ?? $resultado
                 : null
             ,
             'documentos' => $Emisor->getDocumentosEmitidosEstadoIntercambio(
@@ -317,12 +387,17 @@ class Controller_DteEmitidos extends \Controller
      */
     public function boletas_sin_email($desde = null, $hasta = null)
     {
-        // si existen datos por post se redirecciona para usar siempre por get
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Si existen datos por POST se redirecciona para usar siempre por GET.
         if (isset($_POST['submit'])) {
             return redirect('/dte/informes/dte_emitidos/boletas_sin_email/'.$_POST['desde'].'/'.$_POST['hasta']);
         }
-        // obtener datos
-        $Emisor = $this->getContribuyente();
+        // Obtener datos.
         $documentos = ($desde && $hasta)
             ? (new Model_DteEmitidos())
                 ->setContribuyente($Emisor)
@@ -330,10 +405,16 @@ class Controller_DteEmitidos extends \Controller
             : false
         ;
         if ($desde && $hasta && !$documentos) {
-            \sowerphp\core\Facade_Session_Message::write('No existen boletas pendientes de enviar por email en el rango de fechas consultado ('.\sowerphp\general\Utility_Date::format($desde).' al '.\sowerphp\general\Utility_Date::format($hasta).')', 'warning');
-            return redirect('/dte/informes/dte_emitidos/boletas_sin_email');
+            return redirect('/dte/informes/dte_emitidos/boletas_sin_email')
+                ->withWarning(__(
+                    'No existen boletas pendientes de enviar por email en el rango de fechas consultado (%s al %s)',
+                    \sowerphp\general\Utility_Date::format($desde),
+                    \sowerphp\general\Utility_Date::format($hasta)
+                ))
+            ;
         }
-        $this->set([
+        // Renderizar vista.
+        return $this->render(null, [
             'Emisor' => $Emisor,
             'desde' => $desde ? $desde : date('Y-m-01'),
             'hasta' => $hasta ? $hasta : date('Y-m-d'),
@@ -346,11 +427,18 @@ class Controller_DteEmitidos extends \Controller
      */
     public function diario($periodo = null)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Variables para la vista.
         $this->set([
             'Emisor' => $Emisor,
             'tipos_dte' => $Emisor->getDocumentosAutorizados(),
         ]);
+        // Procesar formulario.
         if (isset($_POST['submit'])) {
             $this->set([
                 'dias' => $Emisor->getDocumentosEmitidosResumenDiario([

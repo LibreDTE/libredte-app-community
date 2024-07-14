@@ -26,7 +26,7 @@ namespace website\Dte\Informes;
 /**
  * Clase para informes de los documentos recibidos.
  */
-class Controller_DteRecibidos extends \Controller
+class Controller_DteRecibidos extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -34,7 +34,13 @@ class Controller_DteRecibidos extends \Controller
      */
     public function index()
     {
-        $Receptor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Variables para la vista.
         $desde = isset($_POST['desde']) ? $_POST['desde'] : date('Y-m-01');
         $hasta = isset($_POST['hasta']) ? $_POST['hasta'] : date('Y-m-d');
         $this->set([
@@ -42,6 +48,7 @@ class Controller_DteRecibidos extends \Controller
             'desde' => $desde,
             'hasta' => $hasta,
         ]);
+        // Procesar formulario.
         if (isset($_POST['submit'])) {
             $DteRecibidos = (new \website\Dte\Model_DteRecibidos())
                 ->setContribuyente($Receptor)
@@ -60,10 +67,17 @@ class Controller_DteRecibidos extends \Controller
      */
     public function csv($desde, $hasta)
     {
-        extract($this->request->queries([
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Filtros.
+        extract($this->request->getValidatedData([
             'detalle' => false,
         ]));
-        $Emisor = $this->getContribuyente();
+        // Columnas.
         $cols = [
             'ID',
             'Documento',
@@ -100,7 +114,7 @@ class Controller_DteRecibidos extends \Controller
         $cols[] = 'Saldo anterior';
         $cols[] = 'Valor a pagar';
         $aux = (new \website\Dte\Model_DteRecibidos())
-            ->setContribuyente($Emisor)
+            ->setContribuyente($Receptor)
             ->getDetalle($desde, $hasta, $detalle)
         ;
         if ($aux && $detalle) {
@@ -121,8 +135,9 @@ class Controller_DteRecibidos extends \Controller
             $recibidos = $aux;
         }
         array_unshift($recibidos, $cols);
+        // Entregar archivo CSV.
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($recibidos);
-        $this->response->sendAndExit($csv, 'recibidos_'.$Emisor->rut.'_'.$desde.'_'.$hasta.'.csv');
+        $this->response->sendAndExit($csv, 'recibidos_'.$Receptor->rut.'_'.$desde.'_'.$hasta.'.csv');
     }
 
     /**
@@ -130,7 +145,13 @@ class Controller_DteRecibidos extends \Controller
      */
     public function sin_xml()
     {
-        $Receptor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Variables para la vista.
         $desde = isset($_POST['desde']) ? $_POST['desde'] : date('Y-m-01');
         $hasta = isset($_POST['hasta']) ? $_POST['hasta'] : date('Y-m-d');
         $this->set([
@@ -138,6 +159,7 @@ class Controller_DteRecibidos extends \Controller
             'desde' => $desde,
             'hasta' => $hasta,
         ]);
+        // Procesar formulario.
         if (isset($_POST['submit'])) {
             $DteRecibidos = (new \website\Dte\Model_DteRecibidos())
                 ->setContribuyente($Receptor)

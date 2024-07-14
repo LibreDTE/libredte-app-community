@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla contribuyente_config de la base de datos.
  */
-class Model_ContribuyenteConfig extends \Model_App
+class Model_ContribuyenteConfig extends \sowerphp\autoload\Model_App
 {
 
     // Datos para la conexión a la base de datos

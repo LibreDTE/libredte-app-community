@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Controlador para acciones del SII.
  */
-class Controller_Sii extends \Controller
+class Controller_Sii extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -43,7 +43,7 @@ class Controller_Sii extends \Controller
             }
             $Firma = $Emisor->getFirma($this->Auth->User->id);
             $certificacion = $Emisor->enCertificacion();
-            $response = apigateway_consume(
+            $response = apigateway(
                 '/sii/dte/contribuyentes/datos/'.$Emisor->getRUT().'?formato=html&certificacion='.$certificacion,
                 [
                     'auth' => [
@@ -79,7 +79,7 @@ class Controller_Sii extends \Controller
                 die('No hay firma electrónica asociada al usuario.');
             }
             $certificacion = $Emisor->enCertificacion();
-            $response = apigateway_consume(
+            $response = apigateway(
                 '/sii/dte/contribuyentes/usuarios/'.$Emisor->getRUT().'?formato=html&certificacion='.$certificacion,
                 [
                     'auth' => [
@@ -103,12 +103,12 @@ class Controller_Sii extends \Controller
      */
     public function contribuyente_autorizado($rut)
     {
-        extract($this->request->queries([
+        extract($this->request->getValidatedData([
             'certificacion' => \sasco\LibreDTE\Sii::PRODUCCION,
         ]));
         // si existe el proveedor libredte se consulta al servicio web de LibreDTE oficial
         try {
-            $response = apigateway_consume(
+            $response = apigateway(
                 '/sii/dte/contribuyentes/autorizado/'.$rut.'?formato=html&certificacion='.$certificacion
             );
             $this->response->sendAndExit($response['body']);
@@ -126,7 +126,7 @@ class Controller_Sii extends \Controller
     {
         // si existe el proveedor libredte se consulta al servicio web de LibreDTE oficial
         try {
-            $response = apigateway_consume(
+            $response = apigateway(
                 '/sii/contribuyentes/situacion_tributaria/tercero/'.$rut.'?formato=html'
             );
             $this->response->sendAndExit($response['body']);
@@ -142,15 +142,20 @@ class Controller_Sii extends \Controller
      */
     public function estado_envio($track_id)
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // si existe el proveedor libredte se consulta al servicio web de LibreDTE oficial
         try {
-            $Emisor = $this->getContribuyente();
             $Firma = $Emisor->getFirma($this->Auth->User->id);
             if (!$Firma) {
                 die('No hay firma electrónica asociada al usuario.');
             }
             $certificacion = $Emisor->enCertificacion();
-            $response = apigateway_consume(
+            $response = apigateway(
                 '/sii/dte/emitidos/estado_envio/'.$Emisor->getRUT().'/'.$track_id.'?certificacion='.$certificacion.'&formato=html',
                 [
                     'auth' => [
@@ -165,7 +170,10 @@ class Controller_Sii extends \Controller
         }
         // se crea enlace directo al SII
         catch (\Exception $e) {
-            $this->query('QEstadoEnvio2', ['TrackId' => $track_id, 'NPagina' => 1]);
+            return $this->query(
+                'QEstadoEnvio2',
+                ['TrackId' => $track_id, 'NPagina' => 1]
+            );
         }
     }
 
@@ -176,7 +184,7 @@ class Controller_Sii extends \Controller
     {
         list($receptor_rut, $receptor_dv) = explode('-', $receptor);
         list($emisor_rut, $emisor_dv) = $emisor ? explode('-', $emisor) : [null, null];
-        $this->query('QEstadoDTE', [
+        return $this->query('QEstadoDTE', [
             'rutReceiver' => str_replace('.', '', $receptor_rut),
             'dvReceiver' => $receptor_dv,
             'tipoDTE' => $dte,
@@ -193,13 +201,18 @@ class Controller_Sii extends \Controller
      */
     private function query($query, $params)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener firma.
         $Firma = $Emisor->getFirma($this->Auth->User->id);
         if (!$Firma) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No existe firma asociada.', 'error'
+            return redirect('/dte/dte_emitidos/listar')->withError(
+                'No existe firma asociada.'
             );
-            return redirect('/dte/dte_emitidos/listar');
         }
         list($rutQuery, $dvQuery) = explode('-', $Firma->getId());
         $servidor = \sasco\LibreDTE\Sii::getServidor();
@@ -212,9 +225,10 @@ class Controller_Sii extends \Controller
             $url .= '&amp;'.$k.'='.$v;
         }
         // renderizar vista
-        $this->set(['url' => $url]);
         $this->layout = null;
-        return $this->render('Sii/query');
+        return $this->render('Sii/query', [
+            'url' => $url,
+        ]);
     }
 
     /**
@@ -222,8 +236,13 @@ class Controller_Sii extends \Controller
      */
     public function dte_rcv($emisor, $dte, $folio)
     {
-        list($emisor_rut, $emisor_dv) = explode('-', str_replace('.', '', $emisor));
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Buscar firma electrónica.
         $Firma = $Contribuyente->getFirma($this->Auth->User->id);
         if (!$Firma) {
             \sowerphp\core\Facade_Session_Message::write(
@@ -231,12 +250,15 @@ class Controller_Sii extends \Controller
             );
             return redirect('/dte');
         }
+        // asignar variables para la vista.
+        list($emisor_rut, $emisor_dv) = explode('-', str_replace('.', '', $emisor));
         $this->layout .= '.min';
         $this->set([
             'Emisor' => new \website\Dte\Model_Contribuyente($emisor_rut),
             'DteTipo' => new \website\Dte\Admin\Mantenedores\Model_DteTipo($dte),
             'folio' => $folio,
         ]);
+        // Buscar eventos en el SII.
         try {
             $RCV = new \sasco\LibreDTE\Sii\RegistroCompraVenta($Firma);
             $eventos = $RCV->listarEventosHistDoc($emisor_rut, $emisor_dv, $dte, $folio);
@@ -248,8 +270,9 @@ class Controller_Sii extends \Controller
                 'fecha_recepcion' => $fecha_recepcion !== false ? $fecha_recepcion : null,
             ]);
         } catch (\Exception $e) {
-            $this->set(['error' => $e->getMessage()]);
-            return $this->render('Sii/dte_rcv_error');
+            return $this->render('Sii/dte_rcv_error', [
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 
@@ -258,15 +281,20 @@ class Controller_Sii extends \Controller
      */
     public function cesion_estado_envio($track_id)
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // si existe el proveedor libredte se consulta al servicio web de LibreDTE oficial
         try {
-            $Emisor = $this->getContribuyente();
             $Firma = $Emisor->getFirma($this->Auth->User->id);
             if (!$Firma) {
                 die('No hay firma electrónica asociada al usuario.');
             }
             $certificacion = $Emisor->enCertificacion();
-            $response = apigateway_consume(
+            $response = apigateway(
                 '/sii/rtc/cesiones/estado_envio/'.$track_id.'?certificacion='.$certificacion.'&formato=html',
                 [
                     'auth' => [
@@ -290,15 +318,20 @@ class Controller_Sii extends \Controller
      */
     public function cesion_certificado($dte, $folio, $fecha)
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // si existe el proveedor libredte se consulta al servicio web de LibreDTE oficial
         try {
-            $Emisor = $this->getContribuyente();
             $Firma = $Emisor->getFirma($this->Auth->User->id);
             if (!$Firma) {
                 die('No hay firma electrónica asociada al usuario.');
             }
             $certificacion = $Emisor->enCertificacion();
-            $response = apigateway_consume(
+            $response = apigateway(
                 '/sii/rtc/cesiones/certificado/'.$Emisor->getRUT().'/'.$dte.'/'.$folio.'/'.$fecha.'?certificacion='.$certificacion,
                 [
                     'auth' => [

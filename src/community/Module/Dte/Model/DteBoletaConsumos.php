@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla dte_boleta_consumo de la base de datos.
  */
-class Model_DteBoletaConsumos extends \Model_Plural_App
+class Model_DteBoletaConsumos extends \sowerphp\autoload\Model_Plural_App
 {
 
     // Datos para la conexión a la base de datos

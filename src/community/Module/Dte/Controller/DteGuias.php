@@ -42,7 +42,13 @@ class Controller_DteGuias extends Controller_Base_Libros
      */
     public function enviar_sii($periodo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener librio de guías.
         $DteGuia = new Model_DteGuia($Emisor->rut, $periodo, $Emisor->enCertificacion());
         // si el periodo es mayor o igual al actual no se puede enviar
         if ($periodo >= date('Ym')) {
@@ -126,7 +132,12 @@ class Controller_DteGuias extends Controller_Base_Libros
      */
     public function facturar()
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // buscar guías a facturar
         if (!empty($_POST['desde']) && !empty($_POST['hasta'])) {
             $this->set([

@@ -26,7 +26,7 @@ namespace website\Dte\Informes;
 /**
  * Clase para informes de las compras.
  */
-class Controller_Compras extends \Controller
+class Controller_Compras extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -34,12 +34,19 @@ class Controller_Compras extends \Controller
      */
     public function activos_fijos()
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Variables para la vista.
         $this->set([
             'Emisor' => $Emisor,
             'periodo' => !empty($_POST['periodo']) ? $_POST['periodo'] : date('Y'),
             'sucursales' => $Emisor->getSucursales(),
         ]);
+        // Procesar formulario.
         if (!empty($_POST['periodo'])) {
             $this->set([
                 'compras' => (new \website\Dte\Model_DteRecibidos())
@@ -55,12 +62,19 @@ class Controller_Compras extends \Controller
      */
     public function supermercado()
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Variables para la vista.
         $this->set([
             'Emisor' => $Emisor,
             'periodo' => !empty($_POST['periodo']) ? $_POST['periodo'] : date('Y'),
             'sucursales' => $Emisor->getSucursales(),
         ]);
+        // Procesar formulario.
         if (!empty($_POST['periodo'])) {
             $this->set([
                 'compras' => (new \website\Dte\Model_DteRecibidos())

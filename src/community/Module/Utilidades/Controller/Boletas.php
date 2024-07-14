@@ -26,7 +26,7 @@ namespace website\Utilidades;
 /**
  * Controlador para utilidades asociadas a boletas electrónicas.
  */
-class Controller_Boletas extends \Controller
+class Controller_Boletas extends \sowerphp\autoload\Controller
 {
 
     /**

@@ -26,15 +26,15 @@ namespace website\Dte;
 /**
  * Controlador de dte emitidos.
  */
-class Controller_DteEmitidos extends \Controller
+class Controller_DteEmitidos extends \sowerphp\autoload\Controller
 {
 
     /**
-     * Método para permitir acciones sin estar autenticado.
+     * Inicialización del controlador.
      */
     public function boot(): void
     {
-        $this->Auth->allow('pdf', 'xml', 'consultar');
+        app('auth')->allowActionsWithoutLogin('pdf', 'xml', 'consultar');
         parent::boot();
     }
 
@@ -43,10 +43,16 @@ class Controller_DteEmitidos extends \Controller
      */
     public function listar($pagina = 1)
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Procesar.
         if (!is_numeric($pagina)) {
             return redirect('/dte/'.$this->request->getRouteConfig()['controller'].'/listar');
         }
-        $Emisor = $this->getContribuyente();
         $filtros = [];
         if (isset($_GET['search'])) {
             foreach (explode(',', $_GET['search']) as $filtro) {
@@ -94,10 +100,16 @@ class Controller_DteEmitidos extends \Controller
      */
     public function eliminar($dte, $folio)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Eliminar mediante servicio web.
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($this->Auth->User->hash);
-        $response = $rest->get($this->request->getFullUrlWithoutQuery().'/api/dte/dte_emitidos/eliminar/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?_contribuyente_certificacion='.$Emisor->enCertificacion());
+        $response = $rest->get(url('/api/dte/dte_emitidos/eliminar/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?_contribuyente_certificacion='.$Emisor->enCertificacion()));
         if ($response === false) {
             \sowerphp\core\Facade_Session_Message::write(implode('<br/>', $rest->getErrors()), 'error');
         }
@@ -115,10 +127,16 @@ class Controller_DteEmitidos extends \Controller
      */
     public function eliminar_xml($dte, $folio)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Eliminar XML mediante servicio web.
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($this->Auth->User->hash);
-        $response = $rest->get($this->request->getFullUrlWithoutQuery().'/api/dte/dte_emitidos/eliminar_xml/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?_contribuyente_certificacion='.$Emisor->enCertificacion());
+        $response = $rest->get(url('/api/dte/dte_emitidos/eliminar_xml/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?_contribuyente_certificacion='.$Emisor->enCertificacion()));
         if ($response === false) {
             \sowerphp\core\Facade_Session_Message::write(implode('<br/>', $rest->getErrors()), 'error');
         }
@@ -136,7 +154,12 @@ class Controller_DteEmitidos extends \Controller
      */
     public function ver($dte, $folio)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener DTE emitido
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
@@ -178,10 +201,16 @@ class Controller_DteEmitidos extends \Controller
      */
     public function enviar_sii($dte, $folio, $retry = 1)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Enviar al SII mediante servicio web.
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($this->Auth->User->hash);
-        $response = $rest->get($this->request->getFullUrlWithoutQuery().'/api/dte/dte_emitidos/enviar_sii/'.$dte.'/'.$folio.'/'.$Emisor->rut.'/'.$retry.'?_contribuyente_certificacion='.$Emisor->enCertificacion());
+        $response = $rest->get(url('/api/dte/dte_emitidos/enviar_sii/'.$dte.'/'.$folio.'/'.$Emisor->rut.'/'.$retry.'?_contribuyente_certificacion='.$Emisor->enCertificacion()));
         if ($response === false) {
             \sowerphp\core\Facade_Session_Message::write(implode('<br/>', $rest->getErrors()), 'error');
         }
@@ -199,7 +228,12 @@ class Controller_DteEmitidos extends \Controller
      */
     public function solicitar_revision($dte, $folio)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener DTE emitido
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
@@ -236,13 +270,19 @@ class Controller_DteEmitidos extends \Controller
      */
     public function actualizar_estado($dte, $folio, $usarWebservice = null)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Actualizar estado mediante servicio web de LibreDTE.
         if ($usarWebservice === null) {
             $usarWebservice = $Emisor->config_sii_estado_dte_webservice;
         }
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($this->Auth->User->hash);
-        $response = $rest->get($this->request->getFullUrlWithoutQuery().'/api/dte/dte_emitidos/actualizar_estado/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?usarWebservice='.(int)$usarWebservice.'&_contribuyente_certificacion='.$Emisor->enCertificacion());
+        $response = $rest->get(url('/api/dte/dte_emitidos/actualizar_estado/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?usarWebservice='.(int)$usarWebservice.'&_contribuyente_certificacion='.$Emisor->enCertificacion()));
         $redirect = redirect()->back();
         if ($response === false) {
             $redirect->withError(implode('<br/>', $rest->getErrors()));
@@ -263,7 +303,12 @@ class Controller_DteEmitidos extends \Controller
     {
         // usar emisor de la sesión
         if (!$emisor) {
-            $Emisor = $this->getContribuyente();
+            // Obtener contribuyente que se está utilizando en la sesión.
+            try {
+                $Emisor = libredte()->getSessionContribuyente();
+            } catch (\Exception $e) {
+                return libredte()->redirectContribuyenteSeleccionar($e);
+            }
         }
         // usar emisor como parámetro
         else {
@@ -277,7 +322,7 @@ class Controller_DteEmitidos extends \Controller
             }
         }
         // datos por defecto y recibidos por GET
-        extract($this->request->queries([
+        extract($this->request->getValidatedData([
             'cedible' => isset($_POST['copias_cedibles'])
                 ? (int)(bool)$_POST['copias_cedibles']
                 : $cedible
@@ -357,7 +402,12 @@ class Controller_DteEmitidos extends \Controller
     {
         // usar emisor de la sesión
         if (!$emisor) {
-            $Emisor = $this->getContribuyente();
+            // Obtener contribuyente que se está utilizando en la sesión.
+            try {
+                $Emisor = libredte()->getSessionContribuyente();
+            } catch (\Exception $e) {
+                return libredte()->redirectContribuyenteSeleccionar($e);
+            }
         }
         // usar emisor como parámetro
         else {
@@ -407,7 +457,12 @@ class Controller_DteEmitidos extends \Controller
      */
     public function json($dte, $folio)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener DTE emitido
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
@@ -458,7 +513,7 @@ class Controller_DteEmitidos extends \Controller
             $this->Api->send('No existe el DTE solicitado.', 400);
         }
         // datos por defecto
-        $config = $this->request->queries([
+        $config = $this->request->getValidatedData([
             'base64' => false,
             'cedible' => $Emisor->config_pdf_dte_cedible,
             'compress' => false,
@@ -507,7 +562,12 @@ class Controller_DteEmitidos extends \Controller
      */
     public function email_html($dte, $folio)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener DTE emitido
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
@@ -530,6 +590,13 @@ class Controller_DteEmitidos extends \Controller
      */
     public function enviar_email($dte, $folio)
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Procesar formulario.
         if (isset($_POST['submit'])) {
             // armar emails a enviar
             $emails = [];
@@ -545,8 +612,7 @@ class Controller_DteEmitidos extends \Controller
                     )
                 );
             }
-            // enviar correo
-            $Emisor = $this->getContribuyente();
+            // enviar correo mediante servicio web.
             $response = $this->consume(
                 '/api/dte/dte_emitidos/enviar_email/' . $dte . '/' . $folio
                     . '/' . $Emisor->rut . '?_contribuyente_certificacion='
@@ -586,13 +652,19 @@ class Controller_DteEmitidos extends \Controller
      */
     public function ceder($dte, $folio)
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Validar que se venga de un formulario.
         if (!isset($_POST['submit'])) {
             \sowerphp\core\Facade_Session_Message::write(
                 'Debe enviar el formulario para poder realizar la cesión.', 'error'
             );
             return redirect(str_replace('ceder', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
         }
-        $Emisor = $this->getContribuyente();
         // obtener DTE emitido
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
@@ -676,7 +748,12 @@ class Controller_DteEmitidos extends \Controller
      */
     public function receder($dte, $folio)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener DTE emitido
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
@@ -775,13 +852,19 @@ class Controller_DteEmitidos extends \Controller
      */
     public function cesion_email($dte, $folio)
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Validar que se venga de un formulario.
         if (!isset($_POST['submit']) || empty($_POST['emails'])) {
             \sowerphp\core\Facade_Session_Message::write(
                 'Debe enviar el formulario para poder realizar en envío del a cesión.', 'error'
             );
             return redirect(str_replace('cesion_email', 'ver', $this->request->getRequestUriDecoded()).'#cesion');
         }
-        $Emisor = $this->getContribuyente();
         // obtener DTE emitido
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
@@ -824,7 +907,12 @@ class Controller_DteEmitidos extends \Controller
      */
     public function cesion_xml($dte, $folio)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener DTE emitido
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
@@ -854,7 +942,12 @@ class Controller_DteEmitidos extends \Controller
      */
     public function cesion_eliminar($dte, $folio)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener DTE emitido
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
@@ -891,7 +984,12 @@ class Controller_DteEmitidos extends \Controller
      */
     public function avanzado_iva_fuera_plazo($dte, $folio)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener DTE emitido
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
@@ -923,7 +1021,13 @@ class Controller_DteEmitidos extends \Controller
      */
     public function avanzado_anular($dte, $folio)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Marcar el DTE emitido como anulado mediante servicio web.
         $r = $this->consume('/api/dte/dte_emitidos/avanzado_anular/'.$dte.'/'.$folio.'/'.$Emisor->rut, $_POST);
         if ($r['status']['code'] != 200) {
             \sowerphp\core\Facade_Session_Message::write(
@@ -974,7 +1078,13 @@ class Controller_DteEmitidos extends \Controller
      */
     public function avanzado_sucursal($dte, $folio)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Cambio de sucursal mediante servicio web.
         $r = $this->consume('/api/dte/dte_emitidos/avanzado_sucursal/'.$dte.'/'.$folio.'/'.$Emisor->rut, $_POST);
         if ($r['status']['code'] != 200) {
             \sowerphp\core\Facade_Session_Message::write(
@@ -1022,7 +1132,12 @@ class Controller_DteEmitidos extends \Controller
      */
     public function avanzado_tipo_cambio($dte, $folio)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener DTE emitido
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
@@ -1064,7 +1179,13 @@ class Controller_DteEmitidos extends \Controller
      */
     public function avanzado_track_id($dte, $folio)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Cambiar track id mediante servicio web.
         $r = $this->consume(
             '/api/dte/dte_emitidos/avanzado_track_id/'.$dte.'/'.$folio.'/'.$Emisor->rut.'?certificacion='.(int)$Emisor->enCertificacion(),
             $_POST
@@ -1095,7 +1216,7 @@ class Controller_DteEmitidos extends \Controller
         }
         // obtener DTE
         $Emisor = new Model_Contribuyente($emisor);
-        extract($this->request->queries([
+        extract($this->request->getValidatedData([
             'certificacion' => $Emisor->enCertificacion(),
         ]));
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, (int)$certificacion);
@@ -1133,7 +1254,12 @@ class Controller_DteEmitidos extends \Controller
      */
     public function verificar_datos_avanzado($dte, $folio)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener DTE emitido
         $certificacion = (int)$Emisor->enCertificacion();
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $certificacion);
@@ -1159,12 +1285,18 @@ class Controller_DteEmitidos extends \Controller
      */
     public function cargar_xml()
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Procesar formulario.
         if (isset($_POST['submit']) && !$_FILES['xml']['error']) {
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($this->Auth->User->hash);
             $response = $rest->post(
-                $this->request->getFullUrlWithoutQuery().'/api/dte/dte_emitidos/cargar_xml?track_id='.(int)$_POST['track_id'].'&_contribuyente_certificacion='.$Emisor->enCertificacion(),
+                url('/api/dte/dte_emitidos/cargar_xml?track_id='.(int)$_POST['track_id'].'&_contribuyente_certificacion='.$Emisor->enCertificacion()),
                 json_encode(base64_encode(file_get_contents($_FILES['xml']['tmp_name'])))
             );
             if ($response === false) {
@@ -1186,12 +1318,19 @@ class Controller_DteEmitidos extends \Controller
      */
     public function buscar()
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Variables para la vista.
         $this->set([
             'Emisor' => $Emisor,
             'tipos_dte' => $Emisor->getDocumentosAutorizados(),
             'values_xml' => [],
         ]);
+        // Procesar formulario.
         if (isset($_POST['submit'])) {
             $_POST['xml'] = [];
             $values_xml = [];
@@ -1214,7 +1353,7 @@ class Controller_DteEmitidos extends \Controller
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($this->Auth->User->hash);
             $response = $rest->post(
-                $this->request->getFullUrlWithoutQuery().'/api/dte/dte_emitidos/buscar/'.$Emisor->rut.'?_contribuyente_certificacion='.$Emisor->enCertificacion(),
+                url('/api/dte/dte_emitidos/buscar/'.$Emisor->rut.'?_contribuyente_certificacion='.$Emisor->enCertificacion()),
                 $_POST
             );
             if ($response === false) {
@@ -1251,7 +1390,7 @@ class Controller_DteEmitidos extends \Controller
         if (!$DteEmitido->exists()) {
             $this->Api->send('No existe el documento solicitado T'.$dte.'F'.$folio.'.', 404);
         }
-        extract($this->request->queries([
+        extract($this->request->getValidatedData([
             'getXML' => false,
             'getDetalle' => false,
             'getDatosDte' => false,
@@ -1364,7 +1503,7 @@ class Controller_DteEmitidos extends \Controller
         }
         // datos por defecto
         $formatoPDF = $Emisor->getConfigPDF($DteEmitido);
-        $config = $this->request->queries([
+        $config = $this->request->getValidatedData([
             'formato' => $formatoPDF['formato'],
             'papelContinuo' => $formatoPDF['papelContinuo'],
             'base64' => false,
@@ -1442,7 +1581,7 @@ class Controller_DteEmitidos extends \Controller
      */
     public function _api_ted_GET($dte, $folio, $emisor)
     {
-        extract($this->request->queries(['formato' => 'png', 'ecl' => 5, 'size' => 1]));
+        extract($this->request->getValidatedData(['formato' => 'png', 'ecl' => 5, 'size' => 1]));
         $User = $this->Api->getAuthUser();
         if (is_string($User)) {
             $this->Api->send($User, 401);
@@ -1507,7 +1646,7 @@ class Controller_DteEmitidos extends \Controller
         if (!$Firma) {
             $this->Api->send('No existe firma asociada.', 506);
         }
-        extract($this->request->queries([
+        extract($this->request->getValidatedData([
             'avanzado' => false,
             'certificacion' => (int)$Emisor->enCertificacion(),
         ]));
@@ -1534,7 +1673,7 @@ class Controller_DteEmitidos extends \Controller
      */
     public function _api_actualizar_estado_GET($dte, $folio, $emisor)
     {
-        extract($this->request->queries(['usarWebservice' => true]));
+        extract($this->request->getValidatedData(['usarWebservice' => true]));
         // verificar permisos y crear DteEmitido
         $User = $this->Api->getAuthUser();
         if (is_string($User)) {
@@ -1938,7 +2077,7 @@ class Controller_DteEmitidos extends \Controller
      */
     public function _api_consultar_POST()
     {
-        extract($this->request->queries([
+        extract($this->request->getValidatedData([
             'getXML' => false,
         ]));
         // verificar si se pasaron credenciales de un usuario

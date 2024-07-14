@@ -26,7 +26,7 @@ namespace website;
 /**
  * Controlador para el proceso de certificación ante el SII.
  */
-class Controller_Certificacion extends \Controller
+class Controller_Certificacion extends \sowerphp\autoload\Controller
 {
 
     private $nav = [
@@ -53,11 +53,11 @@ class Controller_Certificacion extends \Controller
     ]; ///< Menú web del controlador
 
     /**
-     * Método para permitir acciones sin estar autenticado.
+     * Inicialización del controlador.
      */
     public function boot(): void
     {
-        $this->Auth->allow('index');
+        app('auth')->allowActionsWithoutLogin('index');
         parent::boot();
     }
 
@@ -502,7 +502,7 @@ class Controller_Certificacion extends \Controller
             'webVerificacion' => $_POST['web_verificacion'],
             'compress' => true,
         ];
-        $response = $rest->post($this->request->getFullUrlWithoutQuery().'/api/utilidades/documentos/generar_pdf', $data);
+        $response = $rest->post(url('/api/utilidades/documentos/generar_pdf'), $data);
         if ($response['status']['code'] != 200) {
             \sowerphp\core\Facade_Session_Message::write('No fue posible crear PDF boletas: '.$response['body'], 'error');
             return redirect('/certificacion/set_pruebas#boletas');
@@ -514,7 +514,7 @@ class Controller_Certificacion extends \Controller
                 'cedible' => true,
                 'compress' => true,
             ];
-            $response = $rest->post($this->request->getFullUrlWithoutQuery().'/api/utilidades/documentos/generar_pdf', $data);
+            $response = $rest->post(url('/api/utilidades/documentos/generar_pdf'), $data);
             if ($response['status']['code'] != 200) {
                 \sowerphp\core\Facade_Session_Message::write('No fue posible crear PDF notas de crédito: '.$response['body'], 'error');
                 return redirect('/certificacion/set_pruebas#boletas');

@@ -28,7 +28,7 @@ use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
 /**
  * Clase para mapear la tabla boleta_tercero de la base de datos.
  */
-class Model_BoletaTerceros extends \Model_Plural_App
+class Model_BoletaTerceros extends \sowerphp\autoload\Model_Plural_App
 {
 
     // Datos para la conexión a la base de datos
@@ -89,7 +89,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
      */
     public function getBoletas($periodo)
     {
-        $r = apigateway_consume('/sii/bte/emitidas/documentos/'.$this->getContribuyente()->getRUT().'/'.$periodo.'?formato=json', [
+        $r = apigateway('/sii/bte/emitidas/documentos/'.$this->getContribuyente()->getRUT().'/'.$periodo.'?formato=json', [
             'auth' => [
                 'pass' => [
                     'rut' => $this->getContribuyente()->getRUT(),
@@ -238,7 +238,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
             $Receptor->save();
         }
         // consumir servicio web y emitir boleta
-        $r = apigateway_consume('/sii/bte/emitidas/emitir', [
+        $r = apigateway('/sii/bte/emitidas/emitir', [
             'auth' => [
                 'pass' => [
                     'rut' => $this->getContribuyente()->getRUT(),

@@ -66,13 +66,13 @@ $(function() { __.tabs(); });
         <li class="nav-item"><a href="#datos" aria-controls="datos" role="tab" data-bs-toggle="tab" id="datos-tab" class="nav-link active" aria-selected="true">Datos básicos</a></li>
         <li class="nav-item"><a href="#pdf" aria-controls="pdf" role="tab" data-bs-toggle="tab" id="pdf-tab" class="nav-link">PDF</a></li>
         <li class="nav-item"><a href="#email" aria-controls="email" role="tab" data-bs-toggle="tab" id="email-tab" class="nav-link">Enviar por email</a></li>
-<?php if ($DteTmp->getTipo()->permiteCobro()): ?>
-        <li class="nav-item"><a href="#pagos" aria-controls="pagos" role="tab" data-bs-toggle="tab" id="pagos-tab" class="nav-link">Pagos</a></li>
-<?php endif; ?>
+        <?php if ($DteTmp->getTipo()->permiteCobro()): ?>
+            <li class="nav-item"><a href="#pagos" aria-controls="pagos" role="tab" data-bs-toggle="tab" id="pagos-tab" class="nav-link">Pagos</a></li>
+        <?php endif; ?>
         <li class="nav-item"><a href="#actualizar_fecha" aria-controls="actualizar_fecha" role="tab" data-bs-toggle="tab" id="actualizar_fecha-tab" class="nav-link">Actualizar fecha</a></li>
-<?php if ($Emisor->usuarioAutorizado($_Auth->User, 'admin')): ?>
-        <li class="nav-item"><a href="#avanzado" aria-controls="avanzado" role="tab" data-bs-toggle="tab" id="avanzado-tab" class="nav-link">Avanzado</a ></li>
-<?php endif; ?>
+        <?php if ($Emisor->usuarioAutorizado($user, 'admin')): ?>
+            <li class="nav-item"><a href="#avanzado" aria-controls="avanzado" role="tab" data-bs-toggle="tab" id="avanzado-tab" class="nav-link">Avanzado</a ></li>
+        <?php endif; ?>
     </ul>
     <div class="tab-content pt-4">
 
@@ -349,7 +349,7 @@ echo $f->end('Actualizar fecha');
 </div>
 <!-- FIN ACTUALIZAR FECHA -->
 
-<?php if ($Emisor->usuarioAutorizado($_Auth->User, 'admin')): ?>
+<?php if ($Emisor->usuarioAutorizado($user, 'admin')): ?>
 <!-- INICIO AVANZADO -->
 <div role="tabpanel" class="tab-pane" id="avanzado" aria-labelledby="avanzado-tab">
 <div class="card mt-4" id="avanzado_datos-documento-temporal-card">

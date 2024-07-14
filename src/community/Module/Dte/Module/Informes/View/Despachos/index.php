@@ -99,8 +99,8 @@ if (!$latitud || !$longitud) {
     $longitud = $despachos_mapa[0]['longitud'];
 }
 ?>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?=$google_api_key?>"></script>
-<script type="text/javascript">
+<script src="https://maps.googleapis.com/maps/api/js?key=<?=$google_api_key?>"></script>
+<script>
 $(function(){
     var mapOptions = {
         center: new google.maps.LatLng(<?=$latitud?>, <?=$longitud?>),

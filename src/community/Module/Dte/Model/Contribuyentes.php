@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla contribuyente de la base de datos.
  */
-class Model_Contribuyentes extends \Model_Plural_App
+class Model_Contribuyentes extends \sowerphp\autoload\Model_Plural_App
 {
 
     // Datos para la conexión a la base de datos

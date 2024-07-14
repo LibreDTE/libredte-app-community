@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla dte_recibido de la base de datos.
  */
-class Model_DteRecibidos extends \Model_Plural_App
+class Model_DteRecibidos extends \sowerphp\autoload\Model_Plural_App
 {
 
     // Datos para la conexión a la base de datos

@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla dte_emitido de la base de datos.
  */
-class Model_DteEmitidos extends \Model_Plural_App
+class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural_App
 {
 
     // Datos para la conexión a la base de datos

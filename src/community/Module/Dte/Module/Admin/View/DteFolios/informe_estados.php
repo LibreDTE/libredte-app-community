@@ -6,7 +6,7 @@
     </li>
 </ul>
 <div class="page-header"><h1>Generar informe de estados de los folios en SII </h1></div>
-<p>Aquí podrá solicitar vía correo electrónico, que será enviado a <?=$_Auth->User->email?>, un informe con los estados que el SII tiene registrado para los folios (recibidos, anulados o pendientes).</p>
+<p>Aquí podrá solicitar vía correo electrónico, que será enviado a <?=$user->email?>, un informe con los estados que el SII tiene registrado para los folios (recibidos, anulados o pendientes).</p>
 <div class="row">
     <div class="col-md-8">
         <?php

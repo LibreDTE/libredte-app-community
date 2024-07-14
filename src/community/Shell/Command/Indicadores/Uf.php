@@ -51,7 +51,7 @@ class Shell_Command_Indicadores_Uf extends \sowerphp\core\Shell_App
             $anio = date('Y');
         }
         $this->out('Obteniendo valor de la UF para el año '.$anio);
-        $response = apigateway_consume('/sii/indicadores/uf/anual/'.$anio);
+        $response = apigateway('/sii/indicadores/uf/anual/'.$anio);
         if ($response['status']['code'] != 200 || empty($response['body'])) {
             $msg = 'No fue posible obtener los valores de la UF para el año '.$anio;
             if ($response['body']) {

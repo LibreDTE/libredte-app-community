@@ -27,7 +27,7 @@ namespace website\Dte;
  * Clase para el controlador asociado a la tabla registro_compra de la base de
  * datos.
  */
-class Controller_RegistroCompras extends \Controller
+class Controller_RegistroCompras extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -40,12 +40,19 @@ class Controller_RegistroCompras extends \Controller
     }
 
     /**
-     * Acción para mostrar los documentos recibidos en SII con estado pendientes
-     * de procesar.
+     * Acción para mostrar los documentos recibidos en SII con estado
+     * pendientes de procesar.
      */
     public function pendientes()
     {
-        $filtros = array_merge($this->request->queries([
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Armar filtros.
+        $filtros = array_merge($this->request->getValidatedData([
             'emisor' => null,
             'fecha_desde' => null,
             'fecha_hasta' => null,
@@ -55,12 +62,13 @@ class Controller_RegistroCompras extends \Controller
             'total_desde' => null,
             'total_hasta' => null,
         ]), ['estado' => 0]); // forzar estado PENDIENTE
-        $Receptor = $this->getContribuyente();
+        // Buscar documentos.
         $documentos = (new Model_RegistroCompras())
             ->setContribuyente($Receptor)
             ->buscar($filtros)
         ;
-        $this->set([
+        // Renderizar vista.
+        return $this->render(null, [
             'Receptor' => $Receptor,
             'filtros' => $filtros,
             'documentos' => $documentos,
@@ -73,7 +81,14 @@ class Controller_RegistroCompras extends \Controller
      */
     public function csv()
     {
-        $filtros = array_merge($this->request->queries([
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Armar filtros.
+        $filtros = array_merge($this->request->getValidatedData([
             'emisor' => null,
             'fecha_desde' => null,
             'fecha_hasta' => null,
@@ -81,15 +96,17 @@ class Controller_RegistroCompras extends \Controller
             'total_desde' => null,
             'total_hasta' => null,
         ]), ['estado' => 0]); // forzar estado PENDIENTE
-        $Receptor = $this->getContribuyente();
+        // Buscar documentos.
         $documentos = (new Model_RegistroCompras())
             ->setContribuyente($Receptor)
             ->getDetalle($filtros)
         ;
         if (!$documentos) {
-            \sowerphp\core\Facade_Session_Message::write('No hay documentos recibidos en SII para la búsqueda realizada.');
-            return redirect('/dte/registro_compras');
+            return redirect('/dte/registro_compras')->withInfo(
+                'No hay documentos recibidos en SII para la búsqueda realizada.'
+            );
         }
+        // Entregar CSV.
         array_unshift($documentos, array_keys($documentos[0]));
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($documentos);
         $this->response->sendAndExit($csv, $Receptor->rut.'-'.$Receptor->dv.'_recibidos_'.date('YmdHis').'.csv');
@@ -100,15 +117,23 @@ class Controller_RegistroCompras extends \Controller
      */
     public function pendientes_resumen_csv()
     {
-        $Receptor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Buscar resumen.
         $resumen = (new Model_RegistroCompras())
             ->setContribuyente($Receptor)
             ->getResumenPendientes()
         ;
         if (!$resumen) {
-            \sowerphp\core\Facade_Session_Message::write('No hay documentos recibidos pendientes en SII.');
-            return redirect('/dte');
+            return redirect('/dte')->withInfo(
+                'No hay documentos recibidos pendientes en SII.'
+            );
         }
+        // Entregar archivo CSV.
         array_unshift($resumen, array_keys($resumen[0]));
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($resumen);
         $this->response->sendAndExit($csv, $Receptor->rut.'-'.$Receptor->dv.'_resumen_recibidos_pendientes_'.date('YmdHis').'.csv');
@@ -119,14 +144,22 @@ class Controller_RegistroCompras extends \Controller
      */
     public function buscar()
     {
-        $Receptor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Variables para la vista.
         $this->set([
             'Receptor' => $Receptor,
             'dte_tipos' => (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->getList(),
         ]);
+        // Procesar formulario.
         if (isset($_POST['submit'])) {
             unset($_POST['submit']);
-            $filtros = array_merge($_POST, ['estado' => 0]); // forzar estado PENDIENTE
+            // forzar estado PENDIENTE
+            $filtros = array_merge($_POST, ['estado' => 0]);
             // obtener PDF desde servicio web
             $r = $this->consume('/api/dte/registro_compras/buscar/'.$Receptor->rut, $filtros);
             if ($r['status']['code'] != 200) {
@@ -183,8 +216,15 @@ class Controller_RegistroCompras extends \Controller
      */
     public function actualizar($meses = 2)
     {
-        $estado = 'PENDIENTE'; // forzar estado PENDIENTE
-        $Receptor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Receptor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // forzar estado PENDIENTE
+        $estado = 'PENDIENTE';
+        // Realizar sincronización con SII.
         try {
             (new Model_RegistroCompras())
                 ->setContribuyente($Receptor)
@@ -203,8 +243,13 @@ class Controller_RegistroCompras extends \Controller
      */
     public function ingresar_accion($emisor, $dte, $folio)
     {
-        list($emisor_rut, $emisor_dv) = explode('-', str_replace('.', '', $emisor));
-        $Contribuyente = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Contribuyente = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Buscar firma electrónica.
         $Firma = $Contribuyente->getFirma($this->Auth->User->id);
         if (!$Firma) {
             \sowerphp\core\Facade_Session_Message::write(
@@ -220,6 +265,7 @@ class Controller_RegistroCompras extends \Controller
             return redirect($this->request->getRequestUriDecoded());
         }
         // procesar formulario (antes de asignar variables para que se refleje en la vista)
+        list($emisor_rut, $emisor_dv) = explode('-', str_replace('.', '', $emisor));
         if (isset($_POST['submit'])) {
             try {
                 $r = $RCV->ingresarAceptacionReclamoDoc($emisor_rut, $emisor_dv, $dte, $folio, $_POST['accion']);

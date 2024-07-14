@@ -27,7 +27,7 @@ namespace website\Dte;
  * Clase para el controlador asociado a la tabla dte_intercambio_recibo de la base de
  * datos.
  */
-class Controller_DteIntercambioRecibos extends \Controller
+class Controller_DteIntercambioRecibos extends \sowerphp\autoload\Controller
 {
 
     /**
@@ -35,7 +35,12 @@ class Controller_DteIntercambioRecibos extends \Controller
      */
     public function xml($responde, $codigo)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         // obtener Recibo
         $DteIntercambioRecibo = new Model_DteIntercambioRecibo($responde, $Emisor->rut, $codigo);
         if (!$DteIntercambioRecibo->exists()) {

@@ -26,7 +26,7 @@ namespace website\Utilidades;
 /**
  * Controlador para utilidades asociadas a la cesión electrónica (factoring).
  */
-class Controller_Factoring extends \Controller
+class Controller_Factoring extends \sowerphp\autoload\Controller
 {
 
     /**

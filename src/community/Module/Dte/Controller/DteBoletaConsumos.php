@@ -26,10 +26,9 @@ namespace website\Dte;
 /**
  * Clase para las acciones asociadas al libro de boletas electrónicas.
  */
-class Controller_DteBoletaConsumos extends \Controller_Maintainer
+class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
 {
 
-    protected $namespace = __NAMESPACE__; ///< Namespace del controlador y modelos asociados
     protected $columnsView = [
         'listar' => ['dia', 'secuencia', 'glosa', 'track_id', 'revision_estado', 'revision_detalle']
     ]; ///< Columnas que se deben mostrar en las vistas
@@ -41,7 +40,12 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
      */
     public function listar($page = 1, $orderby = null, $order = 'A')
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
         //$rcof_rechazados = (new Model_DteBoletaConsumos())->setContribuyente($Emisor)->getTotalRechazados();
         //$rcof_reparos_secuencia = (new Model_DteBoletaConsumos())->setContribuyente($Emisor)->getTotalReparosSecuencia();
         $this->set([
@@ -82,7 +86,13 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
      */
     public function xml($dia)
     {
-        $Emisor = $this->getContribuyente();
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener consumo de folios.
         $DteBoletaConsumo = new Model_DteBoletaConsumo($Emisor->rut, $dia, $Emisor->enCertificacion());
         $xml = $DteBoletaConsumo->getXML();
         if (!$xml) {
@@ -104,8 +114,14 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
      */
     public function enviar_sii($dia)
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Obtener consumo de folios.
         $filterListar = !empty($_GET['listar']) ? base64_decode($_GET['listar']) : '';
-        $Emisor = $this->getContribuyente();
         $DteBoletaConsumo = new Model_DteBoletaConsumo($Emisor->rut, $dia, $Emisor->enCertificacion());
         try {
             $track_id = $DteBoletaConsumo->enviar($this->Auth->User->id);
@@ -131,8 +147,14 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
      */
     public function actualizar_estado($dia, $usarWebservice = null)
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Definir filtros y forma de actualizar el estado.
         $filterListar = !empty($_GET['listar']) ? base64_decode($_GET['listar']) : '';
-        $Emisor = $this->getContribuyente();
         if ($usarWebservice === null) {
             $usarWebservice = $Emisor->config_sii_estado_dte_webservice;
         }
@@ -171,8 +193,14 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
      */
     public function solicitar_revision($dia)
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Filtros.
         $filterListar = !empty($_GET['listar']) ? base64_decode($_GET['listar']) : '';
-        $Emisor = $this->getContribuyente();
         // obtener reporte enviado
         $DteBoletaConsumo = new Model_DteBoletaConsumo($Emisor->rut, $dia, $Emisor->enCertificacion());
         if (!$DteBoletaConsumo->exists()) {
@@ -198,8 +226,14 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
      */
     public function eliminar($dia)
     {
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
+        }
+        // Filtros.
         $filterListar = !empty($_GET['listar']) ? base64_decode($_GET['listar']) : '';
-        $Emisor = $this->getContribuyente();
         // solo administrador pueden borrar el rcof
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
             \sowerphp\core\Facade_Session_Message::write('Solo el administrador de la empresa puede eliminar el RCOF.', 'error');
@@ -231,13 +265,25 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
      */
     public function pendientes()
     {
-        $Emisor = $this->getContribuyente();
-        $pendientes = (new Model_DteBoletaConsumos())->setContribuyente($Emisor)->getPendientes();
-        if (!$pendientes) {
-            \sowerphp\core\Facade_Session_Message::write('No existen días pendientes por enviar entre el primer día enviado y ayer.', 'ok');
-            return redirect('/dte/dte_boleta_consumos/listar/1/dia/D');
+        // Obtener contribuyente que se está utilizando en la sesión.
+        try {
+            $Emisor = libredte()->getSessionContribuyente();
+        } catch (\Exception $e) {
+            return libredte()->redirectContribuyenteSeleccionar($e);
         }
-        $this->set([
+        // Obtener consumos de folios pendientes.
+        $pendientes = (new Model_DteBoletaConsumos())
+            ->setContribuyente($Emisor)
+            ->getPendientes()
+        ;
+        if (!$pendientes) {
+            return redirect('/dte/dte_boleta_consumos/listar/1/dia/D')
+                ->withSuccess(
+                    'No existen días pendientes por enviar entre el primer día enviado y ayer.'
+                )
+            ;
+        }
+        return $this->render(null, [
             'Emisor' => $Emisor,
             'pendientes' => $pendientes,
         ]);

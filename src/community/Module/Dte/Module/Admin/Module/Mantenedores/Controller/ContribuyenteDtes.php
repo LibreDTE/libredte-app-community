@@ -27,9 +27,7 @@ namespace website\Dte\Admin\Mantenedores;
  * Clase para el controlador asociado a la tabla contribuyente_dte de la base de
  * datos.
  */
-class Controller_ContribuyenteDtes extends \Controller_Maintainer
+class Controller_ContribuyenteDtes extends \sowerphp\autoload\Controller_Model
 {
-
-    protected $namespace = __NAMESPACE__; ///< Namespace del controlador y modelos asociados
 
 }

@@ -26,7 +26,7 @@ namespace website\Honorarios;
 /**
  * Clase para mapear la tabla boleta_honorario de la base de datos.
  */
-class Model_BoletaHonorarios extends \Model_Plural_App
+class Model_BoletaHonorarios extends \sowerphp\autoload\Model_Plural_App
 {
 
     // Datos para la conexión a la base de datos
@@ -75,7 +75,7 @@ class Model_BoletaHonorarios extends \Model_Plural_App
      */
     public function getBoletas($periodo)
     {
-        $r = apigateway_consume('/sii/bhe/recibidas/documentos/'.$this->getContribuyente()->getRUT().'/'.$periodo.'?formato=json', [
+        $r = apigateway('/sii/bhe/recibidas/documentos/'.$this->getContribuyente()->getRUT().'/'.$periodo.'?formato=json', [
             'auth' => [
                 'pass' => [
                     'rut' => $this->getContribuyente()->getRUT(),
