@@ -169,8 +169,7 @@ class Controller_Dropbox extends \sowerphp\autoload\Controller
             $message = !empty($error['error_summary']) ? $error['error_summary'] : $e->getMessage();
             throw new \Exception('Error al obtener los datos de Dropbox: '.$message.'.');
         }
-        $this->layout .= '.min';
-        $this->set([
+        return $this->render(null, [
             'Contribuyente' => $Contribuyente,
             'account' => $account,
             'accountSpace' => $accountSpace,

@@ -100,7 +100,7 @@ class Controller_FirmaElectronicas extends \sowerphp\autoload\Controller
             $FirmaElectronica->emisor = $Firma->getIssuer();
             $FirmaElectronica->usuario = $this->Auth->User->id;
             $FirmaElectronica->archivo = base64_encode($data);
-            $FirmaElectronica->contrasenia = \website\Dte\Utility_Data::encrypt($_POST['contrasenia']);
+            $FirmaElectronica->contrasenia = encrypt($_POST['contrasenia']);
             try {
                 $FirmaElectronica->save();
                 \sowerphp\core\Facade_Session_Message::write(

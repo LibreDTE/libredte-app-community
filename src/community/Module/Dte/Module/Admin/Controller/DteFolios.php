@@ -714,7 +714,7 @@ class Controller_DteFolios extends \sowerphp\autoload\Controller
         if ($r['status']['code'] != 200) {
             die($r['body']);
         }
-        $this->layout = null;
+        // Renderizar la vista.
         return $this->render(null, [
             'Emisor' => $Emisor,
             'dte' => $dte,

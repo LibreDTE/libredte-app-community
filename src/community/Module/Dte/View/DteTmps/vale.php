@@ -1,3 +1,4 @@
+<?php $__view_layout .= '.min'; ?>
 <div class="text-center">
     <span class="lead">RUT <?=$DteTmp->getReceptor()->getRUT()?></span><br/>
     <span class="lead">Total $<?=num($DteTmp->total)?></span><br/><br/>

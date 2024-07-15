@@ -883,17 +883,17 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
         } catch (\Exception $e) {
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
-        // obtener documento temporal
+        // Obtener documento temporal.
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No existe el documento temporal solicitado.', 'error'
-            );
-            return redirect('/dte/dte_tmps/listar');
+            return redirect('/dte/dte_tmps/listar')->withError(__(
+                'No existe el documento temporal solicitado.'
+            ));
         }
-        // pasar datos a la vista
-        $this->layout .= '.min';
-        $this->set('DteTmp', $DteTmp);
+        // Renderizar la vista.
+        return $this->render(null, [
+            'DteTmp' => $DteTmp,
+        ]);
     }
 
     /**

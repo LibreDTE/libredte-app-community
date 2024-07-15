@@ -1,3 +1,4 @@
+<?php $__view_layout .= '.min'; ?>
 <div class="container">
     <div class="page-header"><h1>Verificación DTE recibido</h1></div>
     <div class="card mb-4">

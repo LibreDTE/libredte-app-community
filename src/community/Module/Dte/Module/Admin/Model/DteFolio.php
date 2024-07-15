@@ -214,7 +214,7 @@ class Model_DteFolio extends \sowerphp\autoload\Model_App
         ]);
         foreach ($cafs as &$caf) {
             try {
-                $xml = \website\Dte\Utility_Data::decrypt($caf['xml']);
+                $xml = decrypt($caf['xml']);
                 $Caf = new \sasco\LibreDTE\Sii\Folios($xml);
                 $caf['fecha_autorizacion'] = $Caf->getFechaAutorizacion();
                 $caf['fecha_vencimiento'] = $Caf->getFechaVencimiento();
@@ -258,7 +258,7 @@ class Model_DteFolio extends \sowerphp\autoload\Model_App
         if (!$caf) {
             return false;
         }
-        $caf = \website\Dte\Utility_Data::decrypt($caf);
+        $caf = decrypt($caf);
         if (!$caf) {
             return false;
         }
@@ -351,7 +351,7 @@ class Model_DteFolio extends \sowerphp\autoload\Model_App
             throw new \Exception('El archivo XML del CAF para el documento de tipo '.$DteCaf->dte.' que inicia en '.$Folios->getDesde().' en ambiente de '.$ambiente_caf.' ya estaba cargado en LibreDTE.');
         }
         $DteCaf->hasta = $Folios->getHasta();
-        $DteCaf->xml = \website\Dte\Utility_Data::encrypt($xml);
+        $DteCaf->xml = encrypt($xml);
         try {
             $DteCaf->save();
         } catch (\Exception $e) {

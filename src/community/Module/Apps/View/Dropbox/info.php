@@ -1,3 +1,4 @@
+<?php $__view_layout .= '.min'; ?>
 <div class="container">
     <div class="page-header"><h1>Estado Dropbox <small><?=$Contribuyente->getRUT()?></small></h1></div>
     <p>El contribuyente <?=$Contribuyente->getNombre()?> tiene conectada la cuenta de LibreDTE con una cuenta en Dropbox. Esto permitirá que se realicen respaldos automáticos de los datos de la empresa.</p>

@@ -216,8 +216,9 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
     /**
      * Método que permite modificar contribuyente previamente registrado.
      */
-    public function modificar()
+    public function modificar(Request $request)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Contribuyente = libredte()->getSessionContribuyente();
@@ -225,9 +226,10 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // verificar que el usuario sea el administrador o de soporte autorizado
-        if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            SessionMessage::write('Usted no es el administrador de la empresa solicitada.', 'error');
-            return redirect('/dte/contribuyentes/seleccionar');
+        if (!$Contribuyente->usuarioAutorizado($user, 'admin')) {
+            return redirect('/dte/contribuyentes/seleccionar')->withError(
+                'Usted no es el administrador de la empresa solicitada.'
+            );
         }
         // asignar variables para editar
         $ImpuestosAdicionales = new \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales();

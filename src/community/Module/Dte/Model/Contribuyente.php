@@ -317,7 +317,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
                     $class = get_called_class();
                     if (in_array($configuracion.'_'.$dato['variable'], $class::$encriptar)) {
                         try {
-                            $dato['valor'] = Utility_Data::decrypt($dato['valor']);
+                            $dato['valor'] = decrypt($dato['valor']);
                         } catch (\Exception $e) {
                             $dato['valor'] = null;
                         }
@@ -486,7 +486,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
                     }
                     $class = get_called_class();
                     if (in_array($configuracion.'_'.$variable, $class::$encriptar) && $valor !== null) {
-                        $valor = Utility_Data::encrypt($valor);
+                        $valor = encrypt($valor);
                     }
                     $Config->valor = $valor;
                     if ($valor !== null)
@@ -1149,7 +1149,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             $f['fecha_vencimiento'] = $f['meses_autorizacion'] = $f['vigente'] = null;
             if ($f['xml']) {
                 try {
-                    $caf = Utility_Data::decrypt($f['xml']);
+                    $caf = decrypt($f['xml']);
                 } catch (\Exception $e) {
                     $caf = null;
                 }
@@ -1317,7 +1317,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             }
             // obtener contraseña de la firma (que está encriptada)
             try {
-                $pass = Utility_Data::decrypt($datos['contrasenia']);
+                $pass = decrypt($datos['contrasenia']);
             } catch (\Exception $e) {
                 $pass = null;
             }

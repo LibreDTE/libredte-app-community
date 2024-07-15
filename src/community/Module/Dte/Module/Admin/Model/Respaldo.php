@@ -182,7 +182,7 @@ class Model_Respaldo
                 foreach ($datos as &$config) {
                     $key = $config['configuracion'].'_'.$config['variable'];
                     if (in_array($key, \website\Dte\Model_Contribuyente::$encriptar)) {
-                        $config['valor'] = \website\Dte\Utility_Data::decrypt($config['valor']);
+                        $config['valor'] = decrypt($config['valor']);
                     }
                 }
             }
@@ -190,7 +190,7 @@ class Model_Respaldo
             if (isset($info['encriptar'])) {
                 foreach ($datos as &$row) {
                     foreach ($info['encriptar'] as $col) {
-                        $row[$col] = trim(\website\Dte\Utility_Data::decrypt($row[$col]));
+                        $row[$col] = trim(decrypt($row[$col]));
                     }
                 }
             }

@@ -1,3 +1,4 @@
+<?php $__view_layout = null; ?>
 <?=$estado_web?>
 <hr/>
 <div style="text-align:center">

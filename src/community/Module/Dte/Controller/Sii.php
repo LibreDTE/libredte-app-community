@@ -23,6 +23,8 @@
 
 namespace website\Dte;
 
+use \sowerphp\core\Network_Request as Request;
+
 /**
  * Controlador para acciones del SII.
  */
@@ -224,8 +226,7 @@ class Controller_Sii extends \sowerphp\autoload\Controller
         foreach ($params as $k => $v) {
             $url .= '&amp;'.$k.'='.$v;
         }
-        // renderizar vista
-        $this->layout = null;
+        // Renderizar vista.
         return $this->render('Sii/query', [
             'url' => $url,
         ]);
@@ -234,8 +235,9 @@ class Controller_Sii extends \sowerphp\autoload\Controller
     /**
      * Método que muestra el estado de un DTE en el registro de compras y ventas.
      */
-    public function dte_rcv($emisor, $dte, $folio)
+    public function dte_rcv(Request $request, $emisor, $dte, $folio)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Contribuyente = libredte()->getSessionContribuyente();
@@ -243,7 +245,7 @@ class Controller_Sii extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Buscar firma electrónica.
-        $Firma = $Contribuyente->getFirma($this->Auth->User->id);
+        $Firma = $Contribuyente->getFirma($user->id);
         if (!$Firma) {
             \sowerphp\core\Facade_Session_Message::write(
                 'No existe firma asociada.', 'error'
@@ -252,7 +254,6 @@ class Controller_Sii extends \sowerphp\autoload\Controller
         }
         // asignar variables para la vista.
         list($emisor_rut, $emisor_dv) = explode('-', str_replace('.', '', $emisor));
-        $this->layout .= '.min';
         $this->set([
             'Emisor' => new \website\Dte\Model_Contribuyente($emisor_rut),
             'DteTipo' => new \website\Dte\Admin\Mantenedores\Model_DteTipo($dte),

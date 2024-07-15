@@ -185,14 +185,12 @@ class Controller_DteIntercambios extends \sowerphp\autoload\Controller
             $Emisor->rut, (int)$codigo, $Emisor->enCertificacion()
         );
         if (!$DteIntercambio->exists()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No existe el intercambio solicitado.', 'error'
-            );
-            return redirect('/dte/dte_intercambios/listar');
+            return redirect('/dte/dte_intercambios/listar')->withError(__(
+                'No existe el intercambio solicitado.'
+            ));
         }
-        $this->layout = null;
         $html = $DteIntercambio->getEmailHtml();
-        $this->set([
+        return $this->render(null, [
             'html' => $html ? $html : 'No hay mensaje HTML.',
         ]);
     }

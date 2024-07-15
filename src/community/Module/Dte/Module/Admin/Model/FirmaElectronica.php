@@ -160,7 +160,7 @@ class Model_FirmaElectronica extends \sowerphp\autoload\Model_App
      */
     public function getContraseniaPlainText()
     {
-        return  \website\Dte\Utility_Data::decrypt($this->contrasenia);
+        return decrypt($this->contrasenia);
     }
 
 }

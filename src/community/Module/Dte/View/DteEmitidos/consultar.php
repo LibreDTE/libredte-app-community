@@ -1,3 +1,4 @@
+<?php $__view_layout .= '.min'; ?>
 <?php $__view_title = 'Consultar Documento Emitido en LibreDTE'; ?>
 <div class="container">
     <div class="text-center mt-4 mb-4">

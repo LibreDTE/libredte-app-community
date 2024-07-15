@@ -589,7 +589,6 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
         if ($r['status']['code'] != 200) {
             die('Error al obtener el estado: '.$r['body']);
         }
-        $this->layout .= '.min';
         return $this->render(null, [
             'Emisor' => $DteRecibido->getEmisor(),
             'Receptor' => $Receptor,

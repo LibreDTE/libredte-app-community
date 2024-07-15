@@ -138,7 +138,7 @@ class Model_DteCaf extends \sowerphp\autoload\Model_App
             return false;
         }
         try {
-            $caf = \website\Dte\Utility_Data::decrypt($this->xml);
+            $caf = decrypt($this->xml);
         } catch (\Exception $e) {
             $caf = null;
         }

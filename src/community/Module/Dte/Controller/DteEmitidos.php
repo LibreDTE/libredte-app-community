@@ -1114,12 +1114,15 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
         $Emisor = new Model_Contribuyente($emisor);
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
         if (!$DteEmitido->exists()) {
-            $this->Api->send('No existe el DTE solicitado.', 404);
+            return response()->json('No existe el DTE solicitado.', 404);
         }
         // verificar que la sucursal exista
         $codigo_sucursal = $Emisor->getSucursal($this->Api->data['sucursal'])->codigo;
         if ($codigo_sucursal != $this->Api->data['sucursal']) {
-            $this->Api->send('No existe el código de sucursal solicitado.', 400);
+            return response()->json(
+                __('No existe el código de sucursal solicitado.'),
+                400
+            );
         }
         // cambiar estado anulado del documento
         $DteEmitido->sucursal_sii = (int)$this->Api->data['sucursal'];
@@ -1260,7 +1263,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
         } catch (\Exception $e) {
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
-        // obtener DTE emitido
+        // Obtener DTE emitido.
         $certificacion = (int)$Emisor->enCertificacion();
         $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $certificacion);
         if (!$DteEmitido->exists()) {
@@ -1270,8 +1273,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
         if ($r['status']['code'] != 200) {
             die('Error al obtener el estado: '.$r['body']);
         }
-        $this->layout .= '.min';
-        $this->set([
+        return $this->render(null, [
             'Emisor' => $Emisor,
             'Receptor' => $DteEmitido->getReceptor(),
             'DteTipo' => $DteEmitido->getTipo(),
@@ -2047,7 +2049,6 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             'dte' => isset($_POST['dte']) ? $_POST['dte'] : $dte,
             'language' => config('app.locale'),
         ]);
-        $this->layout .= '.min';
         // si se solicitó un documento se busca
         if (isset($_POST['emisor'])) {
             // validar captcha

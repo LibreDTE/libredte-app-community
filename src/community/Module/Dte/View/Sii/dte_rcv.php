@@ -1,3 +1,4 @@
+<?php $__view_layout .= '.min'; ?>
 <div class="container">
     <div class="page-header"><h1>Datos en el RCV del SII</h1></div>
     <ul>
