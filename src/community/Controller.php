@@ -38,10 +38,11 @@ abstract class Controller extends \sowerphp\core\Controller
         parent::boot();
         // Solo forzar que exista un contribuyente si la acción solicitada no
         // es de la API. Si es de la API, se validará en cada recurso.
-        $action = $this->request->getRouteConfig()['action'];
+        $request = request();
+        $action = $request->getRouteConfig()['action'];
         if ($action != 'api') {
-            $controller = $this->request->getRouteConfig()['controller'];
-            $module = $this->request->getRouteConfig()['module'];
+            $controller = $request->getRouteConfig()['controller'];
+            $module = $request->getRouteConfig()['module'];
             $isDteModule = (
                 strpos($module, 'Dte') === 0
                 && $controller != 'contribuyentes'
