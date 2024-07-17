@@ -92,13 +92,6 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                     <?php if (!$user) : ?>
                         <li class="nav-item"><a href="<?=$_base?>/usuarios/ingresar" class="nav-link"><span class="fas fa-sign-in-alt" aria-hidden="true"></span> Iniciar sesión</a></li>
                     <?php else : ?>
-                    <?php
-                    $Account = $user->getEmailAccount();
-                    if ($Account) {
-                        $emails = $Account->countUnreadMessages();
-                        echo '<li class="nav-item"><a href="'.$Account->getUserUrl().'" class="nav-link"><i class="far fa-envelope"></i> '.($emails?' <span class="badge bg-primary">'.num($emails).'</span>':'').'</a></li>',"\n";
-                    }
-                    ?>
                         <?php if ($Contribuyente) : ?>
                             <li class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" id="dropdown_contribuyente">

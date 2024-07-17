@@ -6,6 +6,8 @@
 #APP_URL="http://localhost:8000/libredte-community"
 
 # Clave de encriptación.
+# Formato clave: base64:KEY
+# Generador online: https://generate-random.org/laravel-key-generator
 APP_KEY=""
 
 # Configuración de base de datos (PostgreSQL).
@@ -31,11 +33,3 @@ MAIL_PASSWORD=""
 # Token de API Gateway para desbloquear funcionalidades extras.
 # Contrata un plan en: https://www.apigateway.cl
 SERVICES_APIGATEWAY_TOKEN=""
-
-# Configuración del servicio reCAPTCHA.
-#SERVICES_RECAPTCHA_PUBLIC_KEY=""
-#SERVICES_RECAPTCHA_PRIVATE_KEY=""
-
-# Configuración del servicio Dropbox.
-#SERVICES_DROPBOX_KEY=""
-#SERVICES_DROPBOX_SECRET=""

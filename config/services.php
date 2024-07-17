@@ -25,6 +25,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Configuración de LibreDTE
+    |--------------------------------------------------------------------------
+    |
+    | Configuraciones para el uso y administración del servicio de LibreDTE.
+    | Este servicio es útil, y necesario, porque provee mecanismos estándares
+    | y sencillos para acceder a funcionalidades globales de LibreDTE.
+    |
+    */
+    'libredte' => [
+        'class' => \website\Service_Libredte::class,
+        'contribuyente' => [
+            'model' => \website\Dte\Model_Contribuyente::class,
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Configuración de API Gateway
     |--------------------------------------------------------------------------
     |
@@ -33,6 +50,7 @@ return [
     |
     */
     'apigateway' => [
+        'class' => \website\Service_ApiGateway::class,
         'url' => env('SERVICES_APIGATEWAY_URL', 'https://apigateway.cl'),
         'token' => env('SERVICES_APIGATEWAY_TOKEN'),
         'mipyme' => [
