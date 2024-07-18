@@ -1,7 +1,7 @@
 <div class="page-header"><h1>Estadísticas <small>ambiente de <?=$certificacion?'certificación':'producción'?></small></h1></div>
 
 <?php
-echo View_Helper_Dashboard::cards([
+echo \sowerphp\app\View_Helper_Dashboard::cards([
     [
         'icon' => 'fa fa-users',
         'quantity' => $contribuyentes_sii,

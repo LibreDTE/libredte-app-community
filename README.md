@@ -12,11 +12,6 @@ Esta aplicación web utiliza como núcleo para el sistema de facturación la
 [Biblioteca de LibreDTE en PHP](https://github.com/LibreDTE/libredte-lib) y el
 [framework SowerPHP](https://www.sowerphp.org) para la plataforma web.
 
-Instalación
------------
-
-**Nota**: pendiente instalación con Docker.
-
 Términos y condiciones de uso
 -----------------------------
 
@@ -57,3 +52,23 @@ Si deseas contribuir con el proyecto, especialmente resolviendo alguna de las
 **IMPORTANTE**: antes de hacer un *pull request* verificar que el código
 cumpla con los estándares [PSR-1](http://www.php-fig.org/psr/psr-1)
 y [PSR-2](http://www.php-fig.org/psr/psr-2).
+
+Ambiente DEV o QA (no producción)
+---------------------------------
+
+### Instalación
+
+```shell
+mkdir -p $HOME/dev/www
+cd $HOME/dev/www
+git clone git@github.com:sascocl/sowerphp.git sowerphp-framework
+git clone git@github.com:LibreDTE/libredte-app-community.git libredte-community
+cd libredte-community
+composer install
+```
+
+### Ejecución de pruebas
+
+```shell
+XDEBUG_MODE=coverage ./vendor/bin/phpunit
+```

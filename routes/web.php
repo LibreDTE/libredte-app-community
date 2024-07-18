@@ -25,4 +25,4 @@
 $router = router();
 
 // Redireccionamientos.
-//$router->redirect('/dte', '/dte/dashboard');
+$router->redirect('/dte', '/dte/dashboard');

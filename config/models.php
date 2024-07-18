@@ -36,6 +36,7 @@ return [
     */
     'alias' => [
         'User' => '\sowerphp\app\Sistema\Usuarios\Model_Usuario',
+        'Contribuyente' => '\website\Dte\Model_Contribuyente',
         'DteEmitido' => '\website\Dte\Model_DteEmitido',
     ],
 

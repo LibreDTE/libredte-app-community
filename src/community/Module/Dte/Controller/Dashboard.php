@@ -23,6 +23,8 @@
 
 namespace website\Dte;
 
+use \sowerphp\core\Network_Request as Request;
+
 /**
  * Clase para el Dashboard del módulo de facturación.
  */
@@ -32,8 +34,9 @@ class Controller_Dashboard extends \sowerphp\autoload\Controller
     /**
      * Acción principal que muestra el dashboard.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -45,7 +48,7 @@ class Controller_Dashboard extends \sowerphp\autoload\Controller
         $periodo = !empty($_GET['periodo']) ? (int)$_GET['periodo'] : $periodo_actual;
         if (!\sowerphp\general\Utility_Date::validPeriod6($periodo)) {
             \sowerphp\core\Facade_Session_Message::write('Período ingresado no es válido.', 'error');
-            return redirect($this->request->getRequestUriDecoded());
+            return redirect($request->getRequestUriDecoded());
         }
         $periodo_anterior = \sowerphp\general\Utility_Date::previousPeriod($periodo);
         $periodo_siguiente = \sowerphp\general\Utility_Date::nextPeriod($periodo);
@@ -54,16 +57,34 @@ class Controller_Dashboard extends \sowerphp\autoload\Controller
         $n_temporales = $Emisor->countDocumentosTemporales();
         $n_emitidos = $Emisor->countVentas($periodo);
         $n_recibidos = $Emisor->countCompras($periodo);
-        $n_intercambios = (new Model_DteIntercambios())->setContribuyente($Emisor)->getTotalPendientes();
-        $documentos_rechazados = (new Model_DteEmitidos())->setContribuyente($Emisor)->getTotalRechazados();
-        $rcof_rechazados = (new Model_DteBoletaConsumos())->setContribuyente($Emisor)->getTotalRechazados();
-        $rcof_reparos_secuencia = (new Model_DteBoletaConsumos())->setContribuyente($Emisor)->getTotalReparosSecuencia();
+        $n_intercambios = (new Model_DteIntercambios())
+            ->setContribuyente($Emisor)
+            ->getTotalPendientes()
+        ;
+        $documentos_rechazados = (new Model_DteEmitidos())
+            ->setContribuyente($Emisor)
+            ->getTotalRechazados()
+        ;
+        $rcof_rechazados = (new Model_DteBoletaConsumos())
+            ->setContribuyente($Emisor)
+            ->getTotalRechazados()
+        ;
+        $rcof_reparos_secuencia = (new Model_DteBoletaConsumos())
+            ->setContribuyente($Emisor)
+            ->getTotalReparosSecuencia()
+        ;
         // valores para cuota
         $cuota = $Emisor->getCuota();
         $n_dtes = $Emisor->getTotalDocumentosUsadosPeriodo($periodo);
         // libros pendientes de enviar del período anterior
-        $libro_ventas_existe = (new Model_DteVentas())->setContribuyente($Emisor)->libroGenerado($periodo_anterior);
-        $libro_compras_existe = (new Model_DteCompras())->setContribuyente($Emisor)->libroGenerado($periodo_anterior);
+        $libro_ventas_existe = (new Model_DteVentas())
+            ->setContribuyente($Emisor)
+            ->libroGenerado($periodo_anterior)
+        ;
+        $libro_compras_existe = (new Model_DteCompras())
+            ->setContribuyente($Emisor)
+            ->libroGenerado($periodo_anterior)
+        ;
         // ventas
         $ventas_periodo_aux = $Emisor->getVentasPorTipo($periodo);
         $ventas_periodo = [];
@@ -130,10 +151,10 @@ class Controller_Dashboard extends \sowerphp\autoload\Controller
             $n_registro_compra_pendientes += $p['cantidad'];
         }
         // asignar variables a la vista
-        $this->set([
-            'nav' => array_slice(config('modules.Dte.nav'), 1),
+        return $this->render(null, [
+            'nav' => array_slice(config('nav.app.dte.menu'), 2),
             'Emisor' => $Emisor,
-            'Firma' => $Emisor->getFirma($this->Auth->User->id),
+            'Firma' => $Emisor->getFirma($user->id),
             'periodo_actual' => $periodo_actual,
             'periodo' => $periodo,
             'periodo_anterior' => $periodo_anterior,
@@ -146,7 +167,11 @@ class Controller_Dashboard extends \sowerphp\autoload\Controller
             'n_intercambios' => $n_intercambios,
             'libro_ventas_existe' => $libro_ventas_existe,
             'libro_compras_existe' => $libro_compras_existe,
-            'propuesta_f29' => ($libro_ventas_existe && $libro_compras_existe && (date('d') <= 20 || ($periodo < $periodo_actual))),
+            'propuesta_f29' => (
+                $libro_ventas_existe
+                && $libro_compras_existe
+                && (date('d') <= 20 || ($periodo < $periodo_actual))
+            ),
             'ventas_periodo' => $ventas_periodo,
             'compras_periodo' => $compras_periodo,
             'folios' => $folios,

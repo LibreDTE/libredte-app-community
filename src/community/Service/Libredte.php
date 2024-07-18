@@ -163,7 +163,7 @@ class Service_Libredte implements Interface_Service
             $rut = (int)(explode('-', str_replace('.', '', $rut))[0]);
         }
         // Instanciar contribuyente solicitado.
-        $contribuyente = new Model_Contribuyente($rut);
+        $contribuyente = model()->getContribuyente($rut);
         if (!$contribuyente->exists()) {
             return null;
         }

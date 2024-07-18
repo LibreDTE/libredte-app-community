@@ -4173,7 +4173,7 @@
             "dist": {
                 "type": "path",
                 "url": "../sowerphp-framework",
-                "reference": "1705f877eb1a876d44215a3bd07563edbe9ec314"
+                "reference": "4e5bfc77a2731f22b5818730946fe685fbbc66c1"
             },
             "require": {
                 "clue/graph": "~0.9.3",

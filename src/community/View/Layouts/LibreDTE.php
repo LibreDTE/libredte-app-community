@@ -1,4 +1,4 @@
-<?php $Contribuyente = session('dte.Contribuyente'); ?>
+<?php $Contribuyente = libredte()->getSessionContribuyente(false); ?>
 <!--
 LibreDTE: Edición Comunidad (2015 - 2024).
 Copyright (C) LibreDTE <https://www.libredte.cl>

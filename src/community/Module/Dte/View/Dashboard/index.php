@@ -24,7 +24,7 @@
 <div class="page-header"><h1><?=config('modules.Dte.title')?></h1></div>
 
 <?php
-echo View_Helper_Dashboard::cards([
+echo \sowerphp\app\View_Helper_Dashboard::cards([
     [
         'icon' => 'far fa-file',
         'quantity' => $n_temporales,
