@@ -1,0 +1,243 @@
+<!--
+LibreDTE: Edición Comunidad (2015 - 2024).
+Copyright (C) LibreDTE <https://www.libredte.cl>
+Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www.libredte.cl>
+¿Te gusta ver código? ¿Necesitas una integración? Revisa <https://www.billmysales.com>
+-->
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+        <meta name="author" content="LibreDTE" />
+        <meta name="description" content="LibreDTE Edición Comunidad." />
+        <meta name="keywords" content="facturas, boletas, sii, dte" />
+        <script>
+            var _url = "{{ _url }}",
+                _base = "{{ _base }}",
+                _request = "{{ _request }}";
+        </script>
+        <title>{% block title %}{{ __view_title }}{% endblock %}</title>
+        <link rel="shortcut icon" href="{{ _base }}/img/favicon.png" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.2.0/css/all.css">
+        <link href="https://fonts.googleapis.com/css?family=Oswald|Raleway" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ _base }}/css/style.css">
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+        <script src="https://cdn.libredte.cl/js/__.js"></script>
+        <script src="https://cdn.libredte.cl/js/form.js"></script>
+        <script src="https://cdn.libredte.cl/js/datepicker/bootstrap-datepicker.js"></script>
+        <script src="https://cdn.libredte.cl/js/datepicker/bootstrap-datepicker.es.js"></script>
+        <link rel="stylesheet" href="https://cdn.libredte.cl/js/datepicker/datepicker3.css" />
+        <link type="text/css" href="https://cdn.libredte.cl/css/typeahead.css" rel="stylesheet" />
+        <script src="https://cdn.libredte.cl/js/typeahead.bundle.js"></script>
+        <script src="{{ _base }}/js/app.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css" />
+        <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.0/bootbox.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/notyf/3.10.0/notyf.min.js" integrity="sha512-467grL09I/ffq86LVdwDzi86uaxuAhFZyjC99D6CC1vghMp1YAs+DqCgRvhEtZIKX+o9lR0F2bro6qniyeCMEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/notyf/3.10.0/notyf.min.css" integrity="sha512-ZX18S8AwqoIm9QCd1EYun82IryFikdJt7lxj6583zx5Rvr5HoreO9tWY6f2VhSxvK+48vYFSf4zFtX/t2ge62g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+        {{ __view_header }}
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg bg-light mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{{ _base }}/">{{ app.environment }}</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto">
+                    {% set dropdown_id_count = 1 %}
+                    {% for link, name in _nav_website %}
+                        {% set active = _page == link ? ' active' : '' %}
+                        {% if link|first == '/' %}
+                            {% set link = _base ~ link %}
+                        {% endif %}
+                        {% if name.nav is defined %}
+                            {% set dropdown_id = 'dropdown_' ~ dropdown_id_count %}
+                            {% set dropdown_id_count = dropdown_id_count + 1 %}
+                            {% set title = name.desc is defined ? name.desc : (name.title is defined ? name.title : '') %}
+                            {% set icon = name.icon is defined ? '<span class="' ~ name.icon ~ '"></span> ' : '' %}
+                            <li class="nav-item dropdown{{ active }}">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" id="{{ dropdown_id }}" title="{{ title }}">{{ icon|raw }}{{ name.name }}</a>
+                                <div class="dropdown-menu" aria-labelledby="{{ dropdown_id }}">
+                                    {% for l, n in name.nav %}
+                                        {% set l = l[0] == '/' ? link ~ l : l %}
+                                        <a href="{{ l }}" class="dropdown-item">{{ n }}</a>
+                                    {% endfor %}
+                                </div>
+                            </li>
+                        {% else %}
+                            {% if name is iterable %}
+                                {% set title = name.desc is defined ? name.desc : (name.title is defined ? name.title : '') %}
+                                {% set icon = name.icon is defined ? '<span class="' ~ name.icon ~ '"></span> ' : '' %}
+                                {% set name = name.name %}
+                            {% else %}
+                                {% set title = '' %}
+                                {% set icon = '' %}
+                            {% endif %}
+                            <li class="nav-item{{ active }}"><a href="{{ link }}" title="{{ title }}" class="nav-link">{{ icon|raw }}{{ name }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                <ul class="nav navbar-nav ms-auto">
+                    {% if not user %}
+                        <li class="nav-item">
+                            <a href="{{ _base }}/usuarios/ingresar" class="nav-link">
+                                <span class="fas fa-sign-in-alt" aria-hidden="true"></span> Iniciar sesión
+                            </a>
+                        </li>
+                    {% else %}
+                        {% if Contribuyente %}
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" id="dropdown_contribuyente">
+                                    <strong>{{ Contribuyente.getRUT() }}</strong>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown_contribuyente">
+                                    {% set n_links = 0 %}
+                                    {% for l in Contribuyente.getLinks() %}
+                                        {% if l.nombre == '-' %}
+                                            {% if n_links %}
+                                                <div class="dropdown-divider"></div>
+                                            {% endif %}
+                                            {% set n_links = 0 %}
+                                        {% else %}
+                                            {% if l.enlace[0] == '/' %}
+                                                {% if auth.checkResourcePermission(l.enlace) %}
+                                                    {% set n_links = n_links + 1 %}
+                                                    <a href="{{ _base ~ l.enlace }}" class="dropdown-item">
+                                                        <i class="{{ l.icono }} fa-fw"></i> {{ l.nombre }}
+                                                    </a>
+                                                {% endif %}
+                                            {% else %}
+                                                {% set n_links = n_links + 1 %}
+                                                <a href="{{ l.enlace }}" class="dropdown-item">
+                                                    <i class="{{ l.icono }} fa-fw"></i> {{ l.nombre }}
+                                                </a>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if Contribuyente.usuarioAutorizado(user, 'admin') %}
+                                        <div class="dropdown-divider"></div>
+                                        <a href="{{ _base }}/dte/contribuyentes/modificar" class="dropdown-item">
+                                            <i class="fas fa-edit fa-fw"></i> Configuración de la empresa
+                                        </a>
+                                        <a href="{{ _base }}/dte/contribuyentes/usuarios" class="dropdown-item">
+                                            <i class="fas fa-users fa-fw"></i> Usuarios de la empresa
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </li>
+                        {% endif %}                    
+                        <li class="dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside" aria-expanded="false" id="dropdown_menu">
+                                <strong>Menú</strong>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                                {% set anio = "now"|date("Y") %}
+                                {% set dia = "now"|date("Y-m-d") %}
+                                {% for module, nav in _nav_app %}
+                                    {% if auth.checkResourcePermission(nav.link) %}
+                                        {% if nav.menu is defined %}
+                                            <li class="dropstart">
+                                                <a type="button" class="dropdown-item" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <span class="{{ nav.icon }} fa-fw"></span> {{ nav.name }}
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-submenu dropdown-submenu-left">
+                                                    {% for link, menu in nav.menu %}
+                                                        {% set link = link|replace({'{anio}': anio, '{dia}': dia}) %}
+                                                        {% if auth.checkResourcePermission(nav.link ~ link) %}
+                                                            <li>
+                                                                <a href="{{ _base ~ nav.link ~ link }}" class="dropdown-item" title="{{ menu.desc is defined and menu.desc ? menu.desc : '' }}">
+                                                                    <i class="{{ menu.icon }} fa-fw"></i> {{ menu.name }}
+                                                                </a>
+                                                            </li>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                        {% else %}
+                                            <li>
+                                                <a href="{{ _base ~ nav.link }}" class="dropdown-item">
+                                                    <span class="{{ nav.icon }}"></span> {{ nav.name }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="dropdown-divider"></div>
+                                {% if user.inGroup('soporte') %}
+                                    <li>
+                                        <a class="dropdown-item" href="{{ _base }}/sistema">
+                                            <span class="fa fa-cogs fa-fw" aria-hidden="true"></span> Sistema
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                <li>
+                                    <a href="{{ _base }}/usuarios/perfil" class="dropdown-item">
+                                        <span class="fa fa-user fa-fw" aria-hidden="true"></span> Perfil de usuario
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ _base }}/usuarios/salir" class="dropdown-item">
+                                        <span class="fas fa-sign-out-alt fa-fw" aria-hidden="true"></span> Cerrar sesión
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        </nav>
+        <div class="container main-container">
+            <!-- BEGIN MAIN CONTENT -->
+            {% if Contribuyente and Contribuyente.enCertificacion() %}
+                <div class="bg-info text-white text-center lead mt-2 mb-2" style="padding:0.5em">
+                    <strong>AMBIENTE DE CERTIFICACIÓN / PRUEBAS: {{ Contribuyente.razon_social }}</strong>
+                </div>
+            {% endif %}
+            {{ session_messages() }}
+            {% block content %}{% endblock %}
+            <!-- END MAIN CONTENT -->
+            <div class="clearfix"></div>
+            <br/>
+        </div>
+        <footer class="footer d-print-none">
+            <div class="container">
+                <div class="float-start">
+                    &copy; {{ "now"|date("Y") }} LibreDTE -
+                    <a href="{{ _url }}/consultar" title="Consultar documentos (incluyendo boletas)">Consultar DTE</a><br/>
+                    <span class="small">
+                        Aplicación de facturación basada en <a href="https://www.libredte.cl">LibreDTE</a>
+                        que tiene como misión proveer facturación electrónica libre para Chile.
+                    </span>
+                </div>
+                <div class="float-end text-end">
+                    {# {% if auth is defined %}
+                        <?php
+                            if (isset($_Auth) && $_Auth->logged()) {
+                                echo '<span class="small">';
+                                echo 'time: ',round(microtime(true)-constant('TIME_START'), 2),' [s] - ';
+                                echo 'memory: ',round(memory_get_usage()/1024/1024,2),' [MiB] - ';
+                                echo 'queries: ',database()->getStats()['queries'],' - ';
+                                echo 'cache: ',round(cache()->getStats()['hitsRatio']*100,2),'%</span>',"\n";
+                            }
+                        ?>
+                    {% endif %} #}
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </footer>
+    </body>
+</html>
