@@ -138,7 +138,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                                     {% endif %}
                                 </div>
                             </li>
-                        {% endif %}                    
+                        {% endif %}
                         <li class="dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside" aria-expanded="false" id="dropdown_menu">
                                 <strong>Menú</strong>
@@ -224,17 +224,15 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                     </span>
                 </div>
                 <div class="float-end text-end">
-                    {# {% if auth is defined %}
-                        <?php
-                            if (isset($_Auth) && $_Auth->logged()) {
-                                echo '<span class="small">';
-                                echo 'time: ',round(microtime(true)-constant('TIME_START'), 2),' [s] - ';
-                                echo 'memory: ',round(memory_get_usage()/1024/1024,2),' [MiB] - ';
-                                echo 'queries: ',database()->getStats()['queries'],' - ';
-                                echo 'cache: ',round(cache()->getStats()['hitsRatio']*100,2),'%</span>',"\n";
-                            }
-                        ?>
-                    {% endif %} #}
+                    {% if user %}
+                        {% set stats = app_stats() %}
+                        <span class="small">
+                            time: {{ stats.time.duration }} [s] -
+                            memory: {{ stats.memory.used }} [MiB] -
+                            queries: {{ stats.database.queries }} -
+                            cache: {{ stats.cache.hitsPercentage }}%
+                        </span>
+                    {% endif %}
                 </div>
                 <div class="clearfix"></div>
             </div>

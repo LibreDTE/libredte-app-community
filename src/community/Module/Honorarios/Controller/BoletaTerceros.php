@@ -48,7 +48,7 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
             ->setContribuyente($Emisor)
             ->getPeriodos()
         ;
-        return $this->render([
+        return $this->render(null, [
             'periodos' => $periodos,
         ]);
     }

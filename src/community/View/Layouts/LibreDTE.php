@@ -207,15 +207,15 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                     </span>
                 </div>
                 <div class="float-end text-end">
-                <?php
-                    if ($user) {
-                        echo '<span class="small">';
-                        echo 'time: ',round(microtime(true)-TIME_START, 2),' [s] - ';
-                        echo 'memory: ',round(memory_get_usage()/1024/1024,2),' [MiB] - ';
-                        echo 'queries: ',database()->getStats()['queries'],' - ';
-                        echo 'cache: ',(cache()->getStats()['hitsRatio']*100),'%</span>',"\n";
-                    }
-                ?>
+                    <?php if ($user) : ?>
+                        <?php $stats = app()->getStats(); ?>
+                        <span class="small">
+                            time: <?=$stats['time']['duration']?> [s] -
+                            memory: <?=$stats['memory']['used']?> [MiB] -
+                            queries: <?=$stats['database']['queries']?> -
+                            cache: <?=$stats['cache']['hitsPercentage']?>%
+                        </span>
+                    <?php endif; ?>
                 </div>
                 <div class="clearfix"></div>
             </div>
