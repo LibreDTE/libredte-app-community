@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla cobranza de la base de datos.
  */
-class Model_Cobranzas extends \sowerphp\autoload\Model_Plural_App
+class Model_Cobranzas extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos
@@ -101,7 +101,7 @@ class Model_Cobranzas extends \sowerphp\autoload\Model_Plural_App
             $vars[':razon_social'] = '%'.$filtros['razon_social'].'%';
         }
         // realizar consulta
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 r.razon_social,
                 r.rut,
@@ -144,7 +144,7 @@ class Model_Cobranzas extends \sowerphp\autoload\Model_Plural_App
         if (!$dia) {
             $dia = date('Y-m-d');
         }
-        return $this->db->getTableWithAssociativeIndex('
+        return $this->getDatabaseConnection()->getTableWithAssociativeIndex('
             (
                 SELECT \'vencidos\' AS glosa, COUNT(*) AS cantidad
                 FROM cobranza

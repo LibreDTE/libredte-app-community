@@ -26,7 +26,7 @@ namespace website\Dte\Admin\Mantenedores;
 /**
  * Clase para mapear la tabla impuesto_adicional de la base de datos.
  */
-class Model_ImpuestoAdicionales extends \sowerphp\autoload\Model_Plural_App
+class Model_ImpuestoAdicionales extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos
@@ -38,7 +38,7 @@ class Model_ImpuestoAdicionales extends \sowerphp\autoload\Model_Plural_App
      */
     public function getList()
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT codigo, codigo || \' - \' || nombre
             FROM impuesto_adicional
             ORDER BY codigo
@@ -50,7 +50,7 @@ class Model_ImpuestoAdicionales extends \sowerphp\autoload\Model_Plural_App
      */
     public function getListConTasa()
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT codigo, codigo || \' - \' || nombre
             FROM impuesto_adicional
             WHERE tasa IS NOT NULL
@@ -63,7 +63,7 @@ class Model_ImpuestoAdicionales extends \sowerphp\autoload\Model_Plural_App
      */
     public function getTasas()
     {
-        return $this->db->getTableWithAssociativeIndex('
+        return $this->getDatabaseConnection()->getTableWithAssociativeIndex('
             SELECT codigo, tasa
             FROM impuesto_adicional
             WHERE tasa IS NOT NULL
@@ -87,7 +87,7 @@ class Model_ImpuestoAdicionales extends \sowerphp\autoload\Model_Plural_App
             $in[] = ':codigo'.$i;
             $vars[':codigo'.$i++] = $impuesto->codigo;
         }
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT codigo, codigo || \' - \' || nombre
             FROM impuesto_adicional
             WHERE codigo IN ('.implode(', ', $in).')
@@ -113,7 +113,7 @@ class Model_ImpuestoAdicionales extends \sowerphp\autoload\Model_Plural_App
             $vars[':codigo'.$i++] = $impuesto->codigo;
             $tasas[$impuesto->codigo] = $impuesto->tasa;
         }
-        $impuestos = $this->db->getTable('
+        $impuestos = $this->getDatabaseConnection()->getTable('
             SELECT *
             FROM impuesto_adicional
             WHERE codigo IN ('.implode(', ', $in).')

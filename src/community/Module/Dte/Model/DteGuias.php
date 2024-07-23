@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla dte_guia de la base de datos.
  */
-class Model_DteGuias extends \sowerphp\autoload\Model_Plural_App
+class Model_DteGuias extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos
@@ -89,25 +89,25 @@ class Model_DteGuias extends \sowerphp\autoload\Model_Plural_App
             $where[] = 'e.sucursal_sii IS NULL';
         }
         if (!empty($filtros['patente'])) {
-            $where[] = 'LOWER('.$this->db->xml('e.xml', '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Transporte/Patente', 'http://www.sii.cl/SiiDte').') LIKE :patente';
+            $where[] = 'LOWER('.$this->getDatabaseConnection()->xml('e.xml', '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Transporte/Patente', 'http://www.sii.cl/SiiDte').') LIKE :patente';
             $vars[':patente'] = '%'.strtolower($filtros['patente']).'%';
         }
         if (!empty($filtros['transportista'])) {
-            $where[] = $this->db->xml('e.xml', '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Transporte/RUTTrans', 'http://www.sii.cl/SiiDte').' = :transportista';
+            $where[] = $this->getDatabaseConnection()->xml('e.xml', '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Transporte/RUTTrans', 'http://www.sii.cl/SiiDte').' = :transportista';
             $vars[':transportista'] = str_replace('.', '', $filtros['transportista']);
         }
         if (!empty($filtros['vendedor'])) {
-            $where[] = 'LOWER('.$this->db->xml('e.xml', '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Emisor/CdgVendedor', 'http://www.sii.cl/SiiDte').') LIKE :vendedor';
+            $where[] = 'LOWER('.$this->getDatabaseConnection()->xml('e.xml', '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Emisor/CdgVendedor', 'http://www.sii.cl/SiiDte').') LIKE :vendedor';
             $vars[':vendedor'] = '%'.strtolower($filtros['vendedor']).'%';
         }
-        list($direccion, $comuna, $transporte_direccion, $transporte_comuna, $items) = $this->db->xml('e.xml', [
+        list($direccion, $comuna, $transporte_direccion, $transporte_comuna, $items) = $this->getDatabaseConnection()->xml('e.xml', [
             '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Receptor/DirRecep',
             '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Receptor/CmnaRecep',
             '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Transporte/DirDest',
             '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Transporte/CmnaDest',
             '/EnvioDTE/SetDTE/DTE/Documento/Detalle/NmbItem',
         ], 'http://www.sii.cl/SiiDte');
-        $despachos = $this->db->getTable('
+        $despachos = $this->getDatabaseConnection()->getTable('
             SELECT
                 e.folio,
                 r.razon_social,
@@ -154,7 +154,7 @@ class Model_DteGuias extends \sowerphp\autoload\Model_Plural_App
             $vars[':receptor'] = \sowerphp\app\Utility_Rut::normalizar($receptor);
             $where[] = 'e.receptor = :receptor';
         }
-        $where[] = $this->db->xml('e.xml', '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/IdDoc/IndTraslado', 'http://www.sii.cl/SiiDte').' = \'1\'';
+        $where[] = $this->getDatabaseConnection()->xml('e.xml', '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/IdDoc/IndTraslado', 'http://www.sii.cl/SiiDte').' = \'1\'';
         if (!$con_referencia) {
             $where[] = '
                 (e.emisor, e.dte, e.folio, e.certificacion) NOT IN (
@@ -166,7 +166,7 @@ class Model_DteGuias extends \sowerphp\autoload\Model_Plural_App
                 )'
             ;
         }
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT e.folio, r.razon_social, e.fecha, e.total
             FROM
                 dte_emitido AS e

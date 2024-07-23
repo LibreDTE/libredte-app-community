@@ -26,7 +26,7 @@ namespace website\Dte\Admin;
 /**
  * Clase para mapear la tabla dte_folio de la base de datos.
  */
-class Model_DteFolio extends \sowerphp\autoload\Model_App
+class Model_DteFolio extends \sowerphp\autoload\Model
 {
 
     // Datos para la conexión a la base de datos
@@ -138,11 +138,11 @@ class Model_DteFolio extends \sowerphp\autoload\Model_App
      */
     public function save($exitOnFailTransaction = true): bool
     {
-        if (!$this->db->beginTransaction(true) && $exitOnFailTransaction) {
+        if (!$this->getDatabaseConnection()->beginTransaction(true) && $exitOnFailTransaction) {
             return false;
         }
         parent::save();
-        return $this->db->commit();
+        return $this->getDatabaseConnection()->commit();
     }
 
     /**
@@ -150,8 +150,8 @@ class Model_DteFolio extends \sowerphp\autoload\Model_App
      */
     public function calcularDisponibles()
     {
-        $this->db->beginTransaction(true);
-        $cafs = $this->db->getTable('
+        $this->getDatabaseConnection()->beginTransaction(true);
+        $cafs = $this->getDatabaseConnection()->getTable('
             SELECT desde, hasta
             FROM dte_caf
             WHERE
@@ -189,10 +189,10 @@ class Model_DteFolio extends \sowerphp\autoload\Model_App
         }
         $status = $this->save(false);
         if (!$status) {
-            $this->db->rollback();
+            $this->getDatabaseConnection()->rollback();
             return false;
         }
-        $this->db->commit();
+        $this->getDatabaseConnection()->commit();
         return true;
     }
 
@@ -202,7 +202,7 @@ class Model_DteFolio extends \sowerphp\autoload\Model_App
      */
     public function getCafs(string $order = 'ASC')
     {
-        $cafs = $this->db->getTable('
+        $cafs = $this->getDatabaseConnection()->getTable('
             SELECT desde, hasta, (hasta - desde + 1) AS cantidad, xml
             FROM dte_caf
             WHERE emisor = :rut AND dte = :dte AND certificacion = :certificacion
@@ -241,7 +241,7 @@ class Model_DteFolio extends \sowerphp\autoload\Model_App
         if (!$folio) {
             $folio = $this->siguiente;
         }
-        $caf = $this->db->getValue('
+        $caf = $this->getDatabaseConnection()->getValue('
             SELECT xml
             FROM dte_caf
             WHERE
@@ -378,8 +378,8 @@ class Model_DteFolio extends \sowerphp\autoload\Model_App
      */
     public function getUsoMensual(int $limit = 12, string $order = 'ASC')
     {
-        $periodo_col = $this->db->date('Ym', 'fecha');
-        return $this->db->getTable('
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'fecha');
+        return $this->getDatabaseConnection()->getTable('
             SELECT * FROM (
                 SELECT '.$periodo_col.' AS mes, COUNT(*) AS folios
                 FROM dte_emitido
@@ -400,7 +400,7 @@ class Model_DteFolio extends \sowerphp\autoload\Model_App
      */
     public function getPrimerFolio(): int
     {
-        return (int)$this->db->getValue('
+        return (int)$this->getDatabaseConnection()->getValue('
             SELECT MIN(folio)
             FROM dte_emitido
             WHERE emisor = :rut AND dte = :dte AND certificacion = :certificacion
@@ -427,7 +427,7 @@ class Model_DteFolio extends \sowerphp\autoload\Model_App
             return [];
         }
         // buscar rango
-        $rangos_aux = $this->db->getTable('
+        $rangos_aux = $this->getDatabaseConnection()->getTable('
             SELECT desde, hasta
             FROM dte_caf
             WHERE emisor = :rut AND dte = :dte AND certificacion = :certificacion
@@ -443,7 +443,7 @@ class Model_DteFolio extends \sowerphp\autoload\Model_App
                 $folios[] = $folio;
             }
         }
-        return $this->db->getCol('
+        return $this->getDatabaseConnection()->getCol('
             SELECT folio
             FROM UNNEST(ARRAY['.implode(', ', $folios).']) AS folio
             WHERE

@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla dte_emitido de la base de datos.
  */
-class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural_App
+class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos
@@ -63,7 +63,7 @@ class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural_App
             $referencia_razon,
             $observacion,
             $vencimiento
-        ) = $this->db->xml('e.xml',
+        ) = $this->getDatabaseConnection()->xml('e.xml',
             [
                 '/EnvioDTE/SetDTE/DTE/*/Encabezado/Emisor/CdgVendedor',
                 '/*/SetDTE/DTE/Exportaciones/Encabezado/Receptor/RznSocRecep',
@@ -90,7 +90,7 @@ class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural_App
             $detalle_items = '';
         }
         // realizar consulta
-        $datos = $this->db->getTable('
+        $datos = $this->getDatabaseConnection()->getTable('
             SELECT
                 t.codigo AS id,
                 t.tipo,
@@ -184,7 +184,7 @@ class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getPorTipo($desde, $hasta): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT t.tipo, COUNT(*) AS total
             FROM dte_emitido AS e JOIN dte_tipo AS t ON e.dte = t.codigo
             WHERE
@@ -207,7 +207,7 @@ class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getPorDia($desde, $hasta): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT fecha AS dia, COUNT(*) AS total
             FROM dte_emitido
             WHERE
@@ -230,8 +230,8 @@ class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getPorHora($desde, $hasta): array
     {
-        $hora = $this->db->xml('xml', '/*/SetDTE/Caratula/TmstFirmaEnv', 'http://www.sii.cl/SiiDte');
-        return $this->db->getTable('
+        $hora = $this->getDatabaseConnection()->xml('xml', '/*/SetDTE/Caratula/TmstFirmaEnv', 'http://www.sii.cl/SiiDte');
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 SUBSTR('.$hora.', 12, 2) || \':00\' AS hora,
                 COUNT(*) AS total
@@ -257,7 +257,7 @@ class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getPorSucursal($desde, $hasta): array
     {
-        $datos = $this->db->getTable('
+        $datos = $this->getDatabaseConnection()->getTable('
             SELECT sucursal_sii AS sucursal, COUNT(*) AS total
             FROM dte_emitido
             WHERE
@@ -284,7 +284,7 @@ class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getPorUsuario($desde, $hasta): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT u.usuario, COUNT(*) AS total
             FROM dte_emitido AS e JOIN usuario AS u ON e.usuario = u.id
             WHERE
@@ -307,8 +307,8 @@ class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getPorNacionalidad($desde, $hasta): array
     {
-        $nacionalidad = $this->db->xml('xml', '/EnvioDTE/SetDTE/DTE/Exportaciones/Encabezado/Receptor/Extranjero/Nacionalidad', 'http://www.sii.cl/SiiDte');
-        $datos = $this->db->getTable('
+        $nacionalidad = $this->getDatabaseConnection()->xml('xml', '/EnvioDTE/SetDTE/DTE/Exportaciones/Encabezado/Receptor/Extranjero/Nacionalidad', 'http://www.sii.cl/SiiDte');
+        $datos = $this->getDatabaseConnection()->getTable('
             SELECT '.$nacionalidad.' AS nacionalidad, COUNT(*) AS total
             FROM dte_emitido
             WHERE
@@ -336,8 +336,8 @@ class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getPorMoneda($desde, $hasta): array
     {
-        $moneda = $this->db->xml('xml', '/EnvioDTE/SetDTE/DTE/Exportaciones/Encabezado/Totales/TpoMoneda', 'http://www.sii.cl/SiiDte');
-        return $this->db->getTable('
+        $moneda = $this->getDatabaseConnection()->xml('xml', '/EnvioDTE/SetDTE/DTE/Exportaciones/Encabezado/Totales/TpoMoneda', 'http://www.sii.cl/SiiDte');
+        return $this->getDatabaseConnection()->getTable('
             SELECT '.$moneda.' AS moneda, COUNT(*) AS total
             FROM dte_emitido
             WHERE
@@ -367,7 +367,7 @@ class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural_App
         if (!$hasta) {
             $hasta = date('Y-m-d');
         }
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT fecha AS dia, COUNT(*) AS total
             FROM dte_emitido
             WHERE
@@ -405,7 +405,7 @@ class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural_App
             $vars[':emisor'] = $Emisor->rut;
         }
         // realizar consulta
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 c.rut,
                 c.razon_social,
@@ -430,7 +430,7 @@ class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getTotalRechazados(): ?array
     {
-        $aux = $this->db->getRow('
+        $aux = $this->getDatabaseConnection()->getRow('
             SELECT COUNT(folio) AS total, MIN(fecha) AS desde, MAX(fecha) AS hasta
             FROM dte_emitido
             WHERE
@@ -456,7 +456,7 @@ class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural_App
             $periodo = date('Ym');
         }
         $dtes  = array_keys(\sasco\LibreDTE\Sii\RegistroCompraVenta::$dtes);
-        $dtes = $this->db->getCol('
+        $dtes = $this->getDatabaseConnection()->getCol('
             SELECT DISTINCT dte
             FROM dte_emitido
             WHERE
@@ -464,7 +464,7 @@ class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural_App
                 AND dte IN ('.implode(', ', array_keys(\sasco\LibreDTE\Sii\RegistroCompraVenta::$dtes)).')
                 AND certificacion = :certificacion
                 AND receptor_evento IS NULL
-                AND '.$this->db->date('Ym', 'fecha', 'INTEGER').' = :periodo
+                AND '.$this->getDatabaseConnection()->date('Ym', 'fecha', 'INTEGER').' = :periodo
         ', [
             ':emisor' => $this->getContribuyente()->rut,
             ':certificacion' => $this->getContribuyente()->enCertificacion(),
@@ -501,7 +501,7 @@ class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getSinEnvioIntercambio($desde, $hasta): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 d.dte,
                 t.tipo,
@@ -548,7 +548,7 @@ class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getBoletasSinEnvioEmail($desde, $hasta): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 d.dte,
                 t.tipo,

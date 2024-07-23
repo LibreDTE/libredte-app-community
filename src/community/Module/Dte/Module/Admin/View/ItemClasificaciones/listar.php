@@ -106,7 +106,7 @@ foreach ($Objs as &$obj) {
             $row[] = $obj->{$column};
         }
     }
-    $pkValues = $obj->getPkValues();
+    $pkValues = $obj->getPrimaryKeyValues();
     $pkURL = implode('/', array_map('urlencode', $pkValues));
     $actions = '';
     if (!empty($extraActions)) {

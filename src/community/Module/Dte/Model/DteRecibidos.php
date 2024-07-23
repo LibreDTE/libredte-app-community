@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla dte_recibido de la base de datos.
  */
-class Model_DteRecibidos extends \sowerphp\autoload\Model_Plural_App
+class Model_DteRecibidos extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos
@@ -110,11 +110,11 @@ class Model_DteRecibidos extends \sowerphp\autoload\Model_Plural_App
             }
         }
         // armar consulta SQL
-        list($items, $precios) = $this->db->xml('i.archivo_xml', [
+        list($items, $precios) = $this->getDatabaseConnection()->xml('i.archivo_xml', [
             '/*/SetDTE/DTE/*/Detalle/NmbItem',
             '/*/SetDTE/DTE/*/Detalle/PrcItem',
         ], 'http://www.sii.cl/SiiDte');
-        $recibidos = $this->db->getTable('
+        $recibidos = $this->getDatabaseConnection()->getTable('
             SELECT
                 r.fecha,
                 r.periodo,
@@ -197,7 +197,7 @@ class Model_DteRecibidos extends \sowerphp\autoload\Model_Plural_App
             $vars[':total_hasta'] = $filtros['total_hasta'];
         }
         // realizar consultar
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 d.fecha,
                 d.emisor,
@@ -228,14 +228,14 @@ class Model_DteRecibidos extends \sowerphp\autoload\Model_Plural_App
             $detalle_items = '';
         }
         // campos del XML
-        list($MontoNF, $MontoPeriodo, $SaldoAnterior, $VlrPagar) = $this->db->xml('i.archivo_xml', [
+        list($MontoNF, $MontoPeriodo, $SaldoAnterior, $VlrPagar) = $this->getDatabaseConnection()->xml('i.archivo_xml', [
             '/EnvioDTE/SetDTE/DTE/*/Encabezado/Totales/MontoNF',
             '/EnvioDTE/SetDTE/DTE/*/Encabezado/Totales/MontoPeriodo',
             '/EnvioDTE/SetDTE/DTE/*/Encabezado/Totales/SaldoAnterior',
             '/EnvioDTE/SetDTE/DTE/*/Encabezado/Totales/VlrPagar',
         ], 'http://www.sii.cl/SiiDte');
         // realizar consulta
-        $datos = $this->db->getTable('
+        $datos = $this->getDatabaseConnection()->getTable('
             SELECT
                 t.codigo AS id,
                 t.tipo,
@@ -312,7 +312,7 @@ class Model_DteRecibidos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getPorTipo($desde, $hasta): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT t.tipo, COUNT(*) AS total
             FROM dte_recibido AS r JOIN dte_tipo AS t ON r.dte = t.codigo
             WHERE
@@ -334,7 +334,7 @@ class Model_DteRecibidos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getPorDia($desde, $hasta): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT fecha AS dia, COUNT(*) AS total
             FROM dte_recibido
             WHERE
@@ -356,7 +356,7 @@ class Model_DteRecibidos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getPorSucursal($desde, $hasta): array
     {
-        $datos = $this->db->getTable('
+        $datos = $this->getDatabaseConnection()->getTable('
             SELECT COALESCE(sucursal_sii_receptor, 0) AS sucursal, COUNT(*) AS total
             FROM dte_recibido
             WHERE
@@ -382,7 +382,7 @@ class Model_DteRecibidos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getPorUsuario($desde, $hasta): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT u.usuario, COUNT(*) AS total
             FROM dte_recibido AS r JOIN usuario AS u ON r.usuario = u.id
             WHERE
@@ -404,7 +404,7 @@ class Model_DteRecibidos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getDocumentosSinXML($desde, $hasta): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 c.rut,
                 c.dv,

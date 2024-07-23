@@ -26,7 +26,7 @@ namespace website\Dte\Admin;
 /**
  * Clase para mapear la tabla firma_electronica de la base de datos.
  */
-class Model_FirmaElectronica extends \sowerphp\autoload\Model_App
+class Model_FirmaElectronica extends \sowerphp\autoload\Model
 {
 
     // Datos para la conexión a la base de datos

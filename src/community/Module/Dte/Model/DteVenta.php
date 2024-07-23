@@ -228,7 +228,7 @@ class Model_DteVenta extends Model_Base_Libro
      */
     public function getResumenManual(): array
     {
-        if ($this->_table == 'dte_venta' && $this->xml) {
+        if ($this->getMeta()['model.db_table'] == 'dte_venta' && $this->xml) {
             $Libro = new \sasco\LibreDTE\Sii\LibroCompraVenta();
             $Libro->loadXML(base64_decode($this->xml));
             return $Libro->getResumenManual();
@@ -257,13 +257,13 @@ class Model_DteVenta extends Model_Base_Libro
      */
     public function getDocumentosPorEventoReceptor(): array
     {
-        $aux = $this->db->getTable('
+        $aux = $this->getDatabaseConnection()->getTable('
             SELECT receptor_evento AS codigo, NULL AS glosa, COUNT(*) AS documentos
             FROM dte_emitido
             WHERE
                 emisor = :emisor
                 AND dte IN ('.implode(', ', array_keys(\sasco\LibreDTE\Sii\RegistroCompraVenta::$dtes)).')
-                AND '.$this->db->date('Ym', 'fecha', 'INTEGER').' = :periodo
+                AND '.$this->getDatabaseConnection()->date('Ym', 'fecha', 'INTEGER').' = :periodo
                 AND certificacion = :certificacion
             GROUP BY receptor_evento
             ORDER BY receptor_evento ASC
@@ -348,8 +348,8 @@ class Model_DteVenta extends Model_Base_Libro
      */
     public function countDteSinEstadoEnvioSII(): int
     {
-        $periodo_col = $this->db->date('Ym', 'fecha');
-        return (int)$this->db->getValue('
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'fecha');
+        return (int)$this->getDatabaseConnection()->getValue('
             SELECT COUNT(folio)
             FROM dte_emitido
             WHERE
@@ -372,8 +372,8 @@ class Model_DteVenta extends Model_Base_Libro
      */
     public function countDteRechazadosSII(): int
     {
-        $periodo_col = $this->db->date('Ym', 'fecha');
-        return (int)$this->db->getValue('
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'fecha');
+        return (int)$this->getDatabaseConnection()->getValue('
             SELECT COUNT(folio)
             FROM dte_emitido
             WHERE

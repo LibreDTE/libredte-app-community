@@ -26,7 +26,7 @@ namespace website\Honorarios;
 /**
  * Clase para mapear la tabla boleta_honorario de la base de datos.
  */
-class Model_BoletaHonorarios extends \sowerphp\autoload\Model_Plural_App
+class Model_BoletaHonorarios extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos
@@ -98,14 +98,14 @@ class Model_BoletaHonorarios extends \sowerphp\autoload\Model_Plural_App
      */
     public function getPeriodos($periodo = null)
     {
-        $periodo_col = $this->db->date('Ym', 'fecha');
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'fecha');
         $where = ['receptor = :receptor', 'anulada IS NULL'];
         $vars = [':receptor' => $this->getContribuyente()->rut];
         if ($periodo) {
             $where[] = $periodo_col.' = :periodo';
             $vars[':periodo'] = $periodo;
         }
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 '.$periodo_col.' AS periodo,
                 COUNT(*) AS cantidad,
@@ -138,7 +138,7 @@ class Model_BoletaHonorarios extends \sowerphp\autoload\Model_Plural_App
         $where = ['b.receptor = :receptor'];
         $vars = [':receptor' => $this->getContribuyente()->rut];
         if (!empty($filtros['periodo'])) {
-            $periodo_col = $this->db->date('Ym', 'b.fecha');
+            $periodo_col = $this->getDatabaseConnection()->date('Ym', 'b.fecha');
             $where[] = $periodo_col.' = :periodo';
             $vars[':periodo'] = $filtros['periodo'];
         }
@@ -174,7 +174,7 @@ class Model_BoletaHonorarios extends \sowerphp\autoload\Model_Plural_App
                 $where[] = 'b.anulada IS NULL';
             }
         }
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 b.codigo,
                 b.emisor AS emisor_rut,

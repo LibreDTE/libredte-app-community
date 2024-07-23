@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla contribuyente de la base de datos.
  */
-class Model_Contribuyentes extends \sowerphp\autoload\Model_Plural_App
+class Model_Contribuyentes extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos
@@ -39,13 +39,13 @@ class Model_Contribuyentes extends \sowerphp\autoload\Model_Plural_App
     public function getList($all = false)
     {
         if ($all) {
-            return $this->db->getTable('
+            return $this->getDatabaseConnection()->getTable('
                 SELECT rut, razon_social
                 FROM contribuyente
                 ORDER BY razon_social
             ');
         } else {
-            return $this->db->getTable('
+            return $this->getDatabaseConnection()->getTable('
                 SELECT rut, razon_social
                 FROM contribuyente
                 WHERE usuario IS NOT NULL
@@ -85,7 +85,7 @@ class Model_Contribuyentes extends \sowerphp\autoload\Model_Plural_App
      */
     public function getByUsuario($usuario, $omitir = null): array
     {
-        $empresas =  $this->db->getTable('
+        $empresas =  $this->getDatabaseConnection()->getTable('
             (
                 SELECT c.rut, c.dv, c.razon_social, c.giro, a.valor AS certificacion, true AS administrador
                 FROM contribuyente AS c JOIN contribuyente_config AS a ON c.rut = a.contribuyente
@@ -166,7 +166,7 @@ class Model_Contribuyentes extends \sowerphp\autoload\Model_Plural_App
             $vars[':rut'] = $rut;
         }
         // realizar consulta
-        $contribuyentes = \sowerphp\core\Utility_Array::fromTableWithHeaderAndBody($this->db->getTable('
+        $contribuyentes = \sowerphp\core\Utility_Array::fromTableWithHeaderAndBody($this->getDatabaseConnection()->getTable('
             SELECT c.rut, c.razon_social, co.valor AS ambiente, u.usuario, NULL as grupos, u.nombre, u.email, e.emitidos, r.recibidos, g.grupo
             FROM
                 contribuyente AS c
@@ -210,7 +210,7 @@ class Model_Contribuyentes extends \sowerphp\autoload\Model_Plural_App
     public function countRegistrados($certificacion = null): int
     {
         if ($certificacion === null) {
-            return (int)$this->db->getValue('
+            return (int)$this->getDatabaseConnection()->getValue('
                 SELECT
                     COUNT(*)
                 FROM
@@ -219,7 +219,7 @@ class Model_Contribuyentes extends \sowerphp\autoload\Model_Plural_App
                     usuario IS NOT NULL
             ');
         } else {
-            return (int)$this->db->getValue('
+            return (int)$this->getDatabaseConnection()->getValue('
                 SELECT
                     COUNT(*)
                 FROM
@@ -241,7 +241,7 @@ class Model_Contribuyentes extends \sowerphp\autoload\Model_Plural_App
      */
     public function getRegistrados($desde = null, $hasta = null): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 c.rut,
                 c.razon_social,
@@ -278,7 +278,7 @@ class Model_Contribuyentes extends \sowerphp\autoload\Model_Plural_App
     public function countByComuna($certificacion = null)
     {
         $vars[':certificacion'] = (int)$certificacion;
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 co.comuna,
                 COUNT(c.rut) AS contribuyentes
@@ -307,7 +307,7 @@ class Model_Contribuyentes extends \sowerphp\autoload\Model_Plural_App
     public function countByActividadEconomica($certificacion = null): array
     {
         $vars[':certificacion'] = (int)$certificacion;
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 a.actividad_economica,
                 COUNT(c.rut) AS contribuyentes

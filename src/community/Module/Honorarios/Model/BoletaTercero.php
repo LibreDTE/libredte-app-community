@@ -26,7 +26,7 @@ namespace website\Honorarios;
 /**
  * Clase para mapear la tabla boleta_tercero de la base de datos.
  */
-class Model_BoletaTercero extends \sowerphp\autoload\Model_App
+class Model_BoletaTercero extends \sowerphp\autoload\Model
 {
 
     // Datos para la conexión a la base de datos

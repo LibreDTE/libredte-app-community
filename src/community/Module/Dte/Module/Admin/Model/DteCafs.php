@@ -26,7 +26,7 @@ namespace website\Dte\Admin;
 /**
  * Clase para mapear la tabla dte_caf de la base de datos.
  */
-class Model_DteCafs extends \sowerphp\autoload\Model_Plural_App
+class Model_DteCafs extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos

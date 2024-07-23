@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase base para para el modelo singular de documentos del SII.
  */
-abstract class Model_Base_Documento extends \sowerphp\autoload\Model_App
+abstract class Model_Base_Documento extends \sowerphp\autoload\Model
 {
 
     /**
@@ -35,7 +35,7 @@ abstract class Model_Base_Documento extends \sowerphp\autoload\Model_App
      */
     public function getContribuyente()
     {
-        return $this->_table == 'dte_compra'
+        return $this->getMeta()['model.db_table'] == 'dte_compra'
             ? $this->getReceptor()
             : $this->getEmisor()
         ;

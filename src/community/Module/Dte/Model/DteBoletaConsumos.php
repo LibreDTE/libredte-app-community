@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla dte_boleta_consumo de la base de datos.
  */
-class Model_DteBoletaConsumos extends \sowerphp\autoload\Model_Plural_App
+class Model_DteBoletaConsumos extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos
@@ -44,7 +44,7 @@ class Model_DteBoletaConsumos extends \sowerphp\autoload\Model_Plural_App
         if ($this->getContribuyente()->config_sii_envio_rcof_desde) {
             $desde = $this->getContribuyente()->config_sii_envio_rcof_desde;
         } else {
-            $desde = $this->db->getValue('
+            $desde = $this->getDatabaseConnection()->getValue('
                 SELECT MIN(dia)
                 FROM dte_boleta_consumo
                 WHERE emisor = :emisor AND certificacion = :certificacion
@@ -69,7 +69,7 @@ class Model_DteBoletaConsumos extends \sowerphp\autoload\Model_Plural_App
             $dia = \sowerphp\general\Utility_Date::getNext($dia, 'D');
         }
         // consultar los dias que si están en el RCOF
-        $dias_enviados = $this->db->getCol('
+        $dias_enviados = $this->getDatabaseConnection()->getCol('
             SELECT dia
             FROM dte_boleta_consumo
             WHERE emisor = :emisor AND certificacion = :certificacion AND track_id IS NOT NULL
@@ -93,7 +93,7 @@ class Model_DteBoletaConsumos extends \sowerphp\autoload\Model_Plural_App
             '-6 ', // ERROR: USUARIO NO AUTORIZADO
         ];
         $estados_sin_respuesta_dias_atras = ['-11'];
-        return $this->db->getCol('
+        return $this->getDatabaseConnection()->getCol('
             SELECT dia
             FROM dte_boleta_consumo
             WHERE
@@ -139,7 +139,7 @@ class Model_DteBoletaConsumos extends \sowerphp\autoload\Model_Plural_App
             $where[] = 'dia <= :hasta';
             $vars[':hasta'] = $hasta;
         }
-        return $this->db->getCol('
+        return $this->getDatabaseConnection()->getCol('
             SELECT dia
             FROM dte_boleta_consumo
             WHERE '.implode(' AND ', $where).'
@@ -152,7 +152,7 @@ class Model_DteBoletaConsumos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getResumenEstados($desde, $hasta): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT revision_estado AS estado, COUNT(*) AS total
             FROM dte_boleta_consumo
             WHERE emisor = :emisor AND certificacion = :certificacion AND dia BETWEEN :desde AND :hasta AND track_id > 0
@@ -171,7 +171,7 @@ class Model_DteBoletaConsumos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getTotalRechazados()
     {
-        $aux = $this->db->getRow('
+        $aux = $this->getDatabaseConnection()->getRow('
             SELECT COUNT(dia) AS total, MIN(dia) AS desde, MAX(dia) AS hasta
             FROM dte_boleta_consumo
             WHERE
@@ -190,7 +190,7 @@ class Model_DteBoletaConsumos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getTotalReparosSecuencia()
     {
-        $aux = $this->db->getRow('
+        $aux = $this->getDatabaseConnection()->getRow('
             SELECT COUNT(dia) AS total, MIN(dia) AS desde, MAX(dia) AS hasta
             FROM dte_boleta_consumo
             WHERE

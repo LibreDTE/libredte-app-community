@@ -26,7 +26,7 @@ namespace website\Dte\Admin;
 /**
  * Clase para mapear la tabla item de la base de datos.
  */
-class Model_Itemes extends \sowerphp\autoload\Model_Plural_App
+class Model_Itemes extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos
@@ -43,7 +43,7 @@ class Model_Itemes extends \sowerphp\autoload\Model_Plural_App
             return parent::get($contribuyente, $tipo, $codigo);
         }
         // si no hay tipo se busca por contribuyente y codigo
-        return (new Model_Item())->set($this->db->getRow('
+        return (new Model_Item())->set($this->getDatabaseConnection()->getRow('
             SELECT *
             FROM item
             WHERE contribuyente = :contribuyente AND codigo = :codigo
@@ -59,7 +59,7 @@ class Model_Itemes extends \sowerphp\autoload\Model_Plural_App
      */
     public function getList()
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT codigo, item
             FROM item
             WHERE contribuyente = :contribuyente
@@ -78,7 +78,7 @@ class Model_Itemes extends \sowerphp\autoload\Model_Plural_App
             $where[] = 'codigo_tipo = :tipo';
             $vars[':tipo'] = $filtros['tipo'];
         }
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT codigo, item, descripcion
             FROM item
             WHERE '.implode(' AND ', $where).'
@@ -91,7 +91,7 @@ class Model_Itemes extends \sowerphp\autoload\Model_Plural_App
      */
     public function exportar()
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT codigo_tipo, codigo, item, descripcion, clasificacion, unidad, precio, moneda, exento, descuento, descuento_tipo, impuesto_adicional, activo::INTEGER, bruto::INTEGER
             FROM item
             WHERE contribuyente = :contribuyente

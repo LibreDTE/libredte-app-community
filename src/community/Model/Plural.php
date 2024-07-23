@@ -26,7 +26,7 @@ namespace website;
 /**
  * Clase abstracta para todos los modelos plurales (clase sobreescribible).
  */
-abstract class Model_Plural_App extends \sowerphp\app\Model_Plural
+abstract class Model_Plural extends \sowerphp\core\Model_Plural
 {
 
     private $Contribuyente = null; ///< Contribuyente con el que se realizarán las consultas

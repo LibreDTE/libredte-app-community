@@ -26,7 +26,7 @@ namespace website\Dte\Admin\Mantenedores;
 /**
  * Clase para mapear la tabla dte_referencia_tipo de la base de datos.
  */
-class Model_DteReferenciaTipos extends \sowerphp\autoload\Model_Plural_App
+class Model_DteReferenciaTipos extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos

@@ -426,7 +426,7 @@ class Model_DteEmitido extends Model_Base_Envio
     /**
      * Método que realiza verificaciones a campos antes de guardar.
      */
-    public function save(): bool
+    public function save(array $options = []): bool
     {
         // corregir datos
         $this->anulado = (int)$this->anulado;
@@ -807,7 +807,7 @@ class Model_DteEmitido extends Model_Base_Envio
      */
     public function getReferencias(): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 t.tipo AS documento_tipo,
                 r.folio,
@@ -851,7 +851,7 @@ class Model_DteEmitido extends Model_Base_Envio
         if (!$this->getTipo()->permiteCobro()) {
             return false;
         }
-        $anulado = (bool)$this->db->getValue('
+        $anulado = (bool)$this->getDatabaseConnection()->getValue('
             SELECT
                 COUNT(*)
             FROM
@@ -950,7 +950,7 @@ class Model_DteEmitido extends Model_Base_Envio
      */
     public function getCobranza(): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 c.fecha,
                 c.monto,
@@ -1123,7 +1123,7 @@ class Model_DteEmitido extends Model_Base_Envio
     public function delete($Usuario = null): bool
     {
         $this->canBeDeleted($Usuario);
-        $this->db->beginTransaction(true);
+        $this->getDatabaseConnection()->beginTransaction(true);
         event('dte_dte_emitido_eliminar', [$this]);
         // retroceder folio si corresponde hacerlo
         // (solo cuando este dte es el último emitido)
@@ -1137,17 +1137,17 @@ class Model_DteEmitido extends Model_Base_Envio
             $DteFolio->disponibles++;
             try {
                 if (!$DteFolio->save(false)) {
-                    $this->db->rollback();
+                    $this->getDatabaseConnection()->rollback();
                     return false;
                 }
             } catch (\Exception $e) {
-                $this->db->rollback();
+                $this->getDatabaseConnection()->rollback();
                 return false;
             }
         }
         // eliminar DTE
         if (!parent::delete()) {
-            $this->db->rollback();
+            $this->getDatabaseConnection()->rollback();
             return false;
         }
         // invalidar RCOF enviado si era boleta
@@ -1170,7 +1170,7 @@ class Model_DteEmitido extends Model_Base_Envio
         // necesario esto, pero al haber datos antiguo malos no se puede
         // agregar la FK hasta corregir primero esos datos. Este DELETE
         // evitará nuevos casos con el error por la falta de la FK.
-        $this->db->executeRawQuery('
+        $this->getDatabaseConnection()->executeRawQuery('
             DELETE
             FROM dte_referencia
             WHERE
@@ -1185,7 +1185,7 @@ class Model_DteEmitido extends Model_Base_Envio
             ':certificacion' => (int)$this->certificacion,
         ]);
         // todo ok con la transacción
-        $this->db->commit();
+        $this->getDatabaseConnection()->commit();
         return true;
     }
 
@@ -1764,7 +1764,7 @@ class Model_DteEmitido extends Model_Base_Envio
             $where[] = 'email = :email';
             $vars[':email'] = $email;
         }
-        return (int)$this->db->getValue('
+        return (int)$this->getDatabaseConnection()->getValue('
             SELECT COUNT(*)
             FROM dte_emitido_email
             WHERE ' . implode(' AND ', $where)
@@ -1895,7 +1895,7 @@ class Model_DteEmitido extends Model_Base_Envio
             $fecha_hora = date('Y-m-d H:i:s');
             foreach ($to as $dest) {
                 try {
-                    $this->db->executeRawQuery('
+                    $this->getDatabaseConnection()->executeRawQuery('
                         INSERT INTO dte_emitido_email
                         VALUES (
                             :emisor,
@@ -1930,7 +1930,7 @@ class Model_DteEmitido extends Model_Base_Envio
      */
     public function getEmailEnviadosResumen(): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 email,
                 COUNT(*) AS enviados,

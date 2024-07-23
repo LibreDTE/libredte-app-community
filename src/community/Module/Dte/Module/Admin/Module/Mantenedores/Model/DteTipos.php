@@ -26,7 +26,7 @@ namespace website\Dte\Admin\Mantenedores;
 /**
  * Clase para mapear la tabla dte_tipo de la base de datos.
  */
-class Model_DteTipos extends \sowerphp\autoload\Model_Plural_App
+class Model_DteTipos extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos
@@ -49,14 +49,14 @@ class Model_DteTipos extends \sowerphp\autoload\Model_Plural_App
     {
         if ($all) {
             if (is_array($all)) {
-                return $this->db->getTable('
+                return $this->getDatabaseConnection()->getTable('
                     SELECT codigo, codigo || \' - \' || tipo AS glosa
                     FROM dte_tipo
                     WHERE codigo IN ('.implode(',', $all).')
                     ORDER BY codigo
                 ');
             } else {
-                return $this->db->getTable('
+                return $this->getDatabaseConnection()->getTable('
                     SELECT codigo, codigo || \' - \' || tipo AS glosa
                     FROM dte_tipo
                     WHERE categoria = \'T\'
@@ -64,7 +64,7 @@ class Model_DteTipos extends \sowerphp\autoload\Model_Plural_App
                 ');
             }
         } else {
-            return $this->db->getTable('
+            return $this->getDatabaseConnection()->getTable('
                 SELECT codigo, codigo || \' - \' || tipo AS glosa
                 FROM dte_tipo
                 WHERE categoria = \'T\' AND electronico = true
@@ -79,7 +79,7 @@ class Model_DteTipos extends \sowerphp\autoload\Model_Plural_App
      */
     public function getListReferencias()
     {
-        $tipos = $this->db->getTable('
+        $tipos = $this->getDatabaseConnection()->getTable('
             SELECT codigo, codigo || \' - \' || tipo AS glosa
             FROM dte_tipo
             ORDER BY codigo

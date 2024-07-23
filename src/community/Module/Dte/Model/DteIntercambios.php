@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla dte_intercambio de la base de datos.
  */
-class Model_DteIntercambios extends \sowerphp\autoload\Model_Plural_App
+class Model_DteIntercambios extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos
@@ -38,7 +38,7 @@ class Model_DteIntercambios extends \sowerphp\autoload\Model_Plural_App
      */
     public function getTotalPendientes(): int
     {
-        return (int)$this->db->getValue('
+        return (int)$this->getDatabaseConnection()->getValue('
             SELECT COUNT(*)
             FROM dte_intercambio
             WHERE receptor = :receptor AND certificacion = :certificacion AND usuario IS NULL
@@ -53,7 +53,7 @@ class Model_DteIntercambios extends \sowerphp\autoload\Model_Plural_App
      */
     private function crearFiltrosDocumentos(array $filtros): array
     {
-        list($col_documentos, $col_totales) = $this->db->xml('i.archivo_xml', [
+        list($col_documentos, $col_totales) = $this->getDatabaseConnection()->xml('i.archivo_xml', [
             '/*/SetDTE/DTE/*/Encabezado/IdDoc/TipoDTE|/*/SetDTE/DTE/*/Encabezado/IdDoc/Folio',
             '/*/SetDTE/DTE/*/Encabezado/Totales/MntTotal',
         ], 'http://www.sii.cl/SiiDte');
@@ -146,7 +146,7 @@ class Model_DteIntercambios extends \sowerphp\autoload\Model_Plural_App
         }
         // si se debe hacer búsqueda dentro de los XML
         if (!empty($filtros['dte'])) {
-            $dte_where = $this->db->xml(
+            $dte_where = $this->getDatabaseConnection()->xml(
                 'i.archivo_xml',
                 '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/TipoDTE',
                 'http://www.sii.cl/SiiDte'
@@ -156,7 +156,7 @@ class Model_DteIntercambios extends \sowerphp\autoload\Model_Plural_App
             $vars[':dte_s'] = '%'.(int)$filtros['dte'].'%';
         }
         if (!empty($filtros['folio'])) {
-            $folio_where = $this->db->xml(
+            $folio_where = $this->getDatabaseConnection()->xml(
                 'i.archivo_xml',
                 '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/Folio',
                 'http://www.sii.cl/SiiDte'
@@ -166,7 +166,7 @@ class Model_DteIntercambios extends \sowerphp\autoload\Model_Plural_App
             $vars[':folio_s'] = '%'.(int)$filtros['folio'].'%';
         }
         if (!empty($filtros['item'])) {
-            $item_where = $this->db->xml(
+            $item_where = $this->getDatabaseConnection()->xml(
                 'i.archivo_xml',
                 '/*/SetDTE/DTE/Documento/Detalle/NmbItem',
                 'http://www.sii.cl/SiiDte'
@@ -175,7 +175,7 @@ class Model_DteIntercambios extends \sowerphp\autoload\Model_Plural_App
             $vars[':item'] = '%'.strtolower($filtros['item']).'%';
         }
         if (!empty($filtros['fecha_emision_desde'])) {
-            $fecha_emision_desde = $this->db->xml(
+            $fecha_emision_desde = $this->getDatabaseConnection()->xml(
                 'i.archivo_xml',
                 '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/FchEmis',
                 'http://www.sii.cl/SiiDte'
@@ -184,7 +184,7 @@ class Model_DteIntercambios extends \sowerphp\autoload\Model_Plural_App
             $vars[':fecha_emision_desde'] = $filtros['fecha_emision_desde'];
         }
         if (!empty($filtros['fecha_emision_hasta'])) {
-            $fecha_emision_hasta = $this->db->xml(
+            $fecha_emision_hasta = $this->getDatabaseConnection()->xml(
                 'i.archivo_xml',
                 '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/FchEmis',
                 'http://www.sii.cl/SiiDte'
@@ -204,7 +204,7 @@ class Model_DteIntercambios extends \sowerphp\autoload\Model_Plural_App
             $i = 1;
             foreach ((array)$filtros['xml'] as $nodo => $valor) {
                 $nodo = preg_replace('/[^A-Za-z\/]/', '', $nodo);
-                $where[] = 'LOWER('.$this->db->xml(
+                $where[] = 'LOWER('.$this->getDatabaseConnection()->xml(
                     'i.archivo_xml',
                     '/*/SetDTE/DTE/Documento/'.$nodo,
                     'http://www.sii.cl/SiiDte'
@@ -223,7 +223,7 @@ class Model_DteIntercambios extends \sowerphp\autoload\Model_Plural_App
     public function countDocumentos(array $filtros = []): int
     {
         list($where, $vars) = $this->crearFiltrosDocumentos($filtros);
-        return (int)$this->db->getValue('
+        return (int)$this->getDatabaseConnection()->getValue('
             SELECT
                 COUNT(*)
             FROM
@@ -249,7 +249,7 @@ class Model_DteIntercambios extends \sowerphp\autoload\Model_Plural_App
             $limit = '';
         }
         // crear consulta
-        $intercambios = $this->db->getTable('
+        $intercambios = $this->getDatabaseConnection()->getTable('
             SELECT
                 i.codigo,
                 i.emisor,
@@ -572,8 +572,8 @@ class Model_DteIntercambios extends \sowerphp\autoload\Model_Plural_App
         if (!$periodo) {
             $periodo = date('Ym');
         }
-        $periodo_col = $this->db->date('Ym', 'fecha_hora_email');
-        return (int)$this->db->getValue('
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'fecha_hora_email');
+        return (int)$this->getDatabaseConnection()->getValue('
             SELECT COUNT(*)
             FROM dte_intercambio
             WHERE receptor = :receptor AND '.$periodo_col.' = :periodo
@@ -589,12 +589,12 @@ class Model_DteIntercambios extends \sowerphp\autoload\Model_Plural_App
      */
     public function buscarIntercambiosDte($emisor, $dte, $folio): array
     {
-        $dte_col = $this->db->xml(
+        $dte_col = $this->getDatabaseConnection()->xml(
             'archivo_xml',
             '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/TipoDTE',
             'http://www.sii.cl/SiiDte'
         );
-        $folio_col = $this->db->xml(
+        $folio_col = $this->getDatabaseConnection()->xml(
             'archivo_xml',
             '/*/SetDTE/DTE/Documento/Encabezado/IdDoc/Folio',
             'http://www.sii.cl/SiiDte'
@@ -639,7 +639,7 @@ class Model_DteIntercambios extends \sowerphp\autoload\Model_Plural_App
             ':receptor' => $this->getContribuyente()->rut,
             ':certificacion' => $this->getContribuyente()->enCertificacion(),
         ];
-        return (int)$this->db->getValue('
+        return (int)$this->getDatabaseConnection()->getValue('
             SELECT MAX(codigo)
             FROM dte_intercambio AS i
             WHERE '.implode(' AND ', $where).'

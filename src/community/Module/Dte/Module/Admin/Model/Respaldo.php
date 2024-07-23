@@ -126,7 +126,6 @@ class Model_Respaldo
      */
     public function __construct()
     {
-        $this->db = database();
         $extra = (array)config('libredte.backup.tables');
         if ($extra) {
             $this->tablas += $extra;
@@ -167,7 +166,7 @@ class Model_Respaldo
             }
             // obtener datos de la tabla
             $info = $this->tablas[$tabla];
-            $datos = $this->db->getTable('
+            $datos = database()->getTable('
                 SELECT *
                 FROM ' . $tabla . '
                 WHERE ' . $info['rut'].' = :rut
@@ -289,9 +288,9 @@ class Model_Respaldo
     private function getPKs($tabla)
     {
         if (!isset($this->_pks[$tabla])) {
-            $this->_pks[$tabla] = $pks = $this->db->getPksFromTable($tabla);
+            $this->_pks[$tabla] = $pks = database()->getPksFromTable($tabla);
             if (empty($pks)) {
-                $this->_pks[$tabla] = $this->db->getPksFromTable($tabla);
+                $this->_pks[$tabla] = database()->getPksFromTable($tabla);
             }
         }
         return $this->_pks[$tabla];
@@ -303,7 +302,7 @@ class Model_Respaldo
     public function boletas($Contribuyente, $fecha_creacion)
     {
         // obtener boletas
-        $boletas = $this->db->getTable('
+        $boletas = database()->getTable('
             SELECT
                 emisor,
                 dte,

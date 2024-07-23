@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla dte_intercambio_recepcion de la base de datos.
  */
-class Model_DteIntercambioRecepcion extends \sowerphp\autoload\Model_App
+class Model_DteIntercambioRecepcion extends \sowerphp\autoload\Model
 {
 
     // Datos para la conexión a la base de datos
@@ -187,7 +187,7 @@ class Model_DteIntercambioRecepcion extends \sowerphp\autoload\Model_App
             throw new \Exception('El RUT del receptor no es válido.');
         }
         // guardar recepción
-        $this->db->beginTransaction();
+        $this->getDatabaseConnection()->beginTransaction();
         $this->responde = explode('-', $Resultado['Caratula']['RutResponde'])[0];
         if (!is_numeric($this->responde)) { // parche por SII que envía en RutResponde: DESCONOCIDO
             throw new \Exception('RutResponde no es válido: '.$this->responde);
@@ -214,7 +214,7 @@ class Model_DteIntercambioRecepcion extends \sowerphp\autoload\Model_App
         ;
         $this->xml = base64_encode($xml);
         if (!$this->save()) {
-            $this->db->rollback();
+            $this->getDatabaseConnection()->rollback();
             throw new \Exception('No fue posible guardar la recepción del intercambio.');
         }
         // procesar cada recepción
@@ -225,7 +225,7 @@ class Model_DteIntercambioRecepcion extends \sowerphp\autoload\Model_App
                 !isset($Recepcion['RUTEmisor'])
                 || explode('-', $Recepcion['RUTEmisor'])[0] != $Emisor->rut
             ) {
-                $this->db->rollback();
+                $this->getDatabaseConnection()->rollback();
                 throw new \Exception('El RUT del emisor del DTE informado no corresponde.');
             }
             // buscar DTE emitido en el ambiente del emisor
@@ -242,7 +242,7 @@ class Model_DteIntercambioRecepcion extends \sowerphp\autoload\Model_App
                 || $Recepcion['FchEmis'] != $DteEmitido->fecha
                 || $Recepcion['MntTotal'] != $DteEmitido->total
             ) {
-                $this->db->rollback();
+                $this->getDatabaseConnection()->rollback();
                 throw new \Exception('DTE informado no existe o sus datos no corresponden.');
             }
             // guardar recibo para el DTE
@@ -258,12 +258,12 @@ class Model_DteIntercambioRecepcion extends \sowerphp\autoload\Model_App
                 $DteIntercambioRecepcionDte->glosa = mb_substr($Recepcion['RecepDTEGlosa'], 0, 256);
             }
             if (!$DteIntercambioRecepcionDte->save()) {
-                $this->db->rollback();
+                $this->getDatabaseConnection()->rollback();
                 throw new \Exception('No fue posible guardar el DTE de la recepción del intercambio.');
             }
         }
         // aceptar transacción
-        $this->db->commit();
+        $this->getDatabaseConnection()->commit();
         return true;
     }
 

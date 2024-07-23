@@ -26,7 +26,7 @@ namespace website\Dte\Admin;
 /**
  * Clase para mapear la tabla item_clasificacion de la base de datos.
  */
-class Model_ItemClasificaciones extends \sowerphp\autoload\Model_Plural_App
+class Model_ItemClasificaciones extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos
@@ -67,7 +67,7 @@ class Model_ItemClasificaciones extends \sowerphp\autoload\Model_Plural_App
         return \sowerphp\core\Utility_Array::toTree(
             \sowerphp\core\Utility_Array::tableToAssociativeArray(
                 \sowerphp\core\Utility_Array::fromTableWithHeaderAndBody(
-                    $this->db->getTable('
+                    $this->getDatabaseConnection()->getTable('
                         SELECT
                             c.codigo AS clasificacion_codigo,
                             c.clasificacion,
@@ -113,7 +113,7 @@ class Model_ItemClasificaciones extends \sowerphp\autoload\Model_Plural_App
      */
     public function exportar()
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT codigo, clasificacion, superior, activa
             FROM item_clasificacion
             WHERE contribuyente = :contribuyente

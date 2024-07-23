@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla cobranza de la base de datos.
  */
-class Model_Cobranza extends \sowerphp\autoload\Model_App
+class Model_Cobranza extends \sowerphp\autoload\Model
 {
 
     // Datos para la conexión a la base de datos
@@ -195,7 +195,7 @@ class Model_Cobranza extends \sowerphp\autoload\Model_App
      */
     public function otrosPagos()
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT fecha, monto, glosa, pagado, observacion
             FROM cobranza
             WHERE

@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla dte_compra de la base de datos.
  */
-class Model_DteCompras extends \sowerphp\autoload\Model_Plural_App
+class Model_DteCompras extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos
@@ -38,7 +38,7 @@ class Model_DteCompras extends \sowerphp\autoload\Model_Plural_App
      */
     public function libroGenerado($periodo): bool
     {
-        return (bool)(int)$this->db->getValue('
+        return (bool)(int)$this->getDatabaseConnection()->getValue('
             SELECT COUNT(*)
             FROM dte_compra
             WHERE
@@ -166,7 +166,7 @@ class Model_DteCompras extends \sowerphp\autoload\Model_Plural_App
             $vars[':fecha_hasta'] = $filtros['fecha_hasta'];
         }
         if (!empty($filtros['periodo'])) {
-            $periodo_col = $this->db->date('Ym', 'd.fecha');
+            $periodo_col = $this->getDatabaseConnection()->date('Ym', 'd.fecha');
             $where_periodo_recibidos = '((d.periodo IS NOT NULL AND d.periodo = :periodo) OR (d.periodo IS NULL AND '. $periodo_col.'::INTEGER = :periodo))';
             $where_periodo_emitidos = $periodo_col.'::INTEGER = :periodo';
             $vars[':periodo'] = $filtros['periodo'];
@@ -180,7 +180,7 @@ class Model_DteCompras extends \sowerphp\autoload\Model_Plural_App
             $vars[':usuario'] = $filtros['usuario'];
         }
         // generar consulta
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT t.*
             FROM
                 (

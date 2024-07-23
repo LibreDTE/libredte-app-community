@@ -31,7 +31,7 @@ use \website\Dte\Admin\Mantenedores\Model_DteTipos;
 /**
  * Clase para mapear la tabla dte_tmp de la base de datos.
  */
-class Model_DteTmp extends \sowerphp\autoload\Model_App
+class Model_DteTmp extends \sowerphp\autoload\Model
 {
 
     // Datos para la conexión a la base de datos
@@ -236,7 +236,7 @@ class Model_DteTmp extends \sowerphp\autoload\Model_App
                             throw new \Exception($message);
                         }
                     }
-                    $this->db->beginTransaction();
+                    $this->getDatabaseConnection()->beginTransaction();
                     try {
                         // actualizar total del dte temporal
                         $this->total = round($total);
@@ -248,9 +248,9 @@ class Model_DteTmp extends \sowerphp\autoload\Model_App
                             $Cobro->save();
                         }
                     } catch (\Exception $e) {
-                        $this->db->rollback();
+                        $this->getDatabaseConnection()->rollback();
                     }
-                    $this->db->commit();
+                    $this->getDatabaseConnection()->commit();
                 }
             }
         }
@@ -621,7 +621,7 @@ class Model_DteTmp extends \sowerphp\autoload\Model_App
                             $pagos = $DteEmitidoReferencia->getPagosProgramados();
                             if ($pagos) {
                                 try {
-                                    $this->db->executeRawQuery('
+                                    $this->getDatabaseConnection()->executeRawQuery('
                                         DELETE
                                         FROM cobranza
                                         WHERE
@@ -703,7 +703,7 @@ class Model_DteTmp extends \sowerphp\autoload\Model_App
     /**
      * Método que realiza verificaciones a campos antes de guardar.
      */
-    public function save(): bool
+    public function save(array $options = []): bool
     {
         // Evento al guardar el DTE temporal.
         event('dte_dte_tmp_guardar', [$this]);
@@ -721,21 +721,21 @@ class Model_DteTmp extends \sowerphp\autoload\Model_App
      */
     public function delete($borrarCobro = true): bool
     {
-        $this->db->beginTransaction();
+        $this->getDatabaseConnection()->beginTransaction();
         if ($borrarCobro && $this->getEmisor()->config_pagos_habilitado) {
             $Cobro = $this->getCobro(false);
             if ($Cobro && $Cobro->exists() && !$Cobro->pagado) {
                 if (!$Cobro->delete(false)) {
-                    $this->db->rollback();
+                    $this->getDatabaseConnection()->rollback();
                     return false;
                 }
             }
         }
         if (!parent::delete()) {
-            $this->db->rollback();
+            $this->getDatabaseConnection()->rollback();
             return false;
         }
-        $this->db->commit();
+        $this->getDatabaseConnection()->commit();
         return true;
     }
 
@@ -861,7 +861,7 @@ class Model_DteTmp extends \sowerphp\autoload\Model_App
             $fecha_hora = date('Y-m-d H:i:s');
             foreach ($to as $dest) {
                 try {
-                    $this->db->executeRawQuery('
+                    $this->getDatabaseConnection()->executeRawQuery('
                         INSERT INTO dte_tmp_email
                         VALUES (:emisor, :receptor, :dte, :codigo, :email, :fecha_hora)
                     ', [
@@ -887,7 +887,7 @@ class Model_DteTmp extends \sowerphp\autoload\Model_App
      */
     public function getEmailEnviadosResumen(): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT email, COUNT(*) AS enviados, MIN(fecha_hora) AS primer_envio, MAX(fecha_hora) AS ultimo_envio
             FROM dte_tmp_email
             WHERE emisor = :emisor AND receptor = :receptor AND  dte = :dte AND codigo = :codigo

@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla dte_intercambio_resultado de la base de datos.
  */
-class Model_DteIntercambioResultado extends \sowerphp\autoload\Model_App
+class Model_DteIntercambioResultado extends \sowerphp\autoload\Model
 {
 
     // Datos para la conexión a la base de datos
@@ -164,7 +164,7 @@ class Model_DteIntercambioResultado extends \sowerphp\autoload\Model_App
             throw new \Exception('El RUT del receptor no es válido.');
         }
         // guardar recepción
-        $this->db->beginTransaction();
+        $this->getDatabaseConnection()->beginTransaction();
         $this->responde = explode('-', $Resultado['Caratula']['RutResponde'])[0];
         $this->recibe = $Emisor->rut;
         $this->codigo = md5($xml);
@@ -183,7 +183,7 @@ class Model_DteIntercambioResultado extends \sowerphp\autoload\Model_App
         $this->fecha_hora = str_replace('T', ' ', $Resultado['Caratula']['TmstFirmaResp']);
         $this->xml = base64_encode($xml);
         if (!$this->save()) {
-            $this->db->rollback();
+            $this->getDatabaseConnection()->rollback();
             throw new \Exception('No fue posible guardar el resultado del intercambio.');
         }
         // procesar cada resultado
@@ -191,7 +191,7 @@ class Model_DteIntercambioResultado extends \sowerphp\autoload\Model_App
             // si el RUT del emisor no corresponde con el del contribuyente el
             // acuse no es para este
             if (explode('-', $Resultado['RUTEmisor'])[0] != $Emisor->rut) {
-                $this->db->rollback();
+                $this->getDatabaseConnection()->rollback();
                 throw new \Exception('El RUT del emisor del DTE informado no corresponde.');
             }
             // buscar DTE emitido en el ambiente del emisor
@@ -208,7 +208,7 @@ class Model_DteIntercambioResultado extends \sowerphp\autoload\Model_App
                 || $Resultado['FchEmis'] != $DteEmitido->fecha
                 || $Resultado['MntTotal'] != $DteEmitido->total
             ) {
-                $this->db->rollback();
+                $this->getDatabaseConnection()->rollback();
                 throw new \Exception('DTE informado no existe o sus datos no corresponden.');
             }
             // guardar recibo para el DTE
@@ -223,12 +223,12 @@ class Model_DteIntercambioResultado extends \sowerphp\autoload\Model_App
                 : ''
             ;
             if (!$DteIntercambioResultadoDte->save()) {
-                $this->db->rollback();
+                $this->getDatabaseConnection()->rollback();
                 throw new \Exception('No fue posible guardar el DTE del resultado del intercambio.');
             }
         }
         // aceptar transacción
-        $this->db->commit();
+        $this->getDatabaseConnection()->commit();
         return true;
     }
 

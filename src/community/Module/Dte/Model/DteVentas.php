@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla dte_venta de la base de datos.
  */
-class Model_DteVentas extends \sowerphp\autoload\Model_Plural_App
+class Model_DteVentas extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos
@@ -38,7 +38,7 @@ class Model_DteVentas extends \sowerphp\autoload\Model_Plural_App
      */
     public function libroGenerado($periodo)
     {
-        return $this->db->getValue('
+        return $this->getDatabaseConnection()->getValue('
             SELECT COUNT(*)
             FROM dte_venta
             WHERE
@@ -168,7 +168,7 @@ class Model_DteVentas extends \sowerphp\autoload\Model_Plural_App
             $vars[':fecha_hasta'] = $filtros['fecha_hasta'];
         }
         if (!empty($filtros['periodo'])) {
-            $periodo_col = $this->db->date('Ym', 'd.fecha');
+            $periodo_col = $this->getDatabaseConnection()->date('Ym', 'd.fecha');
             $where[] = $periodo_col.' = :periodo';
             $vars[':periodo'] = $filtros['periodo'];
         }
@@ -181,7 +181,7 @@ class Model_DteVentas extends \sowerphp\autoload\Model_Plural_App
             $vars[':usuario'] = $filtros['usuario'];
         }
         // generar consulta
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 t.codigo,
                 t.tipo,

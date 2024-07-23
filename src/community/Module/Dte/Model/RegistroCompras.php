@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Clase para mapear la tabla registro_compra de la base de datos.
  */
-class Model_RegistroCompras extends \sowerphp\autoload\Model_Plural_App
+class Model_RegistroCompras extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos
@@ -63,8 +63,8 @@ class Model_RegistroCompras extends \sowerphp\autoload\Model_Plural_App
                 'estado' => $estado,
                 'tipo' => 'rcv',
             ]);
-            $this->db->beginTransaction();
-            $this->db->executeRawQuery('
+            $this->getDatabaseConnection()->beginTransaction();
+            $this->getDatabaseConnection()->executeRawQuery('
                 DELETE
                 FROM registro_compra
                 WHERE
@@ -87,7 +87,7 @@ class Model_RegistroCompras extends \sowerphp\autoload\Model_Plural_App
                 $RegistroCompra->set($this->normalizar($pendiente));
                 $RegistroCompra->save();
             }
-            $this->db->commit();
+            $this->getDatabaseConnection()->commit();
         }
     }
 
@@ -218,7 +218,7 @@ class Model_RegistroCompras extends \sowerphp\autoload\Model_Plural_App
                 rc.dettipotransaccion
             ';
         }
-        $pendientes = $this->db->getTable('
+        $pendientes = $this->getDatabaseConnection()->getTable('
             SELECT
                 '.$select.'
             FROM
@@ -255,7 +255,7 @@ class Model_RegistroCompras extends \sowerphp\autoload\Model_Plural_App
      */
     public function getResumenPendientes(): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 rc.dettipodoc AS dte,
                 t.tipo AS dte_glosa,
@@ -284,7 +284,7 @@ class Model_RegistroCompras extends \sowerphp\autoload\Model_Plural_App
      */
     public function getByDias(int $dias = 8): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 fecha_recepcion_sii,
                 fecha_aceptacion_automatica,
@@ -353,7 +353,7 @@ class Model_RegistroCompras extends \sowerphp\autoload\Model_Plural_App
                 $query_template
             );
         }
-        return $this->db->getTable(
+        return $this->getDatabaseConnection()->getTable(
             implode(' UNION ', $query)
             . ' ORDER BY hasta DESC'
         , [

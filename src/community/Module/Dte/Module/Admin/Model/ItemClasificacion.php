@@ -26,7 +26,7 @@ namespace website\Dte\Admin;
 /**
  * Clase para mapear la tabla item_clasificacion de la base de datos.
  */
-class Model_ItemClasificacion extends \sowerphp\autoload\Model_App
+class Model_ItemClasificacion extends \sowerphp\autoload\Model
 {
 
     // Datos para la conexión a la base de datos
@@ -120,7 +120,7 @@ class Model_ItemClasificacion extends \sowerphp\autoload\Model_App
     /**
      * Método que guarda la clasificación del item.
      */
-    public function save(): bool
+    public function save(array $options = []): bool
     {
         $this->codigo = trim(str_replace(['/', '"', '\'', ' ', '&', '%'], '_', $this->codigo));
         return parent::save();
@@ -147,7 +147,7 @@ class Model_ItemClasificacion extends \sowerphp\autoload\Model_App
      */
     public function enUso()
     {
-        return (bool)$this->db->getValue('
+        return (bool)$this->getDatabaseConnection()->getValue('
             SELECT COUNT(*)
             FROM item
             WHERE contribuyente = :contribuyente AND clasificacion = :clasificacion

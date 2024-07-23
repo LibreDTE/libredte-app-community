@@ -26,7 +26,7 @@ namespace website\Dte\Admin\Mantenedores;
 /**
  * Clase para mapear la tabla iva_no_recuperable de la base de datos.
  */
-class Model_IvaNoRecuperables extends \sowerphp\autoload\Model_Plural_App
+class Model_IvaNoRecuperables extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos
@@ -38,7 +38,7 @@ class Model_IvaNoRecuperables extends \sowerphp\autoload\Model_Plural_App
      */
     public function getList()
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT codigo, codigo || \' - \' || tipo
             FROM iva_no_recuperable
             ORDER BY codigo

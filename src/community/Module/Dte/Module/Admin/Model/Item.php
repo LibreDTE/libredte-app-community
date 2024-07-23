@@ -28,7 +28,7 @@ use \sowerphp\app\Sistema\General\Model_MonedaCambios;
 /**
  * Clase para mapear la tabla item de la base de datos.
  */
-class Model_Item extends \sowerphp\autoload\Model_App
+class Model_Item extends \sowerphp\autoload\Model
 {
 
     // Datos para la conexión a la base de datos
@@ -238,7 +238,7 @@ class Model_Item extends \sowerphp\autoload\Model_App
     /**
      * Método que guarda el item de facturación.
      */
-    public function save(): bool
+    public function save(array $options = []): bool
     {
         $this->codigo = trim(str_replace(['/', '"', '\'', ' ', '&', '%', '+', '#'], '_', $this->codigo));
         return parent::save();

@@ -28,7 +28,7 @@ use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
 /**
  * Clase para mapear la tabla boleta_tercero de la base de datos.
  */
-class Model_BoletaTerceros extends \sowerphp\autoload\Model_Plural_App
+class Model_BoletaTerceros extends \sowerphp\autoload\Model_Plural
 {
 
     // Datos para la conexión a la base de datos
@@ -112,14 +112,14 @@ class Model_BoletaTerceros extends \sowerphp\autoload\Model_Plural_App
      */
     public function getPeriodos($periodo = null)
     {
-        $periodo_col = $this->db->date('Ym', 'fecha');
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'fecha');
         $where = ['emisor = :emisor', 'anulada = false'];
         $vars = [':emisor' => $this->getContribuyente()->rut];
         if ($periodo) {
             $where[] = $periodo_col.' = :periodo';
             $vars[':periodo'] = $periodo;
         }
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 '.$periodo_col.' AS periodo,
                 COUNT(*) AS cantidad,
@@ -152,7 +152,7 @@ class Model_BoletaTerceros extends \sowerphp\autoload\Model_Plural_App
         $where = ['b.emisor = :emisor'];
         $vars = [':emisor' => $this->getContribuyente()->rut];
         if (!empty($filtros['periodo'])) {
-            $periodo_col = $this->db->date('Ym', 'b.fecha');
+            $periodo_col = $this->getDatabaseConnection()->date('Ym', 'b.fecha');
             $where[] = $periodo_col.' = :periodo';
             $vars[':periodo'] = $filtros['periodo'];
         }
@@ -196,7 +196,7 @@ class Model_BoletaTerceros extends \sowerphp\autoload\Model_Plural_App
                 $where[] = 'b.sucursal_sii IS NULL';
             }
         }
-        $boletas = $this->db->getTable('
+        $boletas = $this->getDatabaseConnection()->getTable('
             SELECT
                 b.codigo,
                 b.receptor AS receptor_rut,

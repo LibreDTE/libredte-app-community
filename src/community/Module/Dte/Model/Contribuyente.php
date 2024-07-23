@@ -43,7 +43,7 @@ use \website\Sistema\General\Model_ActividadEconomica;
 /**
  * Clase para mapear la tabla contribuyente de la base de datos.
  */
-class Model_Contribuyente extends \sowerphp\autoload\Model_App
+class Model_Contribuyente extends \sowerphp\autoload\Model
 {
 
     // Datos para la conexión a la base de datos
@@ -299,7 +299,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             return null;
         }
         if ($this->config === null) {
-            $config = $this->getDB()->getTableWithAssociativeIndex('
+            $config = $this->getDatabaseConnection()->getTableWithAssociativeIndex('
                 SELECT configuracion, variable, valor, json
                 FROM contribuyente_config
                 WHERE contribuyente = :contribuyente
@@ -508,11 +508,11 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function delete(bool $all = false): bool
     {
-        $this->db->beginTransaction();
+        $this->getDatabaseConnection()->beginTransaction();
         // desasociar contribuyente del usuario
         $this->usuario = null;
         if (!$this->save()) {
-            $this->db->rollback();
+            $this->getDatabaseConnection()->rollback();
             return false;
         }
         // eliminar todos los registros de la empresa de la base de datos
@@ -526,42 +526,42 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
                 }
             }
             $vars = [':rut' => $this->rut];
-            $this->db->executeRawQuery('
+            $this->getDatabaseConnection()->executeRawQuery('
                 DELETE
                 FROM contribuyente_config
                 WHERE contribuyente = :rut
             ', $vars);
             if (!$this->save()) {
-                $this->db->rollback();
+                $this->getDatabaseConnection()->rollback();
                 return false;
             }
             // módulo Dte
-            $this->db->executeRawQuery('DELETE FROM contribuyente_dte WHERE contribuyente = :rut', $vars);
-            $this->db->executeRawQuery('DELETE FROM contribuyente_usuario WHERE contribuyente = :rut', $vars);
-            $this->db->executeRawQuery('DELETE FROM contribuyente_usuario_dte WHERE contribuyente = :rut', $vars);
-            $this->db->executeRawQuery('DELETE FROM contribuyente_usuario_sucursal WHERE contribuyente = :rut', $vars);
-            $this->db->executeRawQuery('DELETE FROM dte_boleta_consumo WHERE emisor = :rut', $vars);
-            $this->db->executeRawQuery('DELETE FROM dte_compra WHERE receptor = :rut', $vars);
-            $this->db->executeRawQuery('DELETE FROM dte_emitido WHERE emisor = :rut', $vars); // borra: dte_emitido_email, cobranza
-            $this->db->executeRawQuery('DELETE FROM dte_folio WHERE emisor = :rut', $vars); // borra: dte_caf
-            $this->db->executeRawQuery('DELETE FROM dte_guia WHERE emisor = :rut', $vars);
-            $this->db->executeRawQuery('DELETE FROM dte_recibido WHERE receptor = :rut', $vars);
-            $this->db->executeRawQuery('DELETE FROM dte_intercambio WHERE receptor = :rut', $vars);
-            $this->db->executeRawQuery('DELETE FROM dte_intercambio_recepcion WHERE recibe = :rut', $vars); // borra: dte_intercambio_recepcion_dte
-            $this->db->executeRawQuery('DELETE FROM dte_intercambio_recibo WHERE recibe = :rut', $vars); // borra: dte_intercambio_recibo_dte
-            $this->db->executeRawQuery('DELETE FROM dte_intercambio_resultado WHERE recibe = :rut', $vars); // borra: dte_intercambio_resultado_dte
-            $this->db->executeRawQuery('DELETE FROM dte_referencia WHERE emisor = :rut', $vars);
-            $this->db->executeRawQuery('DELETE FROM dte_tmp WHERE emisor = :rut', $vars); // borra: dte_tmp_email
-            $this->db->executeRawQuery('DELETE FROM dte_venta WHERE emisor = :rut', $vars);
-            $this->db->executeRawQuery('DELETE FROM item_clasificacion WHERE contribuyente = :rut', $vars); // borra: item
-            $this->db->executeRawQuery('DELETE FROM registro_compra WHERE receptor = :rut', $vars);
-            $this->db->executeRawQuery('DELETE FROM boleta_honorario WHERE receptor = :rut', $vars);
-            $this->db->executeRawQuery('DELETE FROM boleta_tercero WHERE emisor = :rut', $vars);
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM contribuyente_dte WHERE contribuyente = :rut', $vars);
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM contribuyente_usuario WHERE contribuyente = :rut', $vars);
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM contribuyente_usuario_dte WHERE contribuyente = :rut', $vars);
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM contribuyente_usuario_sucursal WHERE contribuyente = :rut', $vars);
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM dte_boleta_consumo WHERE emisor = :rut', $vars);
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM dte_compra WHERE receptor = :rut', $vars);
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM dte_emitido WHERE emisor = :rut', $vars); // borra: dte_emitido_email, cobranza
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM dte_folio WHERE emisor = :rut', $vars); // borra: dte_caf
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM dte_guia WHERE emisor = :rut', $vars);
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM dte_recibido WHERE receptor = :rut', $vars);
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM dte_intercambio WHERE receptor = :rut', $vars);
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM dte_intercambio_recepcion WHERE recibe = :rut', $vars); // borra: dte_intercambio_recepcion_dte
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM dte_intercambio_recibo WHERE recibe = :rut', $vars); // borra: dte_intercambio_recibo_dte
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM dte_intercambio_resultado WHERE recibe = :rut', $vars); // borra: dte_intercambio_resultado_dte
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM dte_referencia WHERE emisor = :rut', $vars);
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM dte_tmp WHERE emisor = :rut', $vars); // borra: dte_tmp_email
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM dte_venta WHERE emisor = :rut', $vars);
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM item_clasificacion WHERE contribuyente = :rut', $vars); // borra: item
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM registro_compra WHERE receptor = :rut', $vars);
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM boleta_honorario WHERE receptor = :rut', $vars);
+            $this->getDatabaseConnection()->executeRawQuery('DELETE FROM boleta_tercero WHERE emisor = :rut', $vars);
             // eliminar archivos asociados al contribuyente (carpeta: /storage/static/contribuyentes/RUT)
             // TODO: implementar eliminación.
         }
         // aplicar cambios
-        return $this->db->commit();
+        return $this->getDatabaseConnection()->commit();
     }
 
     /**
@@ -636,7 +636,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             $where[] = ':a'.$key;
             $vars[':a'.$key] = $a;
         }
-        return $this->db->getTableWithAssociativeIndex('
+        return $this->getDatabaseConnection()->getTableWithAssociativeIndex('
             SELECT codigo, actividad_economica
             FROM actividad_economica
             WHERE codigo IN ('.implode(',', $where).')
@@ -669,8 +669,8 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function setUsuarios(array $usuarios): bool
     {
-        $this->db->beginTransaction();
-        $this->db->executeRawQuery('
+        $this->getDatabaseConnection()->beginTransaction();
+        $this->getDatabaseConnection()->executeRawQuery('
             DELETE
             FROM contribuyente_usuario
             WHERE contribuyente = :rut
@@ -681,7 +681,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             }
             $Usuario = new Model_Usuario($usuario);
             if (!$Usuario->exists()) {
-                $this->db->rollback();
+                $this->getDatabaseConnection()->rollback();
                 throw new \Exception('Usuario '.$usuario.' no existe');
                 return false;
             }
@@ -694,7 +694,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
                 $ContribuyenteUsuario->save();
             }
         }
-        $this->db->commit();
+        $this->getDatabaseConnection()->commit();
         return true;
     }
 
@@ -705,7 +705,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getUsuariosEmail(string $permiso = 'admin'): array
     {
-        $emails = $this->db->getCol('
+        $emails = $this->getDatabaseConnection()->getCol('
             (
                 SELECT u.email
                 FROM contribuyente AS c JOIN usuario AS u ON u.id = c.usuario
@@ -728,7 +728,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getUsuarios(): array
     {
-        $usuarios = $this->db->getTableWithAssociativeIndex('
+        $usuarios = $this->getDatabaseConnection()->getTableWithAssociativeIndex('
             SELECT u.usuario, c.permiso
             FROM usuario AS u, contribuyente_usuario AS c
             WHERE u.id = c.usuario AND c.contribuyente = :rut
@@ -748,7 +748,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getListUsuarios(): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             (
                 SELECT DISTINCT u.id, u.usuario
                 FROM usuario AS u JOIN contribuyente_usuario AS c ON u.id = c.usuario
@@ -786,7 +786,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             return true;
         }
         // Ver si el usuario tiene acceso a la empresa.
-        $usuario_permisos = $this->db->getCol('
+        $usuario_permisos = $this->getDatabaseConnection()->getCol('
             SELECT permiso
             FROM contribuyente_usuario
             WHERE contribuyente = :rut AND usuario = :usuario
@@ -858,7 +858,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             // siempre asignar el grupo 'usuarios' para mantener permisos básicos
             $usuario_grupos_sesion[] = 'usuarios';
             // buscar los permisos que tiene el usuario autorizado sobre la empresa
-            $usuario_permisos = $this->db->getCol('
+            $usuario_permisos = $this->getDatabaseConnection()->getCol('
                 SELECT permiso
                 FROM contribuyente_usuario
                 WHERE contribuyente = :rut AND usuario = :usuario
@@ -955,7 +955,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
         }
         // buscar documentos
         if ($onlyPK) {
-            $documentos = $this->db->getCol('
+            $documentos = $this->getDatabaseConnection()->getCol('
                 SELECT
                     t.codigo
                 FROM
@@ -972,7 +972,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
                 ':activo' => 1,
             ]);
         } else {
-            $documentos = $this->db->getTable('
+            $documentos = $this->getDatabaseConnection()->getTable('
                 SELECT
                     t.codigo,
                     t.tipo
@@ -1018,7 +1018,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getDocumentosAutorizadosPorUsuario(): array
     {
-        $autorizados = $this->db->getTableWithAssociativeIndex('
+        $autorizados = $this->getDatabaseConnection()->getTableWithAssociativeIndex('
             SELECT
                 u.usuario,
                 d.dte
@@ -1044,8 +1044,8 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function setDocumentosAutorizadosPorUsuario(array $usuarios)
     {
-        $this->db->beginTransaction();
-        $this->db->executeRawQuery('
+        $this->getDatabaseConnection()->beginTransaction();
+        $this->getDatabaseConnection()->executeRawQuery('
             DELETE
             FROM contribuyente_usuario_dte
             WHERE contribuyente = :rut
@@ -1056,7 +1056,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             }
             $Usuario = new Model_Usuario($usuario);
             if (!$Usuario->exists()) {
-                $this->db->rollback();
+                $this->getDatabaseConnection()->rollback();
                 throw new \Exception('Usuario '.$usuario.' no existe.');
                 return false;
             }
@@ -1069,7 +1069,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
                 $ContribuyenteUsuarioDte->save();
             }
         }
-        $this->db->commit();
+        $this->getDatabaseConnection()->commit();
         return true;
     }
 
@@ -1082,7 +1082,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function documentoAutorizado($dte, $Usuario = null): bool
     {
-        $dte_autorizado = (bool)$this->db->getValue('
+        $dte_autorizado = (bool)$this->getDatabaseConnection()->getValue('
             SELECT COUNT(*)
             FROM contribuyente_dte
             WHERE contribuyente = :rut AND dte = :dte AND activo = true
@@ -1097,7 +1097,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             if ($Usuario->id == $this->usuario || $Usuario->inGroup(['soporte'])) {
                 return true;
             }
-            $dtes = $this->db->getCol('
+            $dtes = $this->getDatabaseConnection()->getCol('
                 SELECT dte
                 FROM contribuyente_usuario_dte
                 WHERE contribuyente = :contribuyente AND usuario = :usuario
@@ -1119,7 +1119,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getFolios(): array
     {
-        $folios = $this->db->getTable('
+        $folios = $this->getDatabaseConnection()->getTable('
             SELECT
                 f.dte,
                 t.tipo,
@@ -1171,7 +1171,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getFolio(int $dte, int $folio_manual = 0)
     {
-        if (!$this->db->beginTransaction(true)) {
+        if (!$this->getDatabaseConnection()->beginTransaction(true)) {
             return false;
         }
         $DteFolio = new Model_DteFolio(
@@ -1195,7 +1195,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             }
         }
         if (!$DteFolio->exists() || !$DteFolio->disponibles) {
-            $this->db->rollback();
+            $this->getDatabaseConnection()->rollback();
             return false;
         }
         if ($folio_manual == $DteFolio->siguiente) {
@@ -1207,11 +1207,11 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             $DteFolio->disponibles--;
             try {
                 if (!$DteFolio->save(false)) {
-                    $this->db->rollback();
+                    $this->getDatabaseConnection()->rollback();
                     return false;
                 }
             } catch (\Exception $e) {
-                $this->db->rollback();
+                $this->getDatabaseConnection()->rollback();
                 return false;
             }
         } else {
@@ -1219,10 +1219,10 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
         }
         $Caf = $DteFolio->getCaf($folio);
         if (!$Caf) {
-            $this->db->rollback();
+            $this->getDatabaseConnection()->rollback();
             return false;
         }
-        $this->db->commit();
+        $this->getDatabaseConnection()->commit();
         return (object)[
             'folio' => $folio,
             'Caf' => $Caf,
@@ -1236,7 +1236,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getFirmas(): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             (
                 SELECT
                     f.run,
@@ -1293,7 +1293,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
     {
         if (!isset($this->firmas[(int)$user_id])) {
             // buscar firma del usuario administrador de la empresa
-            $datos = $this->db->getRow('
+            $datos = $this->getDatabaseConnection()->getRow('
                 SELECT
                     f.archivo,
                     f.contrasenia
@@ -1305,7 +1305,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             ', [':rut' => $this->rut]);
             // buscar firma del usuario que está haciendo la solicitud
             if (empty($datos) && $user_id && $user_id != $this->usuario) {
-                $datos = $this->db->getRow('
+                $datos = $this->getDatabaseConnection()->getRow('
                     SELECT archivo, contrasenia
                     FROM firma_electronica
                     WHERE usuario = :usuario
@@ -1466,7 +1466,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
     public function countDocumentosTemporales(array $filtros = []): int
     {
         list($where, $vars) = $this->crearFiltrosDocumentosTemporales($filtros);
-        return (int)$this->db->getValue('
+        return (int)$this->getDatabaseConnection()->getValue('
             SELECT
                 COUNT(*)
             FROM
@@ -1512,14 +1512,14 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
         ';
         // armar límite consulta
         if (isset($filtros['limit'])) {
-            $query = $this->db->setLimit(
+            $query = $this->getDatabaseConnection()->setLimit(
                 $query,
                 $filtros['limit'],
                 !empty($filtros['offset']) ? $filtros['offset'] : 0
             );
         }
         // entregar consulta
-        return $this->db->getTable($query, $vars);
+        return $this->getDatabaseConnection()->getTable($query, $vars);
     }
 
     /**
@@ -1608,7 +1608,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             }
         }
         if (!empty($filtros['razon_social'])) {
-            $razon_social_xpath = $this->db->xml(
+            $razon_social_xpath = $this->getDatabaseConnection()->xml(
                 'd.xml',
                 '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep',
                 'http://www.sii.cl/SiiDte'
@@ -1665,7 +1665,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
         }
         // vendedor
         if (!empty($filtros['vendedor'])) {
-            $vendedor_col = $this->db->xml(
+            $vendedor_col = $this->getDatabaseConnection()->xml(
                 'd.xml',
                 '/EnvioDTE/SetDTE/DTE/*/Encabezado/Emisor/CdgVendedor',
                 'http://www.sii.cl/SiiDte'
@@ -1731,7 +1731,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             $i = 1;
             foreach ($filtros['xml'] as $nodo => $valor) {
                 $nodo = preg_replace('/[^A-Za-z\/]/', '', $nodo);
-                $nodo_col = $this->db->xml('d.xml', '/EnvioDTE/SetDTE/DTE/*/'.$nodo, 'http://www.sii.cl/SiiDte');
+                $nodo_col = $this->getDatabaseConnection()->xml('d.xml', '/EnvioDTE/SetDTE/DTE/*/'.$nodo, 'http://www.sii.cl/SiiDte');
                 $where[] = 'LOWER(' . $nodo_col . ') LIKE :xml' . $i;
                 $vars[':xml' . $i] = '%' . strtolower($valor) . '%';
                 $i++;
@@ -1748,7 +1748,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
     {
         list($where, $vars) = $this->crearFiltrosDocumentosEmitidos($filtros);
         // contar documentos emitidos
-        return (int)$this->db->getValue('
+        return (int)$this->getDatabaseConnection()->getValue('
             SELECT
                 COUNT(*)
             FROM
@@ -1797,7 +1797,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
         ';
         // armar límite consulta
         if (isset($filtros['limit'])) {
-            $query = $this->db->setLimit(
+            $query = $this->getDatabaseConnection()->setLimit(
                 $query,
                 $filtros['limit'],
                 !empty($filtros['offset']) ? $filtros['offset'] : 0
@@ -1805,12 +1805,12 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
         }
         // entregar consulta verdadera (esta si obtiene razón social verdadera
         // en DTE exportación, pero solo para las filas del límite consultado)
-        $razon_social_xpath = $this->db->xml(
+        $razon_social_xpath = $this->getDatabaseConnection()->xml(
             'd.xml',
             '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep',
             'http://www.sii.cl/SiiDte'
         );
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 d.dte,
                 t.tipo,
@@ -1991,8 +1991,8 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getResumenBoletasPeriodos(): array
     {
-        $periodo_col = $this->db->date('Ym', 'fecha');
-        return $this->db->getTable('
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'fecha');
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 '.$periodo_col.' AS periodo,
                 COUNT(folio) AS emitidas,
@@ -2024,8 +2024,8 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getBoletas($periodo): array
     {
-        $periodo_col = $this->db->date('Ym', 'e.fecha');
-        return $this->db->getTable('
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'e.fecha');
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 e.dte,
                 e.folio,
@@ -2072,7 +2072,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
         if (!$hasta) {
             $hasta = $desde;
         }
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             (
                 SELECT
                     dte,
@@ -2128,8 +2128,8 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getResumenVentasPeriodos(): array
     {
-        $periodo_col = $this->db->date('Ym', 'e.fecha', 'INTEGER');
-        return $this->db->getTable('
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'e.fecha', 'INTEGER');
+        return $this->getDatabaseConnection()->getTable('
             (
                 SELECT
                     '.$periodo_col.' AS periodo,
@@ -2182,7 +2182,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
     {
         $fecha_desde = Utility_Date::normalize($periodo . '01');
         $fecha_hasta = Utility_Date::lastDayPeriod($periodo);
-        return (int)$this->db->getValue('
+        return (int)$this->getDatabaseConnection()->getValue('
             SELECT COUNT(*)
             FROM
                 dte_emitido AS e
@@ -2223,8 +2223,8 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getVentas($periodo): array
     {
-        $periodo_col = $this->db->date('Ym', 'e.fecha');
-        $razon_social_xpath = $this->db->xml(
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'e.fecha');
+        $razon_social_xpath = $this->getDatabaseConnection()->xml(
             'e.xml',
             '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep',
             'http://www.sii.cl/SiiDte'
@@ -2234,7 +2234,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
         ;
         // si el contribuyente tiene impuestos adicionales se crean las query para esos campos
         if ($this->config_extra_impuestos_adicionales) {
-            list($impuesto_codigo, $impuesto_tasa, $impuesto_monto) = $this->db->xml('e.xml', [
+            list($impuesto_codigo, $impuesto_tasa, $impuesto_monto) = $this->getDatabaseConnection()->xml('e.xml', [
                 '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Totales/ImptoReten/TipoImp',
                 '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Totales/ImptoReten/TasaImp',
                 '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Totales/ImptoReten/MontoImp',
@@ -2243,7 +2243,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             $impuesto_codigo = $impuesto_tasa = $impuesto_monto = 'NULL';
         }
         if ($this->config_extra_constructora) {
-            $credito_constructoras = $this->db->xml(
+            $credito_constructoras = $this->getDatabaseConnection()->xml(
                 'e.xml',
                 '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Totales/CredEC',
                 'http://www.sii.cl/SiiDte'
@@ -2252,14 +2252,14 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             $credito_constructoras = 'NULL';
         }
         // campos para datos extranjeros
-        list($extranjero_id, $extranjero_nacionalidad) = $this->db->xml('e.xml', [
+        list($extranjero_id, $extranjero_nacionalidad) = $this->getDatabaseConnection()->xml('e.xml', [
             '/EnvioDTE/SetDTE/DTE/Exportaciones/Referencia/FolioRef',
             '/EnvioDTE/SetDTE/DTE/Exportaciones/Encabezado/Receptor/Extranjero/Nacionalidad',
         ], 'http://www.sii.cl/SiiDte');
         // TODO: fix xpath para seleccionar la referencia que tiene codigo 813 (u otro doc identidad que se defina).
         $extranjero_id = 'NULL';
         // realizar consulta
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 e.dte,
                 e.folio,
@@ -2377,11 +2377,11 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
         if (!$fecha) {
             $fecha = date('Y-m-d');
         }
-        $periodo_col = $this->db->date('Ym', 'e.fecha');
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'e.fecha');
         $desde = substr(str_replace('-', '', Utility_Date::getPrevious($fecha, 'M', $periodos)), 0, 6);
         $hasta = Utility_Date::previousPeriod(substr(str_replace('-', '', $fecha), 0, 6));
         // realizar consulta
-        $montos = $this->db->getTable('
+        $montos = $this->getDatabaseConnection()->getTable('
             SELECT
                 '.$periodo_col.' AS periodo,
                 t.operacion,
@@ -2479,9 +2479,9 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getVentasDiarias($periodo): array
     {
-        $periodo_col = $this->db->date('Ym', 'e.fecha');
-        $dia_col = $this->db->date('d', 'e.fecha');
-        return $this->db->getTable('
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'e.fecha');
+        $dia_col = $this->getDatabaseConnection()->date('d', 'e.fecha');
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 '.$dia_col.' AS dia,
                 COUNT(*) AS documentos
@@ -2512,8 +2512,8 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getVentasPorTipo($periodo): array
     {
-        $periodo_col = $this->db->date('Ym', 'e.fecha');
-        return $this->db->getTable('
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'e.fecha');
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 t.tipo,
                 COUNT(*) AS documentos
@@ -2541,8 +2541,8 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getResumenGuiasPeriodos(): array
     {
-        $periodo_col = $this->db->date('Ym', 'e.fecha', 'INTEGER');
-        return $this->db->getTable('
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'e.fecha', 'INTEGER');
+        return $this->getDatabaseConnection()->getTable('
             (
                 SELECT
                     '.$periodo_col.' AS periodo,
@@ -2590,8 +2590,8 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function countGuias($periodo): int
     {
-        $periodo_col = $this->db->date('Ym', 'e.fecha');
-        return (int)$this->db->getValue('
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'e.fecha');
+        return (int)$this->getDatabaseConnection()->getValue('
             SELECT
                 COUNT(*)
             FROM
@@ -2623,13 +2623,13 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getGuias($periodo): array
     {
-        $periodo_col = $this->db->date('Ym', 'e.fecha');
-        $tipo_col= $this->db->xml(
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'e.fecha');
+        $tipo_col= $this->getDatabaseConnection()->xml(
             'e.xml',
             '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/IdDoc/IndTraslado',
             'http://www.sii.cl/SiiDte'
         );
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 e.folio,
                 CASE WHEN e.anulado THEN
@@ -2684,9 +2684,9 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getGuiasDiarias($periodo): array
     {
-        $periodo_col = $this->db->date('Ym', 'fecha');
-        $dia_col = $this->db->date('d', 'fecha');
-        return $this->db->getTable('
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'fecha');
+        $dia_col = $this->getDatabaseConnection()->date('d', 'fecha');
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 '.$dia_col.' AS dia,
                 COUNT(*) AS documentos
@@ -2841,7 +2841,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
     public function countDocumentosRecibidos(array $filtros = []): int
     {
         list($where, $vars) = $this->crearFiltrosDocumentosRecibidos($filtros);
-        return (int)$this->db->getValue('
+        return (int)$this->getDatabaseConnection()->getValue('
             SELECT
                 COUNT(*)
             FROM
@@ -2894,14 +2894,14 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
         ';
         // armar límite consulta
         if (isset($filtros['limit'])) {
-            $query = $this->db->setLimit(
+            $query = $this->getDatabaseConnection()->setLimit(
                 $query,
                 $filtros['limit'],
                 $filtros['offset']
             );
         }
         // entregar consulta
-        return $this->db->getTable($query, $vars);
+        return $this->getDatabaseConnection()->getTable($query, $vars);
     }
 
     /**
@@ -2909,9 +2909,9 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getResumenComprasPeriodos(): array
     {
-        $periodo_col = $this->db->date('Ym', 'r.fecha', 'INTEGER');
-        $periodo_col_46 = $this->db->date('Ym', 'r.fecha_hora_creacion', 'INTEGER'); ///< se asume como período el de la creación de la FC
-        return $this->db->getTable('
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'r.fecha', 'INTEGER');
+        $periodo_col_46 = $this->getDatabaseConnection()->date('Ym', 'r.fecha_hora_creacion', 'INTEGER'); ///< se asume como período el de la creación de la FC
+        return $this->getDatabaseConnection()->getTable('
             (
                 SELECT
                     CASE WHEN r.periodo IS NOT NULL THEN
@@ -3005,7 +3005,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
         $fecha_desde = Utility_Date::normalize($periodo . '01');
         $fecha_hasta = Utility_Date::lastDayPeriod($periodo);
         $fechahora_hasta = $fecha_hasta . ' 23:59:59';
-        $compras = $this->db->getCol('
+        $compras = $this->getDatabaseConnection()->getCol('
             (
                 SELECT
                     COUNT(*)
@@ -3090,9 +3090,9 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getCompras($periodo, $tipo_dte = null): array
     {
-        $periodo_col = $this->db->date('Ym', 'r.fecha', 'INTEGER');
-        $periodo_col_46 = $this->db->date('Ym', 'r.fecha_hora_creacion', 'INTEGER');
-        list($impuesto_codigo, $impuesto_tasa, $impuesto_monto) = $this->db->xml('r.xml', [
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'r.fecha', 'INTEGER');
+        $periodo_col_46 = $this->getDatabaseConnection()->date('Ym', 'r.fecha_hora_creacion', 'INTEGER');
+        list($impuesto_codigo, $impuesto_tasa, $impuesto_monto) = $this->getDatabaseConnection()->xml('r.xml', [
             '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Totales/ImptoReten/TipoImp',
             '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Totales/ImptoReten/TasaImp',
             '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/Totales/ImptoReten/MontoImp',
@@ -3112,7 +3112,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
         } else {
             $where_tipo_dte = '';
         }
-        $compras = $this->db->getTable('
+        $compras = $this->getDatabaseConnection()->getTable('
             (
                 SELECT
                     r.dte,
@@ -3352,11 +3352,11 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getComprasDiarias($periodo): array
     {
-        $periodo_col = $this->db->date('Ym', 'r.fecha');
-        $dia_col = $this->db->date('d', 'r.fecha');
-        $periodo_col_46 = $this->db->date('Ym', 'r.fecha_hora_creacion');
-        $dia_col_46 = $this->db->date('d', 'r.fecha_hora_creacion');
-        return $this->db->getTable('
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'r.fecha');
+        $dia_col = $this->getDatabaseConnection()->date('d', 'r.fecha');
+        $periodo_col_46 = $this->getDatabaseConnection()->date('Ym', 'r.fecha_hora_creacion');
+        $dia_col_46 = $this->getDatabaseConnection()->date('d', 'r.fecha_hora_creacion');
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 CASE WHEN r.dia IS NOT NULL THEN
                     r.dia
@@ -3425,9 +3425,9 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getComprasPorTipo($periodo): array
     {
-        $periodo_col = $this->db->date('Ym', 'r.fecha');
-        $periodo_col_46 = $this->db->date('Ym', 'r.fecha_hora_creacion');
-        return $this->db->getTable('
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'r.fecha');
+        $periodo_col_46 = $this->getDatabaseConnection()->date('Ym', 'r.fecha_hora_creacion');
+        return $this->getDatabaseConnection()->getTable('
             (
                 SELECT
                     t.tipo,
@@ -3477,7 +3477,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             ? $certificacion
             : $this->enCertificacion()
         );
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 dte,
                 folio
@@ -3519,7 +3519,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             : $this->enCertificacion()
         );
         $estados_no_final = implode('\', \'', Model_DteEmitidos::$revision_estados['no_final']);
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 dte,
                 folio
@@ -3630,7 +3630,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
     public function getSucursalUsuario($Usuario)
     {
         // obtener desde la tabla de usuarios y sucursales del contribuyente
-        $sucursal = $this->db->getValue('
+        $sucursal = $this->getDatabaseConnection()->getValue('
             SELECT sucursal_sii
             FROM contribuyente_usuario_sucursal
             WHERE contribuyente = :rut AND usuario = :usuario
@@ -3654,10 +3654,10 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function setSucursalesPorUsuario(array $usuarios = [])
     {
-        $this->db->beginTransaction();
+        $this->getDatabaseConnection()->beginTransaction();
         // Se eliminan todas las sucursales, para dejar solo lo que
         // viene en el arreglo.
-        $this->db->executeRawQuery('
+        $this->getDatabaseConnection()->executeRawQuery('
             DELETE
             FROM contribuyente_usuario_sucursal
             WHERE contribuyente = :rut
@@ -3666,7 +3666,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
         foreach ($usuarios as $usuario => $sucursal) {
             $Usuario = new Model_Usuario($usuario);
             if (!$Usuario->exists()) {
-                $this->db->rollback();
+                $this->getDatabaseConnection()->rollback();
                 throw new \Exception('Usuario '.$usuario.' no existe.');
                 return false;
             }
@@ -3674,7 +3674,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             if (!$Sucursal->codigo) {
                 continue;
             }
-            $this->db->executeRawQuery('
+            $this->getDatabaseConnection()->executeRawQuery('
                 INSERT INTO contribuyente_usuario_sucursal
                 VALUES (:rut, :usuario, :sucursal)
             ', [
@@ -3683,7 +3683,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
                 ':sucursal' => $Sucursal->codigo,
             ]);
         }
-        return $this->db->commit();
+        return $this->getDatabaseConnection()->commit();
     }
 
     /**
@@ -3691,7 +3691,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getSucursalesPorUsuario(): array
     {
-        return $this->db->getTableWithAssociativeIndex('
+        return $this->getDatabaseConnection()->getTableWithAssociativeIndex('
             SELECT
                 u.usuario,
                 s.sucursal_sii
@@ -3730,7 +3730,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
         }
         // Si es edición comunidad se sacan los clientes de los DTE emitidos.
         else {
-            return $this->db->getTable('
+            return $this->getDatabaseConnection()->getTable('
                 SELECT DISTINCT
                     c.rut,
                     c.dv,
@@ -3779,8 +3779,8 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             ':certificacion' => $this->enCertificacion(),
         ];
         // columnas de periodos
-        $periodo_col = $this->db->date('Ym', 'fecha_hora_creacion');
-        $intercambio_periodo_col = $this->db->date('Ym', 'fecha_hora_email');
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'fecha_hora_creacion');
+        $intercambio_periodo_col = $this->getDatabaseConnection()->date('Ym', 'fecha_hora_email');
         // listado de periodos
         if ($periodo) {
             $periodos = [$periodo];
@@ -3791,7 +3791,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             // que es el período siguiente al actual.
             // el error ocurre por la gran cantidad de UNION que aparecen
             $periodo_actual = date('Ym');
-            $periodos_min = array_filter($this->db->getCol('
+            $periodos_min = array_filter($this->getDatabaseConnection()->getCol('
                 (
                     SELECT MIN('.$periodo_col.')
                     FROM dte_emitido
@@ -3819,7 +3819,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
                 $periodos_min ? min($periodos_min) : $periodo_actual,
                 201601
             );
-            $periodos_max = array_filter($this->db->getCol('
+            $periodos_max = array_filter($this->getDatabaseConnection()->getCol('
                 (
                     SELECT MAX('.$periodo_col.')
                     FROM dte_emitido
@@ -3866,7 +3866,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             function($p) { return '(SELECT '.$p.' AS periodo)'; },
             $periodos
         );
-        $datos = $this->db->getTable('
+        $datos = $this->getDatabaseConnection()->getTable('
             SELECT
                 p.periodo,
                 e.total AS emitidos,
@@ -3948,7 +3948,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getDocumentosEmitidosResumenEstados(string $desde, string $hasta): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 revision_estado AS estado,
                 COUNT(*) AS total
@@ -3979,7 +3979,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
         if (empty($filtros['periodo'])) {
             $filtros['periodo'] = date('Ym');
         }
-        $periodo_col = $this->db->date('Ym', 'fecha');
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'fecha');
         $where = [
             'emisor = :rut',
             'certificacion = :certificacion',
@@ -3996,7 +3996,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             }
             $where[] = 'dte IN (' . implode(', ', array_map('intval', $filtros['dtes'])) . ')';
         }
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 fecha,
                 COUNT(folio) AS emitidos,
@@ -4038,7 +4038,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             $estado = 'd.revision_estado IS NULL';
         }
         // forma de obtener razón social
-        $razon_social_xpath = $this->db->xml(
+        $razon_social_xpath = $this->getDatabaseConnection()->xml(
             'd.xml',
             '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep',
             'http://www.sii.cl/SiiDte'
@@ -4047,7 +4047,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             . $razon_social_xpath . ' END AS razon_social'
         ;
         // realizar consulta
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 d.dte,
                 t.tipo,
@@ -4092,7 +4092,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getDocumentosEmitidosResumenEventos(string $desde, string $hasta): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 receptor_evento AS evento,
                 COUNT(*) AS total
@@ -4135,7 +4135,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             $evento = 'd.receptor_evento IS NULL';
         }
         // forma de obtener razón social
-        $razon_social_xpath = $this->db->xml(
+        $razon_social_xpath = $this->getDatabaseConnection()->xml(
             'd.xml',
             '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep',
             'http://www.sii.cl/SiiDte'
@@ -4144,7 +4144,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             . $razon_social_xpath . ' END AS razon_social'
         ;
         // realizar consulta
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 d.dte,
                 t.tipo,
@@ -4189,7 +4189,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
     public function getDocumentosEmitidosSinEnviar(): array
     {
         // forma de obtener razón social
-        $razon_social_xpath = $this->db->xml(
+        $razon_social_xpath = $this->getDatabaseConnection()->xml(
             'd.xml',
             '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep',
             'http://www.sii.cl/SiiDte'
@@ -4198,7 +4198,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             . $razon_social_xpath . ' END AS razon_social'
         ;
         // realizar consulta
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 d.dte,
                 t.tipo,
@@ -4242,7 +4242,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
      */
     public function getDocumentosEmitidosResumenEstadoIntercambio(string $desde, string $hasta): array
     {
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 CASE WHEN recibo.responde IS NOT NULL THEN
                     true
@@ -4320,7 +4320,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             $where[] = 'resultado.estado IS NULL';
         }
         // forma de obtener razón social
-        $razon_social_xpath = $this->db->xml(
+        $razon_social_xpath = $this->getDatabaseConnection()->xml(
             'e.xml',
             '/*/SetDTE/DTE/*/Encabezado/Receptor/RznSocRecep',
             'http://www.sii.cl/SiiDte'
@@ -4329,7 +4329,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model_App
             . $razon_social_xpath . ' END AS razon_social'
         ;
         // realizar consulta
-        return $this->db->getTable('
+        return $this->getDatabaseConnection()->getTable('
             SELECT
                 e.dte,
                 t.tipo,

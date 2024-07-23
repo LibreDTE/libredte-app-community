@@ -26,7 +26,7 @@ namespace website\Dte\Admin\Mantenedores;
 /**
  * Clase para mapear la tabla iva_no_recuperable de la base de datos.
  */
-class Model_IvaNoRecuperable extends \sowerphp\autoload\Model_App
+class Model_IvaNoRecuperable extends \sowerphp\autoload\Model
 {
 
     // Datos para la conexión a la base de datos

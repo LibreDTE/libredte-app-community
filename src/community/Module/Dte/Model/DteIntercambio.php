@@ -28,7 +28,7 @@ use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
 /**
  * Clase para mapear la tabla dte_intercambio de la base de datos.
  */
-class Model_DteIntercambio extends \sowerphp\autoload\Model_App
+class Model_DteIntercambio extends \sowerphp\autoload\Model
 {
 
     // Datos para la conexión a la base de datos
@@ -307,7 +307,7 @@ class Model_DteIntercambio extends \sowerphp\autoload\Model_App
      */
     private function existeArchivo(): bool
     {
-        return (bool)(int)$this->db->getValue('
+        return (bool)(int)$this->getDatabaseConnection()->getValue('
             SELECT COUNT(*)
             FROM dte_intercambio
             WHERE
@@ -326,7 +326,7 @@ class Model_DteIntercambio extends \sowerphp\autoload\Model_App
     /**
      * Método que guarda el enviodte que se ha recibido desde otro contribuyente.
      */
-    public function save(): bool
+    public function save(array $options = []): bool
     {
         $this->certificacion = (int)$this->certificacion;
         if (!isset($this->codigo)) {
@@ -337,8 +337,8 @@ class Model_DteIntercambio extends \sowerphp\autoload\Model_App
             // corregir datos
             $this->archivo = utf8_encode($this->archivo);
             // guardar entrada
-            $this->db->beginTransaction(true);
-            $this->codigo = (int)$this->db->getValue('
+            $this->getDatabaseConnection()->beginTransaction(true);
+            $this->codigo = (int)$this->getDatabaseConnection()->getValue('
                 SELECT MAX(codigo)
                 FROM dte_intercambio
                 WHERE receptor = :receptor AND certificacion = :certificacion
@@ -348,10 +348,10 @@ class Model_DteIntercambio extends \sowerphp\autoload\Model_App
             ]) + 1;
             try {
                 $status = parent::save();
-                $this->db->commit();
+                $this->getDatabaseConnection()->commit();
                 return $status;
             } catch (\Exception $e) {
-                $this->db->rollback();
+                $this->getDatabaseConnection()->rollback();
                 throw new \Exception('Error al guardar el archivo \''.$this->archivo.'\' del intercambio enviado por '.$this->de.' con el asunto \''.$this->asunto.'\' del día '.$this->fecha_hora_email.' / '.$e->getMessage());
             }
         } else {
@@ -480,7 +480,7 @@ class Model_DteIntercambio extends \sowerphp\autoload\Model_App
      */
     public function recibido()
     {
-        return (bool)$this->db->getValue('
+        return (bool)$this->getDatabaseConnection()->getValue('
             SELECT COUNT(*)
             FROM dte_recibido
             WHERE receptor = :receptor AND emisor = :emisor AND certificacion = :certificacion AND intercambio = :intercambio

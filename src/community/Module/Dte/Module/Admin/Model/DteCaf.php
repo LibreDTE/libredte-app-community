@@ -26,7 +26,7 @@ namespace website\Dte\Admin;
 /**
  * Clase para mapear la tabla dte_caf de la base de datos.
  */
-class Model_DteCaf extends \sowerphp\autoload\Model_App
+class Model_DteCaf extends \sowerphp\autoload\Model
 {
 
     // Datos para la conexión a la base de datos
@@ -218,7 +218,7 @@ class Model_DteCaf extends \sowerphp\autoload\Model_App
      */
     public function usado()
     {
-        return (bool)$this->db->getValue('
+        return (bool)$this->getDatabaseConnection()->getValue('
             SELECT COUNT(*)
             FROM dte_emitido
             WHERE

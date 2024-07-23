@@ -306,13 +306,13 @@ class Model_DteCompra extends Model_Base_Libro
      */
     public function countDocumentosConMontosExentos(): int
     {
-        $periodo_col = $this->db->date('Ym', 'r.fecha', 'INTEGER');
+        $periodo_col = $this->getDatabaseConnection()->date('Ym', 'r.fecha', 'INTEGER');
         $vars = [
             ':receptor' => $this->receptor,
             ':periodo' => $this->periodo,
             ':certificacion' => (int)$this->certificacion,
         ];
-        return (int)$this->db->getValue('
+        return (int)$this->getDatabaseConnection()->getValue('
             SELECT COUNT(*)
             FROM
                 dte_recibido AS r
