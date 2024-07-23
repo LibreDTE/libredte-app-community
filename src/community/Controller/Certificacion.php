@@ -23,6 +23,8 @@
 
 namespace website;
 
+use \sowerphp\core\Network_Request as Request;
+
 /**
  * Controlador para el proceso de certificación ante el SII.
  */
@@ -95,10 +97,10 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
     {
         // si no se pasó el archivo error
         if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'Debes enviar el archivo del set de pruebas entregado por el SII.', 'error'
-            );
-            return redirect('/certificacion/set_pruebas#dte');
+            return redirect('/certificacion/set_pruebas#dte')
+                ->withError(
+                    __('Debes enviar el archivo del set de pruebas entregado por el SII.')
+                );
         }
         // armar folios
         $folios = [];
@@ -113,10 +115,10 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
         // obtener JSON del archivo
         $json = \sasco\LibreDTE\Sii\Certificacion\SetPruebas::getJSON(file_get_contents($_FILES['archivo']['tmp_name']), $folios);
         if (!$json) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible crear el archivo JSON a partir del archivo del set de prueba, ¡verificar el formato y/o codificación!.', 'error'
-            );
-            return redirect('/certificacion/set_pruebas#dte');
+            return redirect('/certificacion/set_pruebas#dte')
+                ->withError(
+                    __('No fue posible crear el archivo JSON a partir del archivo del set de prueba, ¡verificar el formato y/o codificación!.')
+                );
         }
         // guardar json para el siguiente paso y redirigir
         session(['documentos_json' => $json]);
@@ -131,10 +133,10 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
     {
         // si no se pasó el archivo error
         if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'Debes enviar el archivo XML del EnvioDTE al que quieres generar su Libro de Ventas.', 'error'
-            );
-            return redirect('/certificacion/set_pruebas#ventas');
+            return redirect('/certificacion/set_pruebas#ventas')
+                ->withError(
+                    __('Debes enviar el archivo XML del EnvioDTE al que quieres generar su Libro de Ventas.')
+                );
         }
         // obtener documentos
         $EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
@@ -167,10 +169,10 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
                 ]);
                 $LibroCompraVenta->setFirma($Firma);
             } catch (\Exception $e) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'No fue posible abrir la firma electrónica, quizás contraseña incorrecta.', 'error'
-            );
-                return redirect('/certificacion/set_pruebas#ventas');
+                return redirect('/certificacion/set_pruebas#ventas')
+                    ->withError(
+                        __('No fue posible abrir la firma electrónica, quizás contraseña incorrecta.')
+                    );
             }
         }
         // generar XML con el libro de ventas
@@ -178,10 +180,14 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
         $xml = $LibroCompraVenta->generar(!$_POST['simplificado']);
         // verificar problemas de esquema
         if (!$LibroCompraVenta->schemaValidate()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
-            );
-            return redirect('/certificacion/set_pruebas#ventas');
+            return redirect('/certificacion/set_pruebas#ventas')
+                ->withError(
+                    __('%(logs)s', 
+                        [
+                            'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                        ]
+                    )
+                );
         }
         // descargar XML
         $file = DIR_TMP.'/'.$LibroCompraVenta->getID().'.xml';
@@ -194,14 +200,15 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
      * Acción que genera EnvioBOLETA, consumo de folios, libro de boletas y las
      * muestras impresas a partir de un set de pruebas de boleta electrónica.
      */
-    public function set_pruebas_boletas()
+    public function set_pruebas_boletas(Request $request)
     {
+        $user = $request->user();
         // si no se pasó el archivo error
         if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'Debes enviar la planilla con el set de pruebas de las boletas electrónicas.', 'error'
-            );
-            return redirect('/certificacion/set_pruebas#boletas');
+            return redirect('/certificacion/set_pruebas#boletas')
+                ->withError(
+                    __('Debes enviar la planilla con el set de pruebas de las boletas electrónicas.')
+                );
         }
         // determinar tipo de DTE a generar (afecto o exento)
         $TipoDTE = in_array(39, $_POST['folios']) ? 39 : 41;
@@ -260,10 +267,10 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
         mkdir($dir.'/xml');
         mkdir($dir.'/pdf');
         if (!is_dir($dir)) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible generar el directorio para archivos del set de boletas.', 'error'
-            );
-            return redirect('/certificacion/set_pruebas#boletas');
+            return redirect('/certificacion/set_pruebas#boletas')
+                ->withError(
+                    __('No fue posible generar el directorio para archivos del set de boletas.')
+                );
         }
         // crear set de boletas
         $caratula = [
@@ -304,10 +311,10 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
                 'pass' => $_POST['contrasenia'],
             ]);
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible abrir la firma electrónica, quizás contraseña incorrecta.', 'error'
-            );
-            return redirect('/certificacion/set_pruebas#boletas');
+            return redirect('/certificacion/set_pruebas#boletas')
+                ->withError(
+                    __('No fue posible abrir la firma electrónica, quizás contraseña incorrecta.')
+                );
         }
         $Folios = []; // CAF
         $folios = []; // desde donde partir
@@ -322,10 +329,14 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
             $documento['Encabezado']['Receptor'] = $Receptor;
             $DTE = new \sasco\LibreDTE\Sii\Dte($documento);
             if (empty($Folios[$DTE->getTipo()])) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'Faltó subir archivo CAF de tipo '.$DTE->getTipo().'.', 'error'
-                );
-                return redirect('/certificacion/set_pruebas#boletas');
+                return redirect('/certificacion/set_pruebas#boletas')
+                    ->withError(
+                        __('Faltó subir archivo CAF de tipo %(dte_tipo)s.', 
+                            [
+                                'dte_tipo' => $DTE->getTipo()
+                            ]
+                        )
+                    );
             }
             if (!$DTE->timbrar($Folios[$DTE->getTipo()])) {
                 break;
@@ -341,10 +352,14 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
         if ($EnvioBOLETA->schemaValidate()) {
             file_put_contents($dir.'/xml/EnvioBOLETA.xml', $EnvioBOLETA->generar());
         } else {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible generar EnvioBOLETA.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
-            );
-            return redirect('/certificacion/set_pruebas#boletas');
+            return redirect('/certificacion/set_pruebas#boletas')
+                ->withError(
+                    __('No fue posible generar EnvioBOLETA.xml<br/>%(logs)s', 
+                        [
+                            'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                        ]
+                    )
+                );
         }
         // crear set de notas de crédito
         $notas_credito = [];
@@ -426,10 +441,14 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
             if ($EnvioDTE->schemaValidate()) {
                 file_put_contents($dir.'/xml/NotasCredito.xml', $EnvioDTE->generar());
             } else {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'No fue posible generar NotasCredito.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
-                );
-                return redirect('/certificacion/set_pruebas#boletas');
+                return redirect('/certificacion/set_pruebas#boletas')
+                    ->withError(
+                        __('No fue posible generar NotasCredito.xml<br/>%(logs)s', 
+                            [
+                                'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                            ]
+                        )
+                    );
             }
         }
         // crear consumo de folios
@@ -458,10 +477,14 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
         if ($ConsumoFolio->schemaValidate()) {
             file_put_contents($dir.'/xml/ConsumoFolios.xml', $ConsumoFolio->generar());
         } else {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible generar ConsumoFolios.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
-            );
-            return redirect('/certificacion/set_pruebas#boletas');
+            return redirect('/certificacion/set_pruebas#boletas')
+                ->withError(
+                    __('No fue posible generar ConsumoFolios.xml<br/>%(logs)s',
+                        [
+                            'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                        ]
+                    )
+                );
         }
         // crear libro de boletas
         $LibroBoleta = new \sasco\LibreDTE\Sii\LibroBoleta();
@@ -489,14 +512,18 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
         if ($LibroBoleta->schemaValidate()) {
             file_put_contents($dir.'/xml/LibroBoletas.xml', $LibroBoleta->generar());
         } else {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible generar LibroBoletas.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
-            );
-            return redirect('/certificacion/set_pruebas#boletas');
+            return redirect('/certificacion/set_pruebas#boletas')
+                ->withError(
+                    __('No fue posible generar LibroBoletas.xml<br/>%(logs)s', 
+                        [
+                            'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                        ]
+                    )
+                );
         }
         // generar muestras impresas
         $rest = new \sowerphp\core\Network_Http_Rest();
-        $rest->setAuth($this->Auth->User->hash);
+        $rest->setAuth($user->hash);
         $data = [
             'xml' => base64_encode(file_get_contents($dir.'/xml/EnvioBOLETA.xml')),
             'webVerificacion' => $_POST['web_verificacion'],
@@ -504,8 +531,14 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
         ];
         $response = $rest->post(url('/api/utilidades/documentos/generar_pdf'), $data);
         if ($response['status']['code'] != 200) {
-            \sowerphp\core\Facade_Session_Message::write('No fue posible crear PDF boletas: '.$response['body'], 'error');
-            return redirect('/certificacion/set_pruebas#boletas');
+            return redirect('/certificacion/set_pruebas#boletas')
+                ->withError(
+                    __('No fue posible crear PDF boletas: %(response_body)s', 
+                        [
+                            'response_body' => $response['body']
+                        ]
+                    )
+                );
         }
         file_put_contents($dir.'/pdf/EnvioBOLETA.zip', $response['body']);
         if (is_readable($dir.'/xml/NotasCredito.xml')) {
@@ -516,8 +549,12 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
             ];
             $response = $rest->post(url('/api/utilidades/documentos/generar_pdf'), $data);
             if ($response['status']['code'] != 200) {
-                \sowerphp\core\Facade_Session_Message::write('No fue posible crear PDF notas de crédito: '.$response['body'], 'error');
-                return redirect('/certificacion/set_pruebas#boletas');
+                return redirect('/certificacion/set_pruebas#boletas')
+                    ->withError('No fue posible crear PDF notas de crédito: %(response_body)s', 
+                        [
+                            'response_body' => $response['body']
+                        ]
+                    );
             }
             file_put_contents($dir.'/pdf/NotasCredito.zip', $response['body']);
         }
@@ -550,26 +587,26 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
         }
         // verificar que se hayan pasado los datos requeridos
         if (!isset($_FILES['xml']) || $_FILES['xml']['error']) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'Hubo algún problema al subir el XML EnvioDTE.', 'error'
+            \sowerphp\core\Facade_Session_Message::error(
+                'Hubo algún problema al subir el XML EnvioDTE.'
             );
             return;
         }
         if (empty($_POST['emisor'])) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'RUT emisor esperado no puede estar en blanco.', 'error'
+            \sowerphp\core\Facade_Session_Message::error(
+                'RUT emisor esperado no puede estar en blanco.'
             );
             return;
         }
         if (empty($_POST['receptor'])) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'RUT receptor esperado no puede estar en blanco.', 'error'
+            \sowerphp\core\Facade_Session_Message::error(
+                'RUT receptor esperado no puede estar en blanco.'
             );
             return;
         }
         if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'Hubo algún problema al subir la firma electrónica.', 'error'
+            \sowerphp\core\Facade_Session_Message::error(
+                'Hubo algún problema al subir la firma electrónica.'
             );
             return;
         }
@@ -584,8 +621,8 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
                 'pass' => $_POST['contrasenia']
             ]);
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible abrir la firma electrónica, quizás contraseña incorrecta.', 'error'
+            \sowerphp\core\Facade_Session_Message::error(
+                'No fue posible abrir la firma electrónica, quizás contraseña incorrecta.'
             );
             return;
         }
@@ -604,8 +641,8 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
             $Firma
         );
         if (!$RecepcionDTE) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible generar RecepcionDTE.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+            \sowerphp\core\Facade_Session_Message::error(
+                'No fue posible generar RecepcionDTE.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll())
             );
             return;
         }
@@ -621,8 +658,8 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
             $Firma
         );
         if (!$EnvioRecibos) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible generar EnvioRecibos.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+            \sowerphp\core\Facade_Session_Message::error(
+                'No fue posible generar EnvioRecibos.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll())
             );
             return;
         }
@@ -641,16 +678,16 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
             $Firma
         );
         if (!$ResultadoDTE) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible generar ResultadoDTE.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+            \sowerphp\core\Facade_Session_Message::error(
+                'No fue posible generar ResultadoDTE.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll())
             );
             return;
         }
         // aquí se tienen los 3 XML, se guardan en un único directorio
         $dir = DIR_TMP.'/intercambio_'.$Caratula['RutEmisor'].'_'.date('U');
         if (!mkdir($dir)) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible generar el archivo comprimido con los XML.', 'error'
+            \sowerphp\core\Facade_Session_Message::error(
+                'No fue posible generar el archivo comprimido con los XML.'
             );
             return;
         }

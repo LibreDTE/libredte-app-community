@@ -75,11 +75,11 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
             // obtener PDF desde servicio web
             $r = $this->consume('/api/honorarios/boleta_terceros/buscar/'.$Emisor->rut, $_POST);
             if ($r['status']['code'] != 200) {
-                \sowerphp\core\Facade_Session_Message::write($r['body'], 'error');
+                \sowerphp\core\Facade_Session_Message::error($r['body']);
                 return;
             }
             if (empty($r['body'])) {
-                \sowerphp\core\Facade_Session_Message::write('No se encontraron boletas para la búsqueda solicitada.', 'warning');
+                \sowerphp\core\Facade_Session_Message::warning('No se encontraron boletas para la búsqueda solicitada.');
             }
             $this->set('boletas', $r['body']);
         }
@@ -98,10 +98,16 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
         // crear emisor
         $Emisor = new \website\Dte\Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe.', 404);
+            return response()->json(
+                __('Emisor no existe.'),
+                404
+            );
         }
         if (!$Emisor->usuarioAutorizado($User, '/honorarios/boleta_terceros/buscar')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
+            return response()->json(
+                __('No está autorizado a operar con la empresa solicitada.'),
+                403
+            );
         }
         // obtener boletas
         $filtros = [];
@@ -111,13 +117,18 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
             }
         }
         if (empty($filtros)) {
-            $this->Api->send('Debe definir a lo menos un filtro para la búsqueda.', 400);
+            return response()->json(
+                __('Debe definir a lo menos un filtro para la búsqueda.'),
+                400
+            );
         }
         $boletas = (new Model_BoletaTerceros())
             ->setContribuyente($Emisor)
             ->buscar($filtros, 'DESC')
         ;
-        $this->Api->send($boletas, 200);
+        return response()->json(
+            $boletas,
+            200);
     }
 
     /**
@@ -134,16 +145,22 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
         // Obtener boleta.
         $BoletaTercero = new Model_BoletaTercero($Emisor->rut, $numero);
         if (!$BoletaTercero->exists()) {
-            return redirect('/honorarios/boleta_terceros')->withError(
-                'No existe la boleta solicitada.'
-            );
+            return redirect('/honorarios/boleta_terceros')
+                ->withError(
+                    __('No existe la boleta solicitada.')
+                );
         }
         // obtener PDF desde servicio web
         $r = $this->consume('/api/honorarios/boleta_terceros/html/'.$BoletaTercero->numero.'/'.$BoletaTercero->emisor);
         if ($r['status']['code'] != 200) {
-            return redirect('/honorarios/boleta_terceros')->withError(
-                $r['body']
-            );
+            return redirect('/honorarios/boleta_terceros')
+                ->withError(
+                    __('%(body)s',
+                        [
+                            'body' => $r['body']
+                        ]
+                    )
+                );
         }
         // Entregar HTML.
         $filename = 'bte_'.$BoletaTercero->emisor.'_'.$BoletaTercero->numero.'.html';
@@ -171,28 +188,44 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
         // crear emisor
         $Emisor = new \website\Dte\Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe.', 404);
+            return response()->json(
+                __('Emisor no existe.'),
+                404
+            );
         }
         if (!$Emisor->usuarioAutorizado($User, '/honorarios/boleta_terceros/html')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
+            return response()->json(
+                __('No está autorizado a operar con la empresa solicitada.'),
+                403
+            );
         }
         // obtener boleta
         $BoletaTercero = new Model_BoletaTercero($emisor, $numero);
         if (!$BoletaTercero->exists()) {
-            $this->Api->send('No existe la boleta solicitada.', 404);
+            return response()->json(
+                __('No existe la boleta solicitada.'),
+                404
+            );
         }
         // obtener html
         try {
             $html = $BoletaTercero->getHTML();
         } catch (\Exception $e) {
-            $this->Api->send($e->getMessage(), 500);
+            return response()->json(
+                __('%(error_message)s',
+                    [
+                        'error_message' => $e->getMessage()
+                    ]
+                ), 
+                500
+            );
         }
         // entregar boleta
         $this->Api->response()->type('text/html');
         $this->Api->response()->header('Content-Disposition', 'attachment; filename=bte_'.$BoletaTercero->emisor.'_'.$BoletaTercero->numero.'.html');
         $this->Api->response()->header('Pragma', 'no-cache');
         $this->Api->response()->header('Expires', 0);
-        $this->Api->send($html);
+        return response()->json($html);
     }
 
     /**
@@ -212,9 +245,10 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
             ->buscar(['periodo' => $periodo])
         ;
         if (empty($boletas)) {
-            return redirect('/honorarios/boleta_terceros')->withInfo(
-                'No existen boletas para el período solicitado.'
-            );
+            return redirect('/honorarios/boleta_terceros')
+                ->withInfo(
+                    __('No existen boletas para el período solicitado.')
+                );
         }
         // Renderizar vista.
         return $this->render(null, [
@@ -241,9 +275,10 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
             ->buscar(['periodo' => $periodo])
         ;
         if (empty($boletas)) {
-            return redirect('/honorarios/boleta_terceros')->withInfo(
-                'No existen boletas para el período solicitado.'
-            );
+            return redirect('/honorarios/boleta_terceros')
+                ->withInfo(
+                    __('No existen boletas para el período solicitado.')
+                );
         }
         foreach ($boletas as &$b) {
             unset($b['codigo']);
@@ -272,11 +307,20 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
                 ->setContribuyente($Emisor)
                 ->sincronizar($meses)
             ;
-            \sowerphp\core\Facade_Session_Message::write('Boletas actualizadas.', 'ok');
+            return redirect('/honorarios/boleta_terceros')
+                ->withSuccess(
+                    __('Boletas actualizadas.')
+                );
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
+            return redirect('/honorarios/boleta_terceros')
+                ->withError(
+                    __('%(error_message)s',
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    )
+                );
         }
-        return redirect('/honorarios/boleta_terceros');
     }
 
     /**
@@ -330,8 +374,14 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
             // emitir boleta y bajar HTML de boleta
             $r = $this->consume('/api/honorarios/boleta_terceros/emitir', $boleta);
             if ($r['status']['code'] != 200) {
-                \sowerphp\core\Facade_Session_Message::write($r['body'], 'error');
-                return redirect('/honorarios/boleta_terceros/emitir');
+                return redirect('/honorarios/boleta_terceros/emitir')
+                    ->withError(
+                        __('%(body)s', 
+                            [
+                                'body' => $r['body']
+                            ]
+                        )
+                    );
             }
             // obtener html
             try {
@@ -339,14 +389,21 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
                 $BoletaTercero->set($r['body']);
                 $html = $BoletaTercero->getHTML();
             } catch (\Exception $e) {
-                $this->Api->send($e->getMessage(), 500);
+                return response()->json(
+                    __('%(error_message)s',
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    ),
+                    500
+                );
             }
             // entregar boleta
             $this->Api->response()->type('text/html');
             $this->Api->response()->header('Content-Disposition', 'attachment; filename=bte_'.$BoletaTercero->emisor.'_'.$BoletaTercero->numero.'.html');
             $this->Api->response()->header('Pragma', 'no-cache');
             $this->Api->response()->header('Expires', 0);
-            $this->Api->send($html);
+            return response()->json($html);
         }
     }
 
@@ -363,25 +420,47 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
         // verificar que venga RUTEmisor
         $boleta = $this->Api->data;
         if (is_string($boleta)) {
-            $this->Api->send('Se recibieron los datos de la boleta como un string (problema al codificar JSON).', 400);
+            return response()->json(
+                __('Se recibieron los datos de la boleta como un string (problema al codificar JSON).'),
+                400
+            );
         }
         if (empty($boleta['Encabezado']['Emisor']['RUTEmisor'])) {
-            $this->Api->send('Debe indicar RUT del emisor de la BTE.', 400);
+            return response()->json(
+                __('Debe indicar RUT del emisor de la BTE.'),
+                400
+            );
         }
         // crear emisor
         $Emisor = new \website\Dte\Model_Contribuyente($boleta['Encabezado']['Emisor']['RUTEmisor']);
         if (!$Emisor->exists()) {
-            $this->Api->send('Emisor no existe.', 404);
+            return response()->json(
+                __('Emisor no existe.'),
+                404
+            );
         }
         if (!$Emisor->usuarioAutorizado($User, '/honorarios/boleta_terceros/emitir')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
+            return response()->json(
+                __('No está autorizado a operar con la empresa solicitada.'),
+                403
+            );
         }
         // emitir boleta
         try {
             $BoletaTercero = (new Model_BoletaTerceros())->setContribuyente($Emisor)->emitir($boleta);
-            $this->Api->send($BoletaTercero, 200);
+            return response()->json(
+                $BoletaTercero,
+                200
+            );
         } catch (\Exception $e) {
-            $this->Api->send($e->getMessage(), 500);
+            return response()->json(
+                __('%(error_message)s',
+                    [
+                        'error_message' => $e->getMessage()
+                    ]
+                ),
+                500
+            );
         }
     }
 

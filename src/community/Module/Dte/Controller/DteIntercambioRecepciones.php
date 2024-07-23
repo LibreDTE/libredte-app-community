@@ -44,10 +44,10 @@ class Controller_DteIntercambioRecepciones extends \sowerphp\autoload\Controller
         // obtener Recepción
         $DteIntercambioRecepcion = new Model_DteIntercambioRecepcion($responde, $Emisor->rut, $codigo);
         if (!$DteIntercambioRecepcion->exists()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No existe la recepción solicitada.', 'error'
-            );
-            return redirect('/dte/dte_intercambios');
+            return redirect('/dte/dte_intercambios')
+                ->withError(
+                    __('No existe la recepción solicitada.')
+                );
         }
         // entregar XML
         $xml = base64_decode($DteIntercambioRecepcion->xml);

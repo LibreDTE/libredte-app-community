@@ -43,10 +43,16 @@ class Controller_RegistroVentas extends \sowerphp\autoload\Controller
         // crear emisor
         $Emisor = new Model_Contribuyente($emisor);
         if (!$Emisor->exists()) {
-            $this->Api->send(__('Emisor no existe.'), 404);
+            return response()->json(
+                __('Emisor no existe.'),
+                404
+            );
         }
         if (!$Emisor->usuarioAutorizado($User, '/dte/registro_ventas/resumen')) {
-            $this->Api->send(__('No está autorizado a operar con la empresa solicitada.'), 403);
+            return response()->json(
+                __('No está autorizado a operar con la empresa solicitada.'),
+                403
+            );
         }
         // entregar datos
         return $Emisor->getRCV([

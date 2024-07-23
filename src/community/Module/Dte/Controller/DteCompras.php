@@ -23,6 +23,8 @@
 
 namespace website\Dte;
 
+use \sowerphp\core\Network_Request as Request;
+
 /**
  * Controlador de compras.
  */
@@ -39,8 +41,9 @@ class Controller_DteCompras extends Controller_Base_Libros
     /**
      * Acción que permite importar un libro desde un archivo CSV.
      */
-    public function importar()
+    public function importar(Request $request)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Receptor = libredte()->getSessionContribuyente();
@@ -51,12 +54,12 @@ class Controller_DteCompras extends Controller_Base_Libros
         if (isset($_POST['submit'])) {
             // verificar que se haya podido subir el archivo con el libro
             if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
-                \sowerphp\core\Facade_Session_Message::write('Ocurrió un error al subir el libro.', 'error');
+                \sowerphp\core\Facade_Session_Message::error('Ocurrió un error al subir el libro.');
                 return;
             }
             $mimetype = \sowerphp\general\Utility_File::mimetype($_FILES['archivo']['tmp_name']);
             if (!in_array($mimetype, ['text/csv', 'text/plain'])) {
-                \sowerphp\core\Facade_Session_Message::write('Formato '.$mimetype.' del archivo '.$_FILES['archivo']['name'].' es incorrecto. Debe ser un archivo CSV.', 'error');
+                \sowerphp\core\Facade_Session_Message::error('Formato '.$mimetype.' del archivo '.$_FILES['archivo']['name'].' es incorrecto. Debe ser un archivo CSV.');
                 return;
             }
             // Obtener libro.
@@ -64,7 +67,7 @@ class Controller_DteCompras extends Controller_Base_Libros
             try {
                 $Libro->agregarComprasCSV($_FILES['archivo']['tmp_name']);
             } catch (\Exception $e) {
-                \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
+                \sowerphp\core\Facade_Session_Message::error($e->getMessage());
                 return;
             }
             $detalle = $Libro->getCompras();
@@ -85,7 +88,7 @@ class Controller_DteCompras extends Controller_Base_Libros
                 $DteRecibido->set($datos);
                 $DteRecibido->emisor = $emisor;
                 $DteRecibido->receptor = $Receptor->rut;
-                $DteRecibido->usuario = $this->Auth->User->id;
+                $DteRecibido->usuario = $user->id;
                 if (
                     $_POST['periodo']
                     && \sowerphp\general\Utility_Date::format($DteRecibido->fecha, 'Ym') != $_POST['periodo']
@@ -102,14 +105,16 @@ class Controller_DteCompras extends Controller_Base_Libros
                     && !$Receptor->config_recepcion_omitir_verificacion_sii
                 ) {
                     // obtener firma
-                    $Firma = $Receptor->getFirma($this->Auth->User->id);
+                    $Firma = $Receptor->getFirma($user->id);
                     if (!$Firma) {
-                        $message = __(
-                            'No existe una firma electrónica asociada a la empresa que se pueda utilizar para consultar el estado del documento importado al SII antes de que sea guardado. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
-                            url('/dte/admin/firma_electronicas/agregar')
-                        );
-                        \sowerphp\core\Facade_Session_Message::write($message, 'error');
-                        return redirect('/dte/admin/firma_electronicas/agregar');
+                        return redirect('/dte/admin/firma_electronicas/agregar')
+                            ->withError(
+                                __('No existe una firma electrónica asociada a la empresa que se pueda utilizar para consultar el estado del documento importado al SII antes de que sea guardado. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%(url)s).',
+                                    [
+                                        'url' => url('/dte/admin/firma_electronicas/agregar')
+                                    ]
+                                )
+                            );
                     }
                     // consultar estado dte
                     $estado = $DteRecibido->getEstado($Firma);
@@ -134,10 +139,12 @@ class Controller_DteCompras extends Controller_Base_Libros
             }
             // mostrar errores o redireccionar
             if ($noGuardado) {
-                \sowerphp\core\Facade_Session_Message::write('Los siguientes documentos no se agregaron:<br/>- '.implode('<br/>- ', $noGuardado), 'error');
+                \sowerphp\core\Facade_Session_Message::error('Los siguientes documentos no se agregaron:<br/>- '.implode('<br/>- ', $noGuardado));
             } else {
-                \sowerphp\core\Facade_Session_Message::write('Se importó el libro de compras.', 'ok');
-                return redirect('/dte/dte_compras');
+                return redirect('/dte/dte_compras')
+                    ->withSuccess(
+                        __('Se importó el libro de compras.')
+                    );
             }
         }
     }
@@ -146,8 +153,9 @@ class Controller_DteCompras extends Controller_Base_Libros
      * Acción que envía el archivo XML del libro de compras al SII.
      * Si no hay documentos en el período se enviará sin movimientos.
      */
-    public function enviar_sii($periodo)
+    public function enviar_sii(Request $request, $periodo)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -157,23 +165,37 @@ class Controller_DteCompras extends Controller_Base_Libros
         // si el libro fue enviado y no es rectifica error
         $DteCompra = new Model_DteCompra($Emisor->rut, $periodo, $Emisor->enCertificacion());
         if ($DteCompra->track_id && empty($_POST['CodAutRec']) && $DteCompra->getEstado() != 'LRH' && $DteCompra->track_id!=-1) {
-            \sowerphp\core\Facade_Session_Message::write('Libro del período '.$periodo.' ya fue enviado, ahora solo puede hacer rectificaciones.', 'error');
-            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('Libro del período %(periodo)s ya fue enviado, ahora solo puede hacer rectificaciones.', 
+                        [
+                            'periodo' => $periodo
+                        ]
+                    )
+                );
         }
         // si el periodo es mayor o igual al actual no se puede enviar
         if ($periodo >= date('Ym')) {
-            \sowerphp\core\Facade_Session_Message::write('No puede enviar el libro de compras del período '.$periodo.'.Debe esperar al mes siguiente del período para poder enviar.', 'error');
-            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('No puede enviar el libro de compras del período %(periodo)s.Debe esperar al mes siguiente del período para poder enviar.', 
+                        [
+                            'periodo' => $periodo
+                        ]
+                    )
+                );
         }
         // obtener firma
-        $Firma = $Emisor->getFirma($this->Auth->User->id);
+        $Firma = $Emisor->getFirma($user->id);
         if (!$Firma) {
-            $message = __(
-                'No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
-                url('/dte/admin/firma_electronicas/agregar')
-            );
-            \sowerphp\core\Facade_Session_Message::write($message, 'error');
-            return redirect('/dte/admin/firma_electronicas/agregar');
+            return redirect('/dte/admin/firma_electronicas/agregar')
+                ->withError(
+                    __('No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%(url)s).', 
+                        [
+                            'url' => url('/dte/admin/firma_electronicas/agregar')
+                        ]
+                    )
+                );
         }
         // agregar carátula al libro
         $Libro = $Emisor->getLibroCompras($periodo);
@@ -202,8 +224,14 @@ class Controller_DteCompras extends Controller_Base_Libros
         $Libro->setFirma($Firma);
         $xml = $Libro->generar();
         if (!$xml) {
-            \sowerphp\core\Facade_Session_Message::write('No fue posible generar el libro de compras<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
-            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('No fue posible generar el libro de compras<br/>%(logs)s', 
+                        [
+                            'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                        ]
+                    )
+                );
         }
         // enviar al SII solo si el libro es de un período menor o igual al 201707
         // esto ya que desde 201708 se reemplaza por RCV
@@ -212,15 +240,21 @@ class Controller_DteCompras extends Controller_Base_Libros
             $revision_estado = null;
             $revision_detalle = null;
             if (!$track_id) {
-                \sowerphp\core\Facade_Session_Message::write('No fue posible enviar el libro de compras al SII<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
-                return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+                return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()))
+                    ->withError(
+                        __('No fue posible enviar el libro de compras al SII<br/>%(logs)s', 
+                            [
+                                'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                            ]
+                        )
+                    );
             }
-            \sowerphp\core\Facade_Session_Message::write('Libro de compras período '.$periodo.' envíado al SII.', 'ok');
+            \sowerphp\core\Facade_Session_Message::success('Libro de compras período '.$periodo.' envíado al SII.');
         } else {
             $track_id = -1;
             $revision_estado = 'Libro Local Generado';
             $revision_detalle = 'Este libro fue reemplazado por el Registro de Compras';
-            \sowerphp\core\Facade_Session_Message::write('Libro de compras local del período '.$periodo.' generado localmente en LibreDTE. Recuerde que este libro se reemplazó con el Registro de Compras en el SII.', 'ok');
+            \sowerphp\core\Facade_Session_Message::success('Libro de compras local del período '.$periodo.' generado localmente en LibreDTE. Recuerde que este libro se reemplazó con el Registro de Compras en el SII.');
         }
         // guardar libro de compras
         $DteCompra->documentos = $Libro->cantidad();
@@ -247,10 +281,14 @@ class Controller_DteCompras extends Controller_Base_Libros
         // Buscar compras.
         $compras = $Emisor->getCompras($periodo, is_numeric($electronico) ? $electronico : null);
         if (!$compras) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No hay documentos de compra del período '.$periodo.'.', 'warning'
-            );
-            return redirect('/dte/dte_compras/ver/'.$periodo);
+            return redirect('/dte/dte_compras/ver/'.$periodo)
+                ->withWarning(
+                    __('No hay documentos de compra del período %(periodo)s.', 
+                        [
+                            'periodo' => $periodo
+                        ]
+                    )
+                );
         }
         foreach ($compras as &$c) {
             unset($c['anulado'], $c['impuesto_vehiculos'], $c['iva_uso_comun_factor']);
@@ -278,10 +316,14 @@ class Controller_DteCompras extends Controller_Base_Libros
         $DteCompra = new Model_DteCompra($Emisor->rut, $periodo, $Emisor->enCertificacion());
         $datos = $DteCompra->getTiposTransacciones();
         if (!$datos) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No hay compras caracterizadas para el período '.$periodo.'.', 'warning'
-            );
-            return redirect(str_replace('descargar_tipo_transacciones', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('descargar_tipo_transacciones', 'ver', $this->request->getRequestUriDecoded()))
+                ->withWarning(
+                    __('No hay compras caracterizadas para el período %(periodo)s.', 
+                        [
+                            'periodo' => $periodo
+                        ]
+                    )
+                );
         }
         array_unshift($datos, ['Rut-DV', 'Codigo_Tipo_Doc', 'Folio_Doc', 'TpoTranCompra', 'Codigo_IVA_E_Imptos']);
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($datos);
@@ -318,8 +360,14 @@ class Controller_DteCompras extends Controller_Base_Libros
                 'detalle' => false,
             ]);
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
-            return redirect('/dte/dte_compras/ver/'.$periodo);
+            return redirect('/dte/dte_compras/ver/'.$periodo)
+                ->withError(
+                    __('%(error_message)s', 
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    )
+                );
         }
         $this->set([
             'Emisor' => $Emisor,
@@ -349,12 +397,20 @@ class Controller_DteCompras extends Controller_Base_Libros
                 'estado' => $estado,
             ]);
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
-            return redirect('/dte/dte_compras/ver/'.$periodo);
+            return redirect('/dte/dte_compras/ver/'.$periodo)
+                ->withError(
+                    __('%(error_message)s', 
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    )
+                );
         }
         if (!$detalle) {
-            \sowerphp\core\Facade_Session_Message::write('No hay detalle para el período y estado solicitados.', 'warning');
-            return redirect('/dte/dte_compras/ver/'.$periodo);
+            return redirect('/dte/dte_compras/ver/'.$periodo)
+                ->withWarning(
+                    __('No hay detalle para el período y estado solicitados.')
+                );
         }
         $this->set([
             'Emisor' => $Emisor,
@@ -387,12 +443,20 @@ class Controller_DteCompras extends Controller_Base_Libros
                 'estado' => 'REGISTRO',
             ]);
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
-            return redirect('/dte/dte_compras/ver/'.$periodo);
+            return redirect('/dte/dte_compras/ver/'.$periodo)
+                ->withError(
+                    __('%(error_message)s', 
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    )
+                );
         }
         if (!$documentos_rc_todos) {
-            \sowerphp\core\Facade_Session_Message::write('No hay detalle para el período y estado solicitados.', 'warning');
-            return redirect('/dte/dte_compras/ver/'.$periodo);
+            return redirect('/dte/dte_compras/ver/'.$periodo)
+                ->withWarning(
+                    __('No hay detalle para el período y estado solicitados.')
+                );
         }
         // crear documentos rc
         $documentos_rc = [];
@@ -453,8 +517,14 @@ class Controller_DteCompras extends Controller_Base_Libros
         $DteCompra = new Model_DteCompra($Emisor->rut, $periodo, $Emisor->enCertificacion());
         $datos = $DteCompra->getTiposTransacciones();
         if (!$datos) {
-            \sowerphp\core\Facade_Session_Message::write('No hay compras caracterizadas para el período '.$periodo.'.', 'warning');
-            return redirect(str_replace('rcv_sincronizar_tipo_transacciones', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('rcv_sincronizar_tipo_transacciones', 'ver', $this->request->getRequestUriDecoded()))
+                ->withWarning(
+                    __('No hay compras caracterizadas para el período %(periodo)s.', 
+                        [
+                            'periodo' => $periodo
+                        ]
+                    )
+                );
         }
         // enviar al SII
         $r = apigateway('/sii/rcv/compras/set_tipo_transaccion/'.$Emisor->rut.'-'.$Emisor->dv.'/'.$periodo.'?certificacion='.$Emisor->enCertificacion(), [
@@ -502,7 +572,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         if (isset($_POST['submit'])) {
             $documentos = $Emisor->getDocumentosRecibidos($_POST + ['periodo' => $periodo, 'dte' => [33, 34, 43, 46, 56, 61]]);
             if (!$documentos) {
-                \sowerphp\core\Facade_Session_Message::write('No hay resultados en la búsqueda para el período '.$periodo.'.', 'warning');
+                \sowerphp\core\Facade_Session_Message::warning('No hay resultados en la búsqueda para el período '.$periodo.'.');
                 return;
             }
             $this->set([
@@ -534,12 +604,20 @@ class Controller_DteCompras extends Controller_Base_Libros
                 'formato' => $tipo == 'rcv_csv' ? 'csv' : 'json',
             ]);
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
-            return redirect('/dte/dte_compras/ver/'.$periodo);
+            return redirect('/dte/dte_compras/ver/'.$periodo)
+                ->withError(
+                    __('%(error_message)s', 
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    )
+                );
         }
         if (!$detalle) {
-            \sowerphp\core\Facade_Session_Message::write('No hay detalle para el período y estado solicitados.', 'warning');
-            return redirect('/dte/dte_compras/ver/'.$periodo);
+            return redirect('/dte/dte_compras/ver/'.$periodo)
+                ->withWarning(
+                    __('No hay detalle para el período y estado solicitados.')
+                );
         }
         if ($tipo == 'rcv_csv') {
             $this->response->sendAndExit($detalle, 'rc_'.$Emisor->rut.'_'.$periodo.'_'.$estado.'_'.$tipo.'.csv');

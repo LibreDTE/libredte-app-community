@@ -23,6 +23,8 @@
 
 namespace website\Dte\Admin;
 
+use \sowerphp\core\Network_Request as Request;
+
 /**
  * Clase exportar e importar datos de un contribuyente.
  */
@@ -32,8 +34,9 @@ class Controller_Respaldos extends \sowerphp\autoload\Controller
     /**
      * Acción que permite exportar todos los datos de un contribuyente.
      */
-    public function exportar($all = false)
+    public function exportar(Request $request, $all = false)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -41,10 +44,11 @@ class Controller_Respaldos extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Validar acceso de administrador.
-        if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-            return redirect('/dte/admin')->withError(
-                'Solo el administrador de la empresa puede descargar un respaldo.'
-            );
+        if (!$Emisor->usuarioAutorizado($user, 'admin')) {
+            return redirect('/dte/admin')
+                ->withError(
+                    __('Solo el administrador de la empresa puede descargar un respaldo.')
+                );
         }
         // Preparar respaldo.
         $Respaldo = new Model_Respaldo();
@@ -67,8 +71,8 @@ class Controller_Respaldos extends \sowerphp\autoload\Controller
                     $dir, ['format' => 'zip', 'delete' => true]
                 );
             } catch (\Exception $e) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'No fue posible exportar los datos: '.$e->getMessage(), 'error'
+                \sowerphp\core\Facade_Session_Message::error(
+                    'No fue posible exportar los datos: '.$e->getMessage()
                 );
             }
         }

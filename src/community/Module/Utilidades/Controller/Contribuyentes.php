@@ -39,8 +39,8 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             if ($Contribuyente->exists()) {
                 $this->set('Contribuyente', $Contribuyente);
             } else {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'No se encontró información para el RUT indicado en LibreDTE.', 'warning'
+                \sowerphp\core\Facade_Session_Message::warning(
+                    'No se encontró información para el RUT indicado en LibreDTE.'
                 );
             }
         }

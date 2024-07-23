@@ -59,7 +59,14 @@ class Controller_Estadisticas extends \sowerphp\autoload\Controller
         $url = '/api/estadisticas/' . $ambiente;
         $response = $this->consume($url);
         if ($response['status']['code'] != 200) {
-            return redirect('/')->withError($response['body']);
+            return redirect('/')
+                ->withError(
+                    __('%(body)s', 
+                        [
+                            'body' => $response['body']
+                        ]
+                    )
+                );
         }
         return $this->render('Estadisticas/index', $response['body']);
     }
@@ -150,7 +157,14 @@ class Controller_Estadisticas extends \sowerphp\autoload\Controller
                     unset($c['ambiente']);
                 }
             } catch (\Exception $e) {
-                return response()->json($e->getMessage(), 500);
+                return response()->json(
+                    __('%(error_message)s',
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    ),
+                    500
+                );
             }
         }
         // Entregar resultados.

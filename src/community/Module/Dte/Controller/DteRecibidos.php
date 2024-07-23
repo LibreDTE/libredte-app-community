@@ -26,6 +26,7 @@ namespace website\Dte;
 use \website\Dte\Admin\Mantenedores\Model_DteTipos;
 use \website\Dte\Admin\Mantenedores\Model_IvaNoRecuperables;
 use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
+use \sowerphp\core\Network_Request as Request;
 
 /**
  * Controlador de dte recibidos.
@@ -70,8 +71,8 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             }
             $documentos = $Receptor->getDocumentosRecibidos($filtros);
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'Error al recuperar los documentos:<br/>'.$e->getMessage(), 'error'
+            \sowerphp\core\Facade_Session_Message::error(
+                'Error al recuperar los documentos:<br/>'.$e->getMessage()
             );
             $documentos_total = 0;
             $documentos = [];
@@ -138,9 +139,10 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || $DteRecibido->receptor != $Receptor->rut) {
-            return redirect('/dte/dte_recibidos/listar')->withError(
-                'DTE recibido solicitado no existe.'
-            );
+            return redirect('/dte/dte_recibidos/listar')
+                ->withError(
+                    __('DTE recibido solicitado no existe.')
+                );
         }
         // Procesar formulario si se pasó.
         if (isset($_POST['submit'])) {
@@ -181,9 +183,10 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || $DteRecibido->receptor != $Receptor->rut) {
-            return redirect('/dte/dte_recibidos/listar')->withError(
-                'DTE recibido solicitado no existe.'
-            );
+            return redirect('/dte/dte_recibidos/listar')
+                ->withError(
+                    __('DTE recibido solicitado no existe.')
+                );
         }
         // Renderizar vista.
         return $this->render(null, [
@@ -202,15 +205,16 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
     /**
      * Método que agrega o modifica un DTE recibido.
      */
-    private function save()
+    private function save(Request $request)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         $Receptor = libredte()->getSessionContribuyente();
         // Revisar datos minimos.
         foreach(['emisor', 'dte', 'folio', 'fecha', 'tasa'] as $attr) {
             if (!isset($_POST[$attr][0])) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'Debe indicar '.$attr.'.', 'error'
+                \sowerphp\core\Facade_Session_Message::error(
+                    'Debe indicar '.$attr.'.'
                 );
                 return;
             }
@@ -227,7 +231,7 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             ? $_POST['iva']
             : round((int)$DteRecibido->neto * ($DteRecibido->tasa/100))
         ;
-        $DteRecibido->usuario = $this->Auth->User->id;
+        $DteRecibido->usuario = $user->id;
         // tipo transaccion, iva uso común, no recuperable e impuesto adicional
         $DteRecibido->tipo_transaccion = !empty($_POST['tipo_transaccion'])
             ? $_POST['tipo_transaccion']
@@ -351,25 +355,27 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             && !$Receptor->config_recepcion_omitir_verificacion_sii
         ) {
             // obtener firma
-            $Firma = $Receptor->getFirma($this->Auth->User->id);
+            $Firma = $Receptor->getFirma($user->id);
             if (!$Firma) {
-                $message = __(
-                    'No existe una firma electrónica asociada a la empresa que se pueda utilizar para guardar el documento. Se requiere para consultar el estado del documento al SII antes de que sea guardado. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
-                    url('/dte/admin/firma_electronicas/agregar')
-                );
-                \sowerphp\core\Facade_Session_Message::write($message, 'error');
-                return redirect('/dte/admin/firma_electronicas/agregar');
+                return redirect('/dte/admin/firma_electronicas/agregar')
+                    ->withError(
+                        __('No existe una firma electrónica asociada a la empresa que se pueda utilizar para guardar el documento. Se requiere para consultar el estado del documento al SII antes de que sea guardado. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%(url)s).',
+                            [
+                                'url' => url('/dte/admin/firma_electronicas/agregar')
+                            ]
+                        )
+                    );
             }
             // consultar estado dte
             $estado = $DteRecibido->getEstado($Firma);
             if ($estado === false) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'No se pudo obtener el estado del DTE.<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+                \sowerphp\core\Facade_Session_Message::error(
+                    'No se pudo obtener el estado del DTE.<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll())
                 );
                 return;
             } else if (in_array($estado['ESTADO'], ['DNK', 'FAU', 'FNA', 'EMP'])) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'Estado DTE: '.(is_array($estado) ? implode('. ', $estado) : $estado), 'error'
+                \sowerphp\core\Facade_Session_Message::error(
+                    'Estado DTE: '.(is_array($estado) ? implode('. ', $estado) : $estado)
                 );
                 return;
             }
@@ -377,13 +383,13 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
         // todo ok con el dte así que se agrega a los dte recibidos
         try {
             $DteRecibido->save();
-            \sowerphp\core\Facade_Session_Message::write(
-                'DTE recibido guardado.', 'ok'
-            );
-            return redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
+            return redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio)
+                ->withSuccess(
+                    __('DTE recibido guardado.')
+                );
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible guardar el DTE: '.$e->getMessage(), 'error'
+            \sowerphp\core\Facade_Session_Message::error(
+                'No fue posible guardar el DTE: '.$e->getMessage()
             );
         }
     }
@@ -407,16 +413,23 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible eliminar, el DTE recibido solicitado no existe.', 'warning'
-            );
+            return redirect('/dte/dte_recibidos/listar')
+                ->withWarning(
+                    __('No fue posible eliminar, el DTE recibido solicitado no existe.')
+                );
         } else {
             $DteRecibido->delete();
-            \sowerphp\core\Facade_Session_Message::write(
-                'Se eliminó el DTE T'.$DteRecibido->dte.'F'.$DteRecibido->folio.' recibido de '.\sowerphp\app\Utility_Rut::addDV($DteRecibido->emisor), 'ok'
-            );
+            return redirect('/dte/dte_recibidos/listar')
+                ->withSuccess(
+                    __('Se eliminó el DTE T%(dte)sF%(folio)s recibido de %(emisor)s',
+                        [
+                            'dte' => $DteRecibido->dte,
+                            'folio' => $DteRecibido->folio,
+                            'emisor' => \sowerphp\app\Utility_Rut::addDV($DteRecibido->emisor)
+                        ]
+                    )
+                );
         }
-        return redirect('/dte/dte_recibidos/listar');
     }
 
     /**
@@ -438,17 +451,17 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No existe el DTE recibido solicitado.', 'error'
-            );
-            return redirect('/dte/dte_recibidos/listar');
+            return redirect('/dte/dte_recibidos/listar')
+                ->withError(
+                    __('No existe el DTE recibido solicitado.')
+                );
         }
         // si no tiene XML error
         if (!$DteRecibido->hasXML()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'El DTE no tiene XML asociado.', 'error'
-            );
-            return redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
+            return redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio)
+                ->withError(
+                    __('El DTE no tiene XML asociado.')
+                );
         }
         // entregar XML
         $file = 'dte_'.$DteRecibido->getEmisor()->rut.'-'.$DteRecibido->getEmisor()->dv.'_T'.$DteRecibido->dte.'F'.$DteRecibido->folio.'.xml';
@@ -478,15 +491,17 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists()) {
-            return redirect('/dte/dte_recibidos/listar')->withError(
-                'No existe el DTE recibido solicitado.'
-            );
+            return redirect('/dte/dte_recibidos/listar')
+                ->withError(
+                    __('No existe el DTE recibido solicitado.')
+                );
         }
         // Si no tiene XML -> error.
         if (!$DteRecibido->hasXML()) {
-            return redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio)->withError(
-                'El DTE no tiene XML asociado, no es posible obtener JSON.'
-            );
+            return redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio)
+                ->withError(
+                    __('El DTE no tiene XML asociado, no es posible obtener JSON.')
+                );
         }
         // Entregar XML.
         $file = 'dte_'.$DteRecibido->getEmisor()->rut.'-'.$DteRecibido->getEmisor()->dv.'_T'.$DteRecibido->dte.'F'.$DteRecibido->folio.'.json';
@@ -518,9 +533,10 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
-            return redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio)->withError(
-                'No fue posible obtener el PDF, el DTE recibido solicitado no existe o bien no tiene intercambio asociado.'
-            );
+            return redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio)
+                ->withError(
+                    __('No fue posible obtener el PDF, el DTE recibido solicitado no existe o bien no tiene intercambio asociado.')
+                );
         }
         // datos por defecto y recibidos por GET
         $formatoPDF = $DteRecibido->getEmisor()->getConfigPDF($DteRecibido);
@@ -550,9 +566,14 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
         try {
             $pdf = $DteRecibido->getPDF($config);
         } catch (\Exception $e) {
-            return redirect('/dte/dte_recibidos/listar')->withError(
-                $e->getMessage()
-            );
+            return redirect('/dte/dte_recibidos/listar')
+                ->withError(
+                    __('%(error_message)s', 
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    )
+                );
         }
         $ext = $config['compress'] ? 'zip' : 'pdf';
         $file_name = 'LibreDTE_'.$DteRecibido->emisor.'_T'.$DteRecibido->dte.'F'.$DteRecibido->folio.'.'.$ext;
@@ -609,10 +630,16 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
         }
         $Receptor = new Model_Contribuyente($receptor);
         if (!$Receptor->exists()) {
-            $this->Api->send('Receptor no existe.', 404);
+            return response()->json(
+                __('Receptor no existe.'),
+                404
+            );
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/pdf')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
+            return response()->json(
+                __('No está autorizado a operar con la empresa solicitada.'),
+                403
+            );
         }
         $DteRecibido = new Model_DteRecibido(
             (int)$emisor,
@@ -621,7 +648,16 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
-            $this->Api->send('No existe el documento recibido solicitado T'.$dte.'F'.$folio.' del emisor '.$emisor.' o no tiene XML asociado.', 404);
+            return response()->json(
+                __('No existe el documento recibido solicitado T%(dte)sF%(folio)s del emisor %(emisor)s o no tiene XML asociado.',
+                    [
+                        'dte' => $dte,
+                        'folio' => $folio,
+                        'emisor' => $emisor
+                    ]
+                ),
+                404
+            );
         }
         // datos por defecto
         $formatoPDF = $DteRecibido->getEmisor()->getConfigPDF($DteRecibido);
@@ -639,17 +675,24 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
         try {
             $pdf = $DteRecibido->getPDF($config);
             if ($config['base64']) {
-                $this->Api->send(base64_encode($pdf));
+                return response()->json(base64_encode($pdf));
             } else {
                 $ext = $config['compress'] ? 'zip' : 'pdf';
                 $file_name = 'LibreDTE_'.$DteRecibido->emisor.'_T'.$DteRecibido->dte.'F'.$DteRecibido->folio.'.'.$ext;
                 $this->Api->response()->type('application/'.$ext);
                 $this->Api->response()->header('Content-Disposition', 'attachement; filename="'.$file_name.'"');
                 $this->Api->response()->header('Content-Length', strlen($pdf));
-                $this->Api->send($pdf);
+                return response()->json($pdf);
             }
         } catch (\Exception $e) {
-            $this->Api->send($e->getMessage(), $e->getCode());
+            return response()->json(
+                __('%(error_message)s',
+                    [
+                        'error_message' => $e->getMessage()
+                    ]
+                ),
+                $e->getCode()
+            );
         }
     }
 
@@ -666,10 +709,16 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
         // crear receptor y verificar permisos
         $Receptor = new Model_Contribuyente($receptor);
         if (!$Receptor->usuario) {
-            $this->Api->send('Receptor no está registrado en la aplicación.', 404);
+            return response()->json(
+                __('Receptor no está registrado en la aplicación.'),
+                404
+            );
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/escpos')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
+            return response()->json(
+                __('No está autorizado a operar con la empresa solicitada.'),
+                403
+            );
         }
         $DteRecibido = new Model_DteRecibido(
             (int)$emisor,
@@ -678,7 +727,16 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
-            $this->Api->send('No existe el documento recibido solicitado T'.$dte.'F'.$folio.' del emisor '.$emisor, 404);
+            return response()->json(
+                __('No existe el documento recibido solicitado T%(dte)sF%(folio)s del emisor %(emisor)s',
+                    [
+                        'dte' => $dte,
+                        'folio' => $folio,
+                        'emisor' => $emisor
+                    ]
+                ),
+                404
+            );
         }
         // datos por defecto
         $config = $this->request->getValidatedData([
@@ -696,17 +754,24 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
         try {
             $escpos = $DteRecibido->getESCPOS($config);
             if ($config['base64']) {
-                $this->Api->send(base64_encode($escpos));
+                return response()->json(base64_encode($escpos));
             } else {
                 $ext = $config['compress'] ? 'zip' : 'bin';
                 $mimetype = $config['compress'] ? 'zip' : 'octet-stream';
                 $file_name = 'LibreDTE_'.$DteRecibido->emisor.'_T'.$DteRecibido->dte.'F'.$DteRecibido->folio.'.'.$ext;
                 $this->Api->response()->type('application/'.$mimetype);
                 $this->Api->response()->header('Content-Disposition', 'attachement; filename="'.$file_name.'"');
-                $this->Api->send($escpos);
+                return response()->json($escpos);
             }
         } catch (\Exception $e) {
-            $this->Api->send($e->getMessage(), $e->getCode());
+            return response()->json(
+                __('%(error_message)s',
+                    [
+                        'error_message' => $e->getMessage()
+                    ]
+                ), 
+                $e->getCode()
+            );
         }
     }
 
@@ -721,10 +786,16 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
         }
         $Receptor = new Model_Contribuyente($receptor);
         if (!$Receptor->exists()) {
-            $this->Api->send('Receptor no existe.', 404);
+            return response()->json(
+                __('Receptor no existe.'),
+                404
+            );
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/xml')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
+            return response()->json(
+                __('No está autorizado a operar con la empresa solicitada.'),
+                403
+            );
         }
         $DteRecibido = new Model_DteRecibido(
             (int)$emisor,
@@ -733,7 +804,16 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
-            $this->Api->send('No existe el documento recibido solicitado T'.$dte.'F'.$folio.' del emisor '.$emisor.' o no tiene XML asociado.', 404);
+            return response()->json(
+                __('No existe el documento recibido solicitado T%(dte)sF%(folio)s del emisor %(emisor)s o no tiene XML asociado.',
+                    [
+                        'dte' => $dte,
+                        'folio' => $folio,
+                        'emisor' => $emisor
+                    ]
+                ),
+                404
+            );
         }
         return base64_encode($DteRecibido->getXML());
     }
@@ -750,14 +830,23 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
         }
         $Receptor = new Model_Contribuyente($receptor);
         if (!$Receptor->exists()) {
-            $this->Api->send('Receptor no existe.', 404);
+            return response()->json(
+                __('Receptor no existe.'),
+                404
+            );
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/xml')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
+            return response()->json(
+                __('No está autorizado a operar con la empresa solicitada.'),
+                403
+            );
         }
         $Firma = $Receptor->getFirma($User->id);
         if (!$Firma) {
-            $this->Api->send('No existe firma asociada.', 506);
+            return response()->json(
+                __('No existe firma asociada.'),
+                506
+            );
         }
         $DteRecibido = new Model_DteRecibido(
             (int)$emisor,
@@ -766,10 +855,28 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
-            $this->Api->send('No existe el documento recibido solicitado T'.$dte.'F'.$folio.' del emisor '.$emisor, 404);
+            return response()->json(
+                __('No existe el documento recibido solicitado T%(dte)sF%(folio)s del emisor %(emisor)s',
+                    [
+                        'dte' => $dte,
+                        'folio' => $folio,
+                        'emisor' => $emisor
+                    ]
+                ),
+                404
+            );
         }
         if (!$DteRecibido->getDte()) {
-            $this->Api->send('El documento T'.$dte.'F'.$folio.' del emisor '.$DteRecibido->getEmisor()->getRUT().' no tiene XML en LibreDTE.', 400);
+            return response()->json(
+                __('El documento T%(dte)sF%(folio)s del emisor %(emisor_rut)s no tiene XML en LibreDTE.',
+                    [
+                        'dte' => $dte,
+                        'folio' => $folio,
+                        'emisor_rut' => $DteRecibido->getEmisor()->getRUT()
+                    ]
+                ),
+                400
+            );
         }
         \sasco\LibreDTE\Sii::setAmbiente($Receptor->enCertificacion());
         return $avanzado
@@ -789,10 +896,16 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
         }
         $Receptor = new Model_Contribuyente($receptor);
         if (!$Receptor->exists()) {
-            $this->Api->send('Receptor no existe.', 404);
+            return response()->json(
+                __('Receptor no existe.'),
+                404
+            );
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/ver')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
+            return response()->json(
+                __('No está autorizado a operar con la empresa solicitada.'),
+                403
+            );
         }
         if (strpos($emisor, '-')) {
             $emisor = \sowerphp\app\Utility_Rut::normalizar($emisor);
@@ -804,10 +917,26 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             $Receptor->enCertificacion()
         );
         if (!$DteRecibido->exists()) {
-            $this->Api->send('No existe el documento recibido solicitado T'.$dte.'F'.$folio, 404);
+            return response()->json(
+                __('No existe el documento recibido solicitado T%(dte)sF%(folio)s',
+                    [
+                        'dte' => $dte,
+                        'folio' => $folio
+                    ]
+                ),
+                404
+            );
         }
         if ($DteRecibido->receptor != $Receptor->rut) {
-            $this->Api->send('RUT del receptor no corresponde al DTE T'.$dte.'F'.$folio, 400);
+            return response()->json(
+                __('RUT del receptor no corresponde al DTE T%(dte)sF%(folio)s',
+                    [
+                        'dte' => $dte,
+                        'folio' => $folio
+                    ]
+                ),
+                400
+            );
         }
         extract($this->request->getValidatedData([
             'getXML' => false,
@@ -828,15 +957,19 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
                 $DteRecibido->xml = null;
             }
         }
-        $this->Api->send($DteRecibido, 200);
+        return response()->json(
+            $DteRecibido,
+            200
+        );
     }
 
     /**
      * Acción que permite realizar una búsqueda avanzada dentro de los DTE
      * recibidos.
      */
-    public function buscar()
+    public function buscar(Request $request)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Receptor = libredte()->getSessionContribuyente();
@@ -851,7 +984,7 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
         // Procesar formulario.
         if (isset($_POST['submit'])) {
             $rest = new \sowerphp\core\Network_Http_Rest();
-            $rest->setAuth($this->Auth->User->hash);
+            $rest->setAuth($user->hash);
             $response = $rest->post(url('/api/dte/dte_recibidos/buscar/'.$Receptor->rut.'?_contribuyente_certificacion='.$Receptor->enCertificacion()), [
                 'dte' => $_POST['dte'],
                 'emisor' => $_POST['emisor'],
@@ -861,10 +994,10 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
                 'total_hasta' => $_POST['total_hasta'],
             ]);
             if ($response === false) {
-                \sowerphp\core\Facade_Session_Message::write(implode('<br/>', $rest->getErrors()), 'error');
+                \sowerphp\core\Facade_Session_Message::error(implode('<br/>', $rest->getErrors()));
             }
             else if ($response['status']['code'] != 200) {
-                \sowerphp\core\Facade_Session_Message::write($response['body'], 'error');
+                \sowerphp\core\Facade_Session_Message::error($response['body']);
             }
             else {
                 $this->set([
@@ -888,14 +1021,23 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
         // verificar permisos del usuario autenticado sobre el receptor del DTE
         $Receptor = new Model_Contribuyente($receptor);
         if (!$Receptor->exists()) {
-            $this->Api->send('Receptor no existe.', 404);
+            return response()->json(
+                __('Receptor no existe.'),
+                404
+            );
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/buscar')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
+            return response()->json(
+                __('No está autorizado a operar con la empresa solicitada.'),
+                403
+            );
         }
         // buscar documentos
         $documentos = $Receptor->getDocumentosRecibidos($this->Api->data, true);
-        $this->Api->send($documentos, 200);
+        return response()->json(
+            $documentos,
+            200
+        );
     }
 
     /**
@@ -911,10 +1053,16 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
         }
         $Receptor = new Model_Contribuyente($receptor);
         if (!$Receptor->exists()) {
-            $this->Api->send('Receptor no existe.', 404);
+            return response()->json(
+                __('Receptor no existe.'),
+                404
+            );
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/dte_recibidos/listar')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
+            return response()->json(
+                __('No está autorizado a operar con la empresa solicitada.'),
+                403
+            );
         }
         // buscar documentos
         $filtros = $this->request->getValidatedData([
@@ -931,7 +1079,10 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             ->setContribuyente($Receptor)
             ->buscar($filtros)
         ;
-        $this->Api->send($documentos, 200);
+        return response()->json(
+            $documentos,
+            200
+        );
     }
 
 }

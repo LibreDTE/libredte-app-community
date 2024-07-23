@@ -63,12 +63,14 @@ class Controller_DteBoletas extends \sowerphp\autoload\Controller
         $Libro = new \sasco\LibreDTE\Sii\LibroBoleta();
         $Firma = $Emisor->getFirma();
         if (!$Firma) {
-            $message = __(
-                'No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
-                url('/dte/admin/firma_electronicas/agregar')
-            );
-            \sowerphp\core\Facade_Session_Message::write($message, 'error');
-            return redirect('/dte/dte_boletas');
+            return redirect('/dte/dte_boletas')
+                ->withError(
+                    __('No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%(url)s).', 
+                        [
+                            'url' => url('/dte/admin/firma_electronicas/agregar')
+                        ]
+                    )
+                );
         }
         $Libro->setFirma($Firma);
         foreach ($boletas as $boleta) {
@@ -96,10 +98,14 @@ class Controller_DteBoletas extends \sowerphp\autoload\Controller
         ]);
         $xml = $Libro->generar();
         if (!$Libro->schemaValidate()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible generar el libro de boletas<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
-            );
-            return redirect('/dte/dte_boletas');
+            return redirect('/dte/dte_boletas')
+                ->withError(
+                    __('No fue posible generar el libro de boletas<br/>%(logs)s', 
+                        [
+                            'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                        ]
+                    )
+                );
         }
         // entregar XML
         $file = 'boletas_'.$Emisor->rut.'-'.$Emisor->dv.'_'.$periodo.'.xml';

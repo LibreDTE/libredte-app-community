@@ -34,16 +34,19 @@ class Controller_Sii extends \sowerphp\autoload\Controller
     /**
      * Acción que permite obtener los datos de la empresa desde el SII.
      */
-    public function contribuyente_datos($rut)
+    public function contribuyente_datos(Request $request, $rut)
     {
+        $user = $request->user();
         // si existe el proveedor libredte se consulta al servicio web de LibreDTE oficial
         try {
             $Emisor = (new Model_Contribuyentes())->get($rut);
-            if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-                \sowerphp\core\Facade_Session_Message::write('Usted no es el administrador de la empresa solicitada.', 'error');
-                return redirect('/dte/contribuyentes/seleccionar');
+            if (!$Emisor->usuarioAutorizado($user, 'admin')) {
+                return redirect('/dte/contribuyentes/seleccionar')
+                    ->withError(
+                        __('Usted no es el administrador de la empresa solicitada.')
+                    );
             }
-            $Firma = $Emisor->getFirma($this->Auth->User->id);
+            $Firma = $Emisor->getFirma($user->id);
             $certificacion = $Emisor->enCertificacion();
             $response = apigateway(
                 '/sii/dte/contribuyentes/datos/'.$Emisor->getRUT().'?formato=html&certificacion='.$certificacion,
@@ -67,16 +70,19 @@ class Controller_Sii extends \sowerphp\autoload\Controller
     /**
      * Acción que permite obtener los usuarios de la empresa desde el SII.
      */
-    public function contribuyente_usuarios($rut)
+    public function contribuyente_usuarios(Request $request, $rut)
     {
+        $user = $request->user();
         // si existe el proveedor libredte se consulta al servicio web de LibreDTE oficial
         try {
             $Emisor = (new Model_Contribuyentes())->get($rut);
-            if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-                \sowerphp\core\Facade_Session_Message::write('Usted no es el administrador de la empresa solicitada.', 'error');
-                return redirect('/dte/contribuyentes/seleccionar');
+            if (!$Emisor->usuarioAutorizado($user, 'admin')) {
+                return redirect('/dte/contribuyentes/seleccionar')
+                    ->withError(
+                        __('Usted no es el administrador de la empresa solicitada.')
+                    );
             }
-            $Firma = $Emisor->getFirma($this->Auth->User->id);
+            $Firma = $Emisor->getFirma($user->id);
             if (!$Firma) {
                 die('No hay firma electrónica asociada al usuario.');
             }
@@ -142,8 +148,9 @@ class Controller_Sii extends \sowerphp\autoload\Controller
     /**
      * Acción que permite consultar el estado de un envío en el SII a partir del Track ID del DTE.
      */
-    public function estado_envio($track_id)
+    public function estado_envio(Request $request, $track_id)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -152,7 +159,7 @@ class Controller_Sii extends \sowerphp\autoload\Controller
         }
         // si existe el proveedor libredte se consulta al servicio web de LibreDTE oficial
         try {
-            $Firma = $Emisor->getFirma($this->Auth->User->id);
+            $Firma = $Emisor->getFirma($user->id);
             if (!$Firma) {
                 die('No hay firma electrónica asociada al usuario.');
             }
@@ -201,8 +208,9 @@ class Controller_Sii extends \sowerphp\autoload\Controller
     /**
      * Método que realiza la consulta al SII.
      */
-    private function query($query, $params)
+    private function query(Request $request, $query, $params)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -210,11 +218,12 @@ class Controller_Sii extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Obtener firma.
-        $Firma = $Emisor->getFirma($this->Auth->User->id);
+        $Firma = $Emisor->getFirma($user->id);
         if (!$Firma) {
-            return redirect('/dte/dte_emitidos/listar')->withError(
-                'No existe firma asociada.'
-            );
+            return redirect('/dte/dte_emitidos/listar')
+                ->withError(
+                    __('No existe firma asociada.')
+                );
         }
         list($rutQuery, $dvQuery) = explode('-', $Firma->getId());
         $servidor = \sasco\LibreDTE\Sii::getServidor();
@@ -247,10 +256,10 @@ class Controller_Sii extends \sowerphp\autoload\Controller
         // Buscar firma electrónica.
         $Firma = $Contribuyente->getFirma($user->id);
         if (!$Firma) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No existe firma asociada.', 'error'
-            );
-            return redirect('/dte');
+            return redirect('/dte')
+                ->withError(
+                    __('No existe firma asociada.')
+                );
         }
         // asignar variables para la vista.
         list($emisor_rut, $emisor_dv) = explode('-', str_replace('.', '', $emisor));
@@ -280,8 +289,9 @@ class Controller_Sii extends \sowerphp\autoload\Controller
     /**
      * Acción que permite consultar el estado de un envío en el SII a partir del Track ID del AEC.
      */
-    public function cesion_estado_envio($track_id)
+    public function cesion_estado_envio(Request $request, $track_id)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -290,7 +300,7 @@ class Controller_Sii extends \sowerphp\autoload\Controller
         }
         // si existe el proveedor libredte se consulta al servicio web de LibreDTE oficial
         try {
-            $Firma = $Emisor->getFirma($this->Auth->User->id);
+            $Firma = $Emisor->getFirma($user->id);
             if (!$Firma) {
                 die('No hay firma electrónica asociada al usuario.');
             }
@@ -317,8 +327,9 @@ class Controller_Sii extends \sowerphp\autoload\Controller
     /**
      * Acción que permite consultar el certificado de cesión de un DTE.
      */
-    public function cesion_certificado($dte, $folio, $fecha)
+    public function cesion_certificado(Request $request, $dte, $folio, $fecha)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -327,7 +338,7 @@ class Controller_Sii extends \sowerphp\autoload\Controller
         }
         // si existe el proveedor libredte se consulta al servicio web de LibreDTE oficial
         try {
-            $Firma = $Emisor->getFirma($this->Auth->User->id);
+            $Firma = $Emisor->getFirma($user->id);
             if (!$Firma) {
                 die('No hay firma electrónica asociada al usuario.');
             }

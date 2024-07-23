@@ -23,6 +23,8 @@
 
 namespace website\Dte\Admin;
 
+use \sowerphp\core\Network_Request as Request;
+
 /**
  * Clase para el controlador asociado a la tabla firma_electronica de la base de
  * datos.
@@ -51,13 +53,14 @@ class Controller_FirmaElectronicas extends \sowerphp\autoload\Controller
     /**
      * Acción que permite al usuario agregar una nueva firma electrónica.
      */
-    public function agregar()
+    public function agregar(Request $request)
     {
+        $user = $request->user();
         if (isset($_POST['submit'])) {
             // verificar que se haya podido subir el archivo con la firma
             if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'Ocurrió un error al subir la firma.', 'error'
+                \sowerphp\core\Facade_Session_Message::error(
+                    'Ocurrió un error al subir la firma.'
                 );
                 return;
             }
@@ -70,16 +73,16 @@ class Controller_FirmaElectronicas extends \sowerphp\autoload\Controller
                 ]);
                 $Firma->check();
             } catch (\Exception $e) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    $e->getMessage(), 'error'
+                \sowerphp\core\Facade_Session_Message::error(
+                    $e->getMessage()
                 );
                 return;
             }
             // verificar que la firma no esté cargada en otro usuario
             $FirmaElectronica = new Model_FirmaElectronica(trim($Firma->getID()));
-            if ($FirmaElectronica->usuario && $FirmaElectronica->usuario != $this->Auth->User->id) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'La firma electrónica de '.$Firma->getID().' ya está asociada al usuario '.$FirmaElectronica->getUsuario()->usuario.', no es posible asignarla a su usuario '.$this->Auth->User->usuario.'. Si 2 empresas usan la misma firma, deberán tener ambas el mismo administrador principal en LibreDTE. En el caso que no desee tener el mismo administrador principal, deberá subir la firma de un usuario diferente, y que esté autorizada en SII.', 'error'
+            if ($FirmaElectronica->usuario && $FirmaElectronica->usuario != $user>id) {
+                \sowerphp\core\Facade_Session_Message::error(
+                    'La firma electrónica de '.$Firma->getID().' ya está asociada al usuario '.$FirmaElectronica->getUsuario()->usuario.', no es posible asignarla a su usuario '.$user->usuario.'. Si 2 empresas usan la misma firma, deberán tener ambas el mismo administrador principal en LibreDTE. En el caso que no desee tener el mismo administrador principal, deberá subir la firma de un usuario diferente, y que esté autorizada en SII.'
                 );
                 return;
             }
@@ -88,7 +91,7 @@ class Controller_FirmaElectronicas extends \sowerphp\autoload\Controller
             // del usuario, además un usuario puede tener solo una firma. Entonces si un
             // usuario ya tiene firma y trata de subir una nueva con un RUN diferente el
             // guardado de la firma falla. Para evitar este problema, se borra si existe una
-            $FirmaElectronicaAntigua = (new Model_FirmaElectronicas())->getByUser($this->Auth->User->id);
+            $FirmaElectronicaAntigua = (new Model_FirmaElectronicas())->getByUser($user->id);
             if ($FirmaElectronicaAntigua) {
                 $FirmaElectronicaAntigua->delete();
             }
@@ -98,18 +101,24 @@ class Controller_FirmaElectronicas extends \sowerphp\autoload\Controller
             $FirmaElectronica->desde = $Firma->getFrom();
             $FirmaElectronica->hasta = $Firma->getTo();
             $FirmaElectronica->emisor = $Firma->getIssuer();
-            $FirmaElectronica->usuario = $this->Auth->User->id;
+            $FirmaElectronica->usuario = $user->id;
             $FirmaElectronica->archivo = base64_encode($data);
             $FirmaElectronica->contrasenia = encrypt($_POST['contrasenia']);
             try {
                 $FirmaElectronica->save();
-                \sowerphp\core\Facade_Session_Message::write(
-                    'Se asoció la firma electrónica de '.$Firma->getName().' ('.$Firma->getID().') al usuario '.$this->Auth->User->usuario.'.', 'ok'
-                );
-                return redirect('/dte/admin/firma_electronicas');
+                return redirect('/dte/admin/firma_electronicas')
+                    ->withSuccess(
+                        __('Se asoció la firma electrónica de %(firma_name)s (%(firma_id)s) al usuario %(usuario)s.',
+                            [
+                                'firma_name' => $Firma->getName(),
+                                'firma_id' => $Firma->getID(),
+                                'usuario' => $user->usuario
+                            ]
+                        )
+                    );
             } catch (\Exception $e) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'Ocurrió un error al guardar la firma.<br/>'.$e->getMessage(), 'error'
+                \sowerphp\core\Facade_Session_Message::error(
+                    'Ocurrió un error al guardar la firma.<br/>'.$e->getMessage()
                 );
                 return;
             }
@@ -121,23 +130,30 @@ class Controller_FirmaElectronicas extends \sowerphp\autoload\Controller
      */
     public function eliminar()
     {
-        $FirmaElectronica = (new Model_FirmaElectronicas())->getByUser($this->Auth->User->id);
+        $FirmaElectronica = (new Model_FirmaElectronicas())->getByUser($user->id);
         // Si el usuario no tiene firma electrónica no se elimina,
         if (!$FirmaElectronica) {
-            return redirect('/dte/admin/firma_electronicas')->withInfo(
-                'Usted no tiene una firma electrónica registrada en el sistema. Solo puede eliminar su firma previamente cargada.'
-            );
+            return redirect('/dte/admin/firma_electronicas')
+                ->withInfo(
+                    __('Usted no tiene una firma electrónica registrada en el sistema. Solo puede eliminar su firma previamente cargada.')
+                );
         }
         // Eliminar firma.
         try {
             $FirmaElectronica->delete();
-            return redirect('/dte/admin/firma_electronicas')->withSuccess(
-                'Se eliminó la firma electrónica asociada a su usuario.'
-            );
+            return redirect('/dte/admin/firma_electronicas')
+                ->withSuccess(
+                    __('Se eliminó la firma electrónica asociada a su usuario.')  
+                );
         } catch (\Exception $e) {
-            return redirect('/dte/admin/firma_electronicas')->withError(
-                'No fue posible eliminar la firma electrónica:<br/>'.$e->getMessage()
-            );
+            return redirect('/dte/admin/firma_electronicas')
+                ->withError(
+                    __('No fue posible eliminar la firma electrónica:<br/>%(error_message)s', 
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    ) 
+                );
         }
     }
 
@@ -146,12 +162,13 @@ class Controller_FirmaElectronicas extends \sowerphp\autoload\Controller
      */
     public function descargar()
     {
-        $FirmaElectronica = (new Model_FirmaElectronicas())->getByUser($this->Auth->User->id);
+        $FirmaElectronica = (new Model_FirmaElectronicas())->getByUser($user->id);
         // si el usuario no tiene firma electrónica no hay algo que descargar
         if (!$FirmaElectronica) {
-            return redirect('/dte/admin/firma_electronicas')->withInfo(
-                'Usted no tiene una firma electrónica registrada en el sistema, solo puede descargar su firma previamente cargada.'
-            );
+            return redirect('/dte/admin/firma_electronicas')
+                ->withInfo(
+                    __('Usted no tiene una firma electrónica registrada en el sistema, solo puede descargar su firma previamente cargada.')
+                );
         }
         // descargar la firma
         $file = $FirmaElectronica->run.'.p12';

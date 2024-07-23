@@ -110,11 +110,15 @@ class Controller_ItemClasificaciones extends \sowerphp\autoload\Controller_Model
         // Buscar clasificación.
         $Clasificacion = new Model_ItemClasificacion($Contribuyente->rut, $codigo);
         if ($Clasificacion->enUso()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No es posible eliminar la clasificacion '.$Clasificacion->clasificacion.' ya que existen items que la usan.', 'error'
-            );
             $filterListar = !empty($_GET['listar']) ? base64_decode($_GET['listar']) : '';
-            return redirect('/dte/admin/item_clasificaciones/listar' . $filterListar);
+            return redirect('/dte/admin/item_clasificaciones/listar' . $filterListar)
+                ->withError(
+                    __('No es posible eliminar la clasificacion %(clasificacion)s ya que existen items que la usan.',
+                        [
+                            'clasificacion' => $Clasificacion->clasificacion
+                        ]
+                    )
+                );
         }
         // Llamar al método padre.
         return parent::eliminar($Contribuyente->rut, $codigo);
@@ -136,8 +140,8 @@ class Controller_ItemClasificaciones extends \sowerphp\autoload\Controller_Model
         if (isset($_POST['submit'])) {
             // verificar que se haya podido subir el archivo con el libro
             if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'Ocurrió un error al subir el listado de clasificaciones de items.', 'error'
+                \sowerphp\core\Facade_Session_Message::error(
+                    'Ocurrió un error al subir el listado de clasificaciones de items.'
                 );
                 return;
             }
@@ -179,10 +183,10 @@ class Controller_ItemClasificaciones extends \sowerphp\autoload\Controller_Model
                     ((empty($resumen['nuevas']) && empty($resumen['editadas'])) ? 'error' : 'warning')
                 );
             } else {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'Se importó el archivo de clasificaciones de items.', 'ok'
-                );
-                return redirect('/dte/admin/item_clasificaciones/listar');
+                return redirect('/dte/admin/item_clasificaciones/listar')
+                    ->withSuccess(
+                        __('Se importó el archivo de clasificaciones de items.')
+                    );
             }
         }
     }
@@ -204,9 +208,10 @@ class Controller_ItemClasificaciones extends \sowerphp\autoload\Controller_Model
             ->exportar()
         ;
         if (!$clasificaciones) {
-            return redirect('/dte/admin/item_clasificaciones/listar')->withWarning(
-                'No hay clasificaciones de items que exportar.'
-            );
+            return redirect('/dte/admin/item_clasificaciones/listar')
+                ->withWarning(
+                    __('No hay clasificaciones de items que exportar.')
+                );
         }
         array_unshift($clasificaciones, array_keys($clasificaciones[0]));
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($clasificaciones);
@@ -226,10 +231,16 @@ class Controller_ItemClasificaciones extends \sowerphp\autoload\Controller_Model
         // crear contribuyente y verificar que exista y el usuario esté autorizado
         $Empresa = new \website\Dte\Model_Contribuyente($empresa);
         if (!$Empresa->exists()) {
-            $this->Api->send('Empresa solicitada no existe.', 404);
+            return response()->json(
+                __('Empresa solicitada no existe.'),
+                404
+            );
         }
         if (!$Empresa->usuarioAutorizado($User, '/dte/documentos/emitir')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
+            return response()->json(
+                __('No está autorizado a operar con la empresa solicitada.'),
+                403
+            );
         }
         // entregar datos
         return (new Model_ItemClasificaciones())

@@ -67,8 +67,8 @@ class Controller_Cesiones extends \sowerphp\autoload\Controller
             }
             $documentos = $Emisor->getDocumentosEmitidos($filtros);
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'Error al recuperar los documentos:<br/>'.$e->getMessage(), 'error'
+            \sowerphp\core\Facade_Session_Message::error(
+                'Error al recuperar los documentos:<br/>'.$e->getMessage()
             );
             $documentos_total = 0;
             $documentos = [];
@@ -101,9 +101,14 @@ class Controller_Cesiones extends \sowerphp\autoload\Controller
         }
         // Validar el tipo de búsqueda que se desea realizar.
         if (!in_array($consulta, ['deudor', 'cedente', 'cesionario'])) {
-            return redirect('/dte/cesiones/listar')->withError(
-                'Búsqueda por "'.$consulta.'" no existe.'
-            );
+            return redirect('/dte/cesiones/listar')
+                ->withError(
+                    __('Búsqueda por "%(consulta)s" no existe.', 
+                        [
+                            'consulta' => $consulta
+                        ]
+                    )
+                );
         }
         // Asignar variables a la vista.
         $this->set([
@@ -133,15 +138,15 @@ class Controller_Cesiones extends \sowerphp\autoload\Controller
                     ]
                 );
             } catch (\Exception $e) {
-                \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
+                \sowerphp\core\Facade_Session_Message::error($e->getMessage());
                 return;
             }
             if ($response['status']['code'] != 200) {
-                \sowerphp\core\Facade_Session_Message::write($response['body'], 'error');
+                \sowerphp\core\Facade_Session_Message::error($response['body']);
                 return;
             }
             if (empty($response['body'])) {
-                \sowerphp\core\Facade_Session_Message::write('No se encontraron documentos cedidos en el período de búsqueda.', 'info');
+                \sowerphp\core\Facade_Session_Message::info('No se encontraron documentos cedidos en el período de búsqueda.');
                 return;
             }
             $this->set([

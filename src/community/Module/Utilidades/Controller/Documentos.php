@@ -25,6 +25,7 @@ namespace website\Utilidades;
 
 use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna;
 use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+use \sowerphp\core\Network_Request as Request;
 use \website\Sistema\General\Model_ActividadEconomicas;
 
 /**
@@ -37,8 +38,9 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
      * Acción que permite la generación del XML del EnvioDTE a partir de los
      * datos en JSON.
      */
-    public function xml()
+    public function xml(Request $request)
     {
+        $user = $request->user();
         // variables para el formulario
         $documentos_json = session('documentos_json');
         if ($documentos_json) {
@@ -60,8 +62,8 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             }
             foreach (['RUTEmisor', 'RznSoc', 'GiroEmis', 'Acteco', 'DirOrigen', 'CmnaOrigen'] as $attr) {
                 if (empty($Emisor[$attr])) {
-                    \sowerphp\core\Facade_Session_Message::write(
-                        'Debe especificar el campo '.$attr.'.', 'error'
+                    \sowerphp\core\Facade_Session_Message::error(
+                        'Debe especificar el campo '.$attr.'.'
                     );
                     return;
                 }
@@ -75,8 +77,8 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             }
             foreach (['RUTRecep', 'RznSocRecep', 'GiroRecep', 'DirRecep', 'CmnaRecep'] as $attr) {
                 if (empty($Receptor[$attr])) {
-                    \sowerphp\core\Facade_Session_Message::write(
-                        'Debe especificar el campo '.$attr.'.', 'error'
+                    \sowerphp\core\Facade_Session_Message::error(
+                        'Debe especificar el campo '.$attr.'.'
                     );
                     return;
                 }
@@ -85,15 +87,15 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             // documentos
             $documentos_json = trim($_POST['documentos']);
             if (empty($documentos_json)) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'Debe enviar los datos JSON con los documentos.', 'error'
+                \sowerphp\core\Facade_Session_Message::error(
+                    'Debe enviar los datos JSON con los documentos.'
                 );
                 return;
             }
             $documentos = json_decode($documentos_json);
             if (!$documentos) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'No fue posible procesar los datos JSON con los documentos, posible error de sintaxis.', 'error'
+                \sowerphp\core\Facade_Session_Message::error(
+                    'No fue posible procesar los datos JSON con los documentos, posible error de sintaxis.'
                 );
                 return;
             }
@@ -108,15 +110,15 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
                 }
             }
             if (empty($folios)) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'Debe enviar a lo menos un archivo CAF con folios.', 'error'
+                \sowerphp\core\Facade_Session_Message::error(
+                    'Debe enviar a lo menos un archivo CAF con folios.'
                 );
                 return;
             }
             // firma
             if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'Hubo algún problema al subir la firma electrónica.', 'error'
+                \sowerphp\core\Facade_Session_Message::error(
+                    'Hubo algún problema al subir la firma electrónica.'
                 );
                 return;
             }
@@ -139,11 +141,11 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             ];
             // realizar consulta a la API
             $rest = new \sowerphp\core\Network_Http_Rest();
-            $rest->setAuth($this->Auth->User->hash);
+            $rest->setAuth($user->hash);
             $response = $rest->post(url('/api/utilidades/documentos/generar_xml'), $data);
             if ($response['status']['code'] != 200) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    str_replace("\n", '<br/>', $response['body']), 'error'
+                \sowerphp\core\Facade_Session_Message::error(
+                    str_replace("\n", '<br/>', $response['body'])
                 );
                 return;
             }
@@ -162,12 +164,13 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
      * Acción que permite la generación del PDF con los DTE contenidos en un
      * XML de EnvioDTE.
      */
-    public function pdf()
+    public function pdf(Request $request)
     {
+        $user = $request->user();
         if (isset($_POST['submit'])) {
             // si hubo problemas al subir el archivo error
             if (!isset($_FILES['xml']) || $_FILES['xml']['error']) {
-                \sowerphp\core\Facade_Session_Message::write('Hubo algún problema al recibir el archivo XML con el EnvioDTE.', 'error');
+                \sowerphp\core\Facade_Session_Message::error('Hubo algún problema al recibir el archivo XML con el EnvioDTE.');
                 return;
             }
             // armar datos con archivo XML y flag para indicar si es cedible o no
@@ -183,10 +186,10 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             }
             // realizar consulta a la API
             $rest = new \sowerphp\core\Network_Http_Rest();
-            $rest->setAuth($this->Auth->User->hash);
+            $rest->setAuth($user->hash);
             $response = $rest->post(url('/api/utilidades/documentos/generar_pdf'), $data);
             if ($response['status']['code'] != 200) {
-                \sowerphp\core\Facade_Session_Message::write($response['body'], 'error');
+                \sowerphp\core\Facade_Session_Message::error($response['body']);
                 return;
             }
             // si dió código 200 se entrega la respuesta del servicio web
@@ -202,20 +205,21 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
     /**
      * Acción para verificar la firma de un XML EnvioDTE.
      */
-    public function verificar()
+    public function verificar(Request $request)
     {
+        $user = $request->user();
         if (isset($_FILES['xml']) && !$_FILES['xml']['error']) {
             $EnvioDTE = new \sasco\LibreDTE\Sii\EnvioDte();
             $EnvioDTE->loadXML(file_get_contents($_FILES['xml']['tmp_name']));
             if ($EnvioDTE->esBoleta() === null) {
-                \sowerphp\core\Facade_Session_Message::write('Archivo XML EnvioDTE no válido.', 'error');
+                \sowerphp\core\Facade_Session_Message::error('Archivo XML EnvioDTE no válido.');
                 return;
             }
             $certificacion = (int)(bool)!$EnvioDTE->getCaratula()['NroResol'];
             // verificar la firma de cada documento
             if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'Hubo algún problema al subir la firma electrónica.', 'error'
+                \sowerphp\core\Facade_Session_Message::error(
+                    'Hubo algún problema al subir la firma electrónica.'
                 );
                 return;
             }
@@ -225,7 +229,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             ]);
             $cert_data = $Firma->getCertificate();
             if (!$cert_data) {
-                \sowerphp\core\Facade_Session_Message::write('No hay firma electrónica por defecto asignada en LibreDTE o no pudo ser cargada.', 'error');
+                \sowerphp\core\Facade_Session_Message::error('No hay firma electrónica por defecto asignada en LibreDTE o no pudo ser cargada.');
                 return;
             }
             $pkey_data = $Firma->getPrivateKey();
@@ -270,7 +274,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
                 // consultar estado solo con datos del timbre
                 catch (\Exception $e) {
                     $rest = new \sowerphp\core\Network_Http_Rest();
-                    $rest->setAuth($this->Auth->User->hash);
+                    $rest->setAuth($user->hash);
                     $response = $rest->post(
                         url('/api/utilidades/documentos/verificar_ted'),
                         json_encode(base64_encode($DTE->getTED()))
@@ -333,10 +337,10 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             }
             // si no hay DTE error
             if (!isset($dtes[0])) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'No fue posible leer DTE desde el archivo.', 'error'
-                );
-                return redirect($this->request->getRequestUriDecoded());
+                return redirect($this->request->getRequestUriDecoded())
+                    ->withError(
+                        __('No fue posible leer DTE desde el archivo.')
+                    );
             }
             // si hay solo un DTE se entrega directamente
             if (!isset($dtes[1])) {
@@ -357,10 +361,10 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
                 if (is_dir($dir))
                     \sasco\LibreDTE\File::rmdir($dir);
                 if (!mkdir($dir)) {
-                    \sowerphp\core\Facade_Session_Message::write(
-                        'No fue posible crear directorio temporal para DTE.', 'error'
-                    );
-                    return redirect($this->request->getRequestUriDecoded());
+                    return redirect($this->request->getRequestUriDecoded())
+                        ->withError(
+                            __('No fue posible crear directorio temporal para DTE.')
+                        );
                 }
                 foreach ($dtes as $dte) {
                     $name = $dte['Encabezado']['Emisor']['RUTEmisor'].'_T'.$dte['Encabezado']['IdDoc']['TipoDTE'].'F'.$dte['Encabezado']['IdDoc']['Folio'].'.json';
@@ -385,7 +389,14 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
         // verificar que se hayan pasado los índices básicos
         foreach (['Emisor', 'Receptor', 'documentos', 'folios', 'firma'] as $key) {
             if (!isset($this->Api->data[$key]))
-                $this->Api->send('Falta índice/variable '.$key.' por POST', 400);
+                return response()->json(
+                    __('Falta índice/variable %(key)s por POST',
+                        [
+                            'key' => $key
+                        ]
+                    ),
+                    400
+                );
         }
         // recuperar folios y definir ambiente
         $folios = [];
@@ -408,7 +419,10 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
                 'pass' => $this->Api->data['firma']['pass']
             ]);
         } catch (\Exception $e) {
-            $this->Api->send('No fue posible abrir la firma digital, quizás contraseña incorrecta', 506);
+            return response()->json(
+                __('No fue posible abrir la firma digital, quizás contraseña incorrecta'),
+                506
+            );
         }
         // normalizar dte?
         $normalizar_dte = isset($this->Api->data['normalizar_dte'])
@@ -430,10 +444,25 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             $DTE = new \sasco\LibreDTE\Sii\Dte($d, $normalizar_dte);
             // timbrar, firmar y validar el documento
             if (!isset($folios[$DTE->getTipo()])) {
-                return $this->Api->send('Falta el CAF para el tipo de DTE '.$DTE->getTipo().': '.implode('. ', \sasco\LibreDTE\Log::readAll()), 508);
+                return response()->json(
+                    __('Falta el CAF para el tipo de DTE %(dte_tipo)s: %(logs)s',
+                        [
+                            'dte_tipo' => $DTE->getTipo(),
+                            'logs' => implode('. ', \sasco\LibreDTE\Log::readAll())
+                        ]
+                    ),
+                    508
+                );
             }
             if (!$DTE->timbrar($folios[$DTE->getTipo()]) || !$DTE->firmar($Firma) || !$DTE->schemaValidate()) {
-                return $this->Api->send(implode("\n", \sasco\LibreDTE\Log::readAll()), 508);
+                return response()->json(
+                    __('%(logs)s', 
+                        [
+                            'logs' => implode("\n", \sasco\LibreDTE\Log::readAll())
+                        ]
+                    ),
+                    508
+                );
             }
             // agregar el DTE al listado
             $Documentos[] = $DTE;
@@ -459,7 +488,14 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             $xml = $EnvioDte->generar();
             // validar schema del DTE
             if (!$EnvioDte->schemaValidate()) {
-                return $this->Api->send(implode("\n", \sasco\LibreDTE\Log::readAll()), 505);
+                return response()->json(
+                    __('%(logs)s',
+                        [
+                            'logs' => implode("\n", \sasco\LibreDTE\Log::readAll())
+                        ]
+                    ),
+                    505
+                );
             }
             $dir = sys_get_temp_dir().'/EnvioDTE_'.$this->Api->data['Emisor']['RUTEmisor'].'_'.$this->Api->data['Receptor']['RUTRecep'].'_'.date('U').'.xml';
             file_put_contents($dir, $xml);
@@ -472,7 +508,10 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
                 \sasco\LibreDTE\File::rmdir($dir);
             }
             if (!mkdir($dir)) {
-                $this->Api->send('No fue posible crear directorio temporal para DTE.', 507);
+                return response()->json(
+                    __('No fue posible crear directorio temporal para DTE.'),
+                    507
+                );
             }
             // procesar cada DTE e ir agregándolo al directorio que se comprimirá
             foreach ($Documentos as $DTE) {
@@ -501,7 +540,10 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
         }
         // si hubo problemas al subir el archivo error
         if (!isset($this->Api->data['xml']) && (!isset($_FILES['xml']) || $_FILES['xml']['error'])) {
-            $this->Api->send('Hubo algún problema al recibir el archivo XML con el EnvioDTE.', 400);
+            return response()->json(
+                __('Hubo algún problema al recibir el archivo XML con el EnvioDTE.'),
+                400
+            );
         }
         // recuperar contenido del archivo xml
         if (isset($this->Api->data['xml'])) {
@@ -521,7 +563,10 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
         // Cargar EnvioDTE y extraer arreglo con datos de carátula y DTE
         $EnvioDte = new \sasco\LibreDTE\Sii\EnvioDte();
         if (!$EnvioDte->loadXML($xml)) {
-            $this->Api->send('Hubo algún problema al cargar el archivo XML con el EnvioDTE.', 400);
+            return response()->json(
+                __('Hubo algún problema al cargar el archivo XML con el EnvioDTE.'),
+                400
+            );
         }
         $Caratula = $EnvioDte->getCaratula();
         if (!empty($this->Api->data['caratula'])) {
@@ -559,13 +604,19 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             \sasco\LibreDTE\File::rmdir($dir);
         }
         if (!mkdir($dir)) {
-            $this->Api->send('No fue posible crear directorio temporal para DTE.', 507);
+            return response()->json(
+                __('No fue posible crear directorio temporal para DTE.'),
+                507
+            );
         }
         // procesar cada DTE e ir agregándolo al PDF
         foreach ($Documentos as $DTE) {
             $datos = $DTE->getDatos();
             if (!$datos) {
-                $this->Api->send('No se pudieron obtener los datos de un DTE.', 500);
+                return response()->json(
+                    __('No se pudieron obtener los datos de un DTE.'),
+                    500
+                );
             }
             if (!empty($extra['dte'])) {
                 $datos = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($datos, $extra['dte']);
@@ -705,7 +756,10 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             $ok = false;
         }
         if (!$ok) {
-            $this->Api->send('El XML del TED es incorrecto.', 400);
+            return response()->json(
+                __('El XML del TED es incorrecto.'),
+                400
+            );
         }
         // verificar firma del ted
         $DD = $xml->getFlattened('/TED/DD');
@@ -718,20 +772,32 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             $datos['TED']['DD']['CAF']['DA']['RSAPK']['E']
         );
         if (openssl_verify($DD, base64_decode($FRMT), $pub_key, OPENSSL_ALGO_SHA1) !== 1) {
-            $this->Api->send('Firma del timbre incorrecta', 500);
+            return response()->json(
+                __('Firma del timbre incorrecta'),
+                500
+            );
         }
         // verificar que datos del timbre correspondan con datos del CAF
         if ($datos['TED']['DD']['RE'] != $datos['TED']['DD']['CAF']['DA']['RE']) {
-            $this->Api->send('RUT del timbre no corresponde con RUT del CAF.', 500);
+            return response()->json(
+                __('RUT del timbre no corresponde con RUT del CAF.'),
+                500
+            );
         }
         if ($datos['TED']['DD']['TD'] != $datos['TED']['DD']['CAF']['DA']['TD']) {
-            $this->Api->send('Tipo de DTE del timbre no corresponde con tipo de DTE del CAF.', 500);
+            return response()->json(
+                __('Tipo de DTE del timbre no corresponde con tipo de DTE del CAF.'),
+                500
+            );
         }
         if (
             $datos['TED']['DD']['F'] < $datos['TED']['DD']['CAF']['DA']['RNG']['D']
             || $datos['TED']['DD']['F'] > $datos['TED']['DD']['CAF']['DA']['RNG']['H']
         ) {
-            $this->Api->send('Folio del DTE del timbre fuera del rango del CAF.', 500);
+            return response()->json(
+                __('Folio del DTE del timbre fuera del rango del CAF.'),
+                500
+            );
         }
         // si es boleta no se consulta su estado ya que no son envíadas al SII
         if (in_array($datos['TED']['DD']['TD'], [39, 41])) {
@@ -744,7 +810,14 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
         // obtener token
         $token = \sasco\LibreDTE\Sii\Autenticacion::getToken($Firma);
         if (!$token) {
-            return $this->Api->send(\sasco\LibreDTE\Log::readAll(), 500);
+            return response()->json(
+                __('%(logs)s',
+                    [
+                        'logs' => \sasco\LibreDTE\Log::readAll() 
+                    ]
+                ),
+                500
+            );
         }
         // verificar estado del DTE con el SII
         list($RutConsultante, $DvConsultante) = explode('-', $Firma->getID());
@@ -765,7 +838,14 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             'token'             => $token,
         ]);
         if ($xml === false) {
-            return $this->Api->send(\sasco\LibreDTE\Log::readAll(), 500);
+            return response()->json(
+                __('%(logs)s',
+                    [
+                        'logs' => \sasco\LibreDTE\Log::readAll()
+                    ]
+                ), 
+                500
+            );
         }
         return (array)$xml->xpath('/SII:RESPUESTA/SII:RESP_HDR')[0];
     }

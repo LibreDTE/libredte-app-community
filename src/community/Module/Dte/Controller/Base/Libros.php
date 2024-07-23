@@ -24,6 +24,7 @@
 namespace website\Dte;
 
 use \sowerphp\core\Facade_Session_Message as SessionMessage;
+use \sowerphp\core\Network_Request as Request;
 use \website\Dte\Admin\Mantenedores\Model_DteTipo;
 
 /**
@@ -66,8 +67,14 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         $n_detalles = $Emisor->{'count'.$this->config['model']['plural']}((int)$periodo);
         if (!$n_detalles && !$Libro->exists()) {
-            SessionMessage::write('No hay documentos ni libro del período '.$periodo.'.', 'error');
-            return redirect('/dte/'.$this->request->getRouteConfig()['controller']);
+            return redirect('/dte/'.$this->request->getRouteConfig()['controller'])
+                ->withError(
+                    __('No hay documentos ni libro del período %(periodo)s.', 
+                        [
+                            'periodo' => $periodo
+                        ]
+                    )
+                );
         }
         $resumen = $Libro->getResumen();
         $operaciones = [];
@@ -107,8 +114,14 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
         // Generar datos del CSV.
         $detalle = $Emisor->{'get'.$this->config['model']['plural']}((int)$periodo);
         if (!$detalle) {
-            SessionMessage::write('No hay documentos en el período '.$periodo.'.', 'error');
-            return redirect('/dte/'.$this->request->getRouteConfig()['controller']);
+            return redirect('/dte/'.$this->request->getRouteConfig()['controller'])
+                ->withError(
+                    __('No hay documentos en el período %(periodo)s.', 
+                        [
+                            'periodo' => $periodo
+                        ]
+                    )
+                );
         }
         foreach ($detalle as &$d) {
             unset($d['tipo_transaccion']);
@@ -135,8 +148,14 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         if (!$Libro->exists()) {
-            SessionMessage::write('Aún no se ha generado el XML del período '.$periodo.'. Debe generar el XML antes de poder descargar el PDF del período.', 'error');
-            return redirect(str_replace('pdf', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('pdf', 'ver', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('Aún no se ha generado el XML del período %(periodo)s. Debe generar el XML antes de poder descargar el PDF del período.', 
+                        [
+                            'periodo' => $periodo
+                        ]
+                    )
+                );
         }
         // definir xml y nombre archivo
         $xml = base64_decode($Libro->xml);
@@ -153,8 +172,10 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
         }
         // entregar libro de guías
         else {
-            SessionMessage::error('Libro en PDF no está implementado.');
-            return redirect(str_replace('pdf', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('pdf', 'ver', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('Libro en PDF no está implementado.')
+                );
         }
     }
 
@@ -173,8 +194,14 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         if (!$Libro->exists()) {
-            SessionMessage::write('Aun no se ha generado el XML del período '.$periodo.'.', 'error');
-            return redirect(str_replace('xml', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('xml', 'ver', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('Aun no se ha generado el XML del período %(periodo)s.', 
+                        [
+                            'periodo' => $periodo
+                        ]
+                    )
+                );
         }
         // entregar XML
         $file = strtolower($this->config['model']['plural']).'_'.$Emisor->rut.'-'.$Emisor->dv.'_'.$periodo.'.xml';
@@ -207,8 +234,14 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         if (!$Libro->exists()) {
-            SessionMessage::write('No ha enviado el libro del período '.$periodo.' al SII, no puede rectificar. Debe hacer un envío normal del libro.', 'error');
-            return redirect(str_replace('enviar_rectificacion', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('enviar_rectificacion', 'ver', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('No ha enviado el libro del período %(periodo)s al SII, no puede rectificar. Debe hacer un envío normal del libro.', 
+                        [
+                            'periodo' => $periodo
+                        ]
+                    )
+                );
         }
         // asignar variables vista
         $this->set([
@@ -227,7 +260,7 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
             // verificar período
             $periodo = (int)$_POST['periodo'];
             if (strlen($_POST['periodo'])!=6 || !$periodo) {
-                SessionMessage::write('Período no es correcto, usar formato AAAAMM.', 'error');
+                SessionMessage::error('Período no es correcto, usar formato AAAAMM.');
                 return;
             }
             // redirigir a la página que envía el libro sin movimientos
@@ -238,8 +271,9 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
     /**
      * Acción que solicita se envíe una nueva revisión del libro al email.
      */
-    public function solicitar_revision($periodo)
+    public function solicitar_revision(Request $request, $periodo)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -250,27 +284,49 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         if (!$Libro->exists()) {
-            SessionMessage::write('Aún no se ha generado el libro del período '.$periodo.'.', 'error');
-            return redirect(str_replace('solicitar_revision', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('solicitar_revision', 'ver', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('Aún no se ha generado el libro del período %(periodo)s.', 
+                        [
+                            'periodo' => $periodo
+                        ]
+                    )
+                );
         }
         // solicitar envío de nueva revisión
-        $estado = $Libro->solicitarRevision($this->Auth->User->id);
+        $estado = $Libro->solicitarRevision($user->id);
         if ($estado === false) {
-            SessionMessage::write('No fue posible solicitar una nueva revisión del libro.<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
+            return redirect(str_replace('solicitar_revision', 'ver', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('No fue posible solicitar una nueva revisión del libro.<br/>%(logs)s',
+                        [
+                            'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                        ]
+                    )
+                );
         } else if ((int)$estado->xpath('/SII:RESPUESTA/SII:RESP_HDR/SII:ESTADO')[0]) {
-            SessionMessage::write('No fue posible solicitar una nueva revisión del libro: '.$estado->xpath('/SII:RESPUESTA/SII:RESP_HDR/SII:GLOSA')[0], 'error');
+            return redirect(str_replace('solicitar_revision', 'ver', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('No fue posible solicitar una nueva revisión del libro: %(estado_xpath)s',
+                        [
+                            'estado_xpath' => $estado->xpath('/SII:RESPUESTA/SII:RESP_HDR/SII:GLOSA')[0]
+                        ]
+                    )
+                );
         } else {
-            SessionMessage::write('Se solicitó nueva revisión del libro, verificar estado en unos segundos.', 'ok');
+            return redirect(str_replace('solicitar_revision', 'ver', $this->request->getRequestUriDecoded()))
+                ->withSuccess(
+                    __('Se solicitó nueva revisión del libro, verificar estado en unos segundos.')
+                );
         }
-        // redireccionar
-        return redirect(str_replace('solicitar_revision', 'ver', $this->request->getRequestUriDecoded()));
     }
 
     /**
      * Acción que actualiza el estado del envío del libro.
      */
-    public function actualizar_estado($periodo, $usarWebservice = null)
+    public function actualizar_estado(Request $request, $periodo, $usarWebservice = null)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -285,23 +341,43 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         if (!$Libro->exists()) {
-            SessionMessage::write('Aún no se ha generado el libro del período '.$periodo.'.', 'error');
-            return redirect(str_replace('actualizar_estado', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('actualizar_estado', 'ver', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('Aún no se ha generado el libro del período %(periodo)s.', 
+                        [
+                            'periodo' => $periodo
+                        ]
+                    )
+                );
         }
         // si no tiene track id error
         if (!$Libro->track_id) {
-            SessionMessage::write('Libro del período '.$periodo.' no tiene Track ID. Primero debe enviarlo al SII.', 'error');
-            return redirect(str_replace('actualizar_estado', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('actualizar_estado', 'ver', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('Libro del período %(periodo)s no tiene Track ID. Primero debe enviarlo al SII.',
+                        [
+                            'periodo' => $periodo
+                        ]
+                    )
+                );
         }
         // actualizar estado
         try {
-            $Libro->actualizarEstado($this->Auth->User->id, $usarWebservice);
-            SessionMessage::write('Se actualizó el estado del libro.', 'ok');
+            $Libro->actualizarEstado($user->id, $usarWebservice);
+            return redirect(str_replace('actualizar_estado', 'ver', $this->request->getRequestUriDecoded()))
+                ->withSuccess(
+                    __('Se actualizó el estado del libro.')
+                );
         } catch (\Exception $e) {
-            SessionMessage::write('Error al actualizar el estado del libro: '.$e->getMessage(), 'error');
+            return redirect(str_replace('actualizar_estado', 'ver', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('Error al actualizar el estado del libro: %(error_message)s',
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    )
+                );
         }
-        // redireccionar
-        return redirect(str_replace('actualizar_estado', 'ver', $this->request->getRequestUriDecoded()));
     }
 
     /**
@@ -317,16 +393,25 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
         }
         $Contribuyente = new Model_Contribuyente($contribuyente);
         if (!$Contribuyente->exists()) {
-            $this->Api->send('Contribuyente no existe.', 404);
+            return response()->json(
+                __('Contribuyente no existe.'),
+                404
+            );
         }
         if (!$Contribuyente->usuarioAutorizado($User, '/dte')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
+            return response()->json(
+                __('No está autorizado a operar con la empresa solicitada.'),
+                403
+            );
         }
         // crear libro
         $class = __NAMESPACE__.'\Model_Dte'.$this->config['model']['singular'];
         $Libro = new $class($Contribuyente->rut, $periodo, $Contribuyente->enCertificacion());
         if (!$Libro->track_id) {
-            $this->Api->send('Libro no tiene Track ID.', 500);
+            return response()->json(
+                __('Libro no tiene Track ID.'),
+                500
+            );
         }
         // consultar código reemplazo libro
         $Firma = $Contribuyente->getFirma($User->id);
@@ -343,7 +428,14 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
             ],
         ]);
         if ($response['status']['code'] != 200) {
-            $this->Api->send('No fue posible obtener el código de reemplazo del libro: '.$response['body'], $response['status']['code']);
+            return response()->json(
+                __('No fue posible obtener el código de reemplazo del libro: %(body)s',
+                    [
+                        'body' => $response['body']
+                    ]
+                ),
+                $response['status']['code']
+            );
         }
         return $response['body'];
     }

@@ -23,6 +23,8 @@
 
 namespace website\Dte;
 
+use \sowerphp\core\Network_Request as Request;
+
 /**
  * Clase para el controlador asociado a la tabla registro_compra de la base de
  * datos.
@@ -102,9 +104,10 @@ class Controller_RegistroCompras extends \sowerphp\autoload\Controller
             ->getDetalle($filtros)
         ;
         if (!$documentos) {
-            return redirect('/dte/registro_compras')->withInfo(
-                'No hay documentos recibidos en SII para la búsqueda realizada.'
-            );
+            return redirect('/dte/registro_compras')
+                ->withInfo(
+                    __('No hay documentos recibidos en SII para la búsqueda realizada.')
+                );
         }
         // Entregar CSV.
         array_unshift($documentos, array_keys($documentos[0]));
@@ -129,9 +132,10 @@ class Controller_RegistroCompras extends \sowerphp\autoload\Controller
             ->getResumenPendientes()
         ;
         if (!$resumen) {
-            return redirect('/dte')->withInfo(
-                'No hay documentos recibidos pendientes en SII.'
-            );
+            return redirect('/dte')
+                ->withInfo(
+                    __('No hay documentos recibidos pendientes en SII.')
+                );
         }
         // Entregar archivo CSV.
         array_unshift($resumen, array_keys($resumen[0]));
@@ -163,11 +167,11 @@ class Controller_RegistroCompras extends \sowerphp\autoload\Controller
             // obtener PDF desde servicio web
             $r = $this->consume('/api/dte/registro_compras/buscar/'.$Receptor->rut, $filtros);
             if ($r['status']['code'] != 200) {
-                \sowerphp\core\Facade_Session_Message::write($r['body'], 'error');
+                \sowerphp\core\Facade_Session_Message::error($r['body']);
                 return;
             }
             if (empty($r['body'])) {
-                \sowerphp\core\Facade_Session_Message::write(__('No hay documentos recibidos en SII para la búsqueda realizada.'), 'warning');
+                \sowerphp\core\Facade_Session_Message::warning(__('No hay documentos recibidos en SII para la búsqueda realizada.'));
             }
             $this->set([
                 'filtros' => $filtros,
@@ -190,10 +194,16 @@ class Controller_RegistroCompras extends \sowerphp\autoload\Controller
         // crear receptor
         $Receptor = new Model_Contribuyente($receptor);
         if (!$Receptor->exists()) {
-            $this->Api->send(__('Receptor no existe.'), 404);
+            return response()->json(
+                __('Receptor no existe.'),
+                404
+            );
         }
         if (!$Receptor->usuarioAutorizado($User, '/dte/registro_compras/buscar')) {
-            $this->Api->send(__('No está autorizado a operar con la empresa solicitada.'), 403);
+            return response()->json(
+                __('No está autorizado a operar con la empresa solicitada.'),
+                403
+            );
         }
         // obtener boletas
         $filtros = [];
@@ -203,11 +213,17 @@ class Controller_RegistroCompras extends \sowerphp\autoload\Controller
             }
         }
         if (empty($filtros)) {
-            $this->Api->send(__('Debe definir a lo menos un filtro para la búsqueda.'), 400);
+            return response()->json(
+                __('Debe definir a lo menos un filtro para la búsqueda.'),
+                400
+            );
         }
         $filtros['estado'] = 0; // forzar estado PENDIENTE
         $documentos = (new Model_RegistroCompras())->setContribuyente($Receptor)->buscar($filtros);
-        $this->Api->send($documentos, 200);
+        return response()->json(
+            $documentos,
+            200
+        );
     }
 
     /**
@@ -230,19 +246,33 @@ class Controller_RegistroCompras extends \sowerphp\autoload\Controller
                 ->setContribuyente($Receptor)
                 ->sincronizar($estado, $meses)
             ;
-            \sowerphp\core\Facade_Session_Message::write(__('Documentos recibidos con estado %s actualizados.', $estado), 'ok');
+            return redirect('/dte/registro_compras')
+                ->withSuccess(
+                    __('Documentos recibidos con estado %(estado)s actualizados.', $estado,
+                        [
+                            'estado' => $estado
+                        ]
+                    )
+                );
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
+            return redirect('/dte/registro_compras')
+                ->withError(
+                    __('%(error_message)s',
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    )
+                );
         }
-        return redirect('/dte/registro_compras');
     }
 
     /**
      * Acción que permite ingresar una acción al registro de compras del DTE en
      * el SII.
      */
-    public function ingresar_accion($emisor, $dte, $folio)
+    public function ingresar_accion(Request $request, $emisor, $dte, $folio)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Contribuyente = libredte()->getSessionContribuyente();
@@ -250,19 +280,25 @@ class Controller_RegistroCompras extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Buscar firma electrónica.
-        $Firma = $Contribuyente->getFirma($this->Auth->User->id);
+        $Firma = $Contribuyente->getFirma($user->id);
         if (!$Firma) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No existe firma asociada.', 'error'
-            );
-            return redirect('/dte/registro_compras/pendientes');
+            return redirect('/dte/registro_compras/pendientes')
+                ->withError(
+                    __('No existe firma asociada.')
+                );
         }
         // hacer conexión al SII para obtener estado actual del registro de compras
         try {
             $RCV = new \sasco\LibreDTE\Sii\RegistroCompraVenta($Firma);
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
-            return redirect($this->request->getRequestUriDecoded());
+            return redirect($this->request->getRequestUriDecoded())
+                ->withError(
+                    __('%(error_message)s', 
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    )
+                );
         }
         // procesar formulario (antes de asignar variables para que se refleje en la vista)
         list($emisor_rut, $emisor_dv) = explode('-', str_replace('.', '', $emisor));
@@ -290,10 +326,10 @@ class Controller_RegistroCompras extends \sowerphp\autoload\Controller
                         }
                     }
                 } else {
-                    \sowerphp\core\Facade_Session_Message::write('No fue posible ingresar la acción del DTE al SII.', 'error');
+                    \sowerphp\core\Facade_Session_Message::error('No fue posible ingresar la acción del DTE al SII.');
                 }
             } catch (\Exception $e) {
-                \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
+                \sowerphp\core\Facade_Session_Message::error($e->getMessage());
             }
         }
         // asignar variables para la vista
@@ -310,8 +346,14 @@ class Controller_RegistroCompras extends \sowerphp\autoload\Controller
                 'fecha_recepcion' => $fecha_recepcion !== false ? $fecha_recepcion : null,
             ]);
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
-            return redirect('/dte/registro_compras/pendientes');
+            return redirect('/dte/registro_compras/pendientes')
+                ->withError(
+                    __('%(error_message)s', 
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    )
+                );
         }
     }
 

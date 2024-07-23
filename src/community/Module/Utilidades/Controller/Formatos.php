@@ -39,8 +39,14 @@ class Controller_Formatos extends \sowerphp\autoload\Controller
         $formatos = $this->getFormatos();
         // si no es formato soportado error
         if ($formato && !in_array($formato, array_keys($formatos))) {
-            \sowerphp\core\Facade_Session_Message::write('Formato '.$formato.' no está soportado.', 'error');
-            return redirect('/utilidades/formatos');
+            return redirect('/utilidades/formatos')
+                ->withError(
+                    __('Formato %(formato)s no está soportado.', 
+                        [
+                            'formato' => $formato
+                        ]
+                    )
+                );
         }
         // variables para la vista
         $this->set([
@@ -55,8 +61,14 @@ class Controller_Formatos extends \sowerphp\autoload\Controller
                     $_POST['formato'], file_get_contents($_FILES['archivo']['tmp_name'])
                 );
             } catch (\Exception $e) {
-                \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
-                return redirect($this->request->getRequestUriDecoded());
+                return redirect($this->request->getRequestUriDecoded())
+                    ->withError(
+                        __('%(error_message)s', 
+                            [
+                                'error_message' => $e->getMessage()
+                            ]
+                        )
+                    );
             }
             // descargar JSON
             $this->response->type('application/json', 'UTF-8');

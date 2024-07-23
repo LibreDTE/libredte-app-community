@@ -98,8 +98,8 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
                     }
                 }
             }
-            \sowerphp\core\Facade_Session_Message::write(
-                'Se actualizaron '.num($actualizados).' contribuyentes', 'ok'
+            \sowerphp\core\Facade_Session_Message::success(
+                'Se actualizaron '.num($actualizados).' contribuyentes'
             );
         }
     }

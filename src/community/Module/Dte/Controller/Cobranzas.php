@@ -23,6 +23,8 @@
 
 namespace website\Dte;
 
+use \sowerphp\core\Network_Request as Request;
+
 /**
  * Clase para el controlador asociado a la tabla cobranza de la base de
  * datos.
@@ -68,8 +70,9 @@ class Controller_Cobranzas extends \sowerphp\autoload\Controller
     /**
      * Acción que permite editar los pagos para marcarlos como pagados.
      */
-    public function ver($dte, $folio, $fecha)
+    public function ver(Request $request, $dte, $folio, $fecha)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -79,10 +82,10 @@ class Controller_Cobranzas extends \sowerphp\autoload\Controller
         // Obtener cobro programado.
         $Pago = new Model_Cobranza($Emisor->rut, $dte, $folio, $Emisor->enCertificacion(), $fecha);
         if (!$Pago->exists()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'Pago programado solicitado no existe.', 'error'
-            );
-            return redirect('/dte/cobranzas/buscar');
+            return redirect('/dte/cobranzas/buscar')
+                ->withError(
+                    __('Pago programado solicitado no existe.')
+                );
         }
         $this->set([
             '__view_header' => ['js' => ['/dte/js/cobranzas.js']],
@@ -92,16 +95,16 @@ class Controller_Cobranzas extends \sowerphp\autoload\Controller
         if (isset($_POST['submit'])) {
             $Pago->pagado = $_POST['pagado'];
             $Pago->observacion = $_POST['observacion'];
-            $Pago->usuario = $this->Auth->User->id;
+            $Pago->usuario = $user->id;
             $Pago->modificado = $_POST['modificado'];
             if ($Pago->save()) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'Pago registrado exitosamente.', 'ok'
-                );
-                return redirect('/dte/dte_emitidos/ver/'.$Pago->dte.'/'.$Pago->folio.'#pagos');
+                return redirect('/dte/dte_emitidos/ver/'.$Pago->dte.'/'.$Pago->folio.'#pagos')
+                    ->withSuccess(
+                        __('Pago registrado exitosamente.')
+                    );
             } else {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'No fue posible guardar el pago.', 'error'
+                \sowerphp\core\Facade_Session_Message::error(
+                    'No fue posible guardar el pago.'
                 );
             }
         }
@@ -121,34 +124,38 @@ class Controller_Cobranzas extends \sowerphp\autoload\Controller
         // Obtener cobro programado.
         $Pago = new Model_Cobranza($Emisor->rut, $dte, $folio, $Emisor->enCertificacion(), $fecha);
         if (!$Pago->exists()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'Pago programado solicitado no existe.', 'error'
-            );
-            return redirect('/dte/cobranzas/buscar');
+            return redirect('/dte/cobranzas/buscar')
+                ->withError(
+                    __('Pago programado solicitado no existe.')
+                );
         }
         if ($Pago->pagado == $Pago->monto) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'El pago programado se encuentra pagado totalmente, no se puede eliminar.', 'error'
-            );
-            return redirect(str_replace('/eliminar/', '/ver/', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('/eliminar/', '/ver/', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('El pago programado se encuentra pagado totalmente, no se puede eliminar.')
+                );
         }
         if ($Pago->pagado) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'El pago programado tiene un abono, no se puede eliminar.', 'error'
-            );
-            return redirect(str_replace('/eliminar/', '/ver/', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('/eliminar/', '/ver/', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('El pago programado tiene un abono, no se puede eliminar.')
+                );
         }
         try {
             $Pago->delete();
-            \sowerphp\core\Facade_Session_Message::write(
-                'Cobro programado eliminado.', 'ok'
-            );
-            return redirect('/dte/dte_emitidos/ver/'.$Pago->dte.'/'.$Pago->folio.'#pagos');
+            return redirect('/dte/dte_emitidos/ver/'.$Pago->dte.'/'.$Pago->folio.'#pagos')
+                ->withSuccess(
+                    __('Cobro programado eliminado.')
+                );
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible eliminar el cobro programado: '.$e->getMessage(), 'error'
-            );
-            return redirect(str_replace('/eliminar/', '/ver/', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('/eliminar/', '/ver/', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('No fue posible eliminar el cobro programado: %(error_message)s', 
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    )
+                );
         }
     }
 

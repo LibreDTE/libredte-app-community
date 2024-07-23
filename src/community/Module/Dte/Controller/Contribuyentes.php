@@ -49,9 +49,14 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             try {
                 $Contribuyente = libredte()->authenticate($rut, $user);
             } catch (\Exception $e) {
-                return redirect('/dte/contribuyentes/seleccionar')->withError(
-                    $e->getMessage()
-                );
+                return redirect('/dte/contribuyentes/seleccionar')
+                    ->withError(
+                        __('%(error_message)s', 
+                            [
+                                'error_message' => $e->getMessage()
+                            ]
+                        )
+                    );
             }
             // Verificar si se requiere auth2 en el usuario para poder usar la
             // empresa.
@@ -69,11 +74,14 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
                     );
                     if ($auth2_required) {
                         return redirect('/dte/contribuyentes/seleccionar')
-                            ->withError(__(
-                                'Debe [habilitar el mecanismo de autenticación secundaria (2FA) en su perfil de usuario](%s) antes de poder ingresar al contribuyente %s.',
-                                url('/usuarios/perfil#auth:2fa'),
-                                $Contribuyente->getNombre()
-                            ))
+                            ->withError(
+                                __('Debe [habilitar el mecanismo de autenticación secundaria (2FA) en su perfil de usuario](%(url)s) antes de poder ingresar al contribuyente %(contribuyente_nombre)s.',
+                                    [
+                                        'url' => url('/usuarios/perfil#auth:2fa'),
+                                        'contribuyente_nombre' => $Contribuyente->getNombre()
+                                    ]
+                                )   
+                            )
                         ;
                     }
                 }
@@ -134,10 +142,15 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
         if ($user->config_contribuyentes_autorizados !== null) {
             $n_empresas = count((new Model_Contribuyentes())->getByUsuario($user->id));
             if ($n_empresas >= $user->config_contribuyentes_autorizados) {
-                SessionMessage::write(
-                    'Ha llegado al límite de empresas que puede registrar ('.num($user->config_contribuyentes_autorizados).'). Si requiere una cantidad mayor <a href="'.url('/contacto').'">contáctenos</a>.', 'error'
-                );
-                return redirect('/dte/contribuyentes/seleccionar');
+                return redirect('/dte/contribuyentes/seleccionar')
+                    ->withError(
+                        __('Ha llegado al límite de empresas que puede registrar (%(numero_contribuyentes)s). Si requiere una cantidad mayor <a href="%(url_contact)s">contáctenos</a>.',
+                            [
+                                'numero_contribuyentes' => num($user->config_contribuyentes_autorizados),
+                                'url_contact' => url('/contacto')
+                            ]
+                        )
+                    );
             }
         }
         // asignar variables para la vista
@@ -165,22 +178,35 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             $Contribuyente = libredte()->contribuyente($rut);
             if ($Contribuyente && $Contribuyente->usuario) {
                 if ($Contribuyente->usuario == $user->id) {
-                    SessionMessage::write(
-                        'Ya tiene asociada la empresa a su usuario.'
-                    );
+                    return redirect('/dte/contribuyentes/seleccionar')
+                        ->withInfo(
+                            __('Ya tiene asociada la empresa a su usuario.')
+                        );
                 } else {
-                    SessionMessage::write(
-                        'La empresa ya está registrada a nombre del usuario '.$Contribuyente->getUsuario()->nombre.' ('.$Contribuyente->getUsuario()->email.'). Si cree que esto es un error o bien puede ser alguien suplantando la identidad de su empresa por favor <a href="'.url('/contacto').'" target="_blank">contáctenos</a>.', 'error'
-                    );
+                    return redirect('/dte/contribuyentes/seleccionar')
+                        ->withError(
+                            __('La empresa ya está registrada a nombre del usuario %(user_name)s (%(user_email)s). Si cree que esto es un error o bien puede ser alguien suplantando la identidad de su empresa por favor <a href="'.url('/contacto').'" target="_blank">contáctenos</a>.',
+                                [
+                                    'user_name' => $Contribuyente->getUsuario()->nombre, 
+                                    'user_email' => $Contribuyente->getUsuario()->email, 
+                                    'url_contact' => url('/contacto')
+                                ]
+                            )
+                        );
                 }
-                return redirect('/dte/contribuyentes/seleccionar');
             }
             // rellenar campos de la empresa
             try {
                 $this->prepararDatosContribuyente($Contribuyente);
             } catch (\Exception $e) {
-                SessionMessage::write($e->getMessage(), 'error');
-                return redirect('/dte/contribuyentes/registrar');
+                return redirect('/dte/contribuyentes/registrar')
+                    ->withError(
+                        __('%(error_message)s',
+                            [
+                                'error_message' => $e->getMessage()
+                            ]
+                        )
+                    );
             }
             $Contribuyente->set($_POST);
             $Contribuyente->rut = $rut;
@@ -203,10 +229,16 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
                     }
                 }
                 // redireccionar
-                SessionMessage::write('Empresa '.$Contribuyente->razon_social.' registrada y asociada a su usuario.', 'ok');
-                return redirect('/dte/contribuyentes/seleccionar');
+                return redirect('/dte/contribuyentes/seleccionar')
+                    ->withSuccess(
+                        __('Empresa %(razon_social)s registrada y asociada a su usuario.', 
+                            [
+                                'razon_social' => $Contribuyente->razon_social
+                            ]
+                        )
+                    );
             } catch (\Exception $e) {
-                SessionMessage::write('No fue posible registrar la empresa:<br/>'.$e->getMessage(), 'error');
+                SessionMessage::error('No fue posible registrar la empresa:<br/>'.$e->getMessage());
             }
         }
         // renderizar vista
@@ -227,9 +259,10 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
         }
         // verificar que el usuario sea el administrador o de soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($user, 'admin')) {
-            return redirect('/dte/contribuyentes/seleccionar')->withError(
-                'Usted no es el administrador de la empresa solicitada.'
-            );
+            return redirect('/dte/contribuyentes/seleccionar')
+                ->withError(
+                    __('Usted no es el administrador de la empresa solicitada.')
+                );
         }
         // asignar variables para editar
         $ImpuestosAdicionales = new \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales();
@@ -257,14 +290,20 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             try {
                 $this->prepararDatosContribuyente($Contribuyente);
             } catch (\Exception $e) {
-                SessionMessage::write($e->getMessage(), 'error');
-                return redirect('/dte/contribuyentes/modificar');
+                return redirect('/dte/contribuyentes/modificar')
+                    ->withError(
+                        __('%(error_message)s', 
+                            [
+                                'error_message' => $e->getMessage()
+                            ]
+                        )
+                    );
             }
             $Contribuyente->set($_POST);
             $Contribuyente->modificado = date('Y-m-d H:i:s');
             try {
                 $Contribuyente->save(true);
-                SessionMessage::write('Empresa '.$Contribuyente->razon_social.' ha sido modificada.', 'ok');
+                SessionMessage::success('Empresa '.$Contribuyente->razon_social.' ha sido modificada.');
                 $ContribuyenteSeleccionado = $this->getContribuyente(false);
                 if ($ContribuyenteSeleccionado && $ContribuyenteSeleccionado->rut == $Contribuyente->rut) {
                     return redirect('/dte/contribuyentes/seleccionar/'.$Contribuyente->rut);
@@ -272,7 +311,7 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
                     return redirect('/dte/contribuyentes/seleccionar');
                 }
             } catch (\Exception $e) {
-                SessionMessage::write('No fue posible modificar la empresa:<br/>'.$e->getMessage(), 'error');
+                SessionMessage::error('No fue posible modificar la empresa:<br/>'.$e->getMessage());
             }
         }
         // renderizar vista
@@ -511,8 +550,9 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
     /**
      * Método que permite cambiar el ambiente durante la sesión del usuario.
      */
-    public function ambiente($ambiente)
+    public function ambiente(Request $request, $ambiente)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Contribuyente = libredte()->getSessionContribuyente();
@@ -520,9 +560,11 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // verificar que el usuario sea el administrador o sea soporte autorizado
-        if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            SessionMessage::write('Usted no es el administrador de la empresa solicitada.', 'error');
-            return redirect('/dte/contribuyentes/seleccionar');
+        if (!$Contribuyente->usuarioAutorizado($user, 'admin')) {
+            return redirect('/dte/contribuyentes/seleccionar')
+                ->withError(
+                    __('Usted no es el administrador de la empresa solicitada.')
+                );
         }
         // verificar ambiente solicitado
         $ambientes = [
@@ -536,20 +578,29 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             ],
         ];
         if (!isset($ambientes[$ambiente])) {
-            SessionMessage::write('Ambiente solicitado no es válido.', 'error');
-            return redirect('/dte/contribuyentes/seleccionar');
+            return redirect('/dte/contribuyentes/seleccionar')
+                ->withError(
+                    __('Ambiente solicitado no es válido.')
+                );
         }
         // asignar ambiente
         session(['dte.certificacion' => (bool)$ambientes[$ambiente]['codigo']]);
-        SessionMessage::write('Se cambió el ambiente de la sesión a '.$ambientes[$ambiente]['glosa'].'.', 'ok');
-        return redirect('/dte');
+        return redirect('/dte')
+            ->withSuccess(
+                __('Se cambió el ambiente de la sesión a %(ambiente_glosa)s.', 
+                    [
+                        'ambiente_glosa' => $ambientes[$ambiente]['glosa']
+                    ]
+                )
+            );
     }
 
     /**
      * Método que permite editar los usuarios autorizados de un contribuyente.
      */
-    public function usuarios()
+    public function usuarios(Request $request)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Contribuyente = libredte()->getSessionContribuyente();
@@ -557,9 +608,11 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // verificar que el usuario sea el administrador o sea soporte autorizado
-        if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            SessionMessage::error('Usted no es el administrador de la empresa solicitada.');
-            return redirect('/dte/contribuyentes/seleccionar');
+        if (!$Contribuyente->usuarioAutorizado($user, 'admin')) {
+            return redirect('/dte/contribuyentes/seleccionar')
+                ->withError(
+                    __('Usted no es el administrador de la empresa solicitada.')
+                );
         }
         // asignar variables para editar
         $permisos_usuarios = config('modules.Dte.contribuyentes.permisos');
@@ -597,27 +650,29 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             }
             try {
                 $Contribuyente->setUsuarios($usuarios);
-                SessionMessage::success(
-                    'Se editaron los usuarios autorizados de la empresa.', 'ok'
-                );
+                return redirect('/dte/contribuyentes/usuarios')
+                    ->withSuccess(
+                        __('Se editaron los usuarios autorizados de la empresa.')
+                    );
             } catch (\Exception $e) {
-                SessionMessage::write(
-                    'No fue posible editar los usuarios autorizados<br/>'.$e->getMessage(), 'error'
-                );
-            } catch (\Exception $e) {
-                SessionMessage::write(
-                    $e->getMessage(), 'error'
-                );
+                return redirect('/dte/contribuyentes/usuarios')
+                    ->withError(
+                        __('No fue posible editar los usuarios autorizados<br/>%(error_message)s',
+                            [
+                                'error_message' => $e->getMessage()
+                            ]
+                        )
+                    );
             }
-            return redirect('/dte/contribuyentes/usuarios');
         }
     }
 
     /**
      * Método que permite editar los documentos autorizados por usuario.
      */
-    public function usuarios_dtes()
+    public function usuarios_dtes(Request $request)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Contribuyente = libredte()->getSessionContribuyente();
@@ -625,9 +680,11 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // verificar que el usuario sea el administrador o sea soporte autorizado
-        if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            SessionMessage::write('Usted no es el administrador de la empresa solicitada.', 'error');
-            return redirect('/dte/contribuyentes/seleccionar');
+        if (!$Contribuyente->usuarioAutorizado($user, 'admin')) {
+            return redirect('/dte/contribuyentes/seleccionar')
+                ->withError(
+                    __('Usted no es el administrador de la empresa solicitada.')
+                );
         }
         // editar documentos de usuario
         if (isset($_POST['submit'])) {
@@ -653,31 +710,38 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             }
             try {
                 $Contribuyente->setDocumentosAutorizadosPorUsuario($usuarios);
-                SessionMessage::write(
-                    'Se editaron los documentos autorizados por usuario de la empresa.', 'ok'
-                );
+                return redirect('/dte/contribuyentes/usuarios#dtes')
+                    ->withSuccess(
+                        __('Se editaron los documentos autorizados por usuario de la empresa.')
+                    );
             } catch (\Exception $e) {
-                SessionMessage::write(
-                    'No fue posible editar los usuarios autorizados<br/>'.$e->getMessage(), 'error'
-                );
-            } catch (\Exception $e) {
-                SessionMessage::write(
-                    $e->getMessage(), 'error'
-                );
+                return redirect('/dte/contribuyentes/usuarios#dtes')
+                    ->withError(
+                        __('No fue posible editar los usuarios autorizados<br/>%(error_message)s',
+                            [
+                                'error_message' => $e->getMessage()
+                            ]
+                        )
+                    );
             }
         } else {
-            SessionMessage::write(
-                'No puede acceder directamente a la página '.$this->request->getRequestUriDecoded(), 'error'
-            );
+            return redirect('/dte/contribuyentes/usuarios#dtes')
+                ->withError(
+                    __('No puede acceder directamente a la página %(uri_decoded)s',
+                        [
+                            'uri_decoded' => $this->request->getRequestUriDecoded()
+                        ]
+                    )
+                );
         }
-        return redirect('/dte/contribuyentes/usuarios#dtes');
     }
 
     /**
      * Método que permite editar los documentos autorizados por usuario.
      */
-    public function usuarios_sucursales()
+    public function usuarios_sucursales(Request $request)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Contribuyente = libredte()->getSessionContribuyente();
@@ -685,9 +749,11 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // verificar que el usuario sea el administrador o sea soporte autorizado
-        if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            SessionMessage::write('Usted no es el administrador de la empresa solicitada.', 'error');
-            return redirect('/dte/contribuyentes/seleccionar');
+        if (!$Contribuyente->usuarioAutorizado($user, 'admin')) {
+            return redirect('/dte/contribuyentes/seleccionar')
+                ->withError(
+                    __('Usted no es el administrador de la empresa solicitada.')
+                );
         }
         // editar sucursales por defecto
         if (isset($_POST['submit'])) {
@@ -702,31 +768,38 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             }
             try {
                 $Contribuyente->setSucursalesPorUsuario($usuarios);
-                SessionMessage::write(
-                    'Se editaron las sucursales por defecto de los usuarios de la empresa.', 'ok'
-                );
+                return redirect('/dte/contribuyentes/usuarios#sucursales')
+                    ->withSuccess(
+                        __('Se editaron las sucursales por defecto de los usuarios de la empresa.')
+                    );
             } catch (\Exception $e) {
-                SessionMessage::write(
-                    'No fue posible editar las sucursales por defecto de los usuarios<br/>'.$e->getMessage(), 'error'
-                );
-            } catch (\Exception $e) {
-                SessionMessage::write(
-                    $e->getMessage(), 'error'
-                );
+                return redirect('/dte/contribuyentes/usuarios#sucursales')
+                    ->withError(
+                        __('No fue posible editar las sucursales por defecto de los usuarios<br/>%(error_message)s',
+                            [
+                                'error_message' => $e->getMessage()
+                            ]
+                        )
+                    );
             }
         } else {
-            SessionMessage::write(
-                'No puede acceder directamente a la página '.$this->request->getRequestUriDecoded(), 'error'
-            );
+            return redirect('/dte/contribuyentes/usuarios#sucursales')
+                ->withError(
+                    __('No puede acceder directamente a la página %(uri_decoded)s',
+                        [
+                            'uri_decoded' => $this->request->getRequestUriDecoded()
+                        ]
+                    )
+                );
         }
-        return redirect('/dte/contribuyentes/usuarios#sucursales');
     }
 
     /**
      * Método que permite modificar la configuración general de usuarios de la empresa.
      */
-    public function usuarios_general()
+    public function usuarios_general(Request $request)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Contribuyente = libredte()->getSessionContribuyente();
@@ -734,9 +807,11 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // verificar que el usuario sea el administrador o sea soporte autorizado
-        if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
-            SessionMessage::write('Usted no es el administrador de la empresa solicitada.', 'error');
-            return redirect('/dte/contribuyentes/seleccionar');
+        if (!$Contribuyente->usuarioAutorizado($user, 'admin')) {
+            return redirect('/dte/contribuyentes/seleccionar')
+                ->withError(
+                    __('Usted no es el administrador de la empresa solicitada.')
+                );
         }
         // editar configuración de usuarios
         if (isset($_POST['submit'])) {
@@ -754,23 +829,38 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             $Contribuyente->modificado = date('Y-m-d H:i:s');
             try {
                 $Contribuyente->save();
-                SessionMessage::write('Configuración general de usuarios de la empresa ha sido modificada. ', 'ok');
+                return redirect('/dte/contribuyentes/usuarios#general')
+                    ->withSuccess(
+                        __('Configuración general de usuarios de la empresa ha sido modificada. ')
+                    );
             } catch (\Exception $e) {
-                SessionMessage::write('No fue posible modificar la configuración de usuarios de la empresa:<br/>'.$e->getMessage(), 'error');
+                return redirect('/dte/contribuyentes/usuarios#general')
+                    ->withError(
+                        __('No fue posible modificar la configuración de usuarios de la empresa:<br/>%(error_message)s',
+                            [
+                                'error_message' => $e->getMessage()
+                            ]
+                        )
+                    );
             }
         } else {
-            SessionMessage::write(
-                'No puede acceder directamente a la página '.$this->request->getRequestUriDecoded(), 'error'
-            );
+            return redirect('/dte/contribuyentes/usuarios#general')
+                ->withError(
+                    __('No puede acceder directamente a la página %(uri_decoded)s',
+                        [
+                            'uri_decoded' => $this->request->getRequestUriDecoded()
+                        ]
+                    )
+                );
         }
-        return redirect('/dte/contribuyentes/usuarios#general');
     }
 
     /**
      * Método que permite transferir una empresa a un nuevo usuario administrador.
      */
-    public function transferir()
+    public function transferir(Request $request)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Contribuyente = libredte()->getSessionContribuyente();
@@ -779,40 +869,63 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
         }
         // verificar si es posible transferir la empresa
         if (!(bool)config('modules.Dte.contribuyentes.transferir')) {
-            SessionMessage::error('No es posible que usted transfiera la empresa, contacte a soporte para realizar esta acción.');
-            return redirect('/dte/contribuyentes/usuarios#general');
+            return redirect('/dte/contribuyentes/usuarios#general')
+                ->withError(
+                    __('No es posible que usted transfiera la empresa, contacte a soporte para realizar esta acción.')
+                );
         }
         // debe venir usuario
         if (empty($_POST['usuario'])) {
-            SessionMessage::error('Debe especificar el nuevo usuario administrador.');
-            return redirect('/dte/contribuyentes/usuarios#general');
+            return redirect('/dte/contribuyentes/usuarios#general')
+                ->withError(
+                    __('Debe especificar el nuevo usuario administrador.')
+                );
         }
         // verificar que el usuario sea el administrador
-        if ($Contribuyente->usuario != $this->Auth->User->id) {
-            SessionMessage::error('Solo el usuario que tiene la empresa registrada puede cambiar el administrador.');
-            return redirect('/dte/contribuyentes/usuarios#general');
+        if ($Contribuyente->usuario != $user->id) {
+            return redirect('/dte/contribuyentes/usuarios#general')
+                ->withError(
+                    __('Solo el usuario que tiene la empresa registrada puede cambiar el administrador.')
+                );
         }
         // transferir al nuevo usuario administrador
         $Usuario = new \sowerphp\app\Sistema\Usuarios\Model_Usuario($_POST['usuario']);
         if (!$Usuario->exists()) {
-            SessionMessage::error('Usuario '.$_POST['usuario'].' no existe');
-            return redirect('/dte/contribuyentes/usuarios#general');
+            return redirect('/dte/contribuyentes/usuarios#general')
+                ->withError(
+                    __('Usuario %(user)s no existe', 
+                        [
+                            'user' => $_POST['usuario']
+                        ]
+                    )
+                );
         }
         if ($Contribuyente->usuario == $Usuario->id) {
-            SessionMessage::warning('El usuario administrador ya es ' . $_POST['usuario']);
-            return redirect('/dte/contribuyentes/usuarios#general');
+            return redirect('/dte/contribuyentes/usuarios#general')
+                ->withError(
+                    __('El usuario administrador ya es %(user)s', 
+                        [
+                            'user' => $_POST['usuario']
+                        ]
+                    )
+                );
         }
         $Contribuyente->usuario = $Usuario->id;
         if ($Contribuyente->save()) {
-            SessionMessage::success(
-                'Se actualizó el usuario administrador a '.$_POST['usuario'].'.'
-            );
+            return redirect('/dte/contribuyentes/usuarios#general')
+                ->withSuccess(
+                    __('Se actualizó el usuario administrador a %(usuario)s.',
+                        [
+                            'usuario' => $_POST['usuario']
+                        ]
+                    )
+                );
         } else {
-            SessionMessage::error(
-                'No fue posible cambiar el administrador de la empresa.'
-            );
+            return redirect('/dte/contribuyentes/usuarios#general')
+                ->withError(
+                    __('No fue posible cambiar el administrador de la empresa.')
+                );
         }
-        return redirect('/dte/contribuyentes/usuarios#general');
     }
 
     /**
@@ -835,8 +948,9 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
     /**
      * Acción que permite probar la configuración de los correos electrónicos.
      */
-    public function config_email_test($email, $protocol = 'smtp')
+    public function config_email_test(Request $request, $email, $protocol = 'smtp')
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Contribuyente = libredte()->getSessionContribuyente();
@@ -844,7 +958,7 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // verificar que el usuario sea el administrador o de soporte autorizado
-        if (!$Contribuyente->usuarioAutorizado($this->Auth->User, 'admin')) {
+        if (!$Contribuyente->usuarioAutorizado($user, 'admin')) {
             $this->response->sendAndExit('Usted no es el administrador de la empresa solicitada.');
         }
         // verificar protocolo
@@ -865,7 +979,7 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             if ($Contribuyente->{'config_email_'.$email.'_replyto'}) {
                 $Email->replyTo($Contribuyente->{'config_email_'.$email.'_replyto'});
             }
-            $Email->to($this->Auth->User->email);
+            $Email->to($user->email);
             $Email->subject('[LibreDTE] Mensaje de prueba '.date('YmdHis'));
             try {
                 $status = $Email->send('Esto es un mensaje de prueba desde LibreDTE');
@@ -907,7 +1021,14 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             'tipo' => 'contribuyente',
         ]));
         if (!in_array($tipo, ['contribuyente', 'emisor', 'receptor'])) {
-            $this->Api->send('Búsqueda de tipo "'.$tipo.'" no es válida. Posibles tipos: contribuyente, emisor o receptor.', 400);
+            return response()->json(
+                __('Búsqueda de tipo "%($tipo)s" no es válida. Posibles tipos: contribuyente, emisor o receptor.',
+                    [
+                        'tipo' => $tipo
+                    ]
+                ),
+                400
+            );
         }
         // obtener objeto del contribuyente
         // se puede obtener por RUT o por correo electrónico asociado al contribuyente
@@ -915,7 +1036,14 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             try {
                 $Contribuyente = (new Model_Contribuyentes())->getByEmail($rut, true);
             } catch (\Exception $e) {
-                $this->Api->send('Error al obtener el contribuyente: '.$e->getMessage(), 500);
+                return response()->json(
+                    __('Error al obtener el contribuyente: %(error_message)s',
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    ), 
+                    500
+                );
             }
         } else {
             $Contribuyente = (new Model_Contribuyentes())->get($rut);
@@ -942,11 +1070,17 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             }
             // si no hay emisor con búsqueda de receptor error
             else if ($tipo == 'receptor') {
-                $this->Api->send('Debe indicar emisor para hacer una búsqueda de tipo receptor.', 400);
+                return response()->json(
+                    __('Debe indicar emisor para hacer una búsqueda de tipo receptor.'),
+                    400
+                );
             }
         } else {
             if ($tipo == 'emisor' && $emisor != $rut) {
-                $this->Api->send('Debe indicar el mismo emisor y rut para una búsqueda de tipo emisor (o dejar el emisor en blanco).', 400);
+                return response()->json(
+                    __('Debe indicar el mismo emisor y rut para una búsqueda de tipo emisor (o dejar el emisor en blanco).'),
+                    400
+                );
             }
         }
         // se agregan datos vía trigger del contribuyente solo si existe un emisor
@@ -954,7 +1088,14 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
         if ($emisor) {
             $Emisor = (new Model_Contribuyentes())->get($emisor);
             if (!$Emisor->usuarioAutorizado($User)) {
-                $this->Api->send('No está autorizado a operar con el emisor seleccionado para el tipo de búsqueda '.$tipo.'.', 404);
+                return response()->json(
+                    __('No está autorizado a operar con el emisor seleccionado para el tipo de búsqueda %(tipo)s.',
+                        [
+                            'tipo' => $tipo
+                        ]
+                    ),
+                    404
+                );
             }
             $datos_event = event(
                 'contribuyente_info',
@@ -968,7 +1109,10 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
         // se quita el usuario de los atributos (por seguridad)
         unset($datos['usuario']);
         // se entregan los datos del contribuyente
-        $this->Api->send($datos, 200);
+        return response()->json(
+            $datos, 
+            200
+        );
     }
 
     /**
@@ -991,7 +1135,10 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             'ambiente_en_certificacion' => $Contribuyente->enCertificacion(),
             'documentos_autorizados' => $Contribuyente->getDocumentosAutorizados(),
         ];
-        $this->Api->send($config, 200);
+        return response()->json(
+            $config, 
+            200
+        );
     }
 
 }

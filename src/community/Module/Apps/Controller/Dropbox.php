@@ -74,15 +74,20 @@ class Controller_Dropbox extends \sowerphp\autoload\Controller
                     ]
                 ]);
                 $Contribuyente->save();
-                \sowerphp\core\Facade_Session_Message::write(
-                    'Dropbox se ha conectado correctamente con LibreDTE.', 'ok'
-                );
+                return redirect('/dte/contribuyentes/modificar#apps')
+                    ->withSuccess(
+                        __('Dropbox se ha conectado correctamente con LibreDTE.')
+                    );
             } catch (\Exception $e) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'No fue posible conectar LibreDTE con Dropbox: '.$e->getMessage(), 'error'
-                );
+                return redirect('/dte/contribuyentes/modificar#apps')
+                    ->withError(
+                        __('No fue posible conectar LibreDTE con Dropbox: %(error_message)s',
+                            [
+                                'error_message' => $e->getMessage()
+                            ]
+                        )
+                    );
             }
-            return redirect('/dte/contribuyentes/modificar#apps');
         }
     }
 
@@ -126,15 +131,20 @@ class Controller_Dropbox extends \sowerphp\autoload\Controller
         if ($borrado === true) {
             $Contribuyente->set(['config_apps_dropbox' => null]);
             $Contribuyente->save();
-            \sowerphp\core\Facade_Session_Message::write(
-                'Dropbox se ha desconectado correctamente de LibreDTE.', 'ok'
-            );
+            return redirect('/dte/contribuyentes/modificar#apps')
+                ->withSuccess(
+                    __('Dropbox se ha desconectado correctamente de LibreDTE.')
+                );
         } else {
-            \sowerphp\core\Facade_Session_Message::write(
-                'Dropbox no pudo ser desconectado: '.$borrado, 'error'
-            );
+            return redirect('/dte/contribuyentes/modificar#apps')
+                ->withError(
+                    __('Dropbox no pudo ser desconectado: %(errors)s', 
+                        [
+                            'errors' => $borrado
+                        ]
+                    )
+                );
         }
-        return redirect('/dte/contribuyentes/modificar#apps');
     }
 
     /**

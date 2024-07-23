@@ -149,16 +149,25 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
         // crear contribuyente y verificar que exista y el usuario esté autorizado
         $Empresa = new \website\Dte\Model_Contribuyente($empresa);
         if (!$Empresa->exists()) {
-            $this->Api->send('Empresa solicitada no existe.', 404);
+            return response()->json(
+                __('Empresa solicitada no existe.'),
+                404
+            );
         }
         if (!$Empresa->usuarioAutorizado($User, '/dte/documentos/emitir')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
+            return response()->json(
+                __('No está autorizado a operar con la empresa solicitada.'),
+                403
+            );
         }
         // consultar item en servicio web del contribuyente
         $ApiDteItemsClient = $Empresa->getApiClient('dte_items');
         if ($ApiDteItemsClient) {
             $response = $ApiDteItemsClient->get($ApiDteItemsClient->url.$codigo);
-            $this->Api->send($response['body'], $response['status']['code']);
+            return response()->json(
+                $response['body'],
+                $response['status']['code']
+            );
         }
         // consultar item en base de datos local de LibreDTE
         else {
@@ -173,7 +182,10 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
                 $Item = null;
             }
             if (!$Item || !$Item->exists() || !$Item->activo) {
-                $this->Api->send('Item solicitado no existe o está inactivo.', 404);
+                return response()->json(
+                    __('Item solicitado no existe o está inactivo.'), 
+                    404
+                );
             }
             try {
                 $datos_event = (array)event(
@@ -182,29 +194,39 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
                     true
                 );
             } catch (\Exception $e) {
-                $this->Api->send($e->getMessage(), $e->getCode() ? $e->getCode() : 500);
+                return response()->json(
+                    __('%(error_message)s',
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    ), 
+                    $e->getCode() ? $e->getCode() : 500
+                );
             }
             if ($decimales === null) {
                 $decimales = (int)$Empresa->config_items_decimales;
             }
-            $this->Api->send(array_merge([
-                'TpoCodigo' => $Item->codigo_tipo,
-                'VlrCodigo' => $Item->codigo,
-                'NmbItem' => $Item->item,
-                'DscItem' => $Item->descripcion,
-                'IndExe' => $Item->exento,
-                'UnmdItem' => $Item->unidad,
-                'PrcItem' => $Item->getPrecio($fecha, $bruto, $moneda, $decimales),
-                'Moneda' => $moneda,
-                'MntBruto' => (bool)$bruto,
-                'ValorDR' => $Item->getDescuento($fecha, $bruto, $moneda, $decimales),
-                'TpoValor' => $Item->descuento_tipo,
-                'CodImpAdic' => $Item->impuesto_adicional,
-                'TasaImp' => $Item->impuesto_adicional
-                    ? \sasco\LibreDTE\Sii\ImpuestosAdicionales::getTasa($Item->impuesto_adicional)
-                    : 0
-                ,
-            ], $datos_event), 200);
+            return response()->json(
+                array_merge([
+                    'TpoCodigo' => $Item->codigo_tipo,
+                    'VlrCodigo' => $Item->codigo,
+                    'NmbItem' => $Item->item,
+                    'DscItem' => $Item->descripcion,
+                    'IndExe' => $Item->exento,
+                    'UnmdItem' => $Item->unidad,
+                    'PrcItem' => $Item->getPrecio($fecha, $bruto, $moneda, $decimales),
+                    'Moneda' => $moneda,
+                    'MntBruto' => (bool)$bruto,
+                    'ValorDR' => $Item->getDescuento($fecha, $bruto, $moneda, $decimales),
+                    'TpoValor' => $Item->descuento_tipo,
+                    'CodImpAdic' => $Item->impuesto_adicional,
+                    'TasaImp' => $Item->impuesto_adicional
+                        ? \sasco\LibreDTE\Sii\ImpuestosAdicionales::getTasa($Item->impuesto_adicional)
+                        : 0
+                    ,
+                ], $datos_event),
+                200
+            );
         }
     }
 
@@ -221,10 +243,16 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
         // crear contribuyente y verificar que exista y el usuario esté autorizado
         $Empresa = new \website\Dte\Model_Contribuyente($empresa);
         if (!$Empresa->exists()) {
-            $this->Api->send('Empresa solicitada no existe.', 404);
+            return response()->json(
+                __('Empresa solicitada no existe.'),
+                404
+            );
         }
         if (!$Empresa->usuarioAutorizado($User, '/dte/documentos/emitir')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
+            return response()->json(
+                __('No está autorizado a operar con la empresa solicitada.'),
+                403
+            );
         }
         // entregar datos
         return (new Model_Itemes())
@@ -252,8 +280,8 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
         if (isset($_POST['submit'])) {
             // verificar que se haya podido subir el archivo con el libro
             if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'Ocurrió un error al subir el archivo con los items.', 'error'
+                \sowerphp\core\Facade_Session_Message::error(
+                    'Ocurrió un error al subir el archivo con los items.'
                 );
                 return;
             }
@@ -261,7 +289,7 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
             try {
                 $items = \sowerphp\general\Utility_Spreadsheet::read($_FILES['archivo']);
             } catch (\Exception $e) {
-                \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
+                \sowerphp\core\Facade_Session_Message::error($e->getMessage());
                 return;
             }
             array_shift($items);
@@ -334,21 +362,21 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
                     ? __('Se agregó un item.')
                     : __('Se agregaron %s items.', $resumen['nuevos'])
                 ;
-                \sowerphp\core\Facade_Session_Message::write($msg, 'ok');
+                \sowerphp\core\Facade_Session_Message::success($msg);
             }
             if ($resumen['editados']) {
                 $msg = $resumen['editados'] == 1
                     ? __('Se editó un item.')
                     : __('Se editaron %s items.', $resumen['editados'])
                 ;
-                \sowerphp\core\Facade_Session_Message::write($msg, 'ok');
+                \sowerphp\core\Facade_Session_Message::success($msg);
             }
             if ($resumen['error']) {
                 $msg = $resumen['error'] == 1
                     ? __('Se encontró un item con error (detalle en tabla de items).')
                     : __('Se encontraron %s items con error (detalle en tabla de items).', $resumen['error'])
                 ;
-                \sowerphp\core\Facade_Session_Message::write($msg, 'error');
+                \sowerphp\core\Facade_Session_Message::error($msg);
             }
             // mostrar resultado de lo realizado
             $cols[] = 'Guardado';
@@ -378,9 +406,10 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
             ->exportar()
         ;
         if (!$items) {
-            return redirect('/dte/admin/itemes/listar')->withWarning(
-                'No hay items que exportar.'
-            );
+            return redirect('/dte/admin/itemes/listar')
+                ->withWarning(
+                    __('No hay items que exportar.')
+                );
         }
         array_unshift($items, array_keys($items[0]));
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($items);

@@ -45,7 +45,7 @@ class Controller_Factoring extends \sowerphp\autoload\Controller
             $EnvioDte->loadXML(file_get_contents($_FILES['xml']['tmp_name']));
             $documentos = $EnvioDte->getDocumentos();
             if (!$documentos) {
-                \sowerphp\core\Facade_Session_Message::write('El XML no contiene un DTE.', 'error');
+                \sowerphp\core\Facade_Session_Message::error('El XML no contiene un DTE.');
                 return;
             }
             $Dte = $documentos[0];

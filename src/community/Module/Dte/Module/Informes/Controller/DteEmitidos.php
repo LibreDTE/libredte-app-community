@@ -303,11 +303,14 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
         ;
         if ($desde && $hasta && !$documentos) {
             return redirect('/dte/informes/dte_emitidos/sin_intercambio')
-                ->withWarning(__(
-                    'No existen documentos pendientes de enviar en el rango de fechas consultado (%s al %s).',
-                    \sowerphp\general\Utility_Date::format($desde),
-                    \sowerphp\general\Utility_Date::format($hasta)
-                ))
+                ->withWarning(
+                    __('No existen documentos pendientes de enviar en el rango de fechas consultado (%(desde)s al %(hasta)s).',
+                        [
+                            'desde' => \sowerphp\general\Utility_Date::format($desde),
+                            'hasta' => \sowerphp\general\Utility_Date::format($hasta)
+                        ]  
+                    )   
+                )
             ;
         }
         // Renderizar vista.
@@ -406,11 +409,14 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
         ;
         if ($desde && $hasta && !$documentos) {
             return redirect('/dte/informes/dte_emitidos/boletas_sin_email')
-                ->withWarning(__(
-                    'No existen boletas pendientes de enviar por email en el rango de fechas consultado (%s al %s)',
-                    \sowerphp\general\Utility_Date::format($desde),
-                    \sowerphp\general\Utility_Date::format($hasta)
-                ))
+                ->withWarning(
+                    __('No existen boletas pendientes de enviar por email en el rango de fechas consultado (%(desde)s al %(hasta)s)',
+                        [
+                            'desde' => \sowerphp\general\Utility_Date::format($desde),
+                            'hasta' => \sowerphp\general\Utility_Date::format($hasta)
+                        ]        
+                    )
+                )
             ;
         }
         // Renderizar vista.

@@ -44,10 +44,10 @@ class Controller_DteIntercambioResultados extends \sowerphp\autoload\Controller
         // obtener Resultado
         $DteIntercambioResultado = new Model_DteIntercambioResultado($responde, $Emisor->rut, $codigo);
         if (!$DteIntercambioResultado->exists()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No existe el resultado solicitado.', 'error'
-            );
-            return redirect('/dte/dte_intercambios');
+            return redirect('/dte/dte_intercambios')
+                ->withError(
+                    __('No existe el resultado solicitado.')
+                );
         }
         // entregar XML
         $xml = base64_decode($DteIntercambioResultado->xml);

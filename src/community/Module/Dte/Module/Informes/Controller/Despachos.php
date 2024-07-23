@@ -23,6 +23,8 @@
 
 namespace website\Dte\Informes;
 
+use \sowerphp\core\Network_Request as Request;
+
 /**
  * Clase para informes de los despachos asociados al contribuyente.
  */
@@ -33,8 +35,9 @@ class Controller_Despachos extends \sowerphp\autoload\Controller
      * Acción principal que muestra el formulario para solcitar el reporte de
      * despachos.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -46,7 +49,7 @@ class Controller_Despachos extends \sowerphp\autoload\Controller
             'Emisor' => $Emisor,
             'fecha' => !empty($_POST['fecha']) ? $_POST['fecha'] : date('Y-m-d'),
             'sucursales' => $Emisor->getSucursales(),
-            'sucursal' => $Emisor->getSucursalUsuario($this->Auth->User),
+            'sucursal' => $Emisor->getSucursalUsuario($user),
             'usuarios' => $Emisor->getListUsuarios(),
             'google_api_key' => config('services.google.api_key'),
         ]);

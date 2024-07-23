@@ -23,6 +23,8 @@
 
 namespace website\Dte;
 
+use \sowerphp\core\Network_Request as Request;
+
 /**
  * Controlador de libro de guías de despacho.
  */
@@ -40,8 +42,9 @@ class Controller_DteGuias extends Controller_Base_Libros
      * Acción que envía el archivo XML del libro de guías al SII.
      * Si no hay documentos en el período se enviará sin movimientos.
      */
-    public function enviar_sii($periodo)
+    public function enviar_sii(Request $request, $periodo)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -52,22 +55,30 @@ class Controller_DteGuias extends Controller_Base_Libros
         $DteGuia = new Model_DteGuia($Emisor->rut, $periodo, $Emisor->enCertificacion());
         // si el periodo es mayor o igual al actual no se puede enviar
         if ($periodo >= date('Ym')) {
-            \sowerphp\core\Facade_Session_Message::write('No puede enviar el libro de guías del período '.$periodo.', debe esperar al mes siguiente del período.', 'error');
-            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('No puede enviar el libro de guías del período %(periodo)s, debe esperar al mes siguiente del período.', 
+                        [
+                            'periodo' => $periodo
+                        ]
+                    )
+                );
         }
         // obtener guías
         $guias = $Emisor->getGuias($periodo);
         // crear libro
         $Libro = new \sasco\LibreDTE\Sii\LibroGuia();
         // obtener firma
-        $Firma = $Emisor->getFirma($this->Auth->User->id);
+        $Firma = $Emisor->getFirma($user->id);
         if (!$Firma) {
-            $message = __(
-                'No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%s).',
-                url('/dte/admin/firma_electronicas/agregar')
-            );
-            \sowerphp\core\Facade_Session_Message::write($message, 'error');
-            return redirect('/dte/admin/firma_electronicas/agregar');
+            return redirect('/dte/admin/firma_electronicas/agregar')
+                ->withError(
+                    __('No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%(url)s).', 
+                        [
+                            'url' => url('/dte/admin/firma_electronicas/agregar')
+                        ]
+                    )
+                );
         }
         // agregar detalle
         $documentos = 0;
@@ -103,16 +114,26 @@ class Controller_DteGuias extends Controller_Base_Libros
         // obtener XML
         $xml = $Libro->generar();
         if (!$xml) {
-            \sowerphp\core\Facade_Session_Message::write('No fue posible generar el libro de guías<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
-            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('No fue posible generar el libro de guías<br/>%(logs)s', 
+                        [
+                            'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                        ]
+                    )
+                );
         }
         // enviar al SII
         $track_id = $Libro->enviar();
         if (!$track_id) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible enviar el libro de guías al SII<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
-            );
-            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+            return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()))
+                ->withError(
+                    __('No fue posible enviar el libro de guías al SII<br/>%(logs)s', 
+                        [
+                            'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                        ]
+                    )
+                );
         }
         // guardar libro de ventas
         $DteGuia->documentos = $documentos;
@@ -121,10 +142,14 @@ class Controller_DteGuias extends Controller_Base_Libros
         $DteGuia->revision_estado = null;
         $DteGuia->revision_detalle = null;
         $DteGuia->save();
-        \sowerphp\core\Facade_Session_Message::write(
-            'Libro de guías período '.$periodo.' envíado.', 'ok'
-        );
-        return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
+        return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()))
+            ->withSuccess(
+                __('Libro de guías período %(periodo)s envíado.',
+                    [
+                        'periodo' => $periodo
+                    ]
+                )
+            );
     }
 
     /**
@@ -177,10 +202,14 @@ class Controller_DteGuias extends Controller_Base_Libros
                     ])
                 ]);
             } catch (\Exception $e) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'No fue posible facturar las guías seleccionadas:'.$e->getMessage(), 'error'
-                );
-                return redirect('/dte/dte_guias');
+                return redirect('/dte/dte_guias')
+                    ->withError(
+                        __('No fue posible facturar las guías seleccionadas: %(error_message)s',
+                            [
+                                'error_message' => $e->getMessage()
+                            ]
+                        )
+                    );
             }
         }
     }

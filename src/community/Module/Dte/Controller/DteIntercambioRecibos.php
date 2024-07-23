@@ -44,10 +44,10 @@ class Controller_DteIntercambioRecibos extends \sowerphp\autoload\Controller
         // obtener Recibo
         $DteIntercambioRecibo = new Model_DteIntercambioRecibo($responde, $Emisor->rut, $codigo);
         if (!$DteIntercambioRecibo->exists()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No existe el recibo solicitado.', 'error'
-            );
-            return redirect('/dte/dte_intercambios');
+            return redirect('/dte/dte_intercambios')
+                ->withError(
+                    __('No existe el recibo solicitado.')
+                );
         }
         // entregar XML
         $xml = base64_decode($DteIntercambioRecibo->xml);

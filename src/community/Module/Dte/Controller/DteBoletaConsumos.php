@@ -23,6 +23,8 @@
 
 namespace website\Dte;
 
+use \sowerphp\core\Network_Request as Request;
+
 /**
  * Clase para las acciones asociadas al libro de boletas electrónicas.
  */
@@ -38,8 +40,9 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
     /**
      * Acción principal que lista los períodos con boletas.
      */
-    public function listar($page = 1, $orderby = null, $order = 'A')
+    public function listar(Request $request, $page = 1, $orderby = null, $order = 'A')
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -49,7 +52,7 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
         //$rcof_rechazados = (new Model_DteBoletaConsumos())->setContribuyente($Emisor)->getTotalRechazados();
         //$rcof_reparos_secuencia = (new Model_DteBoletaConsumos())->setContribuyente($Emisor)->getTotalReparosSecuencia();
         $this->set([
-            'is_admin' => $Emisor->usuarioAutorizado($this->Auth->User, 'admin'),
+            'is_admin' => $Emisor->usuarioAutorizado($user, 'admin'),
             //'rcof_rechazados' => $rcof_rechazados,
             //'rcof_reparos_secuencia' => $rcof_reparos_secuencia,
         ]);
@@ -75,10 +78,10 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
      */
     public function editar($pk)
     {
-        \sowerphp\core\Facade_Session_Message::write(
-            'No se permite la edición de registros.', 'error'
-        );
-        return redirect('/dte/dte_boleta_consumos/listar/1/dia/D');
+        return redirect('/dte/dte_boleta_consumos/listar/1/dia/D')
+            ->withError(
+                __('No se permite la edición de registros.')
+            );
     }
 
     /**
@@ -96,10 +99,14 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
         $DteBoletaConsumo = new Model_DteBoletaConsumo($Emisor->rut, $dia, $Emisor->enCertificacion());
         $xml = $DteBoletaConsumo->getXML();
         if (!$xml) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible generar el reporte de consumo de folios<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
-            );
-            return redirect('/dte/dte_boleta_consumos/listar');
+            return redirect('/dte/dte_boleta_consumos/listar')
+                ->withError(
+                    __('No fue posible generar el reporte de consumo de folios<br/>%(logs)s', 
+                        [
+                            'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                        ]
+                    )
+                );
         }
         // entregar XML
         $file = 'consumo_folios_'.$Emisor->rut.'-'.$Emisor->dv.'_'.$dia.'.xml';
@@ -112,8 +119,9 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
     /**
      * Acción que permite enviar el consumo de folios al SII.
      */
-    public function enviar_sii($dia)
+    public function enviar_sii(Request $request, $dia)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -124,20 +132,37 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
         $filterListar = !empty($_GET['listar']) ? base64_decode($_GET['listar']) : '';
         $DteBoletaConsumo = new Model_DteBoletaConsumo($Emisor->rut, $dia, $Emisor->enCertificacion());
         try {
-            $track_id = $DteBoletaConsumo->enviar($this->Auth->User->id);
+            $track_id = $DteBoletaConsumo->enviar($user->id);
             if (!$track_id) {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'No fue posible enviar el reporte de consumo de folios al SII<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
-                );
+                return redirect('/dte/dte_boleta_consumos/listar'.$filterListar)
+                    ->withError(
+                        __('No fue posible enviar el reporte de consumo de folios al SII<br/>%(logs)s',
+                            [
+                                'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
+                            ]
+                        )
+                    );
+
             } else {
-                \sowerphp\core\Facade_Session_Message::write(
-                    'Reporte de consumo de folios del día '.$dia.' fue envíado al SII. Ahora debe consultar su estado con el Track ID '.$track_id.'.', 'ok'
-                );
+                return redirect('/dte/dte_boleta_consumos/listar'.$filterListar)
+                    ->withSuccess(
+                        __('Reporte de consumo de folios del día %($dia)s fue envíado al SII. Ahora debe consultar su estado con el Track ID %(track_id)s.',
+                            [
+                                'dia' => $dia,
+                                'track_id' => $track_id
+                            ]
+                        )
+                    );
         }
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible enviar el reporte de consumo de folios al SII: '.$e->getMessage(), 'error'
-            );
+            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar)
+                ->withError(
+                    __('No fue posible enviar el reporte de consumo de folios al SII: %(error_message)s',
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    )
+                );
         }
         return redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
     }
@@ -145,8 +170,9 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
     /**
      * Acción que actualiza el estado del envío del reporte de consumo de folios.
      */
-    public function actualizar_estado($dia, $usarWebservice = null)
+    public function actualizar_estado(Request $request, $dia, $usarWebservice = null)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -161,38 +187,43 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
         // obtener reporte enviado
         $DteBoletaConsumo = new Model_DteBoletaConsumo($Emisor->rut, $dia, $Emisor->enCertificacion());
         if (!$DteBoletaConsumo->exists()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No existe el reporte de consumo de folios solicitado.', 'error'
-            );
-            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
+            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar)
+                ->withError(
+                    __('No existe el reporte de consumo de folios solicitado.')
+                );
         }
         // si no tiene track id error
         if (!$DteBoletaConsumo->track_id) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'Reporte de consumo de folios no tiene Track ID, primero debe enviarlo al SII.', 'error'
-            );
-            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
+            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar)
+                ->withError(
+                    __('Reporte de consumo de folios no tiene Track ID, primero debe enviarlo al SII.')
+                );
         }
         // actualizar estado
         try {
-            $DteBoletaConsumo->actualizarEstado($this->Auth->User->id, $usarWebservice);
-            \sowerphp\core\Facade_Session_Message::write(
-                'Se actualizó el estado del reporte de consumo de folios.', 'ok'
-            );
+            $DteBoletaConsumo->actualizarEstado($user->id, $usarWebservice);
+            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar)
+                ->withSuccess(
+                    __('Se actualizó el estado del reporte de consumo de folios.')
+                );
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'Estado del reporte de consumo de folios no pudo ser obtenido: '.$e->getMessage(), 'error'
-            );
+            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar)
+                ->withError(
+                    __('Estado del reporte de consumo de folios no pudo ser obtenido: %(error_message)s',
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    )
+                );
         }
-        // redireccionar
-        return redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
     }
 
     /**
      * Acción que actualiza el estado del envío del reporte de consumo de folios.
      */
-    public function solicitar_revision($dia)
+    public function solicitar_revision(Request $request, $dia)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -204,28 +235,36 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
         // obtener reporte enviado
         $DteBoletaConsumo = new Model_DteBoletaConsumo($Emisor->rut, $dia, $Emisor->enCertificacion());
         if (!$DteBoletaConsumo->exists()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No existe el reporte de consumo de folios solicitado.', 'error'
-            );
-            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
+            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar)
+                ->withError(
+                    __('No existe el reporte de consumo de folios solicitado.')
+                );
         }
         try {
-            $DteBoletaConsumo->solicitarRevision($this->Auth->User->id);
-            \sowerphp\core\Facade_Session_Message::write(
-                'Se solicitó revisión del consumo de folios.', 'ok'
-            );
+            $DteBoletaConsumo->solicitarRevision($user->id);
+            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar)
+                ->withSuccess(
+                    __('Se solicitó revisión del consumo de folios.')
+                );
+
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
+            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar)
+                ->withError(
+                    __('%(error_message)s',
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    )
+                );
         }
-        // redireccionar
-        return redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
     }
 
     /**
      * Acción que permite eliminar un RCOF.
      */
-    public function eliminar($dia)
+    public function eliminar(Request $request, $dia)
     {
+        $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -235,28 +274,40 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
         // Filtros.
         $filterListar = !empty($_GET['listar']) ? base64_decode($_GET['listar']) : '';
         // solo administrador pueden borrar el rcof
-        if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
-            \sowerphp\core\Facade_Session_Message::write('Solo el administrador de la empresa puede eliminar el RCOF.', 'error');
-            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
+        if (!$Emisor->usuarioAutorizado($user, 'admin')) {
+            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar)
+                ->withError(
+                    __('Solo el administrador de la empresa puede eliminar el RCOF.')
+                );
         }
         // obtener reporte enviado
         $DteBoletaConsumo = new Model_DteBoletaConsumo($Emisor->rut, $dia, $Emisor->enCertificacion());
         if (!$DteBoletaConsumo->exists()) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No existe el reporte de consumo de folios solicitado.', 'error'
-            );
-            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
+            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar)
+                ->withError(
+                    __('No existe el reporte de consumo de folios solicitado.')
+                );
         }
         try {
             $DteBoletaConsumo->delete();
-            \sowerphp\core\Facade_Session_Message::write(
-                'Se eliminó el RCOF del día '.\sowerphp\general\Utility_Date::format($dia), 'ok'
-            );
+            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar)
+                ->withSuccess(
+                    __('Se eliminó el RCOF del día %(dia)s',
+                        [
+                            'dia' => \sowerphp\general\Utility_Date::format($dia)
+                        ]
+                    )
+                );
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write($e->getMessage(), 'error');
+            return redirect('/dte/dte_boleta_consumos/listar'.$filterListar)
+                ->withError(
+                    __('%(error_message)s',
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    )
+                );
         }
-        // redireccionar
-        return redirect('/dte/dte_boleta_consumos/listar'.$filterListar);
     }
 
     /**
@@ -279,7 +330,7 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
         if (!$pendientes) {
             return redirect('/dte/dte_boleta_consumos/listar/1/dia/D')
                 ->withSuccess(
-                    'No existen días pendientes por enviar entre el primer día enviado y ayer.'
+                    __('No existen días pendientes por enviar entre el primer día enviado y ayer.')
                 )
             ;
         }

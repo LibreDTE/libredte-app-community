@@ -68,11 +68,11 @@ class Controller_BoletaHonorarios extends \sowerphp\autoload\Controller
             // obtener PDF desde servicio web
             $r = $this->consume('/api/honorarios/boleta_honorarios/buscar/'.$Receptor->rut, $_POST);
             if ($r['status']['code'] != 200) {
-                \sowerphp\core\Facade_Session_Message::write($r['body'], 'error');
+                \sowerphp\core\Facade_Session_Message::error($r['body']);
                 return;
             }
             if (empty($r['body'])) {
-                \sowerphp\core\Facade_Session_Message::write('No se encontraron boletas para la búsqueda solicitad.', 'warning');
+                \sowerphp\core\Facade_Session_Message::warning('No se encontraron boletas para la búsqueda solicitad.');
             }
             $this->set('boletas', $r['body']);
         }
@@ -91,10 +91,16 @@ class Controller_BoletaHonorarios extends \sowerphp\autoload\Controller
         // crear receptor
         $Receptor = new \website\Dte\Model_Contribuyente($receptor);
         if (!$Receptor->exists()) {
-            $this->Api->send('Receptor no existe.', 404);
+            return response()->json(
+                __('Receptor no existe.'),
+                404
+            );
         }
         if (!$Receptor->usuarioAutorizado($User, '/honorarios/boleta_honorarios/buscar')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
+            return response()->json(
+                __('No está autorizado a operar con la empresa solicitada.'),
+                403
+            );
         }
         // obtener boletas
         $filtros = [];
@@ -104,13 +110,19 @@ class Controller_BoletaHonorarios extends \sowerphp\autoload\Controller
             }
         }
         if (empty($filtros)) {
-            $this->Api->send('Debe definir a lo menos un filtro para la búsqueda.', 400);
+            return response()->json(
+                __('Debe definir a lo menos un filtro para la búsqueda.'),
+                400
+            );
         }
         $boletas = (new Model_BoletaHonorarios())
             ->setContribuyente($Receptor)
             ->buscar($filtros, 'DESC')
         ;
-        $this->Api->send($boletas, 200);
+        return response()->json(
+            $boletas,
+            200
+        );
     }
 
     /**
@@ -130,22 +142,29 @@ class Controller_BoletaHonorarios extends \sowerphp\autoload\Controller
             !$BoletaHonorario->exists()
             || $BoletaHonorario->receptor != $Receptor->rut
         ) {
-            return redirect('/honorarios/boleta_honorarios')->withError(
-                'No existe la boleta solicitada.'
-            );
+            return redirect('/honorarios/boleta_honorarios')
+                ->withError(
+                    __('No existe la boleta solicitada.')
+                );
         }
         // obtener PDF desde servicio web
         $r = $this->consume('/api/honorarios/boleta_honorarios/pdf/'.$BoletaHonorario->emisor.'/'.$BoletaHonorario->numero.'/'.$Receptor->rut);
         if ($r['status']['code'] != 200) {
-            return redirect('/honorarios/boleta_honorarios')->withError(
-                $r['body']
-            );
+            return redirect('/honorarios/boleta_honorarios')
+                ->withError(
+                    __('%(body)s',
+                        [
+                            'body' => $r['body']
+                        ]
+                    )
+                    
+                );
         }
         $this->Api->response()->type('application/pdf');
         $this->Api->response()->header('Content-Disposition', 'attachment; filename=bhe_'.$BoletaHonorario->emisor.'_'.$BoletaHonorario->numero.'.pdf');
         $this->Api->response()->header('Pragma', 'no-cache');
         $this->Api->response()->header('Expires', 0);
-        $this->Api->send($r['body']);
+        return response()->json($r['body']);
     }
 
     /**
@@ -161,28 +180,44 @@ class Controller_BoletaHonorarios extends \sowerphp\autoload\Controller
         // crear receptor
         $Receptor = new \website\Dte\Model_Contribuyente($receptor);
         if (!$Receptor->exists()) {
-            $this->Api->send('Receptor no existe.', 404);
+            return response()->json(
+                __('Receptor no existe.'),
+                404
+            );
         }
         if (!$Receptor->usuarioAutorizado($User, '/honorarios/boleta_honorarios/pdf')) {
-            $this->Api->send('No está autorizado a operar con la empresa solicitada.', 403);
+            return response()->json(
+                __('No está autorizado a operar con la empresa solicitada.'),
+                403
+            );
         }
         // obtener boleta
         $BoletaHonorario = new Model_BoletaHonorario($emisor, $numero);
         if (!$BoletaHonorario->exists() || $BoletaHonorario->receptor != $Receptor->rut) {
-            $this->Api->send('No existe la boleta solicitada.', 404);
+            return response()->json(
+                __('No existe la boleta solicitada.'),
+                404
+            );
         }
         // obtener pdf
         try {
             $pdf = $BoletaHonorario->getPDF();
         } catch (\Exception $e) {
-            $this->Api->send($e->getMessage(), 500);
+            return response()->json(
+                __('%(error_message)s',
+                    [
+                        'error_message' => $e->getMessage()
+                    ]
+                ),
+                500
+            );
         }
         // entregar boleta
         $this->Api->response()->type('application/pdf');
         $this->Api->response()->header('Content-Disposition', 'attachment; filename=bhe_'.$BoletaHonorario->emisor.'_'.$BoletaHonorario->numero.'.pdf');
         $this->Api->response()->header('Pragma', 'no-cache');
         $this->Api->response()->header('Expires', 0);
-        $this->Api->send($pdf);
+        return response()->json($pdf);
     }
 
     /**
@@ -202,9 +237,10 @@ class Controller_BoletaHonorarios extends \sowerphp\autoload\Controller
             ->buscar(['periodo' => $periodo])
         ;
         if (empty($boletas)) {
-            return redirect('/honorarios/boleta_honorarios')->withInfo(
-                'No existen boletas para el período solicitado.'
-            );
+            return redirect('/honorarios/boleta_honorarios')
+                ->withInfo(
+                    __('No existen boletas para el período solicitado.')
+                );
         }
         // Renderizar vista.
         return $this->render(null, [
@@ -231,9 +267,10 @@ class Controller_BoletaHonorarios extends \sowerphp\autoload\Controller
             ->buscar(['periodo' => $periodo])
         ;
         if (empty($boletas)) {
-            return redirect('/honorarios/boleta_honorarios')->withInfo(
-                'No existen boletas para el período solicitado.'
-            );
+            return redirect('/honorarios/boleta_honorarios')
+                ->withInfo(
+                    __('No existen boletas para el período solicitado.')
+                );
         }
         foreach ($boletas as &$b) {
             unset($b['codigo']);
@@ -262,11 +299,20 @@ class Controller_BoletaHonorarios extends \sowerphp\autoload\Controller
                 ->setContribuyente($Receptor)
                 ->sincronizar($meses)
             ;
-            \sowerphp\core\Facade_Session_Message::success('Boletas actualizadas.');
+            return redirect('/honorarios/boleta_honorarios')
+                ->withSuccess(
+                    __('Boletas actualizadas.')
+                );
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::error($e->getMessage());
+            return redirect('/honorarios/boleta_honorarios')
+                ->withError(
+                    __('%(error_message)s',
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    )
+                );
         }
-        return redirect('/honorarios/boleta_honorarios');
     }
 
 }

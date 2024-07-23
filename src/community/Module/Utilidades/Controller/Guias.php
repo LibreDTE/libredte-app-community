@@ -52,23 +52,23 @@ class Controller_Guias extends \sowerphp\autoload\Controller
         ];
         foreach ($campos as $campo) {
             if (!isset($_POST[$campo][0])) {
-                 \sowerphp\core\Facade_Session_Message::write(
-                    $campo.' no puede estar en blanco.', 'error'
+                 \sowerphp\core\Facade_Session_Message::error(
+                    $campo.' no puede estar en blanco.'
                 );
                 return;
             }
         }
         // si no se pasó el archivo error
         if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'Debes enviar el archivo CSV con el detalle de las guías a la que deseas generar su XML.', 'error'
+            \sowerphp\core\Facade_Session_Message::error(
+                'Debes enviar el archivo CSV con el detalle de las guías a la que deseas generar su XML.'
             );
             return;
         }
         // si no se pasó la firma error
         if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'Debes enviar el archivo con la firma digital.', 'error'
+            \sowerphp\core\Facade_Session_Message::error(
+                'Debes enviar el archivo con la firma digital.'
             );
             return;
         }
@@ -79,8 +79,8 @@ class Controller_Guias extends \sowerphp\autoload\Controller
                 'pass' => $_POST['contrasenia'],
             ]);
         } catch (\Exception $e) {
-            \sowerphp\core\Facade_Session_Message::write(
-                'No fue posible abrir la firma digital, quizás contraseña incorrecta.', 'error'
+            \sowerphp\core\Facade_Session_Message::error(
+                'No fue posible abrir la firma digital, quizás contraseña incorrecta.'
             );
             return;
         }
@@ -101,7 +101,7 @@ class Controller_Guias extends \sowerphp\autoload\Controller
         $LibroGuia->setCaratula($caratula);
         $xml = $LibroGuia->generar();
         if (!$LibroGuia->schemaValidate()) {
-            \sowerphp\core\Facade_Session_Message::write(implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
+            \sowerphp\core\Facade_Session_Message::error(implode('<br/>', \sasco\LibreDTE\Log::readAll()));
             return;
         }
         // descargar XML
