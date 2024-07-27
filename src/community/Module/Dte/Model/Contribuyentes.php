@@ -23,15 +23,90 @@
 
 namespace website\Dte;
 
+use \sowerphp\autoload\Model_Plural;
+use \sowerphp\app\Utility_Rut;
+use \website\Sistema\General\Model_ActividadEconomica;
+
 /**
- * Clase para mapear la tabla contribuyente de la base de datos.
+ * Modelo plural de la tabla "contribuyente" de la base de datos.
+ *
+ * Permite interactuar con varios registros de la tabla.
  */
-class Model_Contribuyentes extends \sowerphp\autoload\Model_Plural
+class Model_Contribuyentes extends Model_Plural
 {
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'contribuyente'; ///< Tabla del modelo
+    /**
+     * Obtiene los datos del contribuyente desde el SII.
+     *
+     * Solo se buscarán datos del contribuyente si falta alguno de estos:
+     *
+     *   - Razón social.
+     *   - Actividad económica.
+     *   - Giro.
+     *
+     * @param array $datos Datos que existen en el contribuyente y tendrán
+     * prioridad por sobre los del SII (no se reemplazan).
+     * @return array Arreglo con los datos del contribuyente normalizados para
+     * ser usados en el modelo de contribuyentes.
+     */
+    public function getDatosDesdeSii(array $datos = []): array
+    {
+        // Si no se pasó el RUT del contribuyente se retornan los mismos datos,
+        // pues no se pueden buscar datos sin el RUT.
+        if (empty($datos['rut'])) {
+            return $datos;
+        }
+        // Si el RUT es un string y tiene guión se asume formato "RUT-DV".
+        if (!is_numeric($datos['rut']) && strpos($datos['rut'], '-')) {
+            $datos['rut'] = (int)(explode('-', str_replace('.', '', $datos['rut']))[0]);
+        }
+        // Si existen los datos que el SII podría proveer se retorna el arreglo
+        // de datos que se haya pasado, pues los datos del SII no aportarán
+        // nuevos datos a los que ya se tienen.
+        if (
+            !empty($datos['razon_social'])
+            && !empty($datos['actividad_economica'])
+            && !empty($datos['giro'])
+        ) {
+            return $datos;
+        }
+        // Asignar DV del contribuyente.
+        $datos['dv'] = $datos['dv'] ?? Utility_Rut::dv($datos['rut']);
+        // Asignar recurso que se consultará al servicio de API Gateway.
+        $url = sprintf(
+            '/sii/contribuyentes/situacion_tributaria/tercero/%d-%s',
+            $datos['rut'],
+            $datos['dv']
+        );
+        // Realizar consulta al recurso.
+        try {
+            $response = apigateway($url);
+            if ($response['status']['code'] != 200) {
+                return $datos;
+            }
+            $info = $response['body'];
+        } catch (\Exception $e) {
+            $info = [];
+        }
+        // Asignar información de la situación tributaria a los datos que
+        // falten del contribuyente.
+        if (empty($datos['razon_social']) && !empty($info['razon_social'])) {
+            $datos['razon_social'] = mb_substr($info['razon_social'], 0, 100);
+        }
+        if (empty($datos['actividad_economica']) && !empty($info['actividades'][0]['codigo'])) {
+            $ActividadEconomica = new Model_ActividadEconomica(
+                $info['actividades'][0]['codigo']
+            );
+            if ($ActividadEconomica->actividad_economica) {
+                $datos['actividad_economica'] = $info['actividades'][0]['codigo'];
+            }
+        }
+        if (empty($datos['giro']) && !empty($info['actividades'][0]['glosa'])) {
+            $datos['giro'] = mb_substr($info['actividades'][0]['glosa'], 0, 80);
+        }
+        // Entregar los datos actualizados con los del SII.
+        return $datos;
+    }
 
     /**
      * Método que entrega el listado de contribuyentes.

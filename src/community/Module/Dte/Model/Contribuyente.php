@@ -23,12 +23,13 @@
 
 namespace website\Dte;
 
+use \stdClass;
+use \sowerphp\autoload\Model;
 use \sowerphp\core\Network_Email;
 use \sowerphp\core\Network_Email_Imap;
 use \sowerphp\core\Network_Http_Rest;
 use \sowerphp\core\Utility_Array;
 use \sowerphp\app\Utility_Apps;
-use \sowerphp\app\Utility_Rut;
 use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna;
 use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
 use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
@@ -41,375 +42,204 @@ use \website\Dte\Admin\Model_DteFolio;
 use \website\Sistema\General\Model_ActividadEconomica;
 
 /**
- * Clase para mapear la tabla contribuyente de la base de datos.
+ * Modelo singular de la tabla "contribuyente" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_Contribuyente extends \sowerphp\autoload\Model
+class Model_Contribuyente extends Model
 {
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'contribuyente'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $rut; ///< integer(32) NOT NULL DEFAULT '' PK
-    public $dv; ///< character(1) NOT NULL DEFAULT ''
-    public $razon_social; ///< character varying(100) NOT NULL DEFAULT ''
-    public $giro; ///< character varying(80) NOT NULL DEFAULT ''
-    public $actividad_economica; ///< integer(32) NULL DEFAULT '' FK:actividad_economica.codigo
-    public $telefono; ///< character varying(20) NULL DEFAULT ''
-    public $email; ///< character varying(80) NULL DEFAULT ''
-    public $direccion; ///< character varying(70) NOT NULL DEFAULT ''
-    public $comuna; ///< character(5) NOT NULL DEFAULT '' FK:comuna.codigo
-    public $usuario; ///< integer(32) NULL DEFAULT '' FK:usuario.id
-    public $modificado; ///< timestamp without time zone() NOT NULL DEFAULT 'now()'
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'rut' => array(
-            'name'      => 'RUT',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'dv' => array(
-            'name'      => 'DV',
-            'comment'   => '',
-            'type'      => 'character',
-            'length'    => 1,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'razon_social' => array(
-            'name'      => 'Razón Social',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 100,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'giro' => array(
-            'name'      => 'Giro',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 80,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'actividad_economica' => array(
-            'name'      => 'Actividad Económica',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => array('table' => 'actividad_economica', 'column' => 'codigo')
-        ),
-        'telefono' => array(
-            'name'      => 'Teléfono',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 20,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'email' => array(
-            'name'      => 'Email',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 80,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'direccion' => array(
-            'name'      => 'Dirección',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 70,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'comuna' => array(
-            'name'      => 'Comuna',
-            'comment'   => '',
-            'type'      => 'character',
-            'length'    => 5,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => array('table' => 'comuna', 'column' => 'codigo')
-        ),
-        'usuario' => array(
-            'name'      => 'Usuario',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => array('table' => 'usuario', 'column' => 'id')
-        ),
-        'modificado' => array(
-            'name'      => 'Modificado',
-            'comment'   => '',
-            'type'      => 'timestamp without time zone',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'now()',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_ActividadEconomica' => '\website\Sistema\General',
-        'Model_Comuna' => '\sowerphp\app\Sistema\General\DivisionGeopolitica',
-        'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios'
-    ); ///< Namespaces que utiliza esta clase
-
-    public static $encriptar = [
-        'sii_pass',
-        'email_sii_pass',
-        'email_intercambio_pass',
-    ]; ///< columnas de la configuración que se deben encriptar para guardar en la base de datos
-
-    public static $defaultConfig = [
-        'extra_otras_actividades' => [],
-    ]; ///< valores por defecto para columnas de la configuración en caso que no estén especificadas
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => 'Contribuyentes de la aplicación. Esto incluye emisores, receptores, personas naturales, sin inicio de actividades, etc.',
+            'ordering' => ['rut'],
+        ],
+        'fields' => [
+            'rut' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'verbose_name' => 'RUT',
+                'help_text' => 'Rol único tributario (RUT) del contribuyente. Para personas naturales será su rol único nacional (RUN).',
+            ],
+            'dv' => [
+                'type' => self::TYPE_CHAR,
+                'length' => 1,
+                'verbose_name' => 'DV',
+                'help_text' => 'Dígito verificador del RUT.',
+            ],
+            'razon_social' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 100,
+                'verbose_name' => 'Razón social',
+                'help_text' => 'Razón social de empresas o nombre de personas naturales.',
+            ],
+            'giro' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 80,
+                'verbose_name' => 'Giro',
+                'help_text' => 'Descripción de la actividad económica que realiza la empresa. En el caso de personas naturales se puede indicar "Particular".',
+            ],
+            'actividad_economica' => [
+                'type' => self::TYPE_INTEGER,
+                'foreing_key' => Model_ActividadEconomica::class,
+                'to_table' => 'actividad_economica',
+                'to_field' => 'codigo',
+                'null' => true,
+                'blank' => true,
+                'verbose_name' => 'Actividad económica',
+                'help_text' => 'Actividad económica principal del contribuyente si es de 1era categoría.',
+            ],
+            'telefono' => [
+                'type' => self::TYPE_STRING,
+                'null' => true,
+                'blank' => true,
+                'max_length' => 20,
+                'verbose_name' => 'Teléfono',
+            ],
+            'email' => [
+                'type' => self::TYPE_STRING,
+                'null' => true,
+                'blank' => true,
+                'max_length' => 80,
+                'verbose_name' => 'Email',
+                'help_text' => 'Correo electrónico de la empresa.',
+            ],
+            'direccion' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 70,
+                'verbose_name' => 'Dirección',
+                'help_text' => 'Dirección principal de la empresa.',
+            ],
+            'comuna' => [
+                'type' => self::TYPE_CHAR,
+                'max_length' => 5,
+                'foreing_key' => Model_Comuna::class,
+                'to_table' => 'comuna',
+                'to_field' => 'codigo',
+                'verbose_name' => 'Comuna',
+                'help_text' => 'Comuna de la dirección principal de la empresa.',
+            ],
+            'usuario' => [
+                'type' => self::TYPE_INTEGER,
+                'foreing_key' => Model_Usuario::class,
+                'to_table' => 'usuario',
+                'to_field' => 'id',
+                'null' => true,
+                'blank' => true,
+                'verbose_name' => 'Usuario',
+                'help_text' => 'Administrador principal de la empresa.',
+            ],
+            'modificado' => [
+                'type' => self::TYPE_DATE_TIME,
+                'auto' => true,
+                'verbose_name' => 'Modificado',
+                'help_text' => 'Fecha y hora de la última modificación del contribuyente.',
+            ],
+        ],
+        'configurations' => [
+            'model' => [
+                'primary_key' => [
+                    'contribuyente' => 'rut',
+                ],
+            ],
+            'fields' => [
+                'extra_otras_actividades' => [
+                    'default' => [],
+                ],
+                'sii_pass' => [
+                    'encrypt' => true,
+                ],
+                'email_sii_pass' => [
+                    'encrypt' => true,
+                ],
+                'email_intercambio_pass' => [
+                    'encrypt' => true,
+                ],
+            ]
+        ],
+    ];
 
     protected static $onDeleteSaveConfig = [
         'email' => ['intercambio_user'],
     ]; ///< configuración del contribuyente que se mantendrá cuando sea eliminado
 
-    private static $reservados = [
+    /**
+     * RUTs que están reservados y no serán modificados al guardar el
+     * contribuyente.
+     *
+     * @var array
+     */
+    protected $rutReservados = [
         0,
         55555555,
         66666666,
         88888888,
-    ]; ///< RUTs que están reservados y no serán modificados al guardar el contribuyente
-
-    private static $autocompletar = true; ///< Indica si se deben autocompletar los datos de contribuyentes nuevos
-
-    public $contribuyente; ///< Copia de razon_social
-    private $config = null; ///< Caché para configuraciones
-    private $firmas = []; ///< Caché de las firmas del contribuyente
+    ];
 
     /**
-     * Constructor del contribuyente.
+     * Caché de las firmas asociadas al contribuyente.
+     *
+     * @var array
      */
-    public function __construct($rut = null)
+    protected $firmas = [];
+
+    /**
+     * Accessor para el atributo Contribuyente::$contribuyente.
+     *
+     * @return void
+     */
+    public function getContribuyenteAttribute()
     {
+        return $this->razon_social;
+    }
+
+    /**
+     * Obtiene el contribuyente solicitado.
+     *
+     * @param array $id Clave primaria del modelo.
+     * @return stdClass|null
+     */
+    public function retrieve(array $id): ?stdClass
+    {
+        // Determinar variable que tiene el RUT del contribuyente y asignar.
+        $rut = $id['rut'] ?? $id[0] ?? null;
         if (is_array($rut)) {
-            $rut = $rut[0];
+            $rut = $rut['rut'] ?? $rut[0] ?? null;
         }
-        if (!is_numeric($rut) and strpos($rut, '-')) {
-            $rut = explode('-', str_replace('.', '', $rut))[0];
+        // Si el RUT es un string y tiene guión se asume formato "RUT-DV".
+        if (!is_numeric($rut) && strpos($rut, '-')) {
+            $rut = (explode('-', str_replace('.', '', $rut))[0]);
         }
-        parent::__construct((int)$rut);
-        if ($this->rut && !$this->exists()) {
-            $this->dv = Utility_Rut::dv($this->rut);
-            if (self::$autocompletar) {
-                $this->getDatosDesdeSii();
-            }
-        }
-        $this->contribuyente = &$this->razon_social;
-        $this->getConfig();
-    }
-
-    /**
-     * Obtener y asignar datos del contribuyente desde datos del SII.
-     */
-    private function getDatosDesdeSii(): void
-    {
-        if (empty($this->razon_social) || empty($this->actividad_economica) || empty($this->giro)) {
-            return;
-        }
+        // Obtener los datos del contribuyente utilizando su RUT.
         try {
-            $url = '/sii/contribuyentes/situacion_tributaria/tercero/' . $this->rut . '-' . $this->dv;
-            $response = apigateway($url);
-            if ($response['status']['code'] == 200) {
-                $info = $response['body'];
-                if (empty($this->razon_social) && !empty($info['razon_social'])) {
-                    $this->razon_social = mb_substr($info['razon_social'], 0, 100);
-                }
-                if (empty($this->actividad_economica) && !empty($info['actividades'][0]['codigo'])) {
-                    $ActividadEconomica = new Model_ActividadEconomica(
-                        $info['actividades'][0]['codigo']
-                    );
-                    if ($ActividadEconomica->actividad_economica) {
-                        $this->actividad_economica = $info['actividades'][0]['codigo'];
-                    }
-                }
-                if (empty($this->giro) && !empty($info['actividades'][0]['glosa'])) {
-                    $this->giro = mb_substr($info['actividades'][0]['glosa'], 0, 80);
-                }
-                $this->save();
-            }
-            foreach (['telefono', 'email', 'direccion'] as $attr) {
-                if (!$this->$attr) {
-                    $this->$attr = null;
+            $result = parent::retrieve(['rut' => $rut]);
+        } catch (\Exception $e) {
+            $result = null;
+        }
+        // Si el contribuyente no se logró obtener se buscarán sus datos, si
+        // se encuentran, se creará el contribuyente.
+        if ($result === null) {
+            $autocompletar = config('modules.Dte.contribuyentes.autocompletar');
+            if ($autocompletar) {
+                $datosActuales = array_merge($this->toArray(), ['rut' => $rut]);
+                $datosNuevos = $this->getPluralInstance()->getDatosDesdeSii(
+                    $datosActuales
+                );
+                if ($datosActuales != $datosNuevos) {
+                    $this->forceFill($datosNuevos);
+                    $result = (object)$datosNuevos;
+                    $this->save();
+                    $this->exists = true;
                 }
             }
         }
-        catch (\Exception $e) {
-        }
-        catch (\Exception $e) {
-        }
-    }
-
-
-    /**
-     * Método que entrega las configuraciones y parámetros extras para el
-     * contribuyente.
-     */
-    public function getConfig()
-    {
-        if ($this->config === false || !$this->rut) {
-            return null;
-        }
-        if ($this->config === null) {
-            $config = $this->getDatabaseConnection()->getTableWithAssociativeIndex('
-                SELECT configuracion, variable, valor, json
-                FROM contribuyente_config
-                WHERE contribuyente = :contribuyente
-            ', [':contribuyente' => $this->rut]);
-            if (!$config) {
-                $this->config = false;
-                return null;
-            }
-            foreach ($config as $configuracion => $datos) {
-                if (!isset($datos[0])) {
-                    $datos = [$datos];
-                }
-                $this->config[$configuracion] = [];
-                foreach ($datos as $dato) {
-                    $class = get_called_class();
-                    if (in_array($configuracion.'_'.$dato['variable'], $class::$encriptar)) {
-                        try {
-                            $dato['valor'] = decrypt($dato['valor']);
-                        } catch (\Exception $e) {
-                            $dato['valor'] = null;
-                        }
-                    }
-                    $this->config[$configuracion][$dato['variable']] = $dato['json']
-                        ? json_decode($dato['valor'])
-                        : $dato['valor']
-                    ;
-                }
-            }
-        }
-        return $this->config;
-    }
-
-    /**
-     * Método mágico para obtener configuraciones del contribuyente.
-     */
-    public function __get($name)
-    {
-        if (strpos($name, 'config_') === 0) {
-            $this->getConfig();
-            $key = str_replace('config_', '', $name);
-            $c = substr($key, 0, strpos($key, '_'));
-            $v = substr($key, strpos($key, '_') + 1);
-            if (!isset($this->config[$c][$v])) {
-                $class = get_called_class();
-                return $class::$defaultConfig[$c . '_' . $v] ?? null;
-            }
-            $this->$name = $this->config[$c][$v];
-            return $this->$name;
-        } else {
-            throw new \Exception(
-                'Atributo '.$name.' del contribuyente no existe (no se puede obtener).'
-            );
-        }
-    }
-
-    /**
-     * Método mágico asignar una configuración del contribuyente.
-     */
-    public function __set($name, $value)
-    {
-        if (strpos($name, 'config_') === 0) {
-            $key = str_replace('config_', '', $name);
-            $c = substr($key, 0, strpos($key, '_'));
-            $v = substr($key, strpos($key, '_')+1);
-            $value = ($value === false || $value === 0)
-                ? '0'
-                : (
-                    (!is_array($value) && !is_object($value))
-                        ? (string)$value
-                        : (
-                            (is_array($value) && empty($value))
-                                ? null
-                                : $value
-                        )
-                )
-            ;
-            $this->config[$c][$v] = (!is_string($value) || isset($value[0]))
-                ? $value
-                : null
-            ;
-            $this->$name = $this->config[$c][$v];
-        } else {
-            throw new \Exception(__(
-                'Atributo %(name)s del contribuyente no existe (no se puede asignar).',
-                ['name' => $name]
-            ));
-        }
-    }
-
-    /**
-     * Método para setear los atributos del contribuyente.
-     * @param array $array Arreglo con los datos que se deben asignar.
-     */
-    public function set($array)
-    {
-        parent::set($array);
-        foreach($array as $name => $value) {
-            if (strpos($name, 'config_') === 0) {
-                $this->__set($name, $value);
-            }
-        }
-    }
-
-    /**
-     * Método permite desactivar la autocompletación de datos de los contribuyentes
-     * nuevos que se instanciarán.
-     */
-    public static function noAutocompletarNuevosContribuyentes()
-    {
-        self::$autocompletar = false;
+        // Entregar el resultados obtenido para el contribuyente.
+        return $result;
     }
 
     /**
@@ -422,7 +252,7 @@ class Model_Contribuyente extends \sowerphp\autoload\Model
     public function save($registrado = false, $no_modificar = true): bool
     {
         // si no se debe guardar se entrega true (se hace creer que se guardó)
-        if ($no_modificar && in_array($this->rut, self::$reservados)) {
+        if ($no_modificar && in_array($this->rut, $this->rutReservados)) {
             return true;
         }
         // si es contribuyente registrado se hacen algunas verificaciones

@@ -30,7 +30,7 @@ use \sowerphp\core\Facade_Session_Message as SessionMessage;
  * Clase para el controlador asociado a la tabla contribuyente de la base de
  * datos.
  */
-class Controller_Contribuyentes extends \sowerphp\autoload\Controller
+class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
 {
 
     /**
@@ -51,7 +51,7 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             } catch (\Exception $e) {
                 return redirect('/dte/contribuyentes/seleccionar')
                     ->withError(
-                        __('%(error_message)s', 
+                        __('%(error_message)s',
                             [
                                 'error_message' => $e->getMessage()
                             ]
@@ -80,7 +80,7 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
                                         'url' => url('/usuarios/perfil#auth:2fa'),
                                         'contribuyente_nombre' => $Contribuyente->getNombre()
                                     ]
-                                )   
+                                )
                             )
                         ;
                     }
@@ -187,8 +187,8 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
                         ->withError(
                             __('La empresa ya está registrada a nombre del usuario %(user_name)s (%(user_email)s). Si cree que esto es un error o bien puede ser alguien suplantando la identidad de su empresa por favor <a href="'.url('/contacto').'" target="_blank">contáctenos</a>.',
                                 [
-                                    'user_name' => $Contribuyente->getUsuario()->nombre, 
-                                    'user_email' => $Contribuyente->getUsuario()->email, 
+                                    'user_name' => $Contribuyente->getUsuario()->nombre,
+                                    'user_email' => $Contribuyente->getUsuario()->email,
                                     'url_contact' => url('/contacto')
                                 ]
                             )
@@ -231,7 +231,7 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
                 // redireccionar
                 return redirect('/dte/contribuyentes/seleccionar')
                     ->withSuccess(
-                        __('Empresa %(razon_social)s registrada y asociada a su usuario.', 
+                        __('Empresa %(razon_social)s registrada y asociada a su usuario.',
                             [
                                 'razon_social' => $Contribuyente->razon_social
                             ]
@@ -292,7 +292,7 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             } catch (\Exception $e) {
                 return redirect('/dte/contribuyentes/modificar')
                     ->withError(
-                        __('%(error_message)s', 
+                        __('%(error_message)s',
                             [
                                 'error_message' => $e->getMessage()
                             ]
@@ -587,7 +587,7 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
         session(['dte.certificacion' => (bool)$ambientes[$ambiente]['codigo']]);
         return redirect('/dte')
             ->withSuccess(
-                __('Se cambió el ambiente de la sesión a %(ambiente_glosa)s.', 
+                __('Se cambió el ambiente de la sesión a %(ambiente_glosa)s.',
                     [
                         'ambiente_glosa' => $ambientes[$ambiente]['glosa']
                     ]
@@ -893,7 +893,7 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
         if (!$Usuario->exists()) {
             return redirect('/dte/contribuyentes/usuarios#general')
                 ->withError(
-                    __('Usuario %(user)s no existe', 
+                    __('Usuario %(user)s no existe',
                         [
                             'user' => $_POST['usuario']
                         ]
@@ -903,7 +903,7 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
         if ($Contribuyente->usuario == $Usuario->id) {
             return redirect('/dte/contribuyentes/usuarios#general')
                 ->withError(
-                    __('El usuario administrador ya es %(user)s', 
+                    __('El usuario administrador ya es %(user)s',
                         [
                             'user' => $_POST['usuario']
                         ]
@@ -1041,7 +1041,7 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
                         [
                             'error_message' => $e->getMessage()
                         ]
-                    ), 
+                    ),
                     500
                 );
             }
@@ -1110,7 +1110,7 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
         unset($datos['usuario']);
         // se entregan los datos del contribuyente
         return response()->json(
-            $datos, 
+            $datos,
             200
         );
     }
@@ -1136,7 +1136,7 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller
             'documentos_autorizados' => $Contribuyente->getDocumentosAutorizados(),
         ];
         return response()->json(
-            $config, 
+            $config,
             200
         );
     }

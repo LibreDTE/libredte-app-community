@@ -44,9 +44,10 @@ class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
     public function main($opcion = 'apigateway', $ambiente = \sasco\LibreDTE\Sii::PRODUCCION, $dia = null, $autocompletar = false)
     {
         ini_set('memory_limit', '2048M');
-        if (!$autocompletar) {
-            Model_Contribuyente::noAutocompletarNuevosContribuyentes();
-        }
+        app('config')->set(
+            'modules.Dte.contribuyentes.autocompletar',
+            (bool)$autocompletar
+        );
         if (method_exists($this, $opcion)) {
             $this->$opcion($ambiente, $dia);
         } else {

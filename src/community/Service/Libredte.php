@@ -25,6 +25,7 @@ namespace website;
 
 use \sowerphp\core\Interface_Service;
 use \sowerphp\core\Service_Config;
+use \sowerphp\core\Service_Model;
 use \sowerphp\core\Service_Http_Session;
 use \sowerphp\core\Service_Http_Redirect;
 use \sowerphp\core\Network_Request as Request;
@@ -43,6 +44,13 @@ class Service_Libredte implements Interface_Service
      * @var Service_Config
      */
     protected $configService;
+
+    /**
+     * Servivio de modelos de la aplicación.
+     *
+     * @var Service_Model
+     */
+    protected $modelService;
 
     /**
      * Servicio de capas de la aplicación.
@@ -82,12 +90,14 @@ class Service_Libredte implements Interface_Service
      */
     public function __construct(
         Service_Config $configService,
+        Service_Model $modelService,
         Service_Http_Session $sessionService,
         Service_Http_Redirect $redirectService,
         Request $request
     )
     {
         $this->configService = $configService;
+        $this->modelService = $modelService;
         $this->sessionService = $sessionService;
         $this->redirectService = $redirectService;
         $this->request = $request;
@@ -163,7 +173,7 @@ class Service_Libredte implements Interface_Service
             $rut = (int)(explode('-', str_replace('.', '', $rut))[0]);
         }
         // Instanciar contribuyente solicitado.
-        $contribuyente = model()->getContribuyente($rut);
+        $contribuyente = $this->modelService->getContribuyente($rut);
         if (!$contribuyente->exists()) {
             return null;
         }

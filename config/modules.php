@@ -57,6 +57,10 @@ return [
             'footer' => env('MODULES_DTE_PDF_FOOTER', true),
         ],
         'contribuyentes' => [
+            'autocompletar' => env(
+                'MODULES_DTE_CONTRIBUYENTES_AUTOCOMPLETAR',
+                true
+            ),
             'documentos' => array_map('trim', explode(',', env(
                 'MODULES_DTE_CONTRIBUYENTES_DOCUMENTOS',
                 '33,39,56,61'
