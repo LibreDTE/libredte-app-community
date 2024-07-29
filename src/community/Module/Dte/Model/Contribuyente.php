@@ -65,12 +65,14 @@ class Model_Contribuyente extends Model
                 'primary_key' => true,
                 'verbose_name' => 'RUT',
                 'help_text' => 'Rol único tributario (RUT) del contribuyente. Para personas naturales será su rol único nacional (RUN).',
+                'display' => '(rut)"-"(dv)',
             ],
             'dv' => [
                 'type' => self::TYPE_CHAR,
                 'length' => 1,
                 'verbose_name' => 'DV',
                 'help_text' => 'Dígito verificador del RUT.',
+                'show_in_list' => false,
             ],
             'razon_social' => [
                 'type' => self::TYPE_STRING,
@@ -83,6 +85,7 @@ class Model_Contribuyente extends Model
                 'max_length' => 80,
                 'verbose_name' => 'Giro',
                 'help_text' => 'Descripción de la actividad económica que realiza la empresa. En el caso de personas naturales se puede indicar "Particular".',
+                'show_in_list' => false,
             ],
             'actividad_economica' => [
                 'type' => self::TYPE_INTEGER,
@@ -93,6 +96,8 @@ class Model_Contribuyente extends Model
                 'blank' => true,
                 'verbose_name' => 'Actividad económica',
                 'help_text' => 'Actividad económica principal del contribuyente si es de 1era categoría.',
+                'display' => '(actividad_economica.actividad_economica)',
+                'show_in_list' => false,
             ],
             'telefono' => [
                 'type' => self::TYPE_STRING,
@@ -100,6 +105,7 @@ class Model_Contribuyente extends Model
                 'blank' => true,
                 'max_length' => 20,
                 'verbose_name' => 'Teléfono',
+                'show_in_list' => false,
             ],
             'email' => [
                 'type' => self::TYPE_STRING,
@@ -108,12 +114,14 @@ class Model_Contribuyente extends Model
                 'max_length' => 80,
                 'verbose_name' => 'Email',
                 'help_text' => 'Correo electrónico de la empresa.',
+                'show_in_list' => false,
             ],
             'direccion' => [
                 'type' => self::TYPE_STRING,
                 'max_length' => 70,
                 'verbose_name' => 'Dirección',
                 'help_text' => 'Dirección principal de la empresa.',
+                'show_in_list' => false,
             ],
             'comuna' => [
                 'type' => self::TYPE_CHAR,
@@ -123,6 +131,7 @@ class Model_Contribuyente extends Model
                 'to_field' => 'codigo',
                 'verbose_name' => 'Comuna',
                 'help_text' => 'Comuna de la dirección principal de la empresa.',
+                'display' => '(comuna.comuna)',
             ],
             'usuario' => [
                 'type' => self::TYPE_INTEGER,
@@ -133,6 +142,7 @@ class Model_Contribuyente extends Model
                 'blank' => true,
                 'verbose_name' => 'Usuario',
                 'help_text' => 'Administrador principal de la empresa.',
+                'display' => '(usuario.usuario)',
             ],
             'modificado' => [
                 'type' => self::TYPE_DATE_TIME,
