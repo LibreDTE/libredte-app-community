@@ -86,7 +86,7 @@ class Model_Contribuyente extends Model
             ],
             'actividad_economica' => [
                 'type' => self::TYPE_INTEGER,
-                'foreing_key' => Model_ActividadEconomica::class,
+                'foreign_key' => Model_ActividadEconomica::class,
                 'to_table' => 'actividad_economica',
                 'to_field' => 'codigo',
                 'null' => true,
@@ -118,7 +118,7 @@ class Model_Contribuyente extends Model
             'comuna' => [
                 'type' => self::TYPE_CHAR,
                 'max_length' => 5,
-                'foreing_key' => Model_Comuna::class,
+                'foreign_key' => Model_Comuna::class,
                 'to_table' => 'comuna',
                 'to_field' => 'codigo',
                 'verbose_name' => 'Comuna',
@@ -126,7 +126,7 @@ class Model_Contribuyente extends Model
             ],
             'usuario' => [
                 'type' => self::TYPE_INTEGER,
-                'foreing_key' => Model_Usuario::class,
+                'foreign_key' => Model_Usuario::class,
                 'to_table' => 'usuario',
                 'to_field' => 'id',
                 'null' => true,
@@ -164,9 +164,14 @@ class Model_Contribuyente extends Model
         ],
     ];
 
+    /**
+     * Configuración del contribuyente que se mantendrá cuando sea eliminado.
+     *
+     * @var array
+     */
     protected static $onDeleteSaveConfig = [
         'email' => ['intercambio_user'],
-    ]; ///< configuración del contribuyente que se mantendrá cuando sea eliminado
+    ];
 
     /**
      * RUTs que están reservados y no serán modificados al guardar el
@@ -243,11 +248,12 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que guarda los datos del contribuyente, incluyendo su
-     * configuración y parámetros adicionales.
-     * @param bool $registrado Se usa para indicar que el contribuyente que se esta
-     * guardando es uno registrado por un usuario (se validan otros datos).
-     * @param bool no_modificar =true Evita que se modifiquen ciertos contribuyentes reservados.
+     * Guarda los datos del contribuyente, incluyendo su configuración y
+     * parámetros adicionales.
+     *
+     * @param bool $registrado Se usa para indicar que el contribuyente que se
+     * está guardando es uno registrado por un usuario (se validan otros datos).
+     * @param bool $no_modificar =true Evita que se modifiquen ciertos contribuyentes reservados.
      */
     public function save($registrado = false, $no_modificar = true): bool
     {

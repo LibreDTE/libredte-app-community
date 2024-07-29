@@ -29,7 +29,12 @@ namespace website;
 abstract class Model_Plural extends \sowerphp\core\Model_Plural
 {
 
-    private $Contribuyente = null; ///< Contribuyente con el que se realizarán las consultas
+    /**
+     * Contribuyente con el que se realizarán las consultas.
+     *
+     * @var Model_Contribuyente
+     */
+    protected $Contribuyente = null;
 
     /**
      * Método que asigna el contribuyente que se utilizará en las consultas.
@@ -41,8 +46,8 @@ abstract class Model_Plural extends \sowerphp\core\Model_Plural
     }
 
     /**
-     * Método que entrega el contribuyente previamente seteado en el modelo o bien el
-     * de la sesión si no existe seteado.
+     * Método que entrega el contribuyente previamente seteado en el modelo
+     * o bien el de la sesión si no existe asignado en la clase plural.
      */
     public function getContribuyente(bool $readSession = true)
     {
