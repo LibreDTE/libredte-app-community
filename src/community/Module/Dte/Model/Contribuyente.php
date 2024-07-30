@@ -73,6 +73,7 @@ class Model_Contribuyente extends Model
                 'verbose_name' => 'DV',
                 'help_text' => 'Dígito verificador del RUT.',
                 'show_in_list' => false,
+                'searchable' => false,
             ],
             'razon_social' => [
                 'type' => self::TYPE_STRING,
@@ -97,7 +98,7 @@ class Model_Contribuyente extends Model
                 'verbose_name' => 'Actividad económica',
                 'help_text' => 'Actividad económica principal del contribuyente si es de 1era categoría.',
                 'display' => '(actividad_economica.actividad_economica)',
-                'show_in_list' => false,
+                'searchable' => 'actividad_economica:string|categoria:integer',
             ],
             'telefono' => [
                 'type' => self::TYPE_STRING,
@@ -132,6 +133,7 @@ class Model_Contribuyente extends Model
                 'verbose_name' => 'Comuna',
                 'help_text' => 'Comuna de la dirección principal de la empresa.',
                 'display' => '(comuna.comuna)',
+                'searchable' => 'codigo:string|comuna:string',
             ],
             'usuario' => [
                 'type' => self::TYPE_INTEGER,
@@ -143,12 +145,15 @@ class Model_Contribuyente extends Model
                 'verbose_name' => 'Usuario',
                 'help_text' => 'Administrador principal de la empresa.',
                 'display' => '(usuario.usuario)',
+                'searchable' => 'id:integer|usuario:string|nombre:string|email:string',
             ],
             'modificado' => [
                 'type' => self::TYPE_DATE_TIME,
                 'auto' => true,
                 'verbose_name' => 'Modificado',
                 'help_text' => 'Fecha y hora de la última modificación del contribuyente.',
+                'show_in_list' => false,
+                'searchable' => false,
             ],
         ],
         'configurations' => [

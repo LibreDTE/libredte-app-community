@@ -4169,11 +4169,11 @@
         },
         {
             "name": "sowerphp/sowerphp-framework",
-            "version": "dev-main",
+            "version": "dev-master",
             "dist": {
                 "type": "path",
                 "url": "../sowerphp-framework",
-                "reference": "e8bfa5c40968f83280c6487e02ba438720543e67"
+                "reference": "4e7a79bc965fd76607ff7862d7eec476af318463"
             },
             "require": {
                 "clue/graph": "~0.9.3",
