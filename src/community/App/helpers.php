@@ -30,7 +30,11 @@ function libredte(?string $resource = null, array $data = [])
     if ($resource === null) {
         return $libredte;
     }
-    return $libredte->consume($resource, $data);
+    if (empty($data)) {
+        return $libredte->get($resource);
+    } else {
+        return $libredte->post($resource, $data);
+    }
 }
 
 /**

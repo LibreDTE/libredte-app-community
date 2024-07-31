@@ -23,9 +23,11 @@
 
 namespace website;
 
+use Illuminate\Http\Client\Response;
 use \sowerphp\core\Interface_Service;
 use \sowerphp\core\Service_Config;
 use \sowerphp\core\Service_Model;
+use \sowerphp\core\Service_Http_Client;
 use \sowerphp\core\Service_Http_Session;
 use \sowerphp\core\Service_Http_Redirect;
 use \sowerphp\core\Network_Request as Request;
@@ -51,6 +53,13 @@ class Service_Libredte implements Interface_Service
      * @var Service_Model
      */
     protected $modelService;
+
+    /**
+     * Servicio de cliente HTTP.
+     *
+     * @var Service_Http_Client
+     */
+    protected $httpService;
 
     /**
      * Servicio de capas de la aplicación.
@@ -91,6 +100,7 @@ class Service_Libredte implements Interface_Service
     public function __construct(
         Service_Config $configService,
         Service_Model $modelService,
+        Service_Http_Client $httpService,
         Service_Http_Session $sessionService,
         Service_Http_Redirect $redirectService,
         Request $request
@@ -98,6 +108,7 @@ class Service_Libredte implements Interface_Service
     {
         $this->configService = $configService;
         $this->modelService = $modelService;
+        $this->httpService = $httpService;
         $this->sessionService = $sessionService;
         $this->redirectService = $redirectService;
         $this->request = $request;
@@ -287,16 +298,64 @@ class Service_Libredte implements Interface_Service
     }
 
     /**
-     * Método para consumir un servicio web (API) de la aplicación web de
-     * LibreDTE.
+     * Envía una solicitud GET.
      *
-     * @param string $resource Recurso que se desea consumir.
-     * @param array $data Datos a enviar en una solicitud POST.
-     * @return array Resultado de la llamada al servicio web de LibreDTE.
+     * @param string $resource Recurso al cual se enviará la solicitud.
+     * @param array $queryParams Parámetros de consulta para la solicitud.
+     * @return Response Respuesta de la solicitud.
      */
-    public function consume(string $resource, array $data = []): array
+    public function get(string $resource, array $queryParams = []): Response
     {
+        $headers = [];
+        $url = url('/api' . $resource);
+        $response = $this->httpService->get($url, $queryParams, $headers);
+        return $response;
+    }
 
+    /**
+     * Envía una solicitud POST.
+     *
+     * @param string $resource Recurso al cual se enviará la solicitud.
+     * @param array $data Datos que se enviarán en el cuerpo de la solicitud.
+     * @return Response Respuesta de la solicitud.
+     */
+    public function post(string $resource, array $data = []): Response
+    {
+        $headers = [];
+        $url = url('/api' . $resource);
+        $response = $this->httpService->post($url, $data, $headers);
+        return $response;
+    }
+
+    /**
+     * Envía una solicitud PUT.
+     *
+     * @param string $resource Recurso al cual se enviará la solicitud.
+     * @param array $data Datos que se enviarán en el cuerpo de la solicitud.
+     * @return Response Respuesta de la solicitud.
+     */
+    public function put(string $resource, array $data = []): Response
+    {
+        $headers = [];
+        $url = url('/api' . $resource);
+        $response = $this->httpService->put($url, $data, $headers);
+        return $response;
+    }
+
+    /**
+     * Envía una solicitud DELETE.
+     *
+     * @param string $resource Recurso al cual se enviará la solicitud.
+     * @param array $data Datos que se enviarán en el cuerpo de la solicitud
+     * (si es necesario).
+     * @return Response Respuesta de la solicitud.
+     */
+    public function delete(string $resource, array $data = []): Response
+    {
+        $headers = [];
+        $url = url('/api' . $resource);
+        $response = $this->httpService->delete($url, $data, $headers);
+        return $response;
     }
 
 }
