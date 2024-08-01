@@ -23,15 +23,15 @@
 
 namespace website\Dte;
 
-/**
- * Clase para mapear la tabla dte_emitido de la base de datos.
- */
-class Model_DteEmitidos extends \sowerphp\autoload\Model_Plural
-{
+use \sowerphp\autoload\Model_Plural;
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_emitido'; ///< Tabla del modelo
+/**
+ * Modelo plural de la tabla "dte_emitido" de la base de datos.
+ *
+ * Permite interactuar con varios registros de la tabla.
+ */
+class Model_DteEmitidos extends Model_Plural
+{
 
     public static $revision_estados = [
         'rechazados' => ['RSC', 'RCH', 'RPT', 'RFR', 'VOF', 'RCT'],

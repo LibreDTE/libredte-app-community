@@ -23,14 +23,13 @@
 
 namespace website\Dte\Admin\Mantenedores;
 
+use \sowerphp\autoload\Model_Plural;
+
 /**
- * Clase para mapear la tabla dte_referencia_tipo de la base de datos.
+ * Modelo plural de la tabla "dte_referencia_tipo" de la base de datos.
+ *
+ * Permite interactuar con varios registros de la tabla.
  */
-class Model_DteReferenciaTipos extends \sowerphp\autoload\Model_Plural
+class Model_DteReferenciaTipos extends Model_Plural
 {
-
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_referencia_tipo'; ///< Tabla del modelo
-
 }

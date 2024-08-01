@@ -23,15 +23,15 @@
 
 namespace website\Dte;
 
-/**
- * Clase para mapear la tabla cobranza de la base de datos.
- */
-class Model_Cobranzas extends \sowerphp\autoload\Model_Plural
-{
+use \sowerphp\autoload\Model_Plural;
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'cobranza'; ///< Tabla del
+/**
+ * Modelo plural de la tabla "cobranza" de la base de datos.
+ *
+ * Permite interactuar con varios registros de la tabla.
+ */
+class Model_Cobranzas extends Model_Plural
+{
 
     /**
      * Método que entrega los pagos programados pendientes de pago (pagos por

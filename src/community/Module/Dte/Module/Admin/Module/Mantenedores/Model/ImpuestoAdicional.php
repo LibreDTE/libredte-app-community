@@ -23,98 +23,67 @@
 
 namespace website\Dte\Admin\Mantenedores;
 
+use \sowerphp\autoload\Model;
+
 /**
- * Clase para mapear la tabla impuesto_adicional de la base de datos.
+ * Modelo singular de la tabla "impuesto_adicional" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_ImpuestoAdicional extends \sowerphp\autoload\Model
+class Model_ImpuestoAdicional extends Model
 {
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'impuesto_adicional'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $codigo; ///< Código asignado por el SII al impuesto: smallint(16) NOT NULL DEFAULT '' PK
-    public $retencion_total; ///< Código asignado por el SII al impuesto en caso de ser retención total: smallint(16) NULL DEFAULT ''
-    public $nombre; ///< Nombre del impuesto: character varying(70) NOT NULL DEFAULT ''
-    public $tipo; ///< character(1) NULL DEFAULT ''
-    public $tasa; ///< smallint(16) NULL DEFAULT ''
-    public $descripcion; ///< Descripción del impuesto (según ley que aplica al mismo): text() NOT NULL DEFAULT ''
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'codigo' => array(
-            'name'      => 'Código',
-            'comment'   => 'Código asignado por el SII al impuesto',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'retencion_total' => array(
-            'name'      => 'Retención total',
-            'comment'   => 'Código asignado por el SII al impuesto en caso de ser retención total',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'nombre' => array(
-            'name'      => 'Nombre',
-            'comment'   => 'Nombre del impuesto',
-            'type'      => 'character varying',
-            'length'    => 70,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'tipo' => array(
-            'name'      => 'Tipo',
-            'comment'   => '',
-            'type'      => 'character',
-            'length'    => 1,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'tasa' => array(
-            'name'      => 'Tasa',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'descripcion' => array(
-            'name'      => 'Descripción',
-            'comment'   => 'Descripción del impuesto (según ley que aplica al mismo)',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = 'Impuestos adicionales (y retenciones)';
-
-    public static $fkNamespace = array(); ///< Namespaces que utiliza esta clase
-
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => 'Impuestos adicionales (y retenciones)',
+            'ordering' => ['codigo'],
+        ],
+        'fields' => [
+            'codigo' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'primary_key' => true,
+                'max_length' => 16,
+                'verbose_name' => 'Código',
+                'help_text' => 'Código asignado por el SII al impuesto',
+            ],
+            'retencion_total' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'null' => true,
+                'max_length' => 16,
+                'verbose_name' => 'Retención total',
+                'help_text' => 'Código asignado por el SII al impuesto en caso de ser retención total',
+            ],
+            'nombre' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 70,
+                'verbose_name' => 'Nombre',
+                'help_text' => 'Nombre del impuesto',
+            ],
+            'tipo' => [
+                'type' => self::TYPE_CHAR,
+                'null' => true,
+                'max_length' => 1,
+                'verbose_name' => 'Tipo',
+                'help_text' => '',
+            ],
+            'tasa' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'null' => true,
+                'max_length' => 16,
+                'verbose_name' => 'Tasa',
+                'help_text' => '',
+            ],
+            'descripcion' => [
+                'type' => self::TYPE_TEXT,
+                'verbose_name' => 'Descripción',
+                'help_text' => 'Descripción del impuesto (según ley que aplica al mismo)',
+            ],
+        ],
+    ];
+    
 }

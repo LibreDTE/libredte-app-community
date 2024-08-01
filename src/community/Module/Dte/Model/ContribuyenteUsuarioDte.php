@@ -23,66 +23,59 @@
 
 namespace website\Dte;
 
+use \sowerphp\autoload\Model;
+use \website\Dte\Model_Contribuyente;
+use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
+use \website\Dte\Admin\Mantenedores\Model_DteTipo;
+
 /**
- * Clase para mapear la tabla contribuyente_usuario_dte de la base de datos.
+ * Modelo singular de la tabla "contribuyente_usuario_dte" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_ContribuyenteUsuarioDte extends \sowerphp\autoload\Model
+class Model_ContribuyenteUsuarioDte extends Model
 {
-
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'contribuyente_usuario_dte'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $contribuyente; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
-    public $usuario; ///< integer(32) NOT NULL DEFAULT '' PK FK:usuario.id
-    public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_tipo.codigo
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'contribuyente' => array(
-            'name'      => 'Contribuyente',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'usuario' => array(
-            'name'      => 'Usuario',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'usuario', 'column' => 'id')
-        ),
-        'dte' => array(
-            'name'      => 'Dte',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_tipo', 'column' => 'codigo')
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte',
-        'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios',
-        'Model_DteTipo' => 'website\Dte'
-    ); ///< Namespaces que utiliza esta clase
+    
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+            'ordering' => ['usuario'],
+        ],
+        'fields' => [
+            'contribuyente' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Contribuyente',
+            ],
+            'usuario' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_Usuario::class,
+                'to_table' => 'usuario',
+                'to_field' => 'id',
+                'max_length' => 32,
+                'verbose_name' => 'Usuario',
+            ],
+            'dte' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'null' => true,
+                'primary_key' => true,
+                'foreign_key' => Model_DteTipo::class,
+                'to_table' => 'dte_tipo',
+                'to_field' => 'codigo',
+                'max_length' => 16,
+                'verbose_name' => 'Dte',
+            ],
+        ],
+    ];
 
 }

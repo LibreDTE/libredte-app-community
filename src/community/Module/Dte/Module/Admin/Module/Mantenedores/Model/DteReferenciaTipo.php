@@ -23,50 +23,41 @@
 
 namespace website\Dte\Admin\Mantenedores;
 
+use \sowerphp\autoload\Model;
+
 /**
- * Clase para mapear la tabla dte_referencia_tipo de la base de datos.
+ * Modelo singular de la tabla "dte_referencia_tipo" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_DteReferenciaTipo extends \sowerphp\autoload\Model
+class Model_DteReferenciaTipo extends Model
 {
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_referencia_tipo'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $codigo; ///< smallint(16) NOT NULL DEFAULT '' PK
-    public $tipo; ///< character varying(20) NOT NULL DEFAULT ''
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'codigo' => array(
-            'name'      => 'Código',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'tipo' => array(
-            'name'      => 'Tipo',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 20,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(); ///< Namespaces que utiliza esta clase
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+            'ordering' => ['contribuyente'],
+        ],
+        'fields' => [
+            'contribuyente' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'primary_key' => true,
+                'max_length' => 16,
+                'verbose_name' => 'Código',
+                'help_text' => '',
+            ],
+            'tipo' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 20,
+                'verbose_name' => 'Tipo',
+                'help_text' => '',
+            ],
+        ],
+    ];
 
 }

@@ -23,17 +23,16 @@
 
 namespace website\Honorarios;
 
+use \sowerphp\autoload\Model_Plural;
 use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
 
 /**
- * Clase para mapear la tabla boleta_tercero de la base de datos.
+ * Modelo plural de la tabla "boleta_tercero" de la base de datos.
+ *
+ * Permite interactuar con varios registros de la tabla.
  */
-class Model_BoletaTerceros extends \sowerphp\autoload\Model_Plural
+class Model_BoletaTerceros extends Model_Plural
 {
-
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'boleta_tercero'; ///< Tabla del modelo
 
     private $tasas_retencion = [
         201608 => 0.1000,

@@ -23,65 +23,54 @@
 
 namespace website\Dte;
 
+use \sowerphp\autoload\Model;
+use \website\Dte\Model_Contribuyente;
+use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
+
 /**
- * Clase para mapear la tabla contribuyente_usuario de la base de datos.
+ * Modelo singular de la tabla "contribuyente_usuario" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_ContribuyenteUsuario extends \sowerphp\autoload\Model
+class Model_ContribuyenteUsuario extends Model
 {
-
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'contribuyente_usuario'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $contribuyente; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
-    public $usuario; ///< integer(32) NOT NULL DEFAULT '' PK FK:usuario.id
-    public $permiso; ///< character varying(20) NOT NULL DEFAULT '' PK
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'contribuyente' => array(
-            'name'      => 'Contribuyente',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'usuario' => array(
-            'name'      => 'Usuario',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'usuario', 'column' => 'id')
-        ),
-        'permiso' => array(
-            'name'      => 'Permiso',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 20,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte',
-        'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios'
-    ); ///< Namespaces que utiliza esta clase
+    
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+            'ordering' => ['contribuyente'],
+        ],
+        'fields' => [
+            'contribuyente' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Contribuyente',
+            ],
+            'usuario' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_Usuario::class,
+                'to_table' => 'usuario',
+                'to_field' => 'id',
+                'max_length' => 32,
+                'verbose_name' => 'Usuario',
+            ],
+            'permiso' => [
+                'type' => self::TYPE_STRING,
+                'primary_key' => true,
+                'max_length' => 20,
+                'verbose_name' => 'Permiso',
+            ],
+        ],
+    ];
 
 }

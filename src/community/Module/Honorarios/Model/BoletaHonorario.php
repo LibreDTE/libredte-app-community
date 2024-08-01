@@ -23,137 +23,90 @@
 
 namespace website\Honorarios;
 
+use \sowerphp\autoload\Model;
+use \website\Dte\Model_Contribuyente;
+
 /**
- * Clase para mapear la tabla boleta_honorario de la base de datos.
+ * Modelo singular de la tabla "boleta_honorario" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_BoletaHonorario extends \sowerphp\autoload\Model
+class Model_BoletaHonorario extends Model
 {
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'boleta_honorario'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
-    public $numero; ///< integer(32) NOT NULL DEFAULT '' PK
-    public $codigo; ///< character varying(30) NOT NULL DEFAULT ''
-    public $receptor; ///< integer(32) NOT NULL DEFAULT '' FK:contribuyente.rut
-    public $fecha; ///< date() NOT NULL DEFAULT ''
-    public $total_honorarios; ///< integer(32) NOT NULL DEFAULT ''
-    public $total_retencion; ///< integer(32) NOT NULL DEFAULT ''
-    public $total_liquido; ///< integer(32) NOT NULL DEFAULT ''
-    public $anulada; ///< date() NULL DEFAULT ''
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
-            'name'      => 'Emisor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => ['table' => 'contribuyente', 'column' => 'rut']
-        ),
-        'numero' => array(
-            'name'      => 'Numero',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'codigo' => array(
-            'name'      => 'Codigo',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 30,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'receptor' => array(
-            'name'      => 'Receptor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => ['table' => 'contribuyente', 'column' => 'rut']
-        ),
-        'fecha' => array(
-            'name'      => 'Fecha',
-            'comment'   => '',
-            'type'      => 'date',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'total_honorarios' => array(
-            'name'      => 'Total Honorarios',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'total_retencion' => array(
-            'name'      => 'Total Retencion',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'total_liquido' => array(
-            'name'      => 'Total Liquido',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'anulada' => array(
-            'name'      => 'Anulada',
-            'comment'   => '',
-            'type'      => 'date',
-            'length'    => null,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte',
-    ); ///< Namespaces que utiliza esta clase
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+        ],
+        'fields' => [
+            'emisor' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Emisor',
+                'help_text' => '',
+            ],
+            'numero' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Numero',
+                'help_text' => '',
+            ],
+            'codigo' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 30,
+                'verbose_name' => 'Codigo',
+                'help_text' => '',
+            ],
+            'receptor' => [
+                'type' => self::TYPE_INTEGER,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Receptor',
+                'help_text' => '',
+            ],
+            'fecha' => [
+                'type' => self::TYPE_DATE,
+                'verbose_name' => 'Fecha',
+                'help_text' => '',
+            ],
+            'total_honorarios' => [
+                'type' => self::TYPE_INTEGER,
+                'max_length' => 32,
+                'verbose_name' => 'Total Honorarios',
+                'help_text' => '',
+            ],
+            'total_retencion' => [
+                'type' => self::TYPE_INTEGER,
+                'max_length' => 32,
+                'verbose_name' => 'Total Retencion',
+                'help_text' => '',
+            ],
+            'total_liquido' => [
+                'type' => self::TYPE_INTEGER,
+                'max_length' => 32,
+                'verbose_name' => 'Total Liquido',
+                'help_text' => '',
+            ],
+            'anulada' => [
+                'type' => self::TYPE_DATE,
+                'null' => true,
+                'verbose_name' => 'Anulada',
+                'help_text' => '',
+            ],
+        ],
+    ];
 
     /**
      * Método que entrega el objeto del emisor de la boleta.

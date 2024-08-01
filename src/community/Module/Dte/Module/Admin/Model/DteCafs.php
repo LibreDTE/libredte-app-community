@@ -23,14 +23,13 @@
 
 namespace website\Dte\Admin;
 
+use \sowerphp\autoload\Model_Plural;
+
 /**
- * Clase para mapear la tabla dte_caf de la base de datos.
+ * Modelo plural de la tabla "dte_caf" de la base de datos.
+ *
+ * Permite interactuar con varios registros de la tabla.
  */
-class Model_DteCafs extends \sowerphp\autoload\Model_Plural
+class Model_DteCafs extends Model_Plural
 {
-
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_caf'; ///< Tabla del modelo
-
 }

@@ -23,14 +23,11 @@
 
 namespace website\Sistema\General;
 
+use \sowerphp\autoload\Model_Plural;
+
 /**
  * Clase para mapear la tabla banco de la base de datos.
  */
-class Model_Bancos extends \sowerphp\autoload\Model_Plural
+class Model_Bancos extends Model_Plural
 {
-
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'banco'; ///< Tabla del modelo
-
 }

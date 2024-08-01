@@ -23,15 +23,15 @@
 
 namespace website\Dte\Admin\Mantenedores;
 
-/**
- * Clase para mapear la tabla iva_no_recuperable de la base de datos.
- */
-class Model_IvaNoRecuperables extends \sowerphp\autoload\Model_Plural
-{
+use \sowerphp\autoload\Model_Plural;
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'iva_no_recuperable'; ///< Tabla del modelo
+/**
+ * Modelo plural de la tabla "iva_no_recuperable" de la base de datos.
+ *
+ * Permite interactuar con varios registros de la tabla.
+ */
+class Model_IvaNoRecuperables extends Model_Plural
+{
 
     /**
      * Método que entrega el listado de ivas no recuperables.

@@ -23,103 +23,78 @@
 
 namespace website\Dte\Admin;
 
+use \sowerphp\autoload\Model;
+use \website\Dte\Admin\Model_DteFolio;
+
 /**
- * Clase para mapear la tabla dte_caf de la base de datos.
+ * Modelo singular de la tabla "dte_caf" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_DteCaf extends \sowerphp\autoload\Model
+class Model_DteCaf extends Model
 {
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_caf'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:dte_folio.emisor
-    public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_folio.emisor
-    public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK FK:dte_folio.emisor
-    public $desde; ///< integer(32) NOT NULL DEFAULT '' PK
-    public $hasta; ///< integer(32) NOT NULL DEFAULT ''
-    public $xml; ///< text() NOT NULL DEFAULT ''
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
-            'name'      => 'Emisor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_folio', 'column' => 'emisor')
-        ),
-        'dte' => array(
-            'name'      => 'Dte',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_folio', 'column' => 'emisor')
-        ),
-        'certificacion' => array(
-            'name'      => 'Certificacion',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_folio', 'column' => 'emisor')
-        ),
-        'desde' => array(
-            'name'      => 'Desde',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'hasta' => array(
-            'name'      => 'Hasta',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'xml' => array(
-            'name'      => 'Xml',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_DteFolio' => 'website\Dte\Admin',
-        'Model_DteFolio' => 'website\Dte\Admin',
-        'Model_DteFolio' => 'website\Dte\Admin'
-    ); ///< Namespaces que utiliza esta clase
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+            'ordering' => ['dte'],
+        ],
+        'fields' => [
+            'emisor' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_DteFolio::class,
+                'to_table' => 'dte_folio',
+                'to_field' => 'emisor',
+                'max_length' => 32,
+                'verbose_name' => 'Emisor',
+                'help_text' => '',
+            ],
+            'dte' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_DteFolio::class,
+                'to_table' => 'dte_folio',
+                'to_field' => 'emisor',
+                'max_length' => 16,
+                'verbose_name' => 'Dte',
+                'help_text' => '',
+            ],
+            'certificacion' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'false',
+                'primary_key' => true,
+                'foreign_key' => Model_DteFolio::class,
+                'to_table' => 'dte_folio',
+                'to_field' => 'emisor',
+                'verbose_name' => 'Certificacion',
+                'help_text' => '',
+            ],
+            'desde' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Desde',
+                'help_text' => '',
+            ],
+            'hasta' => [
+                'type' => self::TYPE_INTEGER,
+                'max_length' => 32,
+                'verbose_name' => 'Hasta',
+                'help_text' => '',
+            ],
+            'xml' => [
+                'type' => self::TYPE_TEXT,
+                'verbose_name' => 'Xml',
+                'help_text' => '',
+            ],
+        ],
+    ];
 
     /**
      * Método que entrega el objeto del contribuyente asociado al mantenedor de folios.

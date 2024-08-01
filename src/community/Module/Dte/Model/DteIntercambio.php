@@ -23,284 +23,154 @@
 
 namespace website\Dte;
 
+use \sowerphp\autoload\Model;
+use \website\Dte\Model_Contribuyente;
 use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+use sowerphp\app\Sistema\Usuarios\Model_Usuario;
 
 /**
- * Clase para mapear la tabla dte_intercambio de la base de datos.
+ * Modelo singular de la tabla "dte_intercambio" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_DteIntercambio extends \sowerphp\autoload\Model
+class Model_DteIntercambio extends Model
 {
+    
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+            'ordering' => ['codigo'],
+        ],
+        'fields' => [
+            'receptor' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Receptor',
+            ],
+            'codigo' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Codigo',
+            ],
+            'certificacion' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'false',
+                'primary_key' => true,
+                'verbose_name' => 'Certificacion',
+            ],
+            'fecha_hora_email' => [
+                'type' => self::TYPE_TIMESTAMP,
+                'verbose_name' => 'Fecha Hora Email',
+            ],
+            'asunto' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 100,
+                'verbose_name' => 'Asunto',
+            ],
+            'de' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 80,
+                'verbose_name' => 'De',
+            ],
+            'responder_a' => [
+                'type' => self::TYPE_STRING,
+                'null' => true,
+                'max_length' => 80,
+                'verbose_name' => 'Responder A',
+            ],
+            'mensaje' => [
+                'type' => self::TYPE_TEXT,
+                'null' => true,
+                'verbose_name' => 'Mensaje',
+            ],
+            'mensaje_html' => [
+                'type' => self::TYPE_TEXT,
+                'null' => true,
+                'verbose_name' => 'Mensaje Html',
+            ],
+            'emisor' => [
+                'type' => self::TYPE_INTEGER,
+                'max_length' => 32,
+                'verbose_name' => 'Emisor',
+            ],
+            'fecha_hora_firma' => [
+                'type' => self::TYPE_TIMESTAMP,
+                'verbose_name' => 'Fecha Hora Firma',
+            ],
+            'documentos' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'max_length' => 16,
+                'verbose_name' => 'Documentos',
+            ],
+            'archivo' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 100,
+                'verbose_name' => 'Archivo',
+            ],
+            'archivo_xml' => [
+                'type' => self::TYPE_TEXT,
+                'verbose_name' => 'Archivo Xml',
+            ],
+            'archivo_md5' => [
+                'type' => self::TYPE_CHAR,
+                'max_length' => 32,
+                'verbose_name' => 'Archivo Md5',
+            ],
+            'fecha_hora_respuesta' => [
+                'type' => self::TYPE_TIMESTAMP,
+                'null' => true,
+                'verbose_name' => 'Fecha Hora Respuesta',
+            ],
+            'estado' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'null' => true,
+                'max_length' => 16,
+                'verbose_name' => 'Estado',
+            ],
+            'recepcion_xml' => [
+                'type' => self::TYPE_TEXT,
+                'null' => true,
+                'verbose_name' => 'Recepcion Xml',
+            ],
+            'recibos_xml' => [
+                'type' => self::TYPE_TEXT,
+                'null' => true,
+                'verbose_name' => 'Recibos Xml',
+            ],
+            'resultado_xml' => [
+                'type' => self::TYPE_TEXT,
+                'null' => true,
+                'verbose_name' => 'Resultado Xml',
+            ],
+            'usuario' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'foreign_key' => Model_Usuario::class,
+                'to_table' => 'usuario',
+                'to_field' => 'id',
+                'max_length' => 32,
+                'verbose_name' => 'Usuario',
+            ],
+        ],
+    ];
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_intercambio'; ///< Tabla del modelo
+    // // Comentario de la tabla en la base de datos
+    // public static $tableComment = '';
 
-    // Atributos de la clase (columnas en la base de datos)
-    public $receptor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
-    public $codigo; ///< integer(32) NOT NULL DEFAULT '' PK
-    public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK
-    public $fecha_hora_email; ///< timestamp without time zone() NOT NULL DEFAULT ''
-    public $asunto; ///< character varying(100) NOT NULL DEFAULT ''
-    public $de; ///< character varying(80) NOT NULL DEFAULT ''
-    public $responder_a; ///< character varying(80) NULL DEFAULT ''
-    public $mensaje; ///< text() NULL DEFAULT ''
-    public $mensaje_html; ///< text() NULL DEFAULT ''
-    public $emisor; ///< integer(32) NOT NULL DEFAULT ''
-    public $fecha_hora_firma; ///< timestamp without time zone() NOT NULL DEFAULT ''
-    public $documentos; ///< smallint(16) NOT NULL DEFAULT ''
-    public $archivo; ///< character varying(100) NOT NULL DEFAULT ''
-    public $archivo_xml; ///< text() NOT NULL DEFAULT ''
-    public $archivo_md5; ///< character(32) NOT NULL DEFAULT ''
-    public $fecha_hora_respuesta; ///< timestamp without time zone() NULL DEFAULT ''
-    public $estado; ///< smallint(16) NULL DEFAULT ''
-    public $recepcion_xml; ///< text() NULL DEFAULT ''
-    public $recibos_xml; ///< text() NULL DEFAULT ''
-    public $resultado_xml; ///< text() NULL DEFAULT ''
-    public $usuario; ///< integer(32) NULL DEFAULT '' FK:usuario.id
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'receptor' => array(
-            'name'      => 'Receptor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'codigo' => array(
-            'name'      => 'Codigo',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'certificacion' => array(
-            'name'      => 'Certificacion',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'fecha_hora_email' => array(
-            'name'      => 'Fecha Hora Email',
-            'comment'   => '',
-            'type'      => 'timestamp without time zone',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'asunto' => array(
-            'name'      => 'Asunto',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 100,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'de' => array(
-            'name'      => 'De',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 80,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'responder_a' => array(
-            'name'      => 'Responder A',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 80,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'mensaje' => array(
-            'name'      => 'Mensaje',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'mensaje_html' => array(
-            'name'      => 'Mensaje Html',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'emisor' => array(
-            'name'      => 'Emisor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'fecha_hora_firma' => array(
-            'name'      => 'Fecha Hora Firma',
-            'comment'   => '',
-            'type'      => 'timestamp without time zone',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'documentos' => array(
-            'name'      => 'Documentos',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'archivo' => array(
-            'name'      => 'Archivo',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 100,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'archivo_xml' => array(
-            'name'      => 'Archivo Xml',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'archivo_md5' => array(
-            'name'      => 'Archivo Md5',
-            'comment'   => '',
-            'type'      => 'character',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'fecha_hora_respuesta' => array(
-            'name'      => 'Fecha Hora Respuesta',
-            'comment'   => '',
-            'type'      => 'timestamp without time zone',
-            'length'    => null,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'estado' => array(
-            'name'      => 'Estado',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'recepcion_xml' => array(
-            'name'      => 'Recepcion Xml',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'recibos_xml' => array(
-            'name'      => 'Recibos Xml',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'resultado_xml' => array(
-            'name'      => 'Resultado Xml',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'usuario' => array(
-            'name'      => 'Usuario',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => array('table' => 'usuario', 'column' => 'id')
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte',
-        'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios'
-    ); ///< Namespaces que utiliza esta clase
+    // public static $fkNamespace = array(
+    //     'Model_Contribuyente' => 'website\Dte',
+    //     'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios'
+    // ); ///< Namespaces que utiliza esta clase
 
     /**
      * Método que indica si ya existe previamente el documento (mismo archivo).

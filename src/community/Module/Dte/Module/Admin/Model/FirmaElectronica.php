@@ -23,137 +23,87 @@
 
 namespace website\Dte\Admin;
 
+use \sowerphp\autoload\Model;
+use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
+
 /**
- * Clase para mapear la tabla firma_electronica de la base de datos.
+ * Modelo singular de la tabla "firma_electronica" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_FirmaElectronica extends \sowerphp\autoload\Model
+class Model_FirmaElectronica extends Model
 {
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'firma_electronica'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $run; ///< character varying(10) NOT NULL DEFAULT '' PK
-    public $nombre; ///< character varying(100) NOT NULL DEFAULT ''
-    public $email; ///< character varying(100) NOT NULL DEFAULT ''
-    public $desde; ///< timestamp without time zone() NOT NULL DEFAULT ''
-    public $hasta; ///< timestamp without time zone() NOT NULL DEFAULT ''
-    public $emisor; ///< character varying(100) NOT NULL DEFAULT ''
-    public $usuario; ///< integer(32) NOT NULL DEFAULT '' FK:usuario.id
-    public $archivo; ///< text() NOT NULL DEFAULT ''
-    public $contrasenia; ///< character varying(255) NOT NULL DEFAULT ''
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'run' => array(
-            'name'      => 'Run',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 10,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'nombre' => array(
-            'name'      => 'Nombre',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 100,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'email' => array(
-            'name'      => 'Email',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 100,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'desde' => array(
-            'name'      => 'Desde',
-            'comment'   => '',
-            'type'      => 'timestamp without time zone',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'hasta' => array(
-            'name'      => 'Hasta',
-            'comment'   => '',
-            'type'      => 'timestamp without time zone',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'emisor' => array(
-            'name'      => 'Emisor',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 100,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'usuario' => array(
-            'name'      => 'Usuario',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => array('table' => 'usuario', 'column' => 'id')
-        ),
-        'archivo' => array(
-            'name'      => 'Archivo',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'contrasenia' => array(
-            'name'      => 'Contrasenia',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 255,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios'
-    ); ///< Namespaces que utiliza esta clase
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+            'ordering' => ['run'],
+        ],
+        'fields' => [
+            'run' => [
+                'type' => self::TYPE_STRING,
+                'primary_key' => true,
+                'max_length' => 10,
+                'verbose_name' => 'Run',
+                'help_text' => '',
+            ],
+            'nombre' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 100,
+                'verbose_name' => 'Nombre',
+                'help_text' => '',
+            ],
+            'email' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 100,
+                'verbose_name' => 'Email',
+                'help_text' => '',
+                'validation' => ['email'],
+                'sanitize' => ['strip_tags', 'spaces', 'trim', 'email'],
+            ],
+            'desde' => [
+                'type' => self::TYPE_TIMESTAMP,
+                'verbose_name' => 'Desde',
+                'help_text' => '',
+            ],
+            'hasta' => [
+                'type' => self::TYPE_TIMESTAMP,
+                'verbose_name' => 'Hasta',
+                'help_text' => '',
+            ],
+            'emisor' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 100,
+                'verbose_name' => 'Emisor',
+                'help_text' => '',
+            ],
+            'usuario' => [
+                'type' => self::TYPE_INTEGER,
+                'foreign_key' => Model_Usuario::class,
+                'to_table' => 'usuario',
+                'to_field' => 'id',
+                'max_length' => 32,
+                'verbose_name' => 'Usuario',
+                'help_text' => '',
+            ],
+            'archivo' => [
+                'type' => self::TYPE_TEXT,
+                'verbose_name' => 'Archivo',
+                'help_text' => '',
+            ],
+            'contrasenia' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 255,
+                'verbose_name' => 'Contrasenia',
+                'help_text' => '',
+            ],
+        ],
+    ];
 
     /**
      * Método para obtener la contraseña de la firma electrónica en texto plano.

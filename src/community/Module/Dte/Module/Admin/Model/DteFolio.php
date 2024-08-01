@@ -23,114 +23,82 @@
 
 namespace website\Dte\Admin;
 
+use \sowerphp\autoload\Model;
+use \website\Dte\Admin\Mantenedores\Model_DteTipo;
+use \website\Dte\Model_Contribuyente;
+
 /**
- * Clase para mapear la tabla dte_folio de la base de datos.
+ * Modelo singular de la tabla "dte_folio" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_DteFolio extends \sowerphp\autoload\Model
+class Model_DteFolio extends Model
 {
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_folio'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
-    public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_tipo.codigo
-    public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK
-    public $siguiente; ///< integer(32) NOT NULL DEFAULT ''
-    public $disponibles; ///< integer(32) NOT NULL DEFAULT ''
-    public $alerta; ///< integer(32) NOT NULL DEFAULT ''
-    public $alertado; ///< boolean() NOT NULL DEFAULT 'false'
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
-            'name'      => 'Emisor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'dte' => array(
-            'name'      => 'Dte',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_tipo', 'column' => 'codigo')
-        ),
-        'certificacion' => array(
-            'name'      => 'Certificacion',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'siguiente' => array(
-            'name'      => 'Siguiente',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'disponibles' => array(
-            'name'      => 'Disponibles',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'alerta' => array(
-            'name'      => 'Alerta',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'alertado' => array(
-            'name'      => 'Alertado',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte\Admin',
-        'Model_DteTipo' => 'website\Dte\Admin'
-    ); ///< Namespaces que utiliza esta clase
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+            'ordering' => ['dte'],
+        ],
+        'fields' => [
+            'emisor' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Emisor',
+                'help_text' => '',
+            ],
+            'dte' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_DteTipo::class,
+                'to_table' => 'dte_tipo',
+                'to_field' => 'codigo',
+                'max_length' => 16,
+                'verbose_name' => 'Dte',
+                'help_text' => '',
+            ],
+            'certificacion' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'false',
+                'primary_key' => true,
+                'verbose_name' => 'Certificacion',
+                'help_text' => '',
+            ],
+            'siguiente' => [
+                'type' => self::TYPE_INTEGER,
+                'max_length' => 32,
+                'verbose_name' => 'Siguiente',
+                'help_text' => '',
+            ],
+            'disponibles' => [
+                'type' => self::TYPE_INTEGER,
+                'max_length' => 32,
+                'verbose_name' => 'Disponibles',
+                'help_text' => '',
+            ],
+            'alerta' => [
+                'type' => self::TYPE_INTEGER,
+                'max_length' => 32,
+                'verbose_name' => 'Alerta',
+                'help_text' => '',
+            ],
+            'alertado' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'false',
+                'verbose_name' => 'Alertado',
+                'help_text' => '',
+            ],
+        ],
+    ];
 
     /**
      * Método para guardar el mantenedor del folio usando una transacción

@@ -23,12 +23,14 @@
 
 namespace website\Sistema\General;
 
+use \sowerphp\autoload\Model;
+
 /**
  * Modelo singular de la tabla "actividad_economica" de la base de datos.
  *
  * Permite interactuar con un registro de la tabla.
  */
-class Model_ActividadEconomica extends \sowerphp\autoload\Model
+class Model_ActividadEconomica extends Model
 {
 
     /**

@@ -24,458 +24,281 @@
 namespace website\Dte;
 
 use stdClass;
+use \sowerphp\autoload\Model;
 use \sowerphp\core\Utility_Array;
+use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
 use \website\Dte\Admin\Mantenedores\Model_DteTipo;
 use \website\Dte\Admin\Mantenedores\Model_DteTipos;
 use \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos;
+use \website\Dte\Model_Contribuyente;
 
 /**
- * Clase para mapear la tabla dte_recibido de la base de datos.
+ * Modelo singular de la tabla "dte_recibido" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_DteRecibido extends \sowerphp\autoload\Model
+class Model_DteRecibido extends Model
 {
-
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_recibido'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
-    public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_tipo.codigo
-    public $folio; ///< integer(32) NOT NULL DEFAULT '' PK
-    public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK
-    public $receptor; ///< integer(32) NOT NULL DEFAULT '' FK:contribuyente.rut
-    public $tasa; ///< smallint(16) NOT NULL DEFAULT '0'
-    public $fecha; ///< date() NOT NULL DEFAULT ''
-    public $sucursal_sii; ///< integer(32) NULL DEFAULT ''
-    public $exento; ///< integer(32) NULL DEFAULT ''
-    public $neto; ///< integer(32) NULL DEFAULT ''
-    public $iva; ///< integer(32) NOT NULL DEFAULT '0'
-    public $total; ///< integer(32) NOT NULL DEFAULT ''
-    public $usuario; ///< integer(32) NOT NULL DEFAULT '' FK:usuario.id
-    public $intercambio; ///< integer(32) NULL DEFAULT ''
-    public $iva_uso_comun; ///< integer(32) NULL DEFAULT ''
-    public $iva_no_recuperable; ///< text() NULL DEFAULT ''
-    public $impuesto_adicional; ///< text() NULL DEFAULT ''
-    public $impuesto_tipo; ///< smallint(16) NOT NULL DEFAULT '1'
-    public $anulado; ///< character(1) NULL DEFAULT ''
-    public $impuesto_sin_credito; ///< integer(32) NULL DEFAULT ''
-    public $monto_activo_fijo; ///< integer(32) NULL DEFAULT ''
-    public $monto_iva_activo_fijo; ///< integer(32) NULL DEFAULT ''
-    public $iva_no_retenido; ///< integer(32) NULL DEFAULT ''
-    public $periodo; ///< integer(32) NULL DEFAULT ''
-    public $impuesto_puros; ///< integer(32) NULL DEFAULT ''
-    public $impuesto_cigarrillos; ///< integer(32) NULL DEFAULT ''
-    public $impuesto_tabaco_elaborado; ///< integer(32) NULL DEFAULT ''
-    public $impuesto_vehiculos; ///< integer(32) NULL DEFAULT ''
-    public $numero_interno; ///< integer(32) NULL DEFAULT ''
-    public $emisor_nc_nd_fc; ///< smallint(16) NULL DEFAULT ''
-    public $sucursal_sii_receptor; ///< integer(32) NULL DEFAULT ''
-    public $rcv_accion; ///< character(3) NULL DEFAULT ''
-    public $tipo_transaccion; ///< smallint(16) NULL DEFAULT ''
-    public $fecha_hora_creacion; ///< timestamp without time zone() NOT NULL DEFAULT ''
-    public $mipyme; ///< bigint(64) NULL DEFAULT ''
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
-            'name'      => 'Emisor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'dte' => array(
-            'name'      => 'Dte',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_tipo', 'column' => 'codigo')
-        ),
-        'folio' => array(
-            'name'      => 'Folio',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'certificacion' => array(
-            'name'      => 'Certificacion',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'receptor' => array(
-            'name'      => 'Receptor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'tasa' => array(
-            'name'      => 'Tasa',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '0',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'fecha' => array(
-            'name'      => 'Fecha',
-            'comment'   => '',
-            'type'      => 'date',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'sucursal_sii' => array(
-            'name'      => 'Sucursal Sii',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'exento' => array(
-            'name'      => 'Exento',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'neto' => array(
-            'name'      => 'Neto',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'iva' => array(
-            'name'      => 'Iva',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '0',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'total' => array(
-            'name'      => 'Total',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'usuario' => array(
-            'name'      => 'Usuario',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => array('table' => 'usuario', 'column' => 'id')
-        ),
-        'intercambio' => array(
-            'name'      => 'Intercambio',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'iva_uso_comun' => array(
-            'name'      => 'Iva Uso Comun',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'iva_no_recuperable' => array(
-            'name'      => 'Iva No Recuperable',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'impuesto_adicional' => array(
-            'name'      => 'Impuesto Adicional',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'impuesto_tipo' => array(
-            'name'      => 'Impuesto Tipo',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '1',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'anulado' => array(
-            'name'      => 'Anulado',
-            'comment'   => '',
-            'type'      => 'character',
-            'length'    => 1,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'impuesto_sin_credito' => array(
-            'name'      => 'Impuesto Sin Credito',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'monto_activo_fijo' => array(
-            'name'      => 'Monto Activo Fijo',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'monto_iva_activo_fijo' => array(
-            'name'      => 'Monto Iva Activo Fijo',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'iva_no_retenido' => array(
-            'name'      => 'Iva No Retenido',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'periodo' => array(
-            'name'      => 'Período',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'impuesto_puros' => array(
-            'name'      => 'Impuesto Puros',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'impuesto_cigarrillos' => array(
-            'name'      => 'Impuesto Cigarrillos',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'impuesto_tabaco_elaborado' => array(
-            'name'      => 'Impuesto Tabaco Elaborado',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'impuesto_vehiculos' => array(
-            'name'      => 'Impuesto Vehiculos',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'numero_interno' => array(
-            'name'      => 'Numero Interno',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'emisor_nc_nd_fc' => array(
-            'name'      => 'Emisor Nc Nd Fc',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'sucursal_sii_receptor' => array(
-            'name'      => 'Sucursal Sii Receptor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'rcv_accion' => array(
-            'name'      => 'Acción RCV',
-            'comment'   => '',
-            'type'      => 'character',
-            'length'    => 3,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'tipo_transaccion' => array(
-            'name'      => 'Tipo transacción',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'fecha_hora_creacion' => array(
-            'name'      => 'Fecha Hora Creación',
-            'comment'   => '',
-            'type'      => 'timestamp without time zone',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'mipyme' => array(
-            'name'      => 'Código MIPYME',
-            'comment'   => '',
-            'type'      => 'bigint',
-            'length'    => 64,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte',
-        'Model_DteTipo' => 'website\Dte\Admin\Mantenedores',
-        'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios',
-        'Model_IvaNoRecuperable' => 'website\Dte\Admin\Mantenedores',
-        'Model_ImpuestoAdicional' => 'website\Dte\Admin\Mantenedores'
-    ); ///< Namespaces que utiliza esta clase
+    
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+            'ordering' => ['dte'],
+        ],
+        'fields' => [
+            'emisor' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Emisor',
+                'help_text' => '',
+            ],
+            'dte' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_DteTipo::class,
+                'to_table' => 'dte_tipo',
+                'to_field' => 'codigo',
+                'max_length' => 16,
+                'verbose_name' => 'Dte',
+                'help_text' => '',
+            ],
+            'folio' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Folio',
+                'help_text' => '',
+            ],
+            'certificacion' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'false',
+                'primary_key' => true,
+                'verbose_name' => 'Certificacion',
+                'help_text' => '',
+            ],
+            'receptor' => [
+                'type' => self::TYPE_INTEGER,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Receptor',
+                'help_text' => '',
+            ],
+            'tasa' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'default' => '0',
+                'max_length' => 16,
+                'verbose_name' => 'Tasa',
+                'help_text' => '',
+            ],
+            'fecha' => [
+                'type' => self::TYPE_DATE,
+                'verbose_name' => 'Fecha',
+                'help_text' => '',
+            ],
+            'sucursal_sii' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Sucursal Sii',
+                'help_text' => '',
+            ],
+            'exento' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Exento',
+                'help_text' => '',
+            ],
+            'neto' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Neto',
+                'help_text' => '',
+            ],
+            'iva' => [
+                'type' => self::TYPE_INTEGER,
+                'default' => '0',
+                'max_length' => 32,
+                'verbose_name' => 'Iva',
+                'help_text' => '',
+            ],
+            'total' => [
+                'type' => self::TYPE_INTEGER,
+                'max_length' => 32,
+                'verbose_name' => 'Total',
+                'help_text' => '',
+            ],
+            'usuario' => [
+                'type' => self::TYPE_INTEGER,
+                'foreign_key' => Model_Usuario::class,
+                'to_table' => 'usuario',
+                'to_field' => 'id',
+                'max_length' => 32,
+                'verbose_name' => 'Usuario',
+                'help_text' => '',
+            ],
+            'intercambio' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Intercambio',
+                'help_text' => '',
+            ],
+            'iva_uso_comun' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'null' => true,
+                'max_length' => 16,
+                'verbose_name' => 'Iva Uso Comun',
+                'help_text' => '',
+            ],
+            'iva_no_recuperable' => [
+                'type' => self::TYPE_TEXT,
+                'verbose_name' => 'Iva No Recuperable',
+                'help_text' => '',
+            ],
+            'impuesto_adicional' => [
+                'type' => self::TYPE_TEXT,
+                'verbose_name' => 'Impuesto Adicional',
+                'help_text' => '',
+            ],
+            'impuesto_tipo' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'default' => '1',
+                'max_length' => 16,
+                'verbose_name' => 'Impuesto Tipo',
+                'help_text' => '',
+            ],
+            'anulado' => [
+                'type' => self::TYPE_CHAR,
+                'null' => true,
+                'max_length' => 1,
+                'verbose_name' => 'Anulado',
+                'help_text' => '',
+            ],
+            'impuesto_sin_credito' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Impuesto Sin Credito',
+                'help_text' => '',
+            ],
+            'monto_activo_fijo' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Monto Activo Fijo',
+                'help_text' => '',
+            ],
+            'monto_iva_activo_fijo' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Monto Iva Activo Fijo',
+                'help_text' => '',
+            ],
+            'iva_no_retenido' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Iva No Retenido',
+                'help_text' => '',
+            ],
+            'periodo' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Período',
+                'help_text' => '',
+            ],
+            'impuesto_puros' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Impuesto Puros',
+                'help_text' => '',
+            ],
+            'impuesto_cigarrillos' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Impuesto Cigarrillos',
+                'help_text' => '',
+            ],
+            'impuesto_tabaco_elaborado' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Impuesto Tabaco Elaborado',
+                'help_text' => '',
+            ],
+            'impuesto_vehiculos' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Impuesto Vehiculos',
+                'help_text' => '',
+            ],
+            'numero_interno' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Numero Interno',
+                'help_text' => '',
+            ],
+            'emisor_nc_nd_fc' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'null' => true,
+                'max_length' => 16,
+                'verbose_name' => 'Emisor Nc Nd Fc',
+                'help_text' => '',
+            ],
+            'sucursal_sii_receptor' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Sucursal Sii Receptor',
+                'help_text' => '',
+            ],
+            'rcv_accion' => [
+                'type' => self::TYPE_STRING,
+                'null' => true,
+                'max_length' => 3,
+                'verbose_name' => 'Acción RCV',
+                'help_text' => '',
+            ],
+            'tipo_transaccion' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'null' => true,
+                'max_length' => 16,
+                'verbose_name' => 'Tipo transacción',
+                'help_text' => '',
+            ],
+            'fecha_hora_creacion' => [
+                'type' => self::TYPE_TIMESTAMP,
+                'verbose_name' => 'Fecha Hora Creación',
+                'help_text' => '',
+            ],
+            'mipyme' => [
+                'type' => self::TYPE_BIG_INTEGER,
+                'null' => true,
+                'max_length' => 64,
+                'verbose_name' => 'Código MIPYME',
+                'help_text' => '',
+            ],
+        ],
+    ];
 
     // cachés
     private $Dte; ///< Objeto con el DTE

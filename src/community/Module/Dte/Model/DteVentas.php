@@ -23,15 +23,15 @@
 
 namespace website\Dte;
 
-/**
- * Clase para mapear la tabla dte_venta de la base de datos.
- */
-class Model_DteVentas extends \sowerphp\autoload\Model_Plural
-{
+use \sowerphp\autoload\Model_Plural;
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_venta'; ///< Tabla del modelo
+/**
+ * Modelo plural de la tabla "dte_venta" de la base de datos.
+ *
+ * Permite interactuar con varios registros de la tabla.
+ */
+class Model_DteVentas extends Model_Plural
+{
 
     /**
      * Método que indica si el libro para cierto periodo está o no generado.

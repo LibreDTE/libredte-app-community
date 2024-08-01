@@ -23,16 +23,16 @@
 
 namespace website\Dte\Admin\Mantenedores;
 
+use \sowerphp\autoload\Model_Plural;
+
 /**
- * Clase para mapear la tabla impuesto_adicional de la base de datos.
+ * Modelo plural de la tabla "impuesto_adicional" de la base de datos.
+ *
+ * Permite interactuar con varios registros de la tabla.
  */
-class Model_ImpuestoAdicionales extends \sowerphp\autoload\Model_Plural
+class Model_ImpuestoAdicionales extends Model_Plural
 {
-
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'impuesto_adicional'; ///< Tabla del modelo
-
+    
     /**
      * Método que entrega el listado de impuesto adicionales.
      */

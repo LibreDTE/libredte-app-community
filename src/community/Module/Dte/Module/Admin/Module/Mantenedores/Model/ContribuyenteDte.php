@@ -23,65 +23,56 @@
 
 namespace website\Dte\Admin\Mantenedores;
 
+use \sowerphp\autoload\Model;
+use \website\Dte\Model_Contribuyente;
+use \website\Dte\Admin\Mantenedores\Model_DteTipo;
+
 /**
- * Clase para mapear la tabla contribuyente_dte de la base de datos.
+ * Modelo singular de la tabla "contribuyente_dte" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_ContribuyenteDte extends \sowerphp\autoload\Model
+class Model_ContribuyenteDte extends Model
 {
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'contribuyente_dte'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $contribuyente; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
-    public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_tipo.codigo
-    public $activo; ///< boolean() NOT NULL DEFAULT 'true'
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'contribuyente' => array(
-            'name'      => 'Contribuyente',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'dte' => array(
-            'name'      => 'DTE',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_tipo', 'column' => 'codigo')
-        ),
-        'activo' => array(
-            'name'      => '¿Activo?',
-            'comment'   => 'Indica si el documento está o no activo',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'true',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte',
-        'Model_DteTipo' => 'website\Dte\Admin\Mantenedores'
-    ); ///< Namespaces que utiliza esta clase
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+            'ordering' => ['dte'],
+        ],
+        'fields' => [
+            'contribuyente' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Contribuyente',
+                'help_text' => '',
+            ],
+            'dte' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_DteTipo::class,
+                'to_table' => 'dte_tipo',
+                'to_field' => 'codigo',
+                'max_length' => 16,
+                'verbose_name' => 'DTE',
+                'help_text' => '',
+            ],
+            'activo' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'true',
+                'verbose_name' => '¿Activo?',
+                'help_text' => 'Indica si el documento está o no activo',
+            ],
+        ],
+    ];
 
 }

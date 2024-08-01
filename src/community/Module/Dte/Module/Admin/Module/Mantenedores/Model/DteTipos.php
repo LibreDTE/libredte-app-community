@@ -23,15 +23,15 @@
 
 namespace website\Dte\Admin\Mantenedores;
 
-/**
- * Clase para mapear la tabla dte_tipo de la base de datos.
- */
-class Model_DteTipos extends \sowerphp\autoload\Model_Plural
-{
+use \sowerphp\autoload\Model_Plural;
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_tipo'; ///< Tabla del modelo
+/**
+ * Modelo plural de la tabla "dte_tipo" de la base de datos.
+ *
+ * Permite interactuar con varios registros de la tabla.
+ */
+class Model_DteTipos extends Model_Plural
+{
 
     private $internos = [
         'HEM' => 'Hoja de entrada de materiales (HEM)',

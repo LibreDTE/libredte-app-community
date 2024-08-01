@@ -23,213 +23,141 @@
 
 namespace website\Dte\Admin;
 
+use \sowerphp\autoload\Model;
 use \sowerphp\app\Sistema\General\Model_MonedaCambios;
+use \website\Dte\Admin\Model_ItemClasificacion;
+use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicional;
 
 /**
- * Clase para mapear la tabla item de la base de datos.
+ * Modelo singular de la tabla "item" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_Item extends \sowerphp\autoload\Model
+class Model_Item extends Model
 {
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'item'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $contribuyente; ///< integer(32) NOT NULL DEFAULT '' PK FK:item_clasificacion.contribuyente
-    public $codigo_tipo; ///< character varying(10) NOT NULL DEFAULT 'INT1' PK
-    public $codigo; ///< character varying(35) NOT NULL DEFAULT '' PK
-    public $item; ///< character varying(80) NOT NULL DEFAULT ''
-    public $descripcion; ///< character varying(1000) NULL DEFAULT ''
-    public $clasificacion; ///< character varying(35) NOT NULL DEFAULT '' FK:item_clasificacion.contribuyente
-    public $unidad; ///< character varying(4) NULL DEFAULT ''
-    public $precio; ///< real(24) NOT NULL DEFAULT ''
-    public $moneda; ///< character varying(3) NOT NULL DEFAULT ''
-    public $bruto; ///< boolean() NOT NULL DEFAULT 'false'
-    public $exento; ///< smallint(16) NOT NULL DEFAULT '0'
-    public $descuento; ///< real(24) NOT NULL DEFAULT '0'
-    public $descuento_tipo; ///< character(1) NOT NULL DEFAULT '%'
-    public $impuesto_adicional; ///< smallint(16) NULL DEFAULT '' FK:impuesto_adicional.codigo
-    public $activo; ///< boolean() NOT NULL DEFAULT 'true'
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'contribuyente' => array(
-            'name'      => 'Contribuyente',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'item_clasificacion', 'column' => 'contribuyente')
-        ),
-        'codigo_tipo' => array(
-            'name'      => 'Codigo Tipo',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 10,
-            'null'      => false,
-            'default'   => 'INT1',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'codigo' => array(
-            'name'      => 'Código',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 35,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'item' => array(
-            'name'      => 'Nombre',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 80,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'descripcion' => array(
-            'name'      => 'Descripcion',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 1000,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'clasificacion' => array(
-            'name'      => 'Clasificación',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 35,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => array('table' => 'item_clasificacion', 'column' => 'contribuyente')
-        ),
-        'unidad' => array(
-            'name'      => 'Unidad',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 4,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'precio' => array(
-            'name'      => 'Precio',
-            'comment'   => '',
-            'type'      => 'real',
-            'length'    => 24,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'moneda' => array(
-            'name'      => 'Moneda',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 3,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'bruto' => array(
-            'name'      => 'Bruto',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'exento' => array(
-            'name'      => 'Exento',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '0',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'descuento' => array(
-            'name'      => 'Descuento',
-            'comment'   => '',
-            'type'      => 'real',
-            'length'    => 24,
-            'null'      => false,
-            'default'   => '0',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'descuento_tipo' => array(
-            'name'      => 'Descuento Tipo',
-            'comment'   => '',
-            'type'      => 'character',
-            'length'    => 1,
-            'null'      => false,
-            'default'   => '0',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'impuesto_adicional' => array(
-            'name'      => 'Impuesto Adicional',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => array('table' => 'impuesto_adicional', 'column' => 'codigo')
-        ),
-        'activo' => array(
-            'name'      => 'Activo',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'true',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte',
-        'Model_ItemClasificacion' => 'website\Dte\Admin',
-        'Model_ImpuestoAdicional' => 'website\Dte\Admin\Mantenedores'
-    ); ///< Namespaces que utiliza esta clase
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+            'ordering' => ['codigo'],
+        ],
+        'fields' => [
+            'contribuyente' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_ItemClasificacion::class,
+                'to_table' => 'item_clasificacion',
+                'to_field' => 'contribuyente',
+                'max_length' => 32,
+                'verbose_name' => 'Contribuyente',
+                'help_text' => '',
+            ],
+            'codigo_tipo' => [
+                'type' => self::TYPE_STRING,
+                'default' => 'INT1',
+                'primary_key' => true,
+                'max_length' => 10,
+                'verbose_name' => 'Codigo Tipo',
+                'help_text' => '',
+            ],
+            'codigo' => [
+                'type' => self::TYPE_STRING,
+                'primary_key' => true,
+                'max_length' => 35,
+                'verbose_name' => 'Código',
+                'help_text' => '',
+            ],
+            'item' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 80,
+                'verbose_name' => 'Nombre',
+                'help_text' => '',
+            ],
+            'descripcion' => [
+                'type' => self::TYPE_STRING,
+                'null' => true,
+                'max_length' => 1000,
+                'verbose_name' => 'Descripcion',
+                'help_text' => '',
+            ],
+            'clasificacion' => [
+                'type' => self::TYPE_STRING,
+                'foreign_key' => Model_ItemClasificacion::class,
+                'to_table' => 'item_clasificacion',
+                'to_field' => 'contribuyente',
+                'max_length' => 35,
+                'verbose_name' => 'Clasificación',
+                'help_text' => '',
+            ],
+            'unidad' => [
+                'type' => self::TYPE_STRING,
+                'null' => true,
+                'max_length' => 4,
+                'verbose_name' => 'Unidad',
+                'help_text' => '',
+            ],
+            'precio' => [
+                'type' => self::TYPE_FLOAT,
+                'max_length' => 24,
+                'verbose_name' => 'Precio',
+                'help_text' => '',
+            ],
+            'moneda' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 3,
+                'verbose_name' => 'Moneda',
+                'help_text' => '',
+            ],
+            'bruto' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'false',
+                'verbose_name' => 'Bruto',
+                'help_text' => '',
+            ],
+            'exento' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'default' => '0',
+                'max_length' => 16,
+                'verbose_name' => 'Exento',
+                'help_text' => '',
+            ],
+            'descuento' => [
+                'type' => self::TYPE_FLOAT,
+                'default' => '0',
+                'max_length' => 24,
+                'verbose_name' => 'Descuento',
+                'help_text' => '',
+            ],
+            'descuento_tipo' => [
+                'type' => self::TYPE_CHAR,
+                'default' => '0',
+                'max_length' => 1,
+                'verbose_name' => 'Descuento Tipo',
+                'help_text' => '',
+            ],
+            'impuesto_adicional' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'null' => true,
+                'foreign_key' => Model_ImpuestoAdicional::class,
+                'to_table' => 'impuesto_adicional',
+                'to_field' => 'codigo',
+                'max_length' => 16,
+                'verbose_name' => 'Impuesto Adicional',
+                'help_text' => '',
+            ],
+            'activo' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'true',
+                'verbose_name' => 'Activo',
+                'help_text' => '',
+            ],
+        ],
+    ];
 
     // cachés
     private $ItemInventario;

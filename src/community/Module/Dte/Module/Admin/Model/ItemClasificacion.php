@@ -23,90 +23,68 @@
 
 namespace website\Dte\Admin;
 
+use \sowerphp\autoload\Model;
+
 /**
- * Clase para mapear la tabla item_clasificacion de la base de datos.
+ * Modelo singular de la tabla "item_clasificacion" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_ItemClasificacion extends \sowerphp\autoload\Model
+class Model_ItemClasificacion extends Model
 {
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'item_clasificacion'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $contribuyente; ///< integer(32) NOT NULL DEFAULT '' PK FK:item_clasificacion.contribuyente
-    public $codigo; ///< character varying(35) NOT NULL DEFAULT '' PK
-    public $clasificacion; ///< character varying(50) NOT NULL DEFAULT ''
-    public $superior; ///< character varying(10) NULL DEFAULT '' FK:item_clasificacion.contribuyente
-    public $activa; ///< boolean() NOT NULL DEFAULT 'true'
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'contribuyente' => array(
-            'name'      => 'Contribuyente',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'item_clasificacion', 'column' => 'contribuyente')
-        ),
-        'codigo' => array(
-            'name'      => 'Código',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 35,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'clasificacion' => array(
-            'name'      => 'Glosa',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 50,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'superior' => array(
-            'name'      => 'Superior',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 10,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => array('table' => 'item_clasificacion', 'column' => 'contribuyente')
-        ),
-        'activa' => array(
-            'name'      => 'Activa',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'true',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte',
-        'Model_ItemClasificacion' => 'website\Dte\Admin'
-    ); ///< Namespaces que utiliza esta clase
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+            'ordering' => ['codigo'],
+        ],
+        'fields' => [
+            'contribuyente' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_ItemClasificacion::class,
+                'to_table' => 'item_clasificacion',
+                'to_field' => 'contribuyente',
+                'max_length' => 32,
+                'verbose_name' => 'Contribuyente',
+                'help_text' => '',
+            ],
+            'codigo' => [
+                'type' => self::TYPE_STRING,
+                'primary_key' => true,
+                'max_length' => 35,
+                'verbose_name' => 'Código',
+                'help_text' => '',
+            ],
+            'clasificacion' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 50,
+                'verbose_name' => 'Glosa',
+                'help_text' => '',
+            ],
+            'superior' => [
+                'type' => self::TYPE_STRING,
+                'null' => true,
+                'foreign_key' => Model_ItemClasificaciones::class,
+                'to_table' => 'item_clasificacion',
+                'to_field' => 'contribuyente',
+                'max_length' => 10,
+                'verbose_name' => 'Superior',
+                'help_text' => '',
+            ],
+            'activa' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'true',
+                'verbose_name' => 'Activa',
+                'help_text' => '',
+            ],
+        ],
+    ];
 
     /**
      * Constructor de la clasificación del item.

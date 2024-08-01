@@ -23,15 +23,15 @@
 
 namespace website\Dte;
 
-/**
- * Clase para mapear la tabla dte_boleta_consumo de la base de datos.
- */
-class Model_DteBoletaConsumos extends \sowerphp\autoload\Model_Plural
-{
+use \sowerphp\autoload\Model_Plural;
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_boleta_consumo'; ///< Tabla del modelo
+/**
+ * Modelo plural de la tabla "dte_boleta_consumo" de la base de datos.
+ *
+ * Permite interactuar con varios registros de la tabla.
+ */
+class Model_DteBoletaConsumos extends Model_Plural
+{
 
     /**
      * Método que entrega los días pendientes de enviar RCOF.

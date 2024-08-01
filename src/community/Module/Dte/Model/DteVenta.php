@@ -24,126 +24,84 @@
 namespace website\Dte;
 
 use \website\Dte\Admin\Mantenedores\Model_DteTipos;
+use \website\Dte\Model_Contribuyente;
 
 /**
- * Clase para mapear la tabla dte_venta de la base de datos.
+ * Modelo singular de la tabla "dte_venta" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
 class Model_DteVenta extends Model_Base_Libro
 {
-
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_venta'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
-    public $periodo; ///< integer(32) NOT NULL DEFAULT '' PK
-    public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK
-    public $documentos; ///< integer(32) NOT NULL DEFAULT ''
-    public $xml; ///< text() NOT NULL DEFAULT ''
-    public $track_id; ///< integer(32) NULL DEFAULT ''
-    public $revision_estado; ///< character varying(100) NULL DEFAULT ''
-    public $revision_detalle; ///< character text() NULL DEFAULT ''
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
-            'name'      => 'Emisor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'periodo' => array(
-            'name'      => 'Periodo',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'certificacion' => array(
-            'name'      => 'Certificacion',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'documentos' => array(
-            'name'      => 'Documentos',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'xml' => array(
-            'name'      => 'Xml',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'track_id' => array(
-            'name'      => 'Track Id',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'revision_estado' => array(
-            'name'      => 'Revision Estado',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 100,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'revision_detalle' => array(
-            'name'      => 'Revision Detalle',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte'
-    ); ///< Namespaces que utiliza esta clase
+    
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+            'ordering' => ['periodo'],
+        ],
+        'fields' => [
+            'emisor' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Emisor',
+                'help_text' => '',
+            ],
+            'periodo' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Periodo',
+                'help_text' => '',
+            ],
+            'certificacion' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'false',
+                'primary_key' => true,
+                'verbose_name' => 'Certificacion',
+                'help_text' => '',
+            ],
+            'documentos' => [
+                'type' => self::TYPE_INTEGER,
+                'max_length' => 32,
+                'verbose_name' => 'Documentos',
+                'help_text' => '',
+            ],
+            'xml' => [
+                'type' => self::TYPE_TEXT,
+                'verbose_name' => 'Xml',
+                'help_text' => '',
+            ],
+            'track_id' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Track Id',
+                'help_text' => '',
+            ],
+            'revision_estado' => [
+                'type' => self::TYPE_STRING,
+                'null' => true,
+                'max_length' => 100,
+                'verbose_name' => 'Revision Estado',
+                'help_text' => '',
+            ],
+            'revision_detalle' => [
+                'type' => self::TYPE_TEXT,
+                'null' => true,
+                'verbose_name' => 'Revision Detalle',
+                'help_text' => '',
+            ],
+        ],
+    ];
 
     public static $libro_cols = [
         'dte' => 'TpoDoc',

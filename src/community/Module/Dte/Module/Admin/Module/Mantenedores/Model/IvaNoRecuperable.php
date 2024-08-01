@@ -23,50 +23,41 @@
 
 namespace website\Dte\Admin\Mantenedores;
 
+use \sowerphp\autoload\Model;
+
 /**
- * Clase para mapear la tabla iva_no_recuperable de la base de datos.
+ * Modelo singular de la tabla "iva_no_recuperable" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_IvaNoRecuperable extends \sowerphp\autoload\Model
+class Model_IvaNoRecuperable extends Model
 {
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'iva_no_recuperable'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $codigo; ///< Código asignado por el SII al tipo de IVA: smallint(16) NOT NULL DEFAULT '' PK
-    public $tipo; ///< Nombre del tipo de IVA: character varying(70) NOT NULL DEFAULT ''
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'codigo' => array(
-            'name'      => 'Código',
-            'comment'   => 'Código asignado por el SII al tipo de IVA',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'tipo' => array(
-            'name'      => 'Tipo',
-            'comment'   => 'Nombre del tipo de IVA',
-            'type'      => 'character varying',
-            'length'    => 70,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = 'Tipos de IVA no recuperable';
-
-    public static $fkNamespace = array(); ///< Namespaces que utiliza esta clase
-
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => 'Tipos de IVA no recuperable',
+            'ordering' => ['codigo'],
+        ],
+        'fields' => [
+            'codigo' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'primary_key' => true,
+                'max_length' => 16,
+                'verbose_name' => 'Código',
+                'help_text' => 'Código asignado por el SII al tipo de IVA',
+            ],
+            'tipo' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 70,
+                'verbose_name' => 'Tipo',
+                'help_text' => 'Nombre del tipo de IVA',
+            ]
+        ],
+    ];
+   
 }

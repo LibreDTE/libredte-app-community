@@ -23,15 +23,15 @@
 
 namespace website\Honorarios;
 
-/**
- * Clase para mapear la tabla boleta_honorario de la base de datos.
- */
-class Model_BoletaHonorarios extends \sowerphp\autoload\Model_Plural
-{
+use \sowerphp\autoload\Model_Plural;
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'boleta_honorario'; ///< Tabla del modelo
+/**
+ * Modelo plural de la tabla "boleta_honorario" de la base de datos.
+ *
+ * Permite interactuar con varios registros de la tabla.
+ */
+class Model_BoletaHonorarios extends Model_Plural
+{
 
     /**
      * Método que sincroniza las boletas de honorarios recibidas por la empresa

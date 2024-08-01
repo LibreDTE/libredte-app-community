@@ -23,125 +23,83 @@
 
 namespace website\Dte;
 
+use \website\Dte\Model_Contribuyente;
+
 /**
- * Clase para mapear la tabla dte_guia de la base de datos.
+ * Modelo singular de la tabla "dte_guia" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
 class Model_DteGuia extends Model_Base_Libro
 {
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_guia'; ///< Tabla del modelo
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+            'ordering' => ['emisor'],
+        ],
+        'fields' => [
+            'emisor' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Emisor',
+            ],
+            'periodo' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Periodo',
+            ],
+            'certificacion' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'false',
+                'primary_key' => true,
+                'verbose_name' => 'Certificacion',
+            ],
+            'documentos' => [
+                'type' => self::TYPE_INTEGER,
+                'max_length' => 32,
+                'verbose_name' => 'Documentos',
+            ],
+            'xml' => [
+                'type' => self::TYPE_TEXT,
+                'verbose_name' => 'Xml',
+            ],
+            'track_id' => [
+                'type' => self::TYPE_TEXT,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Track Id',
+            ],
+            'revision_estado' => [
+                'type' => self::TYPE_STRING,
+                'null' => true,
+                'max_length' => 100,
+                'verbose_name' => 'Revision Estado',
+            ],
+            'revision_detalle' => [
+                'type' => self::TYPE_TEXT,
+                'null' => true,
+                'verbose_name' => 'Revision Detalle',
+            ],
+        ],
+    ];
 
-    // Atributos de la clase (columnas en la base de datos)
-    public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
-    public $periodo; ///< integer(32) NOT NULL DEFAULT '' PK
-    public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK
-    public $documentos; ///< integer(32) NOT NULL DEFAULT ''
-    public $xml; ///< text() NOT NULL DEFAULT ''
-    public $track_id; ///< integer(32) NULL DEFAULT ''
-    public $revision_estado; ///< character varying(100) NULL DEFAULT ''
-    public $revision_detalle; ///< text() NULL DEFAULT ''
+    // // Comentario de la tabla en la base de datos
+    // public static $tableComment = '';
 
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
-            'name'      => 'Emisor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'periodo' => array(
-            'name'      => 'Periodo',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'certificacion' => array(
-            'name'      => 'Certificacion',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'documentos' => array(
-            'name'      => 'Documentos',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'xml' => array(
-            'name'      => 'Xml',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'track_id' => array(
-            'name'      => 'Track Id',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'revision_estado' => array(
-            'name'      => 'Revision Estado',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 100,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'revision_detalle' => array(
-            'name'      => 'Revision Detalle',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte'
-    ); ///< Namespaces que utiliza esta clase
+    // public static $fkNamespace = array(
+    //     'Model_Contribuyente' => 'website\Dte'
+    // ); ///< Namespaces que utiliza esta clase
 
     public static $libro_cols = [
         'folio' => 'Folio',

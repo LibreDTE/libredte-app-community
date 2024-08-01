@@ -23,162 +23,107 @@
 
 namespace website\Dte;
 
+use \sowerphp\autoload\Model;
+use \website\Dte\Model_DteEmitido;
+use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
+
 /**
- * Clase para mapear la tabla cobranza de la base de datos.
+ * Modelo singular de la tabla "cobranza" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_Cobranza extends \sowerphp\autoload\Model
+class Model_Cobranza extends Model
 {
-
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'cobranza'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:dte_emitido.emisor
-    public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_emitido.emisor
-    public $folio; ///< integer(32) NOT NULL DEFAULT '' PK FK:dte_emitido.emisor
-    public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK FK:dte_emitido.emisor
-    public $fecha; ///< date() NOT NULL DEFAULT '' PK
-    public $monto; ///< integer(32) NOT NULL DEFAULT ''
-    public $glosa; ///< character varying(40) NULL DEFAULT ''
-    public $pagado; ///< integer(32) NULL DEFAULT ''
-    public $observacion; ///< text() NULL DEFAULT ''
-    public $usuario; ///< integer(32) NULL DEFAULT '' FK:usuario.id
-    public $modificado; ///< date() NULL DEFAULT ''
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
-            'name'      => 'Emisor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'dte' => array(
-            'name'      => 'Dte',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'folio' => array(
-            'name'      => 'Folio',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'certificacion' => array(
-            'name'      => 'Certificacion',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'fecha' => array(
-            'name'      => 'Fecha',
-            'comment'   => '',
-            'type'      => 'date',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'monto' => array(
-            'name'      => 'Monto',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'glosa' => array(
-            'name'      => 'Glosa',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 40,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'pagado' => array(
-            'name'      => 'Pagado',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'observacion' => array(
-            'name'      => 'Observacion',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'usuario' => array(
-            'name'      => 'Usuario',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => array('table' => 'usuario', 'column' => 'id')
-        ),
-        'modificado' => array(
-            'name'      => 'Modificado',
-            'comment'   => '',
-            'type'      => 'date',
-            'length'    => null,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_DteEmitido' => 'website\Dte',
-        'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios'
-    ); ///< Namespaces que utiliza esta clase
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+        ],
+        'fields' => [
+            'emisor' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_DteEmitido::class,
+                'to_table' => 'dte_emitido',
+                'to_field' => 'emisor',
+                'max_length' => 32,
+                'verbose_name' => 'Emisor',
+                'help_text' => 'Rol único tributario (RUT) del contribuyente. Para personas naturales será su rol único nacional (RUN).',
+            ],
+            'dte' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_DteEmitido::class,
+                'to_table' => 'dte_emitido',
+                'to_field' => 'emisor',
+                'max_length' => 16,
+                'verbose_name' => 'Dte',
+            ],
+            'folio' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_DteEmitido::class,
+                'to_table' => 'dte_emitido',
+                'to_field' => 'emisor',
+                'max_length' => 32,
+                'verbose_name' => 'Folio',
+                'help_text' => 'Folio del DTE Emitido',
+            ],
+            'certificacion' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'false',
+                'primary_key' => true,
+                'foreign_key' => Model_DteEmitido::class,
+                'to_table' => 'dte_emitido',
+                'to_field' => 'emisor',
+                'verbose_name' => 'Certificacion',
+            ],
+            'fecha' => [
+                'type' => self::TYPE_DATE,
+                'primary_key' => true,
+                'verbose_name' => 'Fecha',
+            ],
+            'monto' => [
+                'type' => self::TYPE_INTEGER,
+                'max_length' => 32,
+                'verbose_name' => 'Monto',
+            ],
+            'glosa' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 40,
+                'verbose_name' => 'Glosa',
+            ],
+            'pagado' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Pagado',
+            ],
+            'observacion' => [
+                'type' => self::TYPE_TEXT,
+                'null' => true,
+                'verbose_name' => 'Observacion',
+            ],
+            'usuario' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'foreign_key' => Model_Usuario::class,
+                'to_table' => 'usuario',
+                'to_field' => 'id',
+                'max_length' => 32,
+                'verbose_name' => 'Usuario',
+            ],
+            'modificado' => [
+                'type' => self::TYPE_DATE,
+                'null' => true,
+                'verbose_name' => 'Modificado',
+            ],
+        ],
+    ];
 
     /**
      * Método que entrega el DTE emitido asociado al pago que.

@@ -23,809 +23,477 @@
 
 namespace website\Dte;
 
+use \sowerphp\autoload\Model;
+use \website\Dte\Model_Contribuyente;
+
 /**
- * Clase para mapear la tabla registro_compra de la base de datos.
+ * Modelo singular de la tabla "registro_compra" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_RegistroCompra extends \sowerphp\autoload\Model
+class Model_RegistroCompra extends Model
 {
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'registro_compra'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $receptor; ///< integer(32) NOT NULL DEFAULT '' FK:contribuyente.rut
-    public $periodo; ///< integer(32) NOT NULL DEFAULT ''
-    public $estado; ///< smallint(16) NOT NULL DEFAULT ''
-    public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK
-    public $dhdrcodigo; ///< bigint(64) NOT NULL DEFAULT ''
-    public $dcvcodigo; ///< bigint(64) NOT NULL DEFAULT ''
-    public $dcvestadocontab; ///< character varying(20) NULL DEFAULT ''
-    public $detcodigo; ///< bigint(64) NOT NULL DEFAULT ''
-    public $dettipodoc; ///< smallint(16) NOT NULL DEFAULT '' PK
-    public $detrutdoc; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
-    public $detnrodoc; ///< integer(32) NOT NULL DEFAULT '' PK
-    public $detfchdoc; ///< date() NOT NULL DEFAULT ''
-    public $detfecacuse; ///< timestamp without time zone() NULL DEFAULT ''
-    public $detfecreclamado; ///< timestamp without time zone() NULL DEFAULT ''
-    public $detfecrecepcion; ///< timestamp without time zone() NOT NULL DEFAULT ''
-    public $detmntexe; ///< integer(32) NULL DEFAULT ''
-    public $detmntneto; ///< integer(32) NULL DEFAULT ''
-    public $detmntactfijo; ///< integer(32) NULL DEFAULT ''
-    public $detmntivaactfijo; ///< integer(32) NULL DEFAULT ''
-    public $detmntivanorec; ///< integer(32) NULL DEFAULT ''
-    public $detmntcodnorec; ///< integer(32) NULL DEFAULT ''
-    public $detmntsincredito; ///< integer(32) NULL DEFAULT ''
-    public $detmntiva; ///< integer(32) NULL DEFAULT ''
-    public $detmnttotal; ///< integer(32) NOT NULL DEFAULT ''
-    public $dettasaimp; ///< smallint(16) NULL DEFAULT ''
-    public $detanulado; ///< boolean() NULL DEFAULT ''
-    public $detivarettotal; ///< integer(32) NULL DEFAULT ''
-    public $detivaretparcial; ///< integer(32) NULL DEFAULT ''
-    public $detivanoretenido; ///< integer(32) NULL DEFAULT ''
-    public $detivapropio; ///< integer(32) NULL DEFAULT ''
-    public $detivaterceros; ///< integer(32) NULL DEFAULT ''
-    public $detivausocomun; ///< integer(32) NULL DEFAULT ''
-    public $detliqrutemisor; ///< integer(32) NULL DEFAULT '' FK:contribuyente.rut
-    public $detliqvalcomneto; ///< integer(32) NULL DEFAULT ''
-    public $detliqvalcomexe; ///< integer(32) NULL DEFAULT ''
-    public $detliqvalcomiva; ///< integer(32) NULL DEFAULT ''
-    public $detivafueraplazo; ///< integer(32) NULL DEFAULT ''
-    public $dettipodocref; ///< smallint(16) NULL DEFAULT ''
-    public $detfoliodocref; ///< integer(32) NULL DEFAULT ''
-    public $detexpnumid; ///< character varying(10) NULL DEFAULT ''
-    public $detexpnacionalidad; ///< smallint(16) NULL DEFAULT ''
-    public $detcredec; ///< integer(32) NULL DEFAULT ''
-    public $detley18211; ///< integer(32) NULL DEFAULT ''
-    public $detdepenvase; ///< integer(32) NULL DEFAULT ''
-    public $detindsincosto; ///< smallint(16) NULL DEFAULT ''
-    public $detindservicio; ///< smallint(16) NULL DEFAULT ''
-    public $detmntnofact; ///< integer(32) NULL DEFAULT ''
-    public $detmntperiodo; ///< integer(32) NULL DEFAULT ''
-    public $detpsjnac; ///< integer(32) NULL DEFAULT ''
-    public $detpsjint; ///< integer(32) NULL DEFAULT ''
-    public $detnumint; ///< integer(32) NULL DEFAULT ''
-    public $detcdgsiisucur; ///< integer(32) NULL DEFAULT ''
-    public $detemisornota; ///< integer(32) NULL DEFAULT ''
-    public $dettabpuros; ///< integer(32) NULL DEFAULT ''
-    public $dettabcigarrillos; ///< integer(32) NULL DEFAULT ''
-    public $dettabelaborado; ///< integer(32) NULL DEFAULT ''
-    public $detimpvehiculo; ///< integer(32) NULL DEFAULT ''
-    public $dettpoimp; ///< smallint(16) NOT NULL DEFAULT ''
-    public $dettipotransaccion; ///< smallint(16) NOT NULL DEFAULT ''
-    public $deteventoreceptor; ///< character(3) NULL DEFAULT ''
-    public $deteventoreceptorleyenda; ///< character varying(200) NULL DEFAULT ''
-    public $cambiartipotran; ///< integer(32) NULL DEFAULT ''
-    public $detpcarga; ///< integer(32) NOT NULL DEFAULT ''
-    public $totaldtoimontoimp; ///< integer(32) NULL DEFAULT ''
-    public $totaldinrmontoivanor; ///< integer(32) NULL DEFAULT ''
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'receptor' => array(
-            'name'      => 'Receptor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => ['table' => 'contribuyente', 'column' => 'rut']
-        ),
-        'periodo' => array(
-            'name'      => 'Periodo',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'estado' => array(
-            'name'      => 'Estado',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'certificacion' => array(
-            'name'      => 'Certificacion',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'dhdrcodigo' => array(
-            'name'      => 'Dhdrcodigo',
-            'comment'   => '',
-            'type'      => 'bigint',
-            'length'    => 64,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'dcvcodigo' => array(
-            'name'      => 'Dcvcodigo',
-            'comment'   => '',
-            'type'      => 'bigint',
-            'length'    => 64,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'dcvestadocontab' => array(
-            'name'      => 'Dcvestadocontab',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 20,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detcodigo' => array(
-            'name'      => 'Detcodigo',
-            'comment'   => '',
-            'type'      => 'bigint',
-            'length'    => 64,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'dettipodoc' => array(
-            'name'      => 'Dettipodoc',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'detrutdoc' => array(
-            'name'      => 'Detrutdoc',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => ['table' => 'contribuyente', 'column' => 'rut']
-        ),
-        'detnrodoc' => array(
-            'name'      => 'Detnrodoc',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'detfchdoc' => array(
-            'name'      => 'Detfchdoc',
-            'comment'   => '',
-            'type'      => 'date',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detfecacuse' => array(
-            'name'      => 'Detfecacuse',
-            'comment'   => '',
-            'type'      => 'timestamp without time zone',
-            'length'    => null,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detfecreclamado' => array(
-            'name'      => 'Detfecreclamado',
-            'comment'   => '',
-            'type'      => 'timestamp without time zone',
-            'length'    => null,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detfecrecepcion' => array(
-            'name'      => 'Detfecrecepcion',
-            'comment'   => '',
-            'type'      => 'timestamp without time zone',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detmntexe' => array(
-            'name'      => 'Detmntexe',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detmntneto' => array(
-            'name'      => 'Detmntneto',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detmntactfijo' => array(
-            'name'      => 'Detmntactfijo',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detmntivaactfijo' => array(
-            'name'      => 'Detmntivaactfijo',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detmntivanorec' => array(
-            'name'      => 'Detmntivanorec',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detmntcodnorec' => array(
-            'name'      => 'Detmntcodnorec',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detmntsincredito' => array(
-            'name'      => 'Detmntsincredito',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detmntiva' => array(
-            'name'      => 'Detmntiva',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detmnttotal' => array(
-            'name'      => 'Detmnttotal',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'dettasaimp' => array(
-            'name'      => 'Dettasaimp',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detanulado' => array(
-            'name'      => 'Detanulado',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detivarettotal' => array(
-            'name'      => 'Detivarettotal',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detivaretparcial' => array(
-            'name'      => 'Detivaretparcial',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detivanoretenido' => array(
-            'name'      => 'Detivanoretenido',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detivapropio' => array(
-            'name'      => 'Detivapropio',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detivaterceros' => array(
-            'name'      => 'Detivaterceros',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detivausocomun' => array(
-            'name'      => 'Detivausocomun',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detliqrutemisor' => array(
-            'name'      => 'Detliqrutemisor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => ['table' => 'contribuyente', 'column' => 'rut']
-        ),
-        'detliqvalcomneto' => array(
-            'name'      => 'Detliqvalcomneto',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detliqvalcomexe' => array(
-            'name'      => 'Detliqvalcomexe',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detliqvalcomiva' => array(
-            'name'      => 'Detliqvalcomiva',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detivafueraplazo' => array(
-            'name'      => 'Detivafueraplazo',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'dettipodocref' => array(
-            'name'      => 'Dettipodocref',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detfoliodocref' => array(
-            'name'      => 'Detfoliodocref',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detexpnumid' => array(
-            'name'      => 'Detexpnumid',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 10,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detexpnacionalidad' => array(
-            'name'      => 'Detexpnacionalidad',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detcredec' => array(
-            'name'      => 'Detcredec',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detley18211' => array(
-            'name'      => 'Detley18211',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detdepenvase' => array(
-            'name'      => 'Detdepenvase',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detindsincosto' => array(
-            'name'      => 'Detindsincosto',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detindservicio' => array(
-            'name'      => 'Detindservicio',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detmntnofact' => array(
-            'name'      => 'Detmntnofact',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detmntperiodo' => array(
-            'name'      => 'Detmntperiodo',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detpsjnac' => array(
-            'name'      => 'Detpsjnac',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detpsjint' => array(
-            'name'      => 'Detpsjint',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detnumint' => array(
-            'name'      => 'Detnumint',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detcdgsiisucur' => array(
-            'name'      => 'Detcdgsiisucur',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detemisornota' => array(
-            'name'      => 'Detemisornota',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'dettabpuros' => array(
-            'name'      => 'Dettabpuros',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'dettabcigarrillos' => array(
-            'name'      => 'Dettabcigarrillos',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'dettabelaborado' => array(
-            'name'      => 'Dettabelaborado',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detimpvehiculo' => array(
-            'name'      => 'Detimpvehiculo',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'dettpoimp' => array(
-            'name'      => 'Dettpoimp',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'dettipotransaccion' => array(
-            'name'      => 'Dettipotransaccion',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'deteventoreceptor' => array(
-            'name'      => 'Deteventoreceptor',
-            'comment'   => '',
-            'type'      => 'character',
-            'length'    => 3,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'deteventoreceptorleyenda' => array(
-            'name'      => 'Deteventoreceptorleyenda',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 200,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'cambiartipotran' => array(
-            'name'      => 'Cambiartipotran',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'detpcarga' => array(
-            'name'      => 'Detpcarga',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'totaldtoimontoimp' => array(
-            'name'      => 'Totaldtoimontoimp',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'totaldinrmontoivanor' => array(
-            'name'      => 'Totaldinrmontoivanor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte',
-    ); ///< Namespaces que utiliza esta clase
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+            'ordering' => ['periodo'],
+        ],
+        'fields' => [
+            'receptor' => [
+                'type' => self::TYPE_INTEGER,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Receptor',
+                'help_text' => '',
+            ],
+            'periodo' => [
+                'type' => self::TYPE_INTEGER,
+                'max_length' => 32,
+                'verbose_name' => 'Periodo',
+                'help_text' => '',
+            ],
+            'estado' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'max_length' => 16,
+                'verbose_name' => 'Estado',
+                'help_text' => '',
+            ],
+            'certificacion' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'false',
+                'primary_key' => true,
+                'verbose_name' => 'Certificacion',
+                'help_text' => '',
+            ],
+            'dhdrcodigo' => [
+                'type' => self::TYPE_BIG_INTEGER,
+                'max_length' => 64,
+                'verbose_name' => 'Dhdrcodigo',
+                'help_text' => '',
+            ],
+            'dcvcodigo' => [
+                'type' => self::TYPE_BIG_INTEGER,
+                'max_length' => 64,
+                'verbose_name' => 'Dcvcodigo',
+                'help_text' => '',
+            ],
+            'dcvestadocontab' => [
+                'type' => self::TYPE_STRING,
+                'null' => true,
+                'max_length' => 20,
+                'verbose_name' => 'Dcvestadocontab',
+                'help_text' => '',
+            ],
+            'detcodigo' => [
+                'type' => self::TYPE_BIG_INTEGER,
+                'max_length' => 64,
+                'verbose_name' => 'Detcodigo',
+                'help_text' => '',
+            ],
+            'dettipodoc' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'primary_key' => true,
+                'max_length' => 16,
+                'verbose_name' => 'Dettipodoc',
+                'help_text' => '',
+            ],
+            'detrutdoc' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Detrutdoc',
+                'help_text' => '',
+            ],
+            'detnrodoc' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detnrodoc',
+                'help_text' => '',
+            ],
+            'detfchdoc' => [
+                'type' => self::TYPE_DATE,
+                'verbose_name' => 'Detfchdoc',
+                'help_text' => '',
+            ],
+            'detfecacuse' => [
+                'type' => self::TYPE_TIMESTAMP,
+                'null' => true,
+                'verbose_name' => 'Detfecacuse',
+                'help_text' => '',
+            ],
+            'detfecreclamado' => [
+                'type' => self::TYPE_TIMESTAMP,
+                'null' => true,
+                'verbose_name' => 'Detfecreclamado',
+                'help_text' => '',
+            ],
+            'detfecrecepcion' => [
+                'type' => self::TYPE_TIMESTAMP,
+                'verbose_name' => 'Detfecrecepcion',
+                'help_text' => '',
+            ],
+            'detmntexe' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detmntexe',
+                'help_text' => '',
+            ],
+            'detmntneto' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detmntneto',
+                'help_text' => '',
+            ],
+            'detmntactfijo' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detmntactfijo',
+                'help_text' => '',
+            ],
+            'detmntivaactfijo' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detmntivaactfijo',
+                'help_text' => '',
+            ],
+            'detmntivanorec' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detmntivanorec',
+                'help_text' => '',
+            ],
+            'detmntcodnorec' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detmntcodnorec',
+                'help_text' => '',
+            ],
+            'detmntsincredito' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detmntsincredito',
+                'help_text' => '',
+            ],
+            'detmntiva' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detmntiva',
+                'help_text' => '',
+            ],
+            'detmnttotal' => [
+                'type' => self::TYPE_INTEGER,
+                'max_length' => 32,
+                'verbose_name' => 'Detmnttotal',
+                'help_text' => '',
+            ],
+            'dettasaimp' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'null' => true,
+                'max_length' => 16,
+                'verbose_name' => 'Dettasaimp',
+                'help_text' => '',
+            ],
+            'detanulado' => [
+                'type' => self::TYPE_BOOLEAN,
+                'null' => true,
+                'verbose_name' => 'Detanulado',
+                'help_text' => '',
+            ],
+            'detivarettotal' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detivarettotal',
+                'help_text' => '',
+            ],
+            'detivaretparcial' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detivaretparcial',
+                'help_text' => '',
+            ],
+            'detivanoretenido' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detivanoretenido',
+                'help_text' => '',
+            ],
+            'detivapropio' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detivapropio',
+                'help_text' => '',
+            ],
+            'detivaterceros' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detivaterceros',
+                'help_text' => '',
+            ],
+            'detivausocomun' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detivausocomun',
+                'help_text' => '',
+            ],
+            'detliqrutemisor' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Detliqrutemisor',
+                'help_text' => '',
+            ],
+            'detliqvalcomneto' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detliqvalcomneto',
+                'help_text' => '',
+            ],
+            'detliqvalcomexe' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detliqvalcomexe',
+                'help_text' => '',
+            ],
+            'detliqvalcomiva' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detliqvalcomiva',
+                'help_text' => '',
+            ],
+            'detivafueraplazo' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detivafueraplazo',
+                'help_text' => '',
+            ],
+            'dettipodocref' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'null' => true,
+                'max_length' => 16,
+                'verbose_name' => 'Dettipodocref',
+                'help_text' => '',
+            ],
+            'detfoliodocref' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detfoliodocref',
+                'help_text' => '',
+            ],
+            'detexpnumid' => [
+                'type' => self::TYPE_STRING,
+                'null' => true,
+                'max_length' => 10,
+                'verbose_name' => 'Detexpnumid',
+                'help_text' => '',
+            ],
+            'detexpnacionalidad' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'null' => true,
+                'max_length' => 16,
+                'verbose_name' => 'Detexpnacionalidad',
+                'help_text' => '',
+            ],
+            'detcredec' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detcredec',
+                'help_text' => '',
+            ],
+            'detley18211' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detley18211',
+                'help_text' => '',
+            ],
+            'detdepenvase' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detdepenvase',
+                'help_text' => '',
+            ],
+            'detindsincosto' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'null' => true,
+                'max_length' => 16,
+                'verbose_name' => 'Detindsincosto',
+                'help_text' => '',
+            ],
+            'detindservicio' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'null' => true,
+                'max_length' => 16,
+                'verbose_name' => 'Detindservicio',
+                'help_text' => '',
+            ],
+            'detmntnofact' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detmntnofact',
+                'help_text' => '',
+            ],
+            'detmntperiodo' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detmntperiodo',
+                'help_text' => '',
+            ],
+            'detpsjnac' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detpsjnac',
+                'help_text' => '',
+            ],
+            'detpsjint' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detpsjint',
+                'help_text' => '',
+            ],
+            'detnumint' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detnumint',
+                'help_text' => '',
+            ],
+            'detcdgsiisucur' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detcdgsiisucur',
+                'help_text' => '',
+            ],
+            'detemisornota' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detemisornota',
+                'help_text' => '',
+            ],
+            'dettabpuros' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Dettabpuros',
+                'help_text' => '',
+            ],
+            'dettabcigarrillos' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Dettabcigarrillos',
+                'help_text' => '',
+            ],
+            'dettabelaborado' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Dettabelaborado',
+                'help_text' => '',
+            ],
+            'detimpvehiculo' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Detimpvehiculo',
+                'help_text' => '',
+            ],
+            'dettpoimp' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'max_length' => 16,
+                'verbose_name' => 'Dettpoimp',
+                'help_text' => '',
+            ],
+            'dettipotransaccion' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'max_length' => 16,
+                'verbose_name' => 'Dettipotransaccion',
+                'help_text' => '',
+            ],
+            'deteventoreceptor' => [
+                'type' => self::TYPE_STRING,
+                'null' => true,
+                'max_length' => 3,
+                'verbose_name' => 'Deteventoreceptor',
+                'help_text' => '',
+            ],
+            'deteventoreceptorleyenda' => [
+                'type' => self::TYPE_STRING,
+                'null' => true,
+                'max_length' => 200,
+                'verbose_name' => 'Deteventoreceptorleyenda',
+                'help_text' => '',
+            ],
+            'cambiartipotran' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Cambiartipotran',
+                'help_text' => '',
+            ],
+            'detpcarga' => [
+                'type' => self::TYPE_INTEGER,
+                'max_length' => 32,
+                'verbose_name' => 'Detpcarga',
+                'help_text' => '',
+            ],
+            'totaldtoimontoimp' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Totaldtoimontoimp',
+                'help_text' => '',
+            ],
+            'totaldinrmontoivanor' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Totaldinrmontoivanor',
+                'help_text' => '',
+            ],
+        ],
+    ];
 
     /**
      * Método que se ejecuta al insertar un nuevo registro en la base de datos.

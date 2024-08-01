@@ -23,125 +23,73 @@
 
 namespace website\Dte;
 
+use \website\Dte\Model_Contribuyentes;
+
 /**
- * Clase para mapear la tabla dte_boleta_consumo de la base de datos.
+ * Modelo singular de la tabla "dte_boleta_consumo" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
 class Model_DteBoletaConsumo extends Model_Base_Envio
 {
-
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_boleta_consumo'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
-    public $dia; ///< date() NOT NULL DEFAULT '' PK
-    public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK
-    public $secuencia; ///< integer(32) NOT NULL DEFAULT ''
-    public $xml; ///< text() NOT NULL DEFAULT ''
-    public $track_id; ///< integer(32) NULL DEFAULT ''
-    public $revision_estado; ///< character varying(100) NULL DEFAULT ''
-    public $revision_detalle; ///< text() NULL DEFAULT ''
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
-            'name'      => 'Emisor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'dia' => array(
-            'name'      => 'Día',
-            'comment'   => '',
-            'type'      => 'date',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'certificacion' => array(
-            'name'      => 'Certificacion',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'secuencia' => array(
-            'name'      => 'Secuencia',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'xml' => array(
-            'name'      => 'Xml',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'track_id' => array(
-            'name'      => 'Track ID',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'revision_estado' => array(
-            'name'      => 'Estado',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 100,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'revision_detalle' => array(
-            'name'      => 'Detalle',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte'
-    ); ///< Namespaces que utiliza esta clase
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+        ],
+        'fields' => [
+            'emisor' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Emisor',
+            ],
+            'dia' => [
+                'type' => self::TYPE_DATE,
+                'primary_key' => true,
+                'verbose_name' => 'Día',
+            ],
+            'certificacion' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'false',
+                'primary_key' => true,
+                'verbose_name' => 'Certificacion',
+            ],
+            'secuencia' => [
+                'type' => self::TYPE_INTEGER,
+                'max_length' => 32,
+                'verbose_name' => 'Secuencia',
+            ],
+            'xml' => [
+                'type' => self::TYPE_TEXT,
+                'verbose_name' => 'Xml',
+            ],
+            'track_id' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Track ID',
+            ],
+            'revision_estado' => [
+                'type' => self::TYPE_STRING,
+                'null' => true,
+                'max_length' => 100,
+                'verbose_name' => 'Estado',
+            ],
+            'revision_detalle' => [
+                'type' => self::TYPE_TEXT,
+                'null' => true,
+                'verbose_name' => 'Detalle',
+            ],
+        ],
+    ];
 
     private $_Emisor; //< Para emisor
 

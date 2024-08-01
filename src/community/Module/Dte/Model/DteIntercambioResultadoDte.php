@@ -23,126 +23,100 @@
 
 namespace website\Dte;
 
+use \sowerphp\autoload\Model;
+use \website\Dte\Model_DteEmitido;
+use \website\Dte\Model_DteIntercambioResultado;
+
 /**
- * Clase para mapear la tabla dte_intercambio_resultado_dte de la base de datos.
+ * Modelo singular de la tabla "dte_intercambio_resultado_dte" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_DteIntercambioResultadoDte extends \sowerphp\autoload\Model
+class Model_DteIntercambioResultadoDte extends Model
 {
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_intercambio_resultado_dte'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:dte_emitido.emisor
-    public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_emitido.emisor
-    public $folio; ///< integer(32) NOT NULL DEFAULT '' PK FK:dte_emitido.emisor
-    public $certificacion; ///< boolean() NOT NULL DEFAULT '' PK FK:dte_emitido.emisor
-    public $responde; ///< integer(32) NOT NULL DEFAULT '' FK:dte_intercambio_resultado.responde
-    public $codigo; ///< character(32) NOT NULL DEFAULT '' FK:dte_intercambio_resultado.responde
-    public $estado; ///< integer(32) NOT NULL DEFAULT ''
-    public $glosa; ///< character varying(256) NOT NULL DEFAULT ''
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
-            'name'      => 'Emisor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'dte' => array(
-            'name'      => 'Dte',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'folio' => array(
-            'name'      => 'Folio',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'certificacion' => array(
-            'name'      => 'Certificacion',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'responde' => array(
-            'name'      => 'Responde',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => array('table' => 'dte_intercambio_resultado', 'column' => 'responde')
-        ),
-        'codigo' => array(
-            'name'      => 'Codigo',
-            'comment'   => '',
-            'type'      => 'character',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => array('table' => 'dte_intercambio_resultado', 'column' => 'responde')
-        ),
-        'estado' => array(
-            'name'      => 'Estado',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'glosa' => array(
-            'name'      => 'Glosa',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 256,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_DteEmitido' => 'website\Dte',
-        'Model_DteIntercambioResultado' => 'website\Dte',
-    ); ///< Namespaces que utiliza esta clase
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+            'ordering' => ['dte'],
+        ],
+        'fields' => [
+            'emisor' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_DteEmitido::class,
+                'to_table' => 'dte_emitido',
+                'to_field' => 'emisor',
+                'max_length' => 32,
+                'verbose_name' => 'Emisor',
+                'help_text' => '',
+            ],
+            'dte' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_DteEmitido::class,
+                'to_table' => 'dte_emitido',
+                'to_field' => 'emisor',
+                'max_length' => 16,
+                'verbose_name' => 'Dte',
+                'help_text' => '',
+            ],
+            'folio' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_DteEmitido::class,
+                'to_table' => 'dte_emitido',
+                'to_field' => 'emisor',
+                'max_length' => 32,
+                'verbose_name' => 'Folio',
+                'help_text' => '',
+            ],
+            'certificacion' => [
+                'type' => self::TYPE_BOOLEAN,
+                'primary_key' => true,
+                'foreign_key' => Model_DteEmitido::class,
+                'to_table' => 'dte_emitido',
+                'to_field' => 'emisor',
+                'verbose_name' => 'Certificacion',
+                'help_text' => '',
+            ],
+            'responde' => [
+                'type' => self::TYPE_INTEGER,
+                'foreign_key' => Model_DteIntercambioResultado::class,
+                'to_table' => 'dte_intercambio_resultado',
+                'to_field' => 'responde',
+                'max_length' => 32,
+                'verbose_name' => 'Codigo',
+                'help_text' => '',
+            ],
+            'codigo' => [
+                'type' => self::TYPE_STRING,
+                'foreign_key' => Model_DteIntercambioResultado::class,
+                'to_table' => 'dte_intercambio_resultado',
+                'to_field' => 'responde',
+                'max_length' => 32,
+                'verbose_name' => 'Codigo',
+                'help_text' => '',
+            ],
+            'estado' => [
+                'type' => self::TYPE_INTEGER,
+                'max_length' => 32,
+                'verbose_name' => 'Estado',
+                'help_text' => '',
+            ],
+            'glosa' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 255,
+                'verbose_name' => 'Glosa',
+                'help_text' => '',
+            ],
+        ],
+    ];
 
     /**
      * Método que entrega el sobre (xml) donde veía el resultado.

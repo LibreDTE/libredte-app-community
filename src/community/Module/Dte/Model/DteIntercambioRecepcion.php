@@ -23,149 +23,89 @@
 
 namespace website\Dte;
 
+use \sowerphp\autoload\Model;
+use \website\Dte\Model_Contribuyente;
+
 /**
- * Clase para mapear la tabla dte_intercambio_recepcion de la base de datos.
+ * Modelo singular de la tabla "dte_intercambio_recepcion" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_DteIntercambioRecepcion extends \sowerphp\autoload\Model
+class Model_DteIntercambioRecepcion extends Model
 {
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_intercambio_recepcion'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $responde; ///< integer(32) NOT NULL DEFAULT '' PK
-    public $recibe; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
-    public $codigo; ///< character(32) NOT NULL DEFAULT '' PK
-    public $contacto; ///< character varying(40) NULL DEFAULT ''
-    public $telefono; ///< character varying(40) NULL DEFAULT ''
-    public $email; ///< character varying(80) NULL DEFAULT ''
-    public $fecha_hora; ///< timestamp without time zone() NOT NULL DEFAULT ''
-    public $estado; ///< integer(32) NOT NULL DEFAULT ''
-    public $glosa; ///< character varying(256) NOT NULL DEFAULT ''
-    public $xml; ///< text() NOT NULL DEFAULT ''
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'responde' => array(
-            'name'      => 'Responde',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'recibe' => array(
-            'name'      => 'Recibe',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'codigo' => array(
-            'name'      => 'Codigo',
-            'comment'   => '',
-            'type'      => 'character',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'contacto' => array(
-            'name'      => 'Contacto',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 40,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'telefono' => array(
-            'name'      => 'Telefono',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 40,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'email' => array(
-            'name'      => 'Email',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 80,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'fecha_hora' => array(
-            'name'      => 'Fecha Hora',
-            'comment'   => '',
-            'type'      => 'timestamp without time zone',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'estado' => array(
-            'name'      => 'Estado',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'glosa' => array(
-            'name'      => 'Glosa',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 256,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'xml' => array(
-            'name'      => 'Xml',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte'
-    ); ///< Namespaces que utiliza esta clase
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+            'ordering' => ['responde'],
+        ],
+        'fields' => [
+            'responde' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Responde',
+            ],
+            'recibe' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Recibe',
+            ],
+            'codigo' => [
+                'type' => self::TYPE_STRING,
+                'primary_key' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Codigo',
+            ],
+            'contacto' => [
+                'type' => self::TYPE_STRING,
+                'null' => true,
+                'max_length' => 40,
+                'verbose_name' => 'Contacto',
+            ],
+            'telefono' => [
+                'type' => self::TYPE_STRING,
+                'null' => true,
+                'max_length' => 40,
+                'verbose_name' => 'Telefono',
+            ],
+            'email' => [
+                'type' => self::TYPE_STRING,
+                'null' => true,
+                'max_length' => 80,
+                'verbose_name' => 'Email',
+                'validation' => ['email'],
+                'sanitize' => ['strip_tags', 'spaces', 'trim', 'email'],
+            ],
+            'fecha_hora' => [
+                'type' => self::TYPE_TIMESTAMP,
+                'verbose_name' => 'Fecha Hora',
+            ],
+            'estado' => [
+                'type' => self::TYPE_INTEGER,
+                'max_length' => 32,
+                'verbose_name' => 'Estado',
+            ],
+            'glosa' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 255,
+                'verbose_name' => 'Glosa',
+            ],
+            'xml' => [
+                'type' => self::INPUT_TEXT,
+                'verbose_name' => 'Xml',
+            ],
+        ],
+    ];
 
     /**
      * Método que guarda el XML de la Recepción de un intercambio.

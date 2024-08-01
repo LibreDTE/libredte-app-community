@@ -23,10 +23,12 @@
 
 namespace website\Dte;
 
+use \sowerphp\autoload\Model;
+
 /**
  * Clase base para para el modelo singular de documentos del SII.
  */
-abstract class Model_Base_Documento extends \sowerphp\autoload\Model
+abstract class Model_Base_Documento extends Model
 {
 
     /**

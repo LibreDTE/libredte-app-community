@@ -23,135 +23,91 @@
 
 namespace website\Dte\Admin\Mantenedores;
 
+use \sowerphp\autoload\Model;
+
 /**
- * Clase para mapear la tabla dte_tipo de la base de datos.
+ * Modelo singular de la tabla "dte_tipo" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_DteTipo extends \sowerphp\autoload\Model
+class Model_DteTipo extends Model
 {
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_tipo'; ///< Tabla del modelo
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => 'Tipos de documentos (electrónicos y no electrónicos)',
+            'ordering' => ['codigo'],
+        ],
+        'fields' => [
+            'codigo' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'primary_key' => true,
+                'max_length' => 16,
+                'verbose_name' => 'Código',
+                'help_text' => 'Código asignado por el SII al tipo de documento',
+            ],
+            'tipo' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 60,
+                'verbose_name' => 'Tipo',
+                'help_text' => 'Nombre del tipo de documento',
+            ],
+            'electronico' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'true',
+                'verbose_name' => 'Electrónico',
+                'help_text' => 'Indica si el documento es o no electrónico',
+            ],
+            'compra' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'false',
+                'verbose_name' => 'Compra',
+                'help_text' => '',
+            ],
+            'venta' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'false',
+                'verbose_name' => 'Venta',
+                'help_text' => '',
+            ],
+            'categoria' => [
+                'type' => self::TYPE_CHAR,
+                'default' => 'T',
+                'max_length' => 1,
+                'verbose_name' => 'Categoría',
+                'help_text' => '',
+            ],
+            'enviar' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'false',
+                'verbose_name' => 'Enviar',
+                'help_text' => '',
+            ],
+            'cedible' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'false',
+                'verbose_name' => 'Cedible',
+                'help_text' => '',
+            ],
+            'operacion' => [
+                'type' => self::TYPE_CHAR,
+                'null' => true,
+                'max_length' => 1,
+                'verbose_name' => 'Operación',
+                'help_text' => '',
+            ],
+        ],
+    ];
 
-    // Atributos de la clase (columnas en la base de datos)
-    public $codigo; ///< Código asignado por el SII al tipo de documento: smallint(16) NOT NULL DEFAULT '' PK
-    public $tipo; ///< Nombre del tipo de documento: character varying(60) NOT NULL DEFAULT ''
-    public $electronico; ///< Indica si el documento es o no electrónico: boolean() NOT NULL DEFAULT 'true'
-    public $compra; ///< boolean() NOT NULL DEFAULT 'false'
-    public $venta; ///< boolean() NOT NULL DEFAULT 'false'
-    public $categoria; ///< character(1) NOT NULL DEFAULT 'T'
-    public $enviar; ///< boolean() NOT NULL DEFAULT 'false'
-    public $cedible; ///< boolean() NOT NULL DEFAULT 'false'
-    public $operacion; ///< character(1) NULL DEFAULT ''
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'codigo' => array(
-            'name'      => 'Código',
-            'comment'   => 'Código asignado por el SII al tipo de documento',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'tipo' => array(
-            'name'      => 'Tipo',
-            'comment'   => 'Nombre del tipo de documento',
-            'type'      => 'character varying',
-            'length'    => 60,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'electronico' => array(
-            'name'      => 'Electrónico',
-            'comment'   => 'Indica si el documento es o no electrónico',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'true',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'compra' => array(
-            'name'      => 'Compra',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'venta' => array(
-            'name'      => 'Venta',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'categoria' => array(
-            'name'      => 'Categoría',
-            'comment'   => '',
-            'type'      => 'character',
-            'length'    => 1,
-            'null'      => false,
-            'default'   => 'T',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'enviar' => array(
-            'name'      => 'Enviar',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'cedible' => array(
-            'name'      => 'Cedible',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'operacion' => array(
-            'name'      => 'Operación',
-            'comment'   => '',
-            'type'      => 'character',
-            'length'    => 1,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = 'Tipos de documentos (electrónicos y no electrónicos)';
-
-    public static $fkNamespace = array(); ///< Namespaces que utiliza esta clase
+    public function getDteTipoAtrribute()
+    {
+        return $this->tipo;
+    }
 
     /**
      * Constructor del tipo de dte.
@@ -159,7 +115,6 @@ class Model_DteTipo extends \sowerphp\autoload\Model
     public function __construct($codigo = null)
     {
         parent::__construct($codigo);
-        $this->dte_tipo = &$this->tipo;
     }
 
     /**

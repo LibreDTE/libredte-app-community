@@ -23,15 +23,15 @@
 
 namespace website\Dte\Admin;
 
-/**
- * Clase para mapear la tabla item_clasificacion de la base de datos.
- */
-class Model_ItemClasificaciones extends \sowerphp\autoload\Model_Plural
-{
+use \sowerphp\autoload\Model_Plural;
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'item_clasificacion'; ///< Tabla del modelo
+/**
+ * Modelo plural de la tabla "item_clasificacion" de la base de datos.
+ *
+ * Permite interactuar con varios registros de la tabla.
+ */
+class Model_ItemClasificaciones extends Model_Plural
+{
 
     /**
      * Método que entrega el listado de clasificaciones.

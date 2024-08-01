@@ -23,14 +23,13 @@
 
 namespace website\Dte;
 
+use \sowerphp\autoload\Model_Plural;
+
 /**
- * Clase para mapear la tabla contribuyente_usuario de la base de datos.
+ * Modelo plural de la tabla "contribuyente_usuario" de la base de datos.
+ *
+ * Permite interactuar con varios registros de la tabla.
  */
-class Model_ContribuyenteUsuarios extends \sowerphp\autoload\Model_Plural
+class Model_ContribuyenteUsuarios extends Model_Plural
 {
-
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'contribuyente_usuario'; ///< Tabla del modelo
-
 }

@@ -23,15 +23,15 @@
 
 namespace website\Dte\Admin;
 
-/**
- * Clase para mapear la tabla item de la base de datos.
- */
-class Model_Itemes extends \sowerphp\autoload\Model_Plural
-{
+use \sowerphp\autoload\Model_Plural;
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'item'; ///< Tabla del modelo
+/**
+ * Modelo plural de la tabla "item" de la base de datos.
+ *
+ * Permite interactuar con varios registros de la tabla.
+ */
+class Model_Itemes extends Model_Plural
+{
 
     /**
      * Método que busca un item en la base de datos.

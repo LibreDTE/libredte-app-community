@@ -23,50 +23,41 @@
 
 namespace website\Sistema\General;
 
+use \sowerphp\autoload\Model;
+
 /**
- * Clase para mapear la tabla banco de la base de datos
+ * Modelo singular de la tabla "banco" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_Banco extends \sowerphp\autoload\Model
+class Model_Banco extends Model
 {
-
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'banco'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $codigo; ///< Código de banco de la SBIF: char(3)(3) NOT NULL DEFAULT '' PK
-    public $banco; ///< Nombre del banco: varchar(40)(40) NOT NULL DEFAULT ''
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'codigo' => array(
-            'name'      => 'Codigo',
-            'comment'   => 'Código de banco de la SBIF',
-            'type'      => 'char',
-            'length'    => 3,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'banco' => array(
-            'name'      => 'Banco',
-            'comment'   => 'Nombre del banco',
-            'type'      => 'varchar',
-            'length'    => 40,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = 'Tabla para bancos';
-
-    public static $fkNamespace = array(); ///< Namespaces que utiliza esta clase
+    
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => 'Tabla para bancos',
+            'ordering' => ['banco'],
+        ],
+        'fields' => [
+            'codigo' => [
+                'type' => self::TYPE_STRING,
+                'primary_key' => true,
+                'max_length' => 3,
+                'verbose_name' => 'Codigo',
+                'help_text' => 'Código de banco de la SBIF',
+            ],
+            'banco' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 40,
+                'verbose_name' => 'Banco',
+                'help_text' => 'Nombre del banco',
+            ],
+        ],
+    ];
 
 }

@@ -23,127 +23,99 @@
 
 namespace website\Dte;
 
+use \sowerphp\autoload\Model;
+use website\Dte\Admin\Mantenedores\Model_DteReferenciaTipo;
+use \website\Dte\Admin\Mantenedores\Model_DteTipo;
+use \website\Dte\Model_Contribuyente;
+
 /**
- * Clase para mapear la tabla dte_referencia de la base de datos.
+ * Modelo singular de la tabla "dte_referencia" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_DteReferencia extends \sowerphp\autoload\Model
+class Model_DteReferencia extends Model
 {
-
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_referencia'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
-    public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_tipo.codigo
-    public $folio; ///< integer(32) NOT NULL DEFAULT '' PK
-    public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK
-    public $referencia_dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_tipo.codigo
-    public $referencia_folio; ///< integer(32) NOT NULL DEFAULT '' PK
-    public $codigo; ///< smallint(16) NULL DEFAULT '' FK:dte_referencia_tipo.codigo
-    public $razon; ///< character varying(90) NULL DEFAULT ''
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
-            'name'      => 'Emisor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'dte' => array(
-            'name'      => 'Dte',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_tipo', 'column' => 'codigo')
-        ),
-        'folio' => array(
-            'name'      => 'Folio',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'certificacion' => array(
-            'name'      => 'Certificacion',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'referencia_dte' => array(
-            'name'      => 'Referencia Dte',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_tipo', 'column' => 'codigo')
-        ),
-        'referencia_folio' => array(
-            'name'      => 'Referencia Folio',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'codigo' => array(
-            'name'      => 'Codigo',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => array('table' => 'dte_referencia_tipo', 'column' => 'codigo')
-        ),
-        'razon' => array(
-            'name'      => 'Razon',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 90,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte',
-        'Model_DteTipo' => 'website\Dte',
-        'Model_DteReferenciaTipo' => 'website\Dte'
-    ); ///< Namespaces que utiliza esta clase
+    
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+            'ordering' => ['dte'],
+        ],
+        'fields' => [
+            'emisor' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Emisor',
+                'help_text' => '',
+            ],
+            'dte' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_DteTipo::class,
+                'to_table' => 'dte_tipo',
+                'to_field' => 'codigo',
+                'max_length' => 16,
+                'verbose_name' => 'Dte',
+                'help_text' => '',
+            ],
+            'folio' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Folio',
+                'help_text' => '',
+            ],
+            'certificacion' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'false',
+                'primary_key' => true,
+                'verbose_name' => 'Certificacion',
+                'help_text' => '',
+            ],
+            'referencia_dte' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_DteTipo::class,
+                'to_table' => 'dte_tipo',
+                'to_field' => 'codigo',
+                'max_length' => 16,
+                'verbose_name' => 'Referencia Dte',
+                'help_text' => '',
+            ],
+            'referencia_folio' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Referencia Folio',
+                'help_text' => '',
+            ],
+            'codigo' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'null' => true,
+                'foreign_key' => Model_DteReferenciaTipo::class,
+                'to_table' => 'dte_referencia_tipo',
+                'to_field' => 'codigo',
+                'max_length' => 16,
+                'verbose_name' => 'Codigo',
+                'help_text' => '',
+            ],
+            'razon' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 90,
+                'verbose_name' => 'Razon',
+                'help_text' => '',
+            ],
+        ],
+    ];
 
     /**
      * Método que entrega el documento asociado a la referencia.

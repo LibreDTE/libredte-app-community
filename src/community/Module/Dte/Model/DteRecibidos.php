@@ -23,16 +23,16 @@
 
 namespace website\Dte;
 
+use \sowerphp\autoload\Model_Plural;
+
 /**
- * Clase para mapear la tabla dte_recibido de la base de datos.
+ * Modelo plural de la tabla "dte_recibido" de la base de datos.
+ *
+ * Permite interactuar con varios registros de la tabla.
  */
-class Model_DteRecibidos extends \sowerphp\autoload\Model_Plural
+class Model_DteRecibidos extends Model_Plural
 {
-
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_recibido'; ///< Tabla del modelo
-
+    
     /**
      * Método que entrega el listado de documentos que tienen compras de
      * activos fijos.

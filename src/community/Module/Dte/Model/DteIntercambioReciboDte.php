@@ -23,138 +23,103 @@
 
 namespace website\Dte;
 
+use \sowerphp\autoload\Model;
+use \website\Dte\Model_DteIntercambioRecibo;
+use \website\Dte\Model_DteEmitido;
+
 /**
- * Clase para mapear la tabla dte_intercambio_recibo_dte de la base de datos.
+ * Modelo singular de la tabla "dte_intercambio_recibo_dte" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
-class Model_DteIntercambioReciboDte extends \sowerphp\autoload\Model
+class Model_DteIntercambioReciboDte extends Model
 {
-
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_intercambio_recibo_dte'; ///< Tabla del modelo
-
-    // Atributos de la clase (columnas en la base de datos)
-    public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:dte_intercambio_recibo.responde
-    public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_emitido.emisor
-    public $folio; ///< integer(32) NOT NULL DEFAULT '' PK FK:dte_emitido.emisor
-    public $certificacion; ///< boolean() NOT NULL DEFAULT '' PK FK:dte_emitido.emisor
-    public $responde; ///< integer(32) NOT NULL DEFAULT '' FK:dte_intercambio_recibo.responde
-    public $codigo; ///< character(32) NOT NULL DEFAULT '' FK:dte_intercambio_recibo.responde
-    public $recinto; ///< character varying(80) NOT NULL DEFAULT ''
-    public $firma; ///< character varying(10) NOT NULL DEFAULT ''
-    public $fecha_hora; ///< timestamp without time zone() NOT NULL DEFAULT ''
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
-            'name'      => 'Emisor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_intercambio_recibo', 'column' => 'responde')
-        ),
-        'dte' => array(
-            'name'      => 'Dte',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'folio' => array(
-            'name'      => 'Folio',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'certificacion' => array(
-            'name'      => 'Certificacion',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'responde' => array(
-            'name'      => 'Responde',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => array('table' => 'dte_intercambio_recibo', 'column' => 'responde')
-        ),
-        'codigo' => array(
-            'name'      => 'Codigo',
-            'comment'   => '',
-            'type'      => 'character',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => array('table' => 'dte_intercambio_recibo', 'column' => 'responde')
-        ),
-        'recinto' => array(
-            'name'      => 'Recinto',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 80,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'firma' => array(
-            'name'      => 'Firma',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 10,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'fecha_hora' => array(
-            'name'      => 'Fecha Hora',
-            'comment'   => '',
-            'type'      => 'timestamp without time zone',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_DteIntercambioRecibo' => 'website\Dte',
-        'Model_DteEmitido' => 'website\Dte',
-    ); ///< Namespaces que utiliza esta clase
+    
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+        ],
+        'fields' => [
+            'emisor' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_DteIntercambioRecibo::class,
+                'to_table' => 'dte_intercambio_recibo',
+                'to_field' => 'responde',
+                'max_length' => 32,
+                'verbose_name' => 'Emisor',
+            ],
+            'dte' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_DteEmitido::class,
+                'to_table' => 'dte_emitido',
+                'to_field' => 'emisor',
+                'max_length' => 16,
+                'verbose_name' => 'Dte',
+                'help_text' => '',
+            ],
+            'folio' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_DteEmitido::class,
+                'to_table' => 'dte_emitido',
+                'to_field' => 'emisor',
+                'max_length' => 32,
+                'verbose_name' => 'Folio',
+                'help_text' => '',
+            ],
+            'certificacion' => [
+                'type' => self::TYPE_BOOLEAN,
+                'primary_key' => true,
+                'foreign_key' => Model_DteEmitido::class,
+                'to_table' => 'dte_emitido',
+                'to_field' => 'emisor',
+                'verbose_name' => 'Certificacion',
+                'help_text' => '',
+            ],
+            'responde' => [
+                'type' => self::TYPE_INTEGER,
+                'foreign_key' => Model_DteIntercambioRecibo::class,
+                'to_table' => 'dte_intercambio_recibo',
+                'to_field' => 'responde',
+                'max_length' => 32,
+                'verbose_name' => 'Responde',
+                'help_text' => '',
+            ],
+            'codigo' => [
+                'type' => self::TYPE_STRING,
+                'foreign_key' => Model_DteIntercambioRecibo::class,
+                'to_table' => 'dte_intercambio_recibo',
+                'to_field' => 'responde',
+                'max_length' => 32,
+                'verbose_name' => 'Codigo',
+                'help_text' => '',
+            ],
+            'recinto' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 80,
+                'verbose_name' => 'Recinto',
+                'help_text' => '',
+            ],
+            'firma' => [
+                'type' => self::TYPE_STRING,
+                'max_length' => 10,
+                'verbose_name' => 'Firma',
+                'help_text' => '',
+            ],
+            'fecha_hora' => [
+                'type' => self::TYPE_TIMESTAMP,
+                'verbose_name' => 'Fecha Hora',
+                'help_text' => '',
+            ],
+        ],
+    ];
 
     /**
      * Método que entrega el sobre (xml) donde veía el recibo.
@@ -162,6 +127,7 @@ class Model_DteIntercambioReciboDte extends \sowerphp\autoload\Model
     public function getSobre()
     {
         return new Model_DteIntercambioRecibo($this->responde, $this->emisor, $this->codigo);
+        // return new Model_DteIntercambioRecibo($this->responde, $this->emisor, $this->codigo);
     }
 
 }

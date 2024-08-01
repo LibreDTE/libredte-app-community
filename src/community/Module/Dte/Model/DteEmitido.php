@@ -27,336 +27,192 @@ use \sowerphp\core\Network_Http_Rest;
 use \sowerphp\core\Utility_Array;
 use \sowerphp\general\Utility_Date;
 use \sowerphp\app\Sistema\General\Model_MonedaCambio;
+use sowerphp\app\Sistema\Usuarios\Model_Usuario;
 use \website\Dte\Admin\Model_DteFolio;
 use \website\Dte\Admin\Mantenedores\Model_DteTipo;
 use \website\Dte\Admin\Mantenedores\Model_DteTipos;
 use \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos;
+use \website\Dte\Model_Contribuyente;
 
-/**
- * Clase para mapear la tabla dte_emitido de la base de datos.
+ /**
+ * Modelo singular de la tabla "dte_emitido" de la base de datos.
+ *
+ * Permite interactuar con un registro de la tabla.
  */
 class Model_DteEmitido extends Model_Base_Envio
 {
+    
+    /**
+     * Metadatos del modelo.
+     *
+     * @var array
+     */
+    protected $meta = [
+        'model' => [
+            'db_table_comment' => '',
+            'ordering' => ['dte'],
+        ],
+        'fields' => [
+            'emisor' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Emisor',
+            ],
+            'dte' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'primary_key' => true,
+                'foreign_key' => Model_DteTipo::class,
+                'to_table' => 'dte_tipo',
+                'to_field' => 'codigo',
+                'max_length' => 16,
+                'verbose_name' => 'Dte',
+            ],
+            'folio' => [
+                'type' => self::TYPE_INTEGER,
+                'primary_key' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Folio',
+            ],
+            'certificacion' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'false',
+                'primary_key' => true,
+                'verbose_name' => 'Certificacion',
+            ],
+            'tasa' => [
+                'type' => self::TYPE_SMALL_INTEGER,
+                'default' => '0',
+                'max_length' => 16,
+                'verbose_name' => 'Tasa',
+            ],
+            'fecha' => [
+                'type' => self::TYPE_DATE,
+                'verbose_name' => 'Fecha',
+            ],
+            'sucursal_sii' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Sucursal Sii',
+            ],
+            'receptor' => [
+                'type' => self::TYPE_INTEGER,
+                'foreign_key' => Model_Contribuyente::class,
+                'to_table' => 'contribuyente',
+                'to_field' => 'rut',
+                'max_length' => 32,
+                'verbose_name' => 'Receptor',
+            ],
+            'exento' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Exento',
+            ],
+            'neto' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Neto',
+            ],
+            'iva' => [
+                'type' => self::TYPE_INTEGER,
+                'default' => '0',
+                'max_length' => 32,
+                'verbose_name' => 'Iva',
+            ],
+            'total' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Total',
+            ],
+            'usuario' => [
+                'type' => self::TYPE_INTEGER,
+                'foreign_key' => Model_Usuario::class,
+                'to_table' => 'usuario',
+                'to_field' => 'id',
+                'max_length' => 32,
+                'verbose_name' => 'Usuario',
+            ],
+            'xml' => [
+                'type' => self::TYPE_TEXT,
+                'verbose_name' => 'Xml',
+            ],
+            'track_id' => [
+                'type' => self::TYPE_BIG_INTEGER,
+                'null' => true,
+                'max_length' => 64,
+                'verbose_name' => 'Track Id',
+            ],
+            'revision_estado' => [
+                'type' => self::TYPE_STRING,
+                'null' => true,
+                'max_length' => 100,
+                'verbose_name' => 'Revision Estado',
+            ],
+            'revision_detalle' => [
+                'type' => self::TYPE_TEXT,
+                'null' => true,
+                'verbose_name' => 'Revision Detalle',
+            ],
+            'anulado' => [
+                'type' => self::TYPE_BOOLEAN,
+                'null' => true,
+                'default' => 'false',
+                'verbose_name' => 'Anulado',
+            ],
+            'iva_fuera_plazo' => [
+                'type' => self::TYPE_BOOLEAN,
+                'default' => 'false',
+                'verbose_name' => 'IVA fuera plazo',
+            ],
+            'cesion_xml' => [
+                'type' => self::TYPE_TEXT,
+                'verbose_name' => 'Cesion Xml',
+            ],
+            'cesion_track_id' => [
+                'type' => self::TYPE_INTEGER,
+                'null' => true,
+                'max_length' => 32,
+                'verbose_name' => 'Cesion Track Id',
+            ],
+            'receptor_evento' => [
+                'type' => self::TYPE_CHAR,
+                'null' => true,
+                'max_length' => 1,
+                'verbose_name' => 'Evento receptor',
+            ],
+            'fecha_hora_creacion' => [
+                'type' => self::TYPE_TIMESTAMP,
+                'verbose_name' => 'Fecha Hora Creación',
+            ],
+            'mipyme' => [
+                'type' => self::TYPE_BIG_INTEGER,
+                'null' => true,
+                'max_length' => 64,
+                'verbose_name' => 'Código MIPYME',
+            ],
+            'extra' => [
+                'type' => self::TYPE_TEXT,
+                'null' => true,
+                'verbose_name' => 'Extra',
+            ],
+        ],
+    ];
 
-    // Datos para la conexión a la base de datos
-    protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_emitido'; ///< Tabla del modelo
+    // // Comentario de la tabla en la base de datos
+    // public static $tableComment = '';
 
-    // Atributos de la clase (columnas en la base de datos)
-    public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
-    public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_tipo.codigo
-    public $folio; ///< integer(32) NOT NULL DEFAULT '' PK
-    public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK
-    public $tasa; ///< smallint(16) NOT NULL DEFAULT '0'
-    public $fecha; ///< date() NOT NULL DEFAULT ''
-    public $sucursal_sii; ///< integer(32) NULL DEFAULT ''
-    public $receptor; ///< integer(32) NOT NULL DEFAULT '' FK:contribuyente.rut
-    public $exento; ///< integer(32) NULL DEFAULT ''
-    public $neto; ///< integer(32) NULL DEFAULT ''
-    public $iva; ///< integer(32) NOT NULL DEFAULT '0'
-    public $total; ///< integer(32) NOT NULL DEFAULT ''
-    public $usuario; ///< integer(32) NOT NULL DEFAULT '' FK:usuario.id
-    public $xml; ///< text() NOT NULL DEFAULT ''
-    public $track_id; ///< bigint(64) NULL DEFAULT ''
-    public $revision_estado; ///< character varying(100) NULL DEFAULT ''
-    public $revision_detalle; ///< character text() NULL DEFAULT ''
-    public $anulado; ///< boolean() NOT NULL DEFAULT 'false'
-    public $iva_fuera_plazo; ///< boolean() NOT NULL DEFAULT 'false'
-    public $cesion_xml; ///< text() NOT NULL DEFAULT ''
-    public $cesion_track_id; ///< integer(32) NULL DEFAULT ''
-    public $receptor_evento; ///< char(1) NULL DEFAULT ''
-    public $fecha_hora_creacion; ///< timestamp without time zone() NOT NULL DEFAULT ''
-    public $mipyme; ///< bigint(64) NULL DEFAULT ''
-    public $extra; ///< text() NULL DEFAULT ''
-
-    // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
-            'name'      => 'Emisor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'dte' => array(
-            'name'      => 'Dte',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => array('table' => 'dte_tipo', 'column' => 'codigo')
-        ),
-        'folio' => array(
-            'name'      => 'Folio',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'certificacion' => array(
-            'name'      => 'Certificacion',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => true,
-            'fk'        => null
-        ),
-        'tasa' => array(
-            'name'      => 'Tasa',
-            'comment'   => '',
-            'type'      => 'smallint',
-            'length'    => 16,
-            'null'      => false,
-            'default'   => '0',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'fecha' => array(
-            'name'      => 'Fecha',
-            'comment'   => '',
-            'type'      => 'date',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'sucursal_sii' => array(
-            'name'      => 'Sucursal Sii',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'receptor' => array(
-            'name'      => 'Receptor',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'exento' => array(
-            'name'      => 'Exento',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'neto' => array(
-            'name'      => 'Neto',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'iva' => array(
-            'name'      => 'Iva',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '0',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'total' => array(
-            'name'      => 'Total',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'usuario' => array(
-            'name'      => 'Usuario',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => array('table' => 'usuario', 'column' => 'id')
-        ),
-        'xml' => array(
-            'name'      => 'Xml',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'track_id' => array(
-            'name'      => 'Track Id',
-            'comment'   => '',
-            'type'      => 'bigint',
-            'length'    => 64,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'revision_estado' => array(
-            'name'      => 'Revision Estado',
-            'comment'   => '',
-            'type'      => 'character varying',
-            'length'    => 100,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'revision_detalle' => array(
-            'name'      => 'Revision Detalle',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'anulado' => array(
-            'name'      => 'Anulado',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'iva_fuera_plazo' => array(
-            'name'      => 'IVA fuera plazo',
-            'comment'   => '',
-            'type'      => 'boolean',
-            'length'    => null,
-            'null'      => false,
-            'default'   => 'false',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'cesion_xml' => array(
-            'name'      => 'Cesion Xml',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'cesion_track_id' => array(
-            'name'      => 'Cesion Track Id',
-            'comment'   => '',
-            'type'      => 'integer',
-            'length'    => 32,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'receptor_evento' => array(
-            'name'      => 'Evento receptor',
-            'comment'   => '',
-            'type'      => 'character',
-            'length'    => 1,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'fecha_hora_creacion' => array(
-            'name'      => 'Fecha Hora Creación',
-            'comment'   => '',
-            'type'      => 'timestamp without time zone',
-            'length'    => null,
-            'null'      => false,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'mipyme' => array(
-            'name'      => 'Código MIPYME',
-            'comment'   => '',
-            'type'      => 'bigint',
-            'length'    => 64,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-        'extra' => array(
-            'name'      => 'Extra',
-            'comment'   => '',
-            'type'      => 'text',
-            'length'    => null,
-            'null'      => true,
-            'default'   => '',
-            'auto'      => false,
-            'pk'        => false,
-            'fk'        => null
-        ),
-
-    );
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_DteTipo' => 'website\Dte\Admin\Mantenedores',
-        'Model_Contribuyente' => 'website\Dte',
-        'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios'
-    ); ///< Namespaces que utiliza esta clase
+    // public static $fkNamespace = array(
+    //     'Model_DteTipo' => 'website\Dte\Admin\Mantenedores',
+    //     'Model_Contribuyente' => 'website\Dte',
+    //     'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios'
+    // ); ///< Namespaces que utiliza esta clase
 
     // cachés
     private $Dte; ///< Objeto con el DTE
