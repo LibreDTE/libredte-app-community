@@ -30,17 +30,17 @@ return [
 
         // Menú para el módulo.
         'nav' => [
-            '/moneda_cambios/listar/1/fecha/D' => [
+            '/moneda_cambios' => [
                 'name' => 'Cambios de moneda',
                 'desc' => 'Listado de tipos de cambio de monedas',
                 'icon' => 'fa-regular fa-money-bill-alt',
             ],
-            '/actividad_economicas/listar' => [
+            '/actividad_economicas' => [
                 'name' => 'Actividad económica',
                 'desc' => 'Listado de actividades económicas del SII',
                 'icon' => 'fa-solid fa-dollar-sign',
             ],
-            '/bancos/listar' => [
+            '/bancos' => [
                 'name' => 'Bancos',
                 'desc' => 'Listado de bancos de Chile',
                 'icon' => 'fa-solid fa-university',

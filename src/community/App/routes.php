@@ -24,20 +24,6 @@
 // Instancia del servicio de enrutamiento.
 $router = router();
 
-// Rutas para servicios web de módulos asociados a empresas.
-$router->connect('/api/dte/:controller/*', [
-    'module' => 'Dte',
-    'action' => 'api',
-]);
-$router->connect('/api/dte/admin/:controller/*', [
-    'module' => 'Dte.Admin',
-    'action' => 'api',
-]);
-$router->connect('/api/honorarios/:controller/*', [
-    'module' => 'Honorarios',
-    'action' => 'api',
-]);
-
 // Rutas para consultar DTE.
 $router->connect('/consultar', [
     'module' => 'Dte',
@@ -52,10 +38,6 @@ $router->connect('/boletas', [
 ]);
 
 // Rutas para utilidades (no asociadas a empresas).
-$router->connect('/api/utilidades/:controller/*', [
-    'module' => 'Utilidades',
-    'action' => 'api',
-]);
 $router->connect('/utilidades', [
     'module' => 'Utilidades',
     'controller' => 'app',
