@@ -90,7 +90,7 @@ class Controller_DteFolios extends \sowerphp\autoload\Controller
             // Si todo fue bien se redirecciona a la página de carga de CAF.
             return redirect('/dte/admin/dte_folios/subir_caf')
                 ->withInfo(
-                    __('Ahora debe subir un archivo CAF para el tipo de documento %(tipo_documento)s.', 
+                    __('Ahora debe subir un archivo CAF para el tipo de documento %(tipo_documento)s.',
                         [
                             'tipo_documento' => mb_strtolower($DteFolio->getTipo()->tipo)
                         ]
@@ -350,7 +350,7 @@ class Controller_DteFolios extends \sowerphp\autoload\Controller
                             [
                                 'tipo_dte' => $DteFolio->dte
                             ]
-                        )  
+                        )
                     );
             } catch (\Exception $e) {
                 \sowerphp\core\Facade_Session_Message::error('No fue posible actualizar el mantenedor de folios: '.$e->getMessage());
@@ -362,8 +362,9 @@ class Controller_DteFolios extends \sowerphp\autoload\Controller
     /**
      * Acción que permite eliminar un mantenedor de folios.
      */
-    public function eliminar(Request $request, $dte)
+    public function eliminar(Request $request, ...$pk)
     {
+        list($dte) = $pk;
         $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
@@ -402,7 +403,7 @@ class Controller_DteFolios extends \sowerphp\autoload\Controller
                         'tipo_dte' => $DteFolio->getTipo()->tipo
                     ]
                 )
-                
+
             );
     }
 
@@ -504,7 +505,7 @@ class Controller_DteFolios extends \sowerphp\autoload\Controller
                         'tipo_dte' => $DteCaf->getTipo()->tipo,
                         'desde' => $DteCaf->desde
                     ])
-                
+
             );
     }
 
@@ -609,7 +610,7 @@ class Controller_DteFolios extends \sowerphp\autoload\Controller
         if (!$DteFolio->exists()) {
             return redirect('/dte/admin/dte_folios')
                 ->withError(
-                    __('Primero debe crear el mantenedor de los folios de tipo %(dte)s.', 
+                    __('Primero debe crear el mantenedor de los folios de tipo %(dte)s.',
                         [
                             'dte' => $dte
                         ]
@@ -675,7 +676,7 @@ class Controller_DteFolios extends \sowerphp\autoload\Controller
                             'folio_desde' => $Folios->getDesde(),
                             'folio_siguiente' => $DteFolio->siguiente
                         ])
-                    
+
                 )
             ;
         } catch (\Exception $e) {
@@ -751,7 +752,7 @@ class Controller_DteFolios extends \sowerphp\autoload\Controller
                                 'folio_siguiente' => $DteFolio->siguiente
                             ]
                         )
-                        
+
                     );
             } catch (\Exception $e) {
                 $message = __(
@@ -855,7 +856,7 @@ class Controller_DteFolios extends \sowerphp\autoload\Controller
                             'estado' => $estado,
                             'folio' => $folio
                         ])
-                    
+
                 );
         }
         array_unshift($detalle, ['Folio inicial', 'Folio final', 'Cantidad de folios']);
@@ -903,7 +904,7 @@ class Controller_DteFolios extends \sowerphp\autoload\Controller
                 return redirect('/dte/admin/dte_folios')
                     ->withError(
                         __('Error al tratar de generar su informe, por favor reintentar.')
-                    );    
+                    );
             } else {
                 return redirect('/dte/admin/dte_folios')
                     ->withSuccess(

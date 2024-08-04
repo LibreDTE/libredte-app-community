@@ -34,7 +34,7 @@ class Controller_DteIntercambios extends \sowerphp\autoload\Controller
     /**
      * Acción para mostrar la bandeja de intercambio de DTE.
      */
-    public function listar($pagina = 1, $soloPendientes = false)
+    public function listar(Request $request, $pagina = 1, $soloPendientes = false)
     {
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
@@ -142,8 +142,9 @@ class Controller_DteIntercambios extends \sowerphp\autoload\Controller
     /**
      * Acción que permite eliminar un intercambio desde la bandeja.
      */
-    public function eliminar($codigo)
+    public function eliminar(Request $request, ...$pk)
     {
+        list($codigo) = $pk;
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -171,7 +172,7 @@ class Controller_DteIntercambios extends \sowerphp\autoload\Controller
         $DteIntercambio->delete();
         return redirect('/dte/dte_intercambios/listar')
             ->withSuccess(
-                __('Intercambio %(codigo)s eliminado.', 
+                __('Intercambio %(codigo)s eliminado.',
                     [
                         'codigo' => $codigo
                     ]
@@ -369,7 +370,7 @@ class Controller_DteIntercambios extends \sowerphp\autoload\Controller
         if ($response['status']['code'] != 200) {
             return redirect('/dte/dte_intercambios/listar')
                 ->withError(
-                    __('%(body)s', 
+                    __('%(body)s',
                         [
                             'body' => $response['body']
                         ]
@@ -440,7 +441,7 @@ class Controller_DteIntercambios extends \sowerphp\autoload\Controller
         if ($response['status']['code'] != 200) {
             return redirect('/dte/dte_intercambios/listar')
                 ->withError(
-                    __('%(body)s', 
+                    __('%(body)s',
                         [
                             'body' => $response['body']
                         ]
@@ -580,7 +581,7 @@ class Controller_DteIntercambios extends \sowerphp\autoload\Controller
         if (!isset($_POST['submit'])) {
             return redirect(str_replace('responder', 'ver', $this->request->getRequestUriDecoded()))
                 ->withError(
-                    __('No puede acceder de forma directa a %(uri_decoded)s', 
+                    __('No puede acceder de forma directa a %(uri_decoded)s',
                         [
                             'uri_decoded' => $this->request->getRequestUriDecoded()
                         ]

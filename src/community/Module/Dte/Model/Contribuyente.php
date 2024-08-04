@@ -158,7 +158,7 @@ class Model_Contribuyente extends Model
         ],
         'configurations' => [
             'model' => [
-                'primary_key' => [
+                'foreign_key' => [
                     'contribuyente' => 'rut',
                 ],
             ],
@@ -357,8 +357,9 @@ class Model_Contribuyente extends Model
      * Los datos del contribuyente de documentos emitidos, recibidos, config
      * extra, etc no se eliminan por defecto, se debe solicitar específicamente.
      */
-    public function delete(bool $all = false): bool
+    public function delete(array $options = []): bool
     {
+        $all = $options['all'] ?? false;
         $this->getDatabaseConnection()->beginTransaction();
         // desasociar contribuyente del usuario
         $this->usuario = null;

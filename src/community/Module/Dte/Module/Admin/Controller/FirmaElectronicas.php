@@ -128,8 +128,9 @@ class Controller_FirmaElectronicas extends \sowerphp\autoload\Controller
     /**
      * Acción que permite eliminar la firma electrónica de un usuario.
      */
-    public function eliminar()
+    public function eliminar(Request $request, ...$pk)
     {
+        $user = $request->user();
         $FirmaElectronica = (new Model_FirmaElectronicas())->getByUser($user->id);
         // Si el usuario no tiene firma electrónica no se elimina,
         if (!$FirmaElectronica) {
@@ -143,16 +144,16 @@ class Controller_FirmaElectronicas extends \sowerphp\autoload\Controller
             $FirmaElectronica->delete();
             return redirect('/dte/admin/firma_electronicas')
                 ->withSuccess(
-                    __('Se eliminó la firma electrónica asociada a su usuario.')  
+                    __('Se eliminó la firma electrónica asociada a su usuario.')
                 );
         } catch (\Exception $e) {
             return redirect('/dte/admin/firma_electronicas')
                 ->withError(
-                    __('No fue posible eliminar la firma electrónica:<br/>%(error_message)s', 
+                    __('No fue posible eliminar la firma electrónica:<br/>%(error_message)s',
                         [
                             'error_message' => $e->getMessage()
                         ]
-                    ) 
+                    )
                 );
         }
     }

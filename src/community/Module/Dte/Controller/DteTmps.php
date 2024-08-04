@@ -43,7 +43,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
     /**
      * Método que muestra los documentos temporales disponibles.
      */
-    public function listar($pagina = 1)
+    public function listar(Request $request, $pagina = 1)
     {
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
@@ -165,7 +165,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
         if ($response === false) {
             return redirect('/dte/dte_tmps/listar')
                 ->withError(
-                    __('%(errors)s', 
+                    __('%(errors)s',
                         [
                             'errors' => implode('<br/>', $rest->getErrors())
                         ]
@@ -175,7 +175,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
         if ($response['status']['code'] != 200) {
             return redirect('/dte/dte_tmps/listar')
             ->withError(
-                __('%(body)s', 
+                __('%(body)s',
                     [
                         'body' => $response['body']
                     ]
@@ -232,7 +232,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
         if ($response === false) {
             return redirect('/dte/dte_tmps/listar')
                 ->withError(
-                    __('%(errors)s', 
+                    __('%(errors)s',
                         [
                             'errors' => implode('<br/>', $rest->getErrors())
                         ]
@@ -242,7 +242,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
         if ($response['status']['code'] != 200) {
             return redirect('/dte/dte_tmps/listar')
                 ->withError(
-                    __('%(body)s', 
+                    __('%(body)s',
                         [
                             'body' => $response['body']
                         ]
@@ -502,7 +502,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
                     [
                         'error_message' => $e->getMessage()
                     ]
-                ), 
+                ),
                 $e->getCode()
             );
         }
@@ -579,7 +579,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
                     [
                         'error_message' => $e->getMessage()
                     ]
-                ), 
+                ),
                 $e->getCode()
             );
         }
@@ -609,7 +609,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
         if (!$xml) {
             return redirect('/dte/dte_tmps/listar')
                 ->withError(
-                    __('No fue posible crear el XML para previsualización:<br/>%(logs)s', 
+                    __('No fue posible crear el XML para previsualización:<br/>%(logs)s',
                         [
                             'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
                         ]
@@ -721,8 +721,9 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
     /**
      * Método que elimina un documento temporal.
      */
-    public function eliminar(Request $request, $receptor, $dte, $codigo)
+    public function eliminar(Request $request, ...$pk)
     {
+        list($receptor, $dte, $codigo) = $pk;
         $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
@@ -742,7 +743,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
         if (!$Emisor->documentoAutorizado($DteTmp->dte, $user)) {
             return redirect('/dte/dte_tmps/listar')
                 ->withError(
-                    __('No está autorizado a eliminar el tipo de documento %(dte_tmp)s', 
+                    __('No está autorizado a eliminar el tipo de documento %(dte_tmp)s',
                         [
                             'dte_tmp' => $DteTmp->dte
                         ]
@@ -759,7 +760,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
         } catch (\Exception $e) {
             return redirect('/dte/dte_tmps/listar')
                 ->withError(
-                    __('No fue posible eliminar el documento temporal: %(errors)s', 
+                    __('No fue posible eliminar el documento temporal: %(errors)s',
                         [
                             'errors' => $e->getMessage()
                         ]
@@ -1017,7 +1018,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
                         __('No fue posible actualizar el documento porque el tipo de cambio para determinar el valor en pesos del día %(fecha)s no se encuentra cargado en LibreDTE. Si la fecha del documento es correcta, recomendamos [emitir un nuevo documento](%(url)s) donde podrá especificar el valor del tipo de cambio en los datos del documento, dicho valor se obtiene desde el [Banco Central de Chile](https://www.bcentral.cl).',
                             [
                                 'fecha' => $fecha,
-                                'url' => url('/dte/documentos/emitir')     
+                                'url' => url('/dte/documentos/emitir')
                             ]
                         ),
                         400

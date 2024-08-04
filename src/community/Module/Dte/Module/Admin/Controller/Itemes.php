@@ -23,6 +23,7 @@
 
 namespace website\Dte\Admin;
 
+use \sowerphp\core\Network_Request as Request;
 use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
 
 /**
@@ -38,7 +39,7 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
     /**
      * Acción para listar los items del contribuyente.
      */
-    public function listar($page = 1, $orderby = null, $order = 'A')
+    public function listar(Request $request, $page = 1, $orderby = null, $order = 'A')
     {
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
@@ -54,7 +55,7 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
     /**
      * Acción para crear un nuevo item.
      */
-    public function crear()
+    public function crear(Request $request)
     {
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
@@ -81,8 +82,10 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
     /**
      * Acción para editar un item.
      */
-    public function editar($codigo, $tipo = 'INT1')
+    public function editar(Request $request, ...$pk)
     {
+        $codigo = $pk[0];
+        $tipo = $pk[1] ?? 'INT1';
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Contribuyente = libredte()->getSessionContribuyente();
@@ -108,8 +111,10 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
     /**
      * Acción para eliminar un item.
      */
-    public function eliminar($codigo, $tipo = 'INT1')
+    public function eliminar(Request $request, ...$pk)
     {
+        $codigo = $pk[0];
+        $tipo = $pk[1] ?? 'INT1';
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Contribuyente = libredte()->getSessionContribuyente();
@@ -183,7 +188,7 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
             }
             if (!$Item || !$Item->exists() || !$Item->activo) {
                 return response()->json(
-                    __('Item solicitado no existe o está inactivo.'), 
+                    __('Item solicitado no existe o está inactivo.'),
                     404
                 );
             }
@@ -199,7 +204,7 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
                         [
                             'error_message' => $e->getMessage()
                         ]
-                    ), 
+                    ),
                     $e->getCode() ? $e->getCode() : 500
                 );
             }

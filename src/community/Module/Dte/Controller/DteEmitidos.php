@@ -43,7 +43,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
     /**
      * Acción que permite mostrar los documentos emitidos por el contribuyente.
      */
-    public function listar($pagina = 1)
+    public function listar(Request $request, $pagina = 1)
     {
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
@@ -100,8 +100,9 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
     /**
      * Acción que permite eliminar un DTE.
      */
-    public function eliminar(Request $request, $dte, $folio)
+    public function eliminar(Request $request, ...$pk)
     {
+        list($dte, $folio) = $pk;
         $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
@@ -461,7 +462,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
         } catch (\Exception $e) {
             return redirect($this->Auth->logged() ? '/dte/dte_emitidos/ver/'.$dte.'/'.$folio : '/')
                 ->withError(
-                    __('%(error_message)s', 
+                    __('%(error_message)s',
                         [
                             'error_message' => $e->getMessage()
                         ]
@@ -1162,7 +1163,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
         ;
         return redirect(str_replace('avanzado_iva_fuera_plazo', 'ver', $this->request->getRequestUriDecoded()).'#avanzado')
             ->withSuccess(
-                __('%(msg)s', 
+                __('%(msg)s',
                     [
                         'msg' => $msg
                     ]
@@ -1199,7 +1200,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
         $msg = $r['body'] ? 'DTE anulado.' : 'DTE ya no está anulado.';
         return redirect(str_replace('avanzado_anular', 'ver', $this->request->getRequestUriDecoded()).'#avanzado')
             ->withSuccess(
-                __('%(msg)s', 
+                __('%(msg)s',
                     [
                         'msg' => $msg
                     ]
@@ -1684,7 +1685,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
         }
         // entregar respuesta
         return response()->json(
-            $DteEmitido, 
+            $DteEmitido,
             200
         );
     }
@@ -1782,7 +1783,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             }
         } catch (\Exception $e) {
             return response()->json(
-                __('%(error_message)s', 
+                __('%(error_message)s',
                     [
                         'error_message' => $e->getMessage()
                     ]

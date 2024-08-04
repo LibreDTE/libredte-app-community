@@ -37,7 +37,7 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
     /**
      * Acción que permite mostrar los documentos recibidos por el contribuyente.
      */
-    public function listar($pagina = 1)
+    public function listar(Request $request, $pagina = 1)
     {
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
@@ -397,8 +397,9 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
     /**
      * Acción que permite eliminar un DTE recibido.
      */
-    public function eliminar($emisor, $dte, $folio)
+    public function eliminar(Request $request, ...$pk)
     {
+        list($emisor, $dte, $folio) = $pk;
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Receptor = libredte()->getSessionContribuyente();
@@ -568,7 +569,7 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
         } catch (\Exception $e) {
             return redirect('/dte/dte_recibidos/listar')
                 ->withError(
-                    __('%(error_message)s', 
+                    __('%(error_message)s',
                         [
                             'error_message' => $e->getMessage()
                         ]
@@ -769,7 +770,7 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
                     [
                         'error_message' => $e->getMessage()
                     ]
-                ), 
+                ),
                 $e->getCode()
             );
         }

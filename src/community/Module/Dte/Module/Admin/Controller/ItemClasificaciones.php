@@ -23,6 +23,8 @@
 
 namespace website\Dte\Admin;
 
+use \sowerphp\core\Network_Request as Request;
+
 /**
  * Clase para el controlador asociado a la tabla item_clasificacion de la base de
  * datos.
@@ -37,7 +39,7 @@ class Controller_ItemClasificaciones extends \sowerphp\autoload\Controller_Model
     /**
      * Acción para listar las clasificaciones de items del contribuyente.
      */
-    public function listar($page = 1, $orderby = null, $order = 'A')
+    public function listar(Request $request, $page = 1, $orderby = null, $order = 'A')
     {
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
@@ -53,7 +55,7 @@ class Controller_ItemClasificaciones extends \sowerphp\autoload\Controller_Model
     /**
      * Acción para crear una clasificación de items.
      */
-    public function crear()
+    public function crear(Request $request)
     {
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
@@ -76,8 +78,9 @@ class Controller_ItemClasificaciones extends \sowerphp\autoload\Controller_Model
     /**
      * Acción para editar una clasificación de items.
      */
-    public function editar($codigo)
+    public function editar(Request $request, ...$pk)
     {
+        list($codigo) = $pk;
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Contribuyente = libredte()->getSessionContribuyente();
@@ -99,8 +102,9 @@ class Controller_ItemClasificaciones extends \sowerphp\autoload\Controller_Model
     /**
      * Acción para eliminar una clasificacion de items.
      */
-    public function eliminar($codigo)
+    public function eliminar(Request $request, ...$pk)
     {
+        list($codigo) = $pk;
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Contribuyente = libredte()->getSessionContribuyente();

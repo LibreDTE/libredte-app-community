@@ -113,8 +113,9 @@ class Controller_Cobranzas extends \sowerphp\autoload\Controller
     /**
      * Acción que permite eliminar un cobro programado.
      */
-    public function eliminar($dte, $folio, $fecha)
+    public function eliminar(Request $request, ...$pk)
     {
+        list($dte, $folio, $fecha) = $pk;
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
             $Emisor = libredte()->getSessionContribuyente();
@@ -150,7 +151,7 @@ class Controller_Cobranzas extends \sowerphp\autoload\Controller
         } catch (\Exception $e) {
             return redirect(str_replace('/eliminar/', '/ver/', $this->request->getRequestUriDecoded()))
                 ->withError(
-                    __('No fue posible eliminar el cobro programado: %(error_message)s', 
+                    __('No fue posible eliminar el cobro programado: %(error_message)s',
                         [
                             'error_message' => $e->getMessage()
                         ]

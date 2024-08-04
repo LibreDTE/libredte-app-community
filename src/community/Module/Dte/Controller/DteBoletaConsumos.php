@@ -63,7 +63,7 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
     /**
      * Acción que permite enviar el reporte de consumo de folios.
      */
-    public function crear()
+    public function crear(Request $request)
     {
         $from_unix_time = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
         $day_before = strtotime('yesterday', $from_unix_time);
@@ -76,7 +76,7 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
     /**
      * Acción para prevenir comportamiento por defecto del mantenedor.
      */
-    public function editar($pk)
+    public function editar(Request $request, ...$pk)
     {
         return redirect('/dte/dte_boleta_consumos/listar/1/dia/D')
             ->withError(
@@ -101,7 +101,7 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
         if (!$xml) {
             return redirect('/dte/dte_boleta_consumos/listar')
                 ->withError(
-                    __('No fue posible generar el reporte de consumo de folios<br/>%(logs)s', 
+                    __('No fue posible generar el reporte de consumo de folios<br/>%(logs)s',
                         [
                             'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
                         ]
@@ -262,8 +262,9 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
     /**
      * Acción que permite eliminar un RCOF.
      */
-    public function eliminar(Request $request, $dia)
+    public function eliminar(Request $request, ...$pk)
     {
+        list($dia) = $pk;
         $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {

@@ -33,6 +33,8 @@ use \sowerphp\autoload\Model;
 class Model_ActividadEconomica extends Model
 {
 
+    protected $fillable = ['*'];
+
     /**
      * Metadatos del modelo.
      *

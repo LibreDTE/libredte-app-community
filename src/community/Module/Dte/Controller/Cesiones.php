@@ -33,7 +33,7 @@ class Controller_Cesiones extends \sowerphp\autoload\Controller
      * Acción que permite mostrar las cesiones de documentos emitidos por el
      * contribuyente.
      */
-    public function listar($pagina = 1)
+    public function listar(Request $request, $pagina = 1)
     {
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
@@ -103,7 +103,7 @@ class Controller_Cesiones extends \sowerphp\autoload\Controller
         if (!in_array($consulta, ['deudor', 'cedente', 'cesionario'])) {
             return redirect('/dte/cesiones/listar')
                 ->withError(
-                    __('Búsqueda por "%(consulta)s" no existe.', 
+                    __('Búsqueda por "%(consulta)s" no existe.',
                         [
                             'consulta' => $consulta
                         ]
