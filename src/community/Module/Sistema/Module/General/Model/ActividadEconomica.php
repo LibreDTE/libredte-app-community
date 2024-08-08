@@ -32,9 +32,6 @@ use \sowerphp\autoload\Model;
  */
 class Model_ActividadEconomica extends Model
 {
-
-    protected $fillable = ['*'];
-
     /**
      * Metadatos del modelo.
      *
@@ -42,11 +39,15 @@ class Model_ActividadEconomica extends Model
      */
     protected $meta = [
         'model' => [
+            'verbose_name' => 'Actividad económica',
+            'verbose_name_plural' => 'Actividades económicas',
             'db_table_comment' => 'Actividades económicas del país.',
         ],
         'fields' => [
             'codigo' => [
                 'type' => self::TYPE_INTEGER,
+                'min_value' => 10000,
+                'max_value' => 1000000,
                 'primary_key' => true,
                 'verbose_name' => 'Código',
                 'help_text' => 'Código de la actividad económica.',

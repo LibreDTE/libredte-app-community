@@ -32,7 +32,7 @@ use \sowerphp\autoload\Model;
  */
 class Model_Banco extends Model
 {
-    
+
     /**
      * Metadatos del modelo.
      *
@@ -40,22 +40,24 @@ class Model_Banco extends Model
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => 'Tabla para bancos',
+            'verbose_name' => 'Entidad bancaria',
+            'verbose_name_plural' => 'Entidades bancarias',
+            'db_table_comment' => 'Entidades bancarias con su respectivo código SBIF.',
             'ordering' => ['banco'],
         ],
         'fields' => [
             'codigo' => [
-                'type' => self::TYPE_STRING,
+                'type' => self::TYPE_CHAR,
                 'primary_key' => true,
-                'max_length' => 3,
-                'verbose_name' => 'Codigo',
-                'help_text' => 'Código de banco de la SBIF',
+                'length' => 3,
+                'verbose_name' => 'Código',
+                'help_text' => 'Código de banco de la SBIF.',
             ],
             'banco' => [
                 'type' => self::TYPE_STRING,
                 'max_length' => 40,
                 'verbose_name' => 'Banco',
-                'help_text' => 'Nombre del banco',
+                'help_text' => 'Nombre del banco.',
             ],
         ],
     ];

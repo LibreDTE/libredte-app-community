@@ -35,7 +35,7 @@ use \website\Dte\Admin\Mantenedores\Model_DteTipo;
  */
 class Model_ContribuyenteUsuarioDte extends Model
 {
-    
+
     /**
      * Metadatos del modelo.
      *
@@ -43,8 +43,8 @@ class Model_ContribuyenteUsuarioDte extends Model
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => '',
-            'ordering' => ['usuario'],
+            'db_table_comment' => 'DTE de los usuarios del contribuyente.',
+            'ordering' => ['dte'],
         ],
         'fields' => [
             'contribuyente' => [
@@ -53,8 +53,9 @@ class Model_ContribuyenteUsuarioDte extends Model
                 'foreign_key' => Model_Contribuyente::class,
                 'to_table' => 'contribuyente',
                 'to_field' => 'rut',
-                'max_length' => 32,
                 'verbose_name' => 'Contribuyente',
+                'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
+                'searchable' => 'rut:integer|usuario:string|email:string',
             ],
             'usuario' => [
                 'type' => self::TYPE_INTEGER,
@@ -62,18 +63,21 @@ class Model_ContribuyenteUsuarioDte extends Model
                 'foreign_key' => Model_Usuario::class,
                 'to_table' => 'usuario',
                 'to_field' => 'id',
-                'max_length' => 32,
                 'verbose_name' => 'Usuario',
+                'display' => '(usuario.usuario)',
+                'searchable' => 'id:integer|usuario:string|nombre:string|email:string',
             ],
             'dte' => [
                 'type' => self::TYPE_SMALL_INTEGER,
-                'null' => true,
                 'primary_key' => true,
                 'foreign_key' => Model_DteTipo::class,
                 'to_table' => 'dte_tipo',
                 'to_field' => 'codigo',
-                'max_length' => 16,
+                'min_value' => 1,
+                'max_value' => 10000,
                 'verbose_name' => 'Dte',
+                'help_text' => 'Código del tipo de documento.',
+                'display' => '(dte_tipo.nombre)',
             ],
         ],
     ];

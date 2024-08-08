@@ -40,23 +40,25 @@ class Model_ImpuestoAdicional extends Model
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => 'Impuestos adicionales (y retenciones)',
+            'verbose_name' => 'Impuesto adicional',
+            'verbose_name_plural' => 'Impuestos adicionales',
+            'db_table_comment' => 'Impuestos adicionales (y retenciones).',
             'ordering' => ['codigo'],
         ],
         'fields' => [
             'codigo' => [
                 'type' => self::TYPE_SMALL_INTEGER,
                 'primary_key' => true,
-                'max_length' => 16,
                 'verbose_name' => 'Código',
                 'help_text' => 'Código asignado por el SII al impuesto',
             ],
             'retencion_total' => [
                 'type' => self::TYPE_SMALL_INTEGER,
                 'null' => true,
-                'max_length' => 16,
+                'blank' => true,
                 'verbose_name' => 'Retención total',
                 'help_text' => 'Código asignado por el SII al impuesto en caso de ser retención total',
+                'show_in_list' => false,
             ],
             'nombre' => [
                 'type' => self::TYPE_STRING,
@@ -67,23 +69,22 @@ class Model_ImpuestoAdicional extends Model
             'tipo' => [
                 'type' => self::TYPE_CHAR,
                 'null' => true,
-                'max_length' => 1,
+                'blank' => true,
                 'verbose_name' => 'Tipo',
-                'help_text' => '',
             ],
             'tasa' => [
-                'type' => self::TYPE_SMALL_INTEGER,
+                'type' => self::TYPE_FLOAT,
                 'null' => true,
-                'max_length' => 16,
+                'blank' => true,
                 'verbose_name' => 'Tasa',
-                'help_text' => '',
             ],
             'descripcion' => [
                 'type' => self::TYPE_TEXT,
                 'verbose_name' => 'Descripción',
                 'help_text' => 'Descripción del impuesto (según ley que aplica al mismo)',
+                'show_in_list' => false,
             ],
         ],
     ];
-    
+
 }

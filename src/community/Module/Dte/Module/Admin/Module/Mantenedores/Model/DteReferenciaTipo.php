@@ -40,22 +40,20 @@ class Model_DteReferenciaTipo extends Model
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => '',
+            'verbose_name' => 'Tipo de referencia de DTE',
+            'verbose_name_plural' => 'Tipos de referencias de DTE',
+            'db_table_comment' => 'Tipos de referencia de dte.',
             'ordering' => ['contribuyente'],
         ],
         'fields' => [
-            'contribuyente' => [
+            'codigo' => [
                 'type' => self::TYPE_SMALL_INTEGER,
                 'primary_key' => true,
-                'max_length' => 16,
                 'verbose_name' => 'Código',
-                'help_text' => '',
             ],
             'tipo' => [
                 'type' => self::TYPE_STRING,
-                'max_length' => 20,
                 'verbose_name' => 'Tipo',
-                'help_text' => '',
             ],
         ],
     ];

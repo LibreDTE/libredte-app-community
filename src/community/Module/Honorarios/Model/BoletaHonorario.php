@@ -41,7 +41,9 @@ class Model_BoletaHonorario extends Model
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => '',
+            'verbose_name' => 'Boleta de Honorario',
+            'verbose_name_plural' => 'Boletas de Honorarios',
+            'db_table_comment' => 'Boleta de honorarios electrónicas',
         ],
         'fields' => [
             'emisor' => [
@@ -50,60 +52,54 @@ class Model_BoletaHonorario extends Model
                 'foreign_key' => Model_Contribuyente::class,
                 'to_table' => 'contribuyente',
                 'to_field' => 'rut',
-                'max_length' => 32,
                 'verbose_name' => 'Emisor',
-                'help_text' => '',
+                'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
+                'searchable' => 'rut:string|email:string|usuario:string',
             ],
             'numero' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'max_length' => 32,
-                'verbose_name' => 'Numero',
-                'help_text' => '',
+                'verbose_name' => 'Número',
+                'show_in_list' => false,
             ],
             'codigo' => [
                 'type' => self::TYPE_STRING,
                 'max_length' => 30,
-                'verbose_name' => 'Codigo',
-                'help_text' => '',
+                'verbose_name' => 'Código',
             ],
             'receptor' => [
                 'type' => self::TYPE_INTEGER,
                 'foreign_key' => Model_Contribuyente::class,
                 'to_table' => 'contribuyente',
                 'to_field' => 'rut',
-                'max_length' => 32,
                 'verbose_name' => 'Receptor',
-                'help_text' => '',
+                'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
+                'searchable' => 'rut:integer|email:string|usuario:string',
             ],
             'fecha' => [
                 'type' => self::TYPE_DATE,
                 'verbose_name' => 'Fecha',
-                'help_text' => '',
             ],
             'total_honorarios' => [
                 'type' => self::TYPE_INTEGER,
-                'max_length' => 32,
                 'verbose_name' => 'Total Honorarios',
-                'help_text' => '',
+                'show_in_list' => false,
             ],
             'total_retencion' => [
                 'type' => self::TYPE_INTEGER,
-                'max_length' => 32,
                 'verbose_name' => 'Total Retencion',
-                'help_text' => '',
+                'show_in_list' => false,
             ],
             'total_liquido' => [
                 'type' => self::TYPE_INTEGER,
-                'max_length' => 32,
-                'verbose_name' => 'Total Liquido',
-                'help_text' => '',
+                'verbose_name' => 'Total Líquido',
             ],
             'anulada' => [
                 'type' => self::TYPE_DATE,
                 'null' => true,
+                'blank' => true,
                 'verbose_name' => 'Anulada',
-                'help_text' => '',
+                'help_text' => 'Fecha de anulación de la boleta.',
             ],
         ],
     ];

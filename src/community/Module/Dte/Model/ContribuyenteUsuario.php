@@ -34,7 +34,7 @@ use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
  */
 class Model_ContribuyenteUsuario extends Model
 {
-    
+
     /**
      * Metadatos del modelo.
      *
@@ -42,7 +42,9 @@ class Model_ContribuyenteUsuario extends Model
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => '',
+            'verbose_name' => 'Usuario del contribuyente',
+            'verbose_name_plural' => 'Usuarios del contribuyente',
+            'db_table_comment' => 'Usuarios del contribuyente.',
             'ordering' => ['contribuyente'],
         ],
         'fields' => [
@@ -52,8 +54,10 @@ class Model_ContribuyenteUsuario extends Model
                 'foreign_key' => Model_Contribuyente::class,
                 'to_table' => 'contribuyente',
                 'to_field' => 'rut',
-                'max_length' => 32,
                 'verbose_name' => 'Contribuyente',
+                'help_text' => 'Rol único tributario (RUT) del contribuyente. Para personas naturales será su rol único nacional (RUN).',
+                'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
+                'searchable' => 'id:integer|usuario:string|nombre:string|email:string',
             ],
             'usuario' => [
                 'type' => self::TYPE_INTEGER,
@@ -61,8 +65,9 @@ class Model_ContribuyenteUsuario extends Model
                 'foreign_key' => Model_Usuario::class,
                 'to_table' => 'usuario',
                 'to_field' => 'id',
-                'max_length' => 32,
                 'verbose_name' => 'Usuario',
+                'display' => '(usuario.usuario)',
+                'searchable' => 'id:integer|usuario:string|nombre:string|email:string',
             ],
             'permiso' => [
                 'type' => self::TYPE_STRING,

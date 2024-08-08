@@ -45,8 +45,10 @@ class Model_DteTmp extends Model
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => '',
-            'ordering' => ['dte'],
+            'verbose_name' => 'Documento temporal',
+            'verbose_name_plural' => 'Documentos temporales',
+            'db_table_comment' => 'Documentos temporales emitidos.',
+            'ordering' => ['-fecha'],
         ],
         'fields' => [
             'emisor' => [
@@ -55,9 +57,8 @@ class Model_DteTmp extends Model
                 'foreign_key' => Model_Contribuyente::class,
                 'to_table' => 'contribuyente',
                 'to_field' => 'rut',
-                'max_length' => 32,
                 'verbose_name' => 'Emisor',
-                'help_text' => '',
+                'show_in_list' => false,
             ],
             'receptor' => [
                 'type' => self::TYPE_INTEGER,
@@ -65,9 +66,9 @@ class Model_DteTmp extends Model
                 'foreign_key' => Model_Contribuyente::class,
                 'to_table' => 'contribuyente',
                 'to_field' => 'rut',
-                'max_length' => 32,
                 'verbose_name' => 'Receptor',
-                'help_text' => '',
+                'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
+                'searchable' => 'rut:integer|usuario:string|email:string',
             ],
             'dte' => [
                 'type' => self::TYPE_SMALL_INTEGER,
@@ -75,55 +76,55 @@ class Model_DteTmp extends Model
                 'foreign_key' => Model_DteTipo::class,
                 'to_table' => 'dte_tipo',
                 'to_field' => 'codigo',
-                'max_length' => 16,
-                'verbose_name' => 'Dte',
-                'help_text' => '',
+                'min_value' => 1,
+                'max_value' => 10000,
+                'verbose_name' => 'DTE',
+                'help_text' => 'Código del tipo de DTE.',
+                'display' => '(dte_tipo.nombre)',
             ],
             'codigo' => [
-                'type' => self::TYPE_STRING,
+                'type' => self::TYPE_CHAR,
                 'primary_key' => true,
                 'max_length' => 32,
-                'verbose_name' => 'Codigo',
-                'help_text' => '',
+                'verbose_name' => 'Código',
+                'show_in_list' => false,
             ],
             'fecha' => [
                 'type' => self::TYPE_DATE,
                 'verbose_name' => 'Fecha',
-                'help_text' => '',
+                'help_text' => 'Fecha de emisión del documento temporal.'
             ],
             'total' => [
-                'type' => self::TYPE_INTEGER,
-                'max_length' => 32,
+                'type' => self::TYPE_BIG_INTEGER,
                 'verbose_name' => 'Total',
-                'help_text' => '',
             ],
             'datos' => [
                 'type' => self::TYPE_TEXT,
                 'verbose_name' => 'Datos',
-                'help_text' => '',
+                'show_in_list' => false,
             ],
             'sucursal_sii' => [
                 'type' => self::TYPE_INTEGER,
                 'null' => true,
-                'max_length' => 32,
+                'blank' => true,
                 'verbose_name' => 'Sucursal SII',
-                'help_text' => '',
+                'help_text' => 'Código sucursal SII.'
             ],
             'usuario' => [
                 'type' => self::TYPE_INTEGER,
-                'null' => true,
                 'foreign_key' => Model_Usuario::class,
                 'to_table' => 'usuario',
                 'to_field' => 'id',
-                'max_length' => 32,
                 'verbose_name' => 'Usuario',
-                'help_text' => '',
+                'display' => '(usuario.usuario)',
+                'searchable' => 'id:integer|usuario:string|nombre:string|email:string',
             ],
             'extra' => [
                 'type' => self::TYPE_TEXT,
                 'null' => true,
+                'blank' => true,
                 'verbose_name' => 'Extra',
-                'help_text' => '',
+                'show_in_list' => false,
             ],
         ],
     ];

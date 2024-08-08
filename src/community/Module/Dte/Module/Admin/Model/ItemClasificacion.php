@@ -40,7 +40,9 @@ class Model_ItemClasificacion extends Model
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => '',
+            'verbose_name' => 'Clasificación de Item',
+            'verbose_name_plural' => 'Clasificaciones de Itemes',
+            'db_table_comment' => 'Clasificación de items',
             'ordering' => ['codigo'],
         ],
         'fields' => [
@@ -50,38 +52,34 @@ class Model_ItemClasificacion extends Model
                 'foreign_key' => Model_ItemClasificacion::class,
                 'to_table' => 'item_clasificacion',
                 'to_field' => 'contribuyente',
-                'max_length' => 32,
                 'verbose_name' => 'Contribuyente',
-                'help_text' => '',
+                'show_in_list' => false,
             ],
             'codigo' => [
                 'type' => self::TYPE_STRING,
                 'primary_key' => true,
                 'max_length' => 35,
                 'verbose_name' => 'Código',
-                'help_text' => '',
             ],
             'clasificacion' => [
                 'type' => self::TYPE_STRING,
                 'max_length' => 50,
                 'verbose_name' => 'Glosa',
-                'help_text' => '',
             ],
             'superior' => [
                 'type' => self::TYPE_STRING,
                 'null' => true,
+                'blank' => true,
                 'foreign_key' => Model_ItemClasificaciones::class,
                 'to_table' => 'item_clasificacion',
                 'to_field' => 'contribuyente',
-                'max_length' => 10,
+                'max_length' => 35,
                 'verbose_name' => 'Superior',
-                'help_text' => '',
             ],
             'activa' => [
                 'type' => self::TYPE_BOOLEAN,
-                'default' => 'true',
+                'default' => true,
                 'verbose_name' => 'Activa',
-                'help_text' => '',
             ],
         ],
     ];

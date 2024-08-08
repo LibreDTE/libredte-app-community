@@ -35,7 +35,7 @@ use \website\Dte\Model_Contribuyente;
  */
 class Model_DteReferencia extends Model
 {
-    
+
     /**
      * Metadatos del modelo.
      *
@@ -43,8 +43,9 @@ class Model_DteReferencia extends Model
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => '',
-            'ordering' => ['dte'],
+            'verbose_name' => 'Referencia del DTE',
+            'verbose_name_plural' => 'Referencias de DTEs',
+            'db_table_comment' => 'Referencias de los DTE.',
         ],
         'fields' => [
             'emisor' => [
@@ -53,9 +54,10 @@ class Model_DteReferencia extends Model
                 'foreign_key' => Model_Contribuyente::class,
                 'to_table' => 'contribuyente',
                 'to_field' => 'rut',
-                'max_length' => 32,
                 'verbose_name' => 'Emisor',
-                'help_text' => '',
+                'help_text' => 'Emisor del documento.',
+                'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
+                'searchable' => 'rut:integer|usuario:string|email:string',
             ],
             'dte' => [
                 'type' => self::TYPE_SMALL_INTEGER,
@@ -63,23 +65,24 @@ class Model_DteReferencia extends Model
                 'foreign_key' => Model_DteTipo::class,
                 'to_table' => 'dte_tipo',
                 'to_field' => 'codigo',
-                'max_length' => 16,
-                'verbose_name' => 'Dte',
-                'help_text' => '',
+                'min_value' => 1,
+                'max_value' => 10000,
+                'verbose_name' => 'DTE',
+                'help_text' => 'Código del tipo de DTE.',
+                'display' => '(dte_tipo.nombre)',
             ],
             'folio' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'max_length' => 32,
                 'verbose_name' => 'Folio',
-                'help_text' => '',
+                'help_text' => 'Folio del documento.',
             ],
             'certificacion' => [
                 'type' => self::TYPE_BOOLEAN,
-                'default' => 'false',
+                'default' => false,
                 'primary_key' => true,
-                'verbose_name' => 'Certificacion',
-                'help_text' => '',
+                'verbose_name' => 'Certificación',
+                'show_in_list' => false,
             ],
             'referencia_dte' => [
                 'type' => self::TYPE_SMALL_INTEGER,
@@ -87,32 +90,33 @@ class Model_DteReferencia extends Model
                 'foreign_key' => Model_DteTipo::class,
                 'to_table' => 'dte_tipo',
                 'to_field' => 'codigo',
-                'max_length' => 16,
-                'verbose_name' => 'Referencia Dte',
-                'help_text' => '',
+                'verbose_name' => 'Referencia DTE',
+                'display' => '(dte_tipo.codigo)',
             ],
             'referencia_folio' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'max_length' => 32,
                 'verbose_name' => 'Referencia Folio',
-                'help_text' => '',
             ],
             'codigo' => [
                 'type' => self::TYPE_SMALL_INTEGER,
+                'min_value' => 1,
+                'max_value' => 10000,
                 'null' => true,
+                'blank' => true,
                 'foreign_key' => Model_DteReferenciaTipo::class,
                 'to_table' => 'dte_referencia_tipo',
                 'to_field' => 'codigo',
-                'max_length' => 16,
-                'verbose_name' => 'Codigo',
-                'help_text' => '',
+                'verbose_name' => 'Código',
+                'display' => '(dte_referencia_tipo.codigo)'
             ],
             'razon' => [
                 'type' => self::TYPE_STRING,
+                'null' => true,
+                'blank' => true,
                 'max_length' => 90,
-                'verbose_name' => 'Razon',
-                'help_text' => '',
+                'verbose_name' => 'Razón',
+                'show_in_list' => false,
             ],
         ],
     ];

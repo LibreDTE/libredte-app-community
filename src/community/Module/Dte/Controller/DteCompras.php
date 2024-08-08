@@ -167,7 +167,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         if ($DteCompra->track_id && empty($_POST['CodAutRec']) && $DteCompra->getEstado() != 'LRH' && $DteCompra->track_id!=-1) {
             return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()))
                 ->withError(
-                    __('Libro del período %(periodo)s ya fue enviado, ahora solo puede hacer rectificaciones.', 
+                    __('Libro del período %(periodo)s ya fue enviado, ahora solo puede hacer rectificaciones.',
                         [
                             'periodo' => $periodo
                         ]
@@ -178,7 +178,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         if ($periodo >= date('Ym')) {
             return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()))
                 ->withError(
-                    __('No puede enviar el libro de compras del período %(periodo)s.Debe esperar al mes siguiente del período para poder enviar.', 
+                    __('No puede enviar el libro de compras del período %(periodo)s.Debe esperar al mes siguiente del período para poder enviar.',
                         [
                             'periodo' => $periodo
                         ]
@@ -190,7 +190,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         if (!$Firma) {
             return redirect('/dte/admin/firma_electronicas/agregar')
                 ->withError(
-                    __('No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%(url)s).', 
+                    __('No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%(url)s).',
                         [
                             'url' => url('/dte/admin/firma_electronicas/agregar')
                         ]
@@ -226,7 +226,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         if (!$xml) {
             return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()))
                 ->withError(
-                    __('No fue posible generar el libro de compras<br/>%(logs)s', 
+                    __('No fue posible generar el libro de compras<br/>%(logs)s',
                         [
                             'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
                         ]
@@ -242,7 +242,7 @@ class Controller_DteCompras extends Controller_Base_Libros
             if (!$track_id) {
                 return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()))
                     ->withError(
-                        __('No fue posible enviar el libro de compras al SII<br/>%(logs)s', 
+                        __('No fue posible enviar el libro de compras al SII<br/>%(logs)s',
                             [
                                 'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
                             ]
@@ -283,7 +283,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         if (!$compras) {
             return redirect('/dte/dte_compras/ver/'.$periodo)
                 ->withWarning(
-                    __('No hay documentos de compra del período %(periodo)s.', 
+                    __('No hay documentos de compra del período %(periodo)s.',
                         [
                             'periodo' => $periodo
                         ]
@@ -318,7 +318,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         if (!$datos) {
             return redirect(str_replace('descargar_tipo_transacciones', 'ver', $this->request->getRequestUriDecoded()))
                 ->withWarning(
-                    __('No hay compras caracterizadas para el período %(periodo)s.', 
+                    __('No hay compras caracterizadas para el período %(periodo)s.',
                         [
                             'periodo' => $periodo
                         ]
@@ -362,7 +362,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         } catch (\Exception $e) {
             return redirect('/dte/dte_compras/ver/'.$periodo)
                 ->withError(
-                    __('%(error_message)s', 
+                    __('%(error_message)s',
                         [
                             'error_message' => $e->getMessage()
                         ]
@@ -399,7 +399,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         } catch (\Exception $e) {
             return redirect('/dte/dte_compras/ver/'.$periodo)
                 ->withError(
-                    __('%(error_message)s', 
+                    __('%(error_message)s',
                         [
                             'error_message' => $e->getMessage()
                         ]
@@ -445,7 +445,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         } catch (\Exception $e) {
             return redirect('/dte/dte_compras/ver/'.$periodo)
                 ->withError(
-                    __('%(error_message)s', 
+                    __('%(error_message)s',
                         [
                             'error_message' => $e->getMessage()
                         ]
@@ -519,7 +519,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         if (!$datos) {
             return redirect(str_replace('rcv_sincronizar_tipo_transacciones', 'ver', $this->request->getRequestUriDecoded()))
                 ->withWarning(
-                    __('No hay compras caracterizadas para el período %(periodo)s.', 
+                    __('No hay compras caracterizadas para el período %(periodo)s.',
                         [
                             'periodo' => $periodo
                         ]
@@ -606,7 +606,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         } catch (\Exception $e) {
             return redirect('/dte/dte_compras/ver/'.$periodo)
                 ->withError(
-                    __('%(error_message)s', 
+                    __('%(error_message)s',
                         [
                             'error_message' => $e->getMessage()
                         ]

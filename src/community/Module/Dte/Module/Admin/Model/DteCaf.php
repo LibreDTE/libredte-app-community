@@ -41,7 +41,9 @@ class Model_DteCaf extends Model
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => '',
+            'verbose_name' => 'CAF',
+            'verbose_name_plural' => 'CAF',
+            'db_table_comment' => 'XML de CAF',
             'ordering' => ['dte'],
         ],
         'fields' => [
@@ -51,9 +53,8 @@ class Model_DteCaf extends Model
                 'foreign_key' => Model_DteFolio::class,
                 'to_table' => 'dte_folio',
                 'to_field' => 'emisor',
-                'max_length' => 32,
                 'verbose_name' => 'Emisor',
-                'help_text' => '',
+                'display' => '(dte_folio.emisor)',
             ],
             'dte' => [
                 'type' => self::TYPE_SMALL_INTEGER,
@@ -61,37 +62,35 @@ class Model_DteCaf extends Model
                 'foreign_key' => Model_DteFolio::class,
                 'to_table' => 'dte_folio',
                 'to_field' => 'emisor',
-                'max_length' => 16,
+                'min_value' => 1,
+                'max_value' => 10000,
                 'verbose_name' => 'Dte',
-                'help_text' => '',
+                'help_text' => 'Código del tipo de DTE.',
+                'display' => '(dte_folio.dte)',
             ],
             'certificacion' => [
                 'type' => self::TYPE_BOOLEAN,
-                'default' => 'false',
+                'default' => false,
                 'primary_key' => true,
                 'foreign_key' => Model_DteFolio::class,
                 'to_table' => 'dte_folio',
                 'to_field' => 'emisor',
-                'verbose_name' => 'Certificacion',
-                'help_text' => '',
+                'verbose_name' => 'Certificación',
+                'show_in_list' => false,
             ],
             'desde' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'max_length' => 32,
                 'verbose_name' => 'Desde',
-                'help_text' => '',
             ],
             'hasta' => [
                 'type' => self::TYPE_INTEGER,
-                'max_length' => 32,
                 'verbose_name' => 'Hasta',
-                'help_text' => '',
             ],
             'xml' => [
                 'type' => self::TYPE_TEXT,
                 'verbose_name' => 'Xml',
-                'help_text' => '',
+                'show_in_list' => false,
             ],
         ],
     ];
