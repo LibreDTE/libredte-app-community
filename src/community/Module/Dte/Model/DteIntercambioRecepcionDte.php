@@ -42,8 +42,10 @@ class Model_DteIntercambioRecepcionDte extends Model
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => '',
-            'ordering' => ['dte'],
+            'verbose_name' => 'Intercambio de documento',
+            'verbose_name_plural' => 'Intercambio de documentos',
+            'db_table_comment' => 'Intercambio de documentos.',
+            'ordering' => ['folio'],
         ],
         'fields' => [
             'emisor' => [
@@ -52,8 +54,9 @@ class Model_DteIntercambioRecepcionDte extends Model
                 'foreign_key' => Model_DteEmitido::class,
                 'to_table' => 'dte_emitido',
                 'to_field' => 'emisor',
-                'max_length' => 32,
                 'verbose_name' => 'Emisor',
+                'help_text' => 'Emisor del documento.',
+                'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
             ],
             'dte' => [
                 'type' => self::TYPE_SMALL_INTEGER,
@@ -61,8 +64,11 @@ class Model_DteIntercambioRecepcionDte extends Model
                 'foreign_key' => Model_DteEmitido::class,
                 'to_table' => 'dte_emitido',
                 'to_field' => 'emisor',
-                'max_length' => 16,
-                'verbose_name' => 'Dte',
+                'min_value' => 1,
+                'max_value' => 10000,
+                'verbose_name' => 'DTE',
+                'help_text' => 'Código del tipo de DTE.',
+                'display' => '(dte_emitido.dte)'
             ],
             'folio' => [
                 'type' => self::TYPE_INTEGER,
@@ -70,8 +76,9 @@ class Model_DteIntercambioRecepcionDte extends Model
                 'foreign_key' => Model_DteEmitido::class,
                 'to_table' => 'dte_emitido',
                 'to_field' => 'emisor',
-                'max_length' => 32,
                 'verbose_name' => 'Folio',
+                'help_text' => 'Folio del documento.',
+                'display' => '(dte_emitido.folio)',
             ],
             'certificacion' => [
                 'type' => self::TYPE_BOOLEAN,
@@ -79,33 +86,35 @@ class Model_DteIntercambioRecepcionDte extends Model
                 'foreign_key' => Model_DteEmitido::class,
                 'to_table' => 'dte_emitido',
                 'to_field' => 'emisor',
-                'verbose_name' => 'Certificacion',
+                'verbose_name' => 'Certificación',
+                'show_in_list' => false,
             ],
             'responde' => [
                 'type' => self::TYPE_INTEGER,
                 'foreign_key' => Model_DteIntercambioRecepcion::class,
                 'to_table' => 'dte_intercambio_recepcion',
                 'to_field' => 'responde',
-                'max_length' => 32,
                 'verbose_name' => 'Responde',
+                'show_in_list' => false,
             ],
             'codigo' => [
-                'type' => self::TYPE_STRING,
+                'type' => self::TYPE_CHAR,
                 'foreign_key' => Model_DteIntercambioRecepcion::class,
                 'to_table' => 'dte_intercambio_recepcion',
                 'to_field' => 'responde',
                 'max_length' => 32,
-                'verbose_name' => 'Codigo',
+                'verbose_name' => 'Código',
+                'display' => '(dte_intercambio_recepcion.codigo)'
             ],
             'estado' => [
                 'type' => self::TYPE_INTEGER,
-                'max_length' => 32,
                 'verbose_name' => 'Estado',
             ],
             'glosa' => [
                 'type' => self::TYPE_STRING,
-                'max_length' => 255,
+                'max_length' => 256,
                 'verbose_name' => 'Glosa',
+                'show_in_list' => false,
             ],
         ],
     ];

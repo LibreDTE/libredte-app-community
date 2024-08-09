@@ -42,7 +42,9 @@ class Model_ContribuyenteDte extends Model
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => '',
+            'verbose_name' => 'Contribuyente DTE',
+            'verbose_name_plural' => 'Contribuyentes DTE',
+            'db_table_comment' => 'Contribuyentes DTE.',
             'ordering' => ['dte'],
         ],
         'fields' => [
@@ -52,9 +54,9 @@ class Model_ContribuyenteDte extends Model
                 'foreign_key' => Model_Contribuyente::class,
                 'to_table' => 'contribuyente',
                 'to_field' => 'rut',
-                'max_length' => 32,
                 'verbose_name' => 'Contribuyente',
-                'help_text' => '',
+                'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
+                'searchable' => 'rut:string|email:string|usuario:string',
             ],
             'dte' => [
                 'type' => self::TYPE_SMALL_INTEGER,
@@ -62,13 +64,15 @@ class Model_ContribuyenteDte extends Model
                 'foreign_key' => Model_DteTipo::class,
                 'to_table' => 'dte_tipo',
                 'to_field' => 'codigo',
-                'max_length' => 16,
+                'min_value' => 1,
+                'max_value' => 10000,
                 'verbose_name' => 'DTE',
-                'help_text' => '',
+                'help_text' => 'Código del tipo de DTE.',
+                'display' => '(dte_tipo.tipo)',
             ],
             'activo' => [
                 'type' => self::TYPE_BOOLEAN,
-                'default' => 'true',
+                'default' => true,
                 'verbose_name' => '¿Activo?',
                 'help_text' => 'Indica si el documento está o no activo',
             ],

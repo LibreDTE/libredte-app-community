@@ -33,7 +33,7 @@ use \website\Dte\Model_Contribuyente;
  */
 class Model_DteVenta extends Model_Base_Libro
 {
-    
+
     /**
      * Metadatos del modelo.
      *
@@ -41,7 +41,9 @@ class Model_DteVenta extends Model_Base_Libro
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => '',
+            'verbose_name' => 'DTE Venta',
+            'verbose_name_plural' => 'DTE Ventas',
+            'db_table_comment' => 'Listado DTE venta.',
             'ordering' => ['periodo'],
         ],
         'fields' => [
@@ -51,54 +53,50 @@ class Model_DteVenta extends Model_Base_Libro
                 'foreign_key' => Model_Contribuyente::class,
                 'to_table' => 'contribuyente',
                 'to_field' => 'rut',
-                'max_length' => 32,
                 'verbose_name' => 'Emisor',
-                'help_text' => '',
+                'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
             ],
             'periodo' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'max_length' => 32,
-                'verbose_name' => 'Periodo',
-                'help_text' => '',
+                'verbose_name' => 'Período',
             ],
             'certificacion' => [
                 'type' => self::TYPE_BOOLEAN,
-                'default' => 'false',
+                'default' => false,
                 'primary_key' => true,
-                'verbose_name' => 'Certificacion',
-                'help_text' => '',
+                'verbose_name' => 'Certificación',
+                'show_in_list' => false,
             ],
             'documentos' => [
                 'type' => self::TYPE_INTEGER,
-                'max_length' => 32,
                 'verbose_name' => 'Documentos',
-                'help_text' => '',
+                'show_in_list' => false,
             ],
             'xml' => [
                 'type' => self::TYPE_TEXT,
-                'verbose_name' => 'Xml',
-                'help_text' => '',
+                'verbose_name' => 'XML',
+                'show_in_list' => false,
             ],
             'track_id' => [
-                'type' => self::TYPE_INTEGER,
+                'type' => self::TYPE_BIG_INTEGER,
                 'null' => true,
-                'max_length' => 32,
-                'verbose_name' => 'Track Id',
-                'help_text' => '',
+                'blank' => true,
+                'verbose_name' => 'Track ID',
             ],
             'revision_estado' => [
                 'type' => self::TYPE_STRING,
                 'null' => true,
+                'blank' => true,
                 'max_length' => 100,
-                'verbose_name' => 'Revision Estado',
-                'help_text' => '',
+                'verbose_name' => 'Revisión Estado',
             ],
             'revision_detalle' => [
                 'type' => self::TYPE_TEXT,
                 'null' => true,
-                'verbose_name' => 'Revision Detalle',
-                'help_text' => '',
+                'blank' => true,
+                'verbose_name' => 'Revisión Detalle',
+                'show_in_list' => false,
             ],
         ],
     ];

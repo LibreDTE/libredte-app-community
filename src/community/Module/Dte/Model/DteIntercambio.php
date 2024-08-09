@@ -35,7 +35,7 @@ use sowerphp\app\Sistema\Usuarios\Model_Usuario;
  */
 class Model_DteIntercambio extends Model
 {
-    
+
     /**
      * Metadatos del modelo.
      *
@@ -43,7 +43,9 @@ class Model_DteIntercambio extends Model
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => '',
+            'verbose_name' => 'Intercambio de contribuyente',
+            'verbose_name_plural' => 'Intercambio de contribuyentes',
+            'db_table_comment' => 'Intercambio de contribuyentes.',
             'ordering' => ['codigo'],
         ],
         'fields' => [
@@ -53,113 +55,134 @@ class Model_DteIntercambio extends Model
                 'foreign_key' => Model_Contribuyente::class,
                 'to_table' => 'contribuyente',
                 'to_field' => 'rut',
-                'max_length' => 32,
                 'verbose_name' => 'Receptor',
+                'show_in_list' => false,
             ],
             'codigo' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'max_length' => 32,
-                'verbose_name' => 'Codigo',
+                'verbose_name' => 'Código',
             ],
             'certificacion' => [
                 'type' => self::TYPE_BOOLEAN,
-                'default' => 'false',
                 'primary_key' => true,
-                'verbose_name' => 'Certificacion',
+                'default' => false,
+                'verbose_name' => 'Certificación',
+                'show_in_list' => false,
             ],
             'fecha_hora_email' => [
                 'type' => self::TYPE_TIMESTAMP,
                 'verbose_name' => 'Fecha Hora Email',
+                'show_in_list' => false,
             ],
             'asunto' => [
                 'type' => self::TYPE_STRING,
                 'max_length' => 100,
                 'verbose_name' => 'Asunto',
+                'show_in_list' => false,
             ],
             'de' => [
                 'type' => self::TYPE_STRING,
                 'max_length' => 80,
                 'verbose_name' => 'De',
+                'show_in_list' => false,
             ],
             'responder_a' => [
                 'type' => self::TYPE_STRING,
                 'null' => true,
+                'blank' => true,
                 'max_length' => 80,
                 'verbose_name' => 'Responder A',
+                'show_in_list' => false,
             ],
             'mensaje' => [
                 'type' => self::TYPE_TEXT,
                 'null' => true,
+                'blank' => true,
                 'verbose_name' => 'Mensaje',
+                'show_in_list' => false,
             ],
             'mensaje_html' => [
                 'type' => self::TYPE_TEXT,
                 'null' => true,
-                'verbose_name' => 'Mensaje Html',
+                'blank' => true,
+                'verbose_name' => 'Mensaje HTML',
+                'show_in_list' => false,
             ],
             'emisor' => [
                 'type' => self::TYPE_INTEGER,
-                'max_length' => 32,
                 'verbose_name' => 'Emisor',
             ],
             'fecha_hora_firma' => [
                 'type' => self::TYPE_TIMESTAMP,
                 'verbose_name' => 'Fecha Hora Firma',
+                'show_in_list' => false,
             ],
             'documentos' => [
                 'type' => self::TYPE_SMALL_INTEGER,
-                'max_length' => 16,
                 'verbose_name' => 'Documentos',
             ],
             'archivo' => [
                 'type' => self::TYPE_STRING,
                 'max_length' => 100,
                 'verbose_name' => 'Archivo',
+                'show_in_list' => false,
             ],
             'archivo_xml' => [
                 'type' => self::TYPE_TEXT,
-                'verbose_name' => 'Archivo Xml',
+                'verbose_name' => 'Archivo XML',
+                'show_in_list' => false,
             ],
             'archivo_md5' => [
                 'type' => self::TYPE_CHAR,
                 'max_length' => 32,
-                'verbose_name' => 'Archivo Md5',
+                'verbose_name' => 'Archivo MD5',
+                'show_in_list' => false,
             ],
             'fecha_hora_respuesta' => [
                 'type' => self::TYPE_TIMESTAMP,
                 'null' => true,
+                'blank' => true,
                 'verbose_name' => 'Fecha Hora Respuesta',
+                'show_in_list' => false,
             ],
             'estado' => [
                 'type' => self::TYPE_SMALL_INTEGER,
                 'null' => true,
-                'max_length' => 16,
+                'blank' => true,
                 'verbose_name' => 'Estado',
             ],
             'recepcion_xml' => [
                 'type' => self::TYPE_TEXT,
                 'null' => true,
-                'verbose_name' => 'Recepcion Xml',
+                'blank' => true,
+                'verbose_name' => 'Recepción XML',
+                'show_in_list' => false,
             ],
             'recibos_xml' => [
                 'type' => self::TYPE_TEXT,
                 'null' => true,
-                'verbose_name' => 'Recibos Xml',
+                'blank' => true,
+                'verbose_name' => 'Recibos XML',
+                'show_in_list' => false,
             ],
             'resultado_xml' => [
                 'type' => self::TYPE_TEXT,
                 'null' => true,
-                'verbose_name' => 'Resultado Xml',
+                'blank' => true,
+                'verbose_name' => 'Resultado XML',
+                'show_in_list' => false,
             ],
             'usuario' => [
                 'type' => self::TYPE_INTEGER,
                 'null' => true,
+                'blank' => true,
                 'foreign_key' => Model_Usuario::class,
                 'to_table' => 'usuario',
                 'to_field' => 'id',
-                'max_length' => 32,
                 'verbose_name' => 'Usuario',
+                'display' => '(usuario.usuario)',
+                'searchable' => 'id:integer|usuario:string|nombre:string|email:string',
             ],
         ],
     ];

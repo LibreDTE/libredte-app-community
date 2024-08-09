@@ -40,8 +40,10 @@ class Model_DteGuia extends Model_Base_Libro
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => '',
-            'ordering' => ['emisor'],
+            'verbose_name' => 'Guía de despacho emitida',
+            'verbose_name_plural' => 'Guías de despacho emitidas',
+            'db_table_comment' => 'Guías de despacho emitidas.',
+            'ordering' => ['periodo'],
         ],
         'fields' => [
             'emisor' => [
@@ -50,46 +52,51 @@ class Model_DteGuia extends Model_Base_Libro
                 'foreign_key' => Model_Contribuyente::class,
                 'to_table' => 'contribuyente',
                 'to_field' => 'rut',
-                'max_length' => 32,
                 'verbose_name' => 'Emisor',
+                'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
+                'searchable' => 'rut:integer|usuario:string|email:string',
             ],
             'periodo' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'max_length' => 32,
                 'verbose_name' => 'Periodo',
             ],
             'certificacion' => [
                 'type' => self::TYPE_BOOLEAN,
-                'default' => 'false',
+                'default' => false,
                 'primary_key' => true,
-                'verbose_name' => 'Certificacion',
+                'verbose_name' => 'Certificación',
+                'show_in_list' => false,
             ],
             'documentos' => [
                 'type' => self::TYPE_INTEGER,
-                'max_length' => 32,
                 'verbose_name' => 'Documentos',
             ],
             'xml' => [
                 'type' => self::TYPE_TEXT,
-                'verbose_name' => 'Xml',
+                'verbose_name' => 'XML',
+                'show_in_list' => false,
             ],
             'track_id' => [
-                'type' => self::TYPE_TEXT,
+                'type' => self::TYPE_BIG_INTEGER,
                 'null' => true,
-                'max_length' => 32,
-                'verbose_name' => 'Track Id',
+                'blank' => true,
+                'verbose_name' => 'Track ID',
             ],
             'revision_estado' => [
                 'type' => self::TYPE_STRING,
                 'null' => true,
+                'blank' => true,
                 'max_length' => 100,
-                'verbose_name' => 'Revision Estado',
+                'verbose_name' => 'Revisión Estado',
+                'help_text' => 'Estado de la guía.',
             ],
             'revision_detalle' => [
                 'type' => self::TYPE_TEXT,
                 'null' => true,
-                'verbose_name' => 'Revision Detalle',
+                'blank' => true,
+                'verbose_name' => 'Revisión Detalle',
+                'show_in_list' => false,
             ],
         ],
     ];

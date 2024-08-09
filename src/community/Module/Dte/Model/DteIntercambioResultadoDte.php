@@ -42,8 +42,8 @@ class Model_DteIntercambioResultadoDte extends Model
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => '',
-            'ordering' => ['dte'],
+            'db_table_comment' => 'Intercambio resultados DTE.',
+            'ordering' => ['folio'],
         ],
         'fields' => [
             'emisor' => [
@@ -52,9 +52,7 @@ class Model_DteIntercambioResultadoDte extends Model
                 'foreign_key' => Model_DteEmitido::class,
                 'to_table' => 'dte_emitido',
                 'to_field' => 'emisor',
-                'max_length' => 32,
                 'verbose_name' => 'Emisor',
-                'help_text' => '',
             ],
             'dte' => [
                 'type' => self::TYPE_SMALL_INTEGER,
@@ -62,9 +60,10 @@ class Model_DteIntercambioResultadoDte extends Model
                 'foreign_key' => Model_DteEmitido::class,
                 'to_table' => 'dte_emitido',
                 'to_field' => 'emisor',
-                'max_length' => 16,
+                'min_value' => 1,
+                'max_value' => 10000,
                 'verbose_name' => 'Dte',
-                'help_text' => '',
+                'help_text' => 'Código del tipo de DTE.',
             ],
             'folio' => [
                 'type' => self::TYPE_INTEGER,
@@ -72,9 +71,7 @@ class Model_DteIntercambioResultadoDte extends Model
                 'foreign_key' => Model_DteEmitido::class,
                 'to_table' => 'dte_emitido',
                 'to_field' => 'emisor',
-                'max_length' => 32,
                 'verbose_name' => 'Folio',
-                'help_text' => '',
             ],
             'certificacion' => [
                 'type' => self::TYPE_BOOLEAN,
@@ -82,38 +79,34 @@ class Model_DteIntercambioResultadoDte extends Model
                 'foreign_key' => Model_DteEmitido::class,
                 'to_table' => 'dte_emitido',
                 'to_field' => 'emisor',
-                'verbose_name' => 'Certificacion',
-                'help_text' => '',
+                'verbose_name' => 'Certificación',
+                'show_in_list' => false,
             ],
             'responde' => [
                 'type' => self::TYPE_INTEGER,
                 'foreign_key' => Model_DteIntercambioResultado::class,
                 'to_table' => 'dte_intercambio_resultado',
                 'to_field' => 'responde',
-                'max_length' => 32,
-                'verbose_name' => 'Codigo',
-                'help_text' => '',
+                'verbose_name' => 'Responde',
+                'show_in_list' => false,
             ],
             'codigo' => [
-                'type' => self::TYPE_STRING,
+                'type' => self::TYPE_CHAR,
                 'foreign_key' => Model_DteIntercambioResultado::class,
                 'to_table' => 'dte_intercambio_resultado',
                 'to_field' => 'responde',
                 'max_length' => 32,
-                'verbose_name' => 'Codigo',
-                'help_text' => '',
+                'verbose_name' => 'Código',
             ],
             'estado' => [
                 'type' => self::TYPE_INTEGER,
-                'max_length' => 32,
                 'verbose_name' => 'Estado',
-                'help_text' => '',
             ],
             'glosa' => [
                 'type' => self::TYPE_STRING,
-                'max_length' => 255,
+                'max_length' => 256,
                 'verbose_name' => 'Glosa',
-                'help_text' => '',
+                'show_in_list' => false,
             ],
         ],
     ];

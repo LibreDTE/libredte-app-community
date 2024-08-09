@@ -81,13 +81,14 @@ class Model_DteTipo extends Model
             'categoria' => [
                 'type' => self::TYPE_CHAR,
                 'default' => 'T',
+                'length' => 1,
                 'verbose_name' => 'Categoría',
                 'show_in_list' => false,
                 'choices' => [
                     'T' => 'Tributario',
                     'I' => 'Informativo',
                 ],
-                'input_type' => 'select',
+                'widget' => 'select',
             ],
             'enviar' => [
                 'type' => self::TYPE_BOOLEAN,
@@ -112,7 +113,7 @@ class Model_DteTipo extends Model
                     'S' => 'Suma',
                     'R' => 'Resta',
                 ],
-                'input_type' => 'select',
+                'widget' => 'select',
             ],
         ],
     ];

@@ -41,16 +41,13 @@ class Model_DteIntercambioResultado extends Model
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => '',
             'ordering' => ['codigo'],
         ],
         'fields' => [
             'responde' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'max_length' => 32,
                 'verbose_name' => 'Responde',
-                'help_text' => '',
             ],
             'recibe' => [
                 'type' => self::TYPE_INTEGER,
@@ -58,49 +55,47 @@ class Model_DteIntercambioResultado extends Model
                 'foreign_key' => Model_Contribuyente::class,
                 'to_table' => 'contribuyente',
                 'to_field' => 'rut',
-                'max_length' => 32,
                 'verbose_name' => 'Recibe',
-                'help_text' => '',
             ],
             'codigo' => [
-                'type' => self::TYPE_STRING,
+                'type' => self::TYPE_CHAR,
                 'primary_key' => true,
                 'max_length' => 32,
-                'verbose_name' => 'Codigo',
-                'help_text' => '',
+                'verbose_name' => 'Código',
             ],
             'contacto' => [
                 'type' => self::TYPE_STRING,
                 'null' => true,
+                'blank' => true,
                 'max_length' => 40,
                 'verbose_name' => 'Contacto',
-                'help_text' => '',
+                'show_in_list' => false,
             ],
             'telefono' => [
                 'type' => self::TYPE_STRING,
                 'null' => true,
+                'blank' => true,
                 'max_length' => 40,
-                'verbose_name' => 'Telefono',
-                'help_text' => '',
+                'verbose_name' => 'Teléfono',
+                'show_in_list' => false,
             ],
             'email' => [
                 'type' => self::TYPE_STRING,
                 'null' => true,
+                'blank' => true,
                 'max_length' => 80,
-                'verbose_name' => 'Email', 
-                'help_text' => '',
+                'verbose_name' => 'Email',
                 'validation' => ['email'],
                 'sanitize' => ['strip_tags', 'spaces', 'trim', 'email'],
             ],
             'fecha_hora' => [
                 'type' => self::TYPE_TIMESTAMP,
                 'verbose_name' => 'Fecha Hora',
-                'help_text' => '',
             ],
             'xml' => [
                 'type' => self::TYPE_TEXT,
-                'verbose_name' => 'Xml',
-                'help_text' => '',
+                'verbose_name' => 'XML',
+                'show_in_list' => false,
             ],
         ],
     ];

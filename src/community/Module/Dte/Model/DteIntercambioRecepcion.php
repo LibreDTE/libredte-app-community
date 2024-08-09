@@ -40,15 +40,10 @@ class Model_DteIntercambioRecepcion extends Model
      * @var array
      */
     protected $meta = [
-        'model' => [
-            'db_table_comment' => '',
-            'ordering' => ['responde'],
-        ],
         'fields' => [
             'responde' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'max_length' => 32,
                 'verbose_name' => 'Responde',
             ],
             'recibe' => [
@@ -57,30 +52,34 @@ class Model_DteIntercambioRecepcion extends Model
                 'foreign_key' => Model_Contribuyente::class,
                 'to_table' => 'contribuyente',
                 'to_field' => 'rut',
-                'max_length' => 32,
                 'verbose_name' => 'Recibe',
+                'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
             ],
             'codigo' => [
-                'type' => self::TYPE_STRING,
+                'type' => self::TYPE_CHAR,
                 'primary_key' => true,
                 'max_length' => 32,
-                'verbose_name' => 'Codigo',
+                'verbose_name' => 'Código',
             ],
             'contacto' => [
                 'type' => self::TYPE_STRING,
                 'null' => true,
+                'blank' => true,
                 'max_length' => 40,
                 'verbose_name' => 'Contacto',
             ],
             'telefono' => [
                 'type' => self::TYPE_STRING,
                 'null' => true,
+                'blank' => true,
                 'max_length' => 40,
-                'verbose_name' => 'Telefono',
+                'verbose_name' => 'Teléfono',
+                'show_in_list' => false,
             ],
             'email' => [
                 'type' => self::TYPE_STRING,
                 'null' => true,
+                'blank' => true,
                 'max_length' => 80,
                 'verbose_name' => 'Email',
                 'validation' => ['email'],
@@ -92,17 +91,20 @@ class Model_DteIntercambioRecepcion extends Model
             ],
             'estado' => [
                 'type' => self::TYPE_INTEGER,
-                'max_length' => 32,
                 'verbose_name' => 'Estado',
             ],
             'glosa' => [
                 'type' => self::TYPE_STRING,
-                'max_length' => 255,
+                'null' => true,
+                'blank' => true,
+                'max_length' => 256,
                 'verbose_name' => 'Glosa',
+                'show_in_list' => false,
             ],
             'xml' => [
                 'type' => self::INPUT_TEXT,
-                'verbose_name' => 'Xml',
+                'verbose_name' => 'XML',
+                'show_in_list' => false,
             ],
         ],
     ];

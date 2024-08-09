@@ -40,24 +40,27 @@ class Model_IvaNoRecuperable extends Model
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => 'Tipos de IVA no recuperable',
+            'verbose_name' => 'IVA no recuperable',
+            'verbose_name_plural' => 'IVA no recuperables',
+            'db_table_comment' => 'Tipos de IVA no recuperable.',
             'ordering' => ['codigo'],
         ],
         'fields' => [
             'codigo' => [
                 'type' => self::TYPE_SMALL_INTEGER,
                 'primary_key' => true,
-                'max_length' => 16,
-                'verbose_name' => 'Código',
+                'min_value' => 1,
+                'max_value' => 100,
+                'verbose_name' => 'Código no recuperable',
                 'help_text' => 'Código asignado por el SII al tipo de IVA',
             ],
             'tipo' => [
                 'type' => self::TYPE_STRING,
                 'max_length' => 70,
-                'verbose_name' => 'Tipo',
+                'verbose_name' => 'Tipo de IVA',
                 'help_text' => 'Nombre del tipo de IVA',
             ]
         ],
     ];
-   
+
 }

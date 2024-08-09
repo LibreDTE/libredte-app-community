@@ -41,7 +41,7 @@ use \website\Dte\Model_Contribuyente;
  */
 class Model_DteEmitido extends Model_Base_Envio
 {
-    
+
     /**
      * Metadatos del modelo.
      *
@@ -49,7 +49,9 @@ class Model_DteEmitido extends Model_Base_Envio
      */
     protected $meta = [
         'model' => [
-            'db_table_comment' => '',
+            'verbose_name' => 'DTE emitido',
+            'verbose_name_plural' => 'DTE emitidos',
+            'db_table_comment' => 'DTE emitidos.',
             'ordering' => ['dte'],
         ],
         'fields' => [
@@ -59,8 +61,9 @@ class Model_DteEmitido extends Model_Base_Envio
                 'foreign_key' => Model_Contribuyente::class,
                 'to_table' => 'contribuyente',
                 'to_field' => 'rut',
-                'max_length' => 32,
                 'verbose_name' => 'Emisor',
+                'help_text' => 'Rol único tributario (RUT) del emisor. Para personas naturales será su rol único nacional (RUN).',
+                'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
             ],
             'dte' => [
                 'type' => self::TYPE_SMALL_INTEGER,
@@ -68,151 +71,174 @@ class Model_DteEmitido extends Model_Base_Envio
                 'foreign_key' => Model_DteTipo::class,
                 'to_table' => 'dte_tipo',
                 'to_field' => 'codigo',
-                'max_length' => 16,
+                'min_value' => 1,
+                'max_value' => 10000,
                 'verbose_name' => 'Dte',
+                'help_text' => 'Código del tipo de documento.',
+                'display' => '(dte_tipo.nombre)',
             ],
             'folio' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'max_length' => 32,
                 'verbose_name' => 'Folio',
+                'help_text' => 'Folio del documento.',
             ],
             'certificacion' => [
                 'type' => self::TYPE_BOOLEAN,
-                'default' => 'false',
                 'primary_key' => true,
-                'verbose_name' => 'Certificacion',
+                'default' => false,
+                'verbose_name' => 'Certificación',
+                'show_in_list' => false,
             ],
             'tasa' => [
                 'type' => self::TYPE_SMALL_INTEGER,
-                'default' => '0',
-                'max_length' => 16,
+                'default' => 0,
                 'verbose_name' => 'Tasa',
+                'help_text' => 'Tasa de impuesto.',
+                'show_in_list' => false,
             ],
             'fecha' => [
                 'type' => self::TYPE_DATE,
                 'verbose_name' => 'Fecha',
+                'help_text' => 'Fecha de emisión del documento.',
             ],
             'sucursal_sii' => [
                 'type' => self::TYPE_INTEGER,
                 'null' => true,
-                'max_length' => 32,
-                'verbose_name' => 'Sucursal Sii',
+                'blank' => true,
+                'verbose_name' => 'Sucursal SII',
+                'help_text' => 'Código sucursal SII.',
             ],
             'receptor' => [
                 'type' => self::TYPE_INTEGER,
                 'foreign_key' => Model_Contribuyente::class,
                 'to_table' => 'contribuyente',
                 'to_field' => 'rut',
-                'max_length' => 32,
                 'verbose_name' => 'Receptor',
+                'help_text' => 'Rol único tributario (RUT) del receptor. Para personas naturales será su rol único nacional (RUN).',
+                'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
             ],
             'exento' => [
-                'type' => self::TYPE_INTEGER,
+                'type' => self::TYPE_BIG_INTEGER,
                 'null' => true,
-                'max_length' => 32,
+                'blank' => true,
                 'verbose_name' => 'Exento',
+                'help_text' => 'Monto exento.',
+                'show_in_list' => false,
             ],
             'neto' => [
-                'type' => self::TYPE_INTEGER,
+                'type' => self::TYPE_BIG_INTEGER,
                 'null' => true,
-                'max_length' => 32,
+                'blank' => true,
                 'verbose_name' => 'Neto',
+                'help_text' => 'Monto neto.',
+                'show_in_list' => false,
             ],
             'iva' => [
-                'type' => self::TYPE_INTEGER,
-                'default' => '0',
-                'max_length' => 32,
-                'verbose_name' => 'Iva',
+                'type' => self::TYPE_BIG_INTEGER,
+                'default' => 0,
+                'verbose_name' => 'IVA',
+                'help_text' => 'Monto IVA.',
+                'show_in_list' => false,
             ],
             'total' => [
-                'type' => self::TYPE_INTEGER,
+                'type' => self::TYPE_BIG_INTEGER,
                 'null' => true,
-                'max_length' => 32,
+                'blank' => true,
                 'verbose_name' => 'Total',
+                'help_text' => 'Monto total.',
             ],
             'usuario' => [
                 'type' => self::TYPE_INTEGER,
                 'foreign_key' => Model_Usuario::class,
                 'to_table' => 'usuario',
                 'to_field' => 'id',
-                'max_length' => 32,
                 'verbose_name' => 'Usuario',
+                'display' => '(usuario.usuario)',
+                'searchable' => 'id:integer|usuario:string|nombre:string|email:string',
             ],
             'xml' => [
                 'type' => self::TYPE_TEXT,
-                'verbose_name' => 'Xml',
+                'null' => true,
+                'blank' => true,
+                'verbose_name' => 'XML',
+                'show_in_list' => false,
             ],
             'track_id' => [
                 'type' => self::TYPE_BIG_INTEGER,
                 'null' => true,
-                'max_length' => 64,
-                'verbose_name' => 'Track Id',
+                'blank' => true,
+                'verbose_name' => 'Track ID',
             ],
             'revision_estado' => [
                 'type' => self::TYPE_STRING,
                 'null' => true,
+                'blank' => true,
                 'max_length' => 100,
-                'verbose_name' => 'Revision Estado',
+                'verbose_name' => 'Revisión Estado',
             ],
             'revision_detalle' => [
                 'type' => self::TYPE_TEXT,
                 'null' => true,
-                'verbose_name' => 'Revision Detalle',
+                'blank' => true,
+                'verbose_name' => 'Revisión Detalle',
+                'show_in_list' => false,
             ],
             'anulado' => [
                 'type' => self::TYPE_BOOLEAN,
-                'null' => true,
-                'default' => 'false',
+                'default' => false,
                 'verbose_name' => 'Anulado',
+                'show_in_list' => false,
             ],
             'iva_fuera_plazo' => [
                 'type' => self::TYPE_BOOLEAN,
-                'default' => 'false',
+                'default' => false,
                 'verbose_name' => 'IVA fuera plazo',
+                'show_in_list' => false,
             ],
             'cesion_xml' => [
                 'type' => self::TYPE_TEXT,
-                'verbose_name' => 'Cesion Xml',
+                'null' => true,
+                'blank' => true,
+                'verbose_name' => 'Cesión XML',
+                'show_in_list' => false,
             ],
             'cesion_track_id' => [
-                'type' => self::TYPE_INTEGER,
+                'type' => self::TYPE_BIG_INTEGER,
                 'null' => true,
-                'max_length' => 32,
-                'verbose_name' => 'Cesion Track Id',
+                'blank' => true,
+                'verbose_name' => 'Cesión Track ID',
+                'show_in_list' => false,
             ],
             'receptor_evento' => [
                 'type' => self::TYPE_CHAR,
                 'null' => true,
-                'max_length' => 1,
+                'blank' => true,
                 'verbose_name' => 'Evento receptor',
+                'show_in_list' => false,
             ],
             'fecha_hora_creacion' => [
                 'type' => self::TYPE_TIMESTAMP,
                 'verbose_name' => 'Fecha Hora Creación',
+                'help_text' => 'Fecha y hora de la creación.',
+                'show_in_list' => false,
             ],
             'mipyme' => [
                 'type' => self::TYPE_BIG_INTEGER,
                 'null' => true,
-                'max_length' => 64,
+                'blank' => true,
                 'verbose_name' => 'Código MIPYME',
+                'show_in_list' => false,
             ],
             'extra' => [
                 'type' => self::TYPE_TEXT,
                 'null' => true,
+                'blank' => true,
                 'verbose_name' => 'Extra',
+                'show_in_list' => false,
             ],
         ],
     ];
-
-    // // Comentario de la tabla en la base de datos
-    // public static $tableComment = '';
-
-    // public static $fkNamespace = array(
-    //     'Model_DteTipo' => 'website\Dte\Admin\Mantenedores',
-    //     'Model_Contribuyente' => 'website\Dte',
-    //     'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios'
-    // ); ///< Namespaces que utiliza esta clase
 
     // cachés
     private $Dte; ///< Objeto con el DTE
