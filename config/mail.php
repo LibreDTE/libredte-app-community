@@ -46,20 +46,21 @@ return [
     'mailers' => [
 
         /*
-        |--------------------------------------------------------------------------
+        |----------------------------------------------------------------------
         | Mailer: SMTP
-        |--------------------------------------------------------------------------
+        |----------------------------------------------------------------------
         |
         | Configuración del correo utilizando SMTP.
         |
         */
         'smtp' => [
             'transport' => 'smtp',
-            'host' => env('MAIL_HOST', 'ssl://smtp.gmail.com'),
+            'host' => env('MAIL_HOST', 'smtp.gmail.com'),
             'port' => env('MAIL_PORT', 465),
             'encryption' => env('MAIL_ENCRYPTION', 'ssl'),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
+            'validate_cert' => env('MAIL_VALIDATE_CERT', true),
         ],
 
     ],
@@ -75,7 +76,7 @@ return [
     |
     */
     'from' => [
-        'address' => env('MAIL_FROM_EMAIL', null),
+        'address' => env('MAIL_FROM_ADDRESS', null),
         'name' => env('MAIL_FROM_NAME', 'LibreDTE'),
     ],
 
@@ -90,7 +91,7 @@ return [
     |
     */
     'to' => [
-        'address' => env('MAIL_TO_EMAIL', null),
+        'address' => env('MAIL_TO_ADDRESS', null),
     ],
 
 ];

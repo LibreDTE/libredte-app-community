@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Comando para sincronizar datos del Portal MIPYME del SII en LibreDTE.
  */
-class Shell_Command_Sii_Mipyme extends \Shell_App
+class Shell_Command_Sii_Mipyme extends \sowerphp\autoload\Shell
 {
 
     public function main($grupo = 'dte_mipyme', $meses = 2, $sincronizar = 'compras,ventas')

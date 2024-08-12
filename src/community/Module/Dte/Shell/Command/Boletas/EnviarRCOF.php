@@ -29,7 +29,7 @@ namespace website\Dte;
  * Permite enviar el RCOF directamente al SII o a un servidor remoto.
  * Por el momento solo se soporta servidor remoto SSH (SFTP/SCP).
  */
-class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
+class Shell_Command_Boletas_EnviarRCOF extends \sowerphp\autoload\Shell
 {
 
     /**

@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Comando para actualizar la bandeja de intercambio de los contribuyentes.
  */
-class Shell_Command_DteIntercambios_Actualizar extends \Shell_App
+class Shell_Command_DteIntercambios_Actualizar extends \sowerphp\autoload\Shell
 {
 
     public function main($grupo = null, $dias = 7, $meses = 2)

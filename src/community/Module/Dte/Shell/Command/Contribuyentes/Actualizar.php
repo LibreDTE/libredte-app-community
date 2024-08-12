@@ -35,7 +35,7 @@ namespace website\Dte;
  *  2) Actualizar cargando un archivo CSV descargado desde SII
  *     $ ./shell.php Dte.Contribuyentes_Actualizar csv archivo.csv
  */
-class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
+class Shell_Command_Contribuyentes_Actualizar extends \sowerphp\autoload\Shell
 {
 
     /**

@@ -41,7 +41,7 @@ namespace website\Dte;
  *    REFERENCES dte_intercambio(receptor, codigo, certificacion)
  *    ON UPDATE CASCADE ON DELETE RESTRICT;
  */
-class Shell_Command_DteIntercambios_Limpiar extends \Shell_App
+class Shell_Command_DteIntercambios_Limpiar extends \sowerphp\autoload\Shell
 {
 
     private $reglas = [

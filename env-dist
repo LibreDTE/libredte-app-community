@@ -20,14 +20,14 @@ DB_PASSWORD=""
 #REDIS_HOST="host.docker.internal"
 
 # Configuración de correo electrónico.
-#MAIL_HOST="ssl://smtp.gmail.com"
+#MAIL_HOST="smtp.gmail.com"
 #MAIL_PORT="465"
 #MAIL_ENCRYPTION="ssl"
 MAIL_USERNAME=""
 MAIL_PASSWORD=""
-#MAIL_FROM_EMAIL=""
-#MAIL_FROM_NAME="No Responder LibreDTE"
-#MAIL_TO_EMAIL=""
+#MAIL_FROM_ADDRESS=""
+#MAIL_FROM_NAME="LibreDTE"
+#MAIL_TO_ADDRESS=""
 
 # Configuración del servicio de API Gateway.
 # Token de API Gateway para desbloquear funcionalidades extras.

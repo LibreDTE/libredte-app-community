@@ -27,7 +27,7 @@ namespace website\Apps;
  * Comando para respaldar los datos de los contribuyentes en la cuenta asociada
  * a la aplicación de Dropbox.
  */
-class Shell_Command_Respaldos_Dropbox extends \Shell_App
+class Shell_Command_Respaldos_Dropbox extends \sowerphp\autoload\Shell
 {
 
     public function main($grupo = null, $compress = 'tgz', $fecha = null)

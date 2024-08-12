@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Comando para actualizar los eventos de receptores de DTE emitidos.
  */
-class Shell_Command_DteEmitidos_EventosReceptor extends \Shell_App
+class Shell_Command_DteEmitidos_EventosReceptor extends \sowerphp\autoload\Shell
 {
 
     public function main($grupo = null, $certificacion = 0, $meses = 2)

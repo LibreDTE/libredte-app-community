@@ -26,7 +26,7 @@ namespace website\Dte\Admin;
 /**
  * Comando que permite emitir masivamente DTE a partir de un archivo CSV.
  */
-class Shell_Command_DteFolios_Estados extends \Shell_App
+class Shell_Command_DteFolios_Estados extends \sowerphp\autoload\Shell
 {
 
     private $time_start;

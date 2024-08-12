@@ -28,7 +28,7 @@ namespace website\Dte;
  *   - Actualizar el estado de los DTE enviados al SII.
  *   - Enviar lo que esté sin Track ID al SII.
  */
-class Shell_Command_DteEmitidos_Actualizar extends \Shell_App
+class Shell_Command_DteEmitidos_Actualizar extends \sowerphp\autoload\Shell
 {
 
     public function main($grupo = null, $certificacion = 0, $creados_hace_horas = 8, $retry = 1)

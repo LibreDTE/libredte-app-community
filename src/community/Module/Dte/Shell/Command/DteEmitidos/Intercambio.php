@@ -29,7 +29,7 @@ namespace website\Dte;
  * solamente, ya que aunque no haya acuse de recibo, si hay recepción después de
  * 8 días se asume con acuse de recibo).
  */
-class Shell_Command_DteEmitidos_Intercambio extends \Shell_App
+class Shell_Command_DteEmitidos_Intercambio extends \sowerphp\autoload\Shell
 {
 
     public function main($grupo = 'dte_plus', $desde = 7, $certificacion = false)

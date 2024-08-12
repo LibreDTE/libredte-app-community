@@ -27,7 +27,7 @@ namespace website\Dte;
  * Comando para migrar los documentos emitidos desde un servidor de LibreDTE a
  * otro.
  */
-class Shell_Command_DteEmitidos_Migrar extends \Shell_App
+class Shell_Command_DteEmitidos_Migrar extends \sowerphp\autoload\Shell
 {
 
     public function main($servidor, $dia = null, $certificacion = 0)

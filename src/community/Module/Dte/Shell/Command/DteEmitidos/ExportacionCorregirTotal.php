@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Comando para actualizar la bandeja de intercambio de los contribuyentes.
  */
-class Shell_Command_DteEmitidos_ExportacionCorregirTotal extends \Shell_App
+class Shell_Command_DteEmitidos_ExportacionCorregirTotal extends \sowerphp\autoload\Shell
 {
 
     public function main($grupo, $certificacion = 0)

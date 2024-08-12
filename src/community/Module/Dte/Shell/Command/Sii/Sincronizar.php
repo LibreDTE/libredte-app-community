@@ -26,7 +26,7 @@ namespace website\Dte;
 /**
  * Comando para sincronizar datos del SII en LibreDTE.
  */
-class Shell_Command_Sii_Sincronizar extends \Shell_App
+class Shell_Command_Sii_Sincronizar extends \sowerphp\autoload\Shell
 {
 
     public function main($grupo = 'dte_plus', $meses = 2, $sincronizar = 'all', $ambiente = \sasco\LibreDTE\Sii::PRODUCCION)

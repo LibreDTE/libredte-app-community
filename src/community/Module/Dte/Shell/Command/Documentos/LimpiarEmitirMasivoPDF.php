@@ -27,7 +27,7 @@ namespace website\Dte;
  * Comando para limpiar los archivos PDF (zip en realidad) que se generaron
  * de documentos temporales o emitidos para ser enviados por email.
  */
-class Shell_Command_Documentos_LimpiarEmitirMasivoPDF extends \Shell_App
+class Shell_Command_Documentos_LimpiarEmitirMasivoPDF extends \sowerphp\autoload\Shell
 {
 
     public function main($validez = 86400)
