@@ -16,10 +16,7 @@
         "source": "https://github.com/libredte/libredte-app-community"
     },
     "autoload": {
-        "classmap": ["src/"],
-        "exclude-from-classmap": [
-            "src/**/App/"
-        ]
+        "classmap": ["src/"]
     },
     "require": {
         "php": "^7.3 || ^8.0",
