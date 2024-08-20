@@ -18,7 +18,7 @@ echo $f->input([
 ]);
 echo $f->end('Buscar documentos sin XML');
 ?>
-<?php if (isset($_POST['submit'])) : ?>
+<?php if (!empty($_POST)) : ?>
 <?php
 foreach ($documentos as &$d) {
     $d[] = '<a href="'.$_base.'/dte/dte_recibidos/ver/'.$d['rut'].'/'.$d['dte'].'/'.$d['folio'].'" title="Ver documento" class="btn btn-primary mb-2"><i class="fas fa-search fa-fw"></i></a>';

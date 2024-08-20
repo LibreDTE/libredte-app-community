@@ -38,7 +38,7 @@ class Model_Banco extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'Entidad bancaria',
             'verbose_name_plural' => 'Entidades bancarias',

@@ -135,7 +135,7 @@ return [
     | sesión del dispositivo anterior.
     |
     */
-    'multiple_logins' => env('AUTH_MULTIPLE_LOGINS', false),
+    'multiple_logins' => env('AUTH_MULTIPLE_LOGINS', true),
 
     /*
     |--------------------------------------------------------------------------

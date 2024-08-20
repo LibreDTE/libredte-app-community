@@ -39,7 +39,7 @@ class Model_DteCaf extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'CAF',
             'verbose_name_plural' => 'CAF',
@@ -50,18 +50,18 @@ class Model_DteCaf extends Model
             'emisor' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_DteFolio::class,
-                'to_table' => 'dte_folio',
-                'to_field' => 'emisor',
+                'relation' => Model_DteFolio::class,
+                'belongs_to' => 'dte_folio',
+                'related_field' => 'emisor',
                 'verbose_name' => 'Emisor',
                 'display' => '(dte_folio.emisor)',
             ],
             'dte' => [
                 'type' => self::TYPE_SMALL_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_DteFolio::class,
-                'to_table' => 'dte_folio',
-                'to_field' => 'emisor',
+                'relation' => Model_DteFolio::class,
+                'belongs_to' => 'dte_folio',
+                'related_field' => 'emisor',
                 'min_value' => 1,
                 'max_value' => 10000,
                 'verbose_name' => 'Dte',
@@ -72,9 +72,9 @@ class Model_DteCaf extends Model
                 'type' => self::TYPE_BOOLEAN,
                 'default' => false,
                 'primary_key' => true,
-                'foreign_key' => Model_DteFolio::class,
-                'to_table' => 'dte_folio',
-                'to_field' => 'emisor',
+                'relation' => Model_DteFolio::class,
+                'belongs_to' => 'dte_folio',
+                'related_field' => 'emisor',
                 'verbose_name' => 'Certificación',
                 'show_in_list' => false,
             ],

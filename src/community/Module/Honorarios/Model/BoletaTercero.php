@@ -39,7 +39,7 @@ class Model_BoletaTercero extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'Boleta de Tercero',
             'verbose_name_plural' => 'Boletas de Terceros',
@@ -49,9 +49,9 @@ class Model_BoletaTercero extends Model
             'emisor' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Emisor',
                 'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
                 'searchable' => 'rut:integer|usuario:string|email:string',
@@ -68,9 +68,9 @@ class Model_BoletaTercero extends Model
             ],
             'receptor' => [
                 'type' => self::TYPE_INTEGER,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Receptor',
                 'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
                 'searchable' => 'rut:integer|usuario:string|email:string',

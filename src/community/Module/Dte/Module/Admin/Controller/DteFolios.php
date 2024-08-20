@@ -68,7 +68,7 @@ class Controller_DteFolios extends \sowerphp\autoload\Controller
             'dte_tipos' => $Emisor->getDocumentosAutorizados(),
         ]);
         // procesar creación del mantenedor
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             // verificar que esté autorizado a cargar folios del tipo de dte
             if (!$Emisor->documentoAutorizado($_POST['dte'])) {
                 \sowerphp\core\Facade_Session_Message::error('La empresa no tiene habilitado en LibreDTE el documento de tipo '.$_POST['dte'].'. Contacte al área de soporte para que sea habilitado este tipo de documento.');
@@ -116,7 +116,7 @@ class Controller_DteFolios extends \sowerphp\autoload\Controller
             'servidor_sii' => \sasco\LibreDTE\Sii::getServidor(),
         ]);
         // procesar solo si se envió el formulario
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             // verificar que se haya podido subir CAF
             if (!isset($_FILES['caf']) || $_FILES['caf']['error']) {
                 $message = __(
@@ -308,7 +308,7 @@ class Controller_DteFolios extends \sowerphp\autoload\Controller
             'DteFolio' => $DteFolio,
         ]);
         // Procesar formulario.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             // validar que campos existan y asignar
             foreach (['siguiente', 'alerta'] as $attr) {
                 if (empty($_POST[$attr])) {
@@ -528,7 +528,7 @@ class Controller_DteFolios extends \sowerphp\autoload\Controller
             'dte' => $dte,
         ]);
         // procesar solicitud de folios
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             // buscar el mantenedor de folios del CAF
             $DteFolio = new Model_DteFolio($Emisor->rut, (int)$_POST['dte'], $Emisor->enCertificacion());
             if (!$DteFolio->exists()) {
@@ -714,7 +714,7 @@ class Controller_DteFolios extends \sowerphp\autoload\Controller
             'dte' => $dte,
         ]);
         // procesar solicitud de folios
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             // buscar el mantenedor de folios del CAF
             $DteFolio = new Model_DteFolio($Emisor->rut, $_POST['dte'], $Emisor->enCertificacion());
             if (!$DteFolio->exists()) {
@@ -888,7 +888,7 @@ class Controller_DteFolios extends \sowerphp\autoload\Controller
             'documentos' => $documentos,
         ]);
         // procesar formulario
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             // si no hay documentos error
             if (empty($_POST['documentos'])) {
                 \sowerphp\core\Facade_Session_Message::error('Debe seleccionar al menos un tipo de documento para obtener el estado.');

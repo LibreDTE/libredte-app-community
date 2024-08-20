@@ -102,7 +102,7 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Procesar formulario si se pasó.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $this->save();
         }
         // Renderizar vista.
@@ -145,7 +145,7 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
                 );
         }
         // Procesar formulario si se pasó.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $this->save();
         }
         // Renderizar vista.
@@ -568,13 +568,8 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             $pdf = $DteRecibido->getPDF($config);
         } catch (\Exception $e) {
             return redirect('/dte/dte_recibidos/listar')
-                ->withError(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
         $ext = $config['compress'] ? 'zip' : 'pdf';
         $file_name = 'LibreDTE_'.$DteRecibido->emisor.'_T'.$DteRecibido->dte.'F'.$DteRecibido->folio.'.'.$ext;
@@ -686,14 +681,7 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
                 return response()->json($pdf);
             }
         } catch (\Exception $e) {
-            return response()->json(
-                __('%(error_message)s',
-                    [
-                        'error_message' => $e->getMessage()
-                    ]
-                ),
-                $e->getCode()
-            );
+            return response()->json($e->getMessage(), $e->getCode());
         }
     }
 
@@ -765,14 +753,7 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
                 return response()->json($escpos);
             }
         } catch (\Exception $e) {
-            return response()->json(
-                __('%(error_message)s',
-                    [
-                        'error_message' => $e->getMessage()
-                    ]
-                ),
-                $e->getCode()
-            );
+            return response()->json($e->getMessage(), $e->getCode());
         }
     }
 
@@ -983,7 +964,7 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             'tipos_dte' => (new Model_DteTipos())->getList(),
         ]);
         // Procesar formulario.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($user->hash);
             $response = $rest->post(url('/api/dte/dte_recibidos/buscar/'.$Receptor->rut.'?_contribuyente_certificacion='.$Receptor->enCertificacion()), [

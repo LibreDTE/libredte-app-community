@@ -118,7 +118,7 @@ class Controller_Cesiones extends \sowerphp\autoload\Controller
             'hasta' => date('Y-m-d'),
         ]);
         // procesar formulario
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $consulta_codigo = [
                 'deudor' => 0,
                 'cedente' => 1,

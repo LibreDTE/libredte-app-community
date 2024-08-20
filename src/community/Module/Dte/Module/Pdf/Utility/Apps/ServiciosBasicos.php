@@ -35,9 +35,12 @@ class Utility_Apps_ServiciosBasicos extends Utility_Apps_Base_Formato
     protected $logo = 'https://i.imgur.com/j6lz7Aq.png';
 
     /**
-     * Método que entrega el código HTML de la página de configuración de la aplicación.
+     * Método que entrega el código HTML de la página de configuración de la
+     * aplicación.
+     *
+     * @return string HTML renderizado con la configuración de la aplicación.
      */
-    public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form)
+    public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form): string
     {
         $buffer = '';
         $buffer .= '<div class="alert alert-info mb-4"><i class="fas fa-exclamation-circle text-info"></i> Este formato solo genera el PDF en tamaño media hoja carta.</div>';

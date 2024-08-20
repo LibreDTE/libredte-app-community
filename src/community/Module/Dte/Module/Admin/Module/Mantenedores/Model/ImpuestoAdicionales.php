@@ -32,11 +32,11 @@ use \sowerphp\autoload\Model_Plural;
  */
 class Model_ImpuestoAdicionales extends Model_Plural
 {
-    
+
     /**
      * Método que entrega el listado de impuesto adicionales.
      */
-    public function getList()
+    public function getList(): array
     {
         return $this->getDatabaseConnection()->getTable('
             SELECT codigo, codigo || \' - \' || nombre

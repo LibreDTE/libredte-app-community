@@ -111,7 +111,7 @@ class Model_Contribuyentes extends Model_Plural
     /**
      * Método que entrega el listado de contribuyentes.
      */
-    public function getList($all = false)
+    public function getList($all = false): array
     {
         if ($all) {
             return $this->getDatabaseConnection()->getTable('

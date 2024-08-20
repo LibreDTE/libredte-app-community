@@ -35,9 +35,12 @@ class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
     protected $logo = 'https://libredte.cl/img/logo.png';
 
     /**
-     * Método que entrega el código HTML de la página de configuración de la aplicación.
+     * Método que entrega el código HTML de la página de configuración de la
+     * aplicación.
+     *
+     * @return string HTML renderizado con la configuración de la aplicación.
      */
-    public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form)
+    public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form): string
     {
         $buffer = '';
         $buffer .= parent::getConfigPageHTML($form);

@@ -36,9 +36,12 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
     protected $logo = 'https://i.imgur.com/B0pnCvz.png';
 
      /**
-     * Método que entrega el código HTML de la página de configuración de la aplicación.
+     * Método que entrega el código HTML de la página de configuración de la
+     * aplicación.
+     *
+     * @return string HTML renderizado con la configuración de la aplicación.
      */
-    public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form)
+    public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form): string
     {
         $Dropbox = $this->getDropboxClient();
         if (!$Dropbox) {
@@ -88,10 +91,12 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
 
     /**
      * Método para evitar que se llame al método padre.
+     *
      * La configuración se activa o desactiva al parear/desparear Dropbox.
      */
-    public function setConfigPOST()
+    public function setConfigPOST(): ?array
     {
+        return [];
     }
 
     /**

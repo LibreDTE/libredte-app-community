@@ -36,7 +36,7 @@ class Controller_Guias extends \sowerphp\autoload\Controller
     public function libro()
     {
         // si no se viene por post terminar
-        if (!isset($_POST['submit'])) {
+        if (empty($_POST)) {
             return;
         }
         // verificar campos no estén vacíos

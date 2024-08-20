@@ -38,7 +38,7 @@ class Model_DteTipo extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'Tipo de documento tributario',
             'verbose_name_plural' => 'Tipos de documentos tributarios',
@@ -49,22 +49,22 @@ class Model_DteTipo extends Model
             'codigo' => [
                 'type' => self::TYPE_SMALL_INTEGER,
                 'primary_key' => true,
-                'min_value' => 1,
-                'max_value' => 10000,
+                'min_value' => 30,
+                'max_value' => 999,
                 'verbose_name' => 'Código',
-                'help_text' => 'Código asignado por el SII al tipo de documento',
+                'help_text' => 'Código asignado por el SII al tipo de documento.',
             ],
             'tipo' => [
                 'type' => self::TYPE_STRING,
                 'max_length' => 60,
                 'verbose_name' => 'Tipo',
-                'help_text' => 'Nombre del tipo de documento',
+                'help_text' => 'Nombre del tipo de documento.',
             ],
             'electronico' => [
                 'type' => self::TYPE_BOOLEAN,
                 'default' => true,
                 'verbose_name' => 'Electrónico',
-                'help_text' => 'Indica si el documento es o no electrónico',
+                'help_text' => 'Indica si el documento es o no electrónico.',
             ],
             'compra' => [
                 'type' => self::TYPE_BOOLEAN,
@@ -121,14 +121,6 @@ class Model_DteTipo extends Model
     public function getDteTipoAtrribute()
     {
         return $this->tipo;
-    }
-
-    /**
-     * Constructor del tipo de dte.
-     */
-    public function __construct($codigo = null)
-    {
-        parent::__construct($codigo);
     }
 
     /**

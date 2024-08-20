@@ -195,7 +195,6 @@ class Shell_Command_Contribuyentes_Actualizar extends \sowerphp\autoload\Shell
             }
             // si el contribuyente está modificado, entonces se guarda
             if ($modificado) {
-                $Contribuyente->modificado = date('Y-m-d H:i:s');
                 try {
                     $Contribuyente->save();
                 } catch (\Exception $e) {

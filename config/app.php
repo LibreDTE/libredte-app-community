@@ -214,6 +214,28 @@ return [
         |
         */
         'error_as_exception' => env('APP_PHP_ERROR_AS_EXCEPTION', true),
+
+        /*
+        |----------------------------------------------------------------------
+        | Manejo de Diagnósticos como Excepciones
+        |----------------------------------------------------------------------
+        |
+        | Este valor determina si los mensajes de diagnóstico, como errores,
+        | advertencias, notices, y otros, que normalmente no detendrían la
+        | ejecución del script, deberían ser convertidos en excepciones. Esto
+        | detendría la ejecución de la aplicación si no son capturadas y
+        | manejadas adecuadamente.
+        |
+        | Solo se generarán excepciones para los diagnósticos incluidos en el
+        | nivel de reporte de errores configurado con error_reporting().
+        |
+        | Valores recomendados:
+        |   - Desarrollo: true
+        |   - Producción: false
+        |
+        */
+        'diagnostics_as_exception' => env('APP_PHP_DIAGNOSTICS_AS_EXCEPTION', true),
+
     ],
 
 ];

@@ -39,7 +39,7 @@ class Model_RegistroCompra extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'Registro de compra',
             'verbose_name_plural' => 'Registros de compras',
@@ -49,9 +49,9 @@ class Model_RegistroCompra extends Model
         'fields' => [
             'receptor' => [
                 'type' => self::TYPE_INTEGER,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Receptor',
                 'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
                 'show_in_list' => false,
@@ -110,9 +110,9 @@ class Model_RegistroCompra extends Model
             'detrutdoc' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'RUT Documento',
                 'show_in_list' => false,
             ],
@@ -267,9 +267,9 @@ class Model_RegistroCompra extends Model
                 'type' => self::TYPE_INTEGER,
                 'null' => true,
                 'blank' => true,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'RUT Liquidador',
                 'show_in_list' => false,
             ],

@@ -35,8 +35,6 @@ use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
 use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
 use \sowerphp\app\Sistema\Usuarios\Model_Usuarios;
 use \sowerphp\general\Utility_Date;
-use \sowerphp\general\Utility_File;
-use \sowerphp\general\Utility_Image;
 use \sowerphp\general\Utility_Mapas_Google;
 use \website\Dte\Admin\Model_DteFolio;
 use \website\Sistema\General\Model_ActividadEconomica;
@@ -54,10 +52,18 @@ class Model_Contribuyente extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'db_table_comment' => 'Contribuyentes de la aplicación. Esto incluye emisores, receptores, personas naturales, sin inicio de actividades, etc.',
             'ordering' => ['rut'],
+            'choices' => ['id' => 'rut', 'name' => 'razon_social'],
+            'get_latest_by' => ['modificado'],
+            'default_permissions' => ['list', 'view'],
+            'audit' => [
+                'fields' => [
+                    'updated_at' => 'modificado',
+                ],
+            ],
         ],
         'fields' => [
             'rut' => [
@@ -66,6 +72,9 @@ class Model_Contribuyente extends Model
                 'verbose_name' => 'RUT',
                 'help_text' => 'Rol único tributario (RUT) del contribuyente. Para personas naturales será su rol único nacional (RUN).',
                 'display' => '(rut)"-"(dv)',
+                'min_value' => 1000000,
+                'max_value' => 99999999,
+                'sanitize' => ['for_rut'],
             ],
             'dv' => [
                 'type' => self::TYPE_CHAR,
@@ -74,6 +83,13 @@ class Model_Contribuyente extends Model
                 'help_text' => 'Dígito verificador del RUT.',
                 'show_in_list' => false,
                 'searchable' => false,
+                'sanitize' => [
+                    'remove_non_printable',
+                    'strip_tags',
+                    'spaces',
+                    'trim',
+                    'strtoupper'
+                ],
             ],
             'razon_social' => [
                 'type' => self::TYPE_STRING,
@@ -90,9 +106,9 @@ class Model_Contribuyente extends Model
             ],
             'actividad_economica' => [
                 'type' => self::TYPE_INTEGER,
-                'foreign_key' => Model_ActividadEconomica::class,
-                'to_table' => 'actividad_economica',
-                'to_field' => 'codigo',
+                'relation' => Model_ActividadEconomica::class,
+                'belongs_to' => 'actividad_economica',
+                'related_field' => 'codigo',
                 'null' => true,
                 'blank' => true,
                 'verbose_name' => 'Actividad económica',
@@ -127,9 +143,9 @@ class Model_Contribuyente extends Model
             'comuna' => [
                 'type' => self::TYPE_CHAR,
                 'max_length' => 5,
-                'foreign_key' => Model_Comuna::class,
-                'to_table' => 'comuna',
-                'to_field' => 'codigo',
+                'relation' => Model_Comuna::class,
+                'belongs_to' => 'comuna',
+                'related_field' => 'codigo',
                 'verbose_name' => 'Comuna',
                 'help_text' => 'Comuna de la dirección principal de la empresa.',
                 'display' => '(comuna.comuna)',
@@ -137,9 +153,9 @@ class Model_Contribuyente extends Model
             ],
             'usuario' => [
                 'type' => self::TYPE_INTEGER,
-                'foreign_key' => Model_Usuario::class,
-                'to_table' => 'usuario',
-                'to_field' => 'id',
+                'relation' => Model_Usuario::class,
+                'belongs_to' => 'usuario',
+                'related_field' => 'id',
                 'null' => true,
                 'blank' => true,
                 'verbose_name' => 'Usuario',
@@ -158,7 +174,7 @@ class Model_Contribuyente extends Model
         ],
         'configurations' => [
             'model' => [
-                'foreign_key' => [
+                'relation' => [
                     'contribuyente' => 'rut',
                 ],
             ],
@@ -166,16 +182,28 @@ class Model_Contribuyente extends Model
                 'extra_otras_actividades' => [
                     'default' => [],
                 ],
+                'extra_web' => [
+                    'serializable' => true,
+                ],
                 'sii_pass' => [
+                    'encrypt' => true,
+                ],
+                'ambiente_produccion_fecha' => [
+                    'serializable' => true,
+                ],
+                'ambiente_produccion_numero' => [
+                    'serializable' => true,
+                ],
+                'email_intercambio_user' => [
+                    'serializable' => true,
+                ],
+                'email_intercambio_pass' => [
                     'encrypt' => true,
                 ],
                 'email_sii_pass' => [
                     'encrypt' => true,
                 ],
-                'email_intercambio_pass' => [
-                    'encrypt' => true,
-                ],
-            ]
+            ],
         ],
     ];
 
@@ -195,10 +223,25 @@ class Model_Contribuyente extends Model
      * @var array
      */
     protected $rutReservados = [
-        0,
-        55555555,
-        66666666,
-        88888888,
+        0,        // Sin RUT.
+        44444444, // RUT para boletas de honorarios a extranjeros.
+        55555555, // RUT para exportación.
+        66666666, // RUT para boletas no nominativas.
+        88888888, // Empresa privada de prueba.
+    ];
+
+    /**
+     * Atributos que son obligatorios cuando el contribuyente tiene un usuario
+     * asociado (está registrado).
+     *
+     * @var array
+     */
+    protected $requiredAttributesWithUser = [
+        'razon_social',
+        'giro',
+        'actividad_economica',
+        'direccion',
+        'comuna',
     ];
 
     /**
@@ -207,6 +250,23 @@ class Model_Contribuyente extends Model
      * @var array
      */
     protected $firmas = [];
+
+    /**
+     * Accessor para el atributo Contribuyente::$dv.
+     *
+     * Permite calcular automáticamente el DV si no está asignado y el atributo
+     * RUT si lo está.
+     *
+     * @return string|null
+     */
+    public function getDvAttribute(): ?string
+    {
+        $value = $this->attributes['dv'] ?? $this->getDefaultValue('dv');
+        if ($value === null && $this->rut) {
+            $value = \sowerphp\app\Utility_Rut::dv($this->rut);
+        }
+        return $value;
+    }
 
     /**
      * Accessor para el atributo Contribuyente::$contribuyente.
@@ -219,12 +279,55 @@ class Model_Contribuyente extends Model
     }
 
     /**
+     * Accessor para el atributo Contribuyente::$storage_path.
+     *
+     * Entrega la ruta base en los storage del contribuyente.
+     *
+     * Es la misma ruta base en el storage static (public) y private.
+     *
+     * @return string String con la ruta base del contribuyente en el storage.
+     */
+    public function getStoragePathAttribute(): string
+    {
+        return sprintf('/contribuyentes/%d', $this->rut);
+    }
+
+    /**
+     * Accessor para el atributo Contribuyente::$public_disk.
+     *
+     * Entrega la instancia del disco (storage) público del contribuyente.
+     *
+     * @return object Instancia con el disco público.
+     */
+    public function getPublicDiskAttribute(): object
+    {
+        return app('storage')->subdisk($this->storage_path, 'static');
+    }
+
+    /**
+     * Accessor para el atributo Contribuyente::$public_url.
+     *
+     * Entrega la URL para acceder a los recursos del disco público del
+     * contribuyente.
+     *
+     * @param string|null $resource Recurso dentro del disco público.
+     * @return string URL completa. La base si no se pasó un recurso o completa
+     * al recurso si se pasó como argumento uno.
+     */
+    public function getPublicUrlAttribute(?string $resource = null): string
+    {
+        $basepath = sprintf('/static/contribuyentes/%d', $this->rut);
+        $fullpath = $resource ? $basepath . $resource : $basepath;
+        return url($fullpath);
+    }
+
+    /**
      * Obtiene el contribuyente solicitado.
      *
      * @param array $id Clave primaria del modelo.
      * @return stdClass|null
      */
-    public function retrieve(array $id): ?stdClass
+    protected function retrieve(array $id, array $options = []): ?stdClass
     {
         // Determinar variable que tiene el RUT del contribuyente y asignar.
         $rut = $id['rut'] ?? $id[0] ?? null;
@@ -270,84 +373,33 @@ class Model_Contribuyente extends Model
      * está guardando es uno registrado por un usuario (se validan otros datos).
      * @param bool $no_modificar =true Evita que se modifiquen ciertos contribuyentes reservados.
      */
-    public function save($registrado = false, $no_modificar = true): bool
+    public function save(array $options = []): bool
     {
-        // si no se debe guardar se entrega true (se hace creer que se guardó)
-        if ($no_modificar && in_array($this->rut, $this->rutReservados)) {
+        // Si es un contribuyente reservado (que no se debe modificar), se
+        // retorna directamente `true` (se hace creer que se guardó).
+        if (in_array($this->rut, $this->rutReservados)) {
             return true;
         }
-        // si es contribuyente registrado se hacen algunas verificaciones
-        if ($registrado) {
-            // verificar campos mínimos
-            foreach (['razon_social', 'giro', 'actividad_economica', 'direccion', 'comuna'] as $attr) {
-                if (empty($this->$attr)) {
-                    throw new \Exception(__('Debe especificar: %s.', $attr));
+
+        // Si es contribuyente registrado se hacen algunas verificaciones
+        // adicionales respecto a los datos que se podrían haber pasado al
+        // guardar.
+        if (!empty($this->usuario)) {
+
+            // Atributos requeridos cuando es un contribuyente registrado.
+            foreach ($this->requiredAttributesWithUser as $attribute) {
+                if (!$this->$attribute) {
+                    throw new \Exception(__(
+                        'Debe especificar el atributo del contribuyente: %s.',
+                        $attribute
+                    ));
                 }
             }
-            // si se pasó un logo se guarda
-            if (isset($_FILES['logo']) && !$_FILES['logo']['error']) {
-                $mimetype = Utility_File::mimetype(
-                    $_FILES['logo']['tmp_name']
-                );
-                if ($mimetype != 'image/png') {
-                    throw new \Exception('Formato del logo debe ser PNG.');
-                }
-                $config = config('modules.Dte.contribuyentes.logos');
-                Utility_Image::resizeOnFile(
-                    $_FILES['logo']['tmp_name'],
-                    $config['width'],
-                    $config['height']
-                );
-                $dir_path = DIR_STATIC . '/contribuyentes/' . $this->rut;
-                if (!is_dir($dir_path)) {
-                    mkdir($dir_path, 0777, true);
-                }
-                move_uploaded_file(
-                    $_FILES['logo']['tmp_name'],
-                    $dir_path . '/logo.png'
-                );
-            }
+
         }
-        // corregir datos
-        $this->dv = strtoupper($this->dv);
-        $this->razon_social = mb_substr($this->razon_social, 0, 100);
-        $this->giro = mb_substr($this->giro, 0, 80);
-        $this->telefono = mb_substr($this->telefono, 0, 20);
-        $this->email = mb_substr($this->email, 0, 80);
-        $this->direccion = mb_substr($this->direccion, 0, 70);
-        $this->modificado = date('Y-m-d H:i:s');
-        // guardar contribuyente
-        if (!parent::save()) {
-            return false;
-        }
-        // guardar configuración
-        if ($this->config) {
-            foreach ($this->config as $configuracion => $datos) {
-                foreach ($datos as $variable => $valor) {
-                    $Config = new Model_ContribuyenteConfig(
-                        $this->rut,
-                        $configuracion,
-                        $variable
-                    );
-                    if (!is_array($valor) && !is_object($valor)) {
-                        $Config->json = 0;
-                    } else {
-                        $valor = json_encode($valor);
-                        $Config->json = 1;
-                    }
-                    $class = get_called_class();
-                    if (in_array($configuracion.'_'.$variable, $class::$encriptar) && $valor !== null) {
-                        $valor = encrypt($valor);
-                    }
-                    $Config->valor = $valor;
-                    if ($valor !== null)
-                        $Config->save();
-                    else
-                        $Config->delete();
-                }
-            }
-        }
-        return true;
+
+        // Guardar contribuyente.
+        return parent::save($options);
     }
 
     /**

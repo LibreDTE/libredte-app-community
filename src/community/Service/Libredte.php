@@ -1,8 +1,8 @@
 <?php
 
 /**
- * SowerPHP: Framework PHP hecho en Chile.
- * Copyright (C) SowerPHP <https://www.sowerphp.org>
+ * LibreDTE: Aplicación Web - Edición Comunidad.
+ * Copyright (C) LibreDTE <https://www.libredte.cl>
  *
  * Este programa es software libre: usted puede redistribuirlo y/o
  * modificarlo bajo los términos de la Licencia Pública General Affero
@@ -282,6 +282,46 @@ class Service_Libredte implements Interface_Service
         }
         // Entregar el contribuyente asignado a la ejecución del servicio.
         return $this->contribuyente;
+    }
+
+    /**
+     * Método que entrega el objeto del contribuyente que ha sido seleccionado
+     * para ser usado en la sesióny. Si no hay uno seleccionado se fuerza a
+     * seleccionar.
+     *
+     * Este método utiliza getSessionContribuyente() pero adicionalmente hace
+     * una validación del usuario que desea utilizar el contribuyente,
+     * corroborando que este tiene permisos para trabajar con el mismo.
+     *
+     * @return Model_Contribuyente Objeto con el contribuyente.
+     */
+    public function getSessionContribuyenteAutorizado(
+        $user,
+        $permissions = [],
+        string $error = null
+    ): ?Model_Contribuyente
+    {
+        // Obtener el contribuyente de la sesión (se requiere obligatoriamente).
+        $required = true;
+        $Contribuyente = $this->getSessionContribuyente($required);
+
+        // Verificar que el usuario tenga los permisos necesarios sobre el
+        // contribuyente que se obtuvo.
+        if (!$Contribuyente->usuarioAutorizado($user, $permissions)) {
+            if ($error === null) {
+                $error = __(
+                    'El usuario %s no tiene los permisos necesarios (%s) para trabajar con el contribuyente %s.',
+                    $user->usuario,
+                    is_string($permissions) ? $permissions : implode(', ', $permissions),
+                    $Contribuyente->razon_social
+                );
+            }
+            throw new \Exception($error, 412);
+        }
+
+        // Entregar el contribuyente de la sesión para el cual se tienen los
+        // permisos solicitados.
+        return $Contribuyente;
     }
 
     /**

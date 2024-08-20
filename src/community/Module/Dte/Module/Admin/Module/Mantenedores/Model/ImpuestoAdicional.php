@@ -38,7 +38,7 @@ class Model_ImpuestoAdicional extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'Impuesto adicional',
             'verbose_name_plural' => 'Impuestos adicionales',

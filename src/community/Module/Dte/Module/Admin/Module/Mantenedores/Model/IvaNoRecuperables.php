@@ -36,7 +36,7 @@ class Model_IvaNoRecuperables extends Model_Plural
     /**
      * Método que entrega el listado de ivas no recuperables.
      */
-    public function getList()
+    public function getList(): array
     {
         return $this->getDatabaseConnection()->getTable('
             SELECT codigo, codigo || \' - \' || tipo

@@ -36,14 +36,19 @@ class Model_Itemes extends Model_Plural
     /**
      * Método que busca un item en la base de datos.
      */
-    public function get($contribuyente, $codigo = null, $tipo = null)
+    public function get(...$id): \sowerphp\core\Model
     {
-        // si hay tipo se recupera de la clase padre
+        $contribuyente = $id[0];
+        $tipo = $id[1] ?? null;
+        $codigo = $id[2] ?? null;
+
+        // Si hay tipo se recupera de la clase padre.
         if ($tipo) {
             return parent::get($contribuyente, $tipo, $codigo);
         }
-        // si no hay tipo se busca por contribuyente y codigo
-        return (new Model_Item())->set($this->getDatabaseConnection()->getRow('
+
+        // Si no hay tipo se busca por contribuyente y codigo.
+        $data = $this->getDatabaseConnection()->getRow('
             SELECT *
             FROM item
             WHERE contribuyente = :contribuyente AND codigo = :codigo
@@ -51,13 +56,14 @@ class Model_Itemes extends Model_Plural
         ', [
             ':contribuyente' => $contribuyente,
             ':codigo' => $codigo,
-        ]));
+        ]);
+        return (new Model_Item())->forceFill($data);
     }
 
     /**
      * Método que entrega el listado de items del contribuyente.
      */
-    public function getList()
+    public function getList(): array
     {
         return $this->getDatabaseConnection()->getTable('
             SELECT codigo, item

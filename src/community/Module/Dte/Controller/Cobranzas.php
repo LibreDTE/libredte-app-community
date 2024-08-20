@@ -92,7 +92,7 @@ class Controller_Cobranzas extends \sowerphp\autoload\Controller
             'Emisor' => $Emisor,
             'Pago' => $Pago
         ]);
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $Pago->pagado = $_POST['pagado'];
             $Pago->observacion = $_POST['observacion'];
             $Pago->usuario = $user->id;

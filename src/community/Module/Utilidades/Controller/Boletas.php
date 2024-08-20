@@ -34,7 +34,7 @@ class Controller_Boletas extends \sowerphp\autoload\Controller
      */
     public function rcof()
     {
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $RutEmisor = str_replace('.', '', $_POST['RutEmisor']);
             // objeto de la firma
             try {

@@ -39,26 +39,25 @@ class Model_DteCompra extends Model_Base_Libro
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'Libro de compra',
             'verbose_name_plural' => 'Libros de compras',
-            'db_table_comment' => 'Libro de compras',
             'ordering' => ['-periodo'],
         ],
         'fields' => [
             'receptor' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Receptor',
                 'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
                 'searchable' => 'rut:string|contribuyente:string|email:string|usuario:string'
             ],
             'periodo' => [
-                'type' => self::TYPE_INTEGER,
+                'type' => self::TYPE_YEAR_MONTH,
                 'primary_key' => true,
                 'verbose_name' => 'Periodo',
             ],
@@ -90,24 +89,17 @@ class Model_DteCompra extends Model_Base_Libro
                 'null' => true,
                 'blank' => true,
                 'max_length' => 100,
-                'verbose_name' => 'Revisión Estado',
+                'verbose_name' => 'Revisión del SII',
             ],
             'revision_detalle' => [
                 'type' => self::TYPE_TEXT,
                 'null' => true,
                 'blank' => true,
-                'verbose_name' => 'Revisión Detalle',
+                'verbose_name' => 'Detalle de la revisión',
                 'show_in_list' => false,
             ],
         ]
     ];
-
-    // Comentario de la tabla en la base de datos
-    public static $tableComment = '';
-
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte'
-    ); ///< Namespaces que utiliza esta clase
 
     public static $libro_cols = [
         'dte' => 'TpoDoc',

@@ -34,12 +34,13 @@ use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
  */
 class Model_Cobranza extends Model
 {
+
     /**
      * Metadatos del modelo.
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'Pago programado',
             'verbose_name_plural' => 'Pagos programados',
@@ -49,9 +50,9 @@ class Model_Cobranza extends Model
             'emisor' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_DteEmitido::class,
-                'to_table' => 'dte_emitido',
-                'to_field' => 'emisor',
+                'relation' => Model_DteEmitido::class,
+                'belongs_to' => 'dte_emitido',
+                'related_field' => 'emisor',
                 'verbose_name' => 'Emisor',
                 'help_text' => 'Rol único tributario (RUT) del emisor. Para personas naturales será su rol único nacional (RUN).',
                 'display' => '(emisor.contribuyente.rut)"-"(emisor.contribuyente.dv)',
@@ -60,9 +61,9 @@ class Model_Cobranza extends Model
             'dte' => [
                 'type' => self::TYPE_SMALL_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_DteEmitido::class,
-                'to_table' => 'dte_emitido',
-                'to_field' => 'emisor',
+                'relation' => Model_DteEmitido::class,
+                'belongs_to' => 'dte_emitido',
+                'related_field' => 'emisor',
                 'min_value' => 1,
                 'max_value' => 10000,
                 'verbose_name' => 'Código',
@@ -72,9 +73,9 @@ class Model_Cobranza extends Model
             'folio' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_DteEmitido::class,
-                'to_table' => 'dte_emitido',
-                'to_field' => 'emisor',
+                'relation' => Model_DteEmitido::class,
+                'belongs_to' => 'dte_emitido',
+                'related_field' => 'emisor',
                 'verbose_name' => 'Folio',
                 'help_text' => 'Folio del DTE Emitido.',
                 'display' => '(dte_emitido.folio)',
@@ -83,9 +84,9 @@ class Model_Cobranza extends Model
                 'type' => self::TYPE_BOOLEAN,
                 'default' => false,
                 'primary_key' => true,
-                'foreign_key' => Model_DteEmitido::class,
-                'to_table' => 'dte_emitido',
-                'to_field' => 'emisor',
+                'relation' => Model_DteEmitido::class,
+                'belongs_to' => 'dte_emitido',
+                'related_field' => 'emisor',
                 'verbose_name' => 'Certificación',
                 'help_text' => 'Ambiente de DTE en el que se trabajará.',
                 'show_in_list' => false,
@@ -128,9 +129,9 @@ class Model_Cobranza extends Model
                 'type' => self::TYPE_INTEGER,
                 'null' => true,
                 'blank' => true,
-                'foreign_key' => Model_Usuario::class,
-                'to_table' => 'usuario',
-                'to_field' => 'id',
+                'relation' => Model_Usuario::class,
+                'belongs_to' => 'usuario',
+                'related_field' => 'id',
                 'verbose_name' => 'Usuario',
                 'display' => '(usuario.usuario)',
                 'searchable' => 'id:integer|usuario:string|nombre:string:email:string'

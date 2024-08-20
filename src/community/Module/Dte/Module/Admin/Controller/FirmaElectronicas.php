@@ -56,7 +56,7 @@ class Controller_FirmaElectronicas extends \sowerphp\autoload\Controller
     public function agregar(Request $request)
     {
         $user = $request->user();
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             // verificar que se haya podido subir el archivo con la firma
             if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
                 \sowerphp\core\Facade_Session_Message::error(

@@ -64,6 +64,12 @@ if ($form_id == 'registrarContribuyente') {
         'check' => 'notempty rut',
         'attr' => 'maxlength="12" onblur="Contribuyente.setDatos(\'registrarContribuyente\')"',
     ]);
+} else {
+    echo $f->input([
+        'type' => 'hidden',
+        'name' => 'rut',
+        'value' => $Contribuyente->rut,
+    ]);
 }
 echo $f->input([
     'name' => 'razon_social',

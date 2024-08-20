@@ -83,7 +83,7 @@ class Controller_DteVentas extends Controller_Base_Libros
         if ($periodo >= date('Ym')) {
             return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()))
                 ->withError(
-                    __('No puede enviar el libro de ventas del período %(periodo)s. Debe esperar al mes siguiente del período para poder enviar.', 
+                    __('No puede enviar el libro de ventas del período %(periodo)s. Debe esperar al mes siguiente del período para poder enviar.',
                         [
                             'periodo' => $periodo
                         ]
@@ -94,7 +94,7 @@ class Controller_DteVentas extends Controller_Base_Libros
         if ($DteVenta->countDteSinEstadoEnvioSII()) {
             return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()))
                 ->withError(
-                    __('Existen documentos sin el estado de envío al SII en el libro de ventas del período %(periodo)s. Debe actualizar los estados de todos los documentos antes de poder generar el libro.', 
+                    __('Existen documentos sin el estado de envío al SII en el libro de ventas del período %(periodo)s. Debe actualizar los estados de todos los documentos antes de poder generar el libro.',
                         [
                             'periodo' => $periodo
                         ]
@@ -118,7 +118,7 @@ class Controller_DteVentas extends Controller_Base_Libros
         if (!$Firma) {
             return redirect('/dte/admin/firma_electronicas/agregar')
                 ->withError(
-                    __('No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%(url)s).', 
+                    __('No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%(url)s).',
                         [
                             'url' => url('/dte/admin/firma_electronicas/agregar')
                         ]
@@ -201,7 +201,7 @@ class Controller_DteVentas extends Controller_Base_Libros
             if (!$track_id) {
                 return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()))
                     ->withError(
-                        __('No fue posible enviar el libro de ventas al SII<br/>%(logs)s', 
+                        __('No fue posible enviar el libro de ventas al SII<br/>%(logs)s',
                             [
                                 'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
                             ]
@@ -281,7 +281,7 @@ class Controller_DteVentas extends Controller_Base_Libros
         if (!$ventas) {
             return redirect(str_replace('descargar_registro_venta', 'ver', $this->request->getRequestUriDecoded()))
                 ->withWarning(
-                    __('No hay documentos de venta del período %(periodo)s.', 
+                    __('No hay documentos de venta del período %(periodo)s.',
                         [
                             'periodo' => $periodo
                         ]
@@ -315,7 +315,7 @@ class Controller_DteVentas extends Controller_Base_Libros
         if (!$Libro->exists()) {
             return redirect(str_replace('descargar_resumenes', 'ver', $this->request->getRequestUriDecoded()))
                 ->withError(
-                    __('Aun no se ha generado el XML del período %(periodo)s.', 
+                    __('Aun no se ha generado el XML del período %(periodo)s.',
                         [
                             'periodo' => $periodo
                         ]
@@ -382,13 +382,8 @@ class Controller_DteVentas extends Controller_Base_Libros
             $resumen = $Emisor->getRCV(['operacion' => 'VENTA', 'periodo' => $periodo, 'estado' => 'REGISTRO', 'detalle' => false]);
         } catch (\Exception $e) {
             return redirect('/dte/dte_ventas/ver/'.$periodo)
-                ->withError(
-                    __('%(error_message)s', 
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
         $this->set([
             'Emisor' => $Emisor,
@@ -418,13 +413,8 @@ class Controller_DteVentas extends Controller_Base_Libros
             ]);
         } catch (\Exception $e) {
             return redirect('/dte/dte_ventas/ver/'.$periodo)
-                ->withError(
-                    __('%(error_message)s', 
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
         if (!$detalle) {
             return redirect('/dte/dte_ventas/ver/'.$periodo)
@@ -634,13 +624,8 @@ class Controller_DteVentas extends Controller_Base_Libros
             ]);
         } catch (\Exception $e) {
             return redirect('/dte/dte_ventas/ver/'.$periodo)
-                ->withError(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
         if (!$detalle) {
             return redirect('/dte/dte_ventas/ver/'.$periodo)

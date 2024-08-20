@@ -61,7 +61,7 @@ class Controller_Estadisticas extends \sowerphp\autoload\Controller
         if ($response['status']['code'] != 200) {
             return redirect('/')
                 ->withError(
-                    __('%(body)s', 
+                    __('%(body)s',
                         [
                             'body' => $response['body']
                         ]
@@ -157,14 +157,7 @@ class Controller_Estadisticas extends \sowerphp\autoload\Controller
                     unset($c['ambiente']);
                 }
             } catch (\Exception $e) {
-                return response()->json(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    ),
-                    500
-                );
+                return response()->json($e->getMessage(), 500);
             }
         }
         // Entregar resultados.

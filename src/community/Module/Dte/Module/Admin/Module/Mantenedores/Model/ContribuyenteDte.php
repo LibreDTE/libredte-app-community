@@ -40,7 +40,7 @@ class Model_ContribuyenteDte extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'Contribuyente DTE',
             'verbose_name_plural' => 'Contribuyentes DTE',
@@ -51,9 +51,9 @@ class Model_ContribuyenteDte extends Model
             'contribuyente' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Contribuyente',
                 'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
                 'searchable' => 'rut:string|email:string|usuario:string',
@@ -61,9 +61,9 @@ class Model_ContribuyenteDte extends Model
             'dte' => [
                 'type' => self::TYPE_SMALL_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_DteTipo::class,
-                'to_table' => 'dte_tipo',
-                'to_field' => 'codigo',
+                'relation' => Model_DteTipo::class,
+                'belongs_to' => 'dte_tipo',
+                'related_field' => 'codigo',
                 'min_value' => 1,
                 'max_value' => 10000,
                 'verbose_name' => 'DTE',

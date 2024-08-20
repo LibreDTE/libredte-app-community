@@ -39,7 +39,7 @@ class Model_BoletaHonorario extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'Boleta de Honorario',
             'verbose_name_plural' => 'Boletas de Honorarios',
@@ -49,9 +49,9 @@ class Model_BoletaHonorario extends Model
             'emisor' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Emisor',
                 'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
                 'searchable' => 'rut:string|email:string|usuario:string',
@@ -69,9 +69,9 @@ class Model_BoletaHonorario extends Model
             ],
             'receptor' => [
                 'type' => self::TYPE_INTEGER,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Receptor',
                 'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
                 'searchable' => 'rut:integer|email:string|usuario:string',

@@ -37,7 +37,7 @@ abstract class Model_Base_Documento extends Model
      */
     public function getContribuyente()
     {
-        return $this->getMeta()['model.db_table'] == 'dte_compra'
+        return $this->getMetadata('model.db_table') == 'dte_compra'
             ? $this->getReceptor()
             : $this->getEmisor()
         ;

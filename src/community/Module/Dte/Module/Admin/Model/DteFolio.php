@@ -40,7 +40,7 @@ class Model_DteFolio extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'Folio DTE',
             'verbose_name_plural' => 'Folios DTE',
@@ -51,9 +51,9 @@ class Model_DteFolio extends Model
             'emisor' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Emisor',
                 'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
                 'searchable' => 'rut:string|usuario:string|email:string',
@@ -61,9 +61,9 @@ class Model_DteFolio extends Model
             'dte' => [
                 'type' => self::TYPE_SMALL_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_DteTipo::class,
-                'to_table' => 'dte_tipo',
-                'to_field' => 'codigo',
+                'relation' => Model_DteTipo::class,
+                'belongs_to' => 'dte_tipo',
+                'related_field' => 'codigo',
                 'min_value' => 1,
                 'max_value' => 10000,
                 'verbose_name' => 'Dte',
@@ -153,7 +153,7 @@ class Model_DteFolio extends Model
             }
             $this->disponibles = $cafs[$i - 1]['hasta'] - $this->siguiente + 1;
         }
-        $status = $this->save(false);
+        $status = $this->save(false); // TODO: ver el false.
         if (!$status) {
             $this->getDatabaseConnection()->rollback();
             return false;

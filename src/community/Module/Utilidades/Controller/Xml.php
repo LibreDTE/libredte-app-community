@@ -34,7 +34,7 @@ class Controller_Xml extends \sowerphp\autoload\Controller
      */
     public function firmar()
     {
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $xml = file_get_contents($_FILES['xml']['tmp_name']);
             // obtener nombre del tag y del ID
             $XML = new \sasco\LibreDTE\XML();

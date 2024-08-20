@@ -38,7 +38,7 @@ class Model_IvaNoRecuperable extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'IVA no recuperable',
             'verbose_name_plural' => 'IVA no recuperables',

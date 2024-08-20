@@ -148,7 +148,7 @@ echo $f->begin(['id' => 'generar_xml', 'onsubmit' => 'dte_generar_xml_validar(th
                 'type' => 'checkbox',
                 'name' => 'normalizar_dte',
                 'label' => 'Normalizar los datos',
-                'checked' => isset($_POST['submit']) ? isset($_POST['normalizar_dte']) : true,
+                'checked' => !empty($_POST) ? isset($_POST['normalizar_dte']) : true,
                 'help' => 'Si esta opción está seleccionada los datos de los DTE pasarán por un proceso llamado "normalización". Se agregarán y/o calcularán los datos faltantes. Si no se normaliza, se deberán proporcionar todos los datos del DTE (incluyendo totales, cálculo de IVA, montos de descuentos, etc).',
             ]);
             ?>

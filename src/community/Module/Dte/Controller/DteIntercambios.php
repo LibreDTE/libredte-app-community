@@ -225,22 +225,12 @@ class Controller_DteIntercambios extends \sowerphp\autoload\Controller
         } catch (\Exception $e) {
             if ($e->getCode() == 500) {
                 return redirect('/dte/dte_intercambios/listar')
-                    ->withError(
-                        __('%(error_message)s',
-                            [
-                                'error_message' => $e->getMessage()
-                            ]
-                        )
-                    );
+                    ->withError($e->getMessage())
+                ;
             } else {
                 return redirect('/dte/dte_intercambios/listar')
-                    ->withInfo(
-                        __('%(error_message)s',
-                            [
-                                'error_message' => $e->getMessage()
-                            ]
-                        )
-                    );
+                    ->withInfo($e->getMessage())
+                ;
             }
         }
         extract($resultado);
@@ -327,14 +317,7 @@ class Controller_DteIntercambios extends \sowerphp\autoload\Controller
         try {
             $pdf = $DteIntercambio->getPDF($config);
         } catch (\Exception $e) {
-            return response()->json(
-                __('%(error_message)s',
-                    [
-                        'error_message' => $e->getMessage()
-                    ]
-                ),
-                $e->getCode()
-            );
+            return response()->json($e->getMessage(), $e->getCode());
         }
         // entregar PDF
         $disposition = $Receptor->config_pdf_disposition ? 'inline' : 'attachement';
@@ -578,7 +561,7 @@ class Controller_DteIntercambios extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // si no se viene por post error
-        if (!isset($_POST['submit'])) {
+        if (empty($_POST)) {
             return redirect(str_replace('responder', 'ver', $this->request->getRequestUriDecoded()))
                 ->withError(
                     __('No puede acceder de forma directa a %(uri_decoded)s',
@@ -651,13 +634,8 @@ class Controller_DteIntercambios extends \sowerphp\autoload\Controller
             }
         } catch (\Exception $e) {
             return redirect(str_replace('responder', 'ver', $this->request->getRequestUriDecoded()))
-                ->withError(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
         // redireccionar
         return redirect(str_replace('responder', 'ver', $this->request->getRequestUriDecoded()));
@@ -685,7 +663,7 @@ class Controller_DteIntercambios extends \sowerphp\autoload\Controller
             'values_xml' => [],
         ]);
         // Procesar búsqueda.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $_POST['xml'] = [];
             $values_xml = [];
             if (!empty($_POST['xml_nodo'])) {

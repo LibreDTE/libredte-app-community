@@ -41,7 +41,7 @@ class Model_DteReferencia extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'Referencia del DTE',
             'verbose_name_plural' => 'Referencias de DTEs',
@@ -51,9 +51,9 @@ class Model_DteReferencia extends Model
             'emisor' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Emisor',
                 'help_text' => 'Emisor del documento.',
                 'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
@@ -62,9 +62,9 @@ class Model_DteReferencia extends Model
             'dte' => [
                 'type' => self::TYPE_SMALL_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_DteTipo::class,
-                'to_table' => 'dte_tipo',
-                'to_field' => 'codigo',
+                'relation' => Model_DteTipo::class,
+                'belongs_to' => 'dte_tipo',
+                'related_field' => 'codigo',
                 'min_value' => 1,
                 'max_value' => 10000,
                 'verbose_name' => 'DTE',
@@ -87,9 +87,9 @@ class Model_DteReferencia extends Model
             'referencia_dte' => [
                 'type' => self::TYPE_SMALL_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_DteTipo::class,
-                'to_table' => 'dte_tipo',
-                'to_field' => 'codigo',
+                'relation' => Model_DteTipo::class,
+                'belongs_to' => 'dte_tipo',
+                'related_field' => 'codigo',
                 'verbose_name' => 'Referencia DTE',
                 'display' => '(dte_tipo.codigo)',
             ],
@@ -104,9 +104,9 @@ class Model_DteReferencia extends Model
                 'max_value' => 10000,
                 'null' => true,
                 'blank' => true,
-                'foreign_key' => Model_DteReferenciaTipo::class,
-                'to_table' => 'dte_referencia_tipo',
-                'to_field' => 'codigo',
+                'relation' => Model_DteReferenciaTipo::class,
+                'belongs_to' => 'dte_referencia_tipo',
+                'related_field' => 'codigo',
                 'verbose_name' => 'Código',
                 'display' => '(dte_referencia_tipo.codigo)'
             ],

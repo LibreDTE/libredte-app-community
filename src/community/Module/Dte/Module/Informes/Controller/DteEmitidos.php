@@ -51,7 +51,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             'hasta' => $hasta,
         ]);
         // Procesar formulario.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $DteEmitidos = (new Model_DteEmitidos())->setContribuyente($Emisor);
             $emitidos_por_hora = $DteEmitidos->getPorHora($desde, $hasta);
             foreach ($emitidos_por_hora as &$e) {
@@ -170,7 +170,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Si existen datos por POST se redirecciona para usar siempre por GET.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             return redirect('/dte/informes/dte_emitidos/estados/'.$_POST['desde'].'/'.$_POST['hasta']);
         }
         // Renderizar vista.
@@ -221,7 +221,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Si existen datos por POST se redirecciona para usar siempre por GET.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             return redirect('/dte/informes/dte_emitidos/eventos/'.$_POST['desde'].'/'.$_POST['hasta']);
         }
         // Renderizar vista.
@@ -291,7 +291,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Si existen datos por POST se redirecciona para usar siempre por GET.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             return redirect('/dte/informes/dte_emitidos/sin_intercambio/'.$_POST['desde'].'/'.$_POST['hasta']);
         }
         // Obtener datos.
@@ -308,8 +308,8 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
                         [
                             'desde' => \sowerphp\general\Utility_Date::format($desde),
                             'hasta' => \sowerphp\general\Utility_Date::format($hasta)
-                        ]  
-                    )   
+                        ]
+                    )
                 )
             ;
         }
@@ -334,7 +334,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Si existen datos por POST se redirecciona para usar siempre por GET.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             return redirect('/dte/informes/dte_emitidos/intercambio/'.$_POST['desde'].'/'.$_POST['hasta']);
         }
         // Renderizar vista.
@@ -397,7 +397,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Si existen datos por POST se redirecciona para usar siempre por GET.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             return redirect('/dte/informes/dte_emitidos/boletas_sin_email/'.$_POST['desde'].'/'.$_POST['hasta']);
         }
         // Obtener datos.
@@ -414,7 +414,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
                         [
                             'desde' => \sowerphp\general\Utility_Date::format($desde),
                             'hasta' => \sowerphp\general\Utility_Date::format($hasta)
-                        ]        
+                        ]
                     )
                 )
             ;
@@ -445,7 +445,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             'tipos_dte' => $Emisor->getDocumentosAutorizados(),
         ]);
         // Procesar formulario.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $this->set([
                 'dias' => $Emisor->getDocumentosEmitidosResumenDiario([
                     'periodo' => $_POST['periodo'],

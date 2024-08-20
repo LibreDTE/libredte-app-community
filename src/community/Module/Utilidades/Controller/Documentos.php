@@ -53,7 +53,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             'documentos_json' => $documentos_json,
         ]);
         // generar xml
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             // datos del emisor
             $Emisor = [];
             foreach (['RUTEmisor', 'RznSoc', 'GiroEmis', 'Acteco', 'DirOrigen', 'CmnaOrigen', 'Telefono', 'CorreoEmisor', 'CdgSIISucur'] as $attr) {
@@ -167,7 +167,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
     public function pdf(Request $request)
     {
         $user = $request->user();
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             // si hubo problemas al subir el archivo error
             if (!isset($_FILES['xml']) || $_FILES['xml']['error']) {
                 \sowerphp\core\Facade_Session_Message::error('Hubo algún problema al recibir el archivo XML con el EnvioDTE.');
@@ -316,7 +316,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
      */
     public function xml2json()
     {
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $xml = file_get_contents($_FILES['xml']['tmp_name']);
             $dtes = [];
             // es EnvioDTE o EnvioBOLETA
@@ -456,7 +456,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             }
             if (!$DTE->timbrar($folios[$DTE->getTipo()]) || !$DTE->firmar($Firma) || !$DTE->schemaValidate()) {
                 return response()->json(
-                    __('%(logs)s', 
+                    __('%(logs)s',
                         [
                             'logs' => implode("\n", \sasco\LibreDTE\Log::readAll())
                         ]
@@ -813,7 +813,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             return response()->json(
                 __('%(logs)s',
                     [
-                        'logs' => \sasco\LibreDTE\Log::readAll() 
+                        'logs' => \sasco\LibreDTE\Log::readAll()
                     ]
                 ),
                 500
@@ -843,7 +843,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
                     [
                         'logs' => \sasco\LibreDTE\Log::readAll()
                     ]
-                ), 
+                ),
                 500
             );
         }

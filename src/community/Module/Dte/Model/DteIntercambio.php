@@ -41,20 +41,19 @@ class Model_DteIntercambio extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
-            'verbose_name' => 'Intercambio de contribuyente',
-            'verbose_name_plural' => 'Intercambio de contribuyentes',
-            'db_table_comment' => 'Intercambio de contribuyentes.',
-            'ordering' => ['codigo'],
+            'verbose_name' => 'Correo de intercambio de DTE',
+            'verbose_name_plural' => 'Correos de intercambios de DTE',
+            'ordering' => ['-codigo'],
         ],
         'fields' => [
             'receptor' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Receptor',
                 'show_in_list' => false,
             ],
@@ -72,7 +71,7 @@ class Model_DteIntercambio extends Model
             ],
             'fecha_hora_email' => [
                 'type' => self::TYPE_TIMESTAMP,
-                'verbose_name' => 'Fecha Hora Email',
+                'verbose_name' => 'Recepción',
                 'show_in_list' => false,
             ],
             'asunto' => [
@@ -92,7 +91,7 @@ class Model_DteIntercambio extends Model
                 'null' => true,
                 'blank' => true,
                 'max_length' => 80,
-                'verbose_name' => 'Responder A',
+                'verbose_name' => 'Responder a',
                 'show_in_list' => false,
             ],
             'mensaje' => [
@@ -115,7 +114,7 @@ class Model_DteIntercambio extends Model
             ],
             'fecha_hora_firma' => [
                 'type' => self::TYPE_TIMESTAMP,
-                'verbose_name' => 'Fecha Hora Firma',
+                'verbose_name' => 'Firmado',
                 'show_in_list' => false,
             ],
             'documentos' => [
@@ -143,7 +142,7 @@ class Model_DteIntercambio extends Model
                 'type' => self::TYPE_TIMESTAMP,
                 'null' => true,
                 'blank' => true,
-                'verbose_name' => 'Fecha Hora Respuesta',
+                'verbose_name' => 'Respuesta',
                 'show_in_list' => false,
             ],
             'estado' => [
@@ -156,44 +155,36 @@ class Model_DteIntercambio extends Model
                 'type' => self::TYPE_TEXT,
                 'null' => true,
                 'blank' => true,
-                'verbose_name' => 'Recepción XML',
+                'verbose_name' => 'XML de recepción',
                 'show_in_list' => false,
             ],
             'recibos_xml' => [
                 'type' => self::TYPE_TEXT,
                 'null' => true,
                 'blank' => true,
-                'verbose_name' => 'Recibos XML',
+                'verbose_name' => 'XML de recibos',
                 'show_in_list' => false,
             ],
             'resultado_xml' => [
                 'type' => self::TYPE_TEXT,
                 'null' => true,
                 'blank' => true,
-                'verbose_name' => 'Resultado XML',
+                'verbose_name' => 'XML de resultado',
                 'show_in_list' => false,
             ],
             'usuario' => [
                 'type' => self::TYPE_INTEGER,
                 'null' => true,
                 'blank' => true,
-                'foreign_key' => Model_Usuario::class,
-                'to_table' => 'usuario',
-                'to_field' => 'id',
+                'relation' => Model_Usuario::class,
+                'belongs_to' => 'usuario',
+                'related_field' => 'id',
                 'verbose_name' => 'Usuario',
                 'display' => '(usuario.usuario)',
                 'searchable' => 'id:integer|usuario:string|nombre:string|email:string',
             ],
         ],
     ];
-
-    // // Comentario de la tabla en la base de datos
-    // public static $tableComment = '';
-
-    // public static $fkNamespace = array(
-    //     'Model_Contribuyente' => 'website\Dte',
-    //     'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios'
-    // ); ///< Namespaces que utiliza esta clase
 
     /**
      * Método que indica si ya existe previamente el documento (mismo archivo).

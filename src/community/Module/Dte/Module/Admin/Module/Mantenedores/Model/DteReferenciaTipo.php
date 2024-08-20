@@ -38,7 +38,7 @@ class Model_DteReferenciaTipo extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'Tipo de referencia de DTE',
             'verbose_name_plural' => 'Tipos de referencias de DTE',

@@ -25,6 +25,7 @@ namespace website\Dte\Admin;
 
 use \sowerphp\autoload\Model;
 use \sowerphp\app\Sistema\General\Model_MonedaCambios;
+use \website\Dte\Model_Contribuyente;
 use \website\Dte\Admin\Model_ItemClasificacion;
 use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicional;
 
@@ -41,18 +42,19 @@ class Model_Item extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
-            'db_table_comment' => 'Items comercializados',
+            'db_table_comment' => 'Productos y servicios.',
             'ordering' => ['codigo'],
         ],
         'fields' => [
             'contribuyente' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_ItemClasificacion::class,
-                'to_table' => 'item_clasificacion',
-                'to_field' => 'contribuyente',
+                'relation' => Model_Contribuyente::class,
+                'virtual_fk' => true,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Contribuyente',
                 'show_in_list' => false,
             ],
@@ -61,8 +63,7 @@ class Model_Item extends Model
                 'default' => 'INT1',
                 'primary_key' => true,
                 'max_length' => 10,
-                'verbose_name' => 'Código Tipo',
-                'help_text' => 'Tipo de código.',
+                'verbose_name' => 'Tipo de código',
                 'show_in_list' => false,
             ],
             'codigo' => [
@@ -75,7 +76,6 @@ class Model_Item extends Model
                 'type' => self::TYPE_STRING,
                 'max_length' => 80,
                 'verbose_name' => 'Nombre',
-                'help_text' => 'Nombre del item.',
             ],
             'descripcion' => [
                 'type' => self::TYPE_STRING,
@@ -83,14 +83,16 @@ class Model_Item extends Model
                 'blank' => true,
                 'max_length' => 1000,
                 'verbose_name' => 'Descripción',
-                'help_text' => 'Descripción del item.',
                 'show_in_list' => false,
             ],
             'clasificacion' => [
                 'type' => self::TYPE_STRING,
-                'foreign_key' => Model_ItemClasificacion::class,
-                'to_table' => 'item_clasificacion',
-                'to_field' => 'contribuyente',
+                'relation' => Model_ItemClasificacion::class,
+                'belongs_to' => 'item_clasificacion',
+                'related_field' => [
+                    'contribuyente' => 'contribuyente',
+                    'clasificacion' => 'codigo',
+                ],
                 'max_length' => 10,
                 'verbose_name' => 'Clasificación',
                 'display' => '(item_clasificacion.clasificacion)',
@@ -110,7 +112,7 @@ class Model_Item extends Model
             'bruto' => [
                 'type' => self::TYPE_BOOLEAN,
                 'default' => false,
-                'verbose_name' => 'Bruto',
+                'verbose_name' => 'Precio es bruto',
                 'show_in_list' => false,
             ],
             'moneda' => [
@@ -121,7 +123,7 @@ class Model_Item extends Model
             'exento' => [
                 'type' => self::TYPE_SMALL_INTEGER,
                 'default' => 0,
-                'verbose_name' => 'Exento',
+                'verbose_name' => 'Precio es exento',
                 'show_in_list' => false,
             ],
             'descuento' => [
@@ -133,17 +135,17 @@ class Model_Item extends Model
             'descuento_tipo' => [
                 'type' => self::TYPE_CHAR,
                 'default' => '%',
-                'verbose_name' => 'Descuento Tipo',
+                'verbose_name' => 'Tipo de descuento',
                 'show_in_list' => false,
             ],
             'impuesto_adicional' => [
                 'type' => self::TYPE_SMALL_INTEGER,
                 'null' => true,
                 'blank' => true,
-                'foreign_key' => Model_ImpuestoAdicional::class,
-                'to_table' => 'impuesto_adicional',
-                'to_field' => 'codigo',
-                'verbose_name' => 'Impuesto Adicional',
+                'relation' => Model_ImpuestoAdicional::class,
+                'belongs_to' => 'impuesto_adicional',
+                'related_field' => 'codigo',
+                'verbose_name' => 'Impuesto adicional',
                 'show_in_list' => false,
             ],
             'activo' => [
@@ -157,15 +159,6 @@ class Model_Item extends Model
     // cachés
     private $ItemInventario;
     private $ItemTienda;
-
-    /**
-     * Método que guarda el item de facturación.
-     */
-    public function save(array $options = []): bool
-    {
-        $this->codigo = trim(str_replace(['/', '"', '\'', ' ', '&', '%', '+', '#'], '_', $this->codigo));
-        return parent::save();
-    }
 
     /**
      * Método que entrega la clasificación del item.

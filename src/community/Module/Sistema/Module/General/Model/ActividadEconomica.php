@@ -37,7 +37,7 @@ class Model_ActividadEconomica extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'Actividad económica',
             'verbose_name_plural' => 'Actividades económicas',

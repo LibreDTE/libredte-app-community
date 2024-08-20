@@ -39,7 +39,7 @@ class Model_FirmaElectronica extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'Firma electrónica',
             'verbose_name_plural' => 'Firmas electrónicas',
@@ -84,9 +84,9 @@ class Model_FirmaElectronica extends Model
             ],
             'usuario' => [
                 'type' => self::TYPE_INTEGER,
-                'foreign_key' => Model_Usuario::class,
-                'to_table' => 'usuario',
-                'to_field' => 'id',
+                'relation' => Model_Usuario::class,
+                'belongs_to' => 'usuario',
+                'related_field' => 'id',
                 'verbose_name' => 'Usuario',
                 'display' => '(usuario.usuario)',
                 'searchable' => 'id:integer|usuario:string|nombre:string|email:string',

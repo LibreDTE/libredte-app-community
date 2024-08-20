@@ -41,7 +41,7 @@ class Model_ContribuyenteUsuarioDte extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'db_table_comment' => 'DTE de los usuarios del contribuyente.',
             'ordering' => ['dte'],
@@ -50,9 +50,9 @@ class Model_ContribuyenteUsuarioDte extends Model
             'contribuyente' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Contribuyente',
                 'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
                 'searchable' => 'rut:integer|usuario:string|email:string',
@@ -60,9 +60,9 @@ class Model_ContribuyenteUsuarioDte extends Model
             'usuario' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_Usuario::class,
-                'to_table' => 'usuario',
-                'to_field' => 'id',
+                'relation' => Model_Usuario::class,
+                'belongs_to' => 'usuario',
+                'related_field' => 'id',
                 'verbose_name' => 'Usuario',
                 'display' => '(usuario.usuario)',
                 'searchable' => 'id:integer|usuario:string|nombre:string|email:string',
@@ -70,9 +70,9 @@ class Model_ContribuyenteUsuarioDte extends Model
             'dte' => [
                 'type' => self::TYPE_SMALL_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_DteTipo::class,
-                'to_table' => 'dte_tipo',
-                'to_field' => 'codigo',
+                'relation' => Model_DteTipo::class,
+                'belongs_to' => 'dte_tipo',
+                'related_field' => 'codigo',
                 'min_value' => 1,
                 'max_value' => 10000,
                 'verbose_name' => 'Dte',

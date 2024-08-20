@@ -160,8 +160,7 @@ class Controller_RegistroCompras extends \sowerphp\autoload\Controller
             'dte_tipos' => (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->getList(),
         ]);
         // Procesar formulario.
-        if (isset($_POST['submit'])) {
-            unset($_POST['submit']);
+        if (!empty($_POST)) {
             // forzar estado PENDIENTE
             $filtros = array_merge($_POST, ['estado' => 0]);
             // obtener PDF desde servicio web
@@ -256,13 +255,8 @@ class Controller_RegistroCompras extends \sowerphp\autoload\Controller
                 );
         } catch (\Exception $e) {
             return redirect('/dte/registro_compras')
-                ->withError(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
     }
 
@@ -292,17 +286,12 @@ class Controller_RegistroCompras extends \sowerphp\autoload\Controller
             $RCV = new \sasco\LibreDTE\Sii\RegistroCompraVenta($Firma);
         } catch (\Exception $e) {
             return redirect($this->request->getRequestUriDecoded())
-                ->withError(
-                    __('%(error_message)s', 
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
         // procesar formulario (antes de asignar variables para que se refleje en la vista)
         list($emisor_rut, $emisor_dv) = explode('-', str_replace('.', '', $emisor));
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             try {
                 $r = $RCV->ingresarAceptacionReclamoDoc($emisor_rut, $emisor_dv, $dte, $folio, $_POST['accion']);
                 if ($r) {
@@ -347,13 +336,8 @@ class Controller_RegistroCompras extends \sowerphp\autoload\Controller
             ]);
         } catch (\Exception $e) {
             return redirect('/dte/registro_compras/pendientes')
-                ->withError(
-                    __('%(error_message)s', 
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
     }
 

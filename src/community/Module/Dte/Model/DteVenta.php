@@ -39,7 +39,7 @@ class Model_DteVenta extends Model_Base_Libro
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'DTE Venta',
             'verbose_name_plural' => 'DTE Ventas',
@@ -50,9 +50,9 @@ class Model_DteVenta extends Model_Base_Libro
             'emisor' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Emisor',
                 'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
             ],
@@ -184,7 +184,7 @@ class Model_DteVenta extends Model_Base_Libro
      */
     public function getResumenManual(): array
     {
-        if ($this->getMeta()['model.db_table'] == 'dte_venta' && $this->xml) {
+        if ($this->getMetadata('model.db_table') == 'dte_venta' && $this->xml) {
             $Libro = new \sasco\LibreDTE\Sii\LibroCompraVenta();
             $Libro->loadXML(base64_decode($this->xml));
             return $Libro->getResumenManual();

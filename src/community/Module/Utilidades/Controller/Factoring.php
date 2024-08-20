@@ -34,7 +34,7 @@ class Controller_Factoring extends \sowerphp\autoload\Controller
      */
     public function ceder()
     {
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             // objeto de firma electrónica
             $Firma = new \sasco\LibreDTE\FirmaElectronica([
                 'file' => $_FILES['firma']['tmp_name'],

@@ -63,8 +63,7 @@ class Controller_BoletaHonorarios extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Procesar formulario.
-        if (isset($_POST['submit'])) {
-            unset($_POST['submit']);
+        if (!empty($_POST)) {
             // obtener PDF desde servicio web
             $r = $this->consume('/api/honorarios/boleta_honorarios/buscar/'.$Receptor->rut, $_POST);
             if ($r['status']['code'] != 200) {
@@ -157,7 +156,7 @@ class Controller_BoletaHonorarios extends \sowerphp\autoload\Controller
                             'body' => $r['body']
                         ]
                     )
-                    
+
                 );
         }
         $this->Api->response()->type('application/pdf');
@@ -203,14 +202,7 @@ class Controller_BoletaHonorarios extends \sowerphp\autoload\Controller
         try {
             $pdf = $BoletaHonorario->getPDF();
         } catch (\Exception $e) {
-            return response()->json(
-                __('%(error_message)s',
-                    [
-                        'error_message' => $e->getMessage()
-                    ]
-                ),
-                500
-            );
+            return response()->json($e->getMessage(), 500);
         }
         // entregar boleta
         $this->Api->response()->type('application/pdf');
@@ -305,13 +297,8 @@ class Controller_BoletaHonorarios extends \sowerphp\autoload\Controller
                 );
         } catch (\Exception $e) {
             return redirect('/honorarios/boleta_honorarios')
-                ->withError(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
     }
 

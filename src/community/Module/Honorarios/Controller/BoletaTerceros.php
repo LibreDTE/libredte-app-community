@@ -70,8 +70,7 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
             'sucursales' => $Emisor->getSucursales(),
         ]);
         // Procesar formulario.
-        if (isset($_POST['submit'])) {
-            unset($_POST['submit']);
+        if (!empty($_POST)) {
             // obtener PDF desde servicio web
             $r = $this->consume('/api/honorarios/boleta_terceros/buscar/'.$Emisor->rut, $_POST);
             if ($r['status']['code'] != 200) {
@@ -211,14 +210,7 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
         try {
             $html = $BoletaTercero->getHTML();
         } catch (\Exception $e) {
-            return response()->json(
-                __('%(error_message)s',
-                    [
-                        'error_message' => $e->getMessage()
-                    ]
-                ), 
-                500
-            );
+            return response()->json($e->getMessage(), 500);
         }
         // entregar boleta
         $this->Api->response()->type('text/html');
@@ -313,13 +305,8 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
                 );
         } catch (\Exception $e) {
             return redirect('/honorarios/boleta_terceros')
-                ->withError(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
     }
 
@@ -342,7 +329,7 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
             'tasas_retencion' => (new Model_BoletaTerceros())->getTasasRetencion(),
         ]);
         // Procesar formulario.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             // armar arreglo con los datos de la boleta
             $boleta = [
                 'Encabezado' => [
@@ -376,7 +363,7 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
             if ($r['status']['code'] != 200) {
                 return redirect('/honorarios/boleta_terceros/emitir')
                     ->withError(
-                        __('%(body)s', 
+                        __('%(body)s',
                             [
                                 'body' => $r['body']
                             ]
@@ -389,14 +376,7 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
                 $BoletaTercero->set($r['body']);
                 $html = $BoletaTercero->getHTML();
             } catch (\Exception $e) {
-                return response()->json(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    ),
-                    500
-                );
+                return response()->json($e->getMessage(), 500);
             }
             // entregar boleta
             $this->Api->response()->type('text/html');
@@ -453,14 +433,7 @@ class Controller_BoletaTerceros extends \sowerphp\autoload\Controller
                 200
             );
         } catch (\Exception $e) {
-            return response()->json(
-                __('%(error_message)s',
-                    [
-                        'error_message' => $e->getMessage()
-                    ]
-                ),
-                500
-            );
+            return response()->json($e->getMessage(), 500);
         }
     }
 

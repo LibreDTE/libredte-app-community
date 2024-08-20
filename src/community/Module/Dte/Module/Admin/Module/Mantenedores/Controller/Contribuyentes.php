@@ -38,7 +38,7 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
      */
     public function importar()
     {
-        if (isset($_POST['submit']) && isset($_FILES['archivo']) && !$_FILES['archivo']['error']) {
+        if (!empty($_POST) && isset($_FILES['archivo']) && !$_FILES['archivo']['error']) {
             $data = \sowerphp\general\Utility_Spreadsheet::read($_FILES['archivo']);
             unset($data[0]);
             $Comunas = new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas();
@@ -89,7 +89,6 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
                     $actualizado = true;
                 }
                 if ($actualizado) {
-                    $Contribuyente->modificado = date('Y-m-d H:i:s');
                     try {
                         if ($Contribuyente->save()) {
                             $actualizados++;

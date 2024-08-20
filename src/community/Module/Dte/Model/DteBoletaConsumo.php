@@ -37,7 +37,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'Consumo de folio',
             'verbose_name_plural' => 'Consumos de folios',
@@ -48,9 +48,9 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
             'emisor' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Emisor',
                 'help_text' => 'Rol único tributario (RUT) del emisor. Para personas naturales será su rol único nacional (RUN).',
                 'display' => '(contribuyente.rut)"-"(contribuyente.dv)',

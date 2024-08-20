@@ -34,7 +34,7 @@ class Controller_FirmaElectronica extends \sowerphp\autoload\Controller
      */
     public function datos()
     {
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $Firma = new \sasco\LibreDTE\FirmaElectronica([
                 'file' => $_FILES['firma']['tmp_name'],
                 'pass' => $_POST['contrasenia'],

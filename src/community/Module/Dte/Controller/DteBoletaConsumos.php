@@ -57,7 +57,7 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
             //'rcof_reparos_secuencia' => $rcof_reparos_secuencia,
         ]);
         $this->forceSearch(['emisor' => $Emisor->rut, 'certificacion' => $Emisor->enCertificacion()]);
-        return parent::listar($page, $orderby, $order);
+        return parent::listar($request, $page, $orderby, $order);
     }
 
     /**
@@ -68,7 +68,7 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
         $from_unix_time = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
         $day_before = strtotime('yesterday', $from_unix_time);
         $this->set('dia', date('Y-m-d', $day_before));
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             return redirect('/dte/dte_boleta_consumos/enviar_sii/'.$_POST['dia'].'?listar='.$_GET['listar']);
         }
     }
@@ -249,13 +249,8 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
 
         } catch (\Exception $e) {
             return redirect('/dte/dte_boleta_consumos/listar'.$filterListar)
-                ->withError(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
     }
 
@@ -301,13 +296,8 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
                 );
         } catch (\Exception $e) {
             return redirect('/dte/dte_boleta_consumos/listar'.$filterListar)
-                ->withError(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
     }
 

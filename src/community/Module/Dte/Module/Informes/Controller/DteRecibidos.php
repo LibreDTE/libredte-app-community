@@ -49,7 +49,7 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             'hasta' => $hasta,
         ]);
         // Procesar formulario.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $DteRecibidos = (new \website\Dte\Model_DteRecibidos())
                 ->setContribuyente($Receptor)
             ;
@@ -160,7 +160,7 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
             'hasta' => $hasta,
         ]);
         // Procesar formulario.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $DteRecibidos = (new \website\Dte\Model_DteRecibidos())
                 ->setContribuyente($Receptor)
             ;

@@ -176,26 +176,16 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
                 $this->Api->data = $datos;
                 unset($datos);
             } catch (\Exception $e) {
-                return response()->json(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    ),
-                    400
-                );
+                return response()->json($e->getMessage(), 400);
             }
         }
         // verificar datos del DTE pasados
         if (!is_array($this->Api->data)) {
-            return response()->json(
-                __('Debe enviar el DTE en formato: %(formato)s.', 
-                    [
-                        'formato' => $formato
-                    ]
-                ),
-                400
-            );
+            return response()->json(__(
+                'Debe enviar el DTE en formato: %(formato)s.', [
+                    'formato' => $formato,
+                ]
+            ), 400);
         }
         // buscar emisor del DTE y verificar que usuario tenga permisos para
         // trabajar con el emisor
@@ -468,14 +458,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
                 [$Emisor, $datos_dte]
             );
         } catch (\Exception $e) {
-            return response()->json(
-                __('%(error_message)s',
-                    [
-                        'error_message' => $e->getMessage()
-                    ]
-                ),
-                $e->getCode() >= 400 ? $e->getCode() : 400
-            );
+            return response()->json($e->getMessage(), $e->getCode());
         }
         // crear DTE temporal y preparar para guardar en la base de datos
         $resumen = $Dte->getResumen();
@@ -614,9 +597,9 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
                 if (!$DocumentoOriginal->exists()) {
                     return redirect('/dte/dte_emitidos/listar')
                         ->withError(
-                            __('Documento T%(referencia_dte)sF%(referencia_folio)s no existe, no se puede referenciar.', 
+                            __('Documento T%(referencia_dte)sF%(referencia_folio)s no existe, no se puede referenciar.',
                                 [
-                                    'referencia_dte' => $referencia_dte, 
+                                    'referencia_dte' => $referencia_dte,
                                     'referencia_folio' => $referencia_folio
                                 ]
                             )
@@ -627,13 +610,8 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
                         $DocumentoOriginal->esReferenciable();
                     } catch (\Exception $e) {
                         return redirect('/dte/dte_emitidos/ver/'.$referencia_dte.'/'.$referencia_folio.'#referencias')
-                            ->withError(
-                                __('%(error_message)s', 
-                                    [
-                                        'error_message' => $e->getMessage()
-                                    ]
-                                )
-                            );
+                            ->withError($e->getMessage())
+                        ;
                     }
                     $this->set([
                         'referenciar_documento' => 'T'.$DocumentoOriginal->dte.'F'.$DocumentoOriginal->folio,
@@ -662,7 +640,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
                 if (!$DocumentoOriginal->exists()) {
                     return redirect('/dte/dte_tmps/listar')
                         ->withError(
-                            __('Documento %(folio)s no existe, no se puede referenciar.', 
+                            __('Documento %(folio)s no existe, no se puede referenciar.',
                                 [
                                     'folio' => $DocumentoOriginal->getFolio()
                                 ]
@@ -762,7 +740,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // si no se viene por POST redirigir
-        if (!isset($_POST['submit'])) {
+        if (empty($_POST)) {
             return redirect('/dte/documentos/emitir')
                 ->withError(
                     __('No puede acceder de forma directa a la previsualización.')
@@ -772,7 +750,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
         if (!$Emisor->documentoAutorizado($_POST['TpoDoc'])) {
             return redirect('/dte/documentos/emitir')
                 ->withError(
-                    __('No está autorizado a emitir el tipo de documento %(tipo_doc)s.', 
+                    __('No está autorizado a emitir el tipo de documento %(tipo_doc)s.',
                         [
                             'tipo_doc' => $_POST['TpoDoc']
                         ]
@@ -800,7 +778,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             if (empty($_POST[$attr])) {
                 return redirect('/dte/documentos/emitir')
                     ->withError(
-                        __('Error al recibir campos mínimos, falta: %(attr)s.', 
+                        __('Error al recibir campos mínimos, falta: %(attr)s.',
                             [
                                 'attr' => $attr
                             ]
@@ -978,7 +956,11 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
                 if (!empty($_POST['TpoCodigo'][$i])) {
                     $TpoCodigo = $_POST['TpoCodigo'][$i];
                 } else {
-                    $Item = (new \website\Dte\Admin\Model_Itemes())->get($Emisor->rut, $_POST['VlrCodigo'][$i]);
+                    $Item = (new \website\Dte\Admin\Model_Itemes())->get(
+                        $Emisor->rut,
+                        null,
+                        $_POST['VlrCodigo'][$i]
+                    );
                     $TpoCodigo = $Item->codigo_tipo ? $Item->codigo_tipo : 'INT1';
                 }
                 $detalle['CdgItem'] = [
@@ -1004,7 +986,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
                 if (!empty($detalle['CodImpAdic'])) {
                     return redirect('/dte/documentos/emitir')
                         ->withError(
-                            __('No es posible generar una boleta que tenga impuestos adicionales mediante la plataforma web de LibreDTE. Este es un caso de uso no considerado. Si tiene dudas con esta opción por favor [contáctenos](%(url)s).', 
+                            __('No es posible generar una boleta que tenga impuestos adicionales mediante la plataforma web de LibreDTE. Este es un caso de uso no considerado. Si tiene dudas con esta opción por favor [contáctenos](%(url)s).',
                                 [
                                     'url' => url('/contacto')
                                 ]
@@ -1122,18 +1104,13 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             $response = $this->consume('/api/dte/documentos/emitir?'.http_build_query($query_data), $dte);
         } catch (\Exception $e) {
             return redirect('/dte/documentos/emitir')
-                ->withError(
-                    __('%(error_message)s', 
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
         if ($response['status']['code'] != 200) {
             return redirect('/dte/documentos/emitir')
                 ->withError(
-                    __('%(body)s', 
+                    __('%(body)s',
                         [
                             'body' => $response['body']
                         ]
@@ -1149,7 +1126,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             $msg = is_string($response['body']) ? $response['body'] : json_encode($response['body']);
             return redirect('/dte/documentos/emitir')
                 ->withError(
-                    __('Hubo problemas al generar el documento temporal: %(msg)s', 
+                    __('Hubo problemas al generar el documento temporal: %(msg)s',
                         [
                             'msg' => $msg
                         ]
@@ -1256,14 +1233,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
         try {
             $DteEmitido = $DteTmp->generar($User->id, null, $retry, $gzip);
         } catch (\Exception $e) {
-            return response()->json(
-                __('%(error_message)s',
-                    [
-                        'error_message' => $e->getMessage()
-                    ]
-                ), 
-                $e->getCode() ? $e->getCode() : 500
-            );
+            return response()->json($e->getMessage(), $e->getCode());
         }
         // enviar por correo el DTE si así se solicitó o está configurado
         if ($email || ($email === false && $Emisor->config_emision_email)) {
@@ -1310,7 +1280,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
         if ($response['status']['code'] != 200) {
             return redirect('/dte/dte_tmps/ver/'.$receptor.'/'.$dte.'/'.$codigo)
                 ->withError(
-                    __('%(body)s', 
+                    __('%(body)s',
                         [
                             'body' => $response['body']
                         ]
@@ -1422,7 +1392,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             ),
         ]);
         // Procesar formulario.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             if (empty($_FILES['archivo']) || $_FILES['archivo']['error']) {
                 \sowerphp\core\Facade_Session_Message::error('No fue posible subir el archivo con los documentos.');
                 return;
@@ -1488,14 +1458,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             try {
                 $documentos = $DteEmitidos->getObjects();
             } catch (\Exception $e) {
-                return redirect('/dte')
-                    ->withError(
-                        __('%(error_message)s', 
-                            [
-                                'error_message' => $e->getMessage()
-                            ]
-                        )
-                    );
+                return redirect('/dte')->withError($e->getMessage());
             }
             if (isset($documentos[0])) {
                 // se encontró más de un DTE -> se redirige a búsqueda
@@ -1571,7 +1534,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
             'Emisor' => $Emisor,
         ]);
         // Procesar formulario.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             if (empty($_FILES['archivo']) || $_FILES['archivo']['error']) {
                 \sowerphp\core\Facade_Session_Message::error('No fue posible subir el archivo con los documentos.');
                 return;

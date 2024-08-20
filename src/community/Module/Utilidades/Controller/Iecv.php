@@ -39,7 +39,7 @@ class Controller_Iecv extends \sowerphp\autoload\Controller
             '__view_header' => ['js' => ['/utilidades/js/utilidades.js']],
         ]);
         // si no se viene por post terminar
-        if (!isset($_POST['submit'])) {
+        if (empty($_POST)) {
             return;
         }
         // verificar campos no estén vacíos
@@ -193,7 +193,7 @@ class Controller_Iecv extends \sowerphp\autoload\Controller
      */
     public function pdf()
     {
-        if (isset($_POST['submit']) && !empty($_FILES['xml']) && !$_FILES['xml']['error']) {
+        if (!empty($_POST) && !empty($_FILES['xml']) && !$_FILES['xml']['error']) {
             $LibroCompraVenta = new \sasco\LibreDTE\Sii\LibroCompraVenta();
             $LibroCompraVenta->loadXML(file_get_contents($_FILES['xml']['tmp_name']));
             $pdf = new \sasco\LibreDTE\Sii\Dte\PDF\LibroCompraVenta();

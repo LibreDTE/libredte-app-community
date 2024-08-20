@@ -39,7 +39,7 @@ class Model_DteIntercambioResultado extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'ordering' => ['codigo'],
         ],
@@ -52,9 +52,9 @@ class Model_DteIntercambioResultado extends Model
             'recibe' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Recibe',
             ],
             'codigo' => [

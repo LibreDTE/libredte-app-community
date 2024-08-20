@@ -182,7 +182,7 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
         if (!$LibroCompraVenta->schemaValidate()) {
             return redirect('/certificacion/set_pruebas#ventas')
                 ->withError(
-                    __('%(logs)s', 
+                    __('%(logs)s',
                         [
                             'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
                         ]
@@ -331,7 +331,7 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
             if (empty($Folios[$DTE->getTipo()])) {
                 return redirect('/certificacion/set_pruebas#boletas')
                     ->withError(
-                        __('Faltó subir archivo CAF de tipo %(dte_tipo)s.', 
+                        __('Faltó subir archivo CAF de tipo %(dte_tipo)s.',
                             [
                                 'dte_tipo' => $DTE->getTipo()
                             ]
@@ -354,7 +354,7 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
         } else {
             return redirect('/certificacion/set_pruebas#boletas')
                 ->withError(
-                    __('No fue posible generar EnvioBOLETA.xml<br/>%(logs)s', 
+                    __('No fue posible generar EnvioBOLETA.xml<br/>%(logs)s',
                         [
                             'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
                         ]
@@ -443,7 +443,7 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
             } else {
                 return redirect('/certificacion/set_pruebas#boletas')
                     ->withError(
-                        __('No fue posible generar NotasCredito.xml<br/>%(logs)s', 
+                        __('No fue posible generar NotasCredito.xml<br/>%(logs)s',
                             [
                                 'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
                             ]
@@ -514,7 +514,7 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
         } else {
             return redirect('/certificacion/set_pruebas#boletas')
                 ->withError(
-                    __('No fue posible generar LibroBoletas.xml<br/>%(logs)s', 
+                    __('No fue posible generar LibroBoletas.xml<br/>%(logs)s',
                         [
                             'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
                         ]
@@ -533,7 +533,7 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
         if ($response['status']['code'] != 200) {
             return redirect('/certificacion/set_pruebas#boletas')
                 ->withError(
-                    __('No fue posible crear PDF boletas: %(response_body)s', 
+                    __('No fue posible crear PDF boletas: %(response_body)s',
                         [
                             'response_body' => $response['body']
                         ]
@@ -550,7 +550,7 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
             $response = $rest->post(url('/api/utilidades/documentos/generar_pdf'), $data);
             if ($response['status']['code'] != 200) {
                 return redirect('/certificacion/set_pruebas#boletas')
-                    ->withError('No fue posible crear PDF notas de crédito: %(response_body)s', 
+                    ->withError('No fue posible crear PDF notas de crédito: %(response_body)s',
                         [
                             'response_body' => $response['body']
                         ]
@@ -582,7 +582,7 @@ class Controller_Certificacion extends \sowerphp\autoload\Controller
         $this->set([
             'nav' => $this->nav,
         ]);
-        if (!isset($_POST['submit'])) {
+        if (empty($_POST)) {
             return;
         }
         // verificar que se hayan pasado los datos requeridos

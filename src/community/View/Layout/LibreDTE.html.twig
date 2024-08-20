@@ -236,6 +236,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                 </div>
             {% endif %}
             {{ session_messages() }}
+            {% block session_messages %}{% endblock %}
             {% block content %}{% endblock %}
             <!-- END MAIN CONTENT -->
             <div class="clearfix"></div>

@@ -36,7 +36,7 @@ class Model_ItemClasificaciones extends Model_Plural
     /**
      * Método que entrega el listado de clasificaciones.
      */
-    public function getList()
+    public function getList(): array
     {
         $items = \sowerphp\core\Utility_Array::treeToList(
             $this->getArbolItems(), 'clasificacion', 'clasificaciones'

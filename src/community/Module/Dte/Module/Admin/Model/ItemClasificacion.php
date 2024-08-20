@@ -24,6 +24,7 @@
 namespace website\Dte\Admin;
 
 use \sowerphp\autoload\Model;
+use \website\Dte\Model_Contribuyente;
 
 /**
  * Modelo singular de la tabla "item_clasificacion" de la base de datos.
@@ -38,20 +39,20 @@ class Model_ItemClasificacion extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
-            'verbose_name' => 'Clasificación de Item',
-            'verbose_name_plural' => 'Clasificaciones de Itemes',
-            'db_table_comment' => 'Clasificación de items',
+            'verbose_name' => 'Clasificación de item',
+            'verbose_name_plural' => 'Clasificaciones de productos y servicios',
+            'db_table_comment' => 'Registro de clasificaciones de los productos y servicios de la empresa.',
             'ordering' => ['codigo'],
         ],
         'fields' => [
             'contribuyente' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_ItemClasificacion::class,
-                'to_table' => 'item_clasificacion',
-                'to_field' => 'contribuyente',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Contribuyente',
                 'show_in_list' => false,
             ],
@@ -64,17 +65,21 @@ class Model_ItemClasificacion extends Model
             'clasificacion' => [
                 'type' => self::TYPE_STRING,
                 'max_length' => 50,
-                'verbose_name' => 'Glosa',
+                'verbose_name' => 'Clasificación',
             ],
             'superior' => [
                 'type' => self::TYPE_STRING,
+                'relation' => Model_ItemClasificacion::class,
+                'belongs_to' => 'item_clasificacion',
+                'related_field' => [
+                    'contribuyente' => 'contribuyente',
+                    'superior' => 'codigo',
+                ],
                 'null' => true,
                 'blank' => true,
-                'foreign_key' => Model_ItemClasificaciones::class,
-                'to_table' => 'item_clasificacion',
-                'to_field' => 'contribuyente',
                 'max_length' => 35,
-                'verbose_name' => 'Superior',
+                'verbose_name' => 'Clasificación superior',
+                'help_text' => 'Esta es la clasificación superior (o padre) bajo la cual esta clasificación está.',
             ],
             'activa' => [
                 'type' => self::TYPE_BOOLEAN,
@@ -85,21 +90,13 @@ class Model_ItemClasificacion extends Model
     ];
 
     /**
-     * Constructor de la clasificación del item.
+     * Atributo $item_clasificacion.
+     *
+     * @return void
      */
-    public function __construct($contribuyente = null, $codigo = null)
+    public function getAttributeItemClasificacion()
     {
-        parent::__construct($contribuyente, $codigo);
-        $this->item_clasificacion = &$this->clasificacion;
-    }
-
-    /**
-     * Método que guarda la clasificación del item.
-     */
-    public function save(array $options = []): bool
-    {
-        $this->codigo = trim(str_replace(['/', '"', '\'', ' ', '&', '%'], '_', $this->codigo));
-        return parent::save();
+        return $this->clasificacion;
     }
 
     /**

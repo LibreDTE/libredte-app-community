@@ -51,7 +51,7 @@ class Controller_DteCompras extends Controller_Base_Libros
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Procesar formulario.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             // verificar que se haya podido subir el archivo con el libro
             if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
                 \sowerphp\core\Facade_Session_Message::error('Ocurrió un error al subir el libro.');
@@ -361,13 +361,8 @@ class Controller_DteCompras extends Controller_Base_Libros
             ]);
         } catch (\Exception $e) {
             return redirect('/dte/dte_compras/ver/'.$periodo)
-                ->withError(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
         $this->set([
             'Emisor' => $Emisor,
@@ -398,13 +393,8 @@ class Controller_DteCompras extends Controller_Base_Libros
             ]);
         } catch (\Exception $e) {
             return redirect('/dte/dte_compras/ver/'.$periodo)
-                ->withError(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
         if (!$detalle) {
             return redirect('/dte/dte_compras/ver/'.$periodo)
@@ -444,13 +434,8 @@ class Controller_DteCompras extends Controller_Base_Libros
             ]);
         } catch (\Exception $e) {
             return redirect('/dte/dte_compras/ver/'.$periodo)
-                ->withError(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
         if (!$documentos_rc_todos) {
             return redirect('/dte/dte_compras/ver/'.$periodo)
@@ -569,7 +554,7 @@ class Controller_DteCompras extends Controller_Base_Libros
             'periodo' => $periodo,
         ]);
         // Procesar formulario.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $documentos = $Emisor->getDocumentosRecibidos($_POST + ['periodo' => $periodo, 'dte' => [33, 34, 43, 46, 56, 61]]);
             if (!$documentos) {
                 \sowerphp\core\Facade_Session_Message::warning('No hay resultados en la búsqueda para el período '.$periodo.'.');
@@ -605,13 +590,8 @@ class Controller_DteCompras extends Controller_Base_Libros
             ]);
         } catch (\Exception $e) {
             return redirect('/dte/dte_compras/ver/'.$periodo)
-                ->withError(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
         if (!$detalle) {
             return redirect('/dte/dte_compras/ver/'.$periodo)

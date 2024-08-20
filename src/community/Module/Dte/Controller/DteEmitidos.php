@@ -326,13 +326,8 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             }
         } catch (\Exception $e) {
             return redirect(str_replace('solicitar_revision', 'ver', $this->request->getRequestUriDecoded()))
-                ->withError(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
     }
 
@@ -461,13 +456,8 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             $this->response->sendAndExit($pdf);
         } catch (\Exception $e) {
             return redirect($this->Auth->logged() ? '/dte/dte_emitidos/ver/'.$dte.'/'.$folio : '/')
-                ->withError(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    )
-                );
+                ->withError($e->getMessage())
+            ;
         }
     }
 
@@ -642,14 +632,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
                 );
             }
         } catch (\Exception $e) {
-            return response()->json(
-                __('%(error_message)s',
-                    [
-                        'error_message' => $e->getMessage()
-                    ]
-                ),
-                $e->getCode()
-            );
+            return response()->json($e->getMessage(), $e->getCode());
         }
     }
 
@@ -695,7 +678,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Procesar formulario.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             // armar emails a enviar
             $emails = [];
             if (!empty($_POST['emails'])) {
@@ -726,12 +709,8 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             );
             if ($response === false) {
                 return redirect(str_replace('enviar_email', 'ver', $this->request->getRequestUriDecoded()).'#email')
-                    ->withError(
-                        __('%(error_message)s',
-                            [
-                                'error_message' => implode('<br/>', $rest->getErrors())
-                            ])
-                    );
+                    ->withError(implode('<br/>', $rest->getErrors()))
+                ;
             }
             else if ($response['status']['code'] != 200) {
                 return redirect(str_replace('enviar_email', 'ver', $this->request->getRequestUriDecoded()).'#email')
@@ -770,7 +749,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Validar que se venga de un formulario.
-        if (!isset($_POST['submit'])) {
+        if (empty($_POST)) {
             return redirect(str_replace('ceder', 'ver', $this->request->getRequestUriDecoded()).'#cesion')
                 ->withError(
                     __('Debe enviar el formulario para poder realizar la cesión.')
@@ -859,13 +838,8 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
                 );
         } else {
             return redirect(str_replace('ceder', 'ver', $this->request->getRequestUriDecoded()).'#cesion')
-                ->withError(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
-                        ]
-                    )
-                );
+                ->withError(implode('<br/>', \sasco\LibreDTE\Log::readAll()))
+            ;
         }
     }
 
@@ -909,7 +883,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             'DteEmitido' => $DteEmitido,
         ]);
         // procesar formulario
-        if (isset($_POST['submit']) && !empty($_FILES['cesion_xml']) && !$_FILES['cesion_xml']['error']) {
+        if (!empty($_POST) && !empty($_FILES['cesion_xml']) && !$_FILES['cesion_xml']['error']) {
             // verificar que no se esté cediendo al mismo rut del emisor del DTE
             if ($DteEmitido->getEmisor()->getRUT() == $_POST['cesionario_rut']) {
                 return redirect(str_replace('receder', 'ver', $this->request->getRequestUriDecoded()).'#cesion')
@@ -999,7 +973,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Validar que se venga de un formulario.
-        if (!isset($_POST['submit']) || empty($_POST['emails'])) {
+        if (empty($_POST['emails'])) {
             return redirect(str_replace('cesion_email', 'ver', $this->request->getRequestUriDecoded()).'#cesion')
                 ->withError(
                     __('Debe enviar el formulario para poder realizar en envío del a cesión.')
@@ -1492,7 +1466,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Procesar formulario.
-        if (isset($_POST['submit']) && !$_FILES['xml']['error']) {
+        if (!empty($_POST) && !$_FILES['xml']['error']) {
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($user->hash);
             $response = $rest->post(
@@ -1532,7 +1506,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             'values_xml' => [],
         ]);
         // Procesar formulario.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $_POST['xml'] = [];
             $values_xml = [];
             if (!empty($_POST['xml_nodo'])) {
@@ -1782,14 +1756,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
                 return response()->json($pdf);
             }
         } catch (\Exception $e) {
-            return response()->json(
-                __('%(error_message)s',
-                    [
-                        'error_message' => $e->getMessage()
-                    ]
-                ),
-                $e->getCode()
-            );
+            return response()->json($e->getMessage(), $e->getCode());
         }
     }
 
@@ -2020,14 +1987,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
                 200
             );
         } catch (\Exception $e) {
-            return response()->json(
-                __('%(error_message)s',
-                    [
-                        'error_message' => $e->getMessage()
-                    ]
-                ),
-                500
-            );
+            return response()->json($e->getMessage(), 500);
         }
     }
 
@@ -2086,14 +2046,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             $DteEmitido->enviar($User->id, $retry);
             return $DteEmitido;
         } catch (\Exception $e) {
-            return response()->json(
-                __('%(error_message)s',
-                    [
-                        'error_message' => $e->getMessage()
-                    ]
-                ),
-                500
-            );
+            return response()->json($e->getMessage(), 500);
         }
     }
 
@@ -2195,14 +2148,7 @@ class Controller_DteEmitidos extends \sowerphp\autoload\Controller
             );
             return $emails;
         } catch (\Exception $e) {
-            return response()->json(
-                __('%(error_message)s',
-                    [
-                        'error_message' => $e->getMessage()
-                    ]
-                ),
-                500
-            );
+            return response()->json($e->getMessage(), 500);
         }
     }
 

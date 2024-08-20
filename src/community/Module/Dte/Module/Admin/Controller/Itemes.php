@@ -23,13 +23,15 @@
 
 namespace website\Dte\Admin;
 
+use \sowerphp\autoload\Controller_Model;
 use \sowerphp\core\Network_Request as Request;
+use \sasco\LibreDTE\Sii\ImpuestosAdicionales;
 use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
 
 /**
  * Clase para las acciones asociadas a items.
  */
-class Controller_Itemes extends \sowerphp\autoload\Controller_Model
+class Controller_Itemes extends Controller_Model
 {
 
     protected $columnsView = [
@@ -49,7 +51,7 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
         }
         // Llamar al método padre.
         $this->forceSearch(['contribuyente' => $Contribuyente->rut]);
-        return parent::listar($page, $orderby, $order);
+        return parent::listar($request, $page, $orderby, $order);
     }
 
     /**
@@ -126,17 +128,28 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
     }
 
     /**
-     * Recurso de la API que permite obtener los datos de un item a partir de su
-     * código (puede ser el código de 'libredte', el que se usa en el mantenedor de productos)
-     * o bien puede ser por 'sku', 'upc' o 'ean'.
+     * Recurso de la API que permite obtener los datos de un item a partir de
+     * su código.
+     *
+     * Puede ser el código de 'libredte' (el que se usa en el mantenedor de
+     * productos), o bien puede ser por 'sku', 'upc' o 'ean'.
      */
-    public function _api_info_GET($empresa, $codigo)
+    public function _api_info_GET(Request $request, $empresa, $codigo)
     {
-        $options = $this->request->getValidatedData([
+        $user = $request->user();
+        // Obtener el contribuyente solicitado.
+        try {
+            $Empresa = libredte()->authenticate($empresa, $user, '/dte/documentos/emitir');
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), $e->getCode());
+        }
+
+        // Opciones del servicio web.
+        $options = $request->getValidatedData([
             'tipo' => null,
             'bruto' => false,
             'moneda' => 'CLP',
-            'decimales' => null,
+            'decimales' => (int)$Empresa->config_items_decimales,
             'campo' => 'libredte',
             'fecha' => date('Y-m-d'),
             'sucursal' => 0,
@@ -146,26 +159,8 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
             'cantidad' => 1,
         ]);
         extract($options);
-        // obtener usuario autenticado
-        $User = $this->Api->getAuthUser();
-        if (is_string($User)) {
-            $this->Api->send($User, 401);
-        }
-        // crear contribuyente y verificar que exista y el usuario esté autorizado
-        $Empresa = new \website\Dte\Model_Contribuyente($empresa);
-        if (!$Empresa->exists()) {
-            return response()->json(
-                __('Empresa solicitada no existe.'),
-                404
-            );
-        }
-        if (!$Empresa->usuarioAutorizado($User, '/dte/documentos/emitir')) {
-            return response()->json(
-                __('No está autorizado a operar con la empresa solicitada.'),
-                403
-            );
-        }
-        // consultar item en servicio web del contribuyente
+
+        // Consultar item en servicio web del contribuyente.
         $ApiDteItemsClient = $Empresa->getApiClient('dte_items');
         if ($ApiDteItemsClient) {
             $response = $ApiDteItemsClient->get($ApiDteItemsClient->url.$codigo);
@@ -174,10 +169,12 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
                 $response['status']['code']
             );
         }
-        // consultar item en base de datos local de LibreDTE
+
+        // Consultar item en base de datos local de LibreDTE.
         else {
+            // Obtener item.
             if ($campo == 'libredte') {
-                $Item = (new Model_Itemes())->get($Empresa->rut, $codigo, $tipo);
+                $Item = (new Model_Itemes())->get($Empresa->rut, $tipo, $codigo);
             } else if (libredte()->isEnterpriseEdition()) {
                 $Item = (new \libredte\enterprise\Inventario\Model_InventarioItemes())
                     ->setContribuyente($Empresa)
@@ -187,11 +184,15 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
                 $Item = null;
             }
             if (!$Item || !$Item->exists() || !$Item->activo) {
-                return response()->json(
-                    __('Item solicitado no existe o está inactivo.'),
-                    404
-                );
+                return response()->json(__(
+                    'Item solicitado %s(%s/%s) no existe o está inactivo.',
+                    $campo,
+                    $tipo,
+                    $codigo
+                ), 404);
             }
+
+            // Consultar datos extras a través de un evento.
             try {
                 $datos_event = (array)event(
                     'dte_item_info',
@@ -199,39 +200,28 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
                     true
                 );
             } catch (\Exception $e) {
-                return response()->json(
-                    __('%(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    ),
-                    $e->getCode() ? $e->getCode() : 500
-                );
+                return response()->json($e->getMessage(), $e->getCode());
             }
-            if ($decimales === null) {
-                $decimales = (int)$Empresa->config_items_decimales;
-            }
-            return response()->json(
-                array_merge([
-                    'TpoCodigo' => $Item->codigo_tipo,
-                    'VlrCodigo' => $Item->codigo,
-                    'NmbItem' => $Item->item,
-                    'DscItem' => $Item->descripcion,
-                    'IndExe' => $Item->exento,
-                    'UnmdItem' => $Item->unidad,
-                    'PrcItem' => $Item->getPrecio($fecha, $bruto, $moneda, $decimales),
-                    'Moneda' => $moneda,
-                    'MntBruto' => (bool)$bruto,
-                    'ValorDR' => $Item->getDescuento($fecha, $bruto, $moneda, $decimales),
-                    'TpoValor' => $Item->descuento_tipo,
-                    'CodImpAdic' => $Item->impuesto_adicional,
-                    'TasaImp' => $Item->impuesto_adicional
-                        ? \sasco\LibreDTE\Sii\ImpuestosAdicionales::getTasa($Item->impuesto_adicional)
-                        : 0
-                    ,
-                ], $datos_event),
-                200
-            );
+
+            // Entregar los datos del item.
+            return array_merge([
+                'TpoCodigo' => $Item->codigo_tipo,
+                'VlrCodigo' => $Item->codigo,
+                'NmbItem' => $Item->item,
+                'DscItem' => $Item->descripcion,
+                'IndExe' => $Item->exento,
+                'UnmdItem' => $Item->unidad,
+                'PrcItem' => $Item->getPrecio($fecha, $bruto, $moneda, $decimales),
+                'Moneda' => $moneda,
+                'MntBruto' => (bool)$bruto,
+                'ValorDR' => $Item->getDescuento($fecha, $bruto, $moneda, $decimales),
+                'TpoValor' => $Item->descuento_tipo,
+                'CodImpAdic' => $Item->impuesto_adicional,
+                'TasaImp' => $Item->impuesto_adicional
+                    ? ImpuestosAdicionales::getTasa($Item->impuesto_adicional)
+                    : 0
+                ,
+            ], $datos_event);
         }
     }
 
@@ -282,7 +272,7 @@ class Controller_Itemes extends \sowerphp\autoload\Controller_Model
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Procesar formulario de importación.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             // verificar que se haya podido subir el archivo con el libro
             if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
                 \sowerphp\core\Facade_Session_Message::error(

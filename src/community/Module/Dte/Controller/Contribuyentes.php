@@ -25,6 +25,11 @@ namespace website\Dte;
 
 use \sowerphp\core\Network_Request as Request;
 use \sowerphp\core\Facade_Session_Message as SessionMessage;
+use \sowerphp\general\Utility_File;
+use \sowerphp\general\Utility_Image;
+use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
+use \website\Sistema\General\Model_ActividadEconomicas;
+use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
 
 /**
  * Clase para el controlador asociado a la tabla contribuyente de la base de
@@ -50,13 +55,8 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
                 $Contribuyente = libredte()->authenticate($rut, $user);
             } catch (\Exception $e) {
                 return redirect('/dte/contribuyentes/seleccionar')
-                    ->withError(
-                        __('%(error_message)s',
-                            [
-                                'error_message' => $e->getMessage()
-                            ]
-                        )
-                    );
+                    ->withError($e->getMessage())
+                ;
             }
             // Verificar si se requiere auth2 en el usuario para poder usar la
             // empresa.
@@ -138,30 +138,33 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
     public function registrar(Request $request)
     {
         $user = $request->user();
-        // verificar si el usuario puede registrar más empresas (solo si está definido el valor
+
+        // Verificar si el usuario puede registrar más empresas (solo si está
+        // definido el valor).
         if ($user->config_contribuyentes_autorizados !== null) {
             $n_empresas = count((new Model_Contribuyentes())->getByUsuario($user->id));
             if ($n_empresas >= $user->config_contribuyentes_autorizados) {
                 return redirect('/dte/contribuyentes/seleccionar')
-                    ->withError(
-                        __('Ha llegado al límite de empresas que puede registrar (%(numero_contribuyentes)s). Si requiere una cantidad mayor <a href="%(url_contact)s">contáctenos</a>.',
-                            [
-                                'numero_contribuyentes' => num($user->config_contribuyentes_autorizados),
-                                'url_contact' => url('/contacto')
-                            ]
-                        )
-                    );
+                    ->withError(__(
+                        'Ha llegado al límite de empresas que puede registrar (%(numero_contribuyentes)s). Si requiere una cantidad mayor <a href="%(url_contact)s">contáctenos</a>.',
+                        [
+                            'numero_contribuyentes' => num($user->config_contribuyentes_autorizados),
+                            'url_contact' => url('/contacto')
+                        ]
+                    ))
+                ;
             }
         }
-        // asignar variables para la vista
-        $ImpuestosAdicionales = new \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales();
+
+        // Asignar variables para la vista.
+        $ImpuestosAdicionales = new Model_ImpuestoAdicionales();
         $impuestos_adicionales = $ImpuestosAdicionales->getListConTasa();
         $impuestos_adicionales_tasa = $ImpuestosAdicionales->getTasas();
         $impuestos_adicionales_todos = $ImpuestosAdicionales->getList();
         $this->set([
             '__view_header' => ['js' => ['/dte/js/dte.js', '/dte/js/contribuyente.js']],
-            'actividades_economicas' => (new \website\Sistema\General\Model_ActividadEconomicas())->getList(),
-            'comunas' => (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->getList(),
+            'actividades_economicas' => (new Model_ActividadEconomicas())->getList(),
+            'comunas' => (new Model_Comunas())->getList(),
             'impuestos_adicionales' => $impuestos_adicionales,
             'impuestos_adicionales_tasa' => $impuestos_adicionales_tasa,
             'impuestos_adicionales_todos' => $impuestos_adicionales_todos,
@@ -171,51 +174,51 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
             'form_id' => 'registrarContribuyente',
             'boton' => 'Registrar empresa',
         ]);
-        // si se envió el formulario se procesa
-        if (isset($_POST['submit'])) {
-            // crear objeto del contribuyente con el rut y verificar que no esté ya asociada a un usuario
-            list($rut, $dv) = explode('-', str_replace('.', '', $_POST['rut']));
-            $Contribuyente = libredte()->contribuyente($rut);
+
+        // Si se envió el formulario se procesa.
+        if (!empty($_POST)) {
+
+            // Crear objeto del contribuyente con el rut y verificar que no
+            // esté ya asociado a un usuario.
+            $Contribuyente = libredte()->contribuyente($_POST['rut']);
             if ($Contribuyente && $Contribuyente->usuario) {
                 if ($Contribuyente->usuario == $user->id) {
                     return redirect('/dte/contribuyentes/seleccionar')
-                        ->withInfo(
-                            __('Ya tiene asociada la empresa a su usuario.')
-                        );
+                        ->withInfo(__(
+                            'Ya tiene asociada la empresa a su usuario.'
+                        ))
+                    ;
                 } else {
                     return redirect('/dte/contribuyentes/seleccionar')
-                        ->withError(
-                            __('La empresa ya está registrada a nombre del usuario %(user_name)s (%(user_email)s). Si cree que esto es un error o bien puede ser alguien suplantando la identidad de su empresa por favor <a href="'.url('/contacto').'" target="_blank">contáctenos</a>.',
-                                [
-                                    'user_name' => $Contribuyente->getUsuario()->nombre,
-                                    'user_email' => $Contribuyente->getUsuario()->email,
-                                    'url_contact' => url('/contacto')
-                                ]
-                            )
-                        );
+                        ->withError(__(
+                            'La empresa ya está registrada a nombre del usuario %(user_name)s (%(user_email)s). Si cree que esto es un error o bien puede ser alguien suplantando la identidad de su empresa por favor <a href="%(url_contact)s" target="_blank">contáctenos</a>.',
+                            [
+                                'user_name' => $Contribuyente->getUsuario()->nombre,
+                                'user_email' => $Contribuyente->getUsuario()->email,
+                                'url_contact' => url('/contacto')
+                            ]
+                        ))
+                    ;
                 }
             }
-            // rellenar campos de la empresa
+
+            // Preparar datos del formulario en la variable $_POST.
             try {
                 $this->prepararDatosContribuyente($Contribuyente);
             } catch (\Exception $e) {
-                return redirect('/dte/contribuyentes/registrar')
-                    ->withError(
-                        __('%(error_message)s',
-                            [
-                                'error_message' => $e->getMessage()
-                            ]
-                        )
-                    );
+                return redirect()->back()->withInput()
+                    ->withError($e->getMessage())
+                ;
             }
-            $Contribuyente->set($_POST);
-            $Contribuyente->rut = $rut;
-            $Contribuyente->dv = $dv;
+
+            // Asignar datos al contribuyente que se está creando.
+            $Contribuyente->forceFill($_POST);
             $Contribuyente->usuario = $user->id;
-            $Contribuyente->modificado = date('Y-m-d H:i:s');
-            // guardar contribuyente
+
+            // Crear el contribuyente (guardarlo).
             try {
-                $Contribuyente->save(true);
+                $Contribuyente->save();
+                $this->uploadLogo($Contribuyente);
                 // guardar los DTE por defecto que la empresa podrá usar
                 $dtes = config('modules.Dte.contribuyentes.documentos');
                 foreach ($dtes as $dte) {
@@ -241,7 +244,8 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
                 SessionMessage::error('No fue posible registrar la empresa:<br/>'.$e->getMessage());
             }
         }
-        // renderizar vista
+
+        // Renderizar la vista para registrar un contribuyente.
         return $this->render('Contribuyentes/registrar_modificar');
     }
 
@@ -253,69 +257,71 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
         $user = $request->user();
         // Obtener contribuyente que se está utilizando en la sesión.
         try {
-            $Contribuyente = libredte()->getSessionContribuyente();
+            $Contribuyente = libredte()->getSessionContribuyenteAutorizado(
+                $user, 'admin'
+            );
         } catch (\Exception $e) {
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
-        // verificar que el usuario sea el administrador o de soporte autorizado
-        if (!$Contribuyente->usuarioAutorizado($user, 'admin')) {
-            return redirect('/dte/contribuyentes/seleccionar')
-                ->withError(
-                    __('Usted no es el administrador de la empresa solicitada.')
-                );
+
+        // Editar el contribuyente.
+        if (!empty($_POST)) {
+            try {
+                $this->prepararDatosContribuyente($Contribuyente);
+            } catch (\Exception $e) {
+                return redirect('/dte/contribuyentes/modificar')
+                    ->withError($e->getMessage())
+                ;
+            }
+            $Contribuyente->forceFill($_POST);
+            try {
+                $Contribuyente->save();
+                $this->uploadLogo($Contribuyente);
+                libredte()->setSessionContribuyente($Contribuyente);
+                return redirect('/dte/contribuyentes/seleccionar/' . $Contribuyente->rut)
+                    ->withSuccess(__(
+                        'Empresa %s ha sido modificada.',
+                        $Contribuyente->razon_social
+                    ))
+                ;
+            } catch (\Exception $e) {
+                return redirect('/dte/contribuyentes/modificar')
+                    ->withError(__(
+                        'No fue posible modificar la empresa: %s',
+                        $e->getMessage()
+                    ))
+                ;
+            }
         }
-        // asignar variables para editar
-        $ImpuestosAdicionales = new \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales();
+
+        // Asignar variables de la vista.
+        $ImpuestosAdicionales = new Model_ImpuestoAdicionales();
         $impuestos_adicionales = $ImpuestosAdicionales->getListConTasa();
         $impuestos_adicionales_tasa = $ImpuestosAdicionales->getTasas();
         $impuestos_adicionales_todos = $ImpuestosAdicionales->getList();
-        $this->set([
+        $data = [
             '__view_header' => ['js' => ['/dte/js/contribuyente.js']],
             'Contribuyente' => $Contribuyente,
-            'actividades_economicas' => (new \website\Sistema\General\Model_ActividadEconomicas())->getList(),
-            'comunas' => (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas())->getList(),
+            'actividades_economicas' => (new Model_ActividadEconomicas())->getList(),
+            'comunas' => (new Model_Comunas())->getList(),
             'impuestos_adicionales' => $impuestos_adicionales,
             'impuestos_adicionales_tasa' => $impuestos_adicionales_tasa,
             'impuestos_adicionales_todos' => $impuestos_adicionales_todos,
             'titulo' => 'Configuración de la empresa',
-            'descripcion' => 'Aquí podrá modificar los datos de la empresa '.$Contribuyente->razon_social.' RUT '.num($Contribuyente->rut).'-'.$Contribuyente->dv.', para la cual usted es el usuario administrador.',
+            'descripcion' => __(
+                'Aquí podrá modificar los datos de la empresa %s RUT %s, para la cual usted es el usuario administrador.',
+                $Contribuyente->razon_social,
+                $Contribuyente->getRUT()
+            ),
             'form_id' => 'modificarContribuyente',
             'boton' => 'Modificar empresa',
             'tipos_dte' => $Contribuyente->getDocumentosAutorizados(),
             'apps' => $Contribuyente->getApps('apps'),
             'dtepdfs' => $Contribuyente->getApps('dtepdfs'),
-        ]);
-        // editar contribuyente
-        if (isset($_POST['submit'])) {
-            try {
-                $this->prepararDatosContribuyente($Contribuyente);
-            } catch (\Exception $e) {
-                return redirect('/dte/contribuyentes/modificar')
-                    ->withError(
-                        __('%(error_message)s',
-                            [
-                                'error_message' => $e->getMessage()
-                            ]
-                        )
-                    );
-            }
-            $Contribuyente->set($_POST);
-            $Contribuyente->modificado = date('Y-m-d H:i:s');
-            try {
-                $Contribuyente->save(true);
-                SessionMessage::success('Empresa '.$Contribuyente->razon_social.' ha sido modificada.');
-                $ContribuyenteSeleccionado = $this->getContribuyente(false);
-                if ($ContribuyenteSeleccionado && $ContribuyenteSeleccionado->rut == $Contribuyente->rut) {
-                    return redirect('/dte/contribuyentes/seleccionar/'.$Contribuyente->rut);
-                } else {
-                    return redirect('/dte/contribuyentes/seleccionar');
-                }
-            } catch (\Exception $e) {
-                SessionMessage::error('No fue posible modificar la empresa:<br/>'.$e->getMessage());
-            }
-        }
-        // renderizar vista
-        return $this->render('Contribuyentes/registrar_modificar');
+        ];
+
+        // Renderizar la vista de modificar contribuyente.
+        return $this->render('Contribuyentes/registrar_modificar', $data);
     }
 
     /**
@@ -324,16 +330,34 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
      */
     protected function prepararDatosContribuyente(&$Contribuyente)
     {
-        // si hay cualquier campo que empiece por 'config_libredte_' se quita ya que son
-        // configuraciones reservadas para los administradores de LibreDTE y no pueden
-        // ser asignadas por los usuarios (esto evita que envién "a la mala" una
-        // configuración del sistema)
+        // Si el RUT del contribuyente no coincide con el pasado en el
+        // formulario error (estamos editando un contribuyente de una sesión
+        // previa).
+        if ($Contribuyente->rut !== (int)$_POST['rut'] && $Contribuyente->getRUT() !== trim($_POST['rut'])) {
+            throw new \Exception(__(
+                'El contribuyente de la sesión (%d) no corresponde con el RUT de los datos enviados (%s).',
+                $Contribuyente->rut,
+                $_POST['rut']
+            ));
+        }
+        if ($Contribuyente->usuario) {
+            unset($_POST['rut']);
+        }
+
+        // Se quita usuario por si se pasó (evita cambio de usuario).
+        unset($_POST['usuario']);
+
+        // Si hay cualquier campo que empiece por 'config_libredte_' se quita
+        // ya que son configuraciones reservadas para los administradores de
+        // LibreDTE y no pueden ser asignadas por los usuarios (esto evita que
+        // envién "a la mala" una configuración del sistema).
         foreach ($_POST as $var => $val) {
             if (strpos($var, 'config_libredte_') === 0) {
                 unset($_POST[$var]);
             }
         }
-        // crear arreglo con actividades económicas secundarias
+
+        // Crear arreglo con actividades económicas secundarias.
         if (!empty($_POST['config_extra_otras_actividades_actividad'])) {
             $n_codigos = count($_POST['config_extra_otras_actividades_actividad']);
             for ($i=0; $i<$n_codigos; $i++) {
@@ -349,7 +373,8 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
         } else {
             $_POST['config_extra_otras_actividades'] = null;
         }
-        // crear arreglo con sucursales
+
+        // Crear arreglo con sucursales.
         if (!empty($_POST['config_extra_sucursales_codigo'])) {
             $_POST['config_extra_sucursales'] = [];
             $n_codigos = count($_POST['config_extra_sucursales_codigo']);
@@ -377,7 +402,8 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
         } else {
             $_POST['config_extra_sucursales'] = null;
         }
-        // crear arreglo de impuestos adicionales
+
+        // Crear arreglo de impuestos adicionales.
         if (!empty($_POST['config_extra_impuestos_adicionales_codigo'])) {
             $_POST['config_extra_impuestos_adicionales'] = [];
             $n_codigos = count($_POST['config_extra_impuestos_adicionales_codigo']);
@@ -397,7 +423,8 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
         } else {
             $_POST['config_extra_impuestos_adicionales'] = null;
         }
-        // crear arreglo con observaciones
+
+        // Crear arreglo con observaciones.
         if (!empty($_POST['config_emision_observaciones_dte'])) {
             $_POST['config_emision_observaciones'] = [];
             $n_codigos = count($_POST['config_emision_observaciones_dte']);
@@ -416,7 +443,8 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
         } else {
             $_POST['config_emision_observaciones'] = null;
         }
-        // crear arreglo de impuestos sin crédito (no recuperables)
+
+        // Crear arreglo de impuestos sin crédito (no recuperables).
         if (!empty($_POST['config_extra_impuestos_sin_credito_codigo'])) {
             $_POST['config_extra_impuestos_sin_credito'] = [];
             $n_codigos = count($_POST['config_extra_impuestos_sin_credito_codigo']);
@@ -431,7 +459,8 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
         } else {
             $_POST['config_extra_impuestos_sin_credito'] = null;
         }
-        // crear arreglo de mapa de formatos de PDF
+
+        // Crear arreglo de mapa de formatos de PDF.
         if (!empty($_POST['config_pdf_mapeo_documento'])) {
             $_POST['config_pdf_mapeo'] = [];
             $n_codigos = count($_POST['config_pdf_mapeo_documento']);
@@ -464,7 +493,8 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
         } else {
             $_POST['config_pdf_mapeo'] = null;
         }
-        // subir archivo de plantilla de correo de envío de dte
+
+        // Subir archivo de plantilla de correo de envío de DTE.
         if (!empty($_FILES['template_email_dte']) && !$_FILES['template_email_dte']['error']) {
             $dir = DIR_STATIC . '/contribuyentes/' . (int)$Contribuyente->rut.'/email';
             if (!is_dir($dir)) {
@@ -476,7 +506,8 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
                 unlink($dir.'/dte.html');
             }
         }
-        // guardar datos de la API
+
+        // Guardar datos de la API.
         if (!empty($_POST['config_api_codigo'])) {
             $config_api_servicios = [];
             $n_api_servicios = count($_POST['config_api_codigo']);
@@ -500,7 +531,8 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
         } else {
             $_POST['config_api_servicios'] = null;
         }
-        // guardar enlaces personalizados
+
+        // Guardar enlaces personalizados.
         if (!empty($_POST['config_extra_links_nombre'])) {
             $config_extra_links = [];
             $n_links = count($_POST['config_extra_links_nombre']);
@@ -529,21 +561,41 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
         } else {
             $_POST['config_extra_links'] = null;
         }
-        // procesar configuración de apps
+
+        // Procesar configuración de apps.
         $apps = $Contribuyente->getApps('apps');
         foreach ($apps as $App) {
             $App->setConfigPOST();
         }
-        // procesar configuración de apps
+
+        // Procesar configuración de formatos de PDF.
         $apps = $Contribuyente->getApps('dtepdfs');
         foreach ($apps as $App) {
             $App->setConfigPOST();
         }
-        // poner valores por defecto
-        foreach (Model_Contribuyente::$defaultConfig as $key => $value) {
-            if (!isset($_POST['config_'.$key])) {
-                $Contribuyente->{'config_'.$key} = $value;
+    }
+
+    /**
+     * Guarda un logo si fue subido mediante el formulario.
+     */
+    protected function uploadLogo(&$Contribuyente)
+    {
+        if (isset($_FILES['logo']) && !$_FILES['logo']['error']) {
+            $mimetype = Utility_File::mimetype(
+                $_FILES['logo']['tmp_name']
+            );
+            if ($mimetype != 'image/png') {
+                throw new \Exception('Formato del logo debe ser PNG.');
             }
+            $config = config('modules.Dte.contribuyentes.logos');
+            Utility_Image::resizeOnFile(
+                $_FILES['logo']['tmp_name'],
+                $config['ancho'],
+                $config['alto']
+            );
+            $fileName = 'logo.png';
+            $fileContents = file_get_contents($_FILES['logo']['tmp_name']);
+            $Contribuyente->public_disk->write($fileName, $fileContents);
         }
     }
 
@@ -622,7 +674,7 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
             'transferir_contribuyente' => (bool)config('modules.Dte.contribuyentes.transferir'),
         ]);
         // editar usuarios autorizados
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $usuarios = [];
             if (isset($_POST['usuario'])) {
                 $n_usuarios = count($_POST['usuario']);
@@ -651,18 +703,18 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
             try {
                 $Contribuyente->setUsuarios($usuarios);
                 return redirect('/dte/contribuyentes/usuarios')
-                    ->withSuccess(
-                        __('Se editaron los usuarios autorizados de la empresa.')
-                    );
+                    ->withSuccess(__(
+                        'Se editaron los usuarios autorizados de la empresa.'
+                    ));
             } catch (\Exception $e) {
                 return redirect('/dte/contribuyentes/usuarios')
-                    ->withError(
-                        __('No fue posible editar los usuarios autorizados<br/>%(error_message)s',
-                            [
-                                'error_message' => $e->getMessage()
-                            ]
-                        )
-                    );
+                    ->withError(__(
+                        'No fue posible editar los usuarios autorizados: %(error_message)s',
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    ))
+                ;
             }
         }
     }
@@ -682,12 +734,12 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
         // verificar que el usuario sea el administrador o sea soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($user, 'admin')) {
             return redirect('/dte/contribuyentes/seleccionar')
-                ->withError(
-                    __('Usted no es el administrador de la empresa solicitada.')
-                );
+                ->withError(__(
+                    'Usted no es el administrador de la empresa solicitada.'
+                ));
         }
         // editar documentos de usuario
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $documentos_autorizados = $Contribuyente->getDocumentosAutorizados();
             $usuarios = [];
             if (isset($_POST['usuario'])) {
@@ -716,23 +768,23 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
                     );
             } catch (\Exception $e) {
                 return redirect('/dte/contribuyentes/usuarios#dtes')
-                    ->withError(
-                        __('No fue posible editar los usuarios autorizados<br/>%(error_message)s',
-                            [
-                                'error_message' => $e->getMessage()
-                            ]
-                        )
-                    );
+                    ->withError(__(
+                        'No fue posible editar los usuarios autorizados<br/>%(error_message)s',
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    ))
+                ;
             }
         } else {
             return redirect('/dte/contribuyentes/usuarios#dtes')
-                ->withError(
-                    __('No puede acceder directamente a la página %(uri_decoded)s',
-                        [
-                            'uri_decoded' => $this->request->getRequestUriDecoded()
-                        ]
-                    )
-                );
+                ->withError(__(
+                    'No puede acceder directamente a la página %(uri_decoded)s',
+                    [
+                        'uri_decoded' => $this->request->getRequestUriDecoded()
+                    ]
+                ))
+            ;
         }
     }
 
@@ -751,12 +803,13 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
         // verificar que el usuario sea el administrador o sea soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($user, 'admin')) {
             return redirect('/dte/contribuyentes/seleccionar')
-                ->withError(
-                    __('Usted no es el administrador de la empresa solicitada.')
-                );
+                ->withError(__(
+                    'Usted no es el administrador de la empresa solicitada.'
+                ))
+            ;
         }
         // editar sucursales por defecto
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $usuarios = [];
             if (isset($_POST['usuario'])) {
                 $n_usuarios = count($_POST['usuario']);
@@ -769,28 +822,29 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
             try {
                 $Contribuyente->setSucursalesPorUsuario($usuarios);
                 return redirect('/dte/contribuyentes/usuarios#sucursales')
-                    ->withSuccess(
-                        __('Se editaron las sucursales por defecto de los usuarios de la empresa.')
-                    );
+                    ->withSuccess(__(
+                        'Se editaron las sucursales por defecto de los usuarios de la empresa.'
+                    ))
+                ;
             } catch (\Exception $e) {
                 return redirect('/dte/contribuyentes/usuarios#sucursales')
-                    ->withError(
-                        __('No fue posible editar las sucursales por defecto de los usuarios<br/>%(error_message)s',
-                            [
-                                'error_message' => $e->getMessage()
-                            ]
-                        )
-                    );
+                    ->withError(__(
+                        'No fue posible editar las sucursales por defecto de los usuarios<br/>%(error_message)s',
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    ))
+                ;
             }
         } else {
             return redirect('/dte/contribuyentes/usuarios#sucursales')
-                ->withError(
-                    __('No puede acceder directamente a la página %(uri_decoded)s',
-                        [
-                            'uri_decoded' => $this->request->getRequestUriDecoded()
-                        ]
-                    )
-                );
+                ->withError(__(
+                    'No puede acceder directamente a la página %(uri_decoded)s',
+                    [
+                        'uri_decoded' => $this->request->getRequestUriDecoded()
+                    ]
+                ))
+            ;
         }
     }
 
@@ -809,12 +863,13 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
         // verificar que el usuario sea el administrador o sea soporte autorizado
         if (!$Contribuyente->usuarioAutorizado($user, 'admin')) {
             return redirect('/dte/contribuyentes/seleccionar')
-                ->withError(
-                    __('Usted no es el administrador de la empresa solicitada.')
-                );
+                ->withError(__(
+                    'Usted no es el administrador de la empresa solicitada.'
+                ))
+            ;
         }
         // editar configuración de usuarios
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             // Si hay cualquier campo que empiece por 'config_libredte_' se quita ya que son
             // configuraciones reservadas para los administradores de LibreDTE y no pueden
             // ser asignadas por los usuarios (esto evita que envién "a la mala" una
@@ -826,32 +881,32 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
             }
             // guardar configuración
             $Contribuyente->set($_POST);
-            $Contribuyente->modificado = date('Y-m-d H:i:s');
             try {
                 $Contribuyente->save();
                 return redirect('/dte/contribuyentes/usuarios#general')
-                    ->withSuccess(
-                        __('Configuración general de usuarios de la empresa ha sido modificada. ')
-                    );
+                    ->withSuccess(__(
+                        'Configuración general de usuarios de la empresa ha sido modificada. '
+                    ))
+                ;
             } catch (\Exception $e) {
                 return redirect('/dte/contribuyentes/usuarios#general')
-                    ->withError(
-                        __('No fue posible modificar la configuración de usuarios de la empresa:<br/>%(error_message)s',
-                            [
-                                'error_message' => $e->getMessage()
-                            ]
-                        )
-                    );
+                    ->withError(__(
+                        'No fue posible modificar la configuración de usuarios de la empresa:<br/>%(error_message)s',
+                        [
+                            'error_message' => $e->getMessage()
+                        ]
+                    ))
+                ;
             }
         } else {
             return redirect('/dte/contribuyentes/usuarios#general')
-                ->withError(
-                    __('No puede acceder directamente a la página %(uri_decoded)s',
-                        [
-                            'uri_decoded' => $this->request->getRequestUriDecoded()
-                        ]
-                    )
-                );
+                ->withError(__(
+                    'No puede acceder directamente a la página %(uri_decoded)s',
+                    [
+                        'uri_decoded' => $this->request->getRequestUriDecoded()
+                    ]
+                ))
+            ;
         }
     }
 
@@ -870,61 +925,65 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
         // verificar si es posible transferir la empresa
         if (!(bool)config('modules.Dte.contribuyentes.transferir')) {
             return redirect('/dte/contribuyentes/usuarios#general')
-                ->withError(
-                    __('No es posible que usted transfiera la empresa, contacte a soporte para realizar esta acción.')
-                );
+                ->withError(__(
+                    'No es posible que usted transfiera la empresa, contacte a soporte para realizar esta acción.'
+                ))
+            ;
         }
         // debe venir usuario
         if (empty($_POST['usuario'])) {
             return redirect('/dte/contribuyentes/usuarios#general')
-                ->withError(
-                    __('Debe especificar el nuevo usuario administrador.')
-                );
+                ->withError(__(
+                    'Debe especificar el nuevo usuario administrador.'
+                ))
+            ;
         }
         // verificar que el usuario sea el administrador
         if ($Contribuyente->usuario != $user->id) {
             return redirect('/dte/contribuyentes/usuarios#general')
-                ->withError(
-                    __('Solo el usuario que tiene la empresa registrada puede cambiar el administrador.')
-                );
+                ->withError(__(
+                    'Solo el usuario que tiene la empresa registrada puede cambiar el administrador.'
+                ))
+            ;
         }
         // transferir al nuevo usuario administrador
         $Usuario = new \sowerphp\app\Sistema\Usuarios\Model_Usuario($_POST['usuario']);
         if (!$Usuario->exists()) {
             return redirect('/dte/contribuyentes/usuarios#general')
-                ->withError(
-                    __('Usuario %(user)s no existe',
-                        [
-                            'user' => $_POST['usuario']
-                        ]
-                    )
-                );
+                ->withError(__(
+                    'Usuario %(user)s no existe.',
+                    [
+                        'user' => $_POST['usuario']
+                    ]
+                ))
+            ;
         }
         if ($Contribuyente->usuario == $Usuario->id) {
             return redirect('/dte/contribuyentes/usuarios#general')
-                ->withError(
-                    __('El usuario administrador ya es %(user)s',
-                        [
-                            'user' => $_POST['usuario']
-                        ]
-                    )
-                );
+                ->withError(__(
+                    'El usuario administrador ya es %(user)s',
+                    [
+                        'user' => $_POST['usuario']
+                    ]
+                ))
+            ;
         }
         $Contribuyente->usuario = $Usuario->id;
         if ($Contribuyente->save()) {
             return redirect('/dte/contribuyentes/usuarios#general')
-                ->withSuccess(
-                    __('Se actualizó el usuario administrador a %(usuario)s.',
-                        [
-                            'usuario' => $_POST['usuario']
-                        ]
-                    )
-                );
+                ->withSuccess(__(
+                    'Se actualizó el usuario administrador a %(usuario)s.',
+                    [
+                        'usuario' => $_POST['usuario']
+                    ]
+                ))
+            ;
         } else {
             return redirect('/dte/contribuyentes/usuarios#general')
-                ->withError(
-                    __('No fue posible cambiar el administrador de la empresa.')
-                );
+                ->withError(__(
+                    'No fue posible cambiar el administrador de la empresa.'
+                ))
+            ;
         }
     }
 
@@ -934,15 +993,29 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
     public function logo($rut)
     {
         $Contribuyente = new Model_Contribuyente(substr($rut, 0, -4));
-        $logo = DIR_STATIC.'/contribuyentes/'.$Contribuyente->rut.'/logo.png';
-        if (!is_readable($logo)) {
-            $logo = app('layers')->getFilePath('/webroot/img/logo.png');
+        $disk = $Contribuyente->public_disk;
+        $logoPath = '/logo.png';
+
+        // Verificar si el logo existe en el disco público.
+        if (!$disk->fileExists($logoPath)) {
+            // Usar un logo por defecto si no existe el logo del contribuyente.
+            $logoPath = app('layers')->getFilePath('/webroot/img/logo.png');
+            $logoContent = file_get_contents($logoPath);
+            $logoSize = filesize($logoPath);
+        } else {
+            $logoContent = $disk->read($logoPath);
+            $logoSize = $disk->fileSize($logoPath);
         }
-        $filename = \sowerphp\core\Utility_String::normalize($Contribuyente->getNombre()).'.png';
-        $this->response->type('image/png');
-        $this->response->header('Content-Length', filesize($logo));
-        $this->response->header('Content-Disposition', 'inline; filename="'.$filename.'"');
-        $this->response->sendAndExit(file_get_contents($logo));
+
+        // Entregar el logo.
+        $filename = \sowerphp\core\Utility_String::normalize(
+            $Contribuyente->getNombre()
+        ) . '.png';
+        $response = response();
+        $response->type('image/png');
+        $response->header('Content-Length', $logoSize);
+        $response->header('Content-Disposition', 'inline; filename="'.$filename.'"');
+        return $response->body($logoContent);
     }
 
     /**
@@ -963,7 +1036,7 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
         }
         // verificar protocolo
         if (!in_array($protocol, ['smtp', 'imap'])) {
-            $this->response->sendAndExit('El protocolo debe ser "smtp" o "imap"');
+            $this->response->sendAndExit('El protocolo debe ser "smtp" o "imap".');
         }
         // datos pasados por GET al servicio web
         extract($this->request->getValidatedData([
@@ -1009,136 +1082,119 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
     /**
      * Método de la API que permite obtener los datos de un contribuyente.
      */
-    public function _api_info_GET($rut, $emisor = null)
+    public function _api_info_GET(Request $request, $rut, $emisor = null)
     {
-        // verificar autenticación
-        $User = $this->Api->getAuthUser();
-        if (is_string($User)) {
-            $this->Api->send($User, 401);
-        }
-        // datos pasados por GET al servicio web
-        extract($this->request->getValidatedData([
+        $user = $request->user();
+
+        // Datos pasados por GET al servicio web.
+        extract($request->getValidatedData([
             'tipo' => 'contribuyente',
         ]));
         if (!in_array($tipo, ['contribuyente', 'emisor', 'receptor'])) {
-            return response()->json(
-                __('Búsqueda de tipo "%($tipo)s" no es válida. Posibles tipos: contribuyente, emisor o receptor.',
-                    [
-                        'tipo' => $tipo
-                    ]
-                ),
-                400
-            );
+            return response()->json(__(
+                'Búsqueda de tipo "%($tipo)s" no es válida. Posibles tipos: contribuyente, emisor o receptor.',
+                [
+                    'tipo' => $tipo
+                ]
+            ), 400);
         }
-        // obtener objeto del contribuyente
-        // se puede obtener por RUT o por correo electrónico asociado al contribuyente
+
+        // Obtener objeto del contribuyente.
+        // Se puede obtener por RUT o por correo electrónico asociado al
+        // contribuyente.
         if (strpos($rut, '@')) {
             try {
                 $Contribuyente = (new Model_Contribuyentes())->getByEmail($rut, true);
             } catch (\Exception $e) {
-                return response()->json(
-                    __('Error al obtener el contribuyente: %(error_message)s',
-                        [
-                            'error_message' => $e->getMessage()
-                        ]
-                    ),
-                    500
-                );
+                return response()->json(__(
+                    'Error al obtener el contribuyente: %(error_message)s',
+                    [
+                        'error_message' => $e->getMessage()
+                    ]
+                ), 500);
             }
         } else {
             $Contribuyente = (new Model_Contribuyentes())->get($rut);
         }
-        // si el contribuyente no existe error
+
+        // Si el contribuyente no existe error.
         if (!$Contribuyente || !$Contribuyente->exists()) {
-            $this->Api->send('Contribuyente solicitado no existe.', 404);
+            return response()->json(__('Contribuyente solicitado no existe.'), 404);
         }
-        // asignar ciertos valores de la configuración al objeto del contribuyente
-        // se hace un "touch" para que el atributo sea cargado desde la configuración
-        $Contribuyente->config_ambiente_produccion_fecha;
-        $Contribuyente->config_ambiente_produccion_numero;
-        $Contribuyente->config_email_intercambio_user;
-        $Contribuyente->config_extra_web;
-        // se crea el arreglo con datos básicos del contribuyente
-        $datos = array_merge(get_object_vars($Contribuyente), [
-            'comuna_glosa' => $Contribuyente->getComuna()->comuna,
-        ]);
-        // acciones si no hay emisor indicado (si fuesen necesarias)
+
+        // Obtener los datos del contribuyente que se deben serializar.
+        $datos = $Contribuyente->jsonSerialize();
+
+        // Acciones si no hay emisor indicado (si fuesen necesarias).
         if (!$emisor) {
-            // si no hay emisor y es búsqueda emisor se copia el rut como emisor
+            // Si no hay emisor y es búsqueda emisor se copia el rut como emisor.
             if ($tipo == 'emisor') {
                 $emisor = $rut;
             }
-            // si no hay emisor con búsqueda de receptor error
+            // Si no hay emisor con búsqueda de receptor error.
             else if ($tipo == 'receptor') {
-                return response()->json(
-                    __('Debe indicar emisor para hacer una búsqueda de tipo receptor.'),
-                    400
-                );
+                return response()->json(__(
+                    'Debe indicar emisor para hacer una búsqueda de tipo receptor.'
+                ), 400);
             }
         } else {
             if ($tipo == 'emisor' && $emisor != $rut) {
-                return response()->json(
-                    __('Debe indicar el mismo emisor y rut para una búsqueda de tipo emisor (o dejar el emisor en blanco).'),
-                    400
-                );
+                return response()->json(__(
+                    'Debe indicar el mismo emisor y rut para una búsqueda de tipo emisor (o dejar el emisor en blanco).'
+                ), 400);
             }
         }
-        // se agregan datos vía trigger del contribuyente solo si existe un emisor
-        // esto indica que se está buscando uno receptor (cliente) o emisor (proveedor)
+
+        // Se agregan datos vía trigger del contribuyente solo si existe un
+        // emisor. Esto indica que se está buscando uno receptor (cliente) o
+        // emisor (proveedor).
         if ($emisor) {
             $Emisor = (new Model_Contribuyentes())->get($emisor);
-            if (!$Emisor->usuarioAutorizado($User)) {
-                return response()->json(
-                    __('No está autorizado a operar con el emisor seleccionado para el tipo de búsqueda %(tipo)s.',
-                        [
-                            'tipo' => $tipo
-                        ]
-                    ),
-                    404
-                );
+            if (!$Emisor->usuarioAutorizado($user)) {
+                return response()->json(__(
+                    'No está autorizado a operar con el emisor seleccionado para el tipo de búsqueda %(tipo)s.',
+                    [
+                        'tipo' => $tipo
+                    ]
+                ), 404);
             }
             $datos_event = event(
                 'contribuyente_info',
-                [$Contribuyente, $tipo, $Emisor, $User, $datos],
+                [$Contribuyente, $tipo, $Emisor, $user, $datos],
                 true
             );
             if (!empty($datos_event)) {
                 $datos = $datos_event;
             }
         }
-        // se quita el usuario de los atributos (por seguridad)
+
+        // Se quita el usuario de los atributos (por seguridad).
         unset($datos['usuario']);
-        // se entregan los datos del contribuyente
-        return response()->json(
-            $datos,
-            200
-        );
+
+        // Entregar los datos del contribuyente.
+        return $datos;
     }
 
     /**
      * Método de la API que permite obtener la configuración de un contribuyente.
      */
-    public function _api_config_GET($rut)
+    public function _api_config_GET(Request $request, $rut)
     {
-        $User = $this->Api->getAuthUser();
-        if (is_string($User)) {
-            $this->Api->send($User, 401);
+        $user = $request->user();
+        // Obtener el contribuyente solicitado.
+        try {
+            $Contribuyente = libredte()->authenticate($rut, $user, 'admin');
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), $e->getCode());
         }
-        $Contribuyente = new Model_Contribuyente($rut);
-        if (!$Contribuyente->exists()) {
-            $this->Api->send('Contribuyente solicitado no existe.', 404);
-        }
-        if (!$Contribuyente->usuarioAutorizado($User, 'admin')) {
-            $this->Api->send('Usted no es el administrador de la empresa solicitada.', 401);
-        }
-        $config = [
+
+        // Entregar la configuración del contribuyente.
+        // Se entrega solo lo relevante para usar en sistemas externos. No se
+        // recomienda modificar esto para entregar toda la configuración.
+        return [
             'ambiente_en_certificacion' => $Contribuyente->enCertificacion(),
             'documentos_autorizados' => $Contribuyente->getDocumentosAutorizados(),
         ];
-        return response()->json(
-            $config,
-            200
-        );
     }
 
 }

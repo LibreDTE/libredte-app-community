@@ -32,9 +32,12 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
     protected $namespace = 'dtepdfs'; ///< nombre del grupo de las aplicaciones que heredan esta clase
 
     /**
-     * Método que entrega el código HTML de la página de configuración de la aplicación.
+     * Método que entrega el código HTML de la página de configuración de la
+     * aplicación.
+     *
+     * @return string HTML renderizado con la configuración de la aplicación.
      */
-    public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form)
+    public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form): string
     {
         $buffer = '';
         $buffer .= $form->input([
@@ -63,42 +66,58 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
     }
 
     /**
-     * Método que asigna la configuración de la aplicación procesando el formulario enviado por POST.
+     * Método que asigna la configuración de la aplicación procesando el
+     * formulario enviado por POST.
+     *
+     * @return array|null Arreglo con la configuración determinada.
      */
-    public function setConfigPOST()
+    public function setConfigPOST(): ?array
     {
-        // asignar configuración
-        if (!empty($_POST['dtepdf_'.$this->getCodigo().'_disponible'])) {
-            $_POST['config_dtepdfs_'.$this->getCodigo()] = $this->createConfig('dtepdf_'.$this->getCodigo());
+        $prefix = 'dtepdf_' . $this->getCodigo();
+        $configName = 'config_dtepdfs_' . $this->getCodigo();
+
+        // Asignar configuración.
+        $config = $this->createConfig($prefix); // Fuera del if para limpiar $_POST.
+        if (!empty($_POST[$prefix . '_disponible'])) {
+            $_POST[$configName] = $config;
         }
-        // eliminar configuración de la aplicación porque no está disponible
-        // esto se puede hacer porque los PDF se pueden desactivar en el mapeo y no en su propia configuración
+
+        // Eliminar configuración de la aplicación porque no está disponible.
+        // Esto se puede hacer porque los PDF se pueden desactivar en el mapeo
+        // y no en su propia configuración.
         else {
-            $_POST['config_dtepdfs_'.$this->getCodigo()] = null;
+            $_POST[$configName] = null;
         }
-        // entregar configuración compartida
-        return $_POST['config_dtepdfs_'.$this->getCodigo()];
+
+        // Entregar configuración.
+        return $_POST[$configName];
     }
 
     /**
-     * Método que crea la configuración de manera automágica :)
+     * Método que crea la configuración de manera automágica modificando la
+     * variable $_POST.
+     *
+     * Este método también deja limpia la variable $_POST.
      */
-    private function createConfig(string $id): array
+    private function createConfig(string $prefix): array
     {
         $config = [];
-        // asignar flags
+
+        // Asignar flags.
         if (!empty($this->config_flags)) {
             $flags = [];
             foreach ($this->config_flags as $codigo => $descripcion) {
-                $flags[$codigo] = !empty($_POST[$id.'_flag_'.$codigo]);
-                unset($_POST[$id.'_flag_'.$codigo]);
+                $flags[$codigo] = !empty($_POST[$prefix . '_flag_' . $codigo]);
+                unset($_POST[$prefix . '_flag_' . $codigo]);
             }
             $config['flags'] = $flags;
         }
-        // asignar otras variables
+
+        // Asignar otras variables.
         foreach ($_POST as $key => $value) {
-            if (strpos($key, $id.'_') === 0) {
-                $name = str_replace($id.'_', '', $key);
+            if (strpos($key, $prefix . '_') === 0) {
+                // Obtener configuración.
+                $name = str_replace($prefix . '_', '', $key);
                 $parts = explode('_', $name, 4);
                 switch (count($parts)) {
                     case 1:
@@ -114,15 +133,20 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
                         $config[$parts[0]][$parts[1]][$parts[2]][$parts[3]] = trim($value);
                         break;
                 }
+
+                // Limpiar $_POST.
                 unset($_POST[$key]);
             }
         }
+
+        // Entregar configuración determinada.
         return $config;
     }
 
     /**
      * Método que entrega la configuración de los flags del formato que
      * permiten activar o desactivar opciones (de un flag o de todos).
+     *
      * @param flag Flag que se quiere obtener o null para obtenerlos todos.
      */
     public function getConfigFlags($flag = null)

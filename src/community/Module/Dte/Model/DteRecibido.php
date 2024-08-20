@@ -45,7 +45,7 @@ class Model_DteRecibido extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'Documento recibido',
             'verbose_name_plural' => 'Documentos recibidos',
@@ -56,9 +56,9 @@ class Model_DteRecibido extends Model
             'emisor' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Emisor',
                 'help_text' => 'Emisor del documento.',
                 'searchable' => 'rut:integer|email:string|usuario:string|nombre:string'
@@ -66,9 +66,9 @@ class Model_DteRecibido extends Model
             'dte' => [
                 'type' => self::TYPE_SMALL_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_DteTipo::class,
-                'to_table' => 'dte_tipo',
-                'to_field' => 'codigo',
+                'relation' => Model_DteTipo::class,
+                'belongs_to' => 'dte_tipo',
+                'related_field' => 'codigo',
                 'min_value' => 1,
                 'max_value' => 10000,
                 'verbose_name' => 'DTE',
@@ -90,9 +90,9 @@ class Model_DteRecibido extends Model
             ],
             'receptor' => [
                 'type' => self::TYPE_INTEGER,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Receptor',
                 'show_in_list' => false,
             ],
@@ -143,9 +143,9 @@ class Model_DteRecibido extends Model
             ],
             'usuario' => [
                 'type' => self::TYPE_INTEGER,
-                'foreign_key' => Model_Usuario::class,
-                'to_table' => 'usuario',
-                'to_field' => 'id',
+                'relation' => Model_Usuario::class,
+                'belongs_to' => 'usuario',
+                'related_field' => 'id',
                 'verbose_name' => 'Usuario',
                 'searchable' => 'id:integer|usuario:string|nombre:string|email:string',
             ],

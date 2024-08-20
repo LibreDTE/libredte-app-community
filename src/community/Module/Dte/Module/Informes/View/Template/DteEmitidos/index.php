@@ -19,7 +19,7 @@ echo $f->input([
 ]);
 echo $f->end('Generar informe de documentos emitidos');
 ?>
-<?php if (isset($_POST['submit'])) : ?>
+<?php if (!empty($_POST)) : ?>
 <div class="row">
     <div class="col-sm-6">
         <div class="card mb-4">

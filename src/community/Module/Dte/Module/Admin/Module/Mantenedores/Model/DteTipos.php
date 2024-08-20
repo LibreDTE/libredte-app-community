@@ -45,7 +45,7 @@ class Model_DteTipos extends Model_Plural
     /**
      * Método que entrega el listado de tipos de documentos tributarios.
      */
-    public function getList($all = false)
+    public function getList($all = false): array
     {
         if ($all) {
             if (is_array($all)) {

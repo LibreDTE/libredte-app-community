@@ -40,7 +40,7 @@ class Model_ContribuyenteUsuario extends Model
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'Usuario del contribuyente',
             'verbose_name_plural' => 'Usuarios del contribuyente',
@@ -51,9 +51,9 @@ class Model_ContribuyenteUsuario extends Model
             'contribuyente' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Contribuyente',
                 'help_text' => 'Rol único tributario (RUT) del contribuyente. Para personas naturales será su rol único nacional (RUN).',
                 'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
@@ -62,9 +62,9 @@ class Model_ContribuyenteUsuario extends Model
             'usuario' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_Usuario::class,
-                'to_table' => 'usuario',
-                'to_field' => 'id',
+                'relation' => Model_Usuario::class,
+                'belongs_to' => 'usuario',
+                'related_field' => 'id',
                 'verbose_name' => 'Usuario',
                 'display' => '(usuario.usuario)',
                 'searchable' => 'id:integer|usuario:string|nombre:string|email:string',

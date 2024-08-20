@@ -38,26 +38,26 @@ class Model_DteGuia extends Model_Base_Libro
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
-            'verbose_name' => 'Guía de despacho emitida',
-            'verbose_name_plural' => 'Guías de despacho emitidas',
-            'db_table_comment' => 'Guías de despacho emitidas.',
-            'ordering' => ['periodo'],
+            'verbose_name' => 'Libro guías de despacho',
+            'verbose_name_plural' => 'Libros de guías de despacho',
+            'db_table_comment' => 'Libros de guías de despacho creados a partir de las guías de despacho emitidas por la empresa..',
+            'ordering' => ['-periodo'],
         ],
         'fields' => [
             'emisor' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Emisor',
                 'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
                 'searchable' => 'rut:integer|usuario:string|email:string',
             ],
             'periodo' => [
-                'type' => self::TYPE_INTEGER,
+                'type' => self::TYPE_YEAR_MONTH,
                 'primary_key' => true,
                 'verbose_name' => 'Periodo',
             ],
@@ -88,25 +88,17 @@ class Model_DteGuia extends Model_Base_Libro
                 'null' => true,
                 'blank' => true,
                 'max_length' => 100,
-                'verbose_name' => 'Revisión Estado',
-                'help_text' => 'Estado de la guía.',
+                'verbose_name' => 'Revisión del SII',
             ],
             'revision_detalle' => [
                 'type' => self::TYPE_TEXT,
                 'null' => true,
                 'blank' => true,
-                'verbose_name' => 'Revisión Detalle',
+                'verbose_name' => 'Detalle de la revisión',
                 'show_in_list' => false,
             ],
         ],
     ];
-
-    // // Comentario de la tabla en la base de datos
-    // public static $tableComment = '';
-
-    // public static $fkNamespace = array(
-    //     'Model_Contribuyente' => 'website\Dte'
-    // ); ///< Namespaces que utiliza esta clase
 
     public static $libro_cols = [
         'folio' => 'Folio',

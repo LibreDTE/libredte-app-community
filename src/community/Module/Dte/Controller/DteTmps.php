@@ -314,7 +314,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Procesar formulario.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             // armar emails a enviar
             $emails = [];
             if (!empty($_POST['emails'])) {
@@ -420,14 +420,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
             );
             return $emails;
         } catch (\Exception $e) {
-            return response()->json(
-                __('%(error_message)s',
-                    [
-                        'error_message' => $e->getMessage()
-                    ]
-                ),
-                500
-            );
+            return response()->json($e->getMessage(), 500);
         }
     }
 
@@ -497,14 +490,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
                 return response()->json($pdf);
             }
         } catch (\Exception $e) {
-            return response()->json(
-                __('%(error_message)s',
-                    [
-                        'error_message' => $e->getMessage()
-                    ]
-                ),
-                $e->getCode()
-            );
+            return response()->json($e->getMessage(), $e->getCode());
         }
     }
 
@@ -574,14 +560,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
                 return response()->json($escpos);
             }
         } catch (\Exception $e) {
-            return response()->json(
-                __('%(error_message)s',
-                    [
-                        'error_message' => $e->getMessage()
-                    ]
-                ),
-                $e->getCode()
-            );
+            return response()->json($e->getMessage(), $e->getCode());
         }
     }
 
@@ -950,8 +929,8 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
                 }
                 $Item = (new \website\Dte\Admin\Model_Itemes())->get(
                     $Emisor->rut,
-                    $d['CdgItem']['VlrCodigo'],
-                    !empty($d['CdgItem']['TpoCodigo']) ? $d['CdgItem']['TpoCodigo'] : null
+                    !empty($d['CdgItem']['TpoCodigo']) ? $d['CdgItem']['TpoCodigo'] : null,
+                    $d['CdgItem']['VlrCodigo']
                 );
                 if ($Item->exists()) {
                     $precio = $Item->getPrecio($fecha_calculo);
@@ -1147,7 +1126,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
         $this->set([
             'tipos_dte' => $Emisor->getDocumentosAutorizados(),
         ]);
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             $rest = new \sowerphp\core\Network_Http_Rest();
             $rest->setAuth($user->hash);
             $response = $rest->post(url('/api/dte/dte_tmps/buscar/'.$Emisor->rut), [

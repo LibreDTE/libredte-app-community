@@ -47,7 +47,7 @@ class Model_DteEmitido extends Model_Base_Envio
      *
      * @var array
      */
-    protected $meta = [
+    protected $metadata = [
         'model' => [
             'verbose_name' => 'DTE emitido',
             'verbose_name_plural' => 'DTE emitidos',
@@ -58,9 +58,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'emisor' => [
                 'type' => self::TYPE_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Emisor',
                 'help_text' => 'Rol único tributario (RUT) del emisor. Para personas naturales será su rol único nacional (RUN).',
                 'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
@@ -68,9 +68,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'dte' => [
                 'type' => self::TYPE_SMALL_INTEGER,
                 'primary_key' => true,
-                'foreign_key' => Model_DteTipo::class,
-                'to_table' => 'dte_tipo',
-                'to_field' => 'codigo',
+                'relation' => Model_DteTipo::class,
+                'belongs_to' => 'dte_tipo',
+                'related_field' => 'codigo',
                 'min_value' => 1,
                 'max_value' => 10000,
                 'verbose_name' => 'Dte',
@@ -111,9 +111,9 @@ class Model_DteEmitido extends Model_Base_Envio
             ],
             'receptor' => [
                 'type' => self::TYPE_INTEGER,
-                'foreign_key' => Model_Contribuyente::class,
-                'to_table' => 'contribuyente',
-                'to_field' => 'rut',
+                'relation' => Model_Contribuyente::class,
+                'belongs_to' => 'contribuyente',
+                'related_field' => 'rut',
                 'verbose_name' => 'Receptor',
                 'help_text' => 'Rol único tributario (RUT) del receptor. Para personas naturales será su rol único nacional (RUN).',
                 'display' => '(contribuyente.rut)"-"(contribuyente.dv)',
@@ -150,9 +150,9 @@ class Model_DteEmitido extends Model_Base_Envio
             ],
             'usuario' => [
                 'type' => self::TYPE_INTEGER,
-                'foreign_key' => Model_Usuario::class,
-                'to_table' => 'usuario',
-                'to_field' => 'id',
+                'relation' => Model_Usuario::class,
+                'belongs_to' => 'usuario',
+                'related_field' => 'id',
                 'verbose_name' => 'Usuario',
                 'display' => '(usuario.usuario)',
                 'searchable' => 'id:integer|usuario:string|nombre:string|email:string',

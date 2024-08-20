@@ -49,7 +49,7 @@ class Controller_ItemClasificaciones extends \sowerphp\autoload\Controller_Model
         }
         // Llamar al método padre.
         $this->forceSearch(['contribuyente' => $Contribuyente->rut]);
-        return parent::listar($page, $orderby, $order);
+        return parent::listar($request, $page, $orderby, $order);
     }
 
     /**
@@ -141,7 +141,7 @@ class Controller_ItemClasificaciones extends \sowerphp\autoload\Controller_Model
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
         // Procesar formulario.
-        if (isset($_POST['submit'])) {
+        if (!empty($_POST)) {
             // verificar que se haya podido subir el archivo con el libro
             if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
                 \sowerphp\core\Facade_Session_Message::error(

@@ -41,7 +41,7 @@ class Controller_Formatos extends \sowerphp\autoload\Controller
         if ($formato && !in_array($formato, array_keys($formatos))) {
             return redirect('/utilidades/formatos')
                 ->withError(
-                    __('Formato %(formato)s no está soportado.', 
+                    __('Formato %(formato)s no está soportado.',
                         [
                             'formato' => $formato
                         ]
@@ -54,7 +54,7 @@ class Controller_Formatos extends \sowerphp\autoload\Controller
             'formato' => $formato,
         ]);
         // procesar archivo de entrada y descargar
-        if (isset($_POST['submit']) && !$_FILES['archivo']['error']) {
+        if (!empty($_POST) && !$_FILES['archivo']['error']) {
             // convertir datos de entrada a JSON
             try {
                 $json = \sasco\LibreDTE\Sii\Dte\Formatos::toJSON(
@@ -62,13 +62,8 @@ class Controller_Formatos extends \sowerphp\autoload\Controller
                 );
             } catch (\Exception $e) {
                 return redirect($this->request->getRequestUriDecoded())
-                    ->withError(
-                        __('%(error_message)s', 
-                            [
-                                'error_message' => $e->getMessage()
-                            ]
-                        )
-                    );
+                    ->withError($e->getMessage())
+                ;
             }
             // descargar JSON
             $this->response->type('application/json', 'UTF-8');
