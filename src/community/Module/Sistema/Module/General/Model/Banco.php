@@ -42,7 +42,7 @@ class Model_Banco extends Model
         'model' => [
             'verbose_name' => 'Entidad bancaria',
             'verbose_name_plural' => 'Entidades bancarias',
-            'db_table_comment' => 'Entidades bancarias con su respectivo código SBIF.',
+            'db_table_comment' => 'Entidades bancarias de Chile con su respectivo código de la CMF (ex SBIF).',
             'ordering' => ['banco'],
         ],
         'fields' => [
@@ -51,7 +51,7 @@ class Model_Banco extends Model
                 'primary_key' => true,
                 'length' => 3,
                 'verbose_name' => 'Código',
-                'help_text' => 'Código de banco de la SBIF.',
+                'help_text' => 'Código asignado al banco por la CMF (ex SBIF).',
             ],
             'banco' => [
                 'type' => self::TYPE_STRING,
@@ -60,6 +60,17 @@ class Model_Banco extends Model
                 'help_text' => 'Nombre del banco.',
             ],
         ],
+        'form' => [
+            'layout' => [
+                [
+                    'rows' => [
+                        [
+                            'codigo', 'banco',
+                        ],
+                    ],
+                ]
+            ],
+        ]
     ];
 
 }

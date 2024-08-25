@@ -4724,7 +4724,7 @@
             "dist": {
                 "type": "path",
                 "url": "../sowerphp-framework",
-                "reference": "271dea597d36a2fd81712f5411455b65d56b199a"
+                "reference": "2eb78ddd4d2a413cf9b59ac3ff9a5ca359b472ab"
             },
             "require": {
                 "clue/graph": "~0.9.3",

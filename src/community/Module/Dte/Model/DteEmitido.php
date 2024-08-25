@@ -49,10 +49,9 @@ class Model_DteEmitido extends Model_Base_Envio
      */
     protected $metadata = [
         'model' => [
-            'verbose_name' => 'DTE emitido',
-            'verbose_name_plural' => 'DTE emitidos',
-            'db_table_comment' => 'DTE emitidos.',
-            'ordering' => ['dte'],
+            'verbose_name' => 'Documento emitido',
+            'verbose_name_plural' => 'Documentos emitidos',
+            'ordering' => ['-fecha', 'dte', 'folio'],
         ],
         'fields' => [
             'emisor' => [
@@ -266,43 +265,44 @@ class Model_DteEmitido extends Model_Base_Envio
     ]; ///< listado de ayudas disponibles para los tipos de estado del SII
 
     /**
-     * Constructor clase DTE emitido.
+     * Accessor para asignar un detalle cuando el estado de la revisión aun no
+     * está determinado.
+     *
+     * @return string|null
      */
-    public function __construct($emisor = null, $dte = null, $folio = null, $certificacion = null)
+    public function getRevisionDetalleAttribute(): ?string
     {
-        if (
-            $emisor !== null
-            && $dte !== null
-            && $folio !== null
-            && $certificacion !== null
-        ) {
-            // NOTE: Existen DTE usando folios muy grande en referencias.
-            // El atributo folio es un int4 (entero "normal").
-            // Actualmente en LibreDTE Edición Enterprise no existen documentos
-            // emitidos con un folio que requiera que sea tipo BIGINT, sin
-            // embargo se han visto referencias en DTE que tienen folios que
-            // si requerirían un BIGINT. No se ha visto una referencia real que
-            // requiera el cambio. Las referencias que se han visto son
-            // erronres de los usuarios al generar las referencias del documento.
-            // Por lo que si el folio excede el máximo de int4 simplemente se
-            // quita (asumiendo que es error) y se asigna con valor 0.
-            // TODO: migrar folios a BIGINT (cuando sea necesario).
-            if ($folio > 2147483647) {
-                $folio = 0;
-            }
-            // Llamar al constructor del modelo.
-            parent::__construct(
-                (int)$emisor,
-                (int)$dte,
-                (int)$folio,
-                (int)$certificacion
-            );
-            // El estado -11 es un estado especial del SII, se avisa
-            // en el detalle ya que no hay aún respuesta del SII.
-            if ($this->revision_estado == -11) {
-                $this->revision_detalle = 'Esperando respuesta de SII.';
-            }
+        if ($this->revision_estado == -11) {
+            return 'Esperando respuesta de SII.';
         }
+        $this->attributes['revision_detalle'] ?? null;
+    }
+
+    /**
+     * Manejo de caso con folio fuera de rango.
+     *
+     * Existen DTE usando folios muy grande en referencias. El atributo folio
+     * es un int4 (entero "normal"). Actualmente en LibreDTE Edición Enterprise
+     * no existen documentos emitidos con un folio que requiera que sea tipo
+     * BIGINT, sin embargo se han visto referencias en DTE que tienen folios
+     * que si requerirían un BIGINT. No se ha visto una referencia real que
+     * requiera el cambio. Las referencias que se han visto son errores de los
+     * usuarios al generar las referencias del documento. Por lo que si el
+     * folio excede el máximo de int4 simplemente se quita (asumiendo que es
+     * error del usuario) y se asigna con valor 0.
+     *
+     * @param array $id
+     * @param array $options
+     * @return stdClass|null
+     * @todo Migrar `folio` a BIGINT (cuando sea necesario).
+     */
+    protected function retrieve(array $id, array $options = []): ?\stdClass
+    {
+        $folio = $id[2] ?? 0;
+        if ($folio > 2147483647) {
+            $folio = 0;
+        }
+        return parent::retrieve($id, $options);
     }
 
     /**

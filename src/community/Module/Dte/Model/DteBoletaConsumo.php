@@ -39,9 +39,8 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
      */
     protected $metadata = [
         'model' => [
-            'verbose_name' => 'Consumo de folio',
-            'verbose_name_plural' => 'Consumos de folios',
-            'db_table_comment' => 'Consumo de folios.',
+            'verbose_name' => 'Consumo de folio RVD (ex RCOF)',
+            'verbose_name_plural' => 'Consumos de folios RVD (ex RCOF)',
             'ordering' => ['-dia'],
         ],
         'fields' => [
