@@ -37,22 +37,6 @@ permiten utilizar el proyecto, son los siguientes:
 Es obligación de quienes quieran usar el proyecto leer y aceptar por completo
 los [términos y condiciones de uso](https://www.libredte.cl/legal).
 
-Contribuir al proyecto
-----------------------
-
-Si deseas contribuir con el proyecto, especialmente resolviendo alguna de las
-[*issues* abiertas](https://github.com/LibreDTE/libredte-app-community/issues), debes:
-
-1. Hacer fork del proyecto en [GitHub](https://github.com/LibreDTE/libredte-app-community)
-2. Crear una *branch* para los cambios: git checkout -b nombre-branch
-3. Modificar código: git commit -am 'Se agrega...'
-4. Publicar cambios: git push origin nombre-branch
-5. Crear un *pull request* para unir la nueva *branch* con LibreDTE.
-
-**IMPORTANTE**: antes de hacer un *pull request* verificar que el código
-cumpla con los estándares [PSR-1](http://www.php-fig.org/psr/psr-1)
-y [PSR-2](http://www.php-fig.org/psr/psr-2).
-
 Ambiente DEV o QA (no producción)
 ---------------------------------
 
