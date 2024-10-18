@@ -23,7 +23,7 @@
 
 namespace website\Dte\Admin;
 
-use \sowerphp\autoload\Model_Plural;
+use sowerphp\autoload\Model_Plural;
 
 /**
  * Modelo plural de la tabla "dte_folio" de la base de datos.

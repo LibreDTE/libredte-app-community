@@ -23,12 +23,12 @@
 
 namespace website\Dte;
 
-use \sowerphp\autoload\Model;
-use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
-use \sowerphp\app\Sistema\General\Model_MonedaCambio;
-use \website\Dte\Admin\Mantenedores\Model_DteTipo;
-use \website\Dte\Admin\Mantenedores\Model_DteTipos;
-use \website\Dte\Model_Contribuyente;
+use sowerphp\autoload\Model;
+use sowerphp\app\Sistema\Usuarios\Model_Usuario;
+use sowerphp\app\Sistema\General\Model_MonedaCambio;
+use website\Dte\Admin\Mantenedores\Model_DteTipo;
+use website\Dte\Admin\Mantenedores\Model_DteTipos;
+use website\Dte\Model_Contribuyente;
 
 /**
  * Modelo singular de la tabla "dte_tmp" de la base de datos.

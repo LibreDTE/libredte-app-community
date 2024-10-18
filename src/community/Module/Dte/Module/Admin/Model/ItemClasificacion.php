@@ -23,8 +23,8 @@
 
 namespace website\Dte\Admin;
 
-use \sowerphp\autoload\Model;
-use \website\Dte\Model_Contribuyente;
+use sowerphp\autoload\Model;
+use website\Dte\Model_Contribuyente;
 
 /**
  * Modelo singular de la tabla "item_clasificacion" de la base de datos.

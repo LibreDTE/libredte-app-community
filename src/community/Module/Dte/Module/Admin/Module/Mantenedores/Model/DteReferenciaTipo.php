@@ -23,7 +23,7 @@
 
 namespace website\Dte\Admin\Mantenedores;
 
-use \sowerphp\autoload\Model;
+use sowerphp\autoload\Model;
 
 /**
  * Modelo singular de la tabla "dte_referencia_tipo" de la base de datos.

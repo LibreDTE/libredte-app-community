@@ -23,7 +23,7 @@
 
 namespace website\Dte;
 
-use \website\Dte\Model_Contribuyentes;
+use website\Dte\Model_Contribuyentes;
 
 /**
  * Modelo singular de la tabla "dte_boleta_consumo" de la base de datos.

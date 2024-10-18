@@ -23,10 +23,10 @@
 
 namespace website\Dte;
 
-use \website\Dte\Admin\Mantenedores\Model_DteTipos;
-use \website\Dte\Admin\Mantenedores\Model_IvaNoRecuperables;
-use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
-use \sowerphp\core\Network_Request as Request;
+use website\Dte\Admin\Mantenedores\Model_DteTipos;
+use website\Dte\Admin\Mantenedores\Model_IvaNoRecuperables;
+use website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
+use sowerphp\core\Network_Request as Request;
 
 /**
  * Controlador de dte recibidos.

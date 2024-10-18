@@ -23,8 +23,8 @@
 
 namespace website\Dte\Admin;
 
-use \sowerphp\autoload\Model;
-use \website\Dte\Admin\Model_DteFolio;
+use sowerphp\autoload\Model;
+use website\Dte\Admin\Model_DteFolio;
 
 /**
  * Modelo singular de la tabla "dte_caf" de la base de datos.

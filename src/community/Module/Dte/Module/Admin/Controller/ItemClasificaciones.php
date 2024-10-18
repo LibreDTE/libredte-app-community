@@ -23,7 +23,7 @@
 
 namespace website\Dte\Admin;
 
-use \sowerphp\core\Network_Request as Request;
+use sowerphp\core\Network_Request as Request;
 
 /**
  * Clase para el controlador asociado a la tabla item_clasificacion de la base de

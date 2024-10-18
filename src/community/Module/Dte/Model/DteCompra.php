@@ -23,8 +23,8 @@
 
 namespace website\Dte;
 
-use \website\Dte\Admin\Mantenedores\Model_DteTipos;
-use \website\Dte\Model_Contribuyente;
+use website\Dte\Admin\Mantenedores\Model_DteTipos;
+use website\Dte\Model_Contribuyente;
 
 /**
  * Modelo singular de la tabla "dte_compra" de la base de datos.

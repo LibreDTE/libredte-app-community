@@ -23,7 +23,7 @@
 
 namespace website\Honorarios;
 
-use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+use sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
 
 /**
  * Clase para el controlador asociado a la tabla boleta_tercero de la base de

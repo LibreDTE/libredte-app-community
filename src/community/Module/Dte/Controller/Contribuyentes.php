@@ -23,13 +23,13 @@
 
 namespace website\Dte;
 
-use \sowerphp\core\Network_Request as Request;
-use \sowerphp\core\Facade_Session_Message as SessionMessage;
-use \sowerphp\general\Utility_File;
-use \sowerphp\general\Utility_Image;
-use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
-use \website\Sistema\General\Model_ActividadEconomicas;
-use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+use sowerphp\core\Network_Request as Request;
+use sowerphp\core\Facade_Session_Message as SessionMessage;
+use sowerphp\general\Utility_File;
+use sowerphp\general\Utility_Image;
+use website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
+use website\Sistema\General\Model_ActividadEconomicas;
+use sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
 
 /**
  * Clase para el controlador asociado a la tabla contribuyente de la base de

@@ -23,7 +23,7 @@
 
 namespace website\Dte;
 
-use \sowerphp\autoload\Model;
+use sowerphp\autoload\Model;
 
 /**
  * Clase base para para el modelo singular de documentos del SII.

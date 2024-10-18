@@ -23,7 +23,7 @@
 
 namespace website\Dte;
 
-use \sowerphp\core\Network_Request as Request;
+use sowerphp\core\Network_Request as Request;
 
 /**
  * Controlador de libro de guías de despacho.
@@ -57,7 +57,7 @@ class Controller_DteGuias extends Controller_Base_Libros
         if ($periodo >= date('Ym')) {
             return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()))
                 ->withError(
-                    __('No puede enviar el libro de guías del período %(periodo)s, debe esperar al mes siguiente del período.', 
+                    __('No puede enviar el libro de guías del período %(periodo)s, debe esperar al mes siguiente del período.',
                         [
                             'periodo' => $periodo
                         ]
@@ -73,7 +73,7 @@ class Controller_DteGuias extends Controller_Base_Libros
         if (!$Firma) {
             return redirect('/dte/admin/firma_electronicas/agregar')
                 ->withError(
-                    __('No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%(url)s).', 
+                    __('No existe una firma electrónica asociada a la empresa que se pueda utilizar para usar esta opción. Antes de intentarlo nuevamente, debe [subir una firma electrónica vigente](%(url)s).',
                         [
                             'url' => url('/dte/admin/firma_electronicas/agregar')
                         ]
@@ -116,7 +116,7 @@ class Controller_DteGuias extends Controller_Base_Libros
         if (!$xml) {
             return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()))
                 ->withError(
-                    __('No fue posible generar el libro de guías<br/>%(logs)s', 
+                    __('No fue posible generar el libro de guías<br/>%(logs)s',
                         [
                             'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
                         ]
@@ -128,7 +128,7 @@ class Controller_DteGuias extends Controller_Base_Libros
         if (!$track_id) {
             return redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()))
                 ->withError(
-                    __('No fue posible enviar el libro de guías al SII<br/>%(logs)s', 
+                    __('No fue posible enviar el libro de guías al SII<br/>%(logs)s',
                         [
                             'logs' => implode('<br/>', \sasco\LibreDTE\Log::readAll())
                         ]

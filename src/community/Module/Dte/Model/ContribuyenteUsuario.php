@@ -23,9 +23,9 @@
 
 namespace website\Dte;
 
-use \sowerphp\autoload\Model;
-use \website\Dte\Model_Contribuyente;
-use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
+use sowerphp\autoload\Model;
+use website\Dte\Model_Contribuyente;
+use sowerphp\app\Sistema\Usuarios\Model_Usuario;
 
 /**
  * Modelo singular de la tabla "contribuyente_usuario" de la base de datos.

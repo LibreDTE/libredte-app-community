@@ -23,8 +23,8 @@
 
 namespace website\Dte\Admin;
 
-use \sowerphp\autoload\Model;
-use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
+use sowerphp\autoload\Model;
+use sowerphp\app\Sistema\Usuarios\Model_Usuario;
 
 /**
  * Modelo singular de la tabla "firma_electronica" de la base de datos.

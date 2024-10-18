@@ -23,7 +23,7 @@
 
 namespace website\Honorarios;
 
-use \sowerphp\autoload\Model;
+use sowerphp\autoload\Model;
 use website\Dte\Model_Contribuyente;
 
 /**

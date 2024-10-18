@@ -23,7 +23,7 @@
 
 namespace website\Dte;
 
-use \sowerphp\autoload\Model_Plural;
+use sowerphp\autoload\Model_Plural;
 
 /**
  * Modelo plural de la tabla "dte_compra" de la base de datos.
@@ -32,7 +32,7 @@ use \sowerphp\autoload\Model_Plural;
  */
 class Model_DteCompras extends Model_Plural
 {
-    
+
     /**
      * Método que indica si el libro para cierto periodo está o no generado.
      */

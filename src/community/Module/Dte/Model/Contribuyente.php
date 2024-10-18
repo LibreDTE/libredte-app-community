@@ -23,21 +23,21 @@
 
 namespace website\Dte;
 
-use \stdClass;
-use \sowerphp\autoload\Model;
-use \sowerphp\core\Network_Email;
-use \sowerphp\core\Network_Email_Imap;
-use \sowerphp\core\Network_Http_Rest;
-use \sowerphp\core\Utility_Array;
-use \sowerphp\app\Utility_Apps;
-use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna;
-use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
-use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
-use \sowerphp\app\Sistema\Usuarios\Model_Usuarios;
-use \sowerphp\general\Utility_Date;
-use \sowerphp\general\Utility_Mapas_Google;
-use \website\Dte\Admin\Model_DteFolio;
-use \website\Sistema\General\Model_ActividadEconomica;
+use stdClass;
+use sowerphp\autoload\Model;
+use sowerphp\core\Network_Email;
+use sowerphp\core\Network_Email_Imap;
+use sowerphp\core\Network_Http_Rest;
+use sowerphp\core\Utility_Array;
+use sowerphp\app\Utility_Apps;
+use sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna;
+use sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+use sowerphp\app\Sistema\Usuarios\Model_Usuario;
+use sowerphp\app\Sistema\Usuarios\Model_Usuarios;
+use sowerphp\general\Utility_Date;
+use sowerphp\general\Utility_Mapas_Google;
+use website\Dte\Admin\Model_DteFolio;
+use website\Sistema\General\Model_ActividadEconomica;
 
 /**
  * Modelo singular de la tabla "contribuyente" de la base de datos.

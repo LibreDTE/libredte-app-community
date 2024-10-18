@@ -23,9 +23,9 @@
 
 namespace website\Dte;
 
-use \sowerphp\core\Facade_Session_Message as SessionMessage;
-use \sowerphp\core\Network_Request as Request;
-use \website\Dte\Admin\Mantenedores\Model_DteTipo;
+use sowerphp\core\Facade_Session_Message as SessionMessage;
+use sowerphp\core\Network_Request as Request;
+use website\Dte\Admin\Mantenedores\Model_DteTipo;
 
 /**
  * Controlador base para libros.
@@ -69,7 +69,7 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
         if (!$n_detalles && !$Libro->exists()) {
             return redirect('/dte/'.$this->request->getRouteConfig()['controller'])
                 ->withError(
-                    __('No hay documentos ni libro del período %(periodo)s.', 
+                    __('No hay documentos ni libro del período %(periodo)s.',
                         [
                             'periodo' => $periodo
                         ]
@@ -116,7 +116,7 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
         if (!$detalle) {
             return redirect('/dte/'.$this->request->getRouteConfig()['controller'])
                 ->withError(
-                    __('No hay documentos en el período %(periodo)s.', 
+                    __('No hay documentos en el período %(periodo)s.',
                         [
                             'periodo' => $periodo
                         ]
@@ -150,7 +150,7 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
         if (!$Libro->exists()) {
             return redirect(str_replace('pdf', 'ver', $this->request->getRequestUriDecoded()))
                 ->withError(
-                    __('Aún no se ha generado el XML del período %(periodo)s. Debe generar el XML antes de poder descargar el PDF del período.', 
+                    __('Aún no se ha generado el XML del período %(periodo)s. Debe generar el XML antes de poder descargar el PDF del período.',
                         [
                             'periodo' => $periodo
                         ]
@@ -196,7 +196,7 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
         if (!$Libro->exists()) {
             return redirect(str_replace('xml', 'ver', $this->request->getRequestUriDecoded()))
                 ->withError(
-                    __('Aun no se ha generado el XML del período %(periodo)s.', 
+                    __('Aun no se ha generado el XML del período %(periodo)s.',
                         [
                             'periodo' => $periodo
                         ]
@@ -236,7 +236,7 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
         if (!$Libro->exists()) {
             return redirect(str_replace('enviar_rectificacion', 'ver', $this->request->getRequestUriDecoded()))
                 ->withError(
-                    __('No ha enviado el libro del período %(periodo)s al SII, no puede rectificar. Debe hacer un envío normal del libro.', 
+                    __('No ha enviado el libro del período %(periodo)s al SII, no puede rectificar. Debe hacer un envío normal del libro.',
                         [
                             'periodo' => $periodo
                         ]
@@ -286,7 +286,7 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
         if (!$Libro->exists()) {
             return redirect(str_replace('solicitar_revision', 'ver', $this->request->getRequestUriDecoded()))
                 ->withError(
-                    __('Aún no se ha generado el libro del período %(periodo)s.', 
+                    __('Aún no se ha generado el libro del período %(periodo)s.',
                         [
                             'periodo' => $periodo
                         ]
@@ -343,7 +343,7 @@ abstract class Controller_Base_Libros extends \sowerphp\autoload\Controller
         if (!$Libro->exists()) {
             return redirect(str_replace('actualizar_estado', 'ver', $this->request->getRequestUriDecoded()))
                 ->withError(
-                    __('Aún no se ha generado el libro del período %(periodo)s.', 
+                    __('Aún no se ha generado el libro del período %(periodo)s.',
                         [
                             'periodo' => $periodo
                         ]

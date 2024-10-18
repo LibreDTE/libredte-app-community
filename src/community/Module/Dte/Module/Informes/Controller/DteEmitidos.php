@@ -23,7 +23,7 @@
 
 namespace website\Dte\Informes;
 
-use \website\Dte\Model_DteEmitidos;
+use website\Dte\Model_DteEmitidos;
 
 /**
  * Clase para informes de los documentos emitidos.

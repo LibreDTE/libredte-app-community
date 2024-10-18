@@ -23,7 +23,7 @@
 
 namespace website\Dte;
 
-use \sowerphp\core\Network_Request as Request;
+use sowerphp\core\Network_Request as Request;
 
 /**
  * Clase para todas las acciones asociadas a documentos (incluyendo API).

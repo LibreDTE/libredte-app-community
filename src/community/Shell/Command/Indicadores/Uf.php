@@ -23,7 +23,7 @@
 
 namespace website;
 
-use \sowerphp\app\Sistema\General\Model_MonedaCambio;
+use sowerphp\app\Sistema\General\Model_MonedaCambio;
 
 /**
  * Obtiene los valores de la UF para un año determinado.

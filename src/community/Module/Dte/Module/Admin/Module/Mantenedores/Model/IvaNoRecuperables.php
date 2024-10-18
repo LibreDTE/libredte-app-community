@@ -23,7 +23,7 @@
 
 namespace website\Dte\Admin\Mantenedores;
 
-use \sowerphp\autoload\Model_Plural;
+use sowerphp\autoload\Model_Plural;
 
 /**
  * Modelo plural de la tabla "iva_no_recuperable" de la base de datos.

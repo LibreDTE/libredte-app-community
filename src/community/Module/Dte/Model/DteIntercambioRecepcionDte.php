@@ -23,9 +23,9 @@
 
 namespace website\Dte;
 
-use \sowerphp\autoload\Model;
-use \website\Dte\Model_DteEmitido;
-use \website\Dte\Model_DteIntercambioRecepcion;
+use sowerphp\autoload\Model;
+use website\Dte\Model_DteEmitido;
+use website\Dte\Model_DteIntercambioRecepcion;
 
 /**
  * Modelo singular de la tabla "dte_intercambio_recepcion_dte" de la base de datos.

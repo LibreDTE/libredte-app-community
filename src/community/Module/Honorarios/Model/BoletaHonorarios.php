@@ -23,7 +23,7 @@
 
 namespace website\Honorarios;
 
-use \sowerphp\autoload\Model_Plural;
+use sowerphp\autoload\Model_Plural;
 
 /**
  * Modelo plural de la tabla "boleta_honorario" de la base de datos.

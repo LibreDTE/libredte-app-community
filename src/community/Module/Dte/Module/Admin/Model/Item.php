@@ -23,11 +23,11 @@
 
 namespace website\Dte\Admin;
 
-use \sowerphp\autoload\Model;
-use \sowerphp\app\Sistema\General\Model_MonedaCambios;
-use \website\Dte\Model_Contribuyente;
-use \website\Dte\Admin\Model_ItemClasificacion;
-use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicional;
+use sowerphp\autoload\Model;
+use sowerphp\app\Sistema\General\Model_MonedaCambios;
+use website\Dte\Model_Contribuyente;
+use website\Dte\Admin\Model_ItemClasificacion;
+use website\Dte\Admin\Mantenedores\Model_ImpuestoAdicional;
 
 /**
  * Modelo singular de la tabla "item" de la base de datos.

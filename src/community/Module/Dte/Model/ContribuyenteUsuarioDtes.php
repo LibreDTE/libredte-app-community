@@ -23,7 +23,7 @@
 
 namespace website\Dte;
 
-use \sowerphp\autoload\Model_Plural;
+use sowerphp\autoload\Model_Plural;
 
 /**
  * Modelo plural de la tabla "contribuyente_usuario_dte" de la base de datos.

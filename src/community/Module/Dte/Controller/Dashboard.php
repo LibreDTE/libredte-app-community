@@ -23,7 +23,7 @@
 
 namespace website\Dte;
 
-use \sowerphp\core\Network_Request as Request;
+use sowerphp\core\Network_Request as Request;
 
 /**
  * Clase para el Dashboard del módulo de facturación.

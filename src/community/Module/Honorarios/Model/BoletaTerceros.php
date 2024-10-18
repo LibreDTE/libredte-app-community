@@ -23,8 +23,8 @@
 
 namespace website\Honorarios;
 
-use \sowerphp\autoload\Model_Plural;
-use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+use sowerphp\autoload\Model_Plural;
+use sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
 
 /**
  * Modelo plural de la tabla "boleta_tercero" de la base de datos.

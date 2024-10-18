@@ -23,7 +23,7 @@
 
 namespace website\Sistema\General;
 
-use \sowerphp\autoload\Model_Plural;
+use sowerphp\autoload\Model_Plural;
 
 /**
  * Clase para mapear la tabla banco de la base de datos.

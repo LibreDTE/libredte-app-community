@@ -23,7 +23,7 @@
 
 namespace website\Dte\Admin\Mantenedores;
 
-use \sowerphp\autoload\Model_Plural;
+use sowerphp\autoload\Model_Plural;
 
 /**
  * Modelo plural de la tabla "impuesto_adicional" de la base de datos.

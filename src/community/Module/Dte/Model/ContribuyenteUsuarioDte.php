@@ -23,10 +23,10 @@
 
 namespace website\Dte;
 
-use \sowerphp\autoload\Model;
-use \website\Dte\Model_Contribuyente;
-use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
-use \website\Dte\Admin\Mantenedores\Model_DteTipo;
+use sowerphp\autoload\Model;
+use website\Dte\Model_Contribuyente;
+use sowerphp\app\Sistema\Usuarios\Model_Usuario;
+use website\Dte\Admin\Mantenedores\Model_DteTipo;
 
 /**
  * Modelo singular de la tabla "contribuyente_usuario_dte" de la base de datos.

@@ -23,7 +23,7 @@
 
 namespace website\Dte;
 
-use \sowerphp\autoload\Model_Plural;
+use sowerphp\autoload\Model_Plural;
 
 /**
  * Modelo plural de la tabla "dte_boleta_consumo" de la base de datos.

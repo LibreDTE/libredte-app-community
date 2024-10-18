@@ -23,7 +23,7 @@
 
 namespace website\Dte\Informes;
 
-use \sowerphp\core\Network_Request as Request;
+use sowerphp\core\Network_Request as Request;
 
 /**
  * Clase para informes de los despachos asociados al contribuyente.

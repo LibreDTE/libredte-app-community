@@ -23,7 +23,7 @@
 
 namespace website\Dte;
 
-use \website\Dte\Model_Contribuyente;
+use website\Dte\Model_Contribuyente;
 
 /**
  * Modelo singular de la tabla "dte_guia" de la base de datos.

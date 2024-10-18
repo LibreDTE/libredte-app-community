@@ -23,7 +23,7 @@
 
 namespace website\Dte;
 
-use \sowerphp\autoload\Model_Plural;
+use sowerphp\autoload\Model_Plural;
 
 /**
  * Modelo plural de la tabla "dte_recibido" de la base de datos.
@@ -32,7 +32,7 @@ use \sowerphp\autoload\Model_Plural;
  */
 class Model_DteRecibidos extends Model_Plural
 {
-    
+
     /**
      * Método que entrega el listado de documentos que tienen compras de
      * activos fijos.

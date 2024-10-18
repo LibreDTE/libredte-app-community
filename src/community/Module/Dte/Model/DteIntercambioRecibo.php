@@ -23,8 +23,8 @@
 
 namespace website\Dte;
 
-use \sowerphp\autoload\Model;
-use \website\Dte\Model_Contribuyente;
+use sowerphp\autoload\Model;
+use website\Dte\Model_Contribuyente;
 
 /**
  * Modelo singular de la tabla "dte_intercambio_recibo" de la base de datos.

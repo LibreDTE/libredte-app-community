@@ -23,7 +23,7 @@
 
 namespace website;
 
-use \sowerphp\core\Interface_Service;
+use sowerphp\core\Interface_Service;
 
 /**
  * Servicio para trabajar con API Gateway.

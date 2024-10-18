@@ -23,9 +23,9 @@
 
 namespace website\Dte;
 
-use \website\Dte\Admin\Mantenedores\Model_DteTipos;
+use website\Dte\Admin\Mantenedores\Model_DteTipos;
 
-use \sowerphp\core\Network_Request as Request;
+use sowerphp\core\Network_Request as Request;
 
 /**
  * Controlador de ventas.

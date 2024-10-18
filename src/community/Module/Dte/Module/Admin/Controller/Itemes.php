@@ -23,10 +23,10 @@
 
 namespace website\Dte\Admin;
 
-use \sowerphp\autoload\Controller_Model;
-use \sowerphp\core\Network_Request as Request;
-use \sasco\LibreDTE\Sii\ImpuestosAdicionales;
-use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
+use sowerphp\autoload\Controller_Model;
+use sowerphp\core\Network_Request as Request;
+use sasco\LibreDTE\Sii\ImpuestosAdicionales;
+use website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
 
 /**
  * Clase para las acciones asociadas a items.

@@ -23,7 +23,7 @@
 
 namespace website\Dte;
 
-use \sowerphp\core\Network_Request as Request;
+use sowerphp\core\Network_Request as Request;
 
 /**
  * Clase para las acciones asociadas al libro de boletas electrónicas.

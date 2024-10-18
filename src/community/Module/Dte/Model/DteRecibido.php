@@ -24,13 +24,13 @@
 namespace website\Dte;
 
 use stdClass;
-use \sowerphp\autoload\Model;
-use \sowerphp\core\Utility_Array;
-use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
-use \website\Dte\Admin\Mantenedores\Model_DteTipo;
-use \website\Dte\Admin\Mantenedores\Model_DteTipos;
-use \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos;
-use \website\Dte\Model_Contribuyente;
+use sowerphp\autoload\Model;
+use sowerphp\core\Utility_Array;
+use sowerphp\app\Sistema\Usuarios\Model_Usuario;
+use website\Dte\Admin\Mantenedores\Model_DteTipo;
+use website\Dte\Admin\Mantenedores\Model_DteTipos;
+use website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos;
+use website\Dte\Model_Contribuyente;
 
 /**
  * Modelo singular de la tabla "dte_recibido" de la base de datos.

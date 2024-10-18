@@ -23,10 +23,10 @@
 
 namespace website\Utilidades;
 
-use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna;
-use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
-use \sowerphp\core\Network_Request as Request;
-use \website\Sistema\General\Model_ActividadEconomicas;
+use sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna;
+use sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+use sowerphp\core\Network_Request as Request;
+use website\Sistema\General\Model_ActividadEconomicas;
 
 /**
  * Controlador para utilidades asociadas a documentos tributarios electrónicos (DTE).

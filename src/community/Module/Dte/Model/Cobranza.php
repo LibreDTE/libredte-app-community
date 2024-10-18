@@ -23,9 +23,9 @@
 
 namespace website\Dte;
 
-use \sowerphp\autoload\Model;
-use \website\Dte\Model_DteEmitido;
-use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
+use sowerphp\autoload\Model;
+use website\Dte\Model_DteEmitido;
+use sowerphp\app\Sistema\Usuarios\Model_Usuario;
 
 /**
  * Modelo singular de la tabla "cobranza" de la base de datos.

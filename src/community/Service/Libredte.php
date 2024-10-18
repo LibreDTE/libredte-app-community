@@ -24,15 +24,15 @@
 namespace website;
 
 use Illuminate\Http\Client\Response;
-use \sowerphp\core\Interface_Service;
-use \sowerphp\core\Service_Config;
-use \sowerphp\core\Service_Model;
-use \sowerphp\core\Service_Http_Client;
-use \sowerphp\core\Service_Http_Session;
-use \sowerphp\core\Service_Http_Redirect;
-use \sowerphp\core\Network_Request as Request;
-use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
-use \website\Dte\Model_Contribuyente;
+use sowerphp\core\Interface_Service;
+use sowerphp\core\Service_Config;
+use sowerphp\core\Service_Model;
+use sowerphp\core\Service_Http_Client;
+use sowerphp\core\Service_Http_Session;
+use sowerphp\core\Service_Http_Redirect;
+use sowerphp\core\Network_Request as Request;
+use sowerphp\app\Sistema\Usuarios\Model_Usuario;
+use website\Dte\Model_Contribuyente;
 
 /**
  * Servicio para trabajar con LibreDTE.

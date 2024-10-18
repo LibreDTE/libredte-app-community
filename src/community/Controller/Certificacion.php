@@ -23,7 +23,7 @@
 
 namespace website;
 
-use \sowerphp\core\Network_Request as Request;
+use sowerphp\core\Network_Request as Request;
 
 /**
  * Controlador para el proceso de certificación ante el SII.

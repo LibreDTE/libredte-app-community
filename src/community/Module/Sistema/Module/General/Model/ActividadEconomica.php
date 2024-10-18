@@ -23,7 +23,7 @@
 
 namespace website\Sistema\General;
 
-use \sowerphp\autoload\Model;
+use sowerphp\autoload\Model;
 
 /**
  * Modelo singular de la tabla "actividad_economica" de la base de datos.

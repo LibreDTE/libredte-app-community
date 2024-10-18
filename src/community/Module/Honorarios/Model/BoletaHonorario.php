@@ -23,8 +23,8 @@
 
 namespace website\Honorarios;
 
-use \sowerphp\autoload\Model;
-use \website\Dte\Model_Contribuyente;
+use sowerphp\autoload\Model;
+use website\Dte\Model_Contribuyente;
 
 /**
  * Modelo singular de la tabla "boleta_honorario" de la base de datos.

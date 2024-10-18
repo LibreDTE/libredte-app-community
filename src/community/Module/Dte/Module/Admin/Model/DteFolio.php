@@ -23,9 +23,9 @@
 
 namespace website\Dte\Admin;
 
-use \sowerphp\autoload\Model;
-use \website\Dte\Admin\Mantenedores\Model_DteTipo;
-use \website\Dte\Model_Contribuyente;
+use sowerphp\autoload\Model;
+use website\Dte\Admin\Mantenedores\Model_DteTipo;
+use website\Dte\Model_Contribuyente;
 
 /**
  * Modelo singular de la tabla "dte_folio" de la base de datos.

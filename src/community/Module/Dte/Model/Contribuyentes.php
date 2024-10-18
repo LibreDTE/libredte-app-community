@@ -23,9 +23,9 @@
 
 namespace website\Dte;
 
-use \sowerphp\autoload\Model_Plural;
-use \sowerphp\app\Utility_Rut;
-use \website\Sistema\General\Model_ActividadEconomica;
+use sowerphp\autoload\Model_Plural;
+use sowerphp\app\Utility_Rut;
+use website\Sistema\General\Model_ActividadEconomica;
 
 /**
  * Modelo plural de la tabla "contribuyente" de la base de datos.

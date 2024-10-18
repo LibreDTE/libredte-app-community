@@ -23,16 +23,16 @@
 
 namespace website\Dte;
 
-use \sowerphp\core\Network_Http_Rest;
-use \sowerphp\core\Utility_Array;
-use \sowerphp\general\Utility_Date;
-use \sowerphp\app\Sistema\General\Model_MonedaCambio;
+use sowerphp\core\Network_Http_Rest;
+use sowerphp\core\Utility_Array;
+use sowerphp\general\Utility_Date;
+use sowerphp\app\Sistema\General\Model_MonedaCambio;
 use sowerphp\app\Sistema\Usuarios\Model_Usuario;
-use \website\Dte\Admin\Model_DteFolio;
-use \website\Dte\Admin\Mantenedores\Model_DteTipo;
-use \website\Dte\Admin\Mantenedores\Model_DteTipos;
-use \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos;
-use \website\Dte\Model_Contribuyente;
+use website\Dte\Admin\Model_DteFolio;
+use website\Dte\Admin\Mantenedores\Model_DteTipo;
+use website\Dte\Admin\Mantenedores\Model_DteTipos;
+use website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos;
+use website\Dte\Model_Contribuyente;
 
  /**
  * Modelo singular de la tabla "dte_emitido" de la base de datos.
@@ -2034,6 +2034,7 @@ class Model_DteEmitido extends Model_Base_Envio
                 );
             }
         }
+        return null;
     }
 
     /**

@@ -23,7 +23,7 @@
 
 namespace website\Sistema\General;
 
-use \sowerphp\autoload\Model_Plural;
+use sowerphp\autoload\Model_Plural;
 
 /**
  * Modelo plural de la tabla "actividad_economica" de la base de datos.

@@ -23,9 +23,9 @@
 
 namespace website\Dte;
 
-use \sowerphp\autoload\Model;
-use \website\Dte\Model_Contribuyente;
-use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+use sowerphp\autoload\Model;
+use website\Dte\Model_Contribuyente;
+use sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
 use sowerphp\app\Sistema\Usuarios\Model_Usuario;
 
 /**
