@@ -1,3 +1,5 @@
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FLibreDTE%2Flibredte-app-community.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FLibreDTE%2Flibredte-app-community?ref=badge_shield)
+
 LibreDTE: Aplicación Web - Edición Comunidad
 ============================================
 
@@ -39,6 +41,9 @@ los [términos y condiciones de uso](https://www.libredte.cl/legal).
 
 Ambiente DEV o QA (no producción)
 ---------------------------------
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FLibreDTE%2Flibredte-app-community.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FLibreDTE%2Flibredte-app-community?ref=badge_large)
 
 ### Instalación
 
