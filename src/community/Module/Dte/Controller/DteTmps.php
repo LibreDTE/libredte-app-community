@@ -41,7 +41,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que muestra los documentos temporales disponibles.
+     * Muestra los documentos temporales disponibles.
      */
     public function listar(Request $request, $pagina = 1)
     {
@@ -129,7 +129,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que genera la cotización en PDF del DTE.
+     * Genera la cotización en PDF del DTE.
      */
     public function cotizacion($receptor, $dte, $codigo, $emisor = null)
     {
@@ -193,7 +193,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que genera la previsualización del PDF del DTE.
+     * Genera la previsualización del PDF del DTE.
      */
     public function pdf(Request $request, $receptor, $dte, $codigo, $disposition = 'attachment')
     {
@@ -565,7 +565,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que genera la previsualización del XML del DTE.
+     * Genera la previsualización del XML del DTE.
      */
     public function xml($receptor, $dte, $codigo)
     {
@@ -632,7 +632,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que entrega el JSON del documento temporal.
+     * Entrega el JSON del documento temporal.
      */
     public function json($receptor, $dte, $codigo)
     {
@@ -659,7 +659,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que elimina todos los documentos temporales del emisor.
+     * Elimina todos los documentos temporales del emisor.
      */
     public function eliminar_masivo(Request $request)
     {
@@ -698,7 +698,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que elimina un documento temporal.
+     * Elimina un documento temporal.
      */
     public function eliminar(Request $request, ...$pk)
     {
@@ -796,7 +796,7 @@ class Controller_DteTmps extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que actualiza un documento temporal.
+     * Actualiza un documento temporal.
      */
     public function actualizar(Request $request, $receptor, $dte, $codigo, $fecha = null, $actualizar_precios = true)
     {

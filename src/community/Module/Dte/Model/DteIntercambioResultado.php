@@ -101,7 +101,7 @@ class Model_DteIntercambioResultado extends Model
     ];
 
     /**
-     * Método que guarda el XML del Resultado de un intercambio.
+     * Guarda el XML del Resultado de un intercambio.
      */
     public function saveXML($Emisor, $xml)
     {

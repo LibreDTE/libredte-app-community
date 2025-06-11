@@ -96,7 +96,7 @@ class Model_DteCaf extends Model
     ];
 
     /**
-     * Método que entrega el objeto del contribuyente asociado al mantenedor de folios.
+     * Entrega el objeto del contribuyente asociado al mantenedor de folios.
      */
     public function getEmisor()
     {
@@ -104,7 +104,7 @@ class Model_DteCaf extends Model
     }
 
     /**
-     * Método que entrega el objeto del CAF.
+     * Entrega el objeto del CAF.
      */
     public function getCAF()
     {
@@ -124,7 +124,7 @@ class Model_DteCaf extends Model
     }
 
     /**
-     * Método que entrega el XML del archivo CAF desencriptado.
+     * Entrega el XML del archivo CAF desencriptado.
      */
     public function getXML()
     {
@@ -133,7 +133,7 @@ class Model_DteCaf extends Model
     }
 
     /**
-     * Método que entrega los folios en SII con cierto estado
+     * Entrega los folios en SII con cierto estado
      * @param estado String recibidos, anulados o pendientes.
      */
     private function getFoliosByEstadoSII($estado)
@@ -163,7 +163,7 @@ class Model_DteCaf extends Model
     }
 
     /**
-     * Método que entrega los folios en SII con estado recibidos.
+     * Entrega los folios en SII con estado recibidos.
      */
     public function getFoliosRecibidos()
     {
@@ -171,7 +171,7 @@ class Model_DteCaf extends Model
     }
 
     /**
-     * Método que entrega los folios en SII con estado anulados.
+     * Entrega los folios en SII con estado anulados.
      */
     public function getFoliosAnulados()
     {
@@ -179,7 +179,7 @@ class Model_DteCaf extends Model
     }
 
     /**
-     * Método que entrega los folios en SII con estado pendientes.
+     * Entrega los folios en SII con estado pendientes.
      */
     public function getFoliosPendientes()
     {
@@ -187,7 +187,7 @@ class Model_DteCaf extends Model
     }
 
     /**
-     * Método que indica si alguno de los folios de este CAF han sido o no usados
+     * Indica si alguno de los folios de este CAF han sido o no usados
      * para emitir algún DTE en LibreDTE.
      */
     public function usado()
@@ -210,7 +210,7 @@ class Model_DteCaf extends Model
     }
 
     /**
-     * Método que entrega el objeto del tipo de DTE asociado al folio.
+     * Entrega el objeto del tipo de DTE asociado al folio.
      */
     public function getTipo()
     {

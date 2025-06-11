@@ -42,7 +42,7 @@ class Model_DteEmitidos extends Model_Plural
     const ENVIO_BOLETA = '2021-01-01'; // desde qué día se deben enviar las boletas al SII en producción
 
     /**
-     * Método que entrega el detalle de las ventas en un rango de tiempo.
+     * Entrega el detalle de las ventas en un rango de tiempo.
      */
     public function getDetalle($desde, $hasta, $detalle): array
     {
@@ -180,7 +180,7 @@ class Model_DteEmitidos extends Model_Plural
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por tipo de DTE.
+     * Entrega los totales de documentos emitidos por tipo de DTE.
      */
     public function getPorTipo($desde, $hasta): array
     {
@@ -203,7 +203,7 @@ class Model_DteEmitidos extends Model_Plural
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por día.
+     * Entrega los totales de documentos emitidos por día.
      */
     public function getPorDia($desde, $hasta): array
     {
@@ -226,7 +226,7 @@ class Model_DteEmitidos extends Model_Plural
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por hora.
+     * Entrega los totales de documentos emitidos por hora.
      */
     public function getPorHora($desde, $hasta): array
     {
@@ -253,7 +253,7 @@ class Model_DteEmitidos extends Model_Plural
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por sucursal.
+     * Entrega los totales de documentos emitidos por sucursal.
      */
     public function getPorSucursal($desde, $hasta): array
     {
@@ -280,7 +280,7 @@ class Model_DteEmitidos extends Model_Plural
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por usuario.
+     * Entrega los totales de documentos emitidos por usuario.
      */
     public function getPorUsuario($desde, $hasta): array
     {
@@ -303,7 +303,7 @@ class Model_DteEmitidos extends Model_Plural
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por nacionalidad.
+     * Entrega los totales de documentos emitidos por nacionalidad.
      */
     public function getPorNacionalidad($desde, $hasta): array
     {
@@ -332,7 +332,7 @@ class Model_DteEmitidos extends Model_Plural
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por moneda.
+     * Entrega los totales de documentos emitidos por moneda.
      */
     public function getPorMoneda($desde, $hasta): array
     {
@@ -357,7 +357,7 @@ class Model_DteEmitidos extends Model_Plural
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por día de todos los contribuyentes.
+     * Entrega los totales de documentos emitidos por día de todos los contribuyentes.
      */
     public function countDiarios($desde, $hasta, $certificacion): array
     {
@@ -383,7 +383,7 @@ class Model_DteEmitidos extends Model_Plural
     }
 
     /**
-     * Método que entrega el listado de documentos rechazados.
+     * Entrega el listado de documentos rechazados.
      * Puede ser el de un emisor en específico o bien de todos los emisores.
      */
     public function getRechazados($desde, $hasta, $certificacion = false): array
@@ -426,7 +426,7 @@ class Model_DteEmitidos extends Model_Plural
     }
 
     /**
-     * Método que entrega el total de documentos rechazados y el rango de fechas.
+     * Entrega el total de documentos rechazados y el rango de fechas.
      */
     public function getTotalRechazados(): ?array
     {
@@ -448,7 +448,7 @@ class Model_DteEmitidos extends Model_Plural
     }
 
     /**
-     * Método que actualiza el estado del evento del receptor (si está aceptado o no el DTE).
+     * Actualiza el estado del evento del receptor (si está aceptado o no el DTE).
      */
     public function actualizarEstadoReceptor($periodo = null): void
     {
@@ -496,7 +496,7 @@ class Model_DteEmitidos extends Model_Plural
     }
 
     /**
-     * Método que entrega el listado de documentos en cierto rango de fecha que
+     * Entrega el listado de documentos en cierto rango de fecha que
      * no han sido enviados al correo de intercambio del receptor.
      */
     public function getSinEnvioIntercambio($desde, $hasta): array
@@ -543,7 +543,7 @@ class Model_DteEmitidos extends Model_Plural
     }
 
     /**
-     * Método que entrega el listado de boletas en cierto rango de fecha que
+     * Entrega el listado de boletas en cierto rango de fecha que
      * no han sido enviados al correo electrónico del receptor.
      */
     public function getBoletasSinEnvioEmail($desde, $hasta): array

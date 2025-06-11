@@ -33,7 +33,7 @@ class Utility_EnvioBoleta
 {
 
     /**
-     * Método que envía un XML de EnvioBoleta al SII y entrega el Track ID del envío.
+     * Envía un XML de EnvioBoleta al SII y entrega el Track ID del envío.
      */
     public static function enviar($usuario, $empresa, $xml, $Firma, $gzip = false, $retry = null)
     {
@@ -59,7 +59,7 @@ class Utility_EnvioBoleta
     }
 
     /**
-     * Método que entrega el estado normalizado del envío e la boleta al SII.
+     * Entrega el estado normalizado del envío e la boleta al SII.
      */
     public static function estado_normalizado($rut, $dv, $track_id, $Firma, $dte, $folio)
     {

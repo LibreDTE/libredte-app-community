@@ -119,7 +119,7 @@ class Model_DteIntercambioReciboDte extends Model
     ];
 
     /**
-     * Método que entrega el sobre (xml) donde veía el recibo.
+     * Entrega el sobre (xml) donde veía el recibo.
      */
     public function getSobre()
     {

@@ -110,7 +110,7 @@ class Model_DteIntercambioRecepcion extends Model
     ];
 
     /**
-     * Método que guarda el XML de la Recepción de un intercambio.
+     * Guarda el XML de la Recepción de un intercambio.
      */
     public function saveXML($Emisor, $xml) {
 

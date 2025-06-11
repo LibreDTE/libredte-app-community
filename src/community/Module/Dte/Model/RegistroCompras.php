@@ -128,7 +128,7 @@ class Model_RegistroCompras extends Model_Plural
     }
 
     /**
-     * Método que entrega los documentos de compras pendientes de ser procesados.
+     * Entrega los documentos de compras pendientes de ser procesados.
      */
     public function buscar(array $filtros = [], $detalle = false): array
     {
@@ -241,7 +241,7 @@ class Model_RegistroCompras extends Model_Plural
     }
 
     /**
-     * Método que entrega los documentos de compras pendientes de ser procesados
+     * Entrega los documentos de compras pendientes de ser procesados
      * con su detalle completo del registro de compras.
      */
     public function getDetalle(array $filtros = []): array
@@ -250,7 +250,7 @@ class Model_RegistroCompras extends Model_Plural
     }
 
     /**
-     * Método que entrega las cantidad de documentos de compras pendientes de
+     * Entrega las cantidad de documentos de compras pendientes de
      * ser procesados.
      */
     public function getResumenPendientes(): array
@@ -279,7 +279,7 @@ class Model_RegistroCompras extends Model_Plural
     }
 
     /**
-     * Método que entrega las cantidad de documentos de compras pendientes de
+     * Entrega las cantidad de documentos de compras pendientes de
      * ser procesados agrupados por días.
      */
     public function getByDias(int $dias = 8): array
@@ -317,7 +317,7 @@ class Model_RegistroCompras extends Model_Plural
     }
 
     /**
-     * Método que entrega la cantidad de pendientes agrupados por rango de montos
+     * Entrega la cantidad de pendientes agrupados por rango de montos
      * y el monto total.
      */
     public function getByRangoMontos(): array

@@ -23,15 +23,12 @@
 
 namespace website\Dte\Admin\Mantenedores;
 
+use sowerphp\autoload\Controller_Model;
+
 /**
  * Clase para el controlador asociado a la tabla dte_tipo de la base de
  * datos.
  */
-class Controller_DteTipos extends \sowerphp\autoload\Controller_Model
+class Controller_DteTipos extends Controller_Model
 {
-
-    protected $columnsView = [
-        'listar' => ['codigo', 'tipo', 'electronico', 'operacion']
-    ]; ///< Columnas que se deben mostrar en las vistas
-
 }

@@ -119,7 +119,7 @@ class Model_DteGuia extends Model_Base_Libro
     ]; ///< Columnas del archivo CSV del libro
 
     /**
-     * Método que entrega el resumen real (de los detalles registrados) del
+     * Entrega el resumen real (de los detalles registrados) del
      * libro.
      * @todo Programar método (por ahora no se está usando).
      */
@@ -129,7 +129,7 @@ class Model_DteGuia extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega el folio de notificación del libro (si existe) o 0
+     * Entrega el folio de notificación del libro (si existe) o 0
      * si el XML del libro no existe.
      */
     public function getFolioNotificacion()
@@ -143,7 +143,7 @@ class Model_DteGuia extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega los documentos por día del libro.
+     * Entrega los documentos por día del libro.
      */
     public function getDocumentosPorDia()
     {

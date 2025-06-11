@@ -84,7 +84,7 @@ class Model_BoletaTerceros extends Model_Plural
     }
 
     /**
-     * Método que obtiene las boletas emitidas desde el SII.
+     * Obtiene las boletas emitidas desde el SII.
      */
     public function getBoletas($periodo)
     {
@@ -106,7 +106,7 @@ class Model_BoletaTerceros extends Model_Plural
     }
 
     /**
-     * Método que entrega un resumen por período de las boletas de terceros
+     * Entrega un resumen por período de las boletas de terceros
      * emitidas.
      */
     public function getPeriodos($periodo = null)
@@ -135,7 +135,7 @@ class Model_BoletaTerceros extends Model_Plural
     }
 
     /**
-     * Método que entrega el resumen de cierto período.
+     * Entrega el resumen de cierto período.
      */
     public function getPeriodo($periodo)
     {
@@ -144,7 +144,7 @@ class Model_BoletaTerceros extends Model_Plural
     }
 
     /**
-     * Método que entrega las boletas de cierto período.
+     * Entrega las boletas de cierto período.
      */
     public function buscar(array $filtros = [], $order = 'ASC')
     {
@@ -223,7 +223,7 @@ class Model_BoletaTerceros extends Model_Plural
     }
 
     /**
-     * Método que emite una BTE en el SII y entrega el objeto local para trabajar.
+     * Emite una BTE en el SII y entrega el objeto local para trabajar.
      */
     public function emitir($boleta)
     {
@@ -288,7 +288,7 @@ class Model_BoletaTerceros extends Model_Plural
     }
 
     /**
-     * Método que entrega las tasas de retencion para personas a honorarios.
+     * Entrega las tasas de retencion para personas a honorarios.
      */
     public function getTasasRetencion()
     {

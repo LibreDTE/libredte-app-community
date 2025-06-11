@@ -44,6 +44,12 @@ class Model_DteTipo extends Model
             'verbose_name_plural' => 'Tipos de documentos tributarios',
             'db_table_comment' => 'Tipos de documentos (electrónicos y no electrónicos).',
             'ordering' => ['codigo'],
+            'list_display' => [
+                'codigo',
+                'tipo',
+                'electronico',
+                'operacion',
+            ],
         ],
         'fields' => [
             'codigo' => [
@@ -124,7 +130,7 @@ class Model_DteTipo extends Model
     }
 
     /**
-     * Método que indica si se puede generar cotización al DTE.
+     * Indica si se puede generar cotización al DTE.
      */
     public function permiteCotizacion(): bool
     {
@@ -132,7 +138,7 @@ class Model_DteTipo extends Model
     }
 
     /**
-     * Método que indica si se puede generar un cobro al DTE.
+     * Indica si se puede generar un cobro al DTE.
      */
     public function permiteCobro(): bool
     {
@@ -140,7 +146,7 @@ class Model_DteTipo extends Model
     }
 
     /**
-     * Método que indica si se genera o no intercambio con el tipo de DTE.
+     * Indica si se genera o no intercambio con el tipo de DTE.
      */
     public function permiteIntercambio(): bool
     {
@@ -148,7 +154,7 @@ class Model_DteTipo extends Model
     }
 
     /**
-     * Método que indica si el documento es o no cedible.
+     * Indica si el documento es o no cedible.
      * @return =true si el documento es cedible.
      */
     public function esCedible(): bool
@@ -157,7 +163,7 @@ class Model_DteTipo extends Model
     }
 
     /**
-     * Método que indica si el documento es o no una boleta electrónica.
+     * Indica si el documento es o no una boleta electrónica.
      * @return =true si el documento es una boleta electrónica.
      */
     public function esBoleta(): bool
@@ -166,7 +172,7 @@ class Model_DteTipo extends Model
     }
 
     /**
-     * Método que indica si el documento es o no una exportación.
+     * Indica si el documento es o no una exportación.
      * @return =true si el documento es una exportación.
      */
     public function esExportacion(): bool

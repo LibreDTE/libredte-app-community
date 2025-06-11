@@ -23,16 +23,13 @@
 
 namespace website\Dte\Admin\Mantenedores;
 
+use sowerphp\autoload\Controller_Model;
+
 /**
  * Controlador para las acciones de administración de los contribuyentes.
  */
-class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
+class Controller_Contribuyentes extends Controller_Model
 {
-
-    protected $columnsView = [
-        'listar' => ['rut', 'razon_social', 'telefono', 'email', 'comuna', 'usuario']
-    ]; ///< Columnas que se deben mostrar en las vistas
-
     /**
      * Acción que permite cargar los datos de contribuyentes.
      */
@@ -98,9 +95,8 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
                 }
             }
             \sowerphp\core\Facade_Session_Message::success(
-                'Se actualizaron '.num($actualizados).' contribuyentes'
+                'Se actualizaron '.num($actualizados).' contribuyentes.'
             );
         }
     }
-
 }

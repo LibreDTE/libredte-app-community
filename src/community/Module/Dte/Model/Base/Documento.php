@@ -32,7 +32,7 @@ abstract class Model_Base_Documento extends Model
 {
 
     /**
-     * Método que entrega el objeto del emisor o receptor del dte según
+     * Entrega el objeto del emisor o receptor del dte según
      * corresponda (si es compra es receptor, otro caso es emisor).
      */
     public function getContribuyente()
@@ -44,7 +44,7 @@ abstract class Model_Base_Documento extends Model
     }
 
     /**
-     * Método que entrega el objeto del emisor del dte.
+     * Entrega el objeto del emisor del dte.
      */
     public function getEmisor()
     {
@@ -55,7 +55,7 @@ abstract class Model_Base_Documento extends Model
     }
 
     /**
-     * Método que entrega el objeto del receptor del dte.
+     * Entrega el objeto del receptor del dte.
      */
     public function getReceptor()
     {

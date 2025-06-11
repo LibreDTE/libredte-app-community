@@ -32,9 +32,8 @@ use sowerphp\autoload\Model_Plural;
  */
 class Model_DteTmps extends Model_Plural
 {
-
     /**
-     * Método que elimina todos los documentos temporales del contribuyente.
+     * Elimina todos los documentos temporales del contribuyente.
      */
     public function eliminar()
     {
@@ -47,5 +46,4 @@ class Model_DteTmps extends Model_Plural
             $borrador->delete();
         }
     }
-
 }

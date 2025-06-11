@@ -120,7 +120,7 @@ class Controller_Estadisticas extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que genera la estadística para las API de producción y
+     * Genera la estadística para las API de producción y
      * certificación.
      *
      * @param bool $certificacion =true se generan estadísticas para el
@@ -185,7 +185,7 @@ class Controller_Estadisticas extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que determina la versión de LibreDTE que se está ejecutando.
+     * Determina la versión de LibreDTE que se está ejecutando.
      */
     protected function getVersion(): array
     {
@@ -225,7 +225,7 @@ class Controller_Estadisticas extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que determina la versión de LibreDTE a partir del último commit
+     * Determina la versión de LibreDTE a partir del último commit
      * del proyecto.
      */
     protected function getVersionLibreDTE(): array

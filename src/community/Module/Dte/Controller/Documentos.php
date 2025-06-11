@@ -1259,7 +1259,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que genera el XML del DTE temporal con Folio y Firma y lo envía
+     * Genera el XML del DTE temporal con Folio y Firma y lo envía
      * al SII.
      */
     public function generar($receptor, $dte, $codigo)
@@ -1317,7 +1317,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que guarda un Receptor de un DTE que se está emitiendo.
+     * Guarda un Receptor de un DTE que se está emitiendo.
      */
     private function guardarReceptor($datos)
     {

@@ -30,7 +30,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
 {
 
     /**
-     * Método que actualiza el estado del libro enviado al SII, en realidad.
+     * Actualiza el estado del libro enviado al SII, en realidad.
      * es un wrapper para las verdaderas llamadas.
      * @param usarWebservice =true se consultará vía servicio web =false vía email.
      */
@@ -49,7 +49,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
     }
 
     /**
-     * Método que actualiza el estado del Libro enviado al SII a través del
+     * Actualiza el estado del Libro enviado al SII a través del
      * servicio web que dispone el SII para esta consulta.
      */
     private function actualizarEstadoWebservice($user_id = null)
@@ -99,7 +99,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
     }
 
     /**
-     * Método que actualiza el estado del Libro enviado al SII a través del
+     * Actualiza el estado del Libro enviado al SII a través del
      * email que es recibido desde el SII.
      */
     private function actualizarEstadoEmail()
@@ -144,7 +144,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
     }
 
     /**
-     * Método que guarda el estado del envío del libro al SII.
+     * Guarda el estado del envío del libro al SII.
      */
     public function saveRevision($xml_data)
     {
@@ -172,7 +172,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el estado (de 3 letras) del envío del libro.
+     * Entrega el estado (de 3 letras) del envío del libro.
      */
     public function getEstado()
     {
@@ -183,7 +183,7 @@ abstract class Model_Base_Libro extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el arreglo con los datos del libro de compra o ventas.
+     * Entrega el arreglo con los datos del libro de compra o ventas.
      */
     public function getDatos()
     {

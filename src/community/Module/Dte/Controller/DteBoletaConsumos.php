@@ -30,10 +30,6 @@ use sowerphp\core\Network_Request as Request;
  */
 class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
 {
-
-    protected $columnsView = [
-        'listar' => ['dia', 'secuencia', 'glosa', 'track_id', 'revision_estado', 'revision_detalle']
-    ]; ///< Columnas que se deben mostrar en las vistas
     protected $deleteRecord = false; ///< Indica si se permite o no borrar registros
     protected $actionsColsWidth = 90; ///< Ancho de columna para acciones en vista listar
 
@@ -330,5 +326,4 @@ class Controller_DteBoletaConsumos extends \sowerphp\autoload\Controller_Model
             'pendientes' => $pendientes,
         ]);
     }
-
 }

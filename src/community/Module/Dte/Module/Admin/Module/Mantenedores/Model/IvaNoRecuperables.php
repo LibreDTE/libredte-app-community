@@ -32,9 +32,8 @@ use sowerphp\autoload\Model_Plural;
  */
 class Model_IvaNoRecuperables extends Model_Plural
 {
-
     /**
-     * Método que entrega el listado de ivas no recuperables.
+     * Entrega el listado de ivas no recuperables.
      */
     public function getList(): array
     {
@@ -44,5 +43,4 @@ class Model_IvaNoRecuperables extends Model_Plural
             ORDER BY codigo
         ');
     }
-
 }

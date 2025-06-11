@@ -32,9 +32,8 @@ use sowerphp\autoload\Model_Plural;
  */
 class Model_DteBoletaConsumos extends Model_Plural
 {
-
     /**
-     * Método que entrega los días pendientes de enviar RCOF.
+     * Entrega los días pendientes de enviar RCOF.
      * Por defecto, se busca entre el primer día enviado y el día de ayer.
      * Si está configurado el desde y/o hasta se usan esos para el rango.
      */
@@ -82,7 +81,7 @@ class Model_DteBoletaConsumos extends Model_Plural
     }
 
     /**
-     * Método que entrega los días con RCOF enviados y que se considera que ya no tuvieron respuesta.
+     * Entrega los días con RCOF enviados y que se considera que ya no tuvieron respuesta.
      */
     public function getSinRespuesta($multiplicador_dias = 5, $secuencia_maxima = 5)
     {
@@ -118,7 +117,7 @@ class Model_DteBoletaConsumos extends Model_Plural
     }
 
     /**
-     * Método que entrega los RCOF rechazados (opcionalmente en un período de tiempo).
+     * Entrega los RCOF rechazados (opcionalmente en un período de tiempo).
      */
     public function getRechazados($desde = null, $hasta = null)
     {
@@ -148,7 +147,7 @@ class Model_DteBoletaConsumos extends Model_Plural
     }
 
     /**
-     * Método que entrega un resumen de los estados del envío del RCOF al SII.
+     * Entrega un resumen de los estados del envío del RCOF al SII.
      */
     public function getResumenEstados($desde, $hasta): array
     {
@@ -167,7 +166,7 @@ class Model_DteBoletaConsumos extends Model_Plural
     }
 
     /**
-     * Método que entrega el total de RCOF rechazados y el rango de fechas.
+     * Entrega el total de RCOF rechazados y el rango de fechas.
      */
     public function getTotalRechazados()
     {
@@ -186,7 +185,7 @@ class Model_DteBoletaConsumos extends Model_Plural
     }
 
     /**
-     * Método que entrega el total de RCOF con reparo por secuencia y el rango de fechas
+     * Entrega el total de RCOF con reparo por secuencia y el rango de fechas
      */
     public function getTotalReparosSecuencia()
     {
@@ -204,5 +203,4 @@ class Model_DteBoletaConsumos extends Model_Plural
         ]);
         return !empty($aux['total']) ? $aux : null;
     }
-
 }

@@ -145,7 +145,7 @@ class Model_DteVenta extends Model_Base_Libro
     ]; ///< Columnas del detalle del libro de ventas
 
     /**
-     * Método que entrega el resumen real (de los detalles registrados) del
+     * Entrega el resumen real (de los detalles registrados) del
      * libro.
      */
     public function getResumen(): array
@@ -179,7 +179,7 @@ class Model_DteVenta extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega el resumen manual, de los totales registrados al
+     * Entrega el resumen manual, de los totales registrados al
      * enviar el libro al SII.
      */
     public function getResumenManual(): array
@@ -193,7 +193,7 @@ class Model_DteVenta extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega los documentos por día del libro.
+     * Entrega los documentos por día del libro.
      */
     public function getDocumentosPorDia()
     {
@@ -201,7 +201,7 @@ class Model_DteVenta extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega las compras por tipo del período.
+     * Entrega las compras por tipo del período.
      */
     public function getDocumentosPorTipo()
     {
@@ -209,7 +209,7 @@ class Model_DteVenta extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega los documentos por evento del receptor.
+     * Entrega los documentos por evento del receptor.
      */
     public function getDocumentosPorEventoReceptor(): array
     {
@@ -240,7 +240,7 @@ class Model_DteVenta extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega los documentos por evento del receptor.
+     * Entrega los documentos por evento del receptor.
      */
     public function getDocumentosConEventoReceptor($evento)
     {
@@ -252,7 +252,7 @@ class Model_DteVenta extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega los totales del período.
+     * Entrega los totales del período.
      */
     public function getTotales(): array
     {
@@ -290,7 +290,7 @@ class Model_DteVenta extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega el total del neto + exento del período.
+     * Entrega el total del neto + exento del período.
      */
     public function getTotalExentoNeto(): int
     {
@@ -299,7 +299,7 @@ class Model_DteVenta extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega la cantidad de documentos que se envían al SII pero que no tienen
+     * Entrega la cantidad de documentos que se envían al SII pero que no tienen
      * estado asociado.
      */
     public function countDteSinEstadoEnvioSII(): int
@@ -323,7 +323,7 @@ class Model_DteVenta extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega la cantidad de documentos que están rechazados por el SII
+     * Entrega la cantidad de documentos que están rechazados por el SII
      * en el período.
      */
     public function countDteRechazadosSII(): int

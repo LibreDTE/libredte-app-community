@@ -61,7 +61,7 @@ class Shell_Command_Contribuyentes_Actualizar extends \sowerphp\autoload\Shell
     }
 
     /**
-     * Método que convierte el string de datos CSV del archivo a un arreglo PHP.
+     * Convierte el string de datos CSV del archivo a un arreglo PHP.
      */
     private function csv2array(&$csv)
     {
@@ -83,7 +83,7 @@ class Shell_Command_Contribuyentes_Actualizar extends \sowerphp\autoload\Shell
     }
 
     /**
-     * Método que descarga el listado de contribuyentes desde el servicio web de API Gateway.
+     * Descarga el listado de contribuyentes desde el servicio web de API Gateway.
      */
     private function apigateway($ambiente, $dia)
     {
@@ -130,7 +130,7 @@ class Shell_Command_Contribuyentes_Actualizar extends \sowerphp\autoload\Shell
     }
 
     /**
-     * Método que carga el listado de contribuyentes desde un archivo CSV y luego los pasa
+     * Carga el listado de contribuyentes desde un archivo CSV y luego los pasa
      * al método que los procesa y actualiza en la BD.
      */
     private function csv($archivo)
@@ -146,7 +146,7 @@ class Shell_Command_Contribuyentes_Actualizar extends \sowerphp\autoload\Shell
     }
 
     /**
-     * Método que procesa los datos de los contribuyentes y los actualiza en la base de datos.
+     * Procesa los datos de los contribuyentes y los actualiza en la base de datos.
      */
     private function procesarContribuyentes($contribuyentes)
     {

@@ -34,7 +34,7 @@ class Model_DteIntercambios extends Model_Plural
 {
 
     /**
-     * Método que entrega el total de documentos de intercambio pendientes de ser procesados.
+     * Entrega el total de documentos de intercambio pendientes de ser procesados.
      */
     public function getTotalPendientes(): int
     {
@@ -49,7 +49,7 @@ class Model_DteIntercambios extends Model_Plural
     }
 
     /**
-     * Método que crea los filtros para ser usados en las consultas de documentos recibidos.
+     * Crea los filtros para ser usados en las consultas de documentos recibidos.
      */
     private function crearFiltrosDocumentos(array $filtros): array
     {
@@ -218,7 +218,7 @@ class Model_DteIntercambios extends Model_Plural
     }
 
     /**
-     * Método que cuenta los casos de intercambio del contribuyente.
+     * Cuenta los casos de intercambio del contribuyente.
      */
     public function countDocumentos(array $filtros = []): int
     {
@@ -235,7 +235,7 @@ class Model_DteIntercambios extends Model_Plural
     }
 
     /**
-     * Método que entrega la tabla con los casos de intercambio del contribuyente.
+     * Entrega la tabla con los casos de intercambio del contribuyente.
      */
     public function getDocumentos(array $filtros = []): array
     {
@@ -499,7 +499,7 @@ class Model_DteIntercambios extends Model_Plural
     }
 
     /**
-     * Método que procesa el archivo EnvioDTE recibido desde un contribuyente.
+     * Procesa el archivo EnvioDTE recibido desde un contribuyente.
      * @param receptor RUT del receptor sin puntos ni dígito verificador.
      * @param datos_email Arreglo con los índices: fecha_hora_email, asunto, de, mensaje, mensaje_html.
      * @param file Arreglo con los índices: name, data, size y type.
@@ -565,7 +565,7 @@ class Model_DteIntercambios extends Model_Plural
     }
 
     /**
-     * Método que entrega la cantidad de intercambios que se han recibido en el periodo.
+     * Entrega la cantidad de intercambios que se han recibido en el periodo.
      */
     public function countPeriodo($periodo = null): int
     {
@@ -584,7 +584,7 @@ class Model_DteIntercambios extends Model_Plural
     }
 
     /**
-     * Método que busca el o los intercambios asociados a un DTE.
+     * Busca el o los intercambios asociados a un DTE.
      * @warning Esta función es muy costosa, ya que debe buscar en los XML y además abrir luego cada intercambio para confirmar que el DTE que se encontró es correcto.
      */
     public function buscarIntercambiosDte($emisor, $dte, $folio): array
@@ -630,7 +630,7 @@ class Model_DteIntercambios extends Model_Plural
     }
 
     /**
-     * Método que entrega el último código de intercambio usado por un receptor de DTE.
+     * Entrega el último código de intercambio usado por un receptor de DTE.
      */
     public function getUltimoCodigo(): int
     {

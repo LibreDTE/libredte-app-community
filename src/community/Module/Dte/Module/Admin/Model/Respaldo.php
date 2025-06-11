@@ -28,7 +28,6 @@ namespace website\Dte\Admin;
  */
 class Model_Respaldo
 {
-
     private $tablas = [
         'cobranza' => [
             'rut' => 'emisor',
@@ -133,7 +132,7 @@ class Model_Respaldo
     }
 
     /**
-     * Método que entrega el listado de tablas que se podrán respaldar.
+     * Entrega el listado de tablas que se podrán respaldar.
      */
     public function getTablas(): array
     {
@@ -145,7 +144,7 @@ class Model_Respaldo
     }
 
     /**
-     * Método que genera el respaldo.
+     * Genera el respaldo.
      * @param rut RUT del contribuyente que se desea respaldar.
      * @param tablas Arreglo con las tablas a respaldar.
      * @return string Ruta del directorio donde se dejó el respaldo recién creado.
@@ -267,7 +266,7 @@ class Model_Respaldo
     }
 
     /**
-     * Método que crea el directorio temporal para el respaldo.
+     * Crea el directorio temporal para el respaldo.
      */
     private function mkdirRespaldo($rut, string $prefix = 'libredte_contribuyente'): string
     {
@@ -283,7 +282,7 @@ class Model_Respaldo
     }
 
     /**
-     * Método que entrega las PK de una tabla.
+     * Entrega las PK de una tabla.
      */
     private function getPKs($tabla)
     {
@@ -297,7 +296,7 @@ class Model_Respaldo
     }
 
     /**
-     * Método que realiza el respaldo asociado a Boletas Electrónicas.
+     * Realiza el respaldo asociado a Boletas Electrónicas.
      */
     public function boletas($Contribuyente, $fecha_creacion)
     {
@@ -347,5 +346,4 @@ class Model_Respaldo
         // entregar nombre del directorio con el respaldo
         return $dir;
     }
-
 }

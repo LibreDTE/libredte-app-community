@@ -33,7 +33,6 @@ use website\Dte\Model_Contribuyente;
  */
 class Model_ItemClasificacion extends Model
 {
-
     /**
      * Metadatos del modelo.
      *
@@ -45,6 +44,12 @@ class Model_ItemClasificacion extends Model
             'verbose_name_plural' => 'Clasificaciones de productos y servicios',
             'db_table_comment' => 'Registro de clasificaciones de los productos y servicios de la empresa.',
             'ordering' => ['codigo'],
+            'list_display' => [
+                'codigo',
+                'clasificacion',
+                'superior',
+                'activa',
+            ],
         ],
         'fields' => [
             'contribuyente' => [
@@ -100,7 +105,7 @@ class Model_ItemClasificacion extends Model
     }
 
     /**
-     * Método que entrega la clasificación superior de la clasificación.
+     * Entrega la clasificación superior de la clasificación.
      */
     public function getSuperior()
     {
@@ -108,7 +113,7 @@ class Model_ItemClasificacion extends Model
     }
 
     /**
-     * Método que entrega la clasificación superior de la clasificación.
+     * Entrega la clasificación superior de la clasificación.
      */
     public function getItemClasificacion()
     {
@@ -116,7 +121,7 @@ class Model_ItemClasificacion extends Model
     }
 
     /**
-     * Método que indica si la clasificación está o no en uso.
+     * Indica si la clasificación está o no en uso.
      */
     public function enUso()
     {
@@ -131,7 +136,7 @@ class Model_ItemClasificacion extends Model
     }
 
     /**
-     * Método que entrega el listado de items de la clasificación.
+     * Entrega el listado de items de la clasificación.
      */
     public function getItems()
     {
@@ -142,5 +147,4 @@ class Model_ItemClasificacion extends Model
         );
         return $Itemes->getObjects();
     }
-
 }

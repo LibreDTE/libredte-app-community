@@ -112,7 +112,7 @@ class Model_DteIntercambioResultadoDte extends Model
     ];
 
     /**
-     * Método que entrega el sobre (xml) donde veía el resultado.
+     * Entrega el sobre (xml) donde veía el resultado.
      */
     public function getSobre()
     {

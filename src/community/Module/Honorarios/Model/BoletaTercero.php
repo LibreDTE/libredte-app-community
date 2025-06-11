@@ -118,7 +118,7 @@ class Model_BoletaTercero extends Model
     ];
 
     /**
-     * Método que entrega el objeto del emisor de la boleta.
+     * Entrega el objeto del emisor de la boleta.
      */
     public function getEmisor()
     {
@@ -126,7 +126,7 @@ class Model_BoletaTercero extends Model
     }
 
     /**
-     * Método que entrega el objeto del receptor de la boleta.
+     * Entrega el objeto del receptor de la boleta.
      */
     public function getReceptor()
     {
@@ -134,7 +134,7 @@ class Model_BoletaTercero extends Model
     }
 
     /**
-     * Método que obtiene el HTML de la boleta de terceros desde el SII.
+     * Obtiene el HTML de la boleta de terceros desde el SII.
      */
     public function getHTML()
     {

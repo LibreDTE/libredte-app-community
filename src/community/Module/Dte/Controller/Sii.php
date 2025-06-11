@@ -206,7 +206,7 @@ class Controller_Sii extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que realiza la consulta al SII.
+     * Realiza la consulta al SII.
      */
     private function query(Request $request, $query, $params)
     {
@@ -242,7 +242,7 @@ class Controller_Sii extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que muestra el estado de un DTE en el registro de compras y ventas.
+     * Muestra el estado de un DTE en el registro de compras y ventas.
      */
     public function dte_rcv(Request $request, $emisor, $dte, $folio)
     {

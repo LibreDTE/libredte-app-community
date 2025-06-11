@@ -33,11 +33,6 @@ use website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
  */
 class Controller_Itemes extends Controller_Model
 {
-
-    protected $columnsView = [
-        'listar' => ['codigo', 'item', 'precio', 'moneda', 'bruto', 'clasificacion', 'activo']
-    ]; ///< Columnas que se deben mostrar en las vistas
-
     /**
      * Acción para listar los items del contribuyente.
      */
@@ -395,6 +390,7 @@ class Controller_Itemes extends Controller_Model
         } catch (\Exception $e) {
             return libredte()->redirectContribuyenteSeleccionar($e);
         }
+
         // Buscar items para exportar.
         $items = (new Model_Itemes())
             ->setContribuyente($Contribuyente)
@@ -402,13 +398,12 @@ class Controller_Itemes extends Controller_Model
         ;
         if (!$items) {
             return redirect('/dte/admin/itemes/listar')
-                ->withWarning(
-                    __('No hay items que exportar.')
-                );
+                ->withWarning(__('No hay items que exportar.'))
+            ;
         }
+
         array_unshift($items, array_keys($items[0]));
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($items);
-        $this->response->sendAndExit($csv, 'items_'.$Contribuyente->rut.'.csv');
+        response()->sendAndExit($csv, 'items_' . $Contribuyente->rut . '.csv');
     }
-
 }

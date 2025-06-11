@@ -239,7 +239,7 @@ class Service_Libredte implements Interface_Service
     }
 
     /**
-     * Método que asigna el objeto del contribuyente para ser "recordado".
+     * Asigna el objeto del contribuyente para ser "recordado".
      */
     public function setSessionContribuyente(Model_Contribuyente $contribuyente): void
     {
@@ -249,7 +249,7 @@ class Service_Libredte implements Interface_Service
     }
 
     /**
-     * Método que entrega el objeto del contribuyente que ha sido seleccionado
+     * Entrega el objeto del contribuyente que ha sido seleccionado
      * para ser usado en la sesión. Si no hay uno seleccionado se fuerza a
      * seleccionar.
      *
@@ -285,7 +285,7 @@ class Service_Libredte implements Interface_Service
     }
 
     /**
-     * Método que entrega el objeto del contribuyente que ha sido seleccionado
+     * Entrega el objeto del contribuyente que ha sido seleccionado
      * para ser usado en la sesióny. Si no hay uno seleccionado se fuerza a
      * seleccionar.
      *

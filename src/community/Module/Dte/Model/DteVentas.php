@@ -34,7 +34,7 @@ class Model_DteVentas extends Model_Plural
 {
 
     /**
-     * Método que indica si el libro para cierto periodo está o no generado.
+     * Indica si el libro para cierto periodo está o no generado.
      */
     public function libroGenerado($periodo)
     {
@@ -54,7 +54,7 @@ class Model_DteVentas extends Model_Plural
     }
 
     /**
-     * Método que entrega el total mensual del libro de ventas.
+     * Entrega el total mensual del libro de ventas.
      */
     public function getTotalesMensuales(int $anio): array
     {
@@ -79,7 +79,7 @@ class Model_DteVentas extends Model_Plural
     }
 
     /**
-     * Método que entrega el resumen anual de ventas.
+     * Entrega el resumen anual de ventas.
      */
     public function getResumenAnual($anio)
     {
@@ -120,7 +120,7 @@ class Model_DteVentas extends Model_Plural
     }
 
     /**
-     * Método que entrega el resumen de los documentos de ventas
+     * Entrega el resumen de los documentos de ventas
      * totalizado según ciertos filtros y por tipo de documento.
      */
     public function getResumen(array $filtros = []): array
@@ -239,7 +239,7 @@ class Model_DteVentas extends Model_Plural
     }
 
     /**
-     * Método que agrega masivamente documentos emitidos.
+     * Agrega masivamente documentos emitidos.
      */
     private function agregarMasivo($documentos, array $config = []): void
     {

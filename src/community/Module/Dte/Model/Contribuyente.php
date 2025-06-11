@@ -46,7 +46,6 @@ use website\Sistema\General\Model_ActividadEconomica;
  */
 class Model_Contribuyente extends Model
 {
-
     /**
      * Metadatos del modelo.
      *
@@ -56,6 +55,14 @@ class Model_Contribuyente extends Model
         'model' => [
             'db_table_comment' => 'Contribuyentes de la aplicación. Esto incluye emisores, receptores, personas naturales, sin inicio de actividades, etc.',
             'ordering' => ['rut'],
+            'list_display' => [
+                'rut',
+                'razon_social',
+                //'telefono',
+                //'email',
+                'comuna',
+                'usuario',
+            ],
             'choices' => ['id' => 'rut', 'name' => 'razon_social'],
             'get_latest_by' => ['modificado'],
             'default_permissions' => ['list', 'view'],
@@ -469,7 +476,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el nombre del contribuyente. Entregará el nombre de
+     * Entrega el nombre del contribuyente. Entregará el nombre de
      * fantasía si existe o la razón social del contribuyente.
      */
     public function getNombre()
@@ -481,7 +488,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que envía un correo electrónico al contribuyente.
+     * Envía un correo electrónico al contribuyente.
      */
     public function notificar(string $asunto, string $mensaje, $para = null, $responder_a = null, $attach = null): bool
     {
@@ -507,7 +514,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el RUT formateado del contribuyente.
+     * Entrega el RUT formateado del contribuyente.
      */
     public function getRUT(): string
     {
@@ -515,7 +522,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega la glosa del ambiente en el que se encuentra el
+     * Entrega la glosa del ambiente en el que se encuentra el
      * contribuyente.
      */
     public function getAmbiente(): string
@@ -524,7 +531,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega las actividades económicas del contribuyente.
+     * Entrega las actividades económicas del contribuyente.
      */
     public function getListActividades(): array
     {
@@ -549,7 +556,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el listado de giros del contribuyente por cada
+     * Entrega el listado de giros del contribuyente por cada
      * actividad económmica que tiene registrada.
      */
     public function getListGiros()
@@ -568,7 +575,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que asigna los usuarios autorizados a operar con el contribuyente.
+     * Asigna los usuarios autorizados a operar con el contribuyente.
      * @param array $usuarios Arreglo con índice nombre de usuario y valores un arreglo con los permisos a asignar.
      */
     public function setUsuarios(array $usuarios): bool
@@ -603,7 +610,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega los correos electrónicos asociados a cierto permiso.
+     * Entrega los correos electrónicos asociados a cierto permiso.
      * Por defecto se entregan los correos de los usuarios administradores.
      * @return array Arreglo con los correos electrónicos solicitados.
      */
@@ -627,7 +634,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el listado de usuarios autorizados y sus permisos.
+     * Entrega el listado de usuarios autorizados y sus permisos.
      * @return array Tabla con los usuarios y sus permisos.
      */
     public function getUsuarios(): array
@@ -647,7 +654,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el listado de usuarios para los campos select.
+     * Entrega el listado de usuarios para los campos select.
      * @return array Listado de usuarios.
      */
     public function getListUsuarios(): array
@@ -667,13 +674,13 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que determina si el usuario está o no autorizado a trabajar con
+     * Determina si el usuario está o no autorizado a trabajar con
      * el contribuyente.
      *
      * @param Model_Usuario $Usuario con el usuario a verificar.
      * @param string|array $permisos Permisos que se desean verificar que tenga
      * el usuario.
-     * @return bool =true si está autorizado.
+     * @return bool `true` si está autorizado.
      */
     public function usuarioAutorizado($Usuario, $permisos = []): bool
     {
@@ -738,7 +745,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que asigna los permisos al usuario.
+     * Asigna los permisos al usuario.
      *
      * @param Model_Usuario $Usuario Usuario al que se asignarán permisos.
      */
@@ -824,10 +831,10 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que determina si el usuario está o no autorizado a asignar
+     * Determina si el usuario está o no autorizado a asignar
      * manualmente el Folio de un DTE.
      * @param Model_Usuario $Usuario Usuario con el usuario a verificar.
-     * @return bool =true si está autorizado a cambiar el folio.
+     * @return bool `true` si está autorizado a cambiar el folio.
      */
     public function puedeAsignarFolio($Usuario): bool
     {
@@ -844,7 +851,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega los documentos que el contribuyente tiene autorizados
+     * Entrega los documentos que el contribuyente tiene autorizados
      * a emitir en la aplicación.
      * @param bool|object $onlyPK
      * @return array Listado de documentos autorizados.
@@ -916,7 +923,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega los documentos que el contribuyente tiene autorizados
+     * Entrega los documentos que el contribuyente tiene autorizados
      * a emitir en la aplicación por cada usuario autorizado que tiene.
      * @return array Listado de documentos autorizados por usuario.
      */
@@ -942,7 +949,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que asigna los documentos autorizados por cada usuario del
+     * Asigna los documentos autorizados por cada usuario del
      * contribuyente.
      * @param usuarios Arreglo asociativo (usuario) con los los documentos.
      */
@@ -978,11 +985,11 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que determina si el documento puede o no ser emitido por el
+     * Determina si el documento puede o no ser emitido por el
      * contribuyente a través de la aplicación.
      * @param int $dte Código del DTE que se quiere saber si está autorizado.
      * @param Model_Usuario $Usuario Permite determinar el permiso para un usuario autorizado.
-     * @return bool =true si está autorizado.
+     * @return bool `true` si está autorizado.
      */
     public function documentoAutorizado($dte, $Usuario = null): bool
     {
@@ -1019,7 +1026,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el listado de folios que el Contribuyente dispone.
+     * Entrega el listado de folios que el Contribuyente dispone.
      */
     public function getFolios(): array
     {
@@ -1070,7 +1077,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega los datos del folio del documento solicitado.
+     * Entrega los datos del folio del documento solicitado.
      * @param int $dte Tipo de documento para el cual se quiere su folio.
      */
     public function getFolio(int $dte, int $folio_manual = 0)
@@ -1135,7 +1142,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega una tabla con los datos de las firmas electrónicas de
+     * Entrega una tabla con los datos de las firmas electrónicas de
      * los usuarios que están autorizados a trabajar con el contribuyente.
      */
     public function getFirmas(): array
@@ -1187,7 +1194,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el objeto de la firma electronica asociada al
+     * Entrega el objeto de la firma electronica asociada al
      * usuario que la está solicitando o bien aquella firma del usuario
      * que es el administrador del contribuyente.
      * @param int $user ID del usuario que desea obtener la firma.
@@ -1244,7 +1251,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que crea los filtros para ser usados en las consultas de
+     * Crea los filtros para ser usados en las consultas de
      * documentos temporales.
      */
     private function crearFiltrosDocumentosTemporales(array $filtros): array
@@ -1365,7 +1372,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el total de documentos temporales por el contribuyente.
+     * Entrega el total de documentos temporales por el contribuyente.
      */
     public function countDocumentosTemporales(array $filtros = []): int
     {
@@ -1384,7 +1391,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el listado de documentos temporales por el contribuyente.
+     * Entrega el listado de documentos temporales por el contribuyente.
      */
     public function getDocumentosTemporales(array $filtros = []): array
     {
@@ -1427,7 +1434,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que crea los filtros para ser usados en las consultas de
+     * Crea los filtros para ser usados en las consultas de
      * documentos emitidos.
      */
     private function crearFiltrosDocumentosEmitidos(array $filtros): array
@@ -1646,7 +1653,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el total de documentos emitidos por el contribuyente.
+     * Entrega el total de documentos emitidos por el contribuyente.
      */
     public function countDocumentosEmitidos(array $filtros = []): int
     {
@@ -1674,7 +1681,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el listado de documentos emitidos por el contribuyente.
+     * Entrega el listado de documentos emitidos por el contribuyente.
      */
     public function getDocumentosEmitidos(array $filtros = []): array
     {
@@ -1762,7 +1769,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que crea el objeto para enviar correo.
+     * Crea el objeto para enviar correo.
      *
      * @param string $email Email que se quiere obtener: intercambio o sii.
      * @return Network_Email
@@ -1784,7 +1791,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que crea el objeto para recibir correo.
+     * Crea el objeto para recibir correo.
      *
      * @param string $email Email que se quiere obtener: intercambio o sii.
      * @return Network_Email_Imap
@@ -1805,7 +1812,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que crea el objeto email para enviar por SMTP y lo entrega.
+     * Crea el objeto email para enviar por SMTP y lo entrega.
      * @param email Email que se quiere obteber: intercambio o sii.
      * @return Network_Email
      */
@@ -1839,7 +1846,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que crea el objeto Imap para recibir correo por IMAP.
+     * Crea el objeto Imap para recibir correo por IMAP.
      * @param email Email que se quiere obteber: intercambio o sii.
      * @return Network_Email_Imap
      */
@@ -1868,7 +1875,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que indica si el correo de recepción configurado en el
+     * Indica si el correo de recepción configurado en el
      * contribuyente es el correo genérico de LibreDTE.
      */
     public function isEmailReceiverLibredte(string $email = 'intercambio'): bool
@@ -1891,7 +1898,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el resumen de las boletas por períodos.
+     * Entrega el resumen de las boletas por períodos.
      */
     public function getResumenBoletasPeriodos(): array
     {
@@ -1924,7 +1931,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega las boletas de un período.
+     * Entrega las boletas de un período.
      */
     public function getBoletas($periodo): array
     {
@@ -1968,7 +1975,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega los documentos para el reporte de consumo de
+     * Entrega los documentos para el reporte de consumo de
      * folios de las boletas electrónicas.
      */
     public function getDocumentosConsumoFolios(string $desde, ?string $hasta = null): array
@@ -2028,7 +2035,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el resumen de las ventas por períodos.
+     * Entrega el resumen de las ventas por períodos.
      */
     public function getResumenVentasPeriodos(): array
     {
@@ -2080,7 +2087,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el total de ventas de un período.
+     * Entrega el total de ventas de un período.
      */
     public function countVentas($periodo): int
     {
@@ -2121,7 +2128,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega las ventas de un período.
+     * Entrega las ventas de un período.
      * @todo Corregir ID en Extranjero y asignar los NULL por los valores que
      * corresponden (quizás haya que modificar tabla dte_emitido).
      */
@@ -2266,7 +2273,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el historial de ventas con el monto total por período
+     * Entrega el historial de ventas con el monto total por período
      * para un determinado receptor.
      * @param periodo Período para el cual se está construyendo el libro.
      */
@@ -2333,7 +2340,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el objeto del libro de ventas a partir de las ventas
+     * Entrega el objeto del libro de ventas a partir de las ventas
      * registradas en la aplicación.
      * @param int $periodo Período para el cual se está construyendo el libro.
      */
@@ -2379,7 +2386,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el resumen de las ventas diarias de un período.
+     * Entrega el resumen de las ventas diarias de un período.
      */
     public function getVentasDiarias($periodo): array
     {
@@ -2411,7 +2418,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el resumen de ventas por tipo de un período.
+     * Entrega el resumen de ventas por tipo de un período.
      * @return Arreglo asociativo con las ventas.
      */
     public function getVentasPorTipo($periodo): array
@@ -2441,7 +2448,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el resumen de las guías por períodos.
+     * Entrega el resumen de las guías por períodos.
      */
     public function getResumenGuiasPeriodos(): array
     {
@@ -2490,7 +2497,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el resumen de las guías de un período.
+     * Entrega el resumen de las guías de un período.
      */
     public function countGuias($periodo): int
     {
@@ -2523,7 +2530,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el resumen de las guías de un período.
+     * Entrega el resumen de las guías de un período.
      */
     public function getGuias($periodo): array
     {
@@ -2584,7 +2591,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el resumen de las guías diarias de un período.
+     * Entrega el resumen de las guías diarias de un período.
      */
     public function getGuiasDiarias($periodo): array
     {
@@ -2613,7 +2620,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que cuenta los casos de intercambio del contribuyente.
+     * Cuenta los casos de intercambio del contribuyente.
      */
     public function countDocumentosIntercambios(array $filter = []): int
     {
@@ -2624,7 +2631,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega la tabla con los casos de intercambio del contribuyente.
+     * Entrega la tabla con los casos de intercambio del contribuyente.
      */
     public function getDocumentosIntercambios(array $filter = []): array
     {
@@ -2646,7 +2653,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que crea los filtros para ser usados en las consultas de documentos recibidos.
+     * Crea los filtros para ser usados en las consultas de documentos recibidos.
      */
     private function crearFiltrosDocumentosRecibidos(array $filtros): array
     {
@@ -2740,7 +2747,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el total de documentos recibidos por el contribuyente.
+     * Entrega el total de documentos recibidos por el contribuyente.
      */
     public function countDocumentosRecibidos(array $filtros = []): int
     {
@@ -2762,7 +2769,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el listado de documentos recibidos por el contribuyente.
+     * Entrega el listado de documentos recibidos por el contribuyente.
      */
     public function getDocumentosRecibidos(array $filtros = []): array
     {
@@ -2809,7 +2816,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el resumen de las compras por períodos.
+     * Entrega el resumen de las compras por períodos.
      */
     public function getResumenComprasPeriodos(): array
     {
@@ -2902,7 +2909,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el total de las compras de un período.
+     * Entrega el total de las compras de un período.
      */
     public function countCompras($periodo): int
     {
@@ -2990,7 +2997,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el resumen de las compras de un período.
+     * Entrega el resumen de las compras de un período.
      */
     public function getCompras($periodo, $tipo_dte = null): array
     {
@@ -3206,7 +3213,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el objeto del libro de compras a partir de las
+     * Entrega el objeto del libro de compras a partir de las
      * compras registradas en la aplicación.
      * @param int $periodo Período para el cual se está construyendo el libro.
      */
@@ -3252,7 +3259,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el resumen de las compras diarias de un período.
+     * Entrega el resumen de las compras diarias de un período.
      */
     public function getComprasDiarias($periodo): array
     {
@@ -3324,7 +3331,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el resumen de compras por tipo de un período.
+     * Entrega el resumen de compras por tipo de un período.
      * @return array Arreglo asociativo con las compras.
      */
     public function getComprasPorTipo($periodo): array
@@ -3372,7 +3379,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el listado de documentos electrónicos que han
+     * Entrega el listado de documentos electrónicos que han
      * sido generados pero no se han enviado al SII.
      */
     public function getDteEmitidosSinEnviar(?int $certificacion = null, int $creados_hace_horas = 0): array
@@ -3413,7 +3420,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el listado de documentos electrónicos que han sido
+     * Entrega el listado de documentos electrónicos que han sido
      * generados y enviados al SII pero aun no se ha actualizado su estado.
      */
     public function getDteEmitidosSinEstado(?int $certificacion = null): array
@@ -3455,7 +3462,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el listado de sucursales del contribuyente con los
+     * Entrega el listado de sucursales del contribuyente con los
      * codigos de actividad económica asociados a cada una (uno por sucursal).
      */
     public function getSucursalesActividades()
@@ -3473,7 +3480,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el listado de sucursales del contribuyente,
+     * Entrega el listado de sucursales del contribuyente,
      * se incluye la casa matriz.
      */
     public function getSucursales(): array
@@ -3496,7 +3503,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el objeto de la sucursal del contribuyente a partir
+     * Entrega el objeto de la sucursal del contribuyente a partir
      * del código de la sucursal (por defecto casa matriz).
      */
     public function getSucursal($codigo = null)
@@ -3529,7 +3536,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega la sucursal del usuario indicado.
+     * Entrega la sucursal del usuario indicado.
      */
     public function getSucursalUsuario($Usuario)
     {
@@ -3554,7 +3561,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que asigna las sucursales por defecto de los usuarios.
+     * Asigna las sucursales por defecto de los usuarios.
      */
     public function setSucursalesPorUsuario(array $usuarios = [])
     {
@@ -3591,7 +3598,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que obtiene las sucursales por defecto de los usuarios.
+     * Obtiene las sucursales por defecto de los usuarios.
      */
     public function getSucursalesPorUsuario(): array
     {
@@ -3609,7 +3616,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega las coordenadas geográficas del emisor según su dirección.
+     * Entrega las coordenadas geográficas del emisor según su dirección.
      */
     public function getCoordenadas($sucursal = null)
     {
@@ -3621,7 +3628,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el listado de clientes del contribuyente.
+     * Entrega el listado de clientes del contribuyente.
      */
     public function getClientes(array $filtros = []): array
     {
@@ -3665,7 +3672,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega la cuota de documentos asignada al contribuyente.
+     * Entrega la cuota de documentos asignada al contribuyente.
      */
     public function getCuota(): int
     {
@@ -3673,7 +3680,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega los documentos usados por el contribuyente.
+     * Entrega los documentos usados por el contribuyente.
      * Ya sea en todos los períodos o en uno en específico.
      */
     public function getDocumentosUsados($periodo = null): array
@@ -3835,7 +3842,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el total de documentos usados por el
+     * Entrega el total de documentos usados por el
      * contribuyente en un periodo en particular.
      */
     public function getTotalDocumentosUsadosPeriodo($periodo = null): int
@@ -3847,7 +3854,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el resumen de los estados de los DTE para un
+     * Entrega el resumen de los estados de los DTE para un
      * periodo de tiempo.
      */
     public function getDocumentosEmitidosResumenEstados(string $desde, string $hasta): array
@@ -3876,7 +3883,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el resumen diario de los documentos emitidos.
+     * Entrega el resumen diario de los documentos emitidos.
      */
     public function getDocumentosEmitidosResumenDiario(array $filtros): array
     {
@@ -3923,7 +3930,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el detalle de los documentos emitidos con
+     * Entrega el detalle de los documentos emitidos con
      * cierto estado en un rango de tiempo.
      */
     public function getDocumentosEmitidosEstado(string $desde, string $hasta, ?string $estado = null): array
@@ -3991,7 +3998,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el resumen de los eventos asignados por los
+     * Entrega el resumen de los eventos asignados por los
      * receptores para un periodo de tiempo.
      */
     public function getDocumentosEmitidosResumenEventos(string $desde, string $hasta): array
@@ -4020,7 +4027,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el detalle de los documentos emitidos con
+     * Entrega el detalle de los documentos emitidos con
      * cierto evento en un rango de tiempo.
      */
     public function getDocumentosEmitidosEvento(string $desde, string $hasta, ?string $evento = null): array
@@ -4087,7 +4094,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el detalle de los documentos emitidos que aun
+     * Entrega el detalle de los documentos emitidos que aun
      * no han sido enviado al SII.
      */
     public function getDocumentosEmitidosSinEnviar(): array
@@ -4141,7 +4148,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el resumen de los estados de los DTE para un
+     * Entrega el resumen de los estados de los DTE para un
      * periodo de tiempo.
      */
     public function getDocumentosEmitidosResumenEstadoIntercambio(string $desde, string $hasta): array
@@ -4194,7 +4201,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega los estados de los DTE para un periodo de tiempo.
+     * Entrega los estados de los DTE para un periodo de tiempo.
      */
     public function getDocumentosEmitidosEstadoIntercambio(string $desde, string $hasta, $recibo, $recepcion, $resultado): array
     {
@@ -4282,7 +4289,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega la información del registro de compra y venta
+     * Entrega la información del registro de compra y venta
      * del SII del contribuyente.
      */
     public function getRCV(array $filtros = []): array
@@ -4443,7 +4450,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega la configuración de cierta API (servicio web)
+     * Entrega la configuración de cierta API (servicio web)
      * del contribuyente.
      */
     public function getAPI($api)
@@ -4455,7 +4462,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el cliente para la API del contribuyente.
+     * Entrega el cliente para la API del contribuyente.
      */
     public function getApiClient($api)
     {
@@ -4479,7 +4486,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega los enlaces normalizados para ser usados en el
+     * Entrega los enlaces normalizados para ser usados en el
      * layout de la aplicación.
      */
     public function getLinks(): array
@@ -4497,7 +4504,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega la plantilla de un correo ya armada con los datos.
+     * Entrega la plantilla de un correo ya armada con los datos.
      */
     public function getEmailFromTemplate($template, $params = null)
     {
@@ -4609,7 +4616,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega la URL del sitio web.
+     * Entrega la URL del sitio web.
      */
     public function getURL()
     {
@@ -4626,7 +4633,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega la aplicación de tercero del contribuyente.
+     * Entrega la aplicación de tercero del contribuyente.
      */
     public function getApp($app)
     {
@@ -4653,7 +4660,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega todas los aplicaciones disponibles para el contribuyente.
+     * Entrega todas los aplicaciones disponibles para el contribuyente.
      * @param array|string $filtros Los filtros de aplicaciones (como arreglo)
      * o el namespace de las aplicaciones (como string).
      */
@@ -4707,7 +4714,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega el contador asociado al contribuyente.
+     * Entrega el contador asociado al contribuyente.
      */
     public function getContador()
     {
@@ -4720,7 +4727,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega las credenciales de empresa para autenticación
+     * Entrega las credenciales de empresa para autenticación
      * en el SII.
      */
     public function getSiiAuth(): array
@@ -4739,7 +4746,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega las credenciales de usuario para autenticación
+     * Entrega las credenciales de usuario para autenticación
      * en el SII. Se puede entregar las credenciales rut/clave del
      * usuario o en segunda instancia la firma electrónica del usuario.
      */
@@ -4767,7 +4774,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega las credenciales de usuario para autenticación
+     * Entrega las credenciales de usuario para autenticación
      * en el SII usando firma electrónica.
      */
     public function getSiiAuthCert($user_id = null): array
@@ -4787,7 +4794,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que indica si el contribuyente está o no en ambiente de certificación.
+     * Indica si el contribuyente está o no en ambiente de certificación.
      * @return int =0 ambiente de producción, =1 ambiente de certificación.
      */
     public function enCertificacion(): int
@@ -4809,7 +4816,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega la configuración para el PDF de los DTE.
+     * Entrega la configuración para el PDF de los DTE.
      * @param array|object $options
      * @param array $default_config
      */
@@ -4879,7 +4886,7 @@ class Model_Contribuyente extends Model
     }
 
     /**
-     * Método que entrega la configuración de formato y papel para los PDF.
+     * Entrega la configuración de formato y papel para los PDF.
      */
     private function _getConfigPDF($options, $firstQuery = true)
     {
@@ -4969,5 +4976,4 @@ class Model_Contribuyente extends Model
         // no se encontró, se debe buscar en otra permutación
         return false;
     }
-
 }

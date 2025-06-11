@@ -325,7 +325,7 @@ class Model_DteRecibido extends Model
     private $datos; /// Datos del DTE
 
     /**
-     * Método que asigna los campos iva_no_recuperable e impuesto_adicional si
+     * Asigna los campos iva_no_recuperable e impuesto_adicional si
      * se pasaron separados en varios campos.
      */
     public function set($datos)
@@ -393,7 +393,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que inserta un registro nuevo en la base de datos.
+     * Inserta un registro nuevo en la base de datos.
      */
     public function insert(): bool
     {
@@ -404,7 +404,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que entrega el tipo de transación asociado.
+     * Entrega el tipo de transación asociado.
      */
     public function getTipoTransaccion(): stdClass
     {
@@ -418,7 +418,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que determina y envía al SII el tipo de transacción del DTE recibido.
+     * Determina y envía al SII el tipo de transacción del DTE recibido.
      */
     public function setTipoTransaccionSII()
     {
@@ -477,7 +477,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que entrega el período al que corresponde el DTE.
+     * Entrega el período al que corresponde el DTE.
      */
     public function getPeriodo()
     {
@@ -488,7 +488,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que entrega el objeto del tipo del dte
+     * Entrega el objeto del tipo del dte
      * @return Model_DteTipo
      */
     public function getTipo(): Model_DteTipo
@@ -497,7 +497,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que entrega el objeto del Dte.
+     * Entrega el objeto del Dte.
      */
     public function getDte()
     {
@@ -518,7 +518,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que entrega el objeto del emisor del dte recibido.
+     * Entrega el objeto del emisor del dte recibido.
      */
     public function getEmisor()
     {
@@ -534,7 +534,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que entrega el objeto del receptor del dte recibido.
+     * Entrega el objeto del receptor del dte recibido.
      */
     public function getReceptor()
     {
@@ -575,7 +575,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que entrega los impuestos adicionales del documento.
+     * Entrega los impuestos adicionales del documento.
      */
     public function getImpuestosAdicionales(string $prefix = ''): array
     {
@@ -594,7 +594,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que entrega los valores de IVA no recuperable.
+     * Entrega los valores de IVA no recuperable.
      */
     public function getIVANoRecuperable($prefix = '')
     {
@@ -613,7 +613,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que entrega el objeto del DTE de intercambio.
+     * Entrega el objeto del DTE de intercambio.
      */
     public function getDteIntercambio()
     {
@@ -628,7 +628,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que entrega los datos del DTE (el XML como arreglo).
+     * Entrega los datos del DTE (el XML como arreglo).
      */
     public function getDatos()
     {
@@ -663,7 +663,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que entrega el detalle del documento recibido si existe intercambio asociado.
+     * Entrega el detalle del documento recibido si existe intercambio asociado.
      */
     public function getDetalle()
     {
@@ -686,7 +686,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que entrega las referencias que este DTE hace a otros documentos.
+     * Entrega las referencias que este DTE hace a otros documentos.
      */
     public function getReferenciados()
     {
@@ -728,7 +728,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que indica si el DTE recibido tiene un XML asociado (LibreDTE o
+     * Indica si el DTE recibido tiene un XML asociado (LibreDTE o
      * MIPYME).
      */
     public function hasXML()
@@ -737,7 +737,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que indica si el DTE recibido tiene un XML en LibreDTE.
+     * Indica si el DTE recibido tiene un XML en LibreDTE.
      */
     public function hasLocalXML()
     {
@@ -745,7 +745,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que entrega el XML del documento recibido.
+     * Entrega el XML del documento recibido.
      * Entrega el XML asociado a un intercambio en LibreDTE o bien recibido con
      * el Portal MIPYME del SII.
      */
@@ -803,7 +803,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que entrega la actividad económica asociada al documento.
+     * Entrega la actividad económica asociada al documento.
      */
     public function getActividad($default = null)
     {
@@ -815,7 +815,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que entrega el PDF del documento recibido.
+     * Entrega el PDF del documento recibido.
      * Entrega el PDF que se ha generado con LibreDTE a partir del XML del DTE
      * recibido o bien el PDF generado con el PortalMIPYME del SII.
      */
@@ -911,7 +911,7 @@ class Model_DteRecibido extends Model
     }
 
     /**
-     * Método que entrega el código ESCPOS del documento emitido.
+     * Entrega el código ESCPOS del documento emitido.
      */
     public function getESCPOS(array $config = [])
     {

@@ -498,7 +498,7 @@ class Model_RegistroCompra extends Model
     ];
 
     /**
-     * Método que se ejecuta al insertar un nuevo registro en la base de datos.
+     * Se ejecuta al insertar un nuevo registro en la base de datos.
      */
     protected function insert()
     {

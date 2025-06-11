@@ -42,7 +42,7 @@ abstract class Controller extends \sowerphp\core\Controller
         $action = $request->getRouteConfig()['action'];
         if ($action != 'api') {
             $controller = $request->getRouteConfig()['controller'];
-            $module = $request->getRouteConfig()['module'];
+            $module = $request->getRouteConfig()['module'] ?? '';
             $isDteModule = (
                 strpos($module, 'Dte') === 0
                 && $controller != 'contribuyentes'

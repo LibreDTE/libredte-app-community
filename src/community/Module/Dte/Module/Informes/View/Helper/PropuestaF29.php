@@ -197,7 +197,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
     }
 
     /**
-     * Método que crea la hoja con las compras del período.
+     * Crea la hoja con las compras del período.
      */
     public function setCompras($compras)
     {
@@ -313,7 +313,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
     }
 
     /**
-     * Método que crea la hoja con las ventas del período.
+     * Crea la hoja con las ventas del período.
      */
     public function setVentas($ventas)
     {
@@ -421,7 +421,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
     }
 
     /**
-     * Método que crea la hoja de resumen con la propuesta del formulario 29.
+     * Crea la hoja de resumen con la propuesta del formulario 29.
      */
     public function setResumen(array $f29)
     {
@@ -851,7 +851,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
     }
 
     /**
-     * Método que asigna un dato a una celda, se usa este método para poder ir
+     * Asigna un dato a una celda, se usa este método para poder ir
      * recordando las celdas donde se dejaron los datos y así poder usar en las
      * fórmulas.
      */
@@ -863,7 +863,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
     }
 
     /**
-     * Método que obtiene un dato del arreglo con los códigos y datos del
+     * Obtiene un dato del arreglo con los códigos y datos del
      * formulario.
      */
     private function getDato($codigo)

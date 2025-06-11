@@ -122,7 +122,7 @@ class Model_DteReferencia extends Model
     ];
 
     /**
-     * Método que entrega el documento asociado a la referencia.
+     * Entrega el documento asociado a la referencia.
      */
     public function getDocumento()
     {

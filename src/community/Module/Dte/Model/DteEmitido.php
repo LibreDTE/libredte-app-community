@@ -306,7 +306,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que realiza verificaciones a campos antes de guardar.
+     * Realiza verificaciones a campos antes de guardar.
      */
     public function save(array $options = []): bool
     {
@@ -361,7 +361,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que inserta un registro nuevo en la base de datos.
+     * Inserta un registro nuevo en la base de datos.
      */
     public function insert(): bool
     {
@@ -372,7 +372,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el objeto del tipo del dte.
+     * Entrega el objeto del tipo del dte.
      * @return Model_DteTipo
      */
     public function getTipo(): Model_DteTipo
@@ -381,7 +381,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el objeto del Dte.
+     * Entrega el objeto del Dte.
      * @return \sasco\LibreDTE\Sii\Dte
      */
     public function getDte()
@@ -405,7 +405,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el objeto del emisor del DTE.
+     * Entrega el objeto del emisor del DTE.
      * @return Model_Contribuyente
      */
     public function getEmisor(): Model_Contribuyente
@@ -419,7 +419,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el objeto del receptor del DTE.
+     * Entrega el objeto del receptor del DTE.
      * @return Model_Contribuyente
      */
     public function getReceptor(): Model_Contribuyente
@@ -479,7 +479,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el período contable al que correspondel el DTE.
+     * Entrega el período contable al que correspondel el DTE.
      */
     public function getPeriodo(): int
     {
@@ -487,7 +487,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega la sucursal asociada al documento emitido.
+     * Entrega la sucursal asociada al documento emitido.
      */
     public function getSucursal()
     {
@@ -495,7 +495,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el vendedor asociado al DTE emitido.
+     * Entrega el vendedor asociado al DTE emitido.
      */
     public function getVendedor()
     {
@@ -507,7 +507,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el arreglo con los datos que se usaron para
+     * Entrega el arreglo con los datos que se usaron para
      * generar el XML del DTE.
      * @return array|false
      */
@@ -546,7 +546,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el arreglo con los datos del XML de cesión del DTE.
+     * Entrega el arreglo con los datos del XML de cesión del DTE.
      */
     public function getDatosCesion()
     {
@@ -567,7 +567,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el listado de correos a los que se debería enviar el
+     * Entrega el listado de correos a los que se debería enviar el
      * DTE (correo receptor, correo intercambio y correo del dte).
      */
     public function getEmails(): array
@@ -636,7 +636,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega las referencias que este DTE hace a otros documentos.
+     * Entrega las referencias que este DTE hace a otros documentos.
      */
     public function getReferenciados(): ?array
     {
@@ -685,7 +685,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega las referencias que existen a este DTE.
+     * Entrega las referencias que existen a este DTE.
      */
     public function getReferencias(): array
     {
@@ -726,7 +726,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que indica si el documento permite o no ser cobrado.
+     * Indica si el documento permite o no ser cobrado.
      */
     public function permiteCobro(): bool
     {
@@ -757,7 +757,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega del intercambio el objeto del Recibo del DTE.
+     * Entrega del intercambio el objeto del Recibo del DTE.
      * @return Model_DteIntercambioReciboDte|false
      */
     public function getIntercambioRecibo()
@@ -772,7 +772,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega del intercambio el objeto de la Recepcion del DTE.
+     * Entrega del intercambio el objeto de la Recepcion del DTE.
      * @return Model_DteIntercambioRecepcionDte|false
      */
     public function getIntercambioRecepcion()
@@ -787,7 +787,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega del intercambio el objeto del Resultado del DTE.
+     * Entrega del intercambio el objeto del Resultado del DTE.
      * @return Model_DteIntercambioResultadoDte|false
      */
     public function getIntercambioResultado()
@@ -802,7 +802,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega los pagos programados del DTE.
+     * Entrega los pagos programados del DTE.
      */
     public function getPagosProgramados(): array
     {
@@ -828,7 +828,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega los datos de cobranza de los pagos programados del DTE.
+     * Entrega los datos de cobranza de los pagos programados del DTE.
      */
     public function getCobranza(): array
     {
@@ -861,7 +861,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el estado del envío del DTE al SII.
+     * Entrega el estado del envío del DTE al SII.
      * @return string R: si es RSC, RCT, RCH, =null otros casos.
      */
     public function getEstado(): ?string
@@ -884,7 +884,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que indica si un documento es o no referenciable.
+     * Indica si un documento es o no referenciable.
      */
     public function esReferenciable(): bool
     {
@@ -906,7 +906,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega true si se puede eliminar el DTE o una excepción con la causa si no es posible.
+     * Entrega true si se puede eliminar el DTE o una excepción con la causa si no es posible.
      * Solo se pueden eliminar DTE que:
      *   - No sean boletas y cumplan con:
      *     - Estén rechazados.
@@ -983,8 +983,8 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que indica si el DTE es o no eliminable.
-     * @return bool =true si se puede eliminar, =false si no es posible eliminar.
+     * Indica si el DTE es o no eliminable.
+     * @return bool `true` si se puede eliminar, `false` si no es posible eliminar.
      */
     public function eliminable($Usuario = false): bool
     {
@@ -999,7 +999,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que elimina el DTE, y si no hay DTE posterior del mismo tipo,
+     * Elimina el DTE, y si no hay DTE posterior del mismo tipo,
      * restaura el folio para que se volver a utilizar.
      */
     public function delete($Usuario = null): bool
@@ -1072,7 +1072,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega true si se puede eliminar el XML del DTE o una
+     * Entrega true si se puede eliminar el XML del DTE o una
      * excepción con la causa si no es posible.
      * Actualmente, solo se pueden eliminar:
      *   - Boletas que cumplan con:
@@ -1119,8 +1119,8 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que indica si el XML del DTE es o no eliminable
-     * @return bool =true si se puede eliminar, =false si no es posible eliminar.
+     * Indica si el XML del DTE es o no eliminable
+     * @return bool `true` si se puede eliminar, `false` si no es posible eliminar.
      */
     public function eliminableXML($Usuario = false): bool
     {
@@ -1135,7 +1135,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que elimina el XML del DTE.
+     * Elimina el XML del DTE.
      */
     public function deleteXML($Usuario = null)
     {
@@ -1145,7 +1145,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que indica si el DTE se debe enviar o no al SII.
+     * Indica si el DTE se debe enviar o no al SII.
      */
     public function seEnvia(): bool
     {
@@ -1169,7 +1169,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que envía el DTE emitido al SII, básicamente lo saca del
+     * Envía el DTE emitido al SII, básicamente lo saca del
      * sobre y lo pone en uno nuevo con el RUT del SII.
      * @param user ID del usuari oque hace el envío.
      * @param retry Número de intentos que se usarán para enviar el DTE al SII
@@ -1320,7 +1320,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que actualiza el estado de un DTE enviado al SII.
+     * Actualiza el estado de un DTE enviado al SII.
      * En realidad es un wrapper para las verdaderas llamadas.
      * @param bool $usarWebservice =true se consultará vía servicio web =false vía email.
      */
@@ -1342,7 +1342,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que actualiza el estado de un DTE enviado al SII a través
+     * Actualiza el estado de un DTE enviado al SII a través
      * del servicio web que dispone el SII para esta consulta.
      */
     private function actualizarEstadoWebservice($user_id = null): array
@@ -1455,7 +1455,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que actualiza el estado de un DTE enviado al SII a través
+     * Actualiza el estado de un DTE enviado al SII a través
      * del email que es recibido desde el SII.
      */
     private function actualizarEstadoEmail(): array
@@ -1600,7 +1600,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que corrige el monto total del DTE al valor de la moneda
+     * Corrige el monto total del DTE al valor de la moneda
      * oficial para el día según lo registrado en el sistema (datos del
      * banco central).
      */
@@ -1625,7 +1625,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que indica la cantidad de veces que un DTE ha sido enviado
+     * Indica la cantidad de veces que un DTE ha sido enviado
      * por correo electrónico.
      */
     public function emailEnviado(string $email = null): int
@@ -1654,7 +1654,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que envía el DTE por correo electrónico.
+     * Envía el DTE por correo electrónico.
      */
     public function email($to = null, ?string $subject = null, ?string $msg = null, bool $pdf = false, bool $cedible = false, ?int $papelContinuo = null, bool $use_template = true)
     {
@@ -1808,7 +1808,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el resumen de los correos enviados.
+     * Entrega el resumen de los correos enviados.
      */
     public function getEmailEnviadosResumen(): array
     {
@@ -1839,7 +1839,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el cobro asociado al DTE emitido.
+     * Entrega el cobro asociado al DTE emitido.
      * @return \libredte\enterprise\Pagos\Model_Cobro|false
      */
     public function getCobro($crearSiNoExiste = true)
@@ -1856,7 +1856,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el vencimiento del documento si es que existe.
+     * Entrega el vencimiento del documento si es que existe.
      */
     public function getVencimiento(): ?string
     {
@@ -1868,7 +1868,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el total real del DTE, si es documento de
+     * Entrega el total real del DTE, si es documento de
      * exportación se entrega el total en la moneda extranjera.
      * @return number|false
      */
@@ -1890,7 +1890,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el detalle del DTE.
+     * Entrega el detalle del DTE.
      */
     public function getDetalle(): array
     {
@@ -1902,7 +1902,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el teléfono asociado al DTE, ya sea porque
+     * Entrega el teléfono asociado al DTE, ya sea porque
      * existe en el DTE o asociado directamente al receptor.
      */
     public function getTelefono(): ?string
@@ -1926,7 +1926,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el celular asociado al DTE si existe
+     * Entrega el celular asociado al DTE si existe
      * @warning Solo detecta como celular un número chileno (+56 9).
      */
     public function getCelular(): ?string
@@ -1944,7 +1944,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega los enlaces públicos del documento.
+     * Entrega los enlaces públicos del documento.
      */
     public function getLinks(): array
     {
@@ -1987,7 +1987,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que indica si el estado de revisión del DTE en el envío al
+     * Indica si el estado de revisión del DTE en el envío al
      * SII es un estado final o bien aun faltan estados por obtener.
      */
     public function tieneEstadoRevisionEnvioSIIFinal(): bool
@@ -2004,7 +2004,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega posibles ayudas para los estados del envío al SII.
+     * Entrega posibles ayudas para los estados del envío al SII.
      */
     public function getAyudaEstadoEnvioSII(): ?string
     {
@@ -2038,7 +2038,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que indica si el DTE emitido tiene un XML asociado
+     * Indica si el DTE emitido tiene un XML asociado
      * (en LibreDTE o MIPYME).
      */
     public function hasXML(): bool
@@ -2047,7 +2047,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que indica si el DTE emitido tiene un XML en LibreDTE.
+     * Indica si el DTE emitido tiene un XML en LibreDTE.
      */
     public function hasLocalXML(): bool
     {
@@ -2055,7 +2055,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el XML del documento emitido.
+     * Entrega el XML del documento emitido.
      * Entrega el XML que existe en LibreDTE o bien generado con el
      * Portal MIPYME del SII.
      * @return string|false
@@ -2124,7 +2124,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega los datos extras del documento.
+     * Entrega los datos extras del documento.
      */
     public function getExtra(): ?array
     {
@@ -2138,7 +2138,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega la actividad económica asociada al documento.
+     * Entrega la actividad económica asociada al documento.
      */
     public function getActividad(?string $default = null): ?string
     {
@@ -2150,7 +2150,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el PDF del documento emitido.
+     * Entrega el PDF del documento emitido.
      * Entrega el PDF que se ha generado con LibreDTE a partir del XML del
      * DTE emitido o bien el PDF generado con el PortalMIPYME del SII.
      */
@@ -2249,7 +2249,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el código ESCPOS del documento emitido.
+     * Entrega el código ESCPOS del documento emitido.
      */
     public function getESCPOS(array $config = [])
     {
@@ -2356,7 +2356,7 @@ class Model_DteEmitido extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el Track ID del DTE o la glosa si tiene otro
+     * Entrega el Track ID del DTE o la glosa si tiene otro
      * significado.
      */
     public function getTrackID(): string

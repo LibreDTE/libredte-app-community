@@ -53,7 +53,7 @@ class Utility_Formatos
     }
 
     /**
-     * Método que entrega todos los proveedores de correo activos del contribuyuente.
+     * Entrega todos los proveedores de correo activos del contribuyuente.
      */
     public function getFormatos()
     {

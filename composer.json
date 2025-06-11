@@ -19,7 +19,7 @@
         "classmap": ["src/"]
     },
     "require": {
-        "php": "7.4.*",
+        "php": "^7.4",
         "apigatewaycl/apigateway-api-client": "^2",
         "sasco/libredte": "~24.1.1",
         "kunalvarma05/dropbox-php-sdk": "0.4.1",

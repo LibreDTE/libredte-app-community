@@ -103,7 +103,7 @@ class Model_DteIntercambioRecibo extends Model
     ];
 
     /**
-     * Método que guarda el XML del Recibo de un intercambio.
+     * Guarda el XML del Recibo de un intercambio.
      */
     public function saveXML($Emisor, $xml) {
         // crear recibo

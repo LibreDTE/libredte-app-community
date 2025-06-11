@@ -34,7 +34,7 @@ class Model_Cobranzas extends Model_Plural
 {
 
     /**
-     * Método que entrega los pagos programados pendientes de pago (pagos por
+     * Entrega los pagos programados pendientes de pago (pagos por
      * cobrar).
      */
     public function getPendientes(array $filtros = []): array
@@ -137,7 +137,7 @@ class Model_Cobranzas extends Model_Plural
     }
 
     /**
-     * Método que entrega un resumen con el estado de los pagos programados por ventas a crédito.
+     * Entrega un resumen con el estado de los pagos programados por ventas a crédito.
      */
     public function getResumen(?string $dia = null): array
     {

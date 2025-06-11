@@ -32,9 +32,8 @@ use sowerphp\autoload\Model_Plural;
  */
 class Model_ImpuestoAdicionales extends Model_Plural
 {
-
     /**
-     * Método que entrega el listado de impuesto adicionales.
+     * Entrega el listado de impuesto adicionales.
      */
     public function getList(): array
     {
@@ -46,7 +45,7 @@ class Model_ImpuestoAdicionales extends Model_Plural
     }
 
     /**
-     * Método que entrega el listado de impuesto adicionales que tienen tasa.
+     * Entrega el listado de impuesto adicionales que tienen tasa.
      */
     public function getListConTasa()
     {
@@ -59,7 +58,7 @@ class Model_ImpuestoAdicionales extends Model_Plural
     }
 
     /**
-     * Método que entrega un arreglo asociativo con los códigos y tasas disponibles.
+     * Entrega un arreglo asociativo con los códigos y tasas disponibles.
      */
     public function getTasas()
     {
@@ -72,7 +71,7 @@ class Model_ImpuestoAdicionales extends Model_Plural
     }
 
     /**
-     * Método que entrega el listado de impuesto adicionales filtrados para un
+     * Entrega el listado de impuesto adicionales filtrados para un
      * contribuyente.
      */
     public function getListContribuyente(?array $listado = []): array
@@ -96,7 +95,7 @@ class Model_ImpuestoAdicionales extends Model_Plural
     }
 
     /**
-     * Método que entrega un arreglo con los objetos de impuesto adicionales
+     * Entrega un arreglo con los objetos de impuesto adicionales
      * para un contribuyente.
      */
     public function getObjectsContribuyente(?array $listado = []): array
@@ -126,5 +125,4 @@ class Model_ImpuestoAdicionales extends Model_Plural
         }
         return $ImpuestoAdicionales;
     }
-
 }

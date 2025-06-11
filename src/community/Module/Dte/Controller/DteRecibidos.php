@@ -203,7 +203,7 @@ class Controller_DteRecibidos extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que agrega o modifica un DTE recibido.
+     * Agrega o modifica un DTE recibido.
      */
     private function save(Request $request)
     {

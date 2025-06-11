@@ -70,7 +70,7 @@ class Shell_Command_Indicadores_Uf extends \sowerphp\core\Shell_App
     }
 
     /**
-     * Método que muestra los valores de un año de UF
+     * Muestra los valores de un año de UF
      * @param $valores Arreglo con los valores de la UF de todos los meses de uno o varios años
      */
     private function showValores($valores)
@@ -111,7 +111,7 @@ class Shell_Command_Indicadores_Uf extends \sowerphp\core\Shell_App
     }
 
     /**
-     * Método que guarda los valores de la UF en la base de datos.
+     * Guarda los valores de la UF en la base de datos.
      * @param array $valores Arreglo con los valores de la UF de todos los meses de uno o varios años.
      */
     private function saveValores(array $valores): void

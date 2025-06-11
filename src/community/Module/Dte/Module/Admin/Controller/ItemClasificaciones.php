@@ -31,11 +31,6 @@ use sowerphp\core\Network_Request as Request;
  */
 class Controller_ItemClasificaciones extends \sowerphp\autoload\Controller_Model
 {
-
-    protected $columnsView = [
-        'listar' => ['codigo', 'clasificacion', 'superior', 'activa']
-    ]; ///< Columnas que se deben mostrar en las vistas
-
     /**
      * Acción para listar las clasificaciones de items del contribuyente.
      */
@@ -256,5 +251,4 @@ class Controller_ItemClasificaciones extends \sowerphp\autoload\Controller_Model
             ->getTable()
         ;
     }
-
 }

@@ -3,7 +3,7 @@
 #
 
 # URL donde se está ejecutando la aplicación.
-#APP_URL="http://localhost:8000/libredte-community"
+#APP_URL="https://community.libredte.cl"
 
 # Clave de encriptación.
 # Formato clave: base64:KEY

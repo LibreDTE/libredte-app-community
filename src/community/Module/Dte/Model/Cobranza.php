@@ -148,7 +148,7 @@ class Model_Cobranza extends Model
     ];
 
     /**
-     * Método que entrega el DTE emitido asociado al pago que.
+     * Entrega el DTE emitido asociado al pago que.
      */
     public function getDocumento()
     {
@@ -158,7 +158,7 @@ class Model_Cobranza extends Model
     }
 
     /**
-     * Método que entrega los otros pagos asociados al documento.
+     * Entrega los otros pagos asociados al documento.
      */
     public function otrosPagos()
     {

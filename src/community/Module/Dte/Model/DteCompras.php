@@ -32,9 +32,8 @@ use sowerphp\autoload\Model_Plural;
  */
 class Model_DteCompras extends Model_Plural
 {
-
     /**
-     * Método que indica si el libro para cierto periodo está o no generado.
+     * Indica si el libro para cierto periodo está o no generado.
      */
     public function libroGenerado($periodo): bool
     {
@@ -54,7 +53,7 @@ class Model_DteCompras extends Model_Plural
     }
 
     /**
-     * Método que entrega el total mensual del libro de compras.
+     * Entrega el total mensual del libro de compras.
      */
     public function getTotalesMensuales($anio): array
     {
@@ -77,7 +76,7 @@ class Model_DteCompras extends Model_Plural
     }
 
     /**
-     * Método que entrega el resumen anual de compras.
+     * Entrega el resumen anual de compras.
      */
     public function getResumenAnual($anio): array
     {
@@ -118,7 +117,7 @@ class Model_DteCompras extends Model_Plural
     }
 
     /**
-     * Método que entrega el resumen de los documentos de compras.
+     * Entrega el resumen de los documentos de compras.
      * totalizado según ciertos filtros y por tipo de documento.
      * @todo Agregar las facturas de compras al resumen (tipo 46).
      */
@@ -277,7 +276,7 @@ class Model_DteCompras extends Model_Plural
     }
 
     /**
-     * Método que agrega masivamente documentos recibidos y acepta los intercambios asociados al DTE.
+     * Agrega masivamente documentos recibidos y acepta los intercambios asociados al DTE.
      */
     private function agregarMasivo($documentos, array $config = []): void
     {
@@ -365,7 +364,7 @@ class Model_DteCompras extends Model_Plural
     }
 
     /**
-     * Método que elimina masivamente documentos recibidos y los intercambios asociados al DTE.
+     * Elimina masivamente documentos recibidos y los intercambios asociados al DTE.
      */
     private function eliminarMasivo($documentos): void
     {
@@ -450,5 +449,4 @@ class Model_DteCompras extends Model_Plural
         }
         return $documentos_encontrados;
     }
-
 }

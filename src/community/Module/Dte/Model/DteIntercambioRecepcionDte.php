@@ -120,7 +120,7 @@ class Model_DteIntercambioRecepcionDte extends Model
     ];
 
     /**
-     * Método que entrega el sobre (xml) donde veía la recepción.
+     * Entrega el sobre (xml) donde veía la recepción.
      */
     public function getSobre()
     {

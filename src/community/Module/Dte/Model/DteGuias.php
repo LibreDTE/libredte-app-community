@@ -34,7 +34,7 @@ class Model_DteGuias extends Model_Plural
 {
 
     /**
-     * Método que entrega los despachos de un contribuyente para cierta fecha.
+     * Entrega los despachos de un contribuyente para cierta fecha.
      */
     public function getDespachos(array $filtros = []): array
     {
@@ -136,7 +136,7 @@ class Model_DteGuias extends Model_Plural
     }
 
     /**
-     * Método que entrega las guías de despacho que no se han facturado, esto
+     * Entrega las guías de despacho que no se han facturado, esto
      * es aquellas que tienen indicador de traslado "operación constituye venta"
      * y no poseen una referencia desde una factura electrónica.
      */
@@ -178,7 +178,7 @@ class Model_DteGuias extends Model_Plural
     }
 
     /**
-     * Método que realiza la facturación masiva de las guías de despacho.
+     * Realiza la facturación masiva de las guías de despacho.
      * Creará una factura para cada RUT que se esté facturando.
      */
     public function facturar(array $folios, array $datos = []): array
@@ -207,7 +207,7 @@ class Model_DteGuias extends Model_Plural
     }
 
     /**
-     * Método que crea el DTE temporal de una factura para un grupo de guías de
+     * Crea el DTE temporal de una factura para un grupo de guías de
      * despacho.
      */
     private function crearDteTmp($guias, array $datos = [], int $guias_max = 10)

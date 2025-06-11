@@ -105,7 +105,7 @@ class Model_BoletaHonorario extends Model
     ];
 
     /**
-     * Método que entrega el objeto del emisor de la boleta.
+     * Entrega el objeto del emisor de la boleta.
      */
     public function getEmisor()
     {
@@ -113,7 +113,7 @@ class Model_BoletaHonorario extends Model
     }
 
     /**
-     * Método que entrega el objeto del receptor de la boleta.
+     * Entrega el objeto del receptor de la boleta.
      */
     public function getReceptor()
     {
@@ -121,7 +121,7 @@ class Model_BoletaHonorario extends Model
     }
 
     /**
-     * Método que obtiene el PDF de la boleta de honorarios desde el SII.
+     * Obtiene el PDF de la boleta de honorarios desde el SII.
      */
     public function getPDF()
     {

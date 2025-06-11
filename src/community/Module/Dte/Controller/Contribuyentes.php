@@ -39,7 +39,7 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
 {
 
     /**
-     * Método que selecciona la empresa con la que se trabajará en el módulo DTE.
+     * Selecciona la empresa con la que se trabajará en el módulo DTE.
      * @param rut Si se pasa un RUT se tratará de seleccionar.
      * @param url URL a la que redirigir después de seleccionar el contribuyente.
      */
@@ -325,7 +325,7 @@ class Controller_Contribuyentes extends \sowerphp\autoload\Controller_Model
     }
 
     /**
-     * Método que prepara los datos de configuraciones del contribuyente para
+     * Prepara los datos de configuraciones del contribuyente para
      * ser guardados.
      */
     protected function prepararDatosContribuyente(&$Contribuyente)

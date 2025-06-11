@@ -32,9 +32,8 @@ use sowerphp\autoload\Model_Plural;
  */
 class Model_ItemClasificaciones extends Model_Plural
 {
-
     /**
-     * Método que entrega el listado de clasificaciones.
+     * Entrega el listado de clasificaciones.
      */
     public function getList(): array
     {
@@ -49,7 +48,7 @@ class Model_ItemClasificaciones extends Model_Plural
     }
 
     /**
-     * Método que entrega el listado de clasificaciones con sus items y valores brutos.
+     * Entrega el listado de clasificaciones con sus items y valores brutos.
      */
     public function getListItems()
     {
@@ -59,7 +58,7 @@ class Model_ItemClasificaciones extends Model_Plural
     }
 
     /**
-     * Método que entrega el árbol de clasificaciones de items con los items y
+     * Entrega el árbol de clasificaciones de items con los items y
      * sus precios.
      */
     public function getArbolItems()
@@ -120,5 +119,4 @@ class Model_ItemClasificaciones extends Model_Plural
             ORDER BY superior, codigo
         ', [':contribuyente' => $this->getContribuyente()->rut]);
     }
-
 }

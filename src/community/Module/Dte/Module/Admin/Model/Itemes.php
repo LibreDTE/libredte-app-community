@@ -32,9 +32,8 @@ use sowerphp\autoload\Model_Plural;
  */
 class Model_Itemes extends Model_Plural
 {
-
     /**
-     * Método que busca un item en la base de datos.
+     * Busca un item en la base de datos.
      */
     public function get(...$id): \sowerphp\core\Model
     {
@@ -61,7 +60,7 @@ class Model_Itemes extends Model_Plural
     }
 
     /**
-     * Método que entrega el listado de items del contribuyente.
+     * Entrega el listado de items del contribuyente.
      */
     public function getList(): array
     {
@@ -74,7 +73,7 @@ class Model_Itemes extends Model_Plural
     }
 
     /**
-     * Método que busca los items del contribuyente.
+     * Busca los items del contribuyente.
      */
     public function getItems($filtros = [])
     {
@@ -104,5 +103,4 @@ class Model_Itemes extends Model_Plural
             ORDER BY clasificacion, codigo_tipo, codigo
         ', [':contribuyente' => $this->getContribuyente()->rut]);
     }
-
 }

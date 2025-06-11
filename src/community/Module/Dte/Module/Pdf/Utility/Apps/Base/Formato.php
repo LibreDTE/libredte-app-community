@@ -32,7 +32,7 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
     protected $namespace = 'dtepdfs'; ///< nombre del grupo de las aplicaciones que heredan esta clase
 
     /**
-     * Método que entrega el código HTML de la página de configuración de la
+     * Entrega el código HTML de la página de configuración de la
      * aplicación.
      *
      * @return string HTML renderizado con la configuración de la aplicación.
@@ -66,7 +66,7 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
     }
 
     /**
-     * Método que asigna la configuración de la aplicación procesando el
+     * Asigna la configuración de la aplicación procesando el
      * formulario enviado por POST.
      *
      * @return array|null Arreglo con la configuración determinada.
@@ -94,7 +94,7 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
     }
 
     /**
-     * Método que crea la configuración de manera automágica modificando la
+     * Crea la configuración de manera automágica modificando la
      * variable $_POST.
      *
      * Este método también deja limpia la variable $_POST.
@@ -144,7 +144,7 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
     }
 
     /**
-     * Método que entrega la configuración de los flags del formato que
+     * Entrega la configuración de los flags del formato que
      * permiten activar o desactivar opciones (de un flag o de todos).
      *
      * @param flag Flag que se quiere obtener o null para obtenerlos todos.
@@ -158,7 +158,7 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
     }
 
     /**
-     * Método que entrega los datos con la configuración para el PDF que se generará.
+     * Entrega los datos con la configuración para el PDF que se generará.
      * Permite sobreescribir en clase de aplicación de PDF para pasar datos específicos
      * de cierta aplicación que no son configurables por el usuario.
      */
@@ -168,7 +168,7 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
     }
 
     /**
-     * Método que genera el PDF consumiendo el servicio web de la API de LibreDTE.
+     * Genera el PDF consumiendo el servicio web de la API de LibreDTE.
      */
     public function generar($config)
     {

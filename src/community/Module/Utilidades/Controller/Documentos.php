@@ -851,7 +851,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que guarda los datos del Emisor.
+     * Guarda los datos del Emisor.
      */
     private function guardarEmisor($datos)
     {
@@ -892,7 +892,7 @@ class Controller_Documentos extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que guarda un Receptor.
+     * Guarda un Receptor.
      */
     private function guardarReceptor($datos)
     {

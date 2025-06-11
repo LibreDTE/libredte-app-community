@@ -187,7 +187,7 @@ class Model_DteIntercambio extends Model
     ];
 
     /**
-     * Método que indica si ya existe previamente el documento (mismo archivo).
+     * Indica si ya existe previamente el documento (mismo archivo).
      */
     private function existeArchivo(): bool
     {
@@ -208,7 +208,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que guarda el enviodte que se ha recibido desde otro contribuyente.
+     * Guarda el enviodte que se ha recibido desde otro contribuyente.
      */
     public function save(array $options = []): bool
     {
@@ -244,7 +244,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que entrega el objeto EnvioDte.
+     * Entrega el objeto EnvioDte.
      * @return \sasco\LibreDTE\Sii\EnvioDte
      */
     public function getEnvioDte(): \sasco\LibreDTE\Sii\EnvioDte
@@ -257,7 +257,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que entrega un arreglo con los objetos Dte con los documentos.
+     * Entrega un arreglo con los objetos Dte con los documentos.
      * @return array Arreglo de \sasco\LibreDTE\Sii\Dte
      */
     public function getDocumentos()
@@ -269,7 +269,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que entrega un objetos Dte con el documento solicitado o false si no se encontró.
+     * Entrega un objetos Dte con el documento solicitado o false si no se encontró.
      * @return \sasco\LibreDTE\Sii\Dte
      */
     public function getDocumento($emisor, $dte, $folio): \sasco\LibreDTE\Sii\Dte
@@ -278,7 +278,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que entrega el objeto del receptor del intercambio.
+     * Entrega el objeto del receptor del intercambio.
      */
     public function getReceptor()
     {
@@ -289,7 +289,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que entrega el objeto del emisor del intercambio.
+     * Entrega el objeto del emisor del intercambio.
      */
     public function getEmisor()
     {
@@ -305,7 +305,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que entrega el objeto del estado del intercambio.
+     * Entrega el objeto del estado del intercambio.
      */
     public function getEstado()
     {
@@ -316,7 +316,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que entrega el asunto del correo del intercambio.
+     * Entrega el asunto del correo del intercambio.
      * Se recomienda usar este método para tratar de obtener el texto en la codificación correcta.
      */
     public function getEmailAsunto()
@@ -328,7 +328,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que entrega el contenido del correo del intercambio en TXT.
+     * Entrega el contenido del correo del intercambio en TXT.
      * Se recomienda usar este método para tratar de obtener el texto en la codificación correcta.
      */
     public function getEmailTxt()
@@ -344,7 +344,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que entrega el contenido del correo del intercambio en HTML.
+     * Entrega el contenido del correo del intercambio en HTML.
      * Se recomienda usar este método para tratar de obtener el texto en la codificación correcta.
      */
     public function getEmailHtml()
@@ -360,7 +360,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que indica si intercambio se encuentra asociado a un DTE recibido.
+     * Indica si intercambio se encuentra asociado a un DTE recibido.
      */
     public function recibido()
     {
@@ -377,7 +377,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que busca si los documentos del intercambio ya están en otro intercambio previamente recibido.
+     * Busca si los documentos del intercambio ya están en otro intercambio previamente recibido.
      */
     public function recibidoPreviamente()
     {
@@ -479,7 +479,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que genera y envía la respuesta del intercambio
+     * Genera y envía la respuesta del intercambio
      * @param accion =true recibir todo el intercambio, =false reclama todo el intercambio, =array procesa los documentos indicados, debe tener índice recibir y/o reclamar o bien indíce númerico y se asume es el listado de documentos.
      * @param config Configuración global para la respuesta con índices: user_id, NmbContacto, MailContacto, sucursal, Recinto, responder_a, periodo.
      */
@@ -639,7 +639,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que crea el XML RecepcionDTE.
+     * Crea el XML RecepcionDTE.
      */
     private function crearXmlRecepcionDte($documentos, $config, $Firma)
     {
@@ -704,7 +704,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que crea el XML EnvioRecibos.
+     * Crea el XML EnvioRecibos.
      */
     private function crearXmlEnvioRecibos($documentos, $config, $Firma)
     {
@@ -749,7 +749,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que crea el XML ResultadoDTE.
+     * Crea el XML ResultadoDTE.
      */
     private function crearXmlResultadoDte($documentos, $config, $Firma)
     {
@@ -793,7 +793,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que envía los 3 XML (si existen) por correo electrónico al emisor del intercambio.
+     * Envía los 3 XML (si existen) por correo electrónico al emisor del intercambio.
      */
     private function enviarEmailRespuestaXML($responder_a, $xmlRecepcionDte, $xmlEnvioRecibos, $xmlResultadoDte)
     {
@@ -843,7 +843,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que guarda los documentos que han sido aceptados (con acuse de recibo).
+     * Guarda los documentos que han sido aceptados (con acuse de recibo).
      */
     private function guardarDocumentosRecibidos(array $guardar_dte, array $rc_accion, array $config)
     {
@@ -983,7 +983,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que entrega el PDF del intercambio.
+     * Entrega el PDF del intercambio.
      * Entrega un PDF con todos los documentos del intercambio o bien puede
      * entregar el PDF de un DTE específico que venga en el intercambio.
      */
@@ -1121,7 +1121,7 @@ class Model_DteIntercambio extends Model
     }
 
     /**
-     * Método que indica si el intercambio es el último (según código).
+     * Indica si el intercambio es el último (según código).
      */
     public function esUltimoIntercambio(): bool
     {

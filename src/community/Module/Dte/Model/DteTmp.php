@@ -133,7 +133,7 @@ class Model_DteTmp extends Model
     private $cache_datos; ///< Caché para los datos del documento
 
     /**
-     * Método que genera el XML de EnvioDTE a partir de los datos ya
+     * Genera el XML de EnvioDTE a partir de los datos ya
      * normalizados de un DTE temporal.
      */
     public function getEnvioDte($folio = 0, \sasco\LibreDTE\Sii\Folios $Folios = null, \sasco\LibreDTE\FirmaElectronica $Firma = null, $RutReceptor = null, $fecha_emision = null)
@@ -238,7 +238,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega el objeto de receptor.
+     * Entrega el objeto de receptor.
      */
     public function getReceptor()
     {
@@ -288,7 +288,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega el objeto del tipo de dte.
+     * Entrega el objeto del tipo de dte.
      */
     public function getTipo(): Model_DteTipo
     {
@@ -296,7 +296,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega el objeto del emisor.
+     * Entrega el objeto del emisor.
      */
     public function getEmisor(): Model_Contribuyente
     {
@@ -304,7 +304,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega el folio del documento temporal.
+     * Entrega el folio del documento temporal.
      */
     public function getFolio()
     {
@@ -312,7 +312,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega la sucursal asociada al documento temporal.
+     * Entrega la sucursal asociada al documento temporal.
      */
     public function getSucursal()
     {
@@ -320,7 +320,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que crea el DTE real asociado al DTE temporal.
+     * Crea el DTE real asociado al DTE temporal.
      * Permite usar el facturador local de LibreDTE o el del Portal MIPYME del SII.
      */
     public function generar($user_id = null, $fecha_emision = null, $retry = null, $gzip = null)
@@ -355,7 +355,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que crea el DTE real asociado al DTE temporal usando LibreDTE.
+     * Crea el DTE real asociado al DTE temporal usando LibreDTE.
      */
     private function generarConFacturadorLocal($user_id = null, $fecha_emision = null, $retry = null, $gzip = null)
     {
@@ -648,7 +648,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que crea el DTE real asociado al DTE temporal usando el SII.
+     * Crea el DTE real asociado al DTE temporal usando el SII.
      */
     private function generarConFacturadorSii($user_id = null, $fecha_emision = null)
     {
@@ -656,7 +656,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que realiza verificaciones a campos antes de guardar.
+     * Realiza verificaciones a campos antes de guardar.
      */
     public function save(array $options = []): bool
     {
@@ -672,7 +672,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que borra el DTE temporal y su cobro asociado si existe.
+     * Borra el DTE temporal y su cobro asociado si existe.
      */
     public function delete(array $options = []): bool
     {
@@ -696,7 +696,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega el listado de correos a los que se podría enviar el documento
+     * Entrega el listado de correos a los que se podría enviar el documento
      * temporal (correo receptor, correo del dte y contacto comercial).
      */
     public function getEmails()
@@ -745,7 +745,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que envía el DTE temporal por correo electrónico.
+     * Envía el DTE temporal por correo electrónico.
      */
     public function email($to = null, $subject = null, $msg = null, $cotizacion = true, $use_template = true)
     {
@@ -839,7 +839,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega el resumen de los correos enviados.
+     * Entrega el resumen de los correos enviados.
      */
     public function getEmailEnviadosResumen(): array
     {
@@ -858,7 +858,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega el arreglo con los datos del documento.
+     * Entrega el arreglo con los datos del documento.
      */
     public function getDatos($force_reload = false)
     {
@@ -875,7 +875,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega el cobro asociado al DTE temporal.
+     * Entrega el cobro asociado al DTE temporal.
      */
     public function getCobro(bool $crearSiNoExiste = true)
     {
@@ -891,7 +891,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega el vencimiento del documento si es que existe.
+     * Entrega el vencimiento del documento si es que existe.
      */
     public function getVencimiento()
     {
@@ -903,7 +903,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega el detalle del DTE.
+     * Entrega el detalle del DTE.
      */
     public function getDetalle()
     {
@@ -912,7 +912,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega los enlaces públicos del documento.
+     * Entrega los enlaces públicos del documento.
      */
     public function getLinks()
     {
@@ -924,7 +924,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega el teléfono asociado al DTE, ya sea porque existe en el DTE o asociado directamente al receptor.
+     * Entrega el teléfono asociado al DTE, ya sea porque existe en el DTE o asociado directamente al receptor.
      */
     public function getTelefono()
     {
@@ -946,7 +946,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega el celular asociado al DTE si existe.
+     * Entrega el celular asociado al DTE si existe.
      * @warning Solo detecta como celular un número chileno (+56 9).
      */
     public function getCelular()
@@ -964,7 +964,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega los datos extras del documento.
+     * Entrega los datos extras del documento.
      */
     public function getExtra($force_reload = false)
     {
@@ -978,7 +978,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega la actividad económica asociada al documento.
+     * Entrega la actividad económica asociada al documento.
      */
     public function getActividad($default = null)
     {
@@ -990,7 +990,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega el monto neto del DTE temporal.
+     * Entrega el monto neto del DTE temporal.
      */
     public function getNeto()
     {
@@ -1002,7 +1002,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega el IVA del DTE temporal.
+     * Entrega el IVA del DTE temporal.
      */
     public function getIva()
     {
@@ -1014,7 +1014,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega el monto exento del DTE temporal.
+     * Entrega el monto exento del DTE temporal.
      */
     public function getExento()
     {
@@ -1026,7 +1026,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega el PDF del documento temporal.
+     * Entrega el PDF del documento temporal.
      * Entrega el PDF que se ha generado con LibreDTE a partir del JSON del DTE
      * temporal.
      */
@@ -1088,7 +1088,7 @@ class Model_DteTmp extends Model
     }
 
     /**
-     * Método que entrega el código ESCPOS del documento temporal.
+     * Entrega el código ESCPOS del documento temporal.
      */
     public function getESCPOS(array $config = [])
     {

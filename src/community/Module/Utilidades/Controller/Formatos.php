@@ -74,7 +74,7 @@ class Controller_Formatos extends \sowerphp\autoload\Controller
     }
 
     /**
-     * Método que entrega los formatos soportados oficialmente (hay parser).
+     * Entrega los formatos soportados oficialmente (hay parser).
      */
     private function getFormatos()
     {

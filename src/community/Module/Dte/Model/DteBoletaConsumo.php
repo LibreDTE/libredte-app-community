@@ -42,6 +42,14 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
             'verbose_name' => 'Consumo de folio RVD (ex RCOF)',
             'verbose_name_plural' => 'Consumos de folios RVD (ex RCOF)',
             'ordering' => ['-dia'],
+            'list_display' => [
+                'dia',
+                'secuencia',
+                'glosa',
+                'track_id',
+                'revision_estado',
+                'revision_detalle',
+            ],
         ],
         'fields' => [
             'emisor' => [
@@ -101,7 +109,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     private $_Emisor; //< Para emisor
 
     /**
-     * Método que obtiene el objeto del emisor y lo guarda en caché en la clase.
+     * Obtiene el objeto del emisor y lo guarda en caché en la clase.
      */
     public function getEmisor()
     {
@@ -112,7 +120,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     }
 
     /**
-     * Método que indica si el RCOF se debe enviar o no al SII.
+     * Indica si el RCOF se debe enviar o no al SII.
      */
     public function seEnvia(): bool
     {
@@ -141,7 +149,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     }
 
     /**
-     * Método que envia el reporte de consumo de folios al SII.
+     * Envía el reporte de consumo de folios al SII.
      */
     public function enviar($user_id = null)
     {
@@ -187,7 +195,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega el XML del consumo de folios.
+     * Entrega el XML del consumo de folios.
      */
     public function getXML()
     {
@@ -198,7 +206,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     }
 
     /**
-     * Método que genera el XML del consumo de folios.
+     * Genera el XML del consumo de folios.
      */
     private function generarXML()
     {
@@ -211,7 +219,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     }
 
     /**
-     * Método que crea el objeto del consumo de folios de LibreDTE.
+     * Crea el objeto del consumo de folios de LibreDTE.
      */
     private function generarConsumoFolio($user_id)
     {
@@ -259,7 +267,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     }
 
     /**
-     * Método que actualiza el estado del RCOF enviado al SII, en realidad
+     * Actualiza el estado del RCOF enviado al SII, en realidad
      * es un wrapper para las verdaderas llamadas.
      * @param bool usarWebservice =true se consultará vía servicio web =false vía email.
      */
@@ -278,7 +286,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     }
 
     /**
-     * Método que actualiza el estado del RCOF enviado al SII a través del
+     * Actualiza el estado del RCOF enviado al SII a través del
      * servicio web que dispone el SII para esta consulta.
      */
     private function actualizarEstadoWebservice($user_id = null)
@@ -337,7 +345,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     }
 
     /**
-     * Método que actualiza el estado del RCOF enviado al SII a través del
+     * Actualiza el estado del RCOF enviado al SII a través del
      * email que es recibido desde el SII.
      */
     private function actualizarEstadoEmail()
@@ -404,7 +412,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
     }
 
     /**
-     * Método que entrega un resumen de los datos del RCOF enviado.
+     * Entrega un resumen de los datos del RCOF enviado.
      */
     public function getResumen()
     {
@@ -426,5 +434,4 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
         }
         return $resumen;
     }
-
 }

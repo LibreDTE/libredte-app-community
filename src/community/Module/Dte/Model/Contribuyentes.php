@@ -109,7 +109,7 @@ class Model_Contribuyentes extends Model_Plural
     }
 
     /**
-     * Método que entrega el listado de contribuyentes.
+     * Entrega el listado de contribuyentes.
      */
     public function getList($all = false): array
     {
@@ -130,7 +130,7 @@ class Model_Contribuyentes extends Model_Plural
     }
 
     /**
-     * Método que busca el objeto de un contribuyente (o varios) a partir
+     * Busca el objeto de un contribuyente (o varios) a partir
      * del correo electrónico registrado del contribuyente.
      */
     public function getByEmail($email, $onlyOne = false)
@@ -152,7 +152,7 @@ class Model_Contribuyentes extends Model_Plural
     }
 
     /**
-     * Método que entrega una tabla con los contribuyentes que cierto usuario
+     * Entrega una tabla con los contribuyentes que cierto usuario
      * está autorizado a operar.
      * @param usuario ID del usuario que se quiere obtener el listado de contribuyentes con los que está autorizado a operar.
      * @param omitir Se puede indicar el RUT de una empresa que no se quiere que aparezca en el listado.
@@ -199,7 +199,7 @@ class Model_Contribuyentes extends Model_Plural
     }
 
     /**
-     * Método que entrega una tabla con los movimientos de los contribuyentes.
+     * Entrega una tabla con los movimientos de los contribuyentes.
      * @param desde Desde cuando considerar la actividad de los contribuyentes.
      * @param hasta Hasta cuando considerar la actividad de los contribuyentes.
      * @param certificacion Ambiente por el que se está consultando.
@@ -279,7 +279,7 @@ class Model_Contribuyentes extends Model_Plural
     }
 
     /**
-     * Método que entrega la cantidad de contribuyentes registrados.
+     * Entrega la cantidad de contribuyentes registrados.
      * @param certificacion =true solo certificación, =false solo producción, =null todos
      */
     public function countRegistrados($certificacion = null): int
@@ -310,7 +310,7 @@ class Model_Contribuyentes extends Model_Plural
     }
 
     /**
-     * Método que entrega el listado de contribuyentes registrados.
+     * Entrega el listado de contribuyentes registrados.
      * @param desde Fecha desde último ingreso que se buscará.
      * @param hasta Fecha hasta el último ingreso que se buscará.
      */
@@ -347,7 +347,7 @@ class Model_Contribuyentes extends Model_Plural
     }
 
     /**
-     * Método que entrega la cantidad de contribuyentes registrados por comuna.
+     * Entrega la cantidad de contribuyentes registrados por comuna.
      * @param certificacion =true solo certificación, =false solo producción, =null todos
      */
     public function countByComuna($certificacion = null)
@@ -376,7 +376,7 @@ class Model_Contribuyentes extends Model_Plural
     }
 
     /**
-     * Método que entrega la cantidad de contribuyentes registrados por actividad económica.
+     * Entrega la cantidad de contribuyentes registrados por actividad económica.
      * @param certificacion =true solo certificación, =false solo producción, =null todos.
      */
     public function countByActividadEconomica($certificacion = null): array

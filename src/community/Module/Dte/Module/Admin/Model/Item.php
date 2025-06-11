@@ -36,7 +36,6 @@ use website\Dte\Admin\Mantenedores\Model_ImpuestoAdicional;
  */
 class Model_Item extends Model
 {
-
     /**
      * Metadatos del modelo.
      *
@@ -46,6 +45,15 @@ class Model_Item extends Model
         'model' => [
             'db_table_comment' => 'Productos y servicios.',
             'ordering' => ['codigo'],
+            'list_display' => [
+                'codigo',
+                'item',
+                'precio',
+                'moneda',
+                'bruto',
+                'clasificacion',
+                'activo',
+            ],
         ],
         'fields' => [
             'contribuyente' => [
@@ -161,7 +169,7 @@ class Model_Item extends Model
     private $ItemTienda;
 
     /**
-     * Método que entrega la clasificación del item.
+     * Entrega la clasificación del item.
      */
     public function getClasificacion()
     {
@@ -169,7 +177,7 @@ class Model_Item extends Model
     }
 
     /**
-     * Método que entrega la clasificación del item.
+     * Entrega la clasificación del item.
      */
     public function getItemClasificacion()
     {
@@ -179,7 +187,7 @@ class Model_Item extends Model
     }
 
     /**
-     * Método que entrega el precio del item.
+     * Entrega el precio del item.
      * @param fecha Permite solicitar el precio para una fecha en particular (sirve cuando el precio no está en CLP).
      * @param bruto =false se obtendrá el valor neto del item, =true se obtendrá el valor bruto (con impuestos).
      * @param moneda Tipo de moneda en la que se desea obtener el precio del item.
@@ -209,7 +217,7 @@ class Model_Item extends Model
     }
 
     /**
-     * Método que entrega el precio bruto del item.
+     * Entrega el precio bruto del item.
      * @param fecha Permite solicitar el precio para una fecha en particular (sirve cuando el precio no está en CLP).
      * @param moneda Tipo de moneda en la que se desea obtener el precio del item.
      * @param decimales Cantidad de decimales para la moneda que se está solicitando obtener el precio.
@@ -225,7 +233,7 @@ class Model_Item extends Model
     }
 
     /**
-     * Método que entrega el descuento del item.
+     * Entrega el descuento del item.
      * @param fecha Permite solicitar el descuento para una fecha en particular (sirve cuando el descuento no está en CLP).
      * @param bruto =false se obtendrá el descuento neto del item, =true se obtendrá el descuento bruto (con impuestos).
      * @param moneda Tipo de moneda en la que se desea obtener el descuento del item.
@@ -260,7 +268,7 @@ class Model_Item extends Model
     }
 
     /**
-     * Método que entrega el descuento bruto del item.
+     * Entrega el descuento bruto del item.
      * @param fecha Permite solicitar el descuento para una fecha en particular (sirve cuando el descuento no está en CLP).
      * @param moneda Tipo de moneda en la que se desea obtener el descuento del item.
      * @param decimales Cantidad de decimales para la moneda que se está solicitando obtener el descuento.
@@ -275,7 +283,7 @@ class Model_Item extends Model
     }
 
     /**
-     * Método que entrega el objeto del Item del módulo de Inventario.
+     * Entrega el objeto del Item del módulo de Inventario.
      */
     public function getItemInventario()
     {
@@ -292,20 +300,21 @@ class Model_Item extends Model
     }
 
     /**
-     * Método que entrega el objeto del Item del módulo de Tienda Electrónica.
+     * Entrega el objeto del Item del módulo de Tienda Electrónica.
      */
     public function getItemTienda($tienda = null)
     {
         if (!libredte()->isEnterpriseEdition()) {
             return null;
         }
+
         if (!isset($this->ItemTienda)) {
             $this->ItemTienda = (new \libredte\enterprise\Tienda\Admin\Model_TiendaItemes())
                 ->setContribuyente($this->getContribuyente())
                 ->getByFacturacion($tienda, $this->codigo, $this->codigo_tipo)
             ;
         }
+
         return $this->ItemTienda;
     }
-
 }

@@ -23,15 +23,12 @@
 
 namespace website\Dte\Admin\Mantenedores;
 
+use sowerphp\autoload\Controller_Model;
+
 /**
- * Clase para el controlador asociado a la tabla impuesto_adicional de la base de
- * datos.
+ * Clase para el controlador asociado a la tabla `impuesto_adicional` de la base
+ * de datos.
  */
-class Controller_ImpuestoAdicionales extends \sowerphp\autoload\Controller_Model
+class Controller_ImpuestoAdicionales extends Controller_Model
 {
-
-    protected $columnsView = [
-        'listar' => ['codigo', 'nombre', 'tipo', 'tasa']
-    ]; ///< Columnas que se deben mostrar en las vistas
-
 }

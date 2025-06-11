@@ -35,7 +35,7 @@ class Utility_Apps_ServiciosBasicos extends Utility_Apps_Base_Formato
     protected $logo = 'https://i.imgur.com/j6lz7Aq.png';
 
     /**
-     * Método que entrega el código HTML de la página de configuración de la
+     * Entrega el código HTML de la página de configuración de la
      * aplicación.
      *
      * @return string HTML renderizado con la configuración de la aplicación.

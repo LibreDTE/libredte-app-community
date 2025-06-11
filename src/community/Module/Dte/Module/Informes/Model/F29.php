@@ -112,7 +112,7 @@ class Model_F29
     }
 
     /**
-     * Método que entrega un arreglo con los códigos del F29 y sus valores.
+     * Entrega un arreglo con los códigos del F29 y sus valores.
      */
     public function getDatos()
     {

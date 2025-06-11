@@ -44,7 +44,7 @@ return [
     | URL completa.
     |
     */
-    'url' => env('APP_URL', 'http://localhost:8000/libredte-community'),
+    'url' => env('APP_URL', 'https://community.libredte.cl'),
 
     /*
     |--------------------------------------------------------------------------

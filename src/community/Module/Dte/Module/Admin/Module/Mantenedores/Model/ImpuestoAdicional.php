@@ -32,7 +32,6 @@ use sowerphp\autoload\Model;
  */
 class Model_ImpuestoAdicional extends Model
 {
-
     /**
      * Metadatos del modelo.
      *
@@ -44,6 +43,12 @@ class Model_ImpuestoAdicional extends Model
             'verbose_name_plural' => 'Impuestos adicionales',
             'db_table_comment' => 'Impuestos adicionales (y retenciones).',
             'ordering' => ['codigo'],
+            'list_display' => [
+                'codigo',
+                'nombre',
+                'tipo',
+                'tasa',
+            ],
         ],
         'fields' => [
             'codigo' => [
@@ -86,5 +91,4 @@ class Model_ImpuestoAdicional extends Model
             ],
         ],
     ];
-
 }

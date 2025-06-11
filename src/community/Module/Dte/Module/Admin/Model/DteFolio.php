@@ -112,7 +112,7 @@ class Model_DteFolio extends Model
     }
 
     /**
-     * Método que calcula la cantidad de folios que quedan disponibles y guarda.
+     * Calcula la cantidad de folios que quedan disponibles y guarda.
      */
     public function calcularDisponibles()
     {
@@ -163,7 +163,7 @@ class Model_DteFolio extends Model
     }
 
     /**
-     * Método que entrega el listado de archivos CAF que existen cargados para
+     * Entrega el listado de archivos CAF que existen cargados para
      * el tipo de DTE.
      */
     public function getCafs(string $order = 'ASC')
@@ -198,7 +198,7 @@ class Model_DteFolio extends Model
     }
 
     /**
-     * Método que entrega el CAF de un folio de cierto DTE.
+     * Entrega el CAF de un folio de cierto DTE.
      * @param folio Folio del CAF del DTE que se busca.
      * @return \sasco\LibreDTE\Sii\Folios
      */
@@ -233,7 +233,7 @@ class Model_DteFolio extends Model
     }
 
     /**
-     * Método que entrega el objeto del tipo de DTE asociado al folio.
+     * Entrega el objeto del tipo de DTE asociado al folio.
      */
     public function getTipo()
     {
@@ -241,7 +241,7 @@ class Model_DteFolio extends Model
     }
 
     /**
-     * Método que entrega el objeto del contribuyente asociado al mantenedor de folios.
+     * Entrega el objeto del contribuyente asociado al mantenedor de folios.
      */
     public function getEmisor()
     {
@@ -286,7 +286,7 @@ class Model_DteFolio extends Model
     }
 
     /**
-     * Método que guardar un archivo de folios en la base de datos.
+     * Guardar un archivo de folios en la base de datos.
      */
     public function guardarFolios($xml)
     {
@@ -340,7 +340,7 @@ class Model_DteFolio extends Model
     }
 
     /**
-     * Método que entrega el uso mensual de los folios.
+     * Entrega el uso mensual de los folios.
      */
     public function getUsoMensual(int $limit = 12, string $order = 'ASC')
     {
@@ -362,7 +362,7 @@ class Model_DteFolio extends Model
     }
 
     /**
-     * Método que entrega el primer folio usado del mantenedor.
+     * Entrega el primer folio usado del mantenedor.
      */
     public function getPrimerFolio(): int
     {
@@ -378,7 +378,7 @@ class Model_DteFolio extends Model
     }
 
     /**
-     * Método que entrega los folios que están antes del folio siguiente, para
+     * Entrega los folios que están antes del folio siguiente, para
      * los cuales hay CAF y no se han usado.
      */
     public function getSinUso(): array
@@ -434,7 +434,7 @@ class Model_DteFolio extends Model
     }
 
     /**
-     * Método que entrega el estado de todos los folios asociados a todos los
+     * Entrega el estado de todos los folios asociados a todos los
      * CAFs del mantenedor de folios.
      */
     public function getEstadoFolios($estados = 'recibidos,anulados,pendientes', int $retry = 10, int $sleep = 200000)

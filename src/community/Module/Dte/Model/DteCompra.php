@@ -135,7 +135,7 @@ class Model_DteCompra extends Model_Base_Libro
     ]; ///< Mapeo columna en BD a nombre en detalle del libro
 
     /**
-     * Método que entrega el resumen real (de los detalles registrados) del
+     * Entrega el resumen real (de los detalles registrados) del
      * libro.
      */
     public function getResumen()
@@ -144,7 +144,7 @@ class Model_DteCompra extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega los documentos por día del libro.
+     * Entrega los documentos por día del libro.
      */
     public function getDocumentosPorDia()
     {
@@ -152,7 +152,7 @@ class Model_DteCompra extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega las compras por tipo del período.
+     * Entrega las compras por tipo del período.
      */
     public function getDocumentosPorTipo()
     {
@@ -160,7 +160,7 @@ class Model_DteCompra extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega los tipos de transacciones de las compras del período.
+     * Entrega los tipos de transacciones de las compras del período.
      */
     public function getTiposTransacciones(): array
     {
@@ -195,7 +195,7 @@ class Model_DteCompra extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega los totales del período.
+     * Entrega los totales del período.
      */
     public function getTotales(): array
     {
@@ -249,7 +249,7 @@ class Model_DteCompra extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega el total del neto + exento del período.
+     * Entrega el total del neto + exento del período.
      */
     public function getTotalExentoNeto(): int
     {
@@ -258,7 +258,7 @@ class Model_DteCompra extends Model_Base_Libro
     }
 
     /**
-     * Método que entrega la cantidad de documentos que tienen montos exentos.
+     * Entrega la cantidad de documentos que tienen montos exentos.
      */
     public function countDocumentosConMontosExentos(): int
     {

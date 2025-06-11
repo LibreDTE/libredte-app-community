@@ -36,7 +36,7 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
     protected $logo = 'https://i.imgur.com/B0pnCvz.png';
 
      /**
-     * Método que entrega el código HTML de la página de configuración de la
+     * Entrega el código HTML de la página de configuración de la
      * aplicación.
      *
      * @return string HTML renderizado con la configuración de la aplicación.
@@ -100,7 +100,7 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
     }
 
     /**
-     * Método que obtiene el cliente de Dropbox (autenticado o aun no).
+     * Obtiene el cliente de Dropbox (autenticado o aun no).
      */
     public function getDropboxClient($token = null)
     {
@@ -120,7 +120,7 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
     }
 
     /**
-     * Método que indica si está o no conectado a Dropbox.
+     * Indica si está o no conectado a Dropbox.
      */
     public function isConnected()
     {
@@ -129,7 +129,7 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
     }
 
     /**
-     * Método que entrega la URL de callback de Dropbox para la conexión.
+     * Entrega la URL de callback de Dropbox para la conexión.
      */
     public function getPairURL()
     {

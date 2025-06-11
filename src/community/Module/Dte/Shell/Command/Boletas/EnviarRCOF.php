@@ -104,7 +104,7 @@ class Shell_Command_Boletas_EnviarRCOF extends \sowerphp\autoload\Shell
     }
 
     /**
-     * Método que envía el RCOF al SII.
+     * Envía el RCOF al SII.
      */
     private function enviar_sii($DteBoletaConsumo, $retry = 10)
     {
@@ -145,7 +145,7 @@ class Shell_Command_Boletas_EnviarRCOF extends \sowerphp\autoload\Shell
     }
 
     /**
-     * Método que obtiene el listado de contribuyentes a los cuales se debe enviar el RCOF.
+     * Obtiene el listado de contribuyentes a los cuales se debe enviar el RCOF.
      */
     private function getContribuyentes($grupo, $dia, $certificacion)
     {

@@ -37,7 +37,7 @@ abstract class Model_Plural extends \sowerphp\core\Model_Plural
     protected $Contribuyente = null;
 
     /**
-     * Método que asigna el contribuyente que se utilizará en las consultas.
+     * Asigna el contribuyente que se utilizará en las consultas.
      */
     public function setContribuyente($Contribuyente)
     {
@@ -46,7 +46,7 @@ abstract class Model_Plural extends \sowerphp\core\Model_Plural
     }
 
     /**
-     * Método que entrega el contribuyente previamente seteado en el modelo
+     * Entrega el contribuyente previamente seteado en el modelo
      * o bien el de la sesión si no existe asignado en la clase plural.
      */
     public function getContribuyente(bool $readSession = true)

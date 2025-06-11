@@ -32,7 +32,6 @@ use sowerphp\autoload\Model_Plural;
  */
 class Model_DteTipos extends Model_Plural
 {
-
     private $internos = [
         'HEM' => 'Hoja de entrada de materiales (HEM)',
         'HES' => 'Hoja de entrada de servicios (HES)',
@@ -43,7 +42,7 @@ class Model_DteTipos extends Model_Plural
     ]; ///< Tipos de documentos internos de LibreDTE (sin código oficial del SII)
 
     /**
-     * Método que entrega el listado de tipos de documentos tributarios.
+     * Entrega el listado de tipos de documentos tributarios.
      */
     public function getList($all = false): array
     {
@@ -74,7 +73,7 @@ class Model_DteTipos extends Model_Plural
     }
 
     /**
-     * Método que entrega el listado de todos los tipos de documentos que se
+     * Entrega el listado de todos los tipos de documentos que se
      * pueden usar como referencias.
      */
     public function getListReferencias()
@@ -89,5 +88,4 @@ class Model_DteTipos extends Model_Plural
         }
         return $tipos;
     }
-
 }

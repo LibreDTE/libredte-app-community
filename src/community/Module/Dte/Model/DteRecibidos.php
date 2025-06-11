@@ -34,7 +34,7 @@ class Model_DteRecibidos extends Model_Plural
 {
 
     /**
-     * Método que entrega el listado de documentos que tienen compras de
+     * Entrega el listado de documentos que tienen compras de
      * activos fijos.
      */
     public function getActivosFijos(array $filtros): array
@@ -45,7 +45,7 @@ class Model_DteRecibidos extends Model_Plural
     }
 
     /**
-     * Método que entrega el listado de documentos que tienen compras de
+     * Entrega el listado de documentos que tienen compras de
      * supermercado.
      */
     public function getSupermercado(array $filtros): array
@@ -56,7 +56,7 @@ class Model_DteRecibidos extends Model_Plural
     }
 
     /**
-     * Método que entrega el listado de documentos que tienen compras con
+     * Entrega el listado de documentos que tienen compras con
      * cierto tipo de transacción.
      */
     private function getByTipoTransaccion(array $filtros): array
@@ -157,7 +157,7 @@ class Model_DteRecibidos extends Model_Plural
     }
 
     /**
-     * Método que busca en los documentos recibidos de un contribuyente.
+     * Busca en los documentos recibidos de un contribuyente.
      */
     public function buscar(array $filtros): array
     {
@@ -217,7 +217,7 @@ class Model_DteRecibidos extends Model_Plural
     }
 
     /**
-     * Método que entrega el detalle de las compras en un rango de tiempo.
+     * Entrega el detalle de las compras en un rango de tiempo.
      */
     public function getDetalle($desde, $hasta, $detalle)
     {
@@ -308,7 +308,7 @@ class Model_DteRecibidos extends Model_Plural
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por tipo de DTE.
+     * Entrega los totales de documentos emitidos por tipo de DTE.
      */
     public function getPorTipo($desde, $hasta): array
     {
@@ -330,7 +330,7 @@ class Model_DteRecibidos extends Model_Plural
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por día.
+     * Entrega los totales de documentos emitidos por día.
      */
     public function getPorDia($desde, $hasta): array
     {
@@ -352,7 +352,7 @@ class Model_DteRecibidos extends Model_Plural
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por sucursal.
+     * Entrega los totales de documentos emitidos por sucursal.
      */
     public function getPorSucursal($desde, $hasta): array
     {
@@ -378,7 +378,7 @@ class Model_DteRecibidos extends Model_Plural
     }
 
     /**
-     * Método que entrega los totales de documentos emitidos por usuario.
+     * Entrega los totales de documentos emitidos por usuario.
      */
     public function getPorUsuario($desde, $hasta): array
     {
@@ -400,7 +400,7 @@ class Model_DteRecibidos extends Model_Plural
     }
 
     /**
-     * Método que entrega los documentos sin XML asociado.
+     * Entrega los documentos sin XML asociado.
      */
     public function getDocumentosSinXML($desde, $hasta): array
     {

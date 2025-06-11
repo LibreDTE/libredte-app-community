@@ -71,7 +71,7 @@ class Model_BoletaHonorarios extends Model_Plural
     }
 
     /**
-     * Método que obtiene las boletas recibidas desde el SII.
+     * Obtiene las boletas recibidas desde el SII.
      */
     public function getBoletas($periodo)
     {
@@ -93,7 +93,7 @@ class Model_BoletaHonorarios extends Model_Plural
     }
 
     /**
-     * Método que entrega un resumen por período de las boletas de honorarios
+     * Entrega un resumen por período de las boletas de honorarios
      * recibidas.
      */
     public function getPeriodos($periodo = null)
@@ -122,7 +122,7 @@ class Model_BoletaHonorarios extends Model_Plural
     }
 
     /**
-     * Método que entrega el resumen de cierto período.
+     * Entrega el resumen de cierto período.
      */
     public function getPeriodo($periodo)
     {
@@ -131,7 +131,7 @@ class Model_BoletaHonorarios extends Model_Plural
     }
 
     /**
-     * Método que entrega las boletas de cierto período.
+     * Entrega las boletas de cierto período.
      */
     public function buscar(array $filtros = [], $order = 'ASC')
     {

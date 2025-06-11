@@ -32,9 +32,8 @@ use sowerphp\autoload\Model_Plural;
  */
 class Model_FirmaElectronicas extends Model_Plural
 {
-
     /**
-     * Método que entrega la firma electrónica de un usuario (si existe).
+     * Entrega la firma electrónica de un usuario (si existe).
      * @param user Código del usuarios que se necesita su firma electrónica.
      * @return Model_FirmaElectronica
      */
@@ -46,7 +45,7 @@ class Model_FirmaElectronicas extends Model_Plural
         );
         $firmas = $this->getObjects();
         $this->clear('where');
+
         return $firmas ? $firmas[0] : false;
     }
-
 }
