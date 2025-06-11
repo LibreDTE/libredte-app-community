@@ -1,6 +1,15 @@
 LibreDTE: Aplicación Web - Edición Comunidad
 ============================================
 
+[![CI Workflow](https://github.com/libredte/libredte-app-community/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/libredte/libredte-app-community/actions/workflows/ci.yml?query=branch%3Amaster)
+[![Scrutinizer](https://scrutinizer-ci.com/g/libredte/libredte-app-community/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/libredte/libredte-app-community/)
+[![Coverage](https://scrutinizer-ci.com/g/libredte/libredte-app-community/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/libredte/libredte-app-community/)
+[![Licencia](https://poser.pugx.org/libredte/libredte-community/license)](https://packagist.org/packages/libredte/libredte-community)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FLibreDTE%2Flibredte-app-community.svg?type=shield&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2FLibreDTE%2Flibredte-app-community?ref=badge_shield&issueType=license)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FLibreDTE%2Flibredte-app-community.svg?type=shield&issueType=security)](https://app.fossa.com/projects/git%2Bgithub.com%2FLibreDTE%2Flibredte-app-community?ref=badge_shield&issueType=security)
+[![Descargas Totales](https://poser.pugx.org/libredte/libredte-community/downloads)](https://packagist.org/packages/libredte/libredte-community)
+[![Descargas Mensuales](https://poser.pugx.org/libredte/libredte-community/d/monthly)](https://packagist.org/packages/libredte/libredte-community)
+
 LibreDTE es un proyecto que tiene por objetivo
 proveer Facturación Electrónica Libre para Chile.
 
