@@ -2154,7 +2154,8 @@ class Model_DteEmitido extends Model_Base_Envio
                     self::$envio_sii_ayudas[$estado]
                 );
             }
-        }
+	}
+	return null;
     }
 
     /**
