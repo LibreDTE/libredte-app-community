@@ -35,7 +35,7 @@ RewriteRule "(^|/)\." - [F]
 RewriteEngine On
 
 # Si la solicitud es para un recurso físico real (archivo o directorio),
-# no hacer nada
+# no hacer nada
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 

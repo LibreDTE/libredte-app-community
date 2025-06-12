@@ -55,7 +55,7 @@ new \sowerphp\general\View_Helper_Table([
     [$col++, 'AH', 'Moneda', 'Moneda para documentos de exportación', 'Por defecto: USD', '3', 'Opcional'],
     [$col++, 'AI', 'NumId', 'ID extranjero', '', '20', 'Opcional'],
     [$col++, 'AJ', 'DscGlobal', 'Descuento global', 'Puede ser 50% para indicar descuento global en porcentaje o un monto como 1000 para indicar descuento global en cantidad. No usar coma, el separador decimal es punto.', '18', 'Opcional'],
-    [$col++, 'AK', '-', 'Nombre del PDF', 'Permite especificar el nombre del PDF a descargar. Se pueden usar las variables: {rut}, {dv}, {dte} y {folio}', '100', 'Opcional'],
+    [$col++, 'AK', '-', 'Nombre del PDF', 'Permite especificar el nombre del PDF a descargar. Se pueden usar las variables: {rut}, {dv}, {dte} y {folio}', '100', 'Opcional'],
     [$col++, 'AL', 'FmaPago', 'Forma de Pago', 'Códigos: 1 para contado, 2 para crédito y 3 para sin costo (entrega gratuita)', '1', 'Opcional'],
     [$col++, 'AM', 'CodImpAdic', 'Impuesto adicional', 'Código de tipo de impuesto adicional, recargo o retención de un item. Por ejemplo usar "15" para "IVA retenido total" en facturas de compra.', '3', 'Opcional'],
 ]);
