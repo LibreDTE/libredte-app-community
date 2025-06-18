@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte\Pdf;
 
 /**
@@ -49,7 +48,7 @@ class Utility_Apps_ServiciosBasicos extends Utility_Apps_Base_Formato
             'type' => 'select',
             'name' => 'dtepdf_'.$this->getCodigo().'_hoja_copias',
             'label' => 'Copias',
-            'options' => [1=>'1 copia en media hoja carta', 2=>'2 copias de media carta en una hoja carta'],
+            'options' => [1 => '1 copia en media hoja carta', 2 => '2 copias de media carta en una hoja carta'],
             'value' => !empty($this->getConfig()->hoja->copias)
                 ? $this->getConfig()->hoja->copias
                 : 10
@@ -128,7 +127,7 @@ class Utility_Apps_ServiciosBasicos extends Utility_Apps_Base_Formato
             'type' => 'select',
             'name' => 'dtepdf_'.$this->getCodigo().'_receptor_fuente',
             'label' => 'Tamaño del texto',
-            'options' => [14=>14, 13=>13, 12=>12, 11=>11, 10=>10, 9=>9, 8=>8, 7=>7],
+            'options' => [14 => 14, 13 => 13, 12 => 12, 11 => 11, 10 => 10, 9 => 9, 8 => 8, 7 => 7],
             'value' => !empty($this->getConfig()->receptor->fuente)
                 ? $this->getConfig()->receptor->fuente
                 : 7

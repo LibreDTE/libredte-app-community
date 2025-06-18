@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte\Admin;
 
 /**
@@ -187,7 +186,7 @@ class Model_DteFolio extends \Model_App
         if ($n_cafs == 1) {
             $this->disponibles = $cafs[0]['hasta'] - $this->siguiente + 1;
         } else {
-            for ($i=1; $i<$n_cafs; $i++) {
+            for ($i = 1; $i < $n_cafs; $i++) {
                 if ($cafs[$i]['desde'] != ($cafs[$i - 1]['hasta'] + 1)) {
                     break;
                 }
@@ -213,7 +212,7 @@ class Model_DteFolio extends \Model_App
             SELECT desde, hasta, (hasta - desde + 1) AS cantidad, xml
             FROM dte_caf
             WHERE emisor = :rut AND dte = :dte AND certificacion = :certificacion
-            ORDER BY desde '.($order == 'ASC'?'ASC':'DESC').'
+            ORDER BY desde '.($order == 'ASC' ? 'ASC' : 'DESC').'
         ', [
             ':rut' => $this->emisor,
             ':dte' => $this->dte,
@@ -394,7 +393,7 @@ class Model_DteFolio extends \Model_App
                 GROUP BY '.$periodo_col.'
                 ORDER BY '.$periodo_col.' DESC
                 LIMIT '.(int)$limit.'
-            ) AS t ORDER BY mes '.($order == 'ASC'?'ASC':'DESC').'
+            ) AS t ORDER BY mes '.($order == 'ASC' ? 'ASC' : 'DESC').'
         ', [
             ':rut' => $this->emisor,
             ':dte' => $this->dte,
@@ -446,7 +445,7 @@ class Model_DteFolio extends \Model_App
         ]);
         $folios = [];
         foreach ($rangos_aux as $r) {
-            for ($folio=$r['desde']; $folio<=$r['hasta']; $folio++) {
+            for ($folio = $r['desde']; $folio <= $r['hasta']; $folio++) {
                 $folios[] = $folio;
             }
         }
@@ -509,7 +508,7 @@ class Model_DteFolio extends \Model_App
         foreach ($cafs as $DteCaf) {
             // obtener folios recibidos
             if (in_array('recibidos', $estados)) {
-                for ($i=0; $i<$retry; $i++) {
+                for ($i = 0; $i < $retry; $i++) {
                     try {
                         $folios['recibidos'] = array_merge(
                             $folios['recibidos'],
@@ -523,7 +522,7 @@ class Model_DteFolio extends \Model_App
             }
             // obtener folios anulados
             if (in_array('anulados', $estados)) {
-                for ($i=0; $i<$retry; $i++) {
+                for ($i = 0; $i < $retry; $i++) {
                     try {
                         $folios['anulados'] = array_merge(
                             $folios['anulados'],
@@ -537,7 +536,7 @@ class Model_DteFolio extends \Model_App
             }
             // obtener folios pendientes
             if (in_array('pendientes', $estados)) {
-                for ($i=0; $i<$retry; $i++) {
+                for ($i = 0; $i < $retry; $i++) {
                     try {
                         $folios['pendientes'] = array_merge(
                             $folios['pendientes'],

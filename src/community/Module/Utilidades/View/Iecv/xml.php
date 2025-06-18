@@ -95,7 +95,7 @@ echo $f->input([
     'id' => 'resumenes',
     'titles' => ['Tipo Doc.', '# docs', 'Anulados', 'Op. exen.', 'Exento', 'Neto', 'IVA', 'IVA propio', 'IVA terc.', 'Ley 18211', 'Monto total', 'No fact.', 'Total periodo'],
     'inputs' => [
-        ['type' => 'select', 'name' => 'TpoDoc', 'options' => [35=>'Boleta', 38=>'Boleta exenta', 48=>'Pago electrónico'], 'attr' => 'style="width:10em"'],
+        ['type' => 'select', 'name' => 'TpoDoc', 'options' => [35 => 'Boleta', 38 => 'Boleta exenta', 48 => 'Pago electrónico'], 'attr' => 'style="width:10em"'],
         ['name' => 'TotDoc', 'check' => 'notempty integer'],
         ['name' => 'TotAnulado', 'check' => 'integer'],
         ['name' => 'TotOpExe', 'check' => 'integer'],

@@ -61,44 +61,50 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                 <ul class="navbar-nav me-auto">
                     <?php
                         $dropdown_id_count = 1;
-                        foreach ($_nav_website as $link=>$name) {
-                            $active = $_page == $link ? ' active' : '';
-                            if ($link[0] == '/') $link = $_base.$link;
-                            if (isset($name['nav'])) {
-                                $dropdown_id = 'dropdown_'.$dropdown_id_count++;
-                                $title = isset($name['desc']) ? $name['desc'] : (isset($name['title']) ? $name['title'] : '');
-                                $icon = isset($name['icon']) ? '<span class="'.$name['icon'].'"></span> ' : '';
-                                echo '<li class="nav-item dropdown',$active,'">',"\n";
-                                echo '<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" id="',$dropdown_id,'" title="',$title,'">',$icon,$name['name'],'</a>',"\n";
-                                echo '<div class="dropdown-menu" aria-labelledby="',$dropdown_id,'">',"\n";
-                                foreach ($name['nav'] as $l=>$n) {
-                                    if ($l[0] == '/') $l = $link.$l;
-                                    echo '<a href="',$l,'" class="dropdown-item">',$n,'</a>',"\n";
-                                }
-                                echo '</div>',"\n";
-                                echo '</li>',"\n";
-                            } else {
-                                if (is_array($name)) {
-                                    $title = isset($name['desc']) ? $name['desc'] : (isset($name['title']) ? $name['title'] : '');
-                                    $icon = isset($name['icon']) ? '<span class="'.$name['icon'].'"></span> ' : '';
-                                    $name = $name['name'];
-                                } else $title = $icon = '';
-                                echo '<li class="nav-item'.$active.'"><a href="',$link,'" title="',$title,'" class="nav-link">',$icon,$name,'</a></li>',"\n";
-                            }
-                        }
-                    ?>
+foreach ($_nav_website as $link => $name) {
+    $active = $_page == $link ? ' active' : '';
+    if ($link[0] == '/') {
+        $link = $_base.$link;
+    }
+    if (isset($name['nav'])) {
+        $dropdown_id = 'dropdown_'.$dropdown_id_count++;
+        $title = isset($name['desc']) ? $name['desc'] : (isset($name['title']) ? $name['title'] : '');
+        $icon = isset($name['icon']) ? '<span class="'.$name['icon'].'"></span> ' : '';
+        echo '<li class="nav-item dropdown',$active,'">',"\n";
+        echo '<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" id="',$dropdown_id,'" title="',$title,'">',$icon,$name['name'],'</a>',"\n";
+        echo '<div class="dropdown-menu" aria-labelledby="',$dropdown_id,'">',"\n";
+        foreach ($name['nav'] as $l => $n) {
+            if ($l[0] == '/') {
+                $l = $link.$l;
+            }
+            echo '<a href="',$l,'" class="dropdown-item">',$n,'</a>',"\n";
+        }
+        echo '</div>',"\n";
+        echo '</li>',"\n";
+    } else {
+        if (is_array($name)) {
+            $title = isset($name['desc']) ? $name['desc'] : (isset($name['title']) ? $name['title'] : '');
+            $icon = isset($name['icon']) ? '<span class="'.$name['icon'].'"></span> ' : '';
+            $name = $name['name'];
+        } else {
+            $title = $icon = '';
+        }
+        echo '<li class="nav-item'.$active.'"><a href="',$link,'" title="',$title,'" class="nav-link">',$icon,$name,'</a></li>',"\n";
+    }
+}
+?>
                 </ul>
                 <ul class="nav navbar-nav ms-auto">
                     <?php if (!$_Auth->logged()) : ?>
                         <li class="nav-item"><a href="<?=$_base?>/usuarios/ingresar" class="nav-link"><span class="fas fa-sign-in-alt" aria-hidden="true"></span> Iniciar sesión</a></li>
                     <?php else : ?>
                     <?php
-                    $Account = $_Auth->User->getEmailAccount();
-                    if ($Account) {
-                        $emails = $Account->countUnreadMessages();
-                        echo '<li class="nav-item"><a href="'.$Account->getUserUrl().'" class="nav-link"><i class="far fa-envelope"></i> '.($emails?' <span class="badge bg-primary">'.num($emails).'</span>':'').'</a></li>',"\n";
-                    }
-                    ?>
+$Account = $_Auth->User->getEmailAccount();
+                        if ($Account) {
+                            $emails = $Account->countUnreadMessages();
+                            echo '<li class="nav-item"><a href="'.$Account->getUserUrl().'" class="nav-link"><i class="far fa-envelope"></i> '.($emails ? ' <span class="badge bg-primary">'.num($emails).'</span>' : '').'</a></li>',"\n";
+                        }
+                        ?>
                         <?php if ($Contribuyente) : ?>
                             <li class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" id="dropdown_contribuyente">
@@ -106,26 +112,26 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown_contribuyente">
                                     <?php
-                                        $n_links = 0;
-                                        foreach ($Contribuyente->getLinks() as $l) {
-                                            if ($l->nombre == '-') {
-                                                if ($n_links) {
-                                                    echo '<div class="dropdown-divider"></div>',"\n";
-                                                }
-                                                $n_links = 0;
-                                            } else {
-                                                if ($l->enlace[0] == '/') {
-                                                    if ($_Auth->check($l->enlace)) {
-                                                        $n_links++;
-                                                        echo '<a href="',$_base,$l->enlace,'" class="dropdown-item"><i class="'.$l->icono.' fa-fw"></i> '.$l->nombre.'</a>',"\n";
-                                                    }
-                                                } else {
-                                                    $n_links++;
-                                                    echo '<a href="',$l->enlace,'" class="dropdown-item"><i class="'.$l->icono.' fa-fw"></i> ',$l->nombre,'</a>',"\n";
-                                                }
-                                            }
+                                            $n_links = 0;
+                            foreach ($Contribuyente->getLinks() as $l) {
+                                if ($l->nombre == '-') {
+                                    if ($n_links) {
+                                        echo '<div class="dropdown-divider"></div>',"\n";
+                                    }
+                                    $n_links = 0;
+                                } else {
+                                    if ($l->enlace[0] == '/') {
+                                        if ($_Auth->check($l->enlace)) {
+                                            $n_links++;
+                                            echo '<a href="',$_base,$l->enlace,'" class="dropdown-item"><i class="'.$l->icono.' fa-fw"></i> '.$l->nombre.'</a>',"\n";
                                         }
-                                    ?>
+                                    } else {
+                                        $n_links++;
+                                        echo '<a href="',$l->enlace,'" class="dropdown-item"><i class="'.$l->icono.' fa-fw"></i> ',$l->nombre,'</a>',"\n";
+                                    }
+                                }
+                            }
+                        ?>
                                     <?php if ($Contribuyente->usuarioAutorizado($_Auth->User, 'admin')) : ?>
                                         <div class="dropdown-divider"></div>
                                         <a href="<?=$_base?>/dte/contribuyentes/modificar" class="dropdown-item">
@@ -141,7 +147,8 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                         <li class="dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside" aria-expanded="false" id="dropdown_menu"><strong>Menú</strong></a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                                <?php $anio = date('Y'); $dia = date('Y-m-d'); ?>
+                                <?php $anio = date('Y');
+$dia = date('Y-m-d'); ?>
                                 <?php foreach ($_nav_app as $module => $nav) : ?>
                                 <?php if ($_Auth->check($nav['link'])) : ?>
                                     <?php if (isset($nav['menu'])) : ?>
@@ -194,25 +201,25 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                 if ($Contribuyente && $Contribuyente->enCertificacion()) {
                     echo '<div class="bg-info text-white text-center lead mt-2 mb-2" style="padding:0.5em"><strong>AMBIENTE DE CERTIFICACIÓN / PRUEBAS: '.$Contribuyente->razon_social.'</strong></div>',"\n";
                 }
-                // mensaje de sesión
-                $messages = \sowerphp\core\Model_Datasource_Session::message();
-                foreach ($messages as $message) {
-                    $icons = [
-                        'success' => 'ok',
-                        'info' => 'info-sign',
-                        'warning' => 'warning-sign',
-                        'danger' => 'exclamation-sign',
-                    ];
-                    $message['text'] = message_format($message['text']);
-                    echo '<div class="alert alert-',$message['type'],'" role="alert">',"\n";
-                    echo '<div class="float-end"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button></div>',"\n";
-                    echo '<span class="glyphicon glyphicon-',$icons[$message['type']],'" aria-hidden="true"></span>',"\n";
-                    echo '<span class="visually-hidden">',$message['type'],': </span>',$message['text'],"\n";
-                    echo '</div>'."\n";
-                }
-                // contenido de la página
-                echo $_content;
-            ?>
+// mensaje de sesión
+$messages = \sowerphp\core\Model_Datasource_Session::message();
+foreach ($messages as $message) {
+    $icons = [
+        'success' => 'ok',
+        'info' => 'info-sign',
+        'warning' => 'warning-sign',
+        'danger' => 'exclamation-sign',
+    ];
+    $message['text'] = message_format($message['text']);
+    echo '<div class="alert alert-',$message['type'],'" role="alert">',"\n";
+    echo '<div class="float-end"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button></div>',"\n";
+    echo '<span class="glyphicon glyphicon-',$icons[$message['type']],'" aria-hidden="true"></span>',"\n";
+    echo '<span class="visually-hidden">',$message['type'],': </span>',$message['text'],"\n";
+    echo '</div>'."\n";
+}
+// contenido de la página
+echo $_content;
+?>
             <!-- END MAIN CONTENT -->
             <div class="clearfix"></div>
             <br/>
@@ -229,14 +236,14 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                 </div>
                 <div class="float-end text-end">
                 <?php
-                    if (isset($_Auth) && $_Auth->logged()) {
-                        echo '<span class="small">';
-                        echo 'time: ',round(microtime(true)-TIME_START, 2),' [s] - ';
-                        echo 'memory: ',round(memory_get_usage()/1024/1024,2),' [MiB] - ';
-                        echo 'querys: ',\sowerphp\core\Model_Datasource_Database_Manager::$querysCount,' - ';
-                        echo 'cache: ',\sowerphp\core\Cache::$setCount,'/',\sowerphp\core\Cache::$getCount,'</span>',"\n";
-                    }
-                ?>
+        if (isset($_Auth) && $_Auth->logged()) {
+            echo '<span class="small">';
+            echo 'time: ',round(microtime(true) - TIME_START, 2),' [s] - ';
+            echo 'memory: ',round(memory_get_usage() / 1024 / 1024, 2),' [MiB] - ';
+            echo 'querys: ',\sowerphp\core\Model_Datasource_Database_Manager::$querysCount,' - ';
+            echo 'cache: ',\sowerphp\core\Cache::$setCount,'/',\sowerphp\core\Cache::$getCount,'</span>',"\n";
+        }
+?>
                 </div>
                 <div class="clearfix"></div>
             </div>

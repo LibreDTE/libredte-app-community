@@ -66,7 +66,7 @@ class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
         $lines = str_getcsv($csv, "\n");
         $n_lines = count($lines);
         $data = [];
-        for ($i=1; $i<$n_lines; $i++) {
+        for ($i = 1; $i < $n_lines; $i++) {
             $lines[$i] = utf8_encode($lines[$i]);
             $row = array_map('trim', str_getcsv($lines[$i], ';', ''));
             unset($lines[$i]);

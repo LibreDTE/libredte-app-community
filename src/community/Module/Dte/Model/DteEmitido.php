@@ -21,19 +21,18 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
-use \sowerphp\app\Sistema\General\Model_MonedaCambio;
-use \sowerphp\core\Exception_Model_Datasource_Database as DatabaseException;
-use \sowerphp\core\Network_Http_Rest;
-use \sowerphp\core\Trigger;
-use \sowerphp\core\Utility_Array;
-use \sowerphp\general\Utility_Date;
-use \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos;
-use \website\Dte\Admin\Mantenedores\Model_DteTipo;
-use \website\Dte\Admin\Mantenedores\Model_DteTipos;
-use \website\Dte\Admin\Model_DteFolio;
+use sowerphp\app\Sistema\General\Model_MonedaCambio;
+use sowerphp\core\Exception_Model_Datasource_Database as DatabaseException;
+use sowerphp\core\Network_Http_Rest;
+use sowerphp\core\Trigger;
+use sowerphp\core\Utility_Array;
+use sowerphp\general\Utility_Date;
+use website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos;
+use website\Dte\Admin\Mantenedores\Model_DteTipo;
+use website\Dte\Admin\Mantenedores\Model_DteTipos;
+use website\Dte\Admin\Model_DteFolio;
 
 /**
  * Clase para mapear la tabla dte_emitido de la base de datos.
@@ -474,7 +473,7 @@ class Model_DteEmitido extends Model_Base_Envio
             }
             // si es un XML, hay que corroborar el XML (firma) y además
             // codificar  en base64
-            elseif (substr($this->xml,0,5) == '<?xml') {
+            elseif (substr($this->xml, 0, 5) == '<?xml') {
                 $datos = $this->getDatos();
                 // si el XML viene sin TED se rechaza el guardado
                 if (empty($datos['TED'])) {
@@ -712,7 +711,7 @@ class Model_DteEmitido extends Model_Base_Envio
                 $Cesion = [$Cesion];
             }
             $n_cesiones = count($Cesion);
-            $this->datos_cesion = $Cesion[$n_cesiones-1]['DocumentoCesion'];
+            $this->datos_cesion = $Cesion[$n_cesiones - 1]['DocumentoCesion'];
         }
         return $this->datos_cesion;
     }
@@ -1067,7 +1066,7 @@ class Model_DteEmitido extends Model_Base_Envio
      */
     private function canBeDeleted($Usuario): bool
     {
-        if ($this->track_id!=-1) {
+        if ($this->track_id != -1) {
             $estado = $this->getEstado();
             // no borrar casos con track id y donde el estado es
             // diferente a rechazado
@@ -1363,8 +1362,7 @@ class Model_DteEmitido extends Model_Base_Envio
             $msg = 'DTE no puede ser reenviado ya que ';
             if (!$this->revision_estado) {
                 $msg .= 'aun no se ha verificado su estado.';
-            }
-            elseif ($this->getEstado() != 'R') {
+            } elseif ($this->getEstado() != 'R') {
                 $msg .= 'no está rechazado.';
             }
             throw new \Exception($msg);
@@ -1430,7 +1428,8 @@ class Model_DteEmitido extends Model_Base_Envio
                         . implode('<br/>', \sasco\LibreDTE\Log::readAll())
                 );
             }
-            $this->track_id = (int)(!empty($result['track_id'])
+            $this->track_id = (int)(
+                !empty($result['track_id'])
                 ? $result['track_id']
                 : $result['trackid']
             );
@@ -1584,7 +1583,7 @@ class Model_DteEmitido extends Model_Base_Envio
                     $this->revision_estado = 'RCH - DTE Rechazado';
                 }
                 // DTE con reparos
-                else  {
+                else {
                     $this->revision_estado = 'RLV - DTE Aceptado con Reparos Leves';
                 }
             }
@@ -1679,7 +1678,7 @@ class Model_DteEmitido extends Model_Base_Envio
         }
         // no se encontró email o bien los que se encontraron no se
         // procesaron (porque no se retornó)
-        if (str_replace('-', '', $this->fecha)<date('Ymd')) {
+        if (str_replace('-', '', $this->fecha) < date('Ymd')) {
             $this->solicitarRevision();
             throw new \Exception(
                 'No se encontró respuesta de envío del DTE, se solicitó nueva revisión.'
@@ -1800,8 +1799,7 @@ class Model_DteEmitido extends Model_Base_Envio
         return (int)$this->db->getValue('
             SELECT COUNT(*)
             FROM dte_emitido_email
-            WHERE ' . implode(' AND ', $where)
-        , $vars);
+            WHERE ' . implode(' AND ', $where), $vars);
     }
 
     /**
@@ -1817,8 +1815,7 @@ class Model_DteEmitido extends Model_Base_Envio
                 );
             }
             $to = [$this->getReceptor()->config_email_intercambio_user];
-        }
-        elseif ($to == 'all') {
+        } elseif ($to == 'all') {
             $to = $this->getEmails();
         }
         if (!is_array($to)) {
@@ -2364,8 +2361,7 @@ class Model_DteEmitido extends Model_Base_Envio
             ) {
                 throw new \Exception(
                     'Formato de PDF ' . $config['formato']
-                        . ' no se encuentra disponible.'
-                    ,
+                        . ' no se encuentra disponible.',
                     400
                 );
             }
@@ -2475,8 +2471,7 @@ class Model_DteEmitido extends Model_Base_Envio
             ) {
                 throw new \Exception(
                     'Formato de ESCPOS ' . $config['formato']
-                        . ' no se encuentra disponible.'
-                    ,
+                        . ' no se encuentra disponible.',
                     400
                 );
             }

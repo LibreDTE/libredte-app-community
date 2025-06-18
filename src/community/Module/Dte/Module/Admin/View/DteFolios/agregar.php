@@ -9,24 +9,24 @@
 <p>Aquí podrá agregar un mantenedor de folios para un nuevo tipo de documento. En el paso siguiente se le pedirá que suba el primer archio XML del CAF (folios).</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit' => 'Form.check()']);
-echo $f->input([
-    'type' => 'select',
-    'name' => 'dte',
-    'label' => 'Tipo de documento',
-    'options' => ['' => 'Seleccione el tipo de documento'] + $dte_tipos,
-    'check' => 'notempty',
-    'help' => '¿Necesitas activar un documento que no está en la lista? <a href="'.$_base.'/dte/contribuyentes/modificar#facturacion:documentos_disponibles">Hazlo en la configuración del contribuyente</a>.',
-]);
-echo $f->input([
-    'name' => 'alerta',
-    'label' => 'Cantidad alerta de folios',
-    'placeholder' => $Emisor->config_sii_timbraje_multiplicador == 5 ? '¿Cuántos folios espera usar mensualmente para este tipo de documento?' : '',
-    'help' => 'Cuando los folios disponibles sean igual a esta cantidad se tratará de timbrar automáticamente o se notificará al administrador de la empresa.',
-    'check' => 'notempty integer',
-]);
-echo $f->end('Crear mantenedor de folios e ir al paso siguiente');
-?>
+        echo $f->begin(['onsubmit' => 'Form.check()']);
+        echo $f->input([
+            'type' => 'select',
+            'name' => 'dte',
+            'label' => 'Tipo de documento',
+            'options' => ['' => 'Seleccione el tipo de documento'] + $dte_tipos,
+            'check' => 'notempty',
+            'help' => '¿Necesitas activar un documento que no está en la lista? <a href="'.$_base.'/dte/contribuyentes/modificar#facturacion:documentos_disponibles">Hazlo en la configuración del contribuyente</a>.',
+        ]);
+        echo $f->input([
+            'name' => 'alerta',
+            'label' => 'Cantidad alerta de folios',
+            'placeholder' => $Emisor->config_sii_timbraje_multiplicador == 5 ? '¿Cuántos folios espera usar mensualmente para este tipo de documento?' : '',
+            'help' => 'Cuando los folios disponibles sean igual a esta cantidad se tratará de timbrar automáticamente o se notificará al administrador de la empresa.',
+            'check' => 'notempty integer',
+        ]);
+        echo $f->end('Crear mantenedor de folios e ir al paso siguiente');
+        ?>
 <div class="card mb-4" id="faq_alerta">
     <div class="card-body">
         <i class="fa-solid fa-question-circle fa-fw text-warning mb-4"></i>

@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -197,7 +196,8 @@ class Controller_Sii extends \Controller_App
         $Firma = $Emisor->getFirma($this->Auth->User->id);
         if (!$Firma) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe firma asociada.', 'error'
+                'No existe firma asociada.',
+                'error'
             );
             $this->redirect('/dte/dte_emitidos/listar');
         }
@@ -228,7 +228,8 @@ class Controller_Sii extends \Controller_App
         $Firma = $Contribuyente->getFirma($this->Auth->User->id);
         if (!$Firma) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe firma asociada.', 'error'
+                'No existe firma asociada.',
+                'error'
             );
             $this->redirect('/dte');
         }

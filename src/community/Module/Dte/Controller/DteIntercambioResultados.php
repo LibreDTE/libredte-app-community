@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -40,7 +39,8 @@ class Controller_DteIntercambioResultados extends \Controller_App
         $DteIntercambioResultado = new Model_DteIntercambioResultado($responde, $Emisor->rut, $codigo);
         if (!$DteIntercambioResultado->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el resultado solicitado.', 'error'
+                'No existe el resultado solicitado.',
+                'error'
             );
             $this->redirect('/dte/dte_intercambios');
         }

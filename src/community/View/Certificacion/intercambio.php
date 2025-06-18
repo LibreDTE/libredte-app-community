@@ -19,43 +19,43 @@
 
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit' => 'Form.check()']);
-echo $f->input([
-    'type' => 'file',
-    'name' => 'xml',
-    'label' => 'XML EnvioDTE',
-    'help' => 'Archivo XML de EnvioDTE descargado desde el SII para el proceso de intercambio.',
-    'check' => 'notempty',
-    'attr' => 'accept=".xml"',
-]);
-echo $f->input([
-    'name' => 'emisor',
-    'label' => 'Emisor esperado',
-    'value' => '88888888-8',
-    'placeholder' => '88888888-8',
-    'help' => 'RUT del emisor (proveedor) esperado de los documentos del intercambio.',
-    'check' => 'notempty rut',
-]);
-echo $f->input([
-    'name' => 'receptor',
-    'label' => 'Receptor esperado',
-    'placeholder' => '11222333-4',
-    'help' => 'RUT de la empresa que se está certificando. Es el cliente en este proceso de intercambio.',
-    'check' => 'notempty rut',
-]);
-echo $f->input([
-    'type' => 'file',
-    'name' => 'firma',
-    'label' => 'Firma electrónica',
-    'help' => 'Certificado digital con extensión .p12 o .pfx',
-    'check' => 'notempty',
-    'attr' => 'accept=".p12,.pfx"',
-]);
-echo $f->input([
-    'type' => 'password',
-    'name' => 'contrasenia',
-    'label' => 'Contraseña firma',
-    'help' => 'Contraseña que permite utilizar la firma electrónica.',
-    'check' => 'notempty',
-]);
-echo $f->end('Generar XML de respuesta a intercambio');
+            echo $f->begin(['onsubmit' => 'Form.check()']);
+            echo $f->input([
+                'type' => 'file',
+                'name' => 'xml',
+                'label' => 'XML EnvioDTE',
+                'help' => 'Archivo XML de EnvioDTE descargado desde el SII para el proceso de intercambio.',
+                'check' => 'notempty',
+                'attr' => 'accept=".xml"',
+            ]);
+            echo $f->input([
+                'name' => 'emisor',
+                'label' => 'Emisor esperado',
+                'value' => '88888888-8',
+                'placeholder' => '88888888-8',
+                'help' => 'RUT del emisor (proveedor) esperado de los documentos del intercambio.',
+                'check' => 'notempty rut',
+            ]);
+            echo $f->input([
+                'name' => 'receptor',
+                'label' => 'Receptor esperado',
+                'placeholder' => '11222333-4',
+                'help' => 'RUT de la empresa que se está certificando. Es el cliente en este proceso de intercambio.',
+                'check' => 'notempty rut',
+            ]);
+            echo $f->input([
+                'type' => 'file',
+                'name' => 'firma',
+                'label' => 'Firma electrónica',
+                'help' => 'Certificado digital con extensión .p12 o .pfx',
+                'check' => 'notempty',
+                'attr' => 'accept=".p12,.pfx"',
+            ]);
+            echo $f->input([
+                'type' => 'password',
+                'name' => 'contrasenia',
+                'label' => 'Contraseña firma',
+                'help' => 'Contraseña que permite utilizar la firma electrónica.',
+                'check' => 'notempty',
+            ]);
+            echo $f->end('Generar XML de respuesta a intercambio');

@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -67,9 +66,8 @@ class Model_DteGuias extends \Model_Plural_App
             if (!empty($filtros['receptor'])) {
                 if ($filtros['receptor'][0] == '!') {
                     $where[] = 'e.receptor != :receptor';
-                    $vars[':receptor'] = substr($filtros['receptor'],1);
-                }
-                else {
+                    $vars[':receptor'] = substr($filtros['receptor'], 1);
+                } else {
                     $where[] = 'e.receptor = :receptor';
                     $vars[':receptor'] = $filtros['receptor'];
                 }
@@ -193,7 +191,8 @@ class Model_DteGuias extends \Model_Plural_App
         foreach ($folios as $folio) {
             $Guia = new Model_DteEmitido(
                 $this->getContribuyente()->rut,
-                52, $folio,
+                52,
+                $folio,
                 $this->getContribuyente()->enCertificacion()
             );
             $facturacion[$Guia->receptor][] = $Guia;

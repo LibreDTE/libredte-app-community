@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website;
 
 /**
@@ -96,7 +95,8 @@ class Controller_Certificacion extends \Controller_App
         // si no se pasó el archivo error
         if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Debes enviar el archivo del set de pruebas entregado por el SII.', 'error'
+                'Debes enviar el archivo del set de pruebas entregado por el SII.',
+                'error'
             );
             $this->redirect('/certificacion/set_pruebas#dte');
         }
@@ -104,7 +104,7 @@ class Controller_Certificacion extends \Controller_App
         $folios = [];
         if (isset($_POST['folios'])) {
             $n_folios = count($_POST['folios']);
-            for ($i=0; $i<$n_folios; $i++) {
+            for ($i = 0; $i < $n_folios; $i++) {
                 if (!empty($_POST['folios'][$i]) && !empty($_POST['desde'][$i])) {
                     $folios[$_POST['folios'][$i]] = $_POST['desde'][$i];
                 }
@@ -114,7 +114,8 @@ class Controller_Certificacion extends \Controller_App
         $json = \sasco\LibreDTE\Sii\Certificacion\SetPruebas::getJSON(file_get_contents($_FILES['archivo']['tmp_name']), $folios);
         if (!$json) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible crear el archivo JSON a partir del archivo del set de prueba, ¡verificar el formato y/o codificación!.', 'error'
+                'No fue posible crear el archivo JSON a partir del archivo del set de prueba, ¡verificar el formato y/o codificación!.',
+                'error'
             );
             $this->redirect('/certificacion/set_pruebas#dte');
         }
@@ -132,7 +133,8 @@ class Controller_Certificacion extends \Controller_App
         // si no se pasó el archivo error
         if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Debes enviar el archivo XML del EnvioDTE al que quieres generar su Libro de Ventas.', 'error'
+                'Debes enviar el archivo XML del EnvioDTE al que quieres generar su Libro de Ventas.',
+                'error'
             );
             $this->redirect('/certificacion/set_pruebas#ventas');
         }
@@ -168,8 +170,9 @@ class Controller_Certificacion extends \Controller_App
                 $LibroCompraVenta->setFirma($Firma);
             } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No fue posible abrir la firma electrónica, quizás contraseña incorrecta.', 'error'
-            );
+                    'No fue posible abrir la firma electrónica, quizás contraseña incorrecta.',
+                    'error'
+                );
                 $this->redirect('/certificacion/set_pruebas#ventas');
             }
         }
@@ -179,7 +182,8 @@ class Controller_Certificacion extends \Controller_App
         // verificar problemas de esquema
         if (!$LibroCompraVenta->schemaValidate()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+                implode('<br/>', \sasco\LibreDTE\Log::readAll()),
+                'error'
             );
             $this->redirect('/certificacion/set_pruebas#ventas');
         }
@@ -199,7 +203,8 @@ class Controller_Certificacion extends \Controller_App
         // si no se pasó el archivo error
         if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Debes enviar la planilla con el set de pruebas de las boletas electrónicas.', 'error'
+                'Debes enviar la planilla con el set de pruebas de las boletas electrónicas.',
+                'error'
             );
             $this->redirect('/certificacion/set_pruebas#boletas');
         }
@@ -213,7 +218,7 @@ class Controller_Certificacion extends \Controller_App
         $folios_anulados = [];
         $folios_rebajados = [];
         $caso = 1;
-        for ($i=1; $i<$n_data; $i++) {
+        for ($i = 1; $i < $n_data; $i++) {
             // crear dte
             if ($data[$i][0]) {
                 $folio_actual = $data[$i][0];
@@ -261,7 +266,8 @@ class Controller_Certificacion extends \Controller_App
         mkdir($dir.'/pdf');
         if (!is_dir($dir)) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible generar el directorio para archivos del set de boletas.', 'error'
+                'No fue posible generar el directorio para archivos del set de boletas.',
+                'error'
             );
             $this->redirect('/certificacion/set_pruebas#boletas');
         }
@@ -305,14 +311,15 @@ class Controller_Certificacion extends \Controller_App
             ]);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible abrir la firma electrónica, quizás contraseña incorrecta.', 'error'
+                'No fue posible abrir la firma electrónica, quizás contraseña incorrecta.',
+                'error'
             );
             $this->redirect('/certificacion/set_pruebas#boletas');
         }
         $Folios = []; // CAF
         $folios = []; // desde donde partir
         $n_folios = count($_POST['folios']);
-        for ($i=0; $i<$n_folios; $i++) {
+        for ($i = 0; $i < $n_folios; $i++) {
             $folios[$_POST['folios'][$i]] = $_POST['desde'][$i];
             $Folios[$_POST['folios'][$i]] = new \sasco\LibreDTE\Sii\Folios(file_get_contents($_FILES['caf']['tmp_name'][$i]));
         }
@@ -323,7 +330,8 @@ class Controller_Certificacion extends \Controller_App
             $DTE = new \sasco\LibreDTE\Sii\Dte($documento);
             if (empty($Folios[$DTE->getTipo()])) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Faltó subir archivo CAF de tipo '.$DTE->getTipo().'.', 'error'
+                    'Faltó subir archivo CAF de tipo '.$DTE->getTipo().'.',
+                    'error'
                 );
                 $this->redirect('/certificacion/set_pruebas#boletas');
             }
@@ -342,7 +350,8 @@ class Controller_Certificacion extends \Controller_App
             file_put_contents($dir.'/xml/EnvioBOLETA.xml', $EnvioBOLETA->generar());
         } else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible generar EnvioBOLETA.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+                'No fue posible generar EnvioBOLETA.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()),
+                'error'
             );
             $this->redirect('/certificacion/set_pruebas#boletas');
         }
@@ -350,12 +359,12 @@ class Controller_Certificacion extends \Controller_App
         $notas_credito = [];
         if ($folios_anulados) {
             $n_folios_anulados = count($folios_anulados);
-            for ($i=0; $i<$n_folios_anulados; $i++) {
+            for ($i = 0; $i < $n_folios_anulados; $i++) {
                 $notas_credito[] = \sasco\LibreDTE\Arreglo::mergeRecursiveDistinct($set_pruebas[$folios_anulados[$i]], [
                     'Encabezado' => [
                         'IdDoc' => [
                             'TipoDTE' => 61,
-                            'Folio' => $folios[61]+$i,
+                            'Folio' => $folios[61] + $i,
                             'MntBruto' => 1,
                         ],
                         'Totales' => [
@@ -380,13 +389,13 @@ class Controller_Certificacion extends \Controller_App
             foreach ($folios_rebajados as $f => $r) {
                 $Detalle = $set_pruebas[$f]['Detalle'];
                 foreach ($Detalle as &$d) {
-                    $d['QtyItem'] = $d['QtyItem']*($r/100);
+                    $d['QtyItem'] = $d['QtyItem'] * ($r / 100);
                 }
                 $notas_credito[] = \sasco\LibreDTE\Arreglo::mergeRecursiveDistinct($set_pruebas[$f], [
                     'Encabezado' => [
                         'IdDoc' => [
                             'TipoDTE' => 61,
-                            'Folio' => $folios[61]+$i+$n_folios_anulados,
+                            'Folio' => $folios[61] + $i + $n_folios_anulados,
                             'MntBruto' => 1,
                         ],
                         'Totales' => [
@@ -427,7 +436,8 @@ class Controller_Certificacion extends \Controller_App
                 file_put_contents($dir.'/xml/NotasCredito.xml', $EnvioDTE->generar());
             } else {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No fue posible generar NotasCredito.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+                    'No fue posible generar NotasCredito.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()),
+                    'error'
                 );
                 $this->redirect('/certificacion/set_pruebas#boletas');
             }
@@ -459,7 +469,8 @@ class Controller_Certificacion extends \Controller_App
             file_put_contents($dir.'/xml/ConsumoFolios.xml', $ConsumoFolio->generar());
         } else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible generar ConsumoFolios.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+                'No fue posible generar ConsumoFolios.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()),
+                'error'
             );
             $this->redirect('/certificacion/set_pruebas#boletas');
         }
@@ -490,7 +501,8 @@ class Controller_Certificacion extends \Controller_App
             file_put_contents($dir.'/xml/LibroBoletas.xml', $LibroBoleta->generar());
         } else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible generar LibroBoletas.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+                'No fue posible generar LibroBoletas.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()),
+                'error'
             );
             $this->redirect('/certificacion/set_pruebas#boletas');
         }
@@ -551,25 +563,29 @@ class Controller_Certificacion extends \Controller_App
         // verificar que se hayan pasado los datos requeridos
         if (!isset($_FILES['xml']) || $_FILES['xml']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Hubo algún problema al subir el XML EnvioDTE.', 'error'
+                'Hubo algún problema al subir el XML EnvioDTE.',
+                'error'
             );
             return;
         }
         if (empty($_POST['emisor'])) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'RUT emisor esperado no puede estar en blanco.', 'error'
+                'RUT emisor esperado no puede estar en blanco.',
+                'error'
             );
             return;
         }
         if (empty($_POST['receptor'])) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'RUT receptor esperado no puede estar en blanco.', 'error'
+                'RUT receptor esperado no puede estar en blanco.',
+                'error'
             );
             return;
         }
         if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Hubo algún problema al subir la firma electrónica.', 'error'
+                'Hubo algún problema al subir la firma electrónica.',
+                'error'
             );
             return;
         }
@@ -585,7 +601,8 @@ class Controller_Certificacion extends \Controller_App
             ]);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible abrir la firma electrónica, quizás contraseña incorrecta.', 'error'
+                'No fue posible abrir la firma electrónica, quizás contraseña incorrecta.',
+                'error'
             );
             return;
         }
@@ -605,7 +622,8 @@ class Controller_Certificacion extends \Controller_App
         );
         if (!$RecepcionDTE) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible generar RecepcionDTE.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+                'No fue posible generar RecepcionDTE.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()),
+                'error'
             );
             return;
         }
@@ -622,7 +640,8 @@ class Controller_Certificacion extends \Controller_App
         );
         if (!$EnvioRecibos) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible generar EnvioRecibos.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+                'No fue posible generar EnvioRecibos.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()),
+                'error'
             );
             return;
         }
@@ -642,7 +661,8 @@ class Controller_Certificacion extends \Controller_App
         );
         if (!$ResultadoDTE) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible generar ResultadoDTE.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+                'No fue posible generar ResultadoDTE.xml<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()),
+                'error'
             );
             return;
         }
@@ -650,7 +670,8 @@ class Controller_Certificacion extends \Controller_App
         $dir = DIR_TMP.'/intercambio_'.$Caratula['RutEmisor'].'_'.date('U');
         if (!mkdir($dir)) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible generar el archivo comprimido con los XML.', 'error'
+                'No fue posible generar el archivo comprimido con los XML.',
+                'error'
             );
             return;
         }

@@ -70,7 +70,8 @@ class Shell_Command_Respaldos_Dropbox extends \Shell_App
             return;
         }
         \sowerphp\general\Utility_File::compress(
-            $dir_uncompressed, ['format' => $compress, 'delete' => true, 'download' => false]
+            $dir_uncompressed,
+            ['format' => $compress, 'delete' => true, 'download' => false]
         );
         $dir_compressed = $dir_uncompressed.'.'.$compress;
         // enviar respaldo a Dropbox
@@ -80,8 +81,8 @@ class Shell_Command_Respaldos_Dropbox extends \Shell_App
                 '/'.$Contribuyente->razon_social.'/respaldos/'.$filename.'.'.$compress,
                 ['mode' => ['.tag' => 'overwrite']]
             );
-            if ($this->verbose>=2) {
-              $this->out('  Se subió el archivo: '.$file->getName());
+            if ($this->verbose >= 2) {
+                $this->out('  Se subió el archivo: '.$file->getName());
             }
             unlink($dir_compressed);
             return true;

@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte\Admin\Mantenedores;
 
 /**
@@ -101,7 +100,8 @@ class Controller_Contribuyentes extends \Controller_Maintainer
                 }
             }
             \sowerphp\core\Model_Datasource_Session::message(
-                'Se actualizaron '.num($actualizados).' contribuyentes', 'ok'
+                'Se actualizaron '.num($actualizados).' contribuyentes',
+                'ok'
             );
         }
     }

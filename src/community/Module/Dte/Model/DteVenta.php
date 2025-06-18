@@ -21,10 +21,9 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
-use \website\Dte\Admin\Mantenedores\Model_DteTipos;
+use website\Dte\Admin\Mantenedores\Model_DteTipos;
 
 /**
  * Clase para mapear la tabla dte_venta de la base de datos.

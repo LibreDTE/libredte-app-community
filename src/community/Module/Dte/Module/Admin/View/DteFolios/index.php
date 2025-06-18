@@ -46,9 +46,9 @@ foreach ($folios as &$f) {
     $f[] = '<a href="dte_folios/ver/'.$f['dte'].'" title="Ver mantenedor del folio tipo '.$f['dte'].'" class="btn btn-primary"><i class="fa fa-search fa-fw"></i></a>';
     unset($f['meses_autorizacion'], $f['vigente']);
 }
-array_unshift($folios, ['Código', 'Documento tributario', 'Siguiente folio', 'Folios disponibles', 'Alerta de folios', 'Vigencia', 'Ver']);
-new \sowerphp\general\View_Helper_Table($folios);
-?>
+        array_unshift($folios, ['Código', 'Documento tributario', 'Siguiente folio', 'Folios disponibles', 'Alerta de folios', 'Vigencia', 'Ver']);
+        new \sowerphp\general\View_Helper_Table($folios);
+        ?>
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3">
     <div class="col">
         <div class="card mb-4" id="faq_solicitar_folios">
@@ -73,7 +73,7 @@ new \sowerphp\general\View_Helper_Table($folios);
             <div class="card-body" id="faq_anular_folios">
                 <i class="fa-solid fa-question-circle fa-fw text-warning mb-4"></i>
                 <strong>¿Cómo puedo anular folios sin uso?</strong><br/>
-                Los folios sin uso (saltados o vencidos) deben ser anulados en el <a href="https://www4<?=$Emisor->enCertificacion()?'c':''?>.sii.cl/anulacionMsvDteInternet/" target="_blank">sitio web del SII</a>. Si no los anula, esto afectará futuras solicitudes de nuevos folios.
+                Los folios sin uso (saltados o vencidos) deben ser anulados en el <a href="https://www4<?=$Emisor->enCertificacion() ? 'c' : ''?>.sii.cl/anulacionMsvDteInternet/" target="_blank">sitio web del SII</a>. Si no los anula, esto afectará futuras solicitudes de nuevos folios.
             </div>
         </div>
     </div>

@@ -21,10 +21,9 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte\Admin;
 
-use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
+use website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
 
 /**
  * Clase para las acciones asociadas a items.
@@ -212,7 +211,8 @@ class Controller_Itemes extends \Controller_Maintainer
             // verificar que se haya podido subir el archivo con el libro
             if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Ocurrió un error al subir el archivo con los items.', 'error'
+                    'Ocurrió un error al subir el archivo con los items.',
+                    'error'
                 );
                 return;
             }
@@ -233,7 +233,7 @@ class Controller_Itemes extends \Controller_Maintainer
                 // crear objeto
                 $Item = new Model_Item();
                 $Item->contribuyente = $Contribuyente->rut;
-                for ($i=0; $i<$n_cols; $i++) {
+                for ($i = 0; $i < $n_cols; $i++) {
                     if (isset($item[$i])) {
                         $Item->{$cols[$i]} = $item[$i];
                     }
@@ -330,7 +330,8 @@ class Controller_Itemes extends \Controller_Maintainer
         $items = (new Model_Itemes())->setContribuyente($Contribuyente)->exportar();
         if (!$items) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No hay items que exportar.', 'warning'
+                'No hay items que exportar.',
+                'warning'
             );
             $this->redirect('/dte/admin/itemes/listar');
         }

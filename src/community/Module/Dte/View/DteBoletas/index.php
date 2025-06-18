@@ -17,10 +17,10 @@ foreach ($periodos as &$p) {
             .' <a href="dte_boletas/xml/'.$p['periodo'].'" title="Descargar XML del libro del período" class="btn btn-primary mb-2"><i class="far fa-file-code fa-fw"></i></a>';
     unset($p['xml']);
 }
-array_unshift($periodos, ['Período', 'Emitidas', 'Desde', 'Hasta', 'Exento', 'Neto', 'IVA', 'Total', 'Descargar']);
-$t = new \sowerphp\general\View_Helper_Table();
-$t->setShowEmptyCols(false);
-$t->setID('boletas_'.$Emisor->rut);
-$t->setExport(true);
-$t->setColsWidth([null, null, null, null, null, null, null, null, 110]);
-echo $t->generate($periodos);
+        array_unshift($periodos, ['Período', 'Emitidas', 'Desde', 'Hasta', 'Exento', 'Neto', 'IVA', 'Total', 'Descargar']);
+        $t = new \sowerphp\general\View_Helper_Table();
+        $t->setShowEmptyCols(false);
+        $t->setID('boletas_'.$Emisor->rut);
+        $t->setExport(true);
+        $t->setColsWidth([null, null, null, null, null, null, null, null, 110]);
+        echo $t->generate($periodos);

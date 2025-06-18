@@ -13,13 +13,13 @@ foreach ($detalle as &$d) {
     $d['detRutDoc'] = num($d['detRutDoc']).'-'.$d['detDvDoc'];
     unset($d['dhdrCodigo'], $d['dcvCodigo'], $d['detCodigo'], $d['detTipoDoc'], $d['detDvDoc'], $d['cambiarTipoTran'], $d['totalDtoiMontoImp'], $d['totalDinrMontoIVANoR']);
 }
-$keys = array_keys($detalle[0]);
-foreach ($keys as &$k) {
-    if (substr($k,0,3) == 'det') {
-        $k = substr($k, 3);
-    }
-}
-array_unshift($detalle, $keys);
-new \sowerphp\general\View_Helper_Table($detalle, 'rv_detalle_'.$periodo.'_'.$DteTipo->codigo, true);
-?>
+        $keys = array_keys($detalle[0]);
+        foreach ($keys as &$k) {
+            if (substr($k, 0, 3) == 'det') {
+                $k = substr($k, 3);
+            }
+        }
+        array_unshift($detalle, $keys);
+        new \sowerphp\general\View_Helper_Table($detalle, 'rv_detalle_'.$periodo.'_'.$DteTipo->codigo, true);
+        ?>
 <script type="text/javascript"> $(document).ready(function(){ dataTable("#<?='rv_detalle_'.$periodo.'_'.$DteTipo->codigo?>"); }); </script>

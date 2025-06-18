@@ -21,10 +21,9 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Honorarios;
 
-use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+use sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
 
 /**
  * Clase para mapear la tabla boleta_tercero de la base de datos.
@@ -58,7 +57,7 @@ class Model_BoletaTerceros extends \Model_Plural_App
         // periodos a procesar
         $periodo_actual = (int)date('Ym');
         $periodos = [$periodo_actual];
-        for ($i = 0; $i < $meses-1; $i++) {
+        for ($i = 0; $i < $meses - 1; $i++) {
             $periodos[] = \sowerphp\general\Utility_Date::previousPeriod($periodos[$i]);
         }
         sort($periodos);
@@ -274,8 +273,8 @@ class Model_BoletaTerceros extends \Model_Plural_App
         // guardar datos del receptor si es posible
         $Receptor = $BoletaTercero->getReceptor();
         if (!$Receptor->usuario) {
-            $Receptor->razon_social = mb_substr($boleta['Encabezado']['Receptor']['RznSocRecep'],0,100);
-            $Receptor->direccion = mb_substr($boleta['Encabezado']['Receptor']['DirRecep'],0,70);
+            $Receptor->razon_social = mb_substr($boleta['Encabezado']['Receptor']['RznSocRecep'], 0, 100);
+            $Receptor->direccion = mb_substr($boleta['Encabezado']['Receptor']['DirRecep'], 0, 70);
             $comuna = (new Model_Comunas())->getComunaByName($boleta['Encabezado']['Receptor']['CmnaRecep']);
             if ($comuna) {
                 $Receptor->comuna = $comuna;

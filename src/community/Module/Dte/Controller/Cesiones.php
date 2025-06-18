@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -54,7 +53,7 @@ class Controller_Cesiones extends \Controller_App
             if (!empty($pagina)) {
                 $filtros['limit'] = config('app.registers_per_page');
                 $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
-                $paginas = $documentos_total ? ceil($documentos_total/$filtros['limit']) : 0;
+                $paginas = $documentos_total ? ceil($documentos_total / $filtros['limit']) : 0;
                 if ($pagina != 1 && $pagina > $paginas) {
                     $this->redirect('/dte/'.$this->request->getParsedParams()['controller'].'/listar'.$searchUrl);
                 }
@@ -62,7 +61,8 @@ class Controller_Cesiones extends \Controller_App
             $documentos = $Emisor->getDocumentosEmitidos($filtros);
         } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Error al recuperar los documentos:<br/>'.$e->getMessage(), 'error'
+                'Error al recuperar los documentos:<br/>'.$e->getMessage(),
+                'error'
             );
             $documentos_total = 0;
             $documentos = [];

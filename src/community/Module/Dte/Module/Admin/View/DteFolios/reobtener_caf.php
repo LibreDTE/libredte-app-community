@@ -9,25 +9,25 @@
 <p>Aquí podrá reobtener un archivo XML de folios (CAF) previamente obtenido en el SII y que sea cargardo inmediatamente a LibreDTE.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit' => 'Form.check() && __.loading(\'Buscando folios en el SII...\')']);
-echo $f->input([
-    'type' => 'select',
-    'name' => 'dte',
-    'label' => 'Tipo de documento',
-    'options' => ['' => 'Seleccione un tipo de documento'] + $dte_tipos,
-    'value' => $dte,
-    'check' => 'notempty',
-]);
-echo $f->end('Buscar folios que se hayan solicitado en SII');
-if (isset($solicitudes)) {
-    foreach ($solicitudes as &$s) {
-        $s[] = '<a href="'.$_url.'/dte/admin/dte_folios/reobtener_caf_cargar/'.$dte.'/'.$s['inicial'].'/'.$s['final'].'/'.$s['fecha'].'" title="Reobtener el CAF y cargar en LibreDTE" class="btn btn-primary" onclick="__.loading(\'Descargando CAF del SII y cargando en LibreDTE...\')"><i class="fa fa-download fa-fw"></i></a>';
-        $s['fecha'] = \sowerphp\general\Utility_Date::format($s['fecha']);
-    }
-    array_unshift($solicitudes, ['Desde', 'Hasta', 'Cantidad', 'Fecha autorización', 'Solicitante', 'Reobtener']);
-    new \sowerphp\general\View_Helper_Table($solicitudes);
-}
-?>
+        echo $f->begin(['onsubmit' => 'Form.check() && __.loading(\'Buscando folios en el SII...\')']);
+        echo $f->input([
+            'type' => 'select',
+            'name' => 'dte',
+            'label' => 'Tipo de documento',
+            'options' => ['' => 'Seleccione un tipo de documento'] + $dte_tipos,
+            'value' => $dte,
+            'check' => 'notempty',
+        ]);
+        echo $f->end('Buscar folios que se hayan solicitado en SII');
+        if (isset($solicitudes)) {
+            foreach ($solicitudes as &$s) {
+                $s[] = '<a href="'.$_url.'/dte/admin/dte_folios/reobtener_caf_cargar/'.$dte.'/'.$s['inicial'].'/'.$s['final'].'/'.$s['fecha'].'" title="Reobtener el CAF y cargar en LibreDTE" class="btn btn-primary" onclick="__.loading(\'Descargando CAF del SII y cargando en LibreDTE...\')"><i class="fa fa-download fa-fw"></i></a>';
+                $s['fecha'] = \sowerphp\general\Utility_Date::format($s['fecha']);
+            }
+            array_unshift($solicitudes, ['Desde', 'Hasta', 'Cantidad', 'Fecha autorización', 'Solicitante', 'Reobtener']);
+            new \sowerphp\general\View_Helper_Table($solicitudes);
+        }
+        ?>
 <div class="row">
     <div class="col-md-6">
         <div class="card mb-4">

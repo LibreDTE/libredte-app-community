@@ -8,7 +8,7 @@ if ($documentos_rc) {
     }
     $keys = array_keys($documentos_rc[0]);
     foreach ($keys as &$k) {
-        if (substr($k,0,3) == 'det') {
+        if (substr($k, 0, 3) == 'det') {
             $k = substr($k, 3);
         }
     }
@@ -28,13 +28,13 @@ $p->getProperties()->setTitle('Diferencias RC del SII e IEC de LibreDTE');
 // agregar documentos RC
 $p->setActiveSheetIndex(0);
 $p->getActiveSheet()->setTitle('RC del SII');
-$y=1; // fila
-$x=0; // columna
+$y = 1; // fila
+$x = 0; // columna
 foreach ($documentos_rc as $fila) {
     foreach ($fila as $celda) {
         $p->getActiveSheet()->setCellValue(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($x++).$y, $celda);
     }
-    $x=0;
+    $x = 0;
     ++$y;
 }
 
@@ -42,13 +42,13 @@ foreach ($documentos_rc as $fila) {
 $p->createSheet(1);
 $p->setActiveSheetIndex(1);
 $p->getActiveSheet()->setTitle('IEC de LibreDTE');
-$y=1; // fila
-$x=0; // columna
+$y = 1; // fila
+$x = 0; // columna
 foreach ($documentos_libredte as $fila) {
     foreach ($fila as $celda) {
         $p->getActiveSheet()->setCellValue(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($x++).$y, $celda);
     }
-    $x=0;
+    $x = 0;
     ++$y;
 }
 

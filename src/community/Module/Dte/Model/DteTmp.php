@@ -21,13 +21,12 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
-use \sowerphp\app\Sistema\General\Model_MonedaCambio;
-use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
-use \website\Dte\Admin\Mantenedores\Model_DteTipo;
-use \website\Dte\Admin\Mantenedores\Model_DteTipos;
+use sowerphp\app\Sistema\General\Model_MonedaCambio;
+use sowerphp\app\Sistema\Usuarios\Model_Usuario;
+use website\Dte\Admin\Mantenedores\Model_DteTipo;
+use website\Dte\Admin\Mantenedores\Model_DteTipos;
 
 /**
  * Clase para mapear la tabla dte_tmp de la base de datos.
@@ -384,13 +383,17 @@ class Model_DteTmp extends \Model_App
         // facturador local de LibreDTE
         if (!$this->getEmisor()->config_libredte_facturador) {
             return $this->generarConFacturadorLocal(
-                $user_id, $fecha_emision, $retry, $gzip
+                $user_id,
+                $fecha_emision,
+                $retry,
+                $gzip
             );
         }
         // facturador del Portal MIPYME del SII
         elseif ($this->getEmisor()->config_libredte_facturador == 1) {
             return $this->generarConFacturadorSii(
-                $user_id, $fecha_emision
+                $user_id,
+                $fecha_emision
             );
         }
         // facturador mixto
@@ -398,13 +401,17 @@ class Model_DteTmp extends \Model_App
             // facturador local de LibreDTE para boletas
             if (in_array($this->dte, [39, 41])) {
                 return $this->generarConFacturadorLocal(
-                    $user_id, $fecha_emision, $retry, $gzip
+                    $user_id,
+                    $fecha_emision,
+                    $retry,
+                    $gzip
                 );
             }
             // facturador del Portal MIPYME del SII para otros documentos
             else {
                 return $this->generarConFacturadorSii(
-                    $user_id, $fecha_emision
+                    $user_id,
+                    $fecha_emision
                 );
             }
         }
@@ -433,8 +440,8 @@ class Model_DteTmp extends \Model_App
         if (empty($fecha_resolucion)) {
             $message = __(
                 'Falta la fecha de %s que autoriza los DTE en el ambiente de %s del SII para generar el DTE. Antes de intentar generar nuevamente el DTE, debe [configurar la fecha del ambiente de facturación en SII](%s).',
-                $Emisor->enCertificacion() ? 'certificación': 'resolución',
-                $Emisor->enCertificacion() ? 'certificación': 'producción',
+                $Emisor->enCertificacion() ? 'certificación' : 'resolución',
+                $Emisor->enCertificacion() ? 'certificación' : 'producción',
                 url('/dte/contribuyentes/modificar#facturacion:ambiente')
             );
             throw new \Exception($message, 400);
@@ -478,7 +485,7 @@ class Model_DteTmp extends \Model_App
                 'El folio para %s número %d no puede ser usado porque pertenece a un rango de folios que está vencido. Antes de intentar generar nuevamente el DTE, debe [anular los folios vencidos](%s), [cargar folios nuevos](%s) y [modificar el siguiente folio](%s) para que coincida con el primer folio del nuevo rango cargado. Adicionalmente LibreDTE se ha saltado automáticamente el folio vencido número %d (aún así debe ser anulado).',
                 mb_strtolower($this->getTipo()->tipo),
                 $FolioInfo->folio,
-                $Emisor->enCertificacion() ? 'https://www4c.sii.cl/anulacionMsvDteInternet/': 'https://www4.sii.cl/anulacionMsvDteInternet/',
+                $Emisor->enCertificacion() ? 'https://www4c.sii.cl/anulacionMsvDteInternet/' : 'https://www4.sii.cl/anulacionMsvDteInternet/',
                 url('/dte/admin/dte_folios/subir_caf'),
                 url('/dte/admin/dte_folios/modificar/'.$this->dte),
                 $FolioInfo->folio,
@@ -489,7 +496,7 @@ class Model_DteTmp extends \Model_App
         if ($FolioInfo->DteFolio->disponibles <= $FolioInfo->DteFolio->alerta) {
             $timbrado = false;
             // timbrar automáticmente
-            if ($Emisor->config_sii_timbraje_automatico==1) {
+            if ($Emisor->config_sii_timbraje_automatico == 1) {
                 try {
                     $xml = $FolioInfo->DteFolio->timbrar(
                         $FolioInfo->DteFolio->alerta * $Emisor->config_sii_timbraje_multiplicador
@@ -511,7 +518,11 @@ class Model_DteTmp extends \Model_App
         }
         // armar xml a partir del DTE temporal
         $EnvioDte = $this->getEnvioDte(
-            $FolioInfo->folio, $FolioInfo->Caf, $Firma, null, $fecha_emision
+            $FolioInfo->folio,
+            $FolioInfo->Caf,
+            $Firma,
+            null,
+            $fecha_emision
         );
         if (!$EnvioDte) {
             $message = __(
@@ -520,10 +531,10 @@ class Model_DteTmp extends \Model_App
                 $FolioInfo->Caf->getHasta(),
                 mb_strtolower($this->getTipo()->tipo),
                 $FolioInfo->folio,
-                $Emisor->enCertificacion() ? 'https://www4c.sii.cl/anulacionMsvDteInternet/': 'https://www4.sii.cl/anulacionMsvDteInternet/',
+                $Emisor->enCertificacion() ? 'https://www4c.sii.cl/anulacionMsvDteInternet/' : 'https://www4.sii.cl/anulacionMsvDteInternet/',
                 implode(
                     '<br/><br/>- ',
-                    array_map(function($error) {
+                    array_map(function ($error) {
                         return str_replace("\n", '<br/>&nbsp;&nbsp;&nbsp;&nbsp;- ', $error);
                     }, \sasco\LibreDTE\Log::readAll())
                 )
@@ -542,13 +553,13 @@ class Model_DteTmp extends \Model_App
                 $FolioInfo->Caf->getHasta(),
                 mb_strtolower($this->getTipo()->tipo),
                 $FolioInfo->folio,
-                $Emisor->enCertificacion() ? 'https://www4c.sii.cl/anulacionMsvDteInternet/': 'https://www4.sii.cl/anulacionMsvDteInternet/',
+                $Emisor->enCertificacion() ? 'https://www4c.sii.cl/anulacionMsvDteInternet/' : 'https://www4.sii.cl/anulacionMsvDteInternet/',
                 str_replace(
                     'Error en la estructura del XML EnvioDte. ',
                     'Error en la estructura del XML EnvioDte, podrá encontrar la estructura correcta en la [documentación oficial del SII]('.$doc_sii.').<br/>&nbsp;&nbsp;&nbsp;&nbsp;- ',
                     implode(
                         '<br/><br/>- ',
-                        array_map(function($error) {
+                        array_map(function ($error) {
                             return str_replace("\n", '<br/>&nbsp;&nbsp;&nbsp;&nbsp;- ', $error);
                         }, \sasco\LibreDTE\Log::readAll())
                     )
@@ -861,7 +872,7 @@ class Model_DteTmp extends \Model_App
         }
         $email->attach([
             'data' => $response['body'],
-            'name' => ($cotizacion?'cotizacion':'dte_tmp').'_'.$this->getEmisor()->getRUT().'_'.$this->getFolio().'.pdf',
+            'name' => ($cotizacion ? 'cotizacion' : 'dte_tmp').'_'.$this->getEmisor()->getRUT().'_'.$this->getFolio().'.pdf',
             'type' => 'application/pdf',
         ]);
         // enviar email
@@ -921,7 +932,8 @@ class Model_DteTmp extends \Model_App
             $extra = (array)$this->getExtra($force_reload);
             if (!empty($extra['dte'])) {
                 $this->cache_datos = \sowerphp\core\Utility_Array::mergeRecursiveDistinct(
-                    $this->cache_datos, $extra['dte']
+                    $this->cache_datos,
+                    $extra['dte']
                 );
             }
         }
@@ -1098,7 +1110,8 @@ class Model_DteTmp extends \Model_App
         $default_config = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($config_emisor, $default_config);
         $config = \sowerphp\core\Utility_Array::mergeRecursiveDistinct($default_config, $config);
         // armar xml a partir de datos del dte temporal
-        $xml = $this->getEnvioDte($config['cotizacion']
+        $xml = $this->getEnvioDte(
+            $config['cotizacion']
             ? $this->getFolio()
             : 0
         )->generar();

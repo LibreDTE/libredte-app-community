@@ -64,11 +64,13 @@ class Controller_Dropbox extends \Controller_App
                 ]);
                 $Contribuyente->save();
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Dropbox se ha conectado correctamente con LibreDTE.', 'ok'
+                    'Dropbox se ha conectado correctamente con LibreDTE.',
+                    'ok'
                 );
             } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No fue posible conectar LibreDTE con Dropbox: '.$e->getMessage(), 'error'
+                    'No fue posible conectar LibreDTE con Dropbox: '.$e->getMessage(),
+                    'error'
                 );
             }
             $this->redirect('/dte/contribuyentes/modificar#apps');
@@ -100,7 +102,7 @@ class Controller_Dropbox extends \Controller_App
             $authHelper->revokeAccessToken();
             $borrado = true;
         } catch (\Kunnu\Dropbox\Exceptions\DropboxClientException $e) {
-            $response = json_decode($e->getMessage(),true);
+            $response = json_decode($e->getMessage(), true);
             if (!empty($response['error']['.tag']) && $response['error']['.tag'] == 'invalid_access_token') {
                 $borrado = true;
             } else {
@@ -111,11 +113,13 @@ class Controller_Dropbox extends \Controller_App
             $Contribuyente->set(['config_apps_dropbox' => null]);
             $Contribuyente->save();
             \sowerphp\core\Model_Datasource_Session::message(
-                'Dropbox se ha desconectado correctamente de LibreDTE.', 'ok'
+                'Dropbox se ha desconectado correctamente de LibreDTE.',
+                'ok'
             );
         } else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Dropbox no pudo ser desconectado: '.$borrado, 'error'
+                'Dropbox no pudo ser desconectado: '.$borrado,
+                'error'
             );
         }
         $this->redirect('/dte/contribuyentes/modificar#apps');
@@ -153,7 +157,7 @@ class Controller_Dropbox extends \Controller_App
             'Contribuyente' => $Contribuyente,
             'account' => $account,
             'accountSpace' => $accountSpace,
-            'uso' => round(($accountSpace['used']/$accountSpace['allocation']['allocated'])*100),
+            'uso' => round(($accountSpace['used'] / $accountSpace['allocation']['allocated']) * 100),
         ]);
     }
 }

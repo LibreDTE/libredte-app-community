@@ -16,7 +16,7 @@ new \sowerphp\general\View_Helper_Table([
 ?>
 <div class="row">
     <div class="col-md-3">
-        <a class="btn btn-primary btn-lg col-12<?=!$DteTmp->getTipo()->permiteCotizacion()?' disabled':''?>" href="../dte_tmps/cotizacion/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
+        <a class="btn btn-primary btn-lg col-12<?=!$DteTmp->getTipo()->permiteCotizacion() ? ' disabled' : ''?>" href="../dte_tmps/cotizacion/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
             <i class="far fa-file"></i>
             Descargar cotización
         </a>
@@ -28,7 +28,7 @@ new \sowerphp\general\View_Helper_Table([
         </a>
     </div>
     <div class="col-md-3">
-        <a class="btn btn-primary btn-lg col-12<?=!$DteTmp->getTipo()->permiteCobro()?' disabled':''?>" href="../dte_tmps/pagar/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
+        <a class="btn btn-primary btn-lg col-12<?=!$DteTmp->getTipo()->permiteCobro() ? ' disabled' : ''?>" href="../dte_tmps/pagar/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
             <i class="fas fa-dollar-sign"></i>
             Registrar pago
         </a>
@@ -41,7 +41,8 @@ new \sowerphp\general\View_Helper_Table([
     </div>
 </div>
 <div class="float-end" style="float:end;margin-bottom:1em;margin-top:2em;font-size:0.8em">
-<?php $links = $DteTmp->getLinks(); if (!empty($links['pagar'])) : ?>
+<?php $links = $DteTmp->getLinks();
+if (!empty($links['pagar'])) : ?>
     <a href="<?=$links['pagar']?>">Enlace público para pago</a> /
 <?php endif; ?>
     <a href="<?=$_base?>/dte/dte_tmps/ver/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>">Ver página del documento temporal</a> /

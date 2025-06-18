@@ -53,11 +53,9 @@ class Shell_Command_DteEmitidos_Migrar extends \Shell_App
         $response = $rest->post($servidor.'/api/dte/dte_emitidos/cargar_xml?track_id='.$dte['track_id'], '"'.$dte['xml'].'"');
         if ($response === false) {
             $this->out(implode('<br/>', $rest->getErrors()));
-        }
-        elseif ($response['status']['code'] != 200) {
+        } elseif ($response['status']['code'] != 200) {
             $this->out($response['body']);
-        }
-        else {
+        } else {
             $this->out('Ok');
         }
     }

@@ -27,11 +27,11 @@ foreach ($documentos as &$d) {
     $d['total'] = num($d['total']);
     unset($d['dv'], $d['dte'], $d['email'], $d['telefono'], $d['direccion']);
 }
-array_unshift($documentos, ['RUT', 'Proveedor', 'Comuna', 'Fecha', 'Documento', 'Folio', 'Total', 'Ver']);
-$t = new \sowerphp\general\View_Helper_Table();
-$t->setID('recibidos_sin_xml');
-$t->setExport(true);
-$t->setColsWidth([110]);
-echo $t->generate($documentos);
-?>
+    array_unshift($documentos, ['RUT', 'Proveedor', 'Comuna', 'Fecha', 'Documento', 'Folio', 'Total', 'Ver']);
+    $t = new \sowerphp\general\View_Helper_Table();
+    $t->setID('recibidos_sin_xml');
+    $t->setExport(true);
+    $t->setColsWidth([110]);
+    echo $t->generate($documentos);
+    ?>
 <?php endif; ?>

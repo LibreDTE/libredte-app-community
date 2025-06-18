@@ -21,10 +21,9 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
-use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+use sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
 
 /**
  * Clase para mapear la tabla dte_intercambio de la base de datos.
@@ -1043,7 +1042,7 @@ class Model_DteIntercambio extends \Model_App
                         $DteRecibido->intercambio = $this->codigo;
                         $DteRecibido->impuesto_tipo = 1; // se asume siempre que es IVA
                         $periodo_dte = (int)substr(str_replace('-', '', $DteRecibido->fecha), 0, 6);
-                        if (!empty($config['periodo']) && $config['periodo']>$periodo_dte) {
+                        if (!empty($config['periodo']) && $config['periodo'] > $periodo_dte) {
                             $DteRecibido->periodo = $config['periodo'];
                         }
                         if (!empty($config['sucursal'])) {
@@ -1188,10 +1187,12 @@ class Model_DteIntercambio extends \Model_App
             'hash' => $this->getReceptor()->getUsuario()->hash,
         ];
         $default_config = \sowerphp\core\Utility_Array::mergeRecursiveDistinct(
-            $default_config, $config_emisor
+            $default_config,
+            $config_emisor
         );
         $config = \sowerphp\core\Utility_Array::mergeRecursiveDistinct(
-            $default_config, $config
+            $default_config,
+            $config
         );
         // consultar servicio web del contribuyente
         $ApiDtePdfClient = $this->getEmisor()->getApiClient('dte_pdf');

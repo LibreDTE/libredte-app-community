@@ -70,7 +70,7 @@ class View_Helper_PDF extends \sowerphp\general\View_Helper_PDF
         \TCPDF::Footer();
         $this->SetY($this->GetY());
         $this->SetFont('helvetica', 'B', 6);
-        $link = 'http'.(isset($_SERVER['HTTPS'])?'s':null).'://'.$_SERVER['HTTP_HOST'];
+        $link = 'http'.(isset($_SERVER['HTTPS']) ? 's' : null).'://'.$_SERVER['HTTP_HOST'];
         $this->Texto('Documento generado el '. date('d/m/Y').' a las '.date('H:i').' usando LibreDTE ('.$link.')');
     }
 }

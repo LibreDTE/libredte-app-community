@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -47,7 +46,7 @@ class Model_RegistroCompras extends \Model_Plural_App
         // periodos a procesar
         $periodo_actual = (int)date('Ym');
         $periodos = [$periodo_actual];
-        for ($i = 0; $i < $meses-1; $i++) {
+        for ($i = 0; $i < $meses - 1; $i++) {
             $periodo = \sowerphp\general\Utility_Date::previousPeriod($periodos[$i]);
             if ($periodo < 201708) {
                 break;
@@ -113,7 +112,7 @@ class Model_RegistroCompras extends \Model_Plural_App
             if (in_array($key, ['detFchDoc', 'detFecAcuse', 'detFecReclamado', 'detFecRecepcion'])) {
                 $aux = explode(' ', $val);
                 if (!empty($aux[0])) {
-                    list($d,$m,$Y) = explode('/', $aux[0]);
+                    list($d, $m, $Y) = explode('/', $aux[0]);
                     $val = $Y.'-'.$m.'-'.$d;
                 }
                 if (!empty($aux[1])) {
@@ -356,10 +355,11 @@ class Model_RegistroCompras extends \Model_Plural_App
         }
         return $this->db->getTable(
             implode(' UNION ', $query)
-            . ' ORDER BY hasta DESC'
-        , [
+            . ' ORDER BY hasta DESC',
+            [
             ':receptor' => $this->getContribuyente()->rut,
             ':certificacion' => $this->getContribuyente()->enCertificacion(),
-        ]);
+        ]
+        );
     }
 }

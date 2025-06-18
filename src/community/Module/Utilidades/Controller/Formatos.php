@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Utilidades;
 
 /**
@@ -52,7 +51,8 @@ class Controller_Formatos extends \Controller_App
             // convertir datos de entrada a JSON
             try {
                 $json = \sasco\LibreDTE\Sii\Dte\Formatos::toJSON(
-                    $_POST['formato'], file_get_contents($_FILES['archivo']['tmp_name'])
+                    $_POST['formato'],
+                    file_get_contents($_FILES['archivo']['tmp_name'])
                 );
             } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');

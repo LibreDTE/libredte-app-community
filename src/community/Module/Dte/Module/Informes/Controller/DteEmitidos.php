@@ -21,10 +21,9 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte\Informes;
 
-use \website\Dte\Model_DteEmitidos;
+use website\Dte\Model_DteEmitidos;
 
 /**
  * Clase para informes de los documentos emitidos.
@@ -178,7 +177,9 @@ class Controller_DteEmitidos extends \Controller_App
             'hasta' => $hasta,
             'estado' => $estado,
             'documentos' => $Emisor->getDocumentosEmitidosEstado(
-                $desde, $hasta, $estado
+                $desde,
+                $hasta,
+                $estado
             ),
         ]);
     }
@@ -218,7 +219,9 @@ class Controller_DteEmitidos extends \Controller_App
             'hasta' => $hasta,
             'evento' => $evento,
             'documentos' => $Emisor->getDocumentosEmitidosEvento(
-                $desde, $hasta, $evento
+                $desde,
+                $hasta,
+                $evento
             ),
         ]);
     }
@@ -307,7 +310,11 @@ class Controller_DteEmitidos extends \Controller_App
                 : null
             ,
             'documentos' => $Emisor->getDocumentosEmitidosEstadoIntercambio(
-                $desde, $hasta, $recibo, $recepcion, $resultado
+                $desde,
+                $hasta,
+                $recibo,
+                $recepcion,
+                $resultado
             ),
         ]);
     }

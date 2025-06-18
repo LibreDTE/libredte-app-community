@@ -213,10 +213,10 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
         $this->setMargins(0.8);
         // título hoja
         $this->y = 1;
-        $this->getActiveSheet()->mergeCells('A'.$this->y.':'.$this->getCol(count($titles)-1).$this->y);
-        $this->setFormatCenterBold('A'.$this->y.':'.$this->getCol(count($titles)-1).($this->y+1));
-        $this->setFormatBorder('A'.$this->y.':'.$this->getCol(count($titles)-1).($this->y+1));
-        $periodo = strtolower(\sowerphp\general\Utility_Date::$meses[(int)substr($this->periodo,4)-1]).' del '.substr($this->periodo,0,4);
+        $this->getActiveSheet()->mergeCells('A'.$this->y.':'.$this->getCol(count($titles) - 1).$this->y);
+        $this->setFormatCenterBold('A'.$this->y.':'.$this->getCol(count($titles) - 1).($this->y + 1));
+        $this->setFormatBorder('A'.$this->y.':'.$this->getCol(count($titles) - 1).($this->y + 1));
+        $periodo = strtolower(\sowerphp\general\Utility_Date::$meses[(int)substr($this->periodo, 4) - 1]).' del '.substr($this->periodo, 0, 4);
         $this->getActiveSheet()->setCellValue('A'.$this->y, 'Libro de compras de '.$periodo);
         // titulos tabla
         $this->y++;
@@ -238,7 +238,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
             if ($documentos) {
                 foreach ($documentos as $d) {
                     // colocar formato
-                    for ($i=5; $i<count($titles); $i++) {
+                    for ($i = 5; $i < count($titles); $i++) {
                         $this->getActiveSheet()->getStyle($this->getCol($i).$this->y)->getNumberFormat()->setFormatCode('#,##0');
                     }
                     // colocar valores
@@ -252,7 +252,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
                     $this->getActiveSheet()->setCellValue('H'.$this->y, $d['impuesto_adicional_monto']);
                     $this->getActiveSheet()->setCellValue('I'.$this->y, $d['iva']);
                     $this->getActiveSheet()->setCellValue('J'.$this->y, '=SUM(F'.$this->y.':I'.$this->y.')');
-                    $this->getActiveSheet()->setCellValue('K'.$this->y, in_array($d['dte'], $this->electronicos)?1:'');
+                    $this->getActiveSheet()->setCellValue('K'.$this->y, in_array($d['dte'], $this->electronicos) ? 1 : '');
                     $this->getActiveSheet()->setCellValue('L'.$this->y, '=I'.$this->y.'*K'.$this->y);
                     $this->getActiveSheet()->setCellValue('M'.$this->y, '');
                     $this->y++;
@@ -263,21 +263,21 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
             }
             // subtotales
             $subtotales[] = $this->y;
-            for ($i=5; $i<count($titles); $i++) {
+            for ($i = 5; $i < count($titles); $i++) {
                 $this->getActiveSheet()->getStyle($this->getCol($i).$this->y)->getNumberFormat()->setFormatCode('#,##0');
             }
-            $this->setFormatBorder('A'.$y.':'.$this->getCol(count($titles)-1).($this->y-1));
+            $this->setFormatBorder('A'.$y.':'.$this->getCol(count($titles) - 1).($this->y - 1));
             $this->getActiveSheet()->mergeCells('A'.$this->y.':'.'D'.$this->y);
             $this->getActiveSheet()->setCellValue('A'.$this->y, 'Subtotales');
-            $this->getActiveSheet()->setCellValue('E'.$this->y, '=COUNT(E'.$y.':E'.($this->y-1).')');
-            $this->getActiveSheet()->setCellValue('F'.$this->y, '=SUM(F'.$y.':F'.($this->y-1).')');
-            $this->getActiveSheet()->setCellValue('G'.$this->y, '=SUM(G'.$y.':G'.($this->y-1).')');
-            $this->getActiveSheet()->setCellValue('H'.$this->y, '=SUM(H'.$y.':H'.($this->y-1).')');
-            $this->getActiveSheet()->setCellValue('I'.$this->y, '=SUM(I'.$y.':I'.($this->y-1).')');
-            $this->getActiveSheet()->setCellValue('J'.$this->y, '=SUM(J'.$y.':J'.($this->y-1).')');
-            $this->getActiveSheet()->setCellValue('K'.$this->y, '=SUM(K'.$y.':K'.($this->y-1).')');
-            $this->getActiveSheet()->setCellValue('L'.$this->y, '=SUM(L'.$y.':L'.($this->y-1).')');
-            $this->getActiveSheet()->setCellValue('M'.$this->y, '=SUM(M'.$y.':M'.($this->y-1).')');
+            $this->getActiveSheet()->setCellValue('E'.$this->y, '=COUNT(E'.$y.':E'.($this->y - 1).')');
+            $this->getActiveSheet()->setCellValue('F'.$this->y, '=SUM(F'.$y.':F'.($this->y - 1).')');
+            $this->getActiveSheet()->setCellValue('G'.$this->y, '=SUM(G'.$y.':G'.($this->y - 1).')');
+            $this->getActiveSheet()->setCellValue('H'.$this->y, '=SUM(H'.$y.':H'.($this->y - 1).')');
+            $this->getActiveSheet()->setCellValue('I'.$this->y, '=SUM(I'.$y.':I'.($this->y - 1).')');
+            $this->getActiveSheet()->setCellValue('J'.$this->y, '=SUM(J'.$y.':J'.($this->y - 1).')');
+            $this->getActiveSheet()->setCellValue('K'.$this->y, '=SUM(K'.$y.':K'.($this->y - 1).')');
+            $this->getActiveSheet()->setCellValue('L'.$this->y, '=SUM(L'.$y.':L'.($this->y - 1).')');
+            $this->getActiveSheet()->setCellValue('M'.$this->y, '=SUM(M'.$y.':M'.($this->y - 1).')');
             // recorder subtotales
             foreach (['E' => 'documentos', 'F' => 'neto', 'G' => 'exento', 'H' => 'impuesto_adicional', 'I' => 'iva', 'J' => 'total'] as $col => $monto) {
                 if (isset($this->compras[$grupo]['subtotal'][$monto])) {
@@ -292,8 +292,8 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
             $this->y += 2;
         }
         // colocar totales
-        $this->getActiveSheet()->getStyle('A'.$this->y.':'.$this->getCol(count($titles)-1).$this->y)->applyFromArray(['font' => ['bold' => true]]);
-        $this->setFormatBorder('A'.$this->y.':'.$this->getCol(count($titles)-1).$this->y);
+        $this->getActiveSheet()->getStyle('A'.$this->y.':'.$this->getCol(count($titles) - 1).$this->y)->applyFromArray(['font' => ['bold' => true]]);
+        $this->setFormatBorder('A'.$this->y.':'.$this->getCol(count($titles) - 1).$this->y);
         $this->getActiveSheet()->mergeCells('A'.$this->y.':'.'D'.$this->y);
         $this->getActiveSheet()->setCellValue('A'.$this->y, 'Totales');
         foreach (['E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'] as $col) {
@@ -305,13 +305,13 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
             if ($col == 'E') {
                 $this->getActiveSheet()->setCellValue($col.$this->y, '='.implode('+', $suma));
             } else {
-                $this->getActiveSheet()->setCellValue($col.$this->y, '='.implode('+', array_slice($suma, 0, count($suma)-1)).'-'.$suma[count($suma)-1]);
+                $this->getActiveSheet()->setCellValue($col.$this->y, '='.implode('+', array_slice($suma, 0, count($suma) - 1)).'-'.$suma[count($suma) - 1]);
             }
         }
         $this->datos[511] = '=\'Compras\'!'.'L'.$this->y;
         $this->datos[730] = '=\'Compras\'!'.'M'.$this->y.'/1000';
         // ancho automático columnas
-        $this->setAutoSize($this->getCol(count($titles)-1));
+        $this->setAutoSize($this->getCol(count($titles) - 1));
     }
 
     /**
@@ -330,10 +330,10 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
         $this->setMargins(0.8);
         // título hoja
         $this->y = 1;
-        $this->getActiveSheet()->mergeCells('A'.$this->y.':'.$this->getCol(count($titles)-1).$this->y);
-        $this->setFormatCenterBold('A'.$this->y.':'.$this->getCol(count($titles)-1).($this->y+1));
-        $this->setFormatBorder('A'.$this->y.':'.$this->getCol(count($titles)-1).($this->y+1));
-        $periodo = strtolower(\sowerphp\general\Utility_Date::$meses[(int)substr($this->periodo,4)-1]).' del '.substr($this->periodo,0,4);
+        $this->getActiveSheet()->mergeCells('A'.$this->y.':'.$this->getCol(count($titles) - 1).$this->y);
+        $this->setFormatCenterBold('A'.$this->y.':'.$this->getCol(count($titles) - 1).($this->y + 1));
+        $this->setFormatBorder('A'.$this->y.':'.$this->getCol(count($titles) - 1).($this->y + 1));
+        $periodo = strtolower(\sowerphp\general\Utility_Date::$meses[(int)substr($this->periodo, 4) - 1]).' del '.substr($this->periodo, 0, 4);
         $this->getActiveSheet()->setCellValue('A'.$this->y, 'Libro de ventas de '.$periodo);
         // titulos tabla
         $this->y++;
@@ -355,7 +355,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
             if ($documentos) {
                 foreach ($documentos as $d) {
                     // colocar formato
-                    for ($i=5; $i<count($titles); $i++) {
+                    for ($i = 5; $i < count($titles); $i++) {
                         $this->getActiveSheet()->getStyle($this->getCol($i).$this->y)->getNumberFormat()->setFormatCode('#,##0');
                     }
                     // colocar valores
@@ -376,17 +376,17 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
             }
             // subtotales
             $subtotales[] = $this->y;
-            for ($i=5; $i<count($titles); $i++) {
+            for ($i = 5; $i < count($titles); $i++) {
                 $this->getActiveSheet()->getStyle($this->getCol($i).$this->y)->getNumberFormat()->setFormatCode('#,##0');
             }
-            $this->setFormatBorder('A'.$y.':'.$this->getCol(count($titles)-1).($this->y-1));
+            $this->setFormatBorder('A'.$y.':'.$this->getCol(count($titles) - 1).($this->y - 1));
             $this->getActiveSheet()->mergeCells('A'.$this->y.':'.'D'.$this->y);
             $this->getActiveSheet()->setCellValue('A'.$this->y, 'Subtotales');
-            $this->getActiveSheet()->setCellValue('E'.$this->y, '=COUNT(E'.$y.':E'.($this->y-1).')');
-            $this->getActiveSheet()->setCellValue('F'.$this->y, '=SUM(F'.$y.':F'.($this->y-1).')');
-            $this->getActiveSheet()->setCellValue('G'.$this->y, '=SUM(G'.$y.':G'.($this->y-1).')');
-            $this->getActiveSheet()->setCellValue('H'.$this->y, '=SUM(H'.$y.':H'.($this->y-1).')');
-            $this->getActiveSheet()->setCellValue('I'.$this->y, '=SUM(I'.$y.':I'.($this->y-1).')');
+            $this->getActiveSheet()->setCellValue('E'.$this->y, '=COUNT(E'.$y.':E'.($this->y - 1).')');
+            $this->getActiveSheet()->setCellValue('F'.$this->y, '=SUM(F'.$y.':F'.($this->y - 1).')');
+            $this->getActiveSheet()->setCellValue('G'.$this->y, '=SUM(G'.$y.':G'.($this->y - 1).')');
+            $this->getActiveSheet()->setCellValue('H'.$this->y, '=SUM(H'.$y.':H'.($this->y - 1).')');
+            $this->getActiveSheet()->setCellValue('I'.$this->y, '=SUM(I'.$y.':I'.($this->y - 1).')');
             // recorder subtotales
             foreach (['E' => 'documentos', 'F' => 'neto', 'G' => 'exento', 'H' => 'iva', 'I' => 'total'] as $col => $monto) {
                 if (isset($this->ventas[$grupo]['subtotal'][$monto])) {
@@ -401,8 +401,8 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
             $this->y += 2;
         }
         // colocar totales
-        $this->getActiveSheet()->getStyle('A'.$this->y.':'.$this->getCol(count($titles)-1).$this->y)->applyFromArray(['font' => ['bold' => true]]);
-        $this->setFormatBorder('A'.$this->y.':'.$this->getCol(count($titles)-1).$this->y);
+        $this->getActiveSheet()->getStyle('A'.$this->y.':'.$this->getCol(count($titles) - 1).$this->y)->applyFromArray(['font' => ['bold' => true]]);
+        $this->setFormatBorder('A'.$this->y.':'.$this->getCol(count($titles) - 1).$this->y);
         $this->getActiveSheet()->mergeCells('A'.$this->y.':'.'D'.$this->y);
         $this->getActiveSheet()->setCellValue('A'.$this->y, 'Totales');
         foreach (['E', 'F', 'G', 'H', 'I'] as $col) {
@@ -414,12 +414,12 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
             if ($col == 'E') {
                 $this->getActiveSheet()->setCellValue($col.$this->y, '='.implode('+', $suma));
             } else {
-                $this->getActiveSheet()->setCellValue($col.$this->y, '='.implode('+', array_slice($suma, 0, count($suma)-1)).'-'.$suma[count($suma)-1]);
+                $this->getActiveSheet()->setCellValue($col.$this->y, '='.implode('+', array_slice($suma, 0, count($suma) - 1)).'-'.$suma[count($suma) - 1]);
             }
         }
         $this->datos[563] = '=\'Ventas\'!'.'F'.$this->y.'+\'Ventas\'!'.'G'.$this->y;
         // ancho automático columnas
-        $this->setAutoSize($this->getCol(count($titles)-1));
+        $this->setAutoSize($this->getCol(count($titles) - 1));
     }
 
     /**
@@ -456,7 +456,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
 
     private function agregarLineas($cantidad)
     {
-        for ($i=$this->y; $i<($this->y+$cantidad); $i++) {
+        for ($i = $this->y; $i < ($this->y + $cantidad); $i++) {
             $this->getActiveSheet()->getStyle('B'.$i)->applyFromArray([
                 'alignment' => [
                     'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
@@ -475,15 +475,15 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
         $codigo_col = 'O';
         $valor_col = 'P';
         $this->y = 1;
-        $this->getActiveSheet()->mergeCells($titulo_start.$this->y.':'.$titulo_end.($this->y+2));
+        $this->getActiveSheet()->mergeCells($titulo_start.$this->y.':'.$titulo_end.($this->y + 2));
         $this->getActiveSheet()->getStyle($titulo_start.$this->y)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
         $this->getActiveSheet()->getStyle($titulo_start.$this->y)->getFont()->setSize(16);
         $this->getActiveSheet()->setCellValue($titulo_start.$this->y, 'Propuesta formulario 29'."\n".'(no enviar sin antes verificar contenido)');
-        $this->getActiveSheet()->getStyle($info_start.$this->y.':'.$valor_col.($this->y+2))->applyFromArray(
+        $this->getActiveSheet()->getStyle($info_start.$this->y.':'.$valor_col.($this->y + 2))->applyFromArray(
             ['alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]]
         );
-        $this->setFormatBorder($titulo_start.$this->y.':'.$valor_col.($this->y+2));
-        $this->setFormatCenterBold($titulo_start.$this->y.':'.$info_end.($this->y+2));
+        $this->setFormatBorder($titulo_start.$this->y.':'.$valor_col.($this->y + 2));
+        $this->setFormatCenterBold($titulo_start.$this->y.':'.$info_end.($this->y + 2));
         $this->getActiveSheet()->mergeCells($info_start.$this->y.':'.$info_end.$this->y);
         $this->getActiveSheet()->setCellValue($info_start.$this->y, 'UTM');
         $this->getActiveSheet()->setCellValue($codigo_col.$this->y, '');
@@ -615,8 +615,8 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
         $this->setResumenConcepto('Importaciones del giro', 534, 535, 'F');
         $this->setResumenConcepto('Importaciones activo fijo', 536, 553, 'F');
         $this->setResumenConcepto('Remanente crédito fiscal mes anterior', 'remanente_anterior_utm', 504, 'C');
-        $this->getActiveSheet()->setCellValue('M'.($this->y-1), 'UTM');
-        $this->getActiveSheet()->getStyle('N'.($this->y-1))->getNumberFormat()->setFormatCode('#,##0.000');
+        $this->getActiveSheet()->setCellValue('M'.($this->y - 1), 'UTM');
+        $this->getActiveSheet()->getStyle('N'.($this->y - 1))->getNumberFormat()->setFormatCode('#,##0.000');
         $this->setResumenConcepto('Devolución solicitud Art 36 (exportadores)', null, 593, 'C');
         $this->setResumenConcepto('Devolución solicitud art 27 (activo fijo)', null, 594, 'C');
         $this->setResumenConcepto('Certificado imputación art 27 (activo fijo)', null, 592, 'C');
@@ -631,40 +631,40 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
         $this->y++;
         $this->setRotateCellValue('Diesel', 'C', 3);
         $this->agregarLineas(1);
-        $this->getActiveSheet()->mergeCells('B'.$this->y.':B'.($this->y+1));
-        $this->getActiveSheet()->mergeCells('D'.$this->y.':I'.($this->y+1));
-        $this->getActiveSheet()->mergeCells('J'.$this->y.':J'.($this->y+1));
-        $this->getActiveSheet()->mergeCells('K'.$this->y.':K'.($this->y+1));
-        $this->getActiveSheet()->mergeCells('O'.$this->y.':O'.($this->y+1));
-        $this->getActiveSheet()->mergeCells('P'.$this->y.':P'.($this->y+1));
+        $this->getActiveSheet()->mergeCells('B'.$this->y.':B'.($this->y + 1));
+        $this->getActiveSheet()->mergeCells('D'.$this->y.':I'.($this->y + 1));
+        $this->getActiveSheet()->mergeCells('J'.$this->y.':J'.($this->y + 1));
+        $this->getActiveSheet()->mergeCells('K'.$this->y.':K'.($this->y + 1));
+        $this->getActiveSheet()->mergeCells('O'.$this->y.':O'.($this->y + 1));
+        $this->getActiveSheet()->mergeCells('P'.$this->y.':P'.($this->y + 1));
         $this->getActiveSheet()->setCellValue('D'.$this->y, 'Recuperación diesel');
         $this->getActiveSheet()->setCellValue('J'.$this->y, 730);
         $this->setDato('K'.$this->y, 730, '#,##0.00000');
         $this->getActiveSheet()->setCellValue('L'.$this->y, 'Base');
-        $this->getActiveSheet()->setCellValue('L'.($this->y+1), 'Variable');
+        $this->getActiveSheet()->setCellValue('L'.($this->y + 1), 'Variable');
         $this->getActiveSheet()->setCellValue('M'.$this->y, 742);
-        $this->getActiveSheet()->setCellValue('M'.($this->y+1), 743);
+        $this->getActiveSheet()->setCellValue('M'.($this->y + 1), 743);
         $this->setDato('N'.$this->y, 742);
-        $this->setDato('N'.($this->y+1), 743);
+        $this->setDato('N'.($this->y + 1), 743);
         $this->getActiveSheet()->setCellValue('O'.$this->y, 127);
         $this->setDato('P'.$this->y, 127);
         $this->y += 2;
         $this->agregarLineas(1);
-        $this->getActiveSheet()->mergeCells('B'.$this->y.':B'.($this->y+1));
-        $this->getActiveSheet()->mergeCells('D'.$this->y.':I'.($this->y+1));
-        $this->getActiveSheet()->mergeCells('J'.$this->y.':J'.($this->y+1));
-        $this->getActiveSheet()->mergeCells('K'.$this->y.':K'.($this->y+1));
-        $this->getActiveSheet()->mergeCells('O'.$this->y.':O'.($this->y+1));
-        $this->getActiveSheet()->mergeCells('P'.$this->y.':P'.($this->y+1));
+        $this->getActiveSheet()->mergeCells('B'.$this->y.':B'.($this->y + 1));
+        $this->getActiveSheet()->mergeCells('D'.$this->y.':I'.($this->y + 1));
+        $this->getActiveSheet()->mergeCells('J'.$this->y.':J'.($this->y + 1));
+        $this->getActiveSheet()->mergeCells('K'.$this->y.':K'.($this->y + 1));
+        $this->getActiveSheet()->mergeCells('O'.$this->y.':O'.($this->y + 1));
+        $this->getActiveSheet()->mergeCells('P'.$this->y.':P'.($this->y + 1));
         $this->getActiveSheet()->setCellValue('D'.$this->y, 'Recuperación diesel'."\n".'(transportistas)');
         $this->getActiveSheet()->setCellValue('J'.$this->y, 729);
         $this->setDato('K'.$this->y, 729);
         $this->getActiveSheet()->setCellValue('L'.$this->y, 'Base');
-        $this->getActiveSheet()->setCellValue('L'.($this->y+1), 'Variable');
+        $this->getActiveSheet()->setCellValue('L'.($this->y + 1), 'Variable');
         $this->getActiveSheet()->setCellValue('M'.$this->y, 744);
-        $this->getActiveSheet()->setCellValue('M'.($this->y+1), 745);
+        $this->getActiveSheet()->setCellValue('M'.($this->y + 1), 745);
         $this->setDato('N'.$this->y, 744);
-        $this->setDato('N'.($this->y+1), 745);
+        $this->setDato('N'.($this->y + 1), 745);
         $this->getActiveSheet()->setCellValue('O'.$this->y, 544);
         $this->setDato('P'.$this->y, 544);
         $this->y += 2;
@@ -715,24 +715,24 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
         $this->setRotateCellValue('Retenciones', 'C', 9);
         $this->setResumenConcepto('Retención impuesto 1era categoría por rentas capitales mobiliarios', null, 50, 'D');
         // retenciones: línea 49
-        $this->getActiveSheet()->mergeCells('B'.$this->y.':B'.($this->y+1));
+        $this->getActiveSheet()->mergeCells('B'.$this->y.':B'.($this->y + 1));
         $this->agregarLineas(1);
-        $this->getActiveSheet()->mergeCells('D'.$this->y.':G'.($this->y+1));
+        $this->getActiveSheet()->mergeCells('D'.$this->y.':G'.($this->y + 1));
         $this->getActiveSheet()->setCellValue('D'.$this->y, 'Retención imp'."\n".'único trab');
-        $this->getActiveSheet()->mergeCells('H'.$this->y.':H'.($this->y+1));
+        $this->getActiveSheet()->mergeCells('H'.$this->y.':H'.($this->y + 1));
         $this->getActiveSheet()->setCellValue('H'.$this->y, 'Créditos');
         $this->getActiveSheet()->mergeCells('I'.$this->y.':J'.$this->y);
         $this->getActiveSheet()->setCellValue('I'.$this->y, 'Don. 18.985');
-        $this->getActiveSheet()->setCellValue('I'.($this->y+1), 751);
-        $this->setDato('J'.($this->y+1), 751);
+        $this->getActiveSheet()->setCellValue('I'.($this->y + 1), 751);
+        $this->setDato('J'.($this->y + 1), 751);
         $this->getActiveSheet()->mergeCells('K'.$this->y.':L'.$this->y);
         $this->getActiveSheet()->setCellValue('K'.$this->y, 'Don. 20.444');
-        $this->getActiveSheet()->setCellValue('K'.($this->y+1), 735);
-        $this->setDato('L'.($this->y+1), 735);
-        $this->getActiveSheet()->mergeCells('M'.$this->y.':N'.($this->y+1));
+        $this->getActiveSheet()->setCellValue('K'.($this->y + 1), 735);
+        $this->setDato('L'.($this->y + 1), 735);
+        $this->getActiveSheet()->mergeCells('M'.$this->y.':N'.($this->y + 1));
         $this->getActiveSheet()->setCellValue('M'.$this->y, 'Impuesto único'."\n".'2da categoría');
-        $this->getActiveSheet()->mergeCells('O'.$this->y.':O'.($this->y+1));
-        $this->getActiveSheet()->mergeCells('P'.$this->y.':P'.($this->y+1));
+        $this->getActiveSheet()->mergeCells('O'.$this->y.':O'.($this->y + 1));
+        $this->getActiveSheet()->mergeCells('P'.$this->y.':P'.($this->y + 1));
         $this->getActiveSheet()->setCellValue('O'.$this->y, 48);
         $this->setDato('P'.$this->y, 48);
         $this->y += 2;
@@ -807,7 +807,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
         $this->setResumenConcepto('Transportistas acogidos a renta presunta (tasa de 0,3%)', null, 66, 'D');
         // PPM: línea 60
         $this->agregarLineas(1);
-        $this->getActiveSheet()->mergeCells('D'.$this->y.':F'.($this->y+1));
+        $this->getActiveSheet()->mergeCells('D'.$this->y.':F'.($this->y + 1));
         $this->getActiveSheet()->setCellValue('D'.$this->y, 'Crédito capacitación');
         $this->getActiveSheet()->mergeCells('G'.$this->y.':H'.$this->y);
         $this->getActiveSheet()->setCellValue('G'.$this->y, 'Crédito del mes');

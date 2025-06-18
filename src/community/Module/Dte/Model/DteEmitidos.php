@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -40,7 +39,7 @@ class Model_DteEmitidos extends \Model_Plural_App
         'final' => ['EPR', 'RLV', 'RPR'],
     ]; ///< Posibles estados de revisión de envío al SII de los DTE
 
-    const ENVIO_BOLETA = '2021-01-01'; // desde qué día se deben enviar las boletas al SII en producción
+    public const ENVIO_BOLETA = '2021-01-01'; // desde qué día se deben enviar las boletas al SII en producción
 
     /**
      * Método que entrega el detalle de las ventas en un rango de tiempo.
@@ -64,7 +63,8 @@ class Model_DteEmitidos extends \Model_Plural_App
             $referencia_razon,
             $observacion,
             $vencimiento
-        ) = $this->db->xml('e.xml',
+        ) = $this->db->xml(
+            'e.xml',
             [
                 '/EnvioDTE/SetDTE/DTE/*/Encabezado/Emisor/CdgVendedor',
                 '/*/SetDTE/DTE/Exportaciones/Encabezado/Receptor/RznSocRecep',

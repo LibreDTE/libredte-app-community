@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -154,7 +153,8 @@ class Model_DteIntercambioRecibo extends \Model_App
     /**
      * Método que guarda el XML del Recibo de un intercambio.
      */
-    public function saveXML($Emisor, $xml) {
+    public function saveXML($Emisor, $xml)
+    {
         // crear recibo
         $EnvioRecibos = new \sasco\LibreDTE\Sii\EnvioRecibos();
         $EnvioRecibos->loadXML($xml);
@@ -211,7 +211,10 @@ class Model_DteIntercambioRecibo extends \Model_App
             }
             // guardar recibo para el DTE
             $DteIntercambioReciboDte = new Model_DteIntercambioReciboDte(
-                $DteEmitido->emisor, $DteEmitido->dte, $DteEmitido->folio, $DteEmitido->certificacion
+                $DteEmitido->emisor,
+                $DteEmitido->dte,
+                $DteEmitido->folio,
+                $DteEmitido->certificacion
             );
             $DteIntercambioReciboDte->responde = $this->responde;
             $DteIntercambioReciboDte->codigo = $this->codigo;
@@ -225,7 +228,9 @@ class Model_DteIntercambioRecibo extends \Model_App
             }
             if (!empty($Recibo['DocumentoRecibo']['TmstFirmaRecibo'])) {
                 $DteIntercambioReciboDte->fecha_hora = str_replace(
-                    'T', ' ', $Recibo['DocumentoRecibo']['TmstFirmaRecibo']
+                    'T',
+                    ' ',
+                    $Recibo['DocumentoRecibo']['TmstFirmaRecibo']
                 );
             }
             if (!$DteIntercambioReciboDte->save()) {

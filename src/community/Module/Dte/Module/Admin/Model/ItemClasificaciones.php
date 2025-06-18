@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte\Admin;
 
 /**
@@ -40,10 +39,12 @@ class Model_ItemClasificaciones extends \Model_Plural_App
     public function getList()
     {
         $items = \sowerphp\core\Utility_Array::treeToList(
-            $this->getArbolItems(), 'clasificacion', 'clasificaciones'
+            $this->getArbolItems(),
+            'clasificacion',
+            'clasificaciones'
         );
         return array_map(
-            function($key, $value) { return [$key, $value]; },
+            function ($key, $value) { return [$key, $value]; },
             array_keys($items),
             $items
         );
@@ -55,7 +56,9 @@ class Model_ItemClasificaciones extends \Model_Plural_App
     public function getListItems()
     {
         return \sowerphp\core\Utility_Array::treeToAssociativeArray(
-            $this->getArbolItems(), 'clasificacion', 'clasificaciones'
+            $this->getArbolItems(),
+            'clasificacion',
+            'clasificaciones'
         );
     }
 

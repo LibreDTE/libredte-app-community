@@ -21,10 +21,9 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
-use \website\Dte\Admin\Mantenedores\Model_DteTipos;
+use website\Dte\Admin\Mantenedores\Model_DteTipos;
 
 /**
  * Clase para mapear la tabla dte_compra de la base de datos.
@@ -217,7 +216,8 @@ class Model_DteCompra extends Model_Base_Libro
     public function getTiposTransacciones(): array
     {
         $compras = $this->getReceptor()->getCompras(
-            $this->periodo, [33, 34, 43, 46, 56, 61]
+            $this->periodo,
+            [33, 34, 43, 46, 56, 61]
         );
         $datos = [];
         foreach ($compras as $c) {

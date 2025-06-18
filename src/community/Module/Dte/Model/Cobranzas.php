@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -89,9 +88,8 @@ class Model_Cobranzas extends \Model_Plural_App
             if (!empty($filtros['receptor'])) {
                 if ($filtros['receptor'][0] == '!') {
                     $where[] = 'd.receptor != :receptor';
-                    $vars[':receptor'] = substr($filtros['receptor'],1);
-                }
-                else {
+                    $vars[':receptor'] = substr($filtros['receptor'], 1);
+                } else {
                     $where[] = 'd.receptor = :receptor';
                     $vars[':receptor'] = $filtros['receptor'];
                 }
@@ -131,7 +129,7 @@ class Model_Cobranzas extends \Model_Plural_App
             WHERE
                 c.emisor = :emisor
                 AND c.certificacion = :certificacion
-                '.(!empty($where)?('AND '.implode(' AND ', $where)):'').'
+                '.(!empty($where) ? ('AND '.implode(' AND ', $where)) : '').'
                 AND (c.pagado IS NULL OR c.monto != c.pagado)
             ORDER BY c.fecha, r.razon_social
         ', $vars);

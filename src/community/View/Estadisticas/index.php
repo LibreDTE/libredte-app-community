@@ -1,4 +1,4 @@
-<div class="page-header"><h1>Estadísticas <small>ambiente de <?=$certificacion?'certificación':'producción'?></small></h1></div>
+<div class="page-header"><h1>Estadísticas <small>ambiente de <?=$certificacion ? 'certificación' : 'producción'?></small></h1></div>
 
 <?php
 echo View_Helper_Dashboard::cards([
@@ -70,8 +70,8 @@ echo View_Helper_Dashboard::cards([
     </div>
 </div>
 
-<a class="btn btn-info col-12" href="<?=$_base?>/estadisticas/<?=$certificacion?'produccion':'certificacion'?>" role="button">
-    Ver datos de <?=$certificacion?'producción':'certificación'?>
+<a class="btn btn-info col-12" href="<?=$_base?>/estadisticas/<?=$certificacion ? 'produccion' : 'certificacion'?>" role="button">
+    Ver datos de <?=$certificacion ? 'producción' : 'certificación'?>
 </a>
 
 <script>

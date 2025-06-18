@@ -38,25 +38,25 @@
 <hr/>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit' => 'Form.check() && __.confirm(this, \'¿Está seguro de importar el libro seleccionado?\', \'Importando archivo...\')']);
-echo $f->input([
-    'type' => 'file',
-    'name' => 'archivo',
-    'label' => 'Libro CSV',
-    'help' => 'Libro de compras en formato CSV (separado por punto y coma, codificado en UTF-8). Puede consultar un <a href="'.$_base.'/dte/archivos/libro_compras.csv" download="libro_compras.csv">ejemplo del libro</a>.',
-    'check' => 'notempty',
-    'attr' => 'accept="csv"',
-]);
-echo $f->input([
-    'type' => 'date',
-    'name' => 'periodo',
-    'label' => 'Período',
-    'check' => 'integer',
-    'help' => 'Período en el que registrar los documentos, se usará solo si es diferente al mes de la fecha de emisión de estos.',
-    'datepicker' => [
-        'format' => 'yyyymm',
-        'viewMode' => 'months',
-        'minViewMode' => 'months',
-    ],
-]);
-echo $f->end('Importar libro de compras');
+        echo $f->begin(['onsubmit' => 'Form.check() && __.confirm(this, \'¿Está seguro de importar el libro seleccionado?\', \'Importando archivo...\')']);
+        echo $f->input([
+            'type' => 'file',
+            'name' => 'archivo',
+            'label' => 'Libro CSV',
+            'help' => 'Libro de compras en formato CSV (separado por punto y coma, codificado en UTF-8). Puede consultar un <a href="'.$_base.'/dte/archivos/libro_compras.csv" download="libro_compras.csv">ejemplo del libro</a>.',
+            'check' => 'notempty',
+            'attr' => 'accept="csv"',
+        ]);
+        echo $f->input([
+            'type' => 'date',
+            'name' => 'periodo',
+            'label' => 'Período',
+            'check' => 'integer',
+            'help' => 'Período en el que registrar los documentos, se usará solo si es diferente al mes de la fecha de emisión de estos.',
+            'datepicker' => [
+                'format' => 'yyyymm',
+                'viewMode' => 'months',
+                'minViewMode' => 'months',
+            ],
+        ]);
+        echo $f->end('Importar libro de compras');

@@ -37,7 +37,8 @@ class Utility_Data
     public static function encrypt($plaintext)
     {
         return \sowerphp\core\Utility_Data::encrypt(
-            trim($plaintext), config('dte.pkey')
+            trim($plaintext),
+            config('dte.pkey')
         );
     }
 
@@ -49,7 +50,8 @@ class Utility_Data
     public static function decrypt($ciphertext_base64)
     {
         return trim(\sowerphp\core\Utility_Data::decrypt(
-            $ciphertext_base64, config('dte.pkey')
+            $ciphertext_base64,
+            config('dte.pkey')
         ));
     }
 }

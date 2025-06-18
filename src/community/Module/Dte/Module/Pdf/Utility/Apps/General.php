@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte\Pdf;
 
 /**
@@ -163,7 +162,7 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
             'type' => 'select',
             'name' => 'dtepdf_'.$this->getCodigo().'_detalle_fuente',
             'label' => 'Tamaño de items',
-            'options' => [11=>11, 10=>10, 9=>9, 8=>8],
+            'options' => [11 => 11, 10 => 10, 9 => 9, 8 => 8],
             'value' => !empty($this->getConfig()->detalle->fuente)
                 ? $this->getConfig()->detalle->fuente
                 : 10

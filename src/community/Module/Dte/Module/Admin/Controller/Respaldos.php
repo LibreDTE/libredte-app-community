@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte\Admin;
 
 /**
@@ -37,7 +36,8 @@ class Controller_Respaldos extends \Controller_App
         $Emisor = $this->getContribuyente();
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Solo el administrador de la empresa puede descargar un respaldo.', 'error'
+                'Solo el administrador de la empresa puede descargar un respaldo.',
+                'error'
             );
             $this->redirect('/dte/admin');
         }
@@ -58,11 +58,13 @@ class Controller_Respaldos extends \Controller_App
             try {
                 $dir = $Respaldo->generar($Emisor->rut, $_POST['tablas']);
                 \sowerphp\general\Utility_File::compress(
-                    $dir, ['format' => 'zip', 'delete' => true]
+                    $dir,
+                    ['format' => 'zip', 'delete' => true]
                 );
             } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No fue posible exportar los datos: '.$e->getMessage(), 'error'
+                    'No fue posible exportar los datos: '.$e->getMessage(),
+                    'error'
                 );
             }
         }

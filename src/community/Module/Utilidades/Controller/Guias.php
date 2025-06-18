@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Utilidades;
 
 /**
@@ -52,8 +51,9 @@ class Controller_Guias extends \Controller_App
         ];
         foreach ($campos as $campo) {
             if (!isset($_POST[$campo][0])) {
-                 \sowerphp\core\Model_Datasource_Session::message(
-                    $campo.' no puede estar en blanco.', 'error'
+                \sowerphp\core\Model_Datasource_Session::message(
+                    $campo.' no puede estar en blanco.',
+                    'error'
                 );
                 return;
             }
@@ -61,14 +61,16 @@ class Controller_Guias extends \Controller_App
         // si no se pasó el archivo error
         if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Debes enviar el archivo CSV con el detalle de las guías a la que deseas generar su XML.', 'error'
+                'Debes enviar el archivo CSV con el detalle de las guías a la que deseas generar su XML.',
+                'error'
             );
             return;
         }
         // si no se pasó la firma error
         if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Debes enviar el archivo con la firma digital.', 'error'
+                'Debes enviar el archivo con la firma digital.',
+                'error'
             );
             return;
         }
@@ -80,7 +82,8 @@ class Controller_Guias extends \Controller_App
             ]);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible abrir la firma digital, quizás contraseña incorrecta.', 'error'
+                'No fue posible abrir la firma digital, quizás contraseña incorrecta.',
+                'error'
             );
             return;
         }

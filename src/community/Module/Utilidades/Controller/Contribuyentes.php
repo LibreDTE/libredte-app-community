@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Utilidades;
 
 /**
@@ -40,7 +39,8 @@ class Controller_Contribuyentes extends \Controller_App
                 $this->set('Contribuyente', $Contribuyente);
             } else {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No se encontró información para el RUT indicado en LibreDTE.', 'warning'
+                    'No se encontró información para el RUT indicado en LibreDTE.',
+                    'warning'
                 );
             }
         }

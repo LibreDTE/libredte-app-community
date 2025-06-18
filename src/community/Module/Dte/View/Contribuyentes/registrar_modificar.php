@@ -8,7 +8,7 @@ if ($Contribuyente->enCertificacion() == $Contribuyente->config_ambiente_en_cert
 ?>
 <ul class="nav nav-pills float-end">
     <li class="nav-item">
-        <a href="<?=$_base?>/dte/contribuyentes/ambiente/<?=$Contribuyente->enCertificacion()?'produccion':'certificacion'?>" title="Cambiar el Ambiente de Facturación durante la sesión del usuario" class="nav-link" <?=$ambiente_onclick?>>
+        <a href="<?=$_base?>/dte/contribuyentes/ambiente/<?=$Contribuyente->enCertificacion() ? 'produccion' : 'certificacion'?>" title="Cambiar el Ambiente de Facturación durante la sesión del usuario" class="nav-link" <?=$ambiente_onclick?>>
             <i class="fa fa-exchange-alt"></i>
             Cambiar Ambiente
         </a>
@@ -189,7 +189,7 @@ echo $f->input([
         [
             'type' => 'select',
             'name' => 'config_extra_sucursales_actividad_economica',
-            'options' => ['' => 'Misma casa matriz'] + (isset($Contribuyente) ? $Contribuyente->getListActividades():[]),
+            'options' => ['' => 'Misma casa matriz'] + (isset($Contribuyente) ? $Contribuyente->getListActividades() : []),
             'attr' => 'style="max-width:14em"',
         ],
     ],
@@ -280,7 +280,7 @@ echo $f->input([
     'value' => isset($Contribuyente) ? $Contribuyente->config_ambiente_produccion_fecha : null,
     'help' => 'Fecha de la resolución que autoriza la emisión de DTE en ambiente de producción. Se obtiene <a href="https://palena.sii.cl/cvc/dte/ee_empresas_dte.html" target="_blank">aquí</a>.',
     'check' => 'notempty date',
-    'attr' => isset($Contribuyente) ? ($Contribuyente->config_ambiente_en_certificacion?'disabled="disabled"':'') : 'disabled="disabled"',
+    'attr' => isset($Contribuyente) ? ($Contribuyente->config_ambiente_en_certificacion ? 'disabled="disabled"' : '') : 'disabled="disabled"',
 ]);
 echo $f->input([
     'name' => 'config_ambiente_produccion_numero',
@@ -288,7 +288,7 @@ echo $f->input([
     'value' => isset($Contribuyente) ? $Contribuyente->config_ambiente_produccion_numero : null,
     'help' => 'Número de la resolución que autoriza la emisión de DTE en ambiente de producción. Se obtiene en mismo lugar que fecha resolución producción.',
     'check' => 'notempty integer',
-    'attr' => isset($Contribuyente) ? ($Contribuyente->config_ambiente_en_certificacion?'disabled="disabled"':'') : 'disabled="disabled"',
+    'attr' => isset($Contribuyente) ? ($Contribuyente->config_ambiente_en_certificacion ? 'disabled="disabled"' : '') : 'disabled="disabled"',
 ]);
 echo $f->input([
     'type' => 'date',
@@ -297,7 +297,7 @@ echo $f->input([
     'value' => isset($Contribuyente) ? $Contribuyente->config_ambiente_certificacion_fecha : null,
     'help' => 'Fecha de la autorización para emisión de DTE en ambiente de certificación. Se obtiene <a href="https://maullin.sii.cl/cvc/dte/ee_empresas_dte.html" target="_blank">aquí</a>.',
     'check' => 'notempty date',
-    'attr' => isset($Contribuyente) ? ($Contribuyente->config_ambiente_en_certificacion?'':'disabled="disabled"') : '',
+    'attr' => isset($Contribuyente) ? ($Contribuyente->config_ambiente_en_certificacion ? '' : 'disabled="disabled"') : '',
 ]);
 ?>
         </div>
@@ -339,7 +339,7 @@ echo $f->input([
     'name' => 'config_email_intercambio_smtp',
     'label' => 'Servidor SMTP',
     'value' => isset($Contribuyente) ? $Contribuyente->config_email_intercambio_smtp : null,
-    'help' => 'Ejemplo: ssl://smtp.gmail.com:465'.(isset($Contribuyente)?('<br/><a href="#" onclick="__.popup(\''.$_base.'/dte/contribuyentes/config_email_test/intercambio/smtp\', 750, 550); return false" class="small">[probar correo]</a>'):''),
+    'help' => 'Ejemplo: ssl://smtp.gmail.com:465'.(isset($Contribuyente) ? ('<br/><a href="#" onclick="__.popup(\''.$_base.'/dte/contribuyentes/config_email_test/intercambio/smtp\', 750, 550); return false" class="small">[probar correo]</a>') : ''),
     'attr' => 'maxlength="50"',
     'check' => 'notempty',
 ]);
@@ -347,7 +347,7 @@ echo $f->input([
     'name' => 'config_email_intercambio_imap',
     'label' => 'Mailbox IMAP',
     'value' => isset($Contribuyente) ? $Contribuyente->config_email_intercambio_imap : null,
-    'help' => 'Ejemplo: {imap.gmail.com:993/imap/ssl}INBOX'.(isset($Contribuyente)?('<br/><a href="#" onclick="__.popup(\''.$_base.'/dte/contribuyentes/config_email_test/intercambio/imap\', 750, 550); return false" class="small">[probar correo]</a>'):''),
+    'help' => 'Ejemplo: {imap.gmail.com:993/imap/ssl}INBOX'.(isset($Contribuyente) ? ('<br/><a href="#" onclick="__.popup(\''.$_base.'/dte/contribuyentes/config_email_test/intercambio/imap\', 750, 550); return false" class="small">[probar correo]</a>') : ''),
     'attr' => 'maxlength="100"',
     'check' => 'notempty',
 ]);
@@ -381,7 +381,7 @@ echo $f->input([
     'name' => 'config_email_sii_smtp',
     'label' => 'Servidor SMTP',
     'value' => isset($Contribuyente) ? $Contribuyente->config_email_sii_smtp : null,
-    'help' => 'Ejemplo: ssl://smtp.gmail.com:465'.(isset($Contribuyente)?('<br/><a href="#" onclick="__.popup(\''.$_base.'/dte/contribuyentes/config_email_test/sii/smtp\', 750, 550); return false" class="small">[probar correo]</a>'):''),
+    'help' => 'Ejemplo: ssl://smtp.gmail.com:465'.(isset($Contribuyente) ? ('<br/><a href="#" onclick="__.popup(\''.$_base.'/dte/contribuyentes/config_email_test/sii/smtp\', 750, 550); return false" class="small">[probar correo]</a>') : ''),
     'attr' => 'maxlength="50"',
     'check' => 'notempty',
 ]);
@@ -389,7 +389,7 @@ echo $f->input([
     'name' => 'config_email_sii_imap',
     'label' => 'Mailbox IMAP',
     'value' => isset($Contribuyente) ? $Contribuyente->config_email_sii_imap : null,
-    'help' => 'Ejemplo: {imap.gmail.com:993/imap/ssl}INBOX'.(isset($Contribuyente)?('<br/><a href="#" onclick="__.popup(\''.$_base.'/dte/contribuyentes/config_email_test/sii/imap\', 750, 550); return false" class="small">[probar correo]</a>'):''),
+    'help' => 'Ejemplo: {imap.gmail.com:993/imap/ssl}INBOX'.(isset($Contribuyente) ? ('<br/><a href="#" onclick="__.popup(\''.$_base.'/dte/contribuyentes/config_email_test/sii/imap\', 750, 550); return false" class="small">[probar correo]</a>') : ''),
     'attr' => 'maxlength="100"',
     'check' => 'notempty',
 ]);
@@ -437,7 +437,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'config_items_decimales',
     'label' => 'Decimales en items',
-    'options' => [0=>'0 para CLP y 3 para otras monedas', 1=>1, 2=>2, 3=>3, 4=>4, 5=>5, 6=>6],
+    'options' => [0 => '0 para CLP y 3 para otras monedas', 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6],
     'value' => isset($Contribuyente) ? $Contribuyente->config_items_decimales : '',
     'help' => '¿Cuántos decimales se deben usar si se requiere aproximar al obtener el precio de un ítem?',
 ]);
@@ -472,7 +472,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'config_emision_forma_pago',
     'label' => 'Forma de pago',
-    'options' => ['' => 'Sin forma de pago', 1=>'Contado', 2=>'Crédito'],
+    'options' => ['' => 'Sin forma de pago', 1 => 'Contado', 2 => 'Crédito'],
     'value' => isset($Contribuyente) ? $Contribuyente->config_emision_forma_pago : 0,
     'help' => '¿Forma de pago por defecto?',
 ]);
@@ -480,7 +480,7 @@ echo $f->input([
     'type' => 'select',
     'name' => 'config_boletas_eliminar',
     'label' => 'Eliminar Boletas',
-    'options' => ['' => 'No (recomendado)', 1=>'Solo las del día actual', 2=>'Solo las del mes actual', 3=>'Las del mes actual y mes anterior (no recomendado)', 4=>'Cualquier boleta (no recomendado)'],
+    'options' => ['' => 'No (recomendado)', 1 => 'Solo las del día actual', 2 => 'Solo las del mes actual', 3 => 'Las del mes actual y mes anterior (no recomendado)', 4 => 'Cualquier boleta (no recomendado)'],
     'value' => isset($Contribuyente) ? $Contribuyente->config_boletas_eliminar : 0,
     'help' => '¿Administradores pueden eliminar boletas emitidas?',
 ]);
@@ -726,7 +726,7 @@ echo $f->input([
     'name' => 'config_sii_envio_intentos',
     'label' => 'Intentos envío DTE',
     'options' => [0,1,2,3,4,5,6,7,8,9,10],
-    'value' => isset($Contribuyente) ? ($Contribuyente->config_sii_envio_intentos !== null ? $Contribuyente->config_sii_envio_intentos:1) : 1,
+    'value' => isset($Contribuyente) ? ($Contribuyente->config_sii_envio_intentos !== null ? $Contribuyente->config_sii_envio_intentos : 1) : 1,
     'help' => '¿Cuántos intentos de envío del XML del DTE se deberán hacer al generar el documento?',
 ]);
 echo $f->input([
@@ -913,13 +913,13 @@ if ($formatos_pdf) {
         <div class="card-body">
 <?php
 $AppsConfigHelper = new \sowerphp\app\View_Helper_AppsConfig('dte_pdf', $f);
-foreach ($dtepdfs as $App) {
-    $App->setVars([
-        'url' => $_url,
-    ]);
-    echo $AppsConfigHelper->generate($App);
-}
-?>
+    foreach ($dtepdfs as $App) {
+        $App->setVars([
+            'url' => $_url,
+        ]);
+        echo $AppsConfigHelper->generate($App);
+    }
+    ?>
         </div>
     </div>
     <!-- FIN DTEPDF -->
@@ -939,37 +939,37 @@ foreach ($dtepdfs as $App) {
         <div class="card-body">
             <p>LibreDTE puede comunicarse con la aplicación de su empresa u otros sitios a través de notificaciones a servicios web.</p>
 <?php
-$api_servicios_disponibles = (array)config('api_contribuyentes');
-$api = [];
-foreach ($api_servicios_disponibles as $api_codigo => $api_servicio) {
-    if (!empty($api_servicio['uses']) && !app('module')->isModuleLoaded($api_servicio['uses'])) {
-        continue;
+    $api_servicios_disponibles = (array)config('api_contribuyentes');
+    $api = [];
+    foreach ($api_servicios_disponibles as $api_codigo => $api_servicio) {
+        if (!empty($api_servicio['uses']) && !app('module')->isModuleLoaded($api_servicio['uses'])) {
+            continue;
+        }
+        $api[] = [
+            'config_api_codigo' => $api_codigo,
+            'config_api_servicio' => $api_servicio['name'],
+            'config_api_url' => isset($Contribuyente->config_api_servicios->$api_codigo->url) ? $Contribuyente->config_api_servicios->$api_codigo->url : null,
+            'config_api_auth' => isset($Contribuyente->config_api_servicios->$api_codigo->auth) ? $Contribuyente->config_api_servicios->$api_codigo->auth : null,
+            'config_api_credenciales' => isset($Contribuyente->config_api_servicios->$api_codigo->credenciales) ? $Contribuyente->config_api_servicios->$api_codigo->credenciales : null,
+        ];
     }
-    $api[] = [
-        'config_api_codigo' => $api_codigo,
-        'config_api_servicio' => $api_servicio['name'],
-        'config_api_url' => isset($Contribuyente->config_api_servicios->$api_codigo->url) ? $Contribuyente->config_api_servicios->$api_codigo->url : null,
-        'config_api_auth' => isset($Contribuyente->config_api_servicios->$api_codigo->auth) ? $Contribuyente->config_api_servicios->$api_codigo->auth : null,
-        'config_api_credenciales' => isset($Contribuyente->config_api_servicios->$api_codigo->credenciales) ? $Contribuyente->config_api_servicios->$api_codigo->credenciales : null,
-    ];
-}
-$f->setStyle(false);
-echo $f->input([
-    'type' => 'table',
-    'id' => 'config_api',
-    'label' => 'API',
-    'titles' => ['Servicio', 'URL del webhook', 'Tipo de autenticación', 'Credenciales'],
-    'inputs' => [
-        ['name' => 'config_api_codigo', 'type' => 'hidden'],
-        ['name' => 'config_api_servicio', 'type' => 'div', 'attr' => 'style="max-width:10em"'],
-        ['name' => 'config_api_url', 'placeholder' => 'https://example.com/api/webhook'],
-        ['name' => 'config_api_auth', 'type' => 'select', 'options' => ['http_auth_basic' => 'HTTP Auth Basic']],
-        ['type' => 'password', 'name' => 'config_api_credenciales', 'placeholder' => 'Ejemplo: usuario:contraseña', 'attr' => 'maxlength="255" onmouseover="this.type=\'text\'" onmouseout="this.type=\'password\'"'],
-    ],
-    'values' => $api,
-]);
-$f->setStyle('horizontal');
-?>
+    $f->setStyle(false);
+    echo $f->input([
+        'type' => 'table',
+        'id' => 'config_api',
+        'label' => 'API',
+        'titles' => ['Servicio', 'URL del webhook', 'Tipo de autenticación', 'Credenciales'],
+        'inputs' => [
+            ['name' => 'config_api_codigo', 'type' => 'hidden'],
+            ['name' => 'config_api_servicio', 'type' => 'div', 'attr' => 'style="max-width:10em"'],
+            ['name' => 'config_api_url', 'placeholder' => 'https://example.com/api/webhook'],
+            ['name' => 'config_api_auth', 'type' => 'select', 'options' => ['http_auth_basic' => 'HTTP Auth Basic']],
+            ['type' => 'password', 'name' => 'config_api_credenciales', 'placeholder' => 'Ejemplo: usuario:contraseña', 'attr' => 'maxlength="255" onmouseover="this.type=\'text\'" onmouseout="this.type=\'password\'"'],
+        ],
+        'values' => $api,
+    ]);
+    $f->setStyle('horizontal');
+    ?>
         </div>
     </div>
     <!-- INICIO APPS -->
@@ -981,14 +981,14 @@ $f->setStyle('horizontal');
         <div class="card-body">
             <p>LibreDTE puede utilizar aplicaciones externas para entregar más funcionalidades y características.</p>
 <?php
-$AppsConfigHelper = new \sowerphp\app\View_Helper_AppsConfig('apps', $f);
-foreach ($apps as $App) {
-    $App->setVars([
-        'url' => $_url,
-    ]);
-    echo $AppsConfigHelper->generate($App);
-}
-?>
+    $AppsConfigHelper = new \sowerphp\app\View_Helper_AppsConfig('apps', $f);
+    foreach ($apps as $App) {
+        $App->setVars([
+            'url' => $_url,
+        ]);
+        echo $AppsConfigHelper->generate($App);
+    }
+    ?>
         </div>
     </div>
     <!-- FIN APPS -->
@@ -1019,28 +1019,28 @@ foreach ($apps as $App) {
         </div>
         <div class="card-body">
 <?php
-$config_extra_links = [];
-foreach ((array)$Contribuyente->config_extra_links as $l) {
-    $config_extra_links[] = [
-        'config_extra_links_nombre' => $l->nombre,
-        'config_extra_links_enlace' => !empty($l->enlace) ? $l->enlace : null,
-        'config_extra_links_icono' => !empty($l->icono) ? $l->icono : null,
-    ];
-}
-echo $f->input([
-    'type' => 'js',
-    'id' => 'config_extra_links',
-    'label' => 'Enlaces',
-    'titles' => ['Nombre', 'Enlace', 'Icono'],
-    'inputs' => [
-        ['name' => 'config_extra_links_nombre', 'check' => 'notempty'],
-        ['name' => 'config_extra_links_enlace'],
-        ['name' => 'config_extra_links_icono'],
-    ],
-    'values' => $config_extra_links,
-    'help' => 'Enlaces para reemplazar el menú por defecto de la empresa. Si se desea agregar un separador usar un guión en el nombre y el enlace en blanco',
-]);
-?>
+    $config_extra_links = [];
+    foreach ((array)$Contribuyente->config_extra_links as $l) {
+        $config_extra_links[] = [
+            'config_extra_links_nombre' => $l->nombre,
+            'config_extra_links_enlace' => !empty($l->enlace) ? $l->enlace : null,
+            'config_extra_links_icono' => !empty($l->icono) ? $l->icono : null,
+        ];
+    }
+    echo $f->input([
+        'type' => 'js',
+        'id' => 'config_extra_links',
+        'label' => 'Enlaces',
+        'titles' => ['Nombre', 'Enlace', 'Icono'],
+        'inputs' => [
+            ['name' => 'config_extra_links_nombre', 'check' => 'notempty'],
+            ['name' => 'config_extra_links_enlace'],
+            ['name' => 'config_extra_links_icono'],
+        ],
+        'values' => $config_extra_links,
+        'help' => 'Enlaces para reemplazar el menú por defecto de la empresa. Si se desea agregar un separador usar un guión en el nombre y el enlace en blanco',
+    ]);
+    ?>
         </div>
     </div>
     <div class="card mb-4">
@@ -1050,14 +1050,14 @@ echo $f->input([
         </div>
         <div class="card-body">
 <?php
-echo $f->input([
-    'type' => 'select',
-    'name' => 'config_app_soporte',
-    'label' => 'Permitir soporte',
-    'options' => ['No', 'Si'],
-    'value' => $Contribuyente->config_app_soporte,
-    'help' => 'Se permite al equipo de soporte de LibreDTE trabajar con el contribuyente',
-]);
+    echo $f->input([
+        'type' => 'select',
+        'name' => 'config_app_soporte',
+        'label' => 'Permitir soporte',
+        'options' => ['No', 'Si'],
+        'value' => $Contribuyente->config_app_soporte,
+        'help' => 'Se permite al equipo de soporte de LibreDTE trabajar con el contribuyente',
+    ]);
 ?>
         </div>
     </div>

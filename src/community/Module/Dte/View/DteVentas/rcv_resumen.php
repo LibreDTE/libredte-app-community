@@ -32,5 +32,5 @@ foreach ($resumen as &$r) {
     $r[] = $r['rsmnLink'] ? ('<a href="'.$_base.'/dte/dte_ventas/rcv_detalle/'.$periodo.'/'.$r['rsmnTipoDocInteger'].'" title="Ver detalles de los documentos" class="btn btn-primary" onclick="return __.loading(\'Consultando datos al SII...\')"><i class="fa fa-search fa-fw"></i></a>') : '';
     unset($r['dcvCodigo'], $r['rsmnCodigo'], $r['rsmnTipoDocInteger'], $r['rsmnLink'], $r['dcvOperacion'], $r['rsmnEstadoContab'], $r['rsmnTotalRutEmisor']);
 }
-array_unshift($resumen, ['DTE', 'Ingreso', 'Exento', 'Neto', 'IVA', 'IVA no rec.', 'IVA uso común', 'Total', 'Docs', 'Ver']);
-new \sowerphp\general\View_Helper_Table($resumen, 'rv_resumen_'.$periodo, true);
+            array_unshift($resumen, ['DTE', 'Ingreso', 'Exento', 'Neto', 'IVA', 'IVA no rec.', 'IVA uso común', 'Total', 'Docs', 'Ver']);
+            new \sowerphp\general\View_Helper_Table($resumen, 'rv_resumen_'.$periodo, true);

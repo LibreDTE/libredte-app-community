@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte\Informes;
 
 /**
@@ -95,10 +94,12 @@ class Model_F29
         ];
         if (app('module')->isModuleLoaded('Lce')) {
             $this->datos['48'] = (new \libredte\enterprise\Lce\Model_LceCuenta(
-                $this->Emisor->rut, $this->Emisor->config_contabilidad_f29_48
+                $this->Emisor->rut,
+                $this->Emisor->config_contabilidad_f29_48
             ))->getHaber($this->periodo);
             $this->datos['151'] = (new \libredte\enterprise\Lce\Model_LceCuenta(
-                $this->Emisor->rut, $this->Emisor->config_contabilidad_f29_151
+                $this->Emisor->rut,
+                $this->Emisor->config_contabilidad_f29_151
             ))->getHaber($this->periodo);
         }
     }

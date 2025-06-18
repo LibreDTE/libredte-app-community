@@ -72,7 +72,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
         $documentos = [];
         $documento = null;
         $error_formato = false;
-        for ($i=1; $i<$n_datos; $i++) {
+        for ($i = 1; $i < $n_datos; $i++) {
             // fila es un documento nuevo
             if (!empty($datos[$i][0])) {
                 // si existe un documento asignado previamente se agrega al listado
@@ -185,7 +185,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
                         ;
                         $file_pdf = $dir.'/'.str_replace(
                             ['{rut}', '{dv}', '{dte}', '{folio}'],
-                            [$Emisor->rut, $Emisor->dv, $response['body']['dte'], $response['body']['dte'].'-'.strtoupper(substr($response['body']['codigo'],0,7))],
+                            [$Emisor->rut, $Emisor->dv, $response['body']['dte'], $response['body']['dte'].'-'.strtoupper(substr($response['body']['codigo'], 0, 7))],
                             $filename
                         ).'.pdf';
                         file_put_contents($file_pdf, $response_pdf['body']);
@@ -284,7 +284,8 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
         if ($pdf) {
             $compress = 'zip';
             \sowerphp\general\Utility_File::compress(
-                $dir, ['format' => $compress, 'delete' => true, 'download' => false]
+                $dir,
+                ['format' => $compress, 'delete' => true, 'download' => false]
             );
             $output = $dir.'.'.$compress;
             $filename = DIR_STATIC.'/emision_masiva_pdf/'.basename($output);
@@ -502,20 +503,20 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
             return;
         }
         if ($transporte[0]) {
-            $documento['Encabezado']['Transporte']['Patente'] = mb_substr(trim($transporte[0]),0,8);
+            $documento['Encabezado']['Transporte']['Patente'] = mb_substr(trim($transporte[0]), 0, 8);
         }
         if ($transporte[1]) {
-            $documento['Encabezado']['Transporte']['RUTTrans'] = mb_substr(str_replace('.','',trim($transporte[1])),0,10);
+            $documento['Encabezado']['Transporte']['RUTTrans'] = mb_substr(str_replace('.', '', trim($transporte[1])), 0, 10);
         }
         if ($transporte[2] && $transporte[3]) {
-            $documento['Encabezado']['Transporte']['Chofer']['RUTChofer'] = mb_substr(str_replace('.','',trim($transporte[2])),0,10);
-            $documento['Encabezado']['Transporte']['Chofer']['NombreChofer'] = mb_substr(trim($transporte[3]),0,30);
+            $documento['Encabezado']['Transporte']['Chofer']['RUTChofer'] = mb_substr(str_replace('.', '', trim($transporte[2])), 0, 10);
+            $documento['Encabezado']['Transporte']['Chofer']['NombreChofer'] = mb_substr(trim($transporte[3]), 0, 30);
         }
         if ($transporte[4]) {
-            $documento['Encabezado']['Transporte']['DirDest'] = mb_substr(trim($transporte[4]),0,70);
+            $documento['Encabezado']['Transporte']['DirDest'] = mb_substr(trim($transporte[4]), 0, 70);
         }
         if ($transporte[5]) {
-            $documento['Encabezado']['Transporte']['CmnaDest'] = mb_substr(trim($transporte[5]),0,20);
+            $documento['Encabezado']['Transporte']['CmnaDest'] = mb_substr(trim($transporte[5]), 0, 20);
         }
     }
 
@@ -534,20 +535,20 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
         if (empty($referencia[0])) {
             throw new \Exception('Tipo del documento de referencia no puede estar vacío.');
         }
-        $Referencia['TpoDocRef'] = mb_substr(trim($referencia[0]),0,3);
+        $Referencia['TpoDocRef'] = mb_substr(trim($referencia[0]), 0, 3);
         if (empty($referencia[1])) {
             throw new \Exception('Folio del documento de referencia no puede estar vacío.');
         }
-        $Referencia['FolioRef'] = mb_substr(trim($referencia[1]),0,18);
+        $Referencia['FolioRef'] = mb_substr(trim($referencia[1]), 0, 18);
         if (empty($referencia[2]) || !\sowerphp\general\Utility_Date::check($referencia[2])) {
             throw new \Exception('Fecha del documento de referencia debe ser en formato AAAA-MM-DD.');
         }
         $Referencia['FchRef'] = $referencia[2];
         if (!empty($referencia[3])) {
-                $Referencia['CodRef'] = (int)$referencia[3];
+            $Referencia['CodRef'] = (int)$referencia[3];
         }
         if (!empty($referencia[4])) {
-                $Referencia['RazonRef'] = mb_substr(trim($referencia[4]), 0, 90);
+            $Referencia['RazonRef'] = mb_substr(trim($referencia[4]), 0, 90);
         }
         $documento['Referencia'][] = $Referencia;
     }
@@ -575,7 +576,9 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
                 'type' => 'text/csv',
             ];
             \sowerphp\general\Utility_Spreadsheet_CSV::save($datos, $file['tmp_name']);
-        } else $file = null;
+        } else {
+            $file = null;
+        }
         // enviar correo
         $titulo = 'Resultado emisión masiva de DTE #'.$id;
         $msg = $Usuario->nombre.','."\n\n";
@@ -584,9 +587,9 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
         } elseif ($datos) {
             $msg .= 'Ha ocurrido un error y el archivo no ha podido ser procesado: '.$datos."\n\n";
         }
-        $msg .= '- Generar DTE real: '.($dte_real?'Si':'No')."\n";
-        $msg .= '- Enviar DTE por correo: '.($email?'Si':'No')."\n";
-        $msg .= '- Descarga de PDF: '.($pdf?(is_string($pdf) ? $pdf:'Si'):'No')."\n";
+        $msg .= '- Generar DTE real: '.($dte_real ? 'Si' : 'No')."\n";
+        $msg .= '- Enviar DTE por correo: '.($email ? 'Si' : 'No')."\n";
+        $msg .= '- Descarga de PDF: '.($pdf ? (is_string($pdf) ? $pdf : 'Si') : 'No')."\n";
         $msg .= '- Tiempo ejecución: '.num($tiempo).' segundos'."\n";
         // mensaje por consola con el resultado (mismo que se envía por email)
         $this->out("\n".$msg."\n");

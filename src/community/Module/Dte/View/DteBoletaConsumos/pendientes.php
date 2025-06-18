@@ -10,7 +10,7 @@
 <p>Se consideran todos los días entre el primer día que se envió un RCOF y el día de ayer.</p>
 <?php
 $tabla = [['Día']];
-foreach ($pendientes as $p) {
-    $tabla[] = [$p];
-}
-new \sowerphp\general\View_Helper_Table($tabla, 'rcof_pendientes_'.$Emisor->rut, true);
+        foreach ($pendientes as $p) {
+            $tabla[] = [$p];
+        }
+        new \sowerphp\general\View_Helper_Table($tabla, 'rcof_pendientes_'.$Emisor->rut, true);

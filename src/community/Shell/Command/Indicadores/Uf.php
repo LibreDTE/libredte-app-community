@@ -23,7 +23,7 @@
 
 namespace website;
 
-use \sowerphp\app\Sistema\General\Model_MonedaCambio;
+use sowerphp\app\Sistema\General\Model_MonedaCambio;
 
 /**
  * Obtiene los valores de la UF para un año determinado.
@@ -86,15 +86,15 @@ class Shell_Command_Indicadores_Uf extends \sowerphp\core\Shell_App
         unset($valores);
         // crear tabla con valores
         foreach ($aux as $anio => $dias) {
-            $this->out(str_repeat('=',134));
+            $this->out(str_repeat('=', 134));
             $this->out('Valores de UF para el año '.$anio);
-            $this->out(str_repeat('=',134));
-            $this->out('   ',0);
-            foreach (range(1,12) as $mes) {
+            $this->out(str_repeat('=', 134));
+            $this->out('   ', 0);
+            foreach (range(1, 12) as $mes) {
                 $this->out(sprintf('%10s ', $mes), 0);
             }
             $this->out();
-            $this->out(str_repeat('-',134));
+            $this->out(str_repeat('-', 134));
             foreach ($dias as $dia => $meses) {
                 $this->out(sprintf('%2s ', $dia), 0);
                 foreach ($meses as $mes => $valor) {
@@ -105,7 +105,7 @@ class Shell_Command_Indicadores_Uf extends \sowerphp\core\Shell_App
                 }
                 $this->out();
             }
-            $this->out(str_repeat('=',134));
+            $this->out(str_repeat('=', 134));
         }
     }
 

@@ -19,5 +19,5 @@ foreach ($boletas as &$b) {
     $b['anulada'] = $b['anulada'] ? \sowerphp\general\Utility_Date::format($b['anulada']) : '';
     unset($b['codigo'], $b['emisor_dv']);
 }
-array_unshift($boletas, ['RUT', 'Emisor', 'Número', 'Fecha', 'Honorarios', 'Líquido', 'Retención', 'Anulada', 'PDF']);
-new \sowerphp\general\View_Helper_Table($boletas, 'bhe', true);
+        array_unshift($boletas, ['RUT', 'Emisor', 'Número', 'Fecha', 'Honorarios', 'Líquido', 'Retención', 'Anulada', 'PDF']);
+        new \sowerphp\general\View_Helper_Table($boletas, 'bhe', true);

@@ -36,37 +36,37 @@ $(function() { __.tabs(); });
 <!-- INICIO DATOS BASICOS -->
 <div role="tabpanel" class="tab-pane active" id="datos" aria-labelledby="datos-tab">
 <?php
-$f = new \sowerphp\general\View_Helper_Form ();
+$f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin(['onsubmit' => 'Form.check()']);
 echo $f->input([
     'name' => 'codigo_tipo',
     'label' => 'Tipo de código',
-    'value' => isset($Obj) ? $Obj->codigo_tipo:'INT1',
+    'value' => isset($Obj) ? $Obj->codigo_tipo : 'INT1',
     'check' => 'notempty',
-    'attr' => isset($Obj)?'disabled="disabled"':'maxlength="10"',
-    'help' => $Contribuyente->config_extra_agente_retenedor?'Si es agente retenedor del producto debe utilizar el tipo de código CPCS':false,
+    'attr' => isset($Obj) ? 'disabled="disabled"' : 'maxlength="10"',
+    'help' => $Contribuyente->config_extra_agente_retenedor ? 'Si es agente retenedor del producto debe utilizar el tipo de código CPCS' : false,
 ]);
 $help = 'Si es agente retenedor del producto debe utilizar el código, nombre y unidad descritos en la tabla anexa del <a href="http://www.sii.cl/factura_electronica/formato_retenedores.pdf" target="_blank">formato de retenedores</a>';
 echo $f->input([
     'name' => 'codigo',
     'label' => 'Código',
-    'value' => isset($Obj) ? $Obj->codigo:'',
+    'value' => isset($Obj) ? $Obj->codigo : '',
     'check' => 'notempty',
-    'attr' => isset($Obj)?'disabled="disabled"':'maxlength="35" onblur="this.value=this.value.replace(\'/\', \'_\')"',
-    'help' => $Contribuyente->config_extra_agente_retenedor ? $help:false,
+    'attr' => isset($Obj) ? 'disabled="disabled"' : 'maxlength="35" onblur="this.value=this.value.replace(\'/\', \'_\')"',
+    'help' => $Contribuyente->config_extra_agente_retenedor ? $help : false,
 ]);
 echo $f->input([
     'name' => 'item',
     'label' => 'Nombre',
-    'value' => isset($Obj) ? $Obj->item:'',
+    'value' => isset($Obj) ? $Obj->item : '',
     'check' => 'notempty',
     'attr' => 'maxlength="80"',
-    'help' => $Contribuyente->config_extra_agente_retenedor ? $help:false,
+    'help' => $Contribuyente->config_extra_agente_retenedor ? $help : false,
 ]);
 echo $f->input([
     'name' => 'descripcion',
     'label' => 'Descripción',
-    'value' => isset($Obj) ? $Obj->descripcion:'',
+    'value' => isset($Obj) ? $Obj->descripcion : '',
     'attr' => 'maxlength="1000"',
 ]);
 echo $f->input([
@@ -74,20 +74,20 @@ echo $f->input([
     'name' => 'clasificacion',
     'label' => 'Clasificación',
     'options' => ['' => 'Seleccionar clasificación'] + $clasificaciones,
-    'value' => isset($Obj) ? $Obj->clasificacion:'',
+    'value' => isset($Obj) ? $Obj->clasificacion : '',
     'check' => 'notempty',
 ]);
 echo $f->input([
     'name' => 'unidad',
     'label' => 'Unidad',
-    'value' => isset($Obj) ? $Obj->unidad:'',
+    'value' => isset($Obj) ? $Obj->unidad : '',
     'attr' => 'maxlength="4"',
-    'help' => $Contribuyente->config_extra_agente_retenedor ? $help:false,
+    'help' => $Contribuyente->config_extra_agente_retenedor ? $help : false,
 ]);
 echo $f->input([
     'name' => 'precio',
     'label' => 'Precio',
-    'value' => isset($Obj)?(float)$Obj->precio:'',
+    'value' => isset($Obj) ? (float)$Obj->precio : '',
     'check' => 'notempty real',
 ]);
 echo $f->input([
@@ -95,7 +95,7 @@ echo $f->input([
     'name' => 'moneda',
     'label' => 'Moneda',
     'options' => ['CLP' => 'Pesos', 'CLF' => 'UF', 'USD' => 'Dólares', 'EUR' => 'Euros'],
-    'value' => isset($Obj) ? $Obj->moneda:'CLP',
+    'value' => isset($Obj) ? $Obj->moneda : 'CLP',
     'check' => 'notempty',
 ]);
 echo $f->input([
@@ -103,7 +103,7 @@ echo $f->input([
     'name' => 'bruto',
     'label' => 'Tipo precio',
     'options' => ['Neto', 'Bruto'],
-    'value' => isset($Obj) ? $Obj->bruto:false,
+    'value' => isset($Obj) ? $Obj->bruto : false,
     'check' => 'notempty',
 ]);
 echo $f->input([
@@ -111,13 +111,13 @@ echo $f->input([
     'name' => 'exento',
     'label' => '¿Exento?',
     'options' => ['No', 'Si'],
-    'value' => isset($Obj) ? $Obj->exento:(int)$Contribuyente->config_extra_exenta,
+    'value' => isset($Obj) ? $Obj->exento : (int)$Contribuyente->config_extra_exenta,
     'check' => 'notempty',
 ]);
 echo $f->input([
     'name' => 'descuento',
     'label' => 'Descuento',
-    'value' => isset($Obj)?(float)$Obj->descuento:0,
+    'value' => isset($Obj) ? (float)$Obj->descuento : 0,
     'check' => 'notempty real',
 ]);
 echo $f->input([
@@ -125,7 +125,7 @@ echo $f->input([
     'name' => 'descuento_tipo',
     'label' => 'Tipo descuento',
     'options' => ['%' => '%', '$' => '$'],
-    'value' => isset($Obj) ? $Obj->descuento_tipo:'%',
+    'value' => isset($Obj) ? $Obj->descuento_tipo : '%',
     'check' => 'notempty',
 ]);
 echo $f->input([
@@ -133,14 +133,14 @@ echo $f->input([
     'name' => 'impuesto_adicional',
     'label' => 'Impuesto adicional',
     'options' => ['' => 'Sin impuesto adicional'] + $impuesto_adicionales,
-    'value' => isset($Obj) ? $Obj->impuesto_adicional:'',
+    'value' => isset($Obj) ? $Obj->impuesto_adicional : '',
 ]);
 echo $f->input([
     'type' => 'select',
     'name' => 'activo',
     'label' => '¿Activo?',
     'options' => ['No', 'Si'],
-    'value' => isset($Obj) ? $Obj->activo:1,
+    'value' => isset($Obj) ? $Obj->activo : 1,
     'check' => 'notempty',
 ]);
 ?>

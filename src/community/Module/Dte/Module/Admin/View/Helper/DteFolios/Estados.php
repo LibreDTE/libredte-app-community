@@ -49,27 +49,27 @@ class View_Helper_DteFolios_Estados extends \sowerphp\general\View_Helper_Spread
             $this->x = 0;
             foreach ($folios as $estado => $listado) {
                 $this->y = 1;
-                $x_hasta = $this->getCol($this->x+2);
+                $x_hasta = $this->getCol($this->x + 2);
                 // formatos de título del estado
                 $this->getActiveSheet()->mergeCells($this->getCol($this->x).$this->y.':'.$x_hasta.$this->y);
-                $this->setFormatCenterBold($this->getCol($this->x).$this->y.':'.$x_hasta.($this->y+1));
-                $this->setFormatBorder($this->getCol($this->x).$this->y.':'.$x_hasta.($this->y+1));
+                $this->setFormatCenterBold($this->getCol($this->x).$this->y.':'.$x_hasta.($this->y + 1));
+                $this->setFormatBorder($this->getCol($this->x).$this->y.':'.$x_hasta.($this->y + 1));
                 // colocar título del estado
                 $this->getActiveSheet()->setCellValue($this->getCol($this->x).$this->y, 'Folios '.$estado.' T'.$dte);
                 $this->y++;
                 $this->getActiveSheet()->setCellValue($this->getCol($this->x).$this->y, 'Inicial');
-                $this->getActiveSheet()->setCellValue($this->getCol($this->x+1).$this->y, 'Final');
-                $this->getActiveSheet()->setCellValue($this->getCol($this->x+2).$this->y, 'Cantidad');
+                $this->getActiveSheet()->setCellValue($this->getCol($this->x + 1).$this->y, 'Final');
+                $this->getActiveSheet()->setCellValue($this->getCol($this->x + 2).$this->y, 'Cantidad');
                 // formato de listado de folios
                 $this->y++;
                 $n_listado = count($listado);
-                $this->setFormatNumber($this->getCol($this->x).$this->y.':'.$x_hasta.($this->y+$n_listado-1));
-                $this->setFormatBorder($this->getCol($this->x).$this->y.':'.$x_hasta.($this->y+$n_listado-1));
+                $this->setFormatNumber($this->getCol($this->x).$this->y.':'.$x_hasta.($this->y + $n_listado - 1));
+                $this->setFormatBorder($this->getCol($this->x).$this->y.':'.$x_hasta.($this->y + $n_listado - 1));
                 // colocar listado de folios
                 foreach ($listado as $l) {
                     $this->getActiveSheet()->setCellValue($this->getCol($this->x).$this->y, $l['inicial']);
-                    $this->getActiveSheet()->setCellValue($this->getCol($this->x+1).$this->y, $l['final']);
-                    $this->getActiveSheet()->setCellValue($this->getCol($this->x+2).$this->y, $l['cantidad']);
+                    $this->getActiveSheet()->setCellValue($this->getCol($this->x + 1).$this->y, $l['final']);
+                    $this->getActiveSheet()->setCellValue($this->getCol($this->x + 2).$this->y, $l['cantidad']);
                     $this->y++;
                 }
                 // pasar a siguiente estado

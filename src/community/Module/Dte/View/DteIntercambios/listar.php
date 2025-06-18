@@ -74,19 +74,19 @@ foreach ($documentos as &$i) {
     }
     unset($i['usuario']);
 }
-$f = new \sowerphp\general\View_Helper_Form(false);
-array_unshift($documentos, [
-    '',
-    $f->input(['name' => 'emisor', 'value' => (isset($search['emisor']) ? $search['emisor'] : '')]),
-    $f->input(['name' => 'folio', 'value' => (isset($search['folio']) ? $search['folio'] : ''), 'check' => 'integer']),
-    '',
-    '',
-    '',
-    '<button type="submit" class="btn btn-primary" onclick="return Form.check()"><i class="fa fa-search fa-fw" aria-hidden="true"></i></button>',
-]);
-array_unshift($documentos, ['Código', 'Emisor', 'Documento', 'Recibido', 'Total', 'Estado', 'Acciones']);
-$paginator = new \sowerphp\app\View_Helper_Paginator([
-    'link' => $_base.'/dte/dte_intercambios/listar',
-]);
-$paginator->setColsWidth([null, null, null, null, null, null, 110]);
-echo $paginator->generate($documentos, $paginas, $pagina);
+        $f = new \sowerphp\general\View_Helper_Form(false);
+        array_unshift($documentos, [
+            '',
+            $f->input(['name' => 'emisor', 'value' => (isset($search['emisor']) ? $search['emisor'] : '')]),
+            $f->input(['name' => 'folio', 'value' => (isset($search['folio']) ? $search['folio'] : ''), 'check' => 'integer']),
+            '',
+            '',
+            '',
+            '<button type="submit" class="btn btn-primary" onclick="return Form.check()"><i class="fa fa-search fa-fw" aria-hidden="true"></i></button>',
+        ]);
+        array_unshift($documentos, ['Código', 'Emisor', 'Documento', 'Recibido', 'Total', 'Estado', 'Acciones']);
+        $paginator = new \sowerphp\app\View_Helper_Paginator([
+            'link' => $_base.'/dte/dte_intercambios/listar',
+        ]);
+        $paginator->setColsWidth([null, null, null, null, null, null, 110]);
+        echo $paginator->generate($documentos, $paginas, $pagina);

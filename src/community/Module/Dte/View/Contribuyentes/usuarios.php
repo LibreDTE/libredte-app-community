@@ -36,39 +36,39 @@ $(function() { __.tabs(); });
 <?php
 // inputs y ayuda
 $inputs = [['name' => 'usuario', 'check' => 'notempty']];
-$permisos_ayuda = '<ul>';
-foreach ($permisos_usuarios as $permiso => $info) {
-    $permisos_ayuda .= '<li><strong>'.$permiso.'</strong>: '.$info['nombre'].' <small>('.$info['descripcion'].')</small>'.'</li>';
-    $inputs[] = ['type' => 'select', 'name' => 'permiso_'.$permiso, 'options' => ['No', 'Si']];
-}
-$permisos_ayuda .= '</ul>';
-// usuarios y sus permisos
-$usuarios = [];
-foreach ($Contribuyente->getUsuarios() as $u => $p) {
-    $permisos = [];
-    foreach ($permisos_usuarios as $permiso => $info) {
-        $permisos['permiso_'.$permiso] = (int)in_array($permiso, $p);
-    }
-    $usuarios[] = array_merge(['usuario' => $u], $permisos);
-}
-// mantenedor usuarios
-$f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin([
-    'id' => 'usuarios',
-    'onsubmit' => 'Form.check(\'usuarios\') && __.confirm(this)',
-]);
-$f->setStyle(false);
-echo $f->input([
-    'type' => 'js',
-    'id' => 'usuarios',
-    'label' => 'Usuarios autorizados',
-    'titles' => array_merge(['Usuario o correo electrónico'], array_keys($permisos_usuarios)),
-    'inputs' => $inputs,
-    'values' => $usuarios,
-]);
-$f->setStyle('horizontal');
-echo $f->end('Modificar usuarios autorizados');
-?>
+        $permisos_ayuda = '<ul>';
+        foreach ($permisos_usuarios as $permiso => $info) {
+            $permisos_ayuda .= '<li><strong>'.$permiso.'</strong>: '.$info['nombre'].' <small>('.$info['descripcion'].')</small>'.'</li>';
+            $inputs[] = ['type' => 'select', 'name' => 'permiso_'.$permiso, 'options' => ['No', 'Si']];
+        }
+        $permisos_ayuda .= '</ul>';
+        // usuarios y sus permisos
+        $usuarios = [];
+        foreach ($Contribuyente->getUsuarios() as $u => $p) {
+            $permisos = [];
+            foreach ($permisos_usuarios as $permiso => $info) {
+                $permisos['permiso_'.$permiso] = (int)in_array($permiso, $p);
+            }
+            $usuarios[] = array_merge(['usuario' => $u], $permisos);
+        }
+        // mantenedor usuarios
+        $f = new \sowerphp\general\View_Helper_Form();
+        echo $f->begin([
+            'id' => 'usuarios',
+            'onsubmit' => 'Form.check(\'usuarios\') && __.confirm(this)',
+        ]);
+        $f->setStyle(false);
+        echo $f->input([
+            'type' => 'js',
+            'id' => 'usuarios',
+            'label' => 'Usuarios autorizados',
+            'titles' => array_merge(['Usuario o correo electrónico'], array_keys($permisos_usuarios)),
+            'inputs' => $inputs,
+            'values' => $usuarios,
+        ]);
+        $f->setStyle('horizontal');
+        echo $f->end('Modificar usuarios autorizados');
+        ?>
 <div class="card mt-4 mb-4">
     <div class="card-body">
         <i class="fa-solid fa-question-circle fa-fw text-warning mb-4"></i>
@@ -91,46 +91,46 @@ echo $f->end('Modificar usuarios autorizados');
 <div role="tabpanel" class="tab-pane" id="dtes" aria-labelledby="dtes-tab">
 <p>Aquí puede asignar los documentos que un usuario puede emitir.</p>
 <?php
-echo $f->begin([
-    'action' => $_base.'/dte/contribuyentes/usuarios_dtes',
-    'id' => 'usuarios_dtes',
-    'onsubmit' => 'Form.check(\'usuarios_dtes\')',
-]);
-$usuarios_dtes = [];
-$aux = $Contribuyente->getDocumentosAutorizados();
-$documentos_autorizados = [];
-foreach ($aux as $d) {
-    $documentos_autorizados[$d['codigo']] = $d['tipo'];
-}
-$inputs = [['name' => 'usuario', 'check' => 'notempty', 'attr' => 'readonly="readonly"']];
-foreach ($documentos_autorizados as $codigo => $tipo) {
-    $inputs[] = ['type' => 'select', 'name' => 'dte_'.$codigo, 'options' => ['No', 'Si']];
-}
-$autorizados = $Contribuyente->getDocumentosAutorizadosPorUsuario();
-foreach ($Contribuyente->getUsuarios() as $u => $p) {
-    $documentos = [];
-    foreach ($documentos_autorizados as $codigo => $tipo) {
-        if (!empty($autorizados[$u])) {
-            $documentos['dte_'.$codigo] = (int)in_array($codigo, $autorizados[$u]);
-        } else {
-            $documentos['dte_'.$codigo] = 0;
+        echo $f->begin([
+            'action' => $_base.'/dte/contribuyentes/usuarios_dtes',
+            'id' => 'usuarios_dtes',
+            'onsubmit' => 'Form.check(\'usuarios_dtes\')',
+        ]);
+        $usuarios_dtes = [];
+        $aux = $Contribuyente->getDocumentosAutorizados();
+        $documentos_autorizados = [];
+        foreach ($aux as $d) {
+            $documentos_autorizados[$d['codigo']] = $d['tipo'];
         }
-    }
-    $usuarios_dtes[] = array_merge(['usuario' => $u], $documentos);
-}
-$f = new \sowerphp\general\View_Helper_Form();
-$f->setStyle(false);
-echo $f->input([
-    'type' => 'table',
-    'id' => 'usuarios_dtes',
-    'label' => 'Documentos por usuarios',
-    'titles' => array_merge(['Usuario'], array_keys($documentos_autorizados)),
-    'inputs' => $inputs,
-    'values' => $usuarios_dtes,
-]);
-$f->setStyle('horizontal');
-echo $f->end('Guardar documentos por usuarios');
-?>
+        $inputs = [['name' => 'usuario', 'check' => 'notempty', 'attr' => 'readonly="readonly"']];
+        foreach ($documentos_autorizados as $codigo => $tipo) {
+            $inputs[] = ['type' => 'select', 'name' => 'dte_'.$codigo, 'options' => ['No', 'Si']];
+        }
+        $autorizados = $Contribuyente->getDocumentosAutorizadosPorUsuario();
+        foreach ($Contribuyente->getUsuarios() as $u => $p) {
+            $documentos = [];
+            foreach ($documentos_autorizados as $codigo => $tipo) {
+                if (!empty($autorizados[$u])) {
+                    $documentos['dte_'.$codigo] = (int)in_array($codigo, $autorizados[$u]);
+                } else {
+                    $documentos['dte_'.$codigo] = 0;
+                }
+            }
+            $usuarios_dtes[] = array_merge(['usuario' => $u], $documentos);
+        }
+        $f = new \sowerphp\general\View_Helper_Form();
+        $f->setStyle(false);
+        echo $f->input([
+            'type' => 'table',
+            'id' => 'usuarios_dtes',
+            'label' => 'Documentos por usuarios',
+            'titles' => array_merge(['Usuario'], array_keys($documentos_autorizados)),
+            'inputs' => $inputs,
+            'values' => $usuarios_dtes,
+        ]);
+        $f->setStyle('horizontal');
+        echo $f->end('Guardar documentos por usuarios');
+        ?>
 <div class="card">
     <div class="card-body">
         <i class="fa-solid fa-question-circle fa-fw text-warning mb-4"></i>
@@ -149,36 +149,36 @@ echo $f->end('Guardar documentos por usuarios');
 <div role="tabpanel" class="tab-pane" id="sucursales" aria-labelledby="sucursales-tab">
 <p>Aquí puede asignar la sucursal por defecto de cada usuario para la emisión de los documentos.</p>
 <?php
-echo $f->begin([
-    'action' => $_base.'/dte/contribuyentes/usuarios_sucursales',
-    'id' => 'usuarios_sucursales',
-    'onsubmit' => 'Form.check(\'usuarios_sucursales\')',
-]);
-$sucursales = $Contribuyente->getSucursales();
-$sucursales[0] = 'Sin sucursal por defecto ('.$sucursales[0].')';
-$inputs = [
-    ['name' => 'usuario', 'check' => 'notempty', 'attr' => 'readonly="readonly"'],
-    ['type' => 'select', 'name' => 'sucursal', 'options' => $sucursales],
-];
-$usuarios_sucursales = [];
-$sucursales_por_usuario = $Contribuyente->getSucursalesPorUsuario();
-$usuarios = [$Contribuyente->getUsuario()->usuario => ['admin']] + $Contribuyente->getUsuarios();
-foreach ($usuarios as $u => $p) {
-    $usuarios_sucursales[] = ['usuario' => $u, 'sucursal' => !empty($sucursales_por_usuario[$u]) ? $sucursales_por_usuario[$u] : null];
-}
-$f = new \sowerphp\general\View_Helper_Form();
-$f->setStyle(false);
-echo $f->input([
-    'type' => 'table',
-    'id' => 'usuarios_sucursales',
-    'label' => 'Sucursales por defecto',
-    'titles' => ['Usuario', 'Sucursal'],
-    'inputs' => $inputs,
-    'values' => $usuarios_sucursales,
-]);
-$f->setStyle('horizontal');
-echo $f->end('Guardar sucursales por usuarios');
-?>
+        echo $f->begin([
+            'action' => $_base.'/dte/contribuyentes/usuarios_sucursales',
+            'id' => 'usuarios_sucursales',
+            'onsubmit' => 'Form.check(\'usuarios_sucursales\')',
+        ]);
+        $sucursales = $Contribuyente->getSucursales();
+        $sucursales[0] = 'Sin sucursal por defecto ('.$sucursales[0].')';
+        $inputs = [
+            ['name' => 'usuario', 'check' => 'notempty', 'attr' => 'readonly="readonly"'],
+            ['type' => 'select', 'name' => 'sucursal', 'options' => $sucursales],
+        ];
+        $usuarios_sucursales = [];
+        $sucursales_por_usuario = $Contribuyente->getSucursalesPorUsuario();
+        $usuarios = [$Contribuyente->getUsuario()->usuario => ['admin']] + $Contribuyente->getUsuarios();
+        foreach ($usuarios as $u => $p) {
+            $usuarios_sucursales[] = ['usuario' => $u, 'sucursal' => !empty($sucursales_por_usuario[$u]) ? $sucursales_por_usuario[$u] : null];
+        }
+        $f = new \sowerphp\general\View_Helper_Form();
+        $f->setStyle(false);
+        echo $f->input([
+            'type' => 'table',
+            'id' => 'usuarios_sucursales',
+            'label' => 'Sucursales por defecto',
+            'titles' => ['Usuario', 'Sucursal'],
+            'inputs' => $inputs,
+            'values' => $usuarios_sucursales,
+        ]);
+        $f->setStyle('horizontal');
+        echo $f->end('Guardar sucursales por usuarios');
+        ?>
 </div>
 <!-- FIN SUCURSALES POR DEFECTO -->
 
@@ -186,19 +186,19 @@ echo $f->end('Guardar sucursales por usuarios');
 <div role="tabpanel" class="tab-pane" id="datos" aria-labelledby="datos-tab">
 <p>Estos son los usuarios autorizados y la configuración que tienen asignada en LibreDTE.</p>
 <?php
-$usuarios = [['Usuario', 'Nombre', 'Correo', 'Último ingreso', 'Estado']];
-foreach (array_merge([$Contribuyente->getUsuario()->usuario=>null], $Contribuyente->getUsuarios()) as $u => $p) {
-    $Usuario = new $_Auth->settings['model']($u);
-    $usuarios[] = [
-        $Usuario->usuario,
-        $Usuario->nombre,
-        $Usuario->email,
-        \sowerphp\general\Utility_Date::format($Usuario->ultimo_ingreso_fecha_hora, 'd/m/y H:i'),
-        !$Usuario->activo ? 'Inactivo' : (!$Usuario->contrasenia_intentos ? 'Bloqueado' : 'Activo'),
-    ];
-}
-new \sowerphp\general\View_Helper_Table($usuarios, 'usuarios_autorizados_'.$Contribuyente->rut, true);
-?>
+        $usuarios = [['Usuario', 'Nombre', 'Correo', 'Último ingreso', 'Estado']];
+        foreach (array_merge([$Contribuyente->getUsuario()->usuario => null], $Contribuyente->getUsuarios()) as $u => $p) {
+            $Usuario = new $_Auth->settings['model']($u);
+            $usuarios[] = [
+                $Usuario->usuario,
+                $Usuario->nombre,
+                $Usuario->email,
+                \sowerphp\general\Utility_Date::format($Usuario->ultimo_ingreso_fecha_hora, 'd/m/y H:i'),
+                !$Usuario->activo ? 'Inactivo' : (!$Usuario->contrasenia_intentos ? 'Bloqueado' : 'Activo'),
+            ];
+        }
+        new \sowerphp\general\View_Helper_Table($usuarios, 'usuarios_autorizados_'.$Contribuyente->rut, true);
+        ?>
 </div>
 <!-- FIN DATOS USUARIOS -->
 
@@ -211,22 +211,22 @@ new \sowerphp\general\View_Helper_Table($usuarios, 'usuarios_autorizados_'.$Cont
         </div>
         <div class="card-body">
 <?php
-$f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin([
-    'action' => $_base.'/dte/contribuyentes/usuarios_general',
-    'id' => 'general',
-    'onsubmit' => 'Form.check(\'general\')',
-]);
-echo $f->input([
-    'type' => 'select',
-    'name' => 'config_usuarios_auth2',
-    'label' => '¿Requerir Auth2?',
-    'options' => ['No es obligatorio', 'Solo usuarios administradores', 'Todos los usuarios autorizados'],
-    'value' => $Contribuyente->config_usuarios_auth2,
-    'help' => 'Esto mejora la seguridad exigiendo que usuarios autorizados usen doble factor de autenticación',
-]);
-echo $f->end('Guardar configuración');
-?>
+        $f = new \sowerphp\general\View_Helper_Form();
+        echo $f->begin([
+            'action' => $_base.'/dte/contribuyentes/usuarios_general',
+            'id' => 'general',
+            'onsubmit' => 'Form.check(\'general\')',
+        ]);
+        echo $f->input([
+            'type' => 'select',
+            'name' => 'config_usuarios_auth2',
+            'label' => '¿Requerir Auth2?',
+            'options' => ['No es obligatorio', 'Solo usuarios administradores', 'Todos los usuarios autorizados'],
+            'value' => $Contribuyente->config_usuarios_auth2,
+            'help' => 'Esto mejora la seguridad exigiendo que usuarios autorizados usen doble factor de autenticación',
+        ]);
+        echo $f->end('Guardar configuración');
+        ?>
         </div>
     </div>
     <div class="card mb-4">
@@ -236,25 +236,25 @@ echo $f->end('Guardar configuración');
         </div>
         <div class="card-body">
 <?php
-$f = new \sowerphp\general\View_Helper_Form();
-if ($transferir_contribuyente) {
-    echo $f->begin([
-        'action' => $_base.'/dte/contribuyentes/transferir',
-        'id' => 'transferir',
-        'onsubmit' => 'Form.check(\'transferir\') && __.confirm(this, \'¿Está seguro de querer transferir la empresa al nuevo usuario?\')',
-    ]);
-}
-echo $f->input([
-    'type' => $transferir_contribuyente ? 'text' : 'div',
-    'name' => 'usuario',
-    'label' => 'Administrador',
-    'value' => $Contribuyente->getUsuario()->usuario,
-    'check' => $transferir_contribuyente ? 'notempty' : '',
-    'help' => $transferir_contribuyente ? 'Previo al cambio, se debe mover la firma electrónica y verificar que el nuevo administrador tenga los permisos necesarios para acceder a los recursos de LibreDTE' : '',
-]);
-if ($transferir_contribuyente) {
-    echo $f->end('Cambiar usuario administrador');
-}
+        $f = new \sowerphp\general\View_Helper_Form();
+        if ($transferir_contribuyente) {
+            echo $f->begin([
+                'action' => $_base.'/dte/contribuyentes/transferir',
+                'id' => 'transferir',
+                'onsubmit' => 'Form.check(\'transferir\') && __.confirm(this, \'¿Está seguro de querer transferir la empresa al nuevo usuario?\')',
+            ]);
+        }
+        echo $f->input([
+            'type' => $transferir_contribuyente ? 'text' : 'div',
+            'name' => 'usuario',
+            'label' => 'Administrador',
+            'value' => $Contribuyente->getUsuario()->usuario,
+            'check' => $transferir_contribuyente ? 'notempty' : '',
+            'help' => $transferir_contribuyente ? 'Previo al cambio, se debe mover la firma electrónica y verificar que el nuevo administrador tenga los permisos necesarios para acceder a los recursos de LibreDTE' : '',
+        ]);
+        if ($transferir_contribuyente) {
+            echo $f->end('Cambiar usuario administrador');
+        }
 ?>
         </div>
     </div>

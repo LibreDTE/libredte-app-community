@@ -71,7 +71,7 @@ $(function() { __.tabs(); });
 <!-- INICIO DATOS BÁSICOS -->
 <div role="tabpanel" class="tab-pane active" id="datos" aria-labelledby="datos-tab">
     <div class="row">
-        <div class="col-md-<?=$enviar_sii?9:12?>">
+        <div class="col-md-<?=$enviar_sii ? 9 : 12?>">
 <?php
 $t = new \sowerphp\general\View_Helper_Table();
 $t->setShowEmptyCols(false);
@@ -92,19 +92,19 @@ echo $t->generate([
 ?>
             <div class="row mt-2 mb-3">
                 <div class="col-md-4 mb-2">
-                    <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_emitidos/pdf/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>/<?=$Emisor->config_pdf_dte_cedible?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML() ? ' disabled' : '')?>" href="<?=$_base?>/dte/dte_emitidos/pdf/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>/<?=$Emisor->config_pdf_dte_cedible?>" role="button">
                         <span class="far fa-file-pdf"></span>
                         Descargar PDF
                     </a>
                 </div>
                 <div class="col-md-4 mb-2">
-                    <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_emitidos/xml/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML() ? ' disabled' : '')?>" href="<?=$_base?>/dte/dte_emitidos/xml/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
                         <span class="far fa-file-code"></span>
                         Descargar XML
                     </a>
                 </div>
                 <div class="col-md-4 mb-2">
-                    <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_emitidos/json/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML() ? ' disabled' : '')?>" href="<?=$_base?>/dte/dte_emitidos/json/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
                         <span class="far fa-file-code"></span>
                         Descargar JSON
                     </a>
@@ -145,7 +145,7 @@ echo $t->generate([
 <?php endif; ?>
 <?php if ($DteEmitido->track_id) : ?>
                     <p>
-                        <a class="btn btn-primary<?=$DteEmitido->track_id < 0 ?' disabled':''?>" href="<?=$_base?>/dte/dte_emitidos/actualizar_estado/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button" onclick="return __.loading('Actualizando estado del DTE...')">Actualizar estado</a><br/>
+                        <a class="btn btn-primary<?=$DteEmitido->track_id < 0 ? ' disabled' : ''?>" href="<?=$_base?>/dte/dte_emitidos/actualizar_estado/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button" onclick="return __.loading('Actualizando estado del DTE...')">Actualizar estado</a><br/>
                         <span style="font-size:0.8em">
 <?php if (!$DteEmitido->getTipo()->esBoleta()) : ?>
 <?php if (!$Emisor->config_sii_estado_dte_webservice && $DteEmitido->track_id > 0) : ?>
@@ -168,7 +168,7 @@ echo $t->generate([
                             <a href="https://www4.sii.cl/bolcoreinternetui/#!/home" target="_blank" title="Verificar datos del documento en la web del SII">verificar documento en SII</a>
 <?php endif; ?>
 <?php endif; ?>
-<?php if (substr($DteEmitido->revision_estado,0,3) == 'RFR') : ?>
+<?php if (substr($DteEmitido->revision_estado, 0, 3) == 'RFR') : ?>
                             <br/>
                             <a href="<?=$_base?>/dte/dte_emitidos/enviar_sii/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" onclick="return __.confirm(this, '¿Confirmar el reenvío del DTE al SII?', 'Reenviando DTE al SII...')">reenviar DTE al SII</a>
 <?php endif; ?>
@@ -180,7 +180,7 @@ echo $t->generate([
                     </p>
 <?php else: ?>
                     <p>
-                        <a class="btn btn-primary<?=(!$DteEmitido->hasLocalXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_emitidos/enviar_sii/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button" onclick="return __.loading('Enviando DTE al SII...')">Enviar documento al SII</a>
+                        <a class="btn btn-primary<?=(!$DteEmitido->hasLocalXML() ? ' disabled' : '')?>" href="<?=$_base?>/dte/dte_emitidos/enviar_sii/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button" onclick="return __.loading('Enviando DTE al SII...')">Enviar documento al SII</a>
                         <br/>
                         <span style="font-size:0.8em">
 <?php if (!$DteEmitido->getTipo()->esBoleta() && $DteEmitido->getTotal(false) !== false) : ?>
@@ -294,7 +294,9 @@ if (!$email_html) {
         $mensaje .= implode(' - ', $contacto)."\n";
     }
     $mensaje .= $Emisor->direccion.', '.$Emisor->getComuna()->comuna."\n";
-} else $mensaje = '';
+} else {
+    $mensaje = '';
+}
 echo $f->begin([
     'action' => $_base.'/dte/dte_emitidos/enviar_email/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
     'id' => 'emailForm',
@@ -326,9 +328,9 @@ echo $f->input([
     'name' => 'mensaje',
     'label' => 'Mensaje',
     'value' => $mensaje,
-    'rows' => !$email_html?10:4,
-    'check' => !$email_html?'notempty':'',
-    'help' => $email_html?('<a href="#" onclick="__.popup(\''.$_base.'/dte/dte_emitidos/email_html/'.$DteEmitido->dte.'/'.$DteEmitido->folio.'\', 750, 550); return false">Correo por defecto es HTML</a>, si agrega un mensaje acá será añadido al campo {msg_txt} del mensaje HTML'):'',
+    'rows' => !$email_html ? 10 : 4,
+    'check' => !$email_html ? 'notempty' : '',
+    'help' => $email_html ? ('<a href="#" onclick="__.popup(\''.$_base.'/dte/dte_emitidos/email_html/'.$DteEmitido->dte.'/'.$DteEmitido->folio.'\', 750, 550); return false">Correo por defecto es HTML</a>, si agrega un mensaje acá será añadido al campo {msg_txt} del mensaje HTML') : '',
 ]);
 echo $f->input(['type' => 'checkbox', 'name' => 'cedible', 'label' => '¿Copia cedible?', 'checked' => $Emisor->config_pdf_dte_cedible]);
 echo $f->end('Enviar PDF y XML por email');
@@ -352,16 +354,16 @@ if ($email_enviados) {
 <div role="tabpanel" class="tab-pane" id="intercambio" aria-labelledby="intercambio-tab">
 <?php if (in_array($DteEmitido->dte, array_keys(\sasco\LibreDTE\Sii\RegistroCompraVenta::$dtes))) : ?>
 <?php
-$color = [
-    '' => 'light',
-    'A' => 'primary',
-    'C' => 'success',
-    'P' => 'warning',
-    'R' => 'danger',
-][$DteEmitido->receptor_evento];
-?>
+    $color = [
+        '' => 'light',
+        'A' => 'primary',
+        'C' => 'success',
+        'P' => 'warning',
+        'R' => 'danger',
+    ][$DteEmitido->receptor_evento];
+    ?>
 <a href="#" onclick="__.popup('<?=$_base?>/dte/sii/dte_rcv/<?=$Emisor->rut?>-<?=$Emisor->dv?>/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>', 750, 550); return false" title="Ver datos del registro de compra/venta en el SII" class="btn btn-<?=$color?> btn-lg col-12">
-    <?=($DteEmitido->receptor_evento?\sasco\LibreDTE\Sii\RegistroCompraVenta::$eventos[$DteEmitido->receptor_evento] : 'Sin evento registrado')?><br/>
+    <?=($DteEmitido->receptor_evento ? \sasco\LibreDTE\Sii\RegistroCompraVenta::$eventos[$DteEmitido->receptor_evento] : 'Sin evento registrado')?><br/>
     <small>(ver datos en el Registro de Ventas del SII)</small>
 </a>
 <?php if ($DteEmitido->hasLocalXML()) : ?>
@@ -373,55 +375,55 @@ $color = [
         <div class="card-header">Recibo</div>
         <div class="card-body">
 <?php
-$Recibo = $DteEmitido->getIntercambioRecibo();
-if ($Recibo) {
-    $Sobre = $Recibo->getSobre();
-    $t = new \sowerphp\general\View_Helper_Table();
-    $t->setColsWidth([null, null, null, null, null, null, 60]);
-    $t->setShowEmptyCols(false);
-    echo $t->generate([
-        ['Contacto', 'Teléfono', 'Email', 'Recinto', 'Firma', 'Fecha y hora', 'XML'],
-        [
-            $Sobre->contacto,
-            $Sobre->telefono,
-            $Sobre->email,
-            $Recibo->recinto,
-            $Recibo->firma,
-            \sowerphp\general\Utility_Date::format($Recibo->fecha_hora, 'd/m/Y H:i'),
-            '<a href="'.$_base.'/dte/dte_intercambio_recibos/xml/'.$Sobre->responde.'/'.$Sobre->codigo.'" role="button" class="btn btn-primary"><i class="far fa-file-code fa-fw"></i></a>',
-        ],
-    ]);
-} else {
-    echo '<p>No existe recibo para el documento.</p>';
-}
-?>
+    $Recibo = $DteEmitido->getIntercambioRecibo();
+    if ($Recibo) {
+        $Sobre = $Recibo->getSobre();
+        $t = new \sowerphp\general\View_Helper_Table();
+        $t->setColsWidth([null, null, null, null, null, null, 60]);
+        $t->setShowEmptyCols(false);
+        echo $t->generate([
+            ['Contacto', 'Teléfono', 'Email', 'Recinto', 'Firma', 'Fecha y hora', 'XML'],
+            [
+                $Sobre->contacto,
+                $Sobre->telefono,
+                $Sobre->email,
+                $Recibo->recinto,
+                $Recibo->firma,
+                \sowerphp\general\Utility_Date::format($Recibo->fecha_hora, 'd/m/Y H:i'),
+                '<a href="'.$_base.'/dte/dte_intercambio_recibos/xml/'.$Sobre->responde.'/'.$Sobre->codigo.'" role="button" class="btn btn-primary"><i class="far fa-file-code fa-fw"></i></a>',
+            ],
+        ]);
+    } else {
+        echo '<p>No existe recibo para el documento.</p>';
+    }
+    ?>
         </div>
     </div>
     <div class="card mb-4" id="intercambio_recepcion-card">
         <div class="card-header">Recepción</div>
         <div class="card-body">
 <?php
-$Recepcion = $DteEmitido->getIntercambioRecepcion();
-if ($Recepcion) {
-    $Sobre = $Recepcion->getSobre();
-    $t = new \sowerphp\general\View_Helper_Table();
-    $t->setColsWidth([null, null, null, null, null, null, 60]);
-    $t->setShowEmptyCols(false);
-    echo $t->generate([
-        ['Contacto', 'Teléfono', 'Email', 'Estado general', 'Estado documento', 'Fecha y hora', 'XML'],
-        [
-            $Sobre->contacto,
-            $Sobre->telefono,
-            $Sobre->email,
-            $Sobre->estado.': '.$Sobre->glosa,
-            $Recepcion->estado.': '.$Recepcion->glosa,
-            \sowerphp\general\Utility_Date::format($Sobre->fecha_hora, 'd/m/Y H:i'),
-            '<a href="'.$_base.'/dte/dte_intercambio_recepciones/xml/'.$Sobre->responde.'/'.$Sobre->codigo.'" role="button" class="btn btn-primary"><i class="far fa-file-code fa-fw"></i></a>',
-        ],
-    ]);
-} else {
-    echo '<p>No existe recepción para el documento.</p>';
-}
+    $Recepcion = $DteEmitido->getIntercambioRecepcion();
+    if ($Recepcion) {
+        $Sobre = $Recepcion->getSobre();
+        $t = new \sowerphp\general\View_Helper_Table();
+        $t->setColsWidth([null, null, null, null, null, null, 60]);
+        $t->setShowEmptyCols(false);
+        echo $t->generate([
+            ['Contacto', 'Teléfono', 'Email', 'Estado general', 'Estado documento', 'Fecha y hora', 'XML'],
+            [
+                $Sobre->contacto,
+                $Sobre->telefono,
+                $Sobre->email,
+                $Sobre->estado.': '.$Sobre->glosa,
+                $Recepcion->estado.': '.$Recepcion->glosa,
+                \sowerphp\general\Utility_Date::format($Sobre->fecha_hora, 'd/m/Y H:i'),
+                '<a href="'.$_base.'/dte/dte_intercambio_recepciones/xml/'.$Sobre->responde.'/'.$Sobre->codigo.'" role="button" class="btn btn-primary"><i class="far fa-file-code fa-fw"></i></a>',
+            ],
+        ]);
+    } else {
+        echo '<p>No existe recepción para el documento.</p>';
+    }
 ?>
         </div>
     </div>
@@ -472,7 +474,7 @@ if ($Resultado) {
         <div class="row">
             <div class="col-sm-6 mb-2">
                 <div class="btn-group w-100" role="group">
-                    <a class="btn btn-primary btn-lg col-12<?=!empty($enlace_pagar_dte)?'':' disabled'?>" href="<?=$enlace_pagar_dte?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=!empty($enlace_pagar_dte) ? '' : ' disabled'?>" href="<?=$enlace_pagar_dte?>" role="button">
                         Enlace público para pagar
                     </a>
 <?php if (!empty($enlace_pagar_dte)) : ?>
@@ -499,7 +501,7 @@ if ($Cobro->datos) {
         echo '</tbody></table>',"\n";
     }
 }
-?>
+    ?>
         <?php if (!empty($Emisor->config_api_servicios->pagos_notificar->url)) : ?>
         <hr/>
         <a class="btn btn-primary btn-lg col-12" href="<?=$_base?>/pagos/cobros/notificar_pago/<?=$Cobro->codigo?>" role="button" title="Notificar pago a <?=$Emisor->config_api_servicios->pagos_notificar->url?>">
@@ -521,25 +523,25 @@ if ($Cobro->datos) {
     </div>
     <div class="card-body">
 <?php
-$cobranza = $DteEmitido->getCobranza();
-if ($cobranza) {
-    echo '<p>El documento emitido tiene los siguientes pagos programados asociados.</p>',"\n";
-    foreach ($cobranza as &$c) {
-        $c[] = '<a href="'.$_base.'/dte/cobranzas/ver/'.$DteEmitido->dte.'/'.$DteEmitido->folio.'/'.$c['fecha'].'" title="Ver pago" class="btn btn-primary"><i class="fa fa-search fa-fw"></i></a>';
-        $c['fecha'] = \sowerphp\general\Utility_Date::format($c['fecha']);
-        $c['monto'] = num($c['monto']);
-        if ($c['pagado'] !== null) {
-            $c['pagado'] = num($c['pagado']);
+    $cobranza = $DteEmitido->getCobranza();
+    if ($cobranza) {
+        echo '<p>El documento emitido tiene los siguientes pagos programados asociados.</p>',"\n";
+        foreach ($cobranza as &$c) {
+            $c[] = '<a href="'.$_base.'/dte/cobranzas/ver/'.$DteEmitido->dte.'/'.$DteEmitido->folio.'/'.$c['fecha'].'" title="Ver pago" class="btn btn-primary"><i class="fa fa-search fa-fw"></i></a>';
+            $c['fecha'] = \sowerphp\general\Utility_Date::format($c['fecha']);
+            $c['monto'] = num($c['monto']);
+            if ($c['pagado'] !== null) {
+                $c['pagado'] = num($c['pagado']);
+            }
+            if ($c['modificado']) {
+                $c['modificado'] = \sowerphp\general\Utility_Date::format($c['modificado']);
+            }
         }
-        if ($c['modificado']) {
-            $c['modificado'] = \sowerphp\general\Utility_Date::format($c['modificado']);
-        }
+        array_unshift($cobranza, ['Fecha', 'Monto', 'Glosa', 'Pagado', 'Observación', 'Usuario', 'Modificado', 'Acciones']);
+        new \sowerphp\general\View_Helper_Table($cobranza);
+    } else {
+        echo '<p>No hay pagos programados por ventas a crédito para este documento.</p>',"\n";
     }
-    array_unshift($cobranza, ['Fecha', 'Monto', 'Glosa', 'Pagado', 'Observación', 'Usuario', 'Modificado', 'Acciones']);
-    new \sowerphp\general\View_Helper_Table($cobranza);
-} else {
-    echo '<p>No hay pagos programados por ventas a crédito para este documento.</p>',"\n";
-}
 ?>
     </div>
 </div>
@@ -566,7 +568,7 @@ if ($referenciados) {
             $DteReferencia = new \website\Dte\Model_DteEmitido($Emisor->rut, $referenciado['TpoDocRef'], $referenciado['FolioRef'], $Emisor->enCertificacion());
             if ($DteReferencia->fecha) {
                 $acciones = '<a href="'.$_base.'/dte/dte_emitidos/ver/'.$DteReferencia->dte.'/'.$DteReferencia->folio.'" title="Ver documento" class="btn btn-primary mb-2"><i class="fas fa-search fa-fw"></i></a>';
-                $acciones .= ' <a href="'.$_base.'/dte/dte_emitidos/pdf/'.$DteReferencia->dte.'/'.$DteReferencia->folio.'/'.(int)$Emisor->config_pdf_dte_cedible.'" title="Descargar PDF del documento" class="btn btn-primary mb-2'.((!$DteReferencia->xml && !$DteReferencia->mipyme)?' disabled':'').'"><i class="far fa-file-pdf fa-fw"></i></a>';
+                $acciones .= ' <a href="'.$_base.'/dte/dte_emitidos/pdf/'.$DteReferencia->dte.'/'.$DteReferencia->folio.'/'.(int)$Emisor->config_pdf_dte_cedible.'" title="Descargar PDF del documento" class="btn btn-primary mb-2'.((!$DteReferencia->xml && !$DteReferencia->mipyme) ? ' disabled' : '').'"><i class="far fa-file-pdf fa-fw"></i></a>';
             }
             unset($DteReferencia);
         }
@@ -605,14 +607,14 @@ if ($referencias) {
     </div>
     <div class="row text-center">
         <?php if (!empty($referencia)) : ?>
-            <div class="col-md-<?=(!empty($referencia)?6:12)?> mb-2">
-                <a class="btn btn-<?=$referencia['color']?> btn-lg col-12<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/documentos/emitir/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>/<?=$referencia['dte']?>/<?=$referencia['codigo']?>/<?=urlencode($referencia['razon'])?>" role="button">
+            <div class="col-md-<?=(!empty($referencia) ? 6 : 12)?> mb-2">
+                <a class="btn btn-<?=$referencia['color']?> btn-lg col-12<?=(!$DteEmitido->hasXML() ? ' disabled' : '')?>" href="<?=$_base?>/dte/documentos/emitir/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>/<?=$referencia['dte']?>/<?=$referencia['codigo']?>/<?=urlencode($referencia['razon'])?>" role="button">
                     <?=$referencia['titulo']?>
                 </a>
             </div>
         <?php endif; ?>
-        <div class="col-md-<?=(!empty($referencia)?6:12)?> mb-2">
-            <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/documentos/emitir/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
+        <div class="col-md-<?=(!empty($referencia) ? 6 : 12)?> mb-2">
+            <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML() ? ' disabled' : '')?>" href="<?=$_base?>/dte/documentos/emitir/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>" role="button">
                 Crear referencia
             </a>
         </div>
@@ -638,8 +640,8 @@ new \sowerphp\general\View_Helper_Table([
         \sowerphp\general\Utility_Date::format($DteEmitido->getDatosCesion()['TmstCesion']),
     ],
 ]);
-$Cesionario = (new \website\Dte\Model_Contribuyentes())->get($DteEmitido->getDatosCesion()['Cesionario']['RUT']);
-?>
+    $Cesionario = (new \website\Dte\Model_Contribuyentes())->get($DteEmitido->getDatosCesion()['Cesionario']['RUT']);
+    ?>
         <div class="card mb-4">
             <div class="card-body"><?=$DteEmitido->getDatosCesion()['Cedente']['DeclaracionJurada']?></div>
         </div>
@@ -657,28 +659,28 @@ $Cesionario = (new \website\Dte\Model_Contribuyentes())->get($DteEmitido->getDat
             <div class="card-header lead text-center">Track ID SII: <?=$DteEmitido->cesion_track_id?></div>
             <div class="card-body small text-center">
                 <a href="#" onclick="__.popup('<?=$_base?>/dte/sii/cesion_estado_envio/<?=$DteEmitido->cesion_track_id?>', 750, 550)" title="Ver el estado del envío en la web del SII">ver estado envío en SII</a><br/>
-                <a href="#" onclick="__.popup('<?=$_base?>/dte/sii/cesion_certificado/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>/<?=\sowerphp\general\Utility_Date::format($DteEmitido->getDatosCesion()['TmstCesion'],'Y-m-d')?>', 750, 550)" title="Obtener el certificado de la cesión del DTE">obtener certificado de cesión</a><br/>
+                <a href="#" onclick="__.popup('<?=$_base?>/dte/sii/cesion_certificado/<?=$DteEmitido->dte?>/<?=$DteEmitido->folio?>/<?=\sowerphp\general\Utility_Date::format($DteEmitido->getDatosCesion()['TmstCesion'], 'Y-m-d')?>', 750, 550)" title="Obtener el certificado de la cesión del DTE">obtener certificado de cesión</a><br/>
                 <a href="https://<?=$servidor_sii?>.sii.cl/rtc/RTC/RTCMenu.html" target="_blank">ir al Registro de Cesión en SII</a>
             </div>
         </div>
         <div class="card mb-4">
             <div class="card-body text-center">
 <?php
-$f->setStyle(false);
-echo $f->begin([
-    'action' => $_base.'/dte/dte_emitidos/cesion_email/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
-    'id' => 'cesionEmailForm',
-    'onsubmit' => 'Form.check(\'cesionEmailForm\')',
-]);
-echo $f->input([
-    'name' => 'emails',
-    'placeholder' => 'Correo electrónico',
-    'value' => ($Cesionario->config_email_intercambio_user ? ($Cesionario->config_email_intercambio_user.', ') : '').$DteEmitido->getDatosCesion()['Cesionario']['eMail'],
-    'check' => 'notempty emails',
-]),'<br/>';
-echo $f->end('Enviar XML de Cesión');
-$f->setStyle('horizontal');
-?>
+    $f->setStyle(false);
+    echo $f->begin([
+        'action' => $_base.'/dte/dte_emitidos/cesion_email/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
+        'id' => 'cesionEmailForm',
+        'onsubmit' => 'Form.check(\'cesionEmailForm\')',
+    ]);
+    echo $f->input([
+        'name' => 'emails',
+        'placeholder' => 'Correo electrónico',
+        'value' => ($Cesionario->config_email_intercambio_user ? ($Cesionario->config_email_intercambio_user.', ') : '').$DteEmitido->getDatosCesion()['Cesionario']['eMail'],
+        'check' => 'notempty emails',
+    ]),'<br/>';
+    echo $f->end('Enviar XML de Cesión');
+    $f->setStyle('horizontal');
+    ?>
             </div>
         </div>
         <div class="card mb-4">
@@ -700,55 +702,55 @@ $f->setStyle('horizontal');
 <div class="row">
     <div class="col-md-12">
 <?php
-echo $f->begin([
-    'action' => $_base.'/dte/dte_emitidos/ceder/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
-    'id' => 'cesionForm',
-    'onsubmit' => 'Form.check(\'cesionForm\') && __.confirm(this, \'¿Está seguro de querer ceder el DTE?\', \'Generando cesión del DTE...\')',
-]);
-?>
+    echo $f->begin([
+        'action' => $_base.'/dte/dte_emitidos/ceder/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
+        'id' => 'cesionForm',
+        'onsubmit' => 'Form.check(\'cesionForm\') && __.confirm(this, \'¿Está seguro de querer ceder el DTE?\', \'Generando cesión del DTE...\')',
+    ]);
+    ?>
 <div class="card mb-4" id="cesion_datos-cedente-card">
     <div class="card-header">Datos del cedente (<?=$Emisor->getNombre()?>)</div>
     <div class="card-body">
 <?php
-echo $f->input([
-    'name' => 'cedente_email',
-    'label' => 'Correo contacto',
-    'check' => 'notempty email',
-    'value' => $_Auth->User->email,
-    'help' => 'Correo electrónico del usuario responsable en '.$Emisor->getNombre().' de la cesión que se está realizando',
-]);
-?>
+    echo $f->input([
+        'name' => 'cedente_email',
+        'label' => 'Correo contacto',
+        'check' => 'notempty email',
+        'value' => $_Auth->User->email,
+        'help' => 'Correo electrónico del usuario responsable en '.$Emisor->getNombre().' de la cesión que se está realizando',
+    ]);
+    ?>
     </div>
 </div>
 <div class="card mb-4" id="cesion_datos-cesionario-card">
     <div class="card-header">Datos del cesionario (ej: la empresa de factoring a quien se cede el DTE)</div>
     <div class="card-body">
 <?php
-echo $f->input([
-    'name' => 'cesionario_rut',
-    'label' => 'RUT',
-    'check' => 'notempty rut',
-    'help' => 'RUT de la empresa a la que se está cediendo el DTE',
-]);
-echo $f->input([
-    'name' => 'cesionario_razon_social',
-    'label' => 'Razón social',
-    'check' => 'notempty',
-    'help' => 'Razón social de la empresa a la que se está cediendo el DTE',
-]);
-echo $f->input([
-    'name' => 'cesionario_direccion',
-    'label' => 'Dirección',
-    'check' => 'notempty',
-    'help' => 'Dirección completa de la empresa a la que se está cediendo el DTE',
-]);
-echo $f->input([
-    'name' => 'cesionario_email',
-    'label' => 'Correo contacto',
-    'check' => 'notempty email',
-    'help' => 'Correo electrónico del contacto en la empresa a la que se está cediendo el DTE',
-]);
-?>
+    echo $f->input([
+        'name' => 'cesionario_rut',
+        'label' => 'RUT',
+        'check' => 'notempty rut',
+        'help' => 'RUT de la empresa a la que se está cediendo el DTE',
+    ]);
+    echo $f->input([
+        'name' => 'cesionario_razon_social',
+        'label' => 'Razón social',
+        'check' => 'notempty',
+        'help' => 'Razón social de la empresa a la que se está cediendo el DTE',
+    ]);
+    echo $f->input([
+        'name' => 'cesionario_direccion',
+        'label' => 'Dirección',
+        'check' => 'notempty',
+        'help' => 'Dirección completa de la empresa a la que se está cediendo el DTE',
+    ]);
+    echo $f->input([
+        'name' => 'cesionario_email',
+        'label' => 'Correo contacto',
+        'check' => 'notempty email',
+        'help' => 'Correo electrónico del contacto en la empresa a la que se está cediendo el DTE',
+    ]);
+    ?>
     </div>
 </div>
 <?php echo $f->end('Generar archivo cesión y enviar al SII'); ?>
@@ -771,9 +773,9 @@ echo $f->input([
 <!-- INICIO AVANZADO -->
 <div role="tabpanel" class="tab-pane" id="avanzado" aria-labelledby="avanzado-tab">
 <?php
-// si es nota de crédito permitir marcar iva como fuera de plazo
-if ($DteEmitido->dte == 61) :
-?>
+    // si es nota de crédito permitir marcar iva como fuera de plazo
+    if ($DteEmitido->dte == 61) :
+        ?>
 <div class="card mt-4" id="avanzado_iva-fuera-plazo-card">
     <div class="card-header">
         <i class="fa fa-ban"></i>
@@ -781,28 +783,28 @@ if ($DteEmitido->dte == 61) :
     </div>
     <div class="card-body">
 <?php
-echo $f->begin([
-    'action' => $_base.'/dte/dte_emitidos/avanzado_iva_fuera_plazo/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
-    'id' => 'avanzadoIVAFueraPlazoForm',
-    'onsubmit' => 'Form.check(\'avanzadoIVAFueraPlazoForm\')',
-]);
-echo $f->input([
-    'type' => 'select',
-    'name' => 'iva_fuera_plazo',
-    'label' => '¿Fuera de plazo?',
-    'options' => ['No', 'Si'],
-    'value' => $DteEmitido->iva_fuera_plazo,
-    'help' => 'Marcar el IVA como fuera de plazo (no recuperable, no descuenta IVA débito)',
-]);
-echo $f->end('Guardar');
-?>
+        echo $f->begin([
+            'action' => $_base.'/dte/dte_emitidos/avanzado_iva_fuera_plazo/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
+            'id' => 'avanzadoIVAFueraPlazoForm',
+            'onsubmit' => 'Form.check(\'avanzadoIVAFueraPlazoForm\')',
+        ]);
+        echo $f->input([
+            'type' => 'select',
+            'name' => 'iva_fuera_plazo',
+            'label' => '¿Fuera de plazo?',
+            'options' => ['No', 'Si'],
+            'value' => $DteEmitido->iva_fuera_plazo,
+            'help' => 'Marcar el IVA como fuera de plazo (no recuperable, no descuenta IVA débito)',
+        ]);
+        echo $f->end('Guardar');
+        ?>
     </div>
 </div>
 <?php endif; ?>
 <?php
 // si es guía de despacho permitir anular
 if ($DteEmitido->dte == 52) :
-?>
+    ?>
 <div class="card mt-4" id="avanzado_anular-dte-card">
     <div class="card-header">
         <i class="fa fa-ban"></i>
@@ -810,28 +812,28 @@ if ($DteEmitido->dte == 52) :
     </div>
     <div class="card-body">
 <?php
-echo $f->begin([
-    'action' => $_base.'/dte/dte_emitidos/avanzado_anular/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
-    'id' => 'avanzadoAnuladoForm',
-    'onsubmit' => 'Form.check(\'avanzadoAnuladoForm\')',
-]);
-echo $f->input([
-    'type' => 'select',
-    'name' => 'anulado',
-    'label' => '¿Anulado?',
-    'options' => ['No', 'Si'],
-    'value' => $DteEmitido->anulado,
-    'help' => 'Marcar el DTE como anulado',
-]);
-echo $f->end('Guardar');
-?>
+    echo $f->begin([
+        'action' => $_base.'/dte/dte_emitidos/avanzado_anular/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
+        'id' => 'avanzadoAnuladoForm',
+        'onsubmit' => 'Form.check(\'avanzadoAnuladoForm\')',
+    ]);
+    echo $f->input([
+        'type' => 'select',
+        'name' => 'anulado',
+        'label' => '¿Anulado?',
+        'options' => ['No', 'Si'],
+        'value' => $DteEmitido->anulado,
+        'help' => 'Marcar el DTE como anulado',
+    ]);
+    echo $f->end('Guardar');
+    ?>
     </div>
 </div>
 <?php endif; ?>
 <?php
 // si es exportación permitir cambiar tipo de cambio (solo si es usuario administrador)
 if ($Emisor->usuarioAutorizado($_Auth->User, 'admin') && $DteEmitido->getTipo()->esExportacion() && $DteEmitido->hasLocalXML()) :
-?>
+    ?>
 <div class="card mt-4" id="avanzado_tipo-cambio-card">
     <div class="card-header">
         <i class="fas fa-dollar-sign"></i>
@@ -839,11 +841,11 @@ if ($Emisor->usuarioAutorizado($_Auth->User, 'admin') && $DteEmitido->getTipo()-
     </div>
     <div class="card-body">
 <?php
-    echo $f->begin([
-        'action' => $_base.'/dte/dte_emitidos/avanzado_tipo_cambio/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
-        'id' => 'avanzadoTipoCambioForm',
-        'onsubmit' => 'Form.check(\'avanzadoTipoCambioForm\') && __.confirm(this, \'¿Está seguro de querer modificar el tipo de cambio del documento?\')',
-    ]);
+        echo $f->begin([
+            'action' => $_base.'/dte/dte_emitidos/avanzado_tipo_cambio/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
+            'id' => 'avanzadoTipoCambioForm',
+            'onsubmit' => 'Form.check(\'avanzadoTipoCambioForm\') && __.confirm(this, \'¿Está seguro de querer modificar el tipo de cambio del documento?\')',
+        ]);
     echo $f->input([
         'name' => 'tipo_cambio',
         'label' => 'Tipo de cambio',
@@ -851,7 +853,7 @@ if ($Emisor->usuarioAutorizado($_Auth->User, 'admin') && $DteEmitido->getTipo()-
         'help' => 'Monto en pesos (CLP) equivalente a 1 '.$DteEmitido->getDte()->getMoneda().' del día '.\sowerphp\general\Utility_Date::format($DteEmitido->fecha),
     ]);
     echo $f->end('Modificar el tipo de cambio');
-?>
+    ?>
     </div>
 </div>
 <?php endif; ?>
@@ -863,21 +865,21 @@ if ($Emisor->usuarioAutorizado($_Auth->User, 'admin') && $DteEmitido->getTipo()-
     </div>
     <div class="card-body">
 <?php
-// permitir cambiar el track id
-echo $f->begin([
-    'action' => $_base.'/dte/dte_emitidos/avanzado_track_id/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
-    'id' => 'avanzadoTrackIdForm',
-    'onsubmit' => 'Form.check(\'avanzadoTrackIdForm\') && __.confirm(this, \'¿Está seguro de querer cambiar el Track ID?\n\n¡Perderá el valor actual!\', \'Actualizando el Track ID del DTE...\')',
-]);
-echo $f->input([
-    'name' => 'track_id',
-    'label' => 'Track ID',
-    'value' => $DteEmitido->track_id,
-    'check' => 'notempty integer',
-    'help' => 'Identificador de envío del XML del DTE al SII',
-]);
-echo $f->end('Modificar Track ID');
-?>
+    // permitir cambiar el track id
+    echo $f->begin([
+        'action' => $_base.'/dte/dte_emitidos/avanzado_track_id/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
+        'id' => 'avanzadoTrackIdForm',
+        'onsubmit' => 'Form.check(\'avanzadoTrackIdForm\') && __.confirm(this, \'¿Está seguro de querer cambiar el Track ID?\n\n¡Perderá el valor actual!\', \'Actualizando el Track ID del DTE...\')',
+    ]);
+    echo $f->input([
+        'name' => 'track_id',
+        'label' => 'Track ID',
+        'value' => $DteEmitido->track_id,
+        'check' => 'notempty integer',
+        'help' => 'Identificador de envío del XML del DTE al SII',
+    ]);
+    echo $f->end('Modificar Track ID');
+    ?>
     </div>
 </div>
 <?php endif; ?>
@@ -888,11 +890,11 @@ echo $f->end('Modificar Track ID');
     </div>
     <div class="card-body">
 <?php
-echo $f->begin([
-    'action' => $_base.'/dte/dte_emitidos/avanzado_sucursal/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
-    'id' => 'avanzadoSucursalForm',
-    'onsubmit' => 'Form.check(\'avanzadoSucursalForm\')',
-]);
+    echo $f->begin([
+        'action' => $_base.'/dte/dte_emitidos/avanzado_sucursal/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
+        'id' => 'avanzadoSucursalForm',
+        'onsubmit' => 'Form.check(\'avanzadoSucursalForm\')',
+    ]);
 echo $f->input([
     'type' => 'select',
     'name' => 'sucursal',

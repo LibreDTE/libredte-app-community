@@ -11,7 +11,7 @@
     <li><strong>Emisor</strong>: <?=$Emisor->razon_social?></li>
     <li><strong>Documento</strong>: <?=$DteTipo->tipo?></li>
     <li><strong>Folio</strong>: <?=$folio?></li>
-    <li><strong>Fecha recepción SII</strong>: <?=$fecha_recepcion?\sowerphp\general\Utility_Date::format($fecha_recepcion, 'd/m/Y H:i'):'No fue posible obtener la fecha de recepción en el SII'?></li>
+    <li><strong>Fecha recepción SII</strong>: <?=$fecha_recepcion ? \sowerphp\general\Utility_Date::format($fecha_recepcion, 'd/m/Y H:i') : 'No fue posible obtener la fecha de recepción en el SII'?></li>
     <li>
         <strong>Eventos</strong>:
 <?php if (is_array($eventos)) : ?>
@@ -29,13 +29,13 @@
 <hr/>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin();
-echo $f->input([
-    'type' => 'select',
-    'name' => 'accion',
-    'label' => 'Acción',
-    'options' => \sasco\LibreDTE\Sii\RegistroCompraVenta::$acciones,
-    'check' => 'notempty',
-    'help' => 'Si rechaza un DTE no podrá aceptarlo en el futuro. Si acepta un DTE no podrá rechazarlo en el futuro.',
-]);
-echo $f->end('Ingresar acción al registro');
+        echo $f->begin();
+        echo $f->input([
+            'type' => 'select',
+            'name' => 'accion',
+            'label' => 'Acción',
+            'options' => \sasco\LibreDTE\Sii\RegistroCompraVenta::$acciones,
+            'check' => 'notempty',
+            'help' => 'Si rechaza un DTE no podrá aceptarlo en el futuro. Si acepta un DTE no podrá rechazarlo en el futuro.',
+        ]);
+        echo $f->end('Ingresar acción al registro');

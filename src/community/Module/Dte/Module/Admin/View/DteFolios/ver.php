@@ -22,16 +22,16 @@
 
 <?php
 $n_ultimosMeses = 6;
-$sumaUltimosMeses = 0;
-$foliosMensuales = $DteFolio->getUsoMensual(24, 'DESC');
-for ($i=1; $i<count($foliosMensuales); $i++) {
-    $sumaUltimosMeses += (int)$foliosMensuales[$i]['folios'];
-    if ($i == $n_ultimosMeses) {
-        break;
+    $sumaUltimosMeses = 0;
+    $foliosMensuales = $DteFolio->getUsoMensual(24, 'DESC');
+    for ($i = 1; $i < count($foliosMensuales); $i++) {
+        $sumaUltimosMeses += (int)$foliosMensuales[$i]['folios'];
+        if ($i == $n_ultimosMeses) {
+            break;
+        }
     }
-}
-$promedioUltimosMeses = round($sumaUltimosMeses / $i);
-?>
+    $promedioUltimosMeses = round($sumaUltimosMeses / $i);
+    ?>
 
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-4 text-center mt-3">
     <div class="col mb-4">
@@ -53,7 +53,7 @@ $promedioUltimosMeses = round($sumaUltimosMeses / $i);
     <div class="col mb-4">
         <div class="card">
             <div class="card-body">
-                <p class="small"><?=$Emisor->config_sii_timbraje_automatico?'timbrar (alertar)':'alertar'?> si se llega a esta cantidad</p>
+                <p class="small"><?=$Emisor->config_sii_timbraje_automatico ? 'timbrar (alertar)' : 'alertar'?> si se llega a esta cantidad</p>
                 <p class="text-info lead"><?=num($DteFolio->alerta)?></p>
             </div>
         </div>
@@ -122,22 +122,22 @@ foreach ($cafs as &$caf) {
     unset($caf['vigente']);
     $caf[] = $actions;
 }
-array_unshift($cafs, ['Folio desde', 'Folio hasta', 'Cantidad de folios', 'Fecha solicitud', 'Vigencia', 'Meses de la solicitud', 'En uso', 'Acciones']);
-$t = new \sowerphp\general\View_Helper_Table();
-$t->setColsWidth([null, null, null, null, null, null, null, 90]);
-echo $t->generate($cafs);
-?>
+    array_unshift($cafs, ['Folio desde', 'Folio hasta', 'Cantidad de folios', 'Fecha solicitud', 'Vigencia', 'Meses de la solicitud', 'En uso', 'Acciones']);
+    $t = new \sowerphp\general\View_Helper_Table();
+    $t->setColsWidth([null, null, null, null, null, null, null, 90]);
+    echo $t->generate($cafs);
+    ?>
 </div>
 <!-- FIN ARCHIVOS CAF -->
 
 <!-- INICIO ESTADISTICA -->
 <div role="tabpanel" class="tab-pane" id="uso_mensual" aria-labelledby="uso_mensual-tab">
     <?php
-    foreach ($foliosMensuales as &$f) {
-        $p = (round($f['folios'] / $DteFolio->alerta)*100);
-        $f[] = $p == 100 ? '<i class="fas fa-equals fa-fw text-success"></i>' : ($p > 100 ? '<i class="fas fa-up-long fa-fw text-warning"></i>' : '<i class="fas fa-down-long fa-fw text-danger"></i>' );
-        $f[] = num($p).'%';
-    }
+        foreach ($foliosMensuales as &$f) {
+            $p = (round($f['folios'] / $DteFolio->alerta) * 100);
+            $f[] = $p == 100 ? '<i class="fas fa-equals fa-fw text-success"></i>' : ($p > 100 ? '<i class="fas fa-up-long fa-fw text-warning"></i>' : '<i class="fas fa-down-long fa-fw text-danger"></i>');
+            $f[] = num($p).'%';
+        }
     array_unshift($foliosMensuales, ['Período', 'Cantidad de folios usados', 'Usado respecto a la alerta', 'Porcentaje usado respecto a la alerta']);
     new \sowerphp\general\View_Helper_Table($foliosMensuales);
     ?>

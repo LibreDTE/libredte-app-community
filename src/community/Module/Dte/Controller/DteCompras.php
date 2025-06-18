@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -112,7 +111,7 @@ class Controller_DteCompras extends Controller_Base_Libros
                         $noGuardado[] = 'T'.$DteRecibido->dte.'F'.$DteRecibido->folio.': '.implode(' / ', \sasco\LibreDTE\Log::readAll());
                     } elseif (in_array($estado['ESTADO'], ['DNK', 'FAU', 'FNA', 'EMP'])) {
                         $guardar = false;
-                        $noGuardado[] = 'T'.$DteRecibido->dte.'F'.$DteRecibido->folio.' Estado DTE: '.(is_array($estado)?implode('. ', $estado):$estado);
+                        $noGuardado[] = 'T'.$DteRecibido->dte.'F'.$DteRecibido->folio.' Estado DTE: '.(is_array($estado) ? implode('. ', $estado) : $estado);
                     }
                 }
                 // guardar documento
@@ -145,7 +144,7 @@ class Controller_DteCompras extends Controller_Base_Libros
         $Emisor = $this->getContribuyente();
         // si el libro fue enviado y no es rectifica error
         $DteCompra = new Model_DteCompra($Emisor->rut, $periodo, $Emisor->enCertificacion());
-        if ($DteCompra->track_id && empty($_POST['CodAutRec']) && $DteCompra->getEstado() != 'LRH' && $DteCompra->track_id!=-1) {
+        if ($DteCompra->track_id && empty($_POST['CodAutRec']) && $DteCompra->getEstado() != 'LRH' && $DteCompra->track_id != -1) {
             \sowerphp\core\Model_Datasource_Session::message('Libro del período '.$periodo.' ya fue enviado, ahora solo puede hacer rectificaciones.', 'error');
             $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
         }
@@ -231,7 +230,8 @@ class Controller_DteCompras extends Controller_Base_Libros
         $compras = $Emisor->getCompras($periodo, is_numeric($electronico) ? $electronico : null);
         if (!$compras) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No hay documentos de compra del período '.$periodo.'.', 'warning'
+                'No hay documentos de compra del período '.$periodo.'.',
+                'warning'
             );
             $this->redirect('/dte/dte_compras/ver/'.$periodo);
         }
@@ -256,7 +256,8 @@ class Controller_DteCompras extends Controller_Base_Libros
         $datos = $DteCompra->getTiposTransacciones();
         if (!$datos) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No hay compras caracterizadas para el período '.$periodo.'.', 'warning'
+                'No hay compras caracterizadas para el período '.$periodo.'.',
+                'warning'
             );
             $this->redirect(str_replace('descargar_tipo_transacciones', 'ver', $this->request->getRequestUriDecoded()));
         }

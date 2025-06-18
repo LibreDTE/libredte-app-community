@@ -4,7 +4,7 @@
         <li><strong>Emisor</strong>: <?=$Emisor->razon_social?></li>
         <li><strong>Documento</strong>: <?=$DteTipo->tipo?></li>
         <li><strong>Folio</strong>: <?=$folio?></li>
-        <li><strong>Fecha recepción SII</strong>: <?=$fecha_recepcion?\sowerphp\general\Utility_Date::format($fecha_recepcion, 'd/m/Y H:i'):'No fue posible obtener la fecha de recepción en el SII'?></li>
+        <li><strong>Fecha recepción SII</strong>: <?=$fecha_recepcion ? \sowerphp\general\Utility_Date::format($fecha_recepcion, 'd/m/Y H:i') : 'No fue posible obtener la fecha de recepción en el SII'?></li>
         <li>
             <strong>Eventos</strong>:
 <?php if (is_array($eventos)) : ?>

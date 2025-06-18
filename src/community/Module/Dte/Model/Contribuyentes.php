@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -114,7 +113,7 @@ class Model_Contribuyentes extends \Model_Plural_App
         ', [':usuario' => $usuario]);
         if ($omitir) {
             $n_empresas = count($empresas);
-            for ($i=0; $i<$n_empresas; $i++) {
+            for ($i = 0; $i < $n_empresas; $i++) {
                 if ($empresas[$i]['rut'] == $omitir) {
                     unset($empresas[$i]);
                 }

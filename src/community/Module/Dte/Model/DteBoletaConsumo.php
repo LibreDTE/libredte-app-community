@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -366,14 +365,13 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
         }
         $this->revision_estado = $glosa ? ($estado.' - '.$glosa) : $estado;
         if (!empty($estado_up->xpath('/SII:RESPUESTA/SII:RESP_HDR/NUM_ATENCION')[0])) {
-            $this->revision_detalle = trim(explode('( ', (string)$estado_up->xpath('/SII:RESPUESTA/SII:RESP_HDR/NUM_ATENCION')[0])[1],')');
+            $this->revision_detalle = trim(explode('( ', (string)$estado_up->xpath('/SII:RESPUESTA/SII:RESP_HDR/NUM_ATENCION')[0])[1], ')');
         } else {
             $this->revision_detalle = null;
         }
         if ($estado == 'EPR') {
             $this->revision_estado = 'CORRECTO';
-        }
-        elseif (in_array($estado, \website\Dte\Model_DteEmitidos::$revision_estados['rechazados'])) {
+        } elseif (in_array($estado, \website\Dte\Model_DteEmitidos::$revision_estados['rechazados'])) {
             $this->revision_estado = 'ERRONEO';
         }
         // guardar estado del dte

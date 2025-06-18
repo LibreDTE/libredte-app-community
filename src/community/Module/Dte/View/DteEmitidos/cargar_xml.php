@@ -12,22 +12,22 @@
     <div class="col-md-8">
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit' => 'Form.check() && __.confirm(this, \'¿Está seguro que desea cargar el XML seleccionado?\', \'Cargando archivo XML a LibreDTE...\')']);
-echo $f->input([
-    'type' => 'file',
-    'name' => 'xml',
-    'label' => 'Archivo XML',
-    'help' => 'Archivo XML del DTE emitido por la empresa que se desea cargar al sistema',
-    'check' => 'notempty',
-]);
-echo $f->input([
-    'name' => 'track_id',
-    'label' => 'Track ID',
-    'help' => 'Identificador del envío del DTE al SII',
-    'check' => 'integer',
-]);
-echo $f->end('Cargar XML');
-?>
+        echo $f->begin(['onsubmit' => 'Form.check() && __.confirm(this, \'¿Está seguro que desea cargar el XML seleccionado?\', \'Cargando archivo XML a LibreDTE...\')']);
+        echo $f->input([
+            'type' => 'file',
+            'name' => 'xml',
+            'label' => 'Archivo XML',
+            'help' => 'Archivo XML del DTE emitido por la empresa que se desea cargar al sistema',
+            'check' => 'notempty',
+        ]);
+        echo $f->input([
+            'name' => 'track_id',
+            'label' => 'Track ID',
+            'help' => 'Identificador del envío del DTE al SII',
+            'check' => 'integer',
+        ]);
+        echo $f->end('Cargar XML');
+        ?>
     </div>
     <div class="col-md-4">
         <div class="card">

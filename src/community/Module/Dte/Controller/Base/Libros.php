@@ -21,10 +21,9 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
-use \website\Dte\Admin\Mantenedores\Model_DteTipo;
+use website\Dte\Admin\Mantenedores\Model_DteTipo;
 
 /**
  * Controlador base para libros.
@@ -129,7 +128,8 @@ abstract class Controller_Base_Libros extends \Controller_App
         // entregar libro de guías
         else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Libro en PDF no está implementado.', 'error'
+                'Libro en PDF no está implementado.',
+                'error'
             );
             $this->redirect(str_replace('pdf', 'ver', $this->request->getRequestUriDecoded()));
         }
@@ -193,7 +193,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         if (!empty($_POST['periodo'])) {
             // verificar período
             $periodo = (int)$_POST['periodo'];
-            if (strlen($_POST['periodo'])!=6 || !$periodo) {
+            if (strlen($_POST['periodo']) != 6 || !$periodo) {
                 \sowerphp\core\Model_Datasource_Session::message('Período no es correcto, usar formato AAAAMM.', 'error');
                 return;
             }

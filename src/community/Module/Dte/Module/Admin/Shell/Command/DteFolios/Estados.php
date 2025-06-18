@@ -76,7 +76,9 @@ class Shell_Command_DteFolios_Estados extends \Shell_App
             ];
             // crear planilla con los datos
             (new View_Helper_DteFolios_Estados())->generar($datos)->save($file['tmp_name']);
-        } else $file = null;
+        } else {
+            $file = null;
+        }
         // enviar correo
         $titulo = 'Resultado estado en SII de folios #'.$id;
         $msg = $Usuario->nombre.','."\n\n";

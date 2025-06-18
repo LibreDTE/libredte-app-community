@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -40,7 +39,8 @@ class Controller_DteIntercambioRecepciones extends \Controller_App
         $DteIntercambioRecepcion = new Model_DteIntercambioRecepcion($responde, $Emisor->rut, $codigo);
         if (!$DteIntercambioRecepcion->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe la recepción solicitada.', 'error'
+                'No existe la recepción solicitada.',
+                'error'
             );
             $this->redirect('/dte/dte_intercambios');
         }

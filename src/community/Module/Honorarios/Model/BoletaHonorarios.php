@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Honorarios;
 
 /**
@@ -43,7 +42,7 @@ class Model_BoletaHonorarios extends \Model_Plural_App
         // periodos a procesar
         $periodo_actual = (int)date('Ym');
         $periodos = [$periodo_actual];
-        for ($i = 0; $i < $meses-1; $i++) {
+        for ($i = 0; $i < $meses - 1; $i++) {
             $periodos[] = \sowerphp\general\Utility_Date::previousPeriod($periodos[$i]);
         }
         sort($periodos);

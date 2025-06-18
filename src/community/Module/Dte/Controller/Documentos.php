@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -158,7 +157,8 @@ class Controller_Documentos extends \Controller_App
             }
             try {
                 $datos = \sasco\LibreDTE\Sii\Dte\Formatos::toArray(
-                    $formato, base64_decode($this->Api->data['datos'])
+                    $formato,
+                    base64_decode($this->Api->data['datos'])
                 );
                 if (!empty($this->Api->data['extra'])) {
                     if (is_string($this->Api->data['extra'])) {
@@ -253,7 +253,8 @@ class Controller_Documentos extends \Controller_App
         }
         // verificar tipo de documento (evita facturas afectas con puros exentos o exentas con item afecto)
         $dte['Encabezado']['IdDoc']['TipoDTE'] = $this->getTipoDTE(
-            $dte['Encabezado']['IdDoc']['TipoDTE'], $dte['Detalle']
+            $dte['Encabezado']['IdDoc']['TipoDTE'],
+            $dte['Detalle']
         );
         if (!$Emisor->documentoAutorizado($dte['Encabezado']['IdDoc']['TipoDTE'], $User)) {
             $DteTipo = new \website\Dte\Admin\Mantenedores\Model_DteTipo($dte['Encabezado']['IdDoc']['TipoDTE']);
@@ -514,7 +515,8 @@ class Controller_Documentos extends \Controller_App
                 );
                 if (!$DocumentoOriginal->exists()) {
                     \sowerphp\core\Model_Datasource_Session::message(
-                        'Documento T'.$referencia_dte.'F'.$referencia_folio.' no existe, no se puede referenciar.', 'error'
+                        'Documento T'.$referencia_dte.'F'.$referencia_folio.' no existe, no se puede referenciar.',
+                        'error'
                     );
                     $this->redirect('/dte/dte_emitidos/listar');
                 }
@@ -549,7 +551,8 @@ class Controller_Documentos extends \Controller_App
                 $DocumentoOriginal = new Model_DteTmp($Emisor->rut, $receptor, $referencia_dte, $codigo);
                 if (!$DocumentoOriginal->exists()) {
                     \sowerphp\core\Model_Datasource_Session::message(
-                        'Documento '.$DocumentoOriginal->getFolio().' no existe, no se puede referenciar.', 'error'
+                        'Documento '.$DocumentoOriginal->getFolio().' no existe, no se puede referenciar.',
+                        'error'
                     );
                     $this->redirect('/dte/dte_tmps/listar');
                 }
@@ -643,14 +646,16 @@ class Controller_Documentos extends \Controller_App
         // si no se viene por POST redirigir
         if (!isset($_POST['submit'])) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No puede acceder de forma directa a la previsualización.', 'error'
+                'No puede acceder de forma directa a la previsualización.',
+                'error'
             );
             $this->redirect('/dte/documentos/emitir');
         }
         // si no está autorizado a emitir el tipo de documento redirigir
         if (!$Emisor->documentoAutorizado($_POST['TpoDoc'])) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No está autorizado a emitir el tipo de documento '.$_POST['TpoDoc'].'.', 'error'
+                'No está autorizado a emitir el tipo de documento '.$_POST['TpoDoc'].'.',
+                'error'
             );
             $this->redirect('/dte/documentos/emitir');
         }
@@ -755,7 +760,7 @@ class Controller_Documentos extends \Controller_App
             else {
                 $dte['Encabezado']['IdDoc']['MntPagos'] = [];
                 $n_pagos = count($_POST['FchPago']);
-                for ($i=0; $i<$n_pagos; $i++) {
+                for ($i = 0; $i < $n_pagos; $i++) {
                     $dte['Encabezado']['IdDoc']['MntPagos'][] = [
                         'FchPago' => $_POST['FchPago'][$i],
                         'MntPago' => $_POST['MntPago'][$i],
@@ -795,8 +800,7 @@ class Controller_Documentos extends \Controller_App
             if (in_array($dte['Encabezado']['IdDoc']['TipoDTE'], [39, 41])) {
                 if ($_POST['IndServicio'] == 1) {
                     $_POST['IndServicio'] = 2;
-                }
-                elseif ($_POST['IndServicio'] == 2) {
+                } elseif ($_POST['IndServicio'] == 2) {
                     $_POST['IndServicio'] = 1;
                 }
             }
@@ -805,13 +809,11 @@ class Controller_Documentos extends \Controller_App
                 if (!in_array($_POST['IndServicio'], [1, 2, 3, 4])) {
                     $_POST['IndServicio'] = false;
                 }
-            }
-            elseif (in_array($dte['Encabezado']['IdDoc']['TipoDTE'], [110, 111, 112])) {
+            } elseif (in_array($dte['Encabezado']['IdDoc']['TipoDTE'], [110, 111, 112])) {
                 if (!in_array($_POST['IndServicio'], [1, 3, 4, 5])) {
                     $_POST['IndServicio'] = false;
                 }
-            }
-            else {
+            } else {
                 if (!in_array($_POST['IndServicio'], [1, 2, 3])) {
                     $_POST['IndServicio'] = false;
                 }
@@ -842,7 +844,7 @@ class Controller_Documentos extends \Controller_App
         $dte['Detalle'] = [];
         $n_itemAfecto = 0;
         $n_itemExento = 0;
-        for ($i=0; $i<$n_detalles; $i++) {
+        for ($i = 0; $i < $n_detalles; $i++) {
             $detalle = [];
             // código del item
             if (!empty($_POST['VlrCodigo'][$i])) {
@@ -870,7 +872,7 @@ class Controller_Documentos extends \Controller_App
             // si es boleta y el item no es exento se le agrega el IVA al precio y el impuesto adicional si existe
             if ($dte['Encabezado']['IdDoc']['TipoDTE'] == 39 && (!isset($detalle['IndExe']) || !$detalle['IndExe'])) {
                 // IVA
-                $iva = round($detalle['PrcItem'] * (\sasco\LibreDTE\Sii::getIVA()/100), (int)$Emisor->config_items_decimales);
+                $iva = round($detalle['PrcItem'] * (\sasco\LibreDTE\Sii::getIVA() / 100), (int)$Emisor->config_items_decimales);
                 // impuesto adicional (no se permiten impuestos adicionales en boletas)
                 if (!empty($detalle['CodImpAdic'])) {
                     $message = __(
@@ -896,7 +898,7 @@ class Controller_Documentos extends \Controller_App
                     $detalle['DescuentoMonto'] = $_POST['ValorDR'][$i];
                     // si es boleta y el item no es exento se le agrega el IVA al descuento
                     if ($dte['Encabezado']['IdDoc']['TipoDTE'] == 39 && (!isset($detalle['IndExe']) || !$detalle['IndExe'])) {
-                        $iva_descuento = round($detalle['DescuentoMonto'] * (\sasco\LibreDTE\Sii::getIVA()/100));
+                        $iva_descuento = round($detalle['DescuentoMonto'] * (\sasco\LibreDTE\Sii::getIVA() / 100));
                         $detalle['DescuentoMonto'] += $iva_descuento;
                     }
                 }
@@ -946,7 +948,7 @@ class Controller_Documentos extends \Controller_App
                 $ValorDR_global = round($ValorDR_global, 2);
             }
             if ($dte['Encabezado']['IdDoc']['TipoDTE'] == 39 && $TpoValor_global == '$') {
-                $ValorDR_global = round($ValorDR_global * (1+\sasco\LibreDTE\Sii::getIVA()/100));
+                $ValorDR_global = round($ValorDR_global * (1 + \sasco\LibreDTE\Sii::getIVA() / 100));
             }
             $dte['DscRcgGlobal'] = [];
             if ($n_itemAfecto) {
@@ -969,7 +971,7 @@ class Controller_Documentos extends \Controller_App
         if (isset($_POST['TpoDocRef'][0])) {
             $n_referencias = count($_POST['TpoDocRef']);
             $dte['Referencia'] = [];
-            for ($i=0; $i<$n_referencias; $i++) {
+            for ($i = 0; $i < $n_referencias; $i++) {
                 $dte['Referencia'][] = [
                     'TpoDocRef' => $_POST['TpoDocRef'][$i],
                     'IndGlobal' => is_numeric($_POST['FolioRef'][$i]) && $_POST['FolioRef'][$i] == 0 ? 1 : false,
@@ -1122,7 +1124,8 @@ class Controller_Documentos extends \Controller_App
         ]);
         if ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message(
-                $response['body'], 'error'
+                $response['body'],
+                'error'
             );
             $this->redirect('/dte/dte_tmps/ver/'.$receptor.'/'.$dte.'/'.$codigo);
         }
@@ -1130,16 +1133,19 @@ class Controller_Documentos extends \Controller_App
         if (!in_array($DteEmitido->dte, [39, 41])) {
             if ($DteEmitido->track_id) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Documento emitido y envíado al SII, ahora debe verificar estado del envío. TrackID: '.$DteEmitido->track_id.'.', 'ok'
+                    'Documento emitido y envíado al SII, ahora debe verificar estado del envío. TrackID: '.$DteEmitido->track_id.'.',
+                    'ok'
                 );
             } else {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'El documento fue emitido, pero no fue envíado al SII, debe enviarlo manualmente desde la página del documento.<br/><br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'warning'
+                    'El documento fue emitido, pero no fue envíado al SII, debe enviarlo manualmente desde la página del documento.<br/><br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()),
+                    'warning'
                 );
             }
         } else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Documento emitido.', 'ok'
+                'Documento emitido.',
+                'ok'
             );
         }
         $this->redirect('/dte/dte_emitidos/ver/'.$DteEmitido->dte.'/'.$DteEmitido->folio);
@@ -1209,7 +1215,7 @@ class Controller_Documentos extends \Controller_App
         $this->set([
             'Emisor' => $Emisor,
             'codigos_referencias' => array_map(
-                function($r) { return $r['id'].' para '.strtolower($r['glosa']); },
+                function ($r) { return $r['id'].' para '.strtolower($r['glosa']); },
                 (new \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos())->getList()
             ),
         ]);
@@ -1236,11 +1242,13 @@ class Controller_Documentos extends \Controller_App
             $log = DIR_TMP.'/screen_documentos_emitir_masivo_'.$Emisor->rut.'_'.date('YmdHis').'.log';
             if ($this->shell($cmd, $log)) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No fue posible programar la emisión masiva.', 'error'
+                    'No fue posible programar la emisión masiva.',
+                    'error'
                 );
             } else {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'La emisión masiva está siendo procesada, se notificará vía correo electrónico el resultado.', 'ok'
+                    'La emisión masiva está siendo procesada, se notificará vía correo electrónico el resultado.',
+                    'ok'
                 );
             }
             $this->redirect('/dte/documentos/emitir_masivo');
@@ -1257,7 +1265,8 @@ class Controller_Documentos extends \Controller_App
         $q = !empty($_GET['q']) ? $_GET['q'] : $q;
         if (!$q) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Debe indicar un documento a buscar.', 'warning'
+                'Debe indicar un documento a buscar.',
+                'warning'
             );
             $this->redirect('/dte');
         }
@@ -1273,7 +1282,8 @@ class Controller_Documentos extends \Controller_App
                 $documentos = $DteEmitidos->getObjects();
             } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    $e->getMessage(), 'error'
+                    $e->getMessage(),
+                    'error'
                 );
                 $this->redirect('/dte');
             }
@@ -1307,7 +1317,8 @@ class Controller_Documentos extends \Controller_App
                 $codigo = strtolower($aux[1]);
                 if (!is_numeric($aux[0]) || strlen($codigo) != 7) {
                     \sowerphp\core\Model_Datasource_Session::message(
-                        'Código del documento temporal no es válido.', 'error'
+                        'Código del documento temporal no es válido.',
+                        'error'
                     );
                     $this->redirect('/dte');
                 }
@@ -1320,7 +1331,8 @@ class Controller_Documentos extends \Controller_App
                 if (isset($documentos[0])) {
                     if (isset($documentos[1])) {
                         \sowerphp\core\Model_Datasource_Session::message(
-                            'Se encontró más de un documento temporal que coincide con la búsqueda, buscar en el listado completo.', 'warning'
+                            'Se encontró más de un documento temporal que coincide con la búsqueda, buscar en el listado completo.',
+                            'warning'
                         );
                         $this->redirect('/dte');
                     }
@@ -1330,7 +1342,8 @@ class Controller_Documentos extends \Controller_App
         }
         // no se encontró el documento
         \sowerphp\core\Model_Datasource_Session::message(
-            'No se encontró el documento solicitado.', 'warning'
+            'No se encontró el documento solicitado.',
+            'warning'
         );
         $this->redirect('/dte');
     }
@@ -1357,7 +1370,7 @@ class Controller_Documentos extends \Controller_App
             $datos = \sowerphp\general\Utility_Spreadsheet_CSV::read($_FILES['archivo']['tmp_name']);
             $datos[0][] = 'documento_encontrado';
             $n_datos = count($datos);
-            for ($i=1; $i<$n_datos; $i++) {
+            for ($i = 1; $i < $n_datos; $i++) {
                 $documento_encontrado = [];
                 // verificar campos básicos
                 if (empty($datos[$i][0])) {
@@ -1365,25 +1378,29 @@ class Controller_Documentos extends \Controller_App
                 }
                 if (empty($datos[$i][2])) {
                     \sowerphp\core\Model_Datasource_Session::message(
-                        'Falta fecha de emisión en documento T'.$datos[$i][0].'F'.$datos[$i][1].'.', 'error'
+                        'Falta fecha de emisión en documento T'.$datos[$i][0].'F'.$datos[$i][1].'.',
+                        'error'
                     );
                     return;
                 }
                 if (!\sowerphp\general\Utility_Date::check($datos[$i][2])) {
                     \sowerphp\core\Model_Datasource_Session::message(
-                        'Formato no válido para fecha de emisión en documento T'.$datos[$i][0].'F'.$datos[$i][1].'.', 'error'
+                        'Formato no válido para fecha de emisión en documento T'.$datos[$i][0].'F'.$datos[$i][1].'.',
+                        'error'
                     );
                     return;
                 }
                 if (empty($datos[$i][4])) {
                     \sowerphp\core\Model_Datasource_Session::message(
-                        'Falta RUT del receptor en documento T'.$datos[$i][0].'F'.$datos[$i][1].'.', 'error'
+                        'Falta RUT del receptor en documento T'.$datos[$i][0].'F'.$datos[$i][1].'.',
+                        'error'
                     );
                     return;
                 }
                 if (!\sowerphp\app\Utility_Rut::check($datos[$i][4])) {
                     \sowerphp\core\Model_Datasource_Session::message(
-                        'Formato no válido para RUT del receptor en documento T'.$datos[$i][0].'F'.$datos[$i][1].'.', 'error'
+                        'Formato no válido para RUT del receptor en documento T'.$datos[$i][0].'F'.$datos[$i][1].'.',
+                        'error'
                     );
                     return;
                 }
@@ -1401,7 +1418,8 @@ class Controller_Documentos extends \Controller_App
                         ]);
                     } catch (\Exception $e) {
                         \sowerphp\core\Model_Datasource_Session::message(
-                            $e->getMessage(), 'error'
+                            $e->getMessage(),
+                            'error'
                         );
                         return;
                     }
@@ -1423,13 +1441,14 @@ class Controller_Documentos extends \Controller_App
                         $documentos = $DteTmps->getTable();
                     } catch (\Exception $e) {
                         \sowerphp\core\Model_Datasource_Session::message(
-                            $e->getMessage(), 'error'
+                            $e->getMessage(),
+                            'error'
                         );
                         return;
                     }
                     if ($documentos) {
                         foreach ($documentos as $documento) {
-                            $documento_encontrado[] = $documento['dte'].'-'.strtoupper(substr($documento['codigo'],0,7)).' ('.$documento['total'].')';
+                            $documento_encontrado[] = $documento['dte'].'-'.strtoupper(substr($documento['codigo'], 0, 7)).' ('.$documento['total'].')';
                         }
                     }
                 }

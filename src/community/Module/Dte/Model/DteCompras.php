@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -62,14 +61,16 @@ class Model_DteCompras extends \Model_Plural_App
         $periodo_actual = date('Ym');
         $periodo = $anio.'01';
         $totales_mensuales = [];
-        for ($i=0; $i<12; $i++) {
-            if ($periodo>$periodo_actual) {
+        for ($i = 0; $i < 12; $i++) {
+            if ($periodo > $periodo_actual) {
                 break;
             }
             $totales_mensuales[$periodo] = array_merge(
                 ['periodo' => $periodo],
                 (new Model_DteCompra(
-                    $this->getContribuyente()->rut, $periodo, $this->getContribuyente()->enCertificacion()
+                    $this->getContribuyente()->rut,
+                    $periodo,
+                    $this->getContribuyente()->enCertificacion()
                 ))->getTotales()
             );
             $periodo = \sowerphp\general\Utility_Date::nextPeriod($periodo);
@@ -83,7 +84,7 @@ class Model_DteCompras extends \Model_Plural_App
     public function getResumenAnual($anio): array
     {
         $libros = [];
-        foreach (range(1,12) as $mes) {
+        foreach (range(1, 12) as $mes) {
             $mes = $mes < 10 ? '0'.$mes : $mes;
             $DteCompra = new Model_DteCompra(
                 $this->getContribuyente()->rut,
@@ -101,7 +102,7 @@ class Model_DteCompras extends \Model_Plural_App
             foreach ($libros[$anio] as $mes => $resumen_mensual) {
                 foreach ($resumen_mensual as $r) {
                     $cols = array_keys($r);
-                    unset($cols[array_search('TpoDoc',$cols)]);
+                    unset($cols[array_search('TpoDoc', $cols)]);
                     if (!isset($resumen[$r['TpoDoc']])) {
                         $resumen[$r['TpoDoc']] = ['TpoDoc' => $r['TpoDoc']];
                         foreach ($cols as $col) {
@@ -144,12 +145,10 @@ class Model_DteCompras extends \Model_Plural_App
                         $i++;
                     }
                     $where[] = 'd.dte IN ('.implode(', ', $where_dte).')';
-                }
-                elseif ($filtros['dte'][0] == '!') {
+                } elseif ($filtros['dte'][0] == '!') {
                     $where[] = 'd.dte != :dte';
-                    $vars[':dte'] = substr($filtros['dte'],1);
-                }
-                else {
+                    $vars[':dte'] = substr($filtros['dte'], 1);
+                } else {
                     $where[] = 'd.dte = :dte';
                     $vars[':dte'] = $filtros['dte'];
                 }
@@ -242,7 +241,7 @@ class Model_DteCompras extends \Model_Plural_App
         // periodos a procesar
         $periodo_actual = (int)date('Ym');
         $periodos = [$periodo_actual];
-        for ($i = 0; $i < $meses-1; $i++) {
+        for ($i = 0; $i < $meses - 1; $i++) {
             $periodos[] = \sowerphp\general\Utility_Date::previousPeriod($periodos[$i]);
         }
         sort($periodos);
@@ -376,7 +375,7 @@ class Model_DteCompras extends \Model_Plural_App
         foreach ($documentos as $doc) {
             // eliminar DTE recibido
             $DteRecibido = new Model_DteRecibido();
-            $DteRecibido->emisor = substr($doc['rut'],0,-2);
+            $DteRecibido->emisor = substr($doc['rut'], 0, -2);
             $DteRecibido->dte = $doc['dte'];
             $DteRecibido->folio = $doc['folio'];
             $DteRecibido->certificacion = $this->getContribuyente()->enCertificacion();
@@ -407,7 +406,7 @@ class Model_DteCompras extends \Model_Plural_App
         // periodos a procesar
         $periodo_actual = (int)date('Ym');
         $periodos = [$periodo_actual];
-        for ($i = 0; $i < $meses-1; $i++) {
+        for ($i = 0; $i < $meses - 1; $i++) {
             $periodos[] = \sowerphp\general\Utility_Date::previousPeriod($periodos[$i]);
         }
         sort($periodos);
@@ -434,7 +433,8 @@ class Model_DteCompras extends \Model_Plural_App
             foreach ($documentos as $dte) {
                 $Emisor = $Emisores->get($dte['rut']);
                 $DteRecibido = new Model_DteRecibido(
-                    $Emisor->rut, $dte['dte'],
+                    $Emisor->rut,
+                    $dte['dte'],
                     $dte['folio'],
                     0
                 );

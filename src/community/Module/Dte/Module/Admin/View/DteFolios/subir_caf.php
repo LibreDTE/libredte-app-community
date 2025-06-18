@@ -21,17 +21,17 @@
     <div class="col-sm-8">
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit' => 'Form.check()']);
-echo $f->input([
-    'type' => 'file',
-    'name' => 'caf',
-    'label' => 'Archivo XML',
-    'check' => 'notempty',
-    'help' => 'Archivo CAF en formato XML descargado desde el sitio web del SII.',
-    'attr' => 'accept="application/xml,text/xml,.xml"',
-]);
-echo $f->end('Subir archivo CAF');
-?>
+        echo $f->begin(['onsubmit' => 'Form.check()']);
+        echo $f->input([
+            'type' => 'file',
+            'name' => 'caf',
+            'label' => 'Archivo XML',
+            'check' => 'notempty',
+            'help' => 'Archivo CAF en formato XML descargado desde el sitio web del SII.',
+            'attr' => 'accept="application/xml,text/xml,.xml"',
+        ]);
+        echo $f->end('Subir archivo CAF');
+        ?>
     </div>
     <div class="col-md-4">
         <div class="card mb-4">

@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -104,7 +103,8 @@ class Controller_DteGuias extends Controller_Base_Libros
         $track_id = $Libro->enviar();
         if (!$track_id) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible enviar el libro de guías al SII<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+                'No fue posible enviar el libro de guías al SII<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()),
+                'error'
             );
             $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
         }
@@ -116,7 +116,8 @@ class Controller_DteGuias extends Controller_Base_Libros
         $DteGuia->revision_detalle = null;
         $DteGuia->save();
         \sowerphp\core\Model_Datasource_Session::message(
-            'Libro de guías período '.$periodo.' envíado.', 'ok'
+            'Libro de guías período '.$periodo.' envíado.',
+            'ok'
         );
         $this->redirect(str_replace('enviar_sii', 'ver', $this->request->getRequestUriDecoded()));
     }
@@ -167,7 +168,8 @@ class Controller_DteGuias extends Controller_Base_Libros
                 ]);
             } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No fue posible facturar las guías seleccionadas:'.$e->getMessage(), 'error'
+                    'No fue posible facturar las guías seleccionadas:'.$e->getMessage(),
+                    'error'
                 );
                 $this->redirect('/dte/dte_guias');
             }

@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -62,7 +61,7 @@ class Model_DteVentas extends \Model_Plural_App
         $periodo_actual = date('Ym');
         $periodo = (int)(((string)$anio) . '01');
         $totales_mensuales = [];
-        for ($i=0; $i<12; $i++) {
+        for ($i = 0; $i < 12; $i++) {
             if ($periodo > $periodo_actual) {
                 break;
             }
@@ -103,7 +102,7 @@ class Model_DteVentas extends \Model_Plural_App
             foreach ($libros[$anio] as $mes => $resumen_mensual) {
                 foreach ($resumen_mensual as $r) {
                     $cols = array_keys($r);
-                    unset($cols[array_search('TpoDoc',$cols)]);
+                    unset($cols[array_search('TpoDoc', $cols)]);
                     if (!isset($resumen[$r['TpoDoc']])) {
                         $resumen[$r['TpoDoc']] = ['TpoDoc' => $r['TpoDoc']];
                         foreach ($cols as $col) {
@@ -146,12 +145,10 @@ class Model_DteVentas extends \Model_Plural_App
                         $i++;
                     }
                     $where[] = 'd.dte IN ('.implode(', ', $where_dte).')';
-                }
-                elseif ($filtros['dte'][0] == '!') {
+                } elseif ($filtros['dte'][0] == '!') {
                     $where[] = 'd.dte != :dte';
-                    $vars[':dte'] = substr($filtros['dte'],1);
-                }
-                else {
+                    $vars[':dte'] = substr($filtros['dte'], 1);
+                } else {
                     $where[] = 'd.dte = :dte';
                     $vars[':dte'] = $filtros['dte'];
                 }
@@ -221,7 +218,7 @@ class Model_DteVentas extends \Model_Plural_App
         // periodos a procesar
         $periodo_actual = (int)date('Ym');
         $periodos = [$periodo_actual];
-        for ($i = 0; $i < $meses-1; $i++) {
+        for ($i = 0; $i < $meses - 1; $i++) {
             $periodos[] = \sowerphp\general\Utility_Date::previousPeriod($periodos[$i]);
         }
         sort($periodos);
@@ -259,7 +256,7 @@ class Model_DteVentas extends \Model_Plural_App
                 continue;
             }
             // agregar el documento emitido si no existe
-            $Receptor = $Receptores->get(substr($doc['rut'],0,-2));
+            $Receptor = $Receptores->get(substr($doc['rut'], 0, -2));
             $DteEmitido = new Model_DteEmitido(
                 $this->getContribuyente()->rut,
                 $doc['dte'],
@@ -292,7 +289,7 @@ class Model_DteVentas extends \Model_Plural_App
         // periodos a procesar
         $periodo_actual = (int)date('Ym');
         $periodos = [$periodo_actual];
-        for ($i = 0; $i < $meses-1; $i++) {
+        for ($i = 0; $i < $meses - 1; $i++) {
             $periodos[] = \sowerphp\general\Utility_Date::previousPeriod($periodos[$i]);
         }
         sort($periodos);

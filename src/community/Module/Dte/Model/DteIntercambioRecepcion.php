@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -180,7 +179,8 @@ class Model_DteIntercambioRecepcion extends \Model_App
     /**
      * Método que guarda el XML de la Recepción de un intercambio.
      */
-    public function saveXML($Emisor, $xml) {
+    public function saveXML($Emisor, $xml)
+    {
 
         $RespuestaEnvio = new \sasco\LibreDTE\Sii\RespuestaEnvio();
         $RespuestaEnvio->loadXML($xml);
@@ -257,7 +257,10 @@ class Model_DteIntercambioRecepcion extends \Model_App
             }
             // guardar recibo para el DTE
             $DteIntercambioRecepcionDte = new Model_DteIntercambioRecepcionDte(
-                $DteEmitido->emisor, $DteEmitido->dte, $DteEmitido->folio, $DteEmitido->certificacion
+                $DteEmitido->emisor,
+                $DteEmitido->dte,
+                $DteEmitido->folio,
+                $DteEmitido->certificacion
             );
             $DteIntercambioRecepcionDte->responde = $this->responde;
             $DteIntercambioRecepcionDte->codigo = $this->codigo;

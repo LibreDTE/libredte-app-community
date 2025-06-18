@@ -21,12 +21,11 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
-use \website\Dte\Admin\Mantenedores\Model_DteTipos;
-use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
-use \website\Dte\Admin\Mantenedores\Model_IvaNoRecuperables;
+use website\Dte\Admin\Mantenedores\Model_DteTipos;
+use website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
+use website\Dte\Admin\Mantenedores\Model_IvaNoRecuperables;
 
 /**
  * Controlador de dte recibidos.
@@ -64,7 +63,8 @@ class Controller_DteRecibidos extends \Controller_App
             $documentos = $Receptor->getDocumentosRecibidos($filtros);
         } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Error al recuperar los documentos:<br/>'.$e->getMessage(), 'error'
+                'Error al recuperar los documentos:<br/>'.$e->getMessage(),
+                'error'
             );
             $documentos_total = 0;
             $documentos = [];
@@ -124,7 +124,8 @@ class Controller_DteRecibidos extends \Controller_App
         );
         if (!$DteRecibido->exists() || $DteRecibido->receptor != $Receptor->rut) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'DTE recibido solicitado no existe', 'error'
+                'DTE recibido solicitado no existe',
+                'error'
             );
             $this->redirect('/dte/dte_recibidos/listar');
         }
@@ -165,7 +166,8 @@ class Controller_DteRecibidos extends \Controller_App
         );
         if (!$DteRecibido->exists() || $DteRecibido->receptor != $Receptor->rut) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'DTE recibido solicitado no existe.', 'error'
+                'DTE recibido solicitado no existe.',
+                'error'
             );
             $this->redirect('/dte/dte_recibidos/listar');
         }
@@ -193,7 +195,8 @@ class Controller_DteRecibidos extends \Controller_App
         foreach (['emisor', 'dte', 'folio', 'fecha', 'tasa'] as $attr) {
             if (!isset($_POST[$attr][0])) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Debe indicar '.$attr.'.', 'error'
+                    'Debe indicar '.$attr.'.',
+                    'error'
                 );
                 return;
             }
@@ -208,7 +211,7 @@ class Controller_DteRecibidos extends \Controller_App
         $DteRecibido->neto = !empty($_POST['neto']) ? $_POST['neto'] : null;
         $DteRecibido->iva = !empty($_POST['iva'])
             ? $_POST['iva']
-            : round((int)$DteRecibido->neto * ($DteRecibido->tasa/100))
+            : round((int)$DteRecibido->neto * ($DteRecibido->tasa / 100))
         ;
         $DteRecibido->usuario = $this->Auth->User->id;
         // tipo transaccion, iva uso común, no recuperable e impuesto adicional
@@ -223,7 +226,7 @@ class Controller_DteRecibidos extends \Controller_App
         if ($DteRecibido->iva && !empty($_POST['iva_no_recuperable_codigo'])) {
             $DteRecibido->iva_no_recuperable = [];
             $n_codigos = count($_POST['iva_no_recuperable_codigo']);
-            for ($i=0; $i<$n_codigos; $i++) {
+            for ($i = 0; $i < $n_codigos; $i++) {
                 if (!empty($_POST['iva_no_recuperable_codigo'][$i])) {
                     $DteRecibido->iva_no_recuperable[] = [
                         'codigo' => $_POST['iva_no_recuperable_codigo'][$i],
@@ -245,7 +248,7 @@ class Controller_DteRecibidos extends \Controller_App
         if (!empty($_POST['impuesto_adicional_codigo'])) {
             $DteRecibido->impuesto_adicional = [];
             $n_codigos = count($_POST['impuesto_adicional_codigo']);
-            for ($i=0; $i<$n_codigos; $i++) {
+            for ($i = 0; $i < $n_codigos; $i++) {
                 if (!empty($_POST['impuesto_adicional_codigo'][$i])) {
                     $DteRecibido->impuesto_adicional[] = [
                         'codigo' => $_POST['impuesto_adicional_codigo'][$i],
@@ -347,12 +350,14 @@ class Controller_DteRecibidos extends \Controller_App
             $estado = $DteRecibido->getEstado($Firma);
             if ($estado === false) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No se pudo obtener el estado del DTE.<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+                    'No se pudo obtener el estado del DTE.<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()),
+                    'error'
                 );
                 return;
             } elseif (in_array($estado['ESTADO'], ['DNK', 'FAU', 'FNA', 'EMP'])) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Estado DTE: '.(is_array($estado) ? implode('. ', $estado) : $estado), 'error'
+                    'Estado DTE: '.(is_array($estado) ? implode('. ', $estado) : $estado),
+                    'error'
                 );
                 return;
             }
@@ -361,12 +366,14 @@ class Controller_DteRecibidos extends \Controller_App
         try {
             $DteRecibido->save();
             \sowerphp\core\Model_Datasource_Session::message(
-                'DTE recibido guardado.', 'ok'
+                'DTE recibido guardado.',
+                'ok'
             );
             $this->redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
         } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible guardar el DTE: '.$e->getMessage(), 'error'
+                'No fue posible guardar el DTE: '.$e->getMessage(),
+                'error'
             );
         }
     }
@@ -385,12 +392,14 @@ class Controller_DteRecibidos extends \Controller_App
         );
         if (!$DteRecibido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible eliminar, el DTE recibido solicitado no existe.', 'warning'
+                'No fue posible eliminar, el DTE recibido solicitado no existe.',
+                'warning'
             );
         } else {
             $DteRecibido->delete();
             \sowerphp\core\Model_Datasource_Session::message(
-                'Se eliminó el DTE T'.$DteRecibido->dte.'F'.$DteRecibido->folio.' recibido de '.\sowerphp\app\Utility_Rut::addDV($DteRecibido->emisor), 'ok'
+                'Se eliminó el DTE T'.$DteRecibido->dte.'F'.$DteRecibido->folio.' recibido de '.\sowerphp\app\Utility_Rut::addDV($DteRecibido->emisor),
+                'ok'
             );
         }
         $this->redirect('/dte/dte_recibidos/listar');
@@ -411,14 +420,16 @@ class Controller_DteRecibidos extends \Controller_App
         );
         if (!$DteRecibido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el DTE recibido solicitado.', 'error'
+                'No existe el DTE recibido solicitado.',
+                'error'
             );
             $this->redirect('/dte/dte_recibidos/listar');
         }
         // si no tiene XML error
         if (!$DteRecibido->hasXML()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'El DTE no tiene XML asociado.', 'error'
+                'El DTE no tiene XML asociado.',
+                'error'
             );
             $this->redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
         }
@@ -446,14 +457,16 @@ class Controller_DteRecibidos extends \Controller_App
         );
         if (!$DteRecibido->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el DTE recibido solicitado.', 'error'
+                'No existe el DTE recibido solicitado.',
+                'error'
             );
             $this->redirect('/dte/dte_recibidos/listar');
         }
         // si no tiene XML error
         if (!$DteRecibido->hasXML()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'El DTE no tiene XML asociado, no es posible obtener JSON.', 'error'
+                'El DTE no tiene XML asociado, no es posible obtener JSON.',
+                'error'
             );
             $this->redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
         }
@@ -483,7 +496,8 @@ class Controller_DteRecibidos extends \Controller_App
         );
         if (!$DteRecibido->exists() || (!$DteRecibido->intercambio && !$DteRecibido->mipyme)) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible obtener el PDF, el DTE recibido solicitado no existe o bien no tiene intercambio asociado.', 'error'
+                'No fue posible obtener el PDF, el DTE recibido solicitado no existe o bien no tiene intercambio asociado.',
+                'error'
             );
             $this->redirect('/dte/dte_recibidos/ver/'.$DteRecibido->emisor.'/'.$DteRecibido->dte.'/'.$DteRecibido->folio);
         }
@@ -516,7 +530,8 @@ class Controller_DteRecibidos extends \Controller_App
             $pdf = $DteRecibido->getPDF($config);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message(
-                $e->getMessage(), 'error'
+                $e->getMessage(),
+                'error'
             );
             $this->redirect('/dte/dte_recibidos/listar');
         }
@@ -817,11 +832,9 @@ class Controller_DteRecibidos extends \Controller_App
             ]);
             if ($response === false) {
                 \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
-            }
-            elseif ($response['status']['code'] != 200) {
+            } elseif ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
-            }
-            else {
+            } else {
                 $this->set([
                     'documentos' => $response['body'],
                 ]);

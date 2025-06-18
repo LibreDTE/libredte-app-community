@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte\Admin;
 
 /**
@@ -270,7 +269,9 @@ class Controller_DteFolios extends \Controller_App
                     \sowerphp\core\Model_Datasource_Session::message('No fue posible actualizar el mantenedor de folios.', 'error');
                     return;
                 }
-                \sowerphp\core\Model_Datasource_Session::message('El mantenedor de folios para tipo '.$DteFolio->dte.' ha sido actualizado.', 'ok'
+                \sowerphp\core\Model_Datasource_Session::message(
+                    'El mantenedor de folios para tipo '.$DteFolio->dte.' ha sido actualizado.',
+                    'ok'
                 );
                 $this->redirect('/dte/admin/dte_folios');
             } catch (\Exception $e) {
@@ -553,7 +554,8 @@ class Controller_DteFolios extends \Controller_App
             try {
                 $Folios = $DteFolio->guardarFolios($xml);
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'El CAF para el documento de tipo '.$Folios->getTipo().' que inicia en '.$Folios->getDesde().' fue cargado. El siguiente folio disponible es '.$DteFolio->siguiente.'.', 'ok'
+                    'El CAF para el documento de tipo '.$Folios->getTipo().' que inicia en '.$Folios->getDesde().' fue cargado. El siguiente folio disponible es '.$DteFolio->siguiente.'.',
+                    'ok'
                 );
                 $this->redirect('/dte/admin/dte_folios');
             } catch (\Exception $e) {
@@ -619,10 +621,10 @@ class Controller_DteFolios extends \Controller_App
         }
         try {
             $detalle = $DteCaf->{'getFolios'.ucfirst($estado)}();
-        } catch(\sowerphp\core\Exception_Object_Method_Missing $e) {
+        } catch (\sowerphp\core\Exception_Object_Method_Missing $e) {
             \sowerphp\core\Model_Datasource_Session::message('No fue posible descargar el estado de folios '.$estado.'.', 'error');
             $this->redirect('/dte/admin/dte_folios/ver/'.$dte);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message($e->getMessage(), 'error');
             $this->redirect('/dte/admin/dte_folios/ver/'.$dte);
         }
@@ -663,7 +665,7 @@ class Controller_DteFolios extends \Controller_App
                 return;
             }
             // lanzar comando
-            $cmd = 'Dte.Admin.DteFolios_Estados '.escapeshellcmd((int)$Emisor->rut).' '.escapeshellcmd(implode(',',$_POST['documentos'])).' '.escapeshellcmd(implode(',',$_POST['estados'])).' '.escapeshellcmd((int)$this->Auth->User->id).' -v';
+            $cmd = 'Dte.Admin.DteFolios_Estados '.escapeshellcmd((int)$Emisor->rut).' '.escapeshellcmd(implode(',', $_POST['documentos'])).' '.escapeshellcmd(implode(',', $_POST['estados'])).' '.escapeshellcmd((int)$this->Auth->User->id).' -v';
             if ($this->shell($cmd)) {
                 \sowerphp\core\Model_Datasource_Session::message('Error al tratar de generar su informe, por favor reintentar.', 'error');
             } else {

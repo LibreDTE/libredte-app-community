@@ -21,12 +21,11 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Utilidades;
 
-use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna;
-use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
-use \website\Sistema\General\Model_ActividadEconomicas;
+use sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna;
+use sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+use website\Sistema\General\Model_ActividadEconomicas;
 
 /**
  * Controlador para utilidades asociadas a documentos tributarios electrónicos (DTE).
@@ -55,13 +54,15 @@ class Controller_Documentos extends \Controller_App
             // datos del emisor
             $Emisor = [];
             foreach (['RUTEmisor', 'RznSoc', 'GiroEmis', 'Acteco', 'DirOrigen', 'CmnaOrigen', 'Telefono', 'CorreoEmisor', 'CdgSIISucur'] as $attr) {
-                if (!empty($_POST[$attr]))
+                if (!empty($_POST[$attr])) {
                     $Emisor[$attr] = $_POST[$attr];
+                }
             }
             foreach (['RUTEmisor', 'RznSoc', 'GiroEmis', 'Acteco', 'DirOrigen', 'CmnaOrigen'] as $attr) {
                 if (empty($Emisor[$attr])) {
                     \sowerphp\core\Model_Datasource_Session::message(
-                        'Debe especificar el campo '.$attr.'.', 'error'
+                        'Debe especificar el campo '.$attr.'.',
+                        'error'
                     );
                     return;
                 }
@@ -70,13 +71,15 @@ class Controller_Documentos extends \Controller_App
             // datos del receptor
             $Receptor = [];
             foreach (['RUTRecep', 'RznSocRecep', 'GiroRecep', 'DirRecep', 'CmnaRecep', 'Contacto', 'CorreoRecep'] as $attr) {
-                if (!empty($_POST[$attr]))
+                if (!empty($_POST[$attr])) {
                     $Receptor[$attr] = $_POST[$attr];
+                }
             }
             foreach (['RUTRecep', 'RznSocRecep', 'GiroRecep', 'DirRecep', 'CmnaRecep'] as $attr) {
                 if (empty($Receptor[$attr])) {
                     \sowerphp\core\Model_Datasource_Session::message(
-                        'Debe especificar el campo '.$attr.'.', 'error'
+                        'Debe especificar el campo '.$attr.'.',
+                        'error'
                     );
                     return;
                 }
@@ -86,14 +89,16 @@ class Controller_Documentos extends \Controller_App
             $documentos_json = trim($_POST['documentos']);
             if (empty($documentos_json)) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Debe enviar los datos JSON con los documentos.', 'error'
+                    'Debe enviar los datos JSON con los documentos.',
+                    'error'
                 );
                 return;
             }
             $documentos = json_decode($documentos_json);
             if (!$documentos) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No fue posible procesar los datos JSON con los documentos, posible error de sintaxis.', 'error'
+                    'No fue posible procesar los datos JSON con los documentos, posible error de sintaxis.',
+                    'error'
                 );
                 return;
             }
@@ -101,7 +106,7 @@ class Controller_Documentos extends \Controller_App
             $folios = [];
             if (isset($_FILES['folios'])) {
                 $n_folios = count($_FILES['folios']['name']);
-                for ($i=0; $i<$n_folios; $i++) {
+                for ($i = 0; $i < $n_folios; $i++) {
                     if (!$_FILES['folios']['error'][$i]) {
                         $folios[] = base64_encode(file_get_contents($_FILES['folios']['tmp_name'][$i]));
                     }
@@ -109,14 +114,16 @@ class Controller_Documentos extends \Controller_App
             }
             if (empty($folios)) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Debe enviar a lo menos un archivo CAF con folios.', 'error'
+                    'Debe enviar a lo menos un archivo CAF con folios.',
+                    'error'
                 );
                 return;
             }
             // firma
             if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Hubo algún problema al subir la firma electrónica.', 'error'
+                    'Hubo algún problema al subir la firma electrónica.',
+                    'error'
                 );
                 return;
             }
@@ -143,7 +150,8 @@ class Controller_Documentos extends \Controller_App
             $response = $rest->post($this->request->getFullUrlWithoutQuery().'/api/utilidades/documentos/generar_xml', $data);
             if ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    str_replace("\n", '<br/>', $response['body']), 'error'
+                    str_replace("\n", '<br/>', $response['body']),
+                    'error'
                 );
                 return;
             }
@@ -215,7 +223,8 @@ class Controller_Documentos extends \Controller_App
             // verificar la firma de cada documento
             if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Hubo algún problema al subir la firma electrónica.', 'error'
+                    'Hubo algún problema al subir la firma electrónica.',
+                    'error'
                 );
                 return;
             }
@@ -334,7 +343,8 @@ class Controller_Documentos extends \Controller_App
             // si no hay DTE error
             if (!isset($dtes[0])) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No fue posible leer DTE desde el archivo.', 'error'
+                    'No fue posible leer DTE desde el archivo.',
+                    'error'
                 );
                 $this->redirect($this->request->getRequestUriDecoded());
             }
@@ -355,11 +365,13 @@ class Controller_Documentos extends \Controller_App
             // si es más de un DTE se comprimirán
             else {
                 $dir = sys_get_temp_dir().'/xml2json_'.date('U');
-                if (is_dir($dir))
+                if (is_dir($dir)) {
                     \sasco\LibreDTE\File::rmdir($dir);
+                }
                 if (!mkdir($dir)) {
                     \sowerphp\core\Model_Datasource_Session::message(
-                        'No fue posible crear directorio temporal para DTE.', 'error'
+                        'No fue posible crear directorio temporal para DTE.',
+                        'error'
                     );
                     $this->redirect($this->request->getRequestUriDecoded());
                 }
@@ -385,8 +397,9 @@ class Controller_Documentos extends \Controller_App
         }
         // verificar que se hayan pasado los índices básicos
         foreach (['Emisor', 'Receptor', 'documentos', 'folios', 'firma'] as $key) {
-            if (!isset($this->Api->data[$key]))
+            if (!isset($this->Api->data[$key])) {
                 $this->Api->send('Falta índice/variable '.$key.' por POST', 400);
+            }
         }
         // recuperar folios y definir ambiente
         $folios = [];
@@ -425,7 +438,8 @@ class Controller_Documentos extends \Controller_App
                 $d['Encabezado']['Receptor'] = $this->Api->data['Receptor'];
             } else {
                 $d['Encabezado']['Receptor'] = \sasco\LibreDTE\Arreglo::mergeRecursiveDistinct(
-                    $this->Api->data['Receptor'], $d['Encabezado']['Receptor']
+                    $this->Api->data['Receptor'],
+                    $d['Encabezado']['Receptor']
                 );
             }
             $DTE = new \sasco\LibreDTE\Sii\Dte($d, $normalizar_dte);
@@ -621,12 +635,13 @@ class Controller_Documentos extends \Controller_App
                 }
             }
             // si no tiene cedible o el cedible va en el mismo archivo
-            if ($cedible!=2) {
-                for ($i=0; $i<$copias_tributarias; $i++)
+            if ($cedible != 2) {
+                for ($i = 0; $i < $copias_tributarias; $i++) {
                     $pdf->agregar($datos, $TED);
+                }
                 if ($cedible && $DTE->esCedible()) {
                     $pdf->setCedible(true);
-                    for ($i=0; $i<$copias_cedibles; $i++) {
+                    for ($i = 0; $i < $copias_cedibles; $i++) {
                         $pdf->agregar($datos, $TED);
                     }
                 }

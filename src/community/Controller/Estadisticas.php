@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website;
 
 /**
@@ -54,7 +53,7 @@ class Controller_Estadisticas extends \Controller_App
      */
     public function index($certificacion = false, $desde = 1, $hasta = 0)
     {
-        $response = $this->consume('/api/estadisticas/'.($certificacion?'certificacion':'produccion'));
+        $response = $this->consume('/api/estadisticas/'.($certificacion ? 'certificacion' : 'produccion'));
         if ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             $this->redirect('/');
@@ -135,7 +134,10 @@ class Controller_Estadisticas extends \Controller_App
         if (!$enterprise && $contribuyentes_activos) {
             try {
                 $contribuyentes_activos = $Contribuyentes->getConMovimientos(
-                    $desde, $hasta, $certificacion, false
+                    $desde,
+                    $hasta,
+                    $certificacion,
+                    false
                 );
                 foreach ($contribuyentes_activos as &$c) {
                     if ($enterprise) {
@@ -193,7 +195,7 @@ class Controller_Estadisticas extends \Controller_App
         $vars = [];
         $files = glob('/etc/*-release');
         foreach ($files as $file) {
-            $lines = array_filter(array_map(function($line) {
+            $lines = array_filter(array_map(function ($line) {
                 $parts = explode('=', $line);
                 if (count($parts) !== 2) {
                     return false;

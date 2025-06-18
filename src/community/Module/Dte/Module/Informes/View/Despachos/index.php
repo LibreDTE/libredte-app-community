@@ -91,14 +91,14 @@ if (isset($despachos)) {
     }
     array_unshift($despachos, ['Guía', 'Receptor', 'Dirección', 'Mercadería', 'Total', 'Acciones']);
     new \sowerphp\general\View_Helper_Table($despachos, 'despachos_'.$Emisor->rut.'_'.$_POST['fecha'], true);
-?>
+    ?>
 <?php if (!empty($_POST['mapa']) && !empty($despachos_mapa) && $google_api_key): ?>
 <?php
 if (!$latitud || !$longitud) {
     $latitud = $despachos_mapa[0]['latitud'];
     $longitud = $despachos_mapa[0]['longitud'];
 }
-?>
+        ?>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?=$google_api_key?>"></script>
 <script type="text/javascript">
 $(function(){

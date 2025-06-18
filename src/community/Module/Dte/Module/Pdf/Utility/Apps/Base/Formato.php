@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte\Pdf;
 
 /**
@@ -49,7 +48,7 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
         if (!empty($this->config_flags)) {
             $flags = '';
             foreach ($this->config_flags as $codigo => $descripcion) {
-                $flags .= '<div class="form-check"><input type="checkbox" name="dtepdf_'.$this->getCodigo().'_flag_'.$codigo.'" value="'.$codigo.'" class="form-check-input" '.($this->getConfigFlags($codigo)?'checked="checked"':'').' id="dtepdf_'.$this->getCodigo().'_flag_'.$codigo.'"><label class="form-check-label" for="dtepdf_'.$this->getCodigo().'_flag_'.$codigo.'">'.$descripcion.'</label></div>';
+                $flags .= '<div class="form-check"><input type="checkbox" name="dtepdf_'.$this->getCodigo().'_flag_'.$codigo.'" value="'.$codigo.'" class="form-check-input" '.($this->getConfigFlags($codigo) ? 'checked="checked"' : '').' id="dtepdf_'.$this->getCodigo().'_flag_'.$codigo.'"><label class="form-check-label" for="dtepdf_'.$this->getCodigo().'_flag_'.$codigo.'">'.$descripcion.'</label></div>';
             }
             $buffer .= $form->input([
                 'type' => 'div',

@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -63,7 +62,6 @@ class Controller_Contribuyentes extends \Controller_App
                             $Emisor->config_usuarios_auth2 == 1
                             && $Emisor->usuarioAutorizado($this->Auth->User, 'admin')
                         )
-
                     );
                     if ($auth2_required) {
                         \sowerphp\core\Model_Datasource_Session::message(__('Debe [habilitar el mecanismo de autenticación secundaria (2FA) en su perfil de usuario](%s) antes de poder ingresar a esta empresa.', url('/usuarios/perfil#auth:2fa')), 'error');
@@ -81,13 +79,14 @@ class Controller_Contribuyentes extends \Controller_App
             }
             if ($redirect) {
                 \sowerphp\core\Model_Datasource_Session::delete('referer');
-            }
-            elseif ($url) {
+            } elseif ($url) {
                 $redirect = base64_decode($url);
-            }
-            else {
+            } else {
                 $trigger_referer = \sowerphp\core\Trigger::run(
-                    'contribuyente_seleccionar_redirect', $Emisor, $redirect, $this->Auth
+                    'contribuyente_seleccionar_redirect',
+                    $Emisor,
+                    $redirect,
+                    $this->Auth
                 );
                 if ($trigger_referer) {
                     $redirect = $trigger_referer;
@@ -116,7 +115,8 @@ class Controller_Contribuyentes extends \Controller_App
             $n_empresas = count((new Model_Contribuyentes())->getByUsuario($this->Auth->User->id));
             if ($n_empresas >= $this->Auth->User->config_contribuyentes_autorizados) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Ha llegado al límite de empresas que puede registrar ('.num($this->Auth->User->config_contribuyentes_autorizados).'). Si requiere una cantidad mayor <a href="'.$this->request->getBaseUrlWithoutSlash().'/contacto">contáctenos</a>.', 'error'
+                    'Ha llegado al límite de empresas que puede registrar ('.num($this->Auth->User->config_contribuyentes_autorizados).'). Si requiere una cantidad mayor <a href="'.$this->request->getBaseUrlWithoutSlash().'/contacto">contáctenos</a>.',
+                    'error'
                 );
                 $this->redirect('/dte/contribuyentes/seleccionar');
             }
@@ -152,7 +152,8 @@ class Controller_Contribuyentes extends \Controller_App
                     );
                 } else {
                     \sowerphp\core\Model_Datasource_Session::message(
-                        'La empresa ya está registrada a nombre del usuario '.$Contribuyente->getUsuario()->nombre.' ('.$Contribuyente->getUsuario()->email.'). Si cree que esto es un error o bien puede ser alguien suplantando la identidad de su empresa por favor <a href="'.$this->request->getBaseUrlWithoutSlash().'/contacto" target="_blank">contáctenos</a>.', 'error'
+                        'La empresa ya está registrada a nombre del usuario '.$Contribuyente->getUsuario()->nombre.' ('.$Contribuyente->getUsuario()->email.'). Si cree que esto es un error o bien puede ser alguien suplantando la identidad de su empresa por favor <a href="'.$this->request->getBaseUrlWithoutSlash().'/contacto" target="_blank">contáctenos</a>.',
+                        'error'
                     );
                 }
                 $this->redirect('/dte/contribuyentes/seleccionar');
@@ -176,11 +177,13 @@ class Controller_Contribuyentes extends \Controller_App
                 $dtes = config('dte.dtes');
                 foreach ($dtes as $dte) {
                     $ContribuyenteDte = new \website\Dte\Admin\Mantenedores\Model_ContribuyenteDte(
-                        $Contribuyente->rut, $dte
+                        $Contribuyente->rut,
+                        $dte
                     );
                     try {
                         $ContribuyenteDte->save();
-                    } catch (\sowerphp\core\Exception_Model_Datasource_Database $e){}
+                    } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
+                    }
                 }
                 // redireccionar
                 \sowerphp\core\Model_Datasource_Session::message('Empresa '.$Contribuyente->razon_social.' registrada y asociada a su usuario.', 'ok');
@@ -272,7 +275,7 @@ class Controller_Contribuyentes extends \Controller_App
         // crear arreglo con actividades económicas secundarias
         if (!empty($_POST['config_extra_otras_actividades_actividad'])) {
             $n_codigos = count($_POST['config_extra_otras_actividades_actividad']);
-            for ($i=0; $i<$n_codigos; $i++) {
+            for ($i = 0; $i < $n_codigos; $i++) {
                 if (!empty($_POST['config_extra_otras_actividades_actividad'][$i])) {
                     $_POST['config_extra_otras_actividades'][] = [
                         'actividad' => (int)$_POST['config_extra_otras_actividades_actividad'][$i],
@@ -289,7 +292,7 @@ class Controller_Contribuyentes extends \Controller_App
         if (!empty($_POST['config_extra_sucursales_codigo'])) {
             $_POST['config_extra_sucursales'] = [];
             $n_codigos = count($_POST['config_extra_sucursales_codigo']);
-            for ($i=0; $i<$n_codigos; $i++) {
+            for ($i = 0; $i < $n_codigos; $i++) {
                 if (
                     !empty($_POST['config_extra_sucursales_codigo'][$i])
                     && !empty($_POST['config_extra_sucursales_sucursal'][$i])
@@ -317,7 +320,7 @@ class Controller_Contribuyentes extends \Controller_App
         if (!empty($_POST['config_extra_impuestos_adicionales_codigo'])) {
             $_POST['config_extra_impuestos_adicionales'] = [];
             $n_codigos = count($_POST['config_extra_impuestos_adicionales_codigo']);
-            for ($i=0; $i<$n_codigos; $i++) {
+            for ($i = 0; $i < $n_codigos; $i++) {
                 if (
                     !empty($_POST['config_extra_impuestos_adicionales_codigo'][$i])
                     && !empty($_POST['config_extra_impuestos_adicionales_tasa'][$i])
@@ -337,7 +340,7 @@ class Controller_Contribuyentes extends \Controller_App
         if (!empty($_POST['config_emision_observaciones_dte'])) {
             $_POST['config_emision_observaciones'] = [];
             $n_codigos = count($_POST['config_emision_observaciones_dte']);
-            for ($i=0; $i<$n_codigos; $i++) {
+            for ($i = 0; $i < $n_codigos; $i++) {
                 if (
                     !empty($_POST['config_emision_observaciones_dte'][$i])
                     && !empty($_POST['config_emision_observaciones_glosa'][$i])
@@ -356,7 +359,7 @@ class Controller_Contribuyentes extends \Controller_App
         if (!empty($_POST['config_extra_impuestos_sin_credito_codigo'])) {
             $_POST['config_extra_impuestos_sin_credito'] = [];
             $n_codigos = count($_POST['config_extra_impuestos_sin_credito_codigo']);
-            for ($i=0; $i<$n_codigos; $i++) {
+            for ($i = 0; $i < $n_codigos; $i++) {
                 if (!empty($_POST['config_extra_impuestos_sin_credito_codigo'][$i])) {
                     $_POST['config_extra_impuestos_sin_credito'][] =
                         (int)$_POST['config_extra_impuestos_sin_credito_codigo'][$i]
@@ -371,7 +374,7 @@ class Controller_Contribuyentes extends \Controller_App
         if (!empty($_POST['config_pdf_mapeo_documento'])) {
             $_POST['config_pdf_mapeo'] = [];
             $n_codigos = count($_POST['config_pdf_mapeo_documento']);
-            for ($i=0; $i<$n_codigos; $i++) {
+            for ($i = 0; $i < $n_codigos; $i++) {
                 if (
                     !empty($_POST['config_pdf_mapeo_documento'][$i])
                     && !empty($_POST['config_pdf_mapeo_actividad'][$i])
@@ -416,7 +419,7 @@ class Controller_Contribuyentes extends \Controller_App
         if (!empty($_POST['config_api_codigo'])) {
             $config_api_servicios = [];
             $n_api_servicios = count($_POST['config_api_codigo']);
-            for ($i=0; $i<$n_api_servicios; $i++) {
+            for ($i = 0; $i < $n_api_servicios; $i++) {
                 if (empty($_POST['config_api_url'][$i])) {
                     continue;
                 }
@@ -440,7 +443,7 @@ class Controller_Contribuyentes extends \Controller_App
         if (!empty($_POST['config_extra_links_nombre'])) {
             $config_extra_links = [];
             $n_links = count($_POST['config_extra_links_nombre']);
-            for ($i=0; $i<$n_links; $i++) {
+            for ($i = 0; $i < $n_links; $i++) {
                 if (empty($_POST['config_extra_links_nombre'][$i])) {
                     continue;
                 }
@@ -534,7 +537,7 @@ class Controller_Contribuyentes extends \Controller_App
             $usuarios = [];
             if (isset($_POST['usuario'])) {
                 $n_usuarios = count($_POST['usuario']);
-                for ($i=0; $i<$n_usuarios; $i++) {
+                for ($i = 0; $i < $n_usuarios; $i++) {
                     if (!empty($_POST['usuario'][$i])) {
                         if (!isset($usuarios[$_POST['usuario'][$i]])) {
                             $usuarios[$_POST['usuario'][$i]] = [];
@@ -551,7 +554,8 @@ class Controller_Contribuyentes extends \Controller_App
                 }
                 if (!$usuarios) {
                     \sowerphp\core\Model_Datasource_Session::message(
-                        'No indicaron permisos para ningún usuario.', 'warning'
+                        'No indicaron permisos para ningún usuario.',
+                        'warning'
                     );
                     return;
                 }
@@ -559,15 +563,18 @@ class Controller_Contribuyentes extends \Controller_App
             try {
                 $Contribuyente->setUsuarios($usuarios);
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Se editaron los usuarios autorizados de la empresa.', 'ok'
+                    'Se editaron los usuarios autorizados de la empresa.',
+                    'ok'
                 );
             } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No fue posible editar los usuarios autorizados<br/>'.$e->getMessage(), 'error'
+                    'No fue posible editar los usuarios autorizados<br/>'.$e->getMessage(),
+                    'error'
                 );
             } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    $e->getMessage(), 'error'
+                    $e->getMessage(),
+                    'error'
                 );
             }
             $this->redirect('/dte/contribuyentes/usuarios');
@@ -591,7 +598,7 @@ class Controller_Contribuyentes extends \Controller_App
             $usuarios = [];
             if (isset($_POST['usuario'])) {
                 $n_usuarios = count($_POST['usuario']);
-                for ($i=0; $i<$n_usuarios; $i++) {
+                for ($i = 0; $i < $n_usuarios; $i++) {
                     if (!empty($_POST['usuario'][$i])) {
                         if (!isset($usuarios[$_POST['usuario'][$i]])) {
                             $usuarios[$_POST['usuario'][$i]] = [];
@@ -610,20 +617,24 @@ class Controller_Contribuyentes extends \Controller_App
             try {
                 $Contribuyente->setDocumentosAutorizadosPorUsuario($usuarios);
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Se editaron los documentos autorizados por usuario de la empresa.', 'ok'
+                    'Se editaron los documentos autorizados por usuario de la empresa.',
+                    'ok'
                 );
             } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No fue posible editar los usuarios autorizados<br/>'.$e->getMessage(), 'error'
+                    'No fue posible editar los usuarios autorizados<br/>'.$e->getMessage(),
+                    'error'
                 );
             } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    $e->getMessage(), 'error'
+                    $e->getMessage(),
+                    'error'
                 );
             }
         } else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No puede acceder directamente a la página '.$this->request->getRequestUriDecoded(), 'error'
+                'No puede acceder directamente a la página '.$this->request->getRequestUriDecoded(),
+                'error'
             );
         }
         $this->redirect('/dte/contribuyentes/usuarios#dtes');
@@ -645,7 +656,7 @@ class Controller_Contribuyentes extends \Controller_App
             $usuarios = [];
             if (isset($_POST['usuario'])) {
                 $n_usuarios = count($_POST['usuario']);
-                for ($i=0; $i<$n_usuarios; $i++) {
+                for ($i = 0; $i < $n_usuarios; $i++) {
                     if (!empty($_POST['usuario'][$i]) && !empty($_POST['sucursal'][$i])) {
                         $usuarios[$_POST['usuario'][$i]] = $_POST['sucursal'][$i];
                     }
@@ -654,20 +665,24 @@ class Controller_Contribuyentes extends \Controller_App
             try {
                 $Contribuyente->setSucursalesPorUsuario($usuarios);
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Se editaron las sucursales por defecto de los usuarios de la empresa.', 'ok'
+                    'Se editaron las sucursales por defecto de los usuarios de la empresa.',
+                    'ok'
                 );
             } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'No fue posible editar las sucursales por defecto de los usuarios<br/>'.$e->getMessage(), 'error'
+                    'No fue posible editar las sucursales por defecto de los usuarios<br/>'.$e->getMessage(),
+                    'error'
                 );
             } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    $e->getMessage(), 'error'
+                    $e->getMessage(),
+                    'error'
                 );
             }
         } else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No puede acceder directamente a la página '.$this->request->getRequestUriDecoded(), 'error'
+                'No puede acceder directamente a la página '.$this->request->getRequestUriDecoded(),
+                'error'
             );
         }
         $this->redirect('/dte/contribuyentes/usuarios#sucursales');
@@ -706,7 +721,8 @@ class Controller_Contribuyentes extends \Controller_App
             }
         } else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No puede acceder directamente a la página '.$this->request->getRequestUriDecoded(), 'error'
+                'No puede acceder directamente a la página '.$this->request->getRequestUriDecoded(),
+                'error'
             );
         }
         $this->redirect('/dte/contribuyentes/usuarios#general');
@@ -746,11 +762,13 @@ class Controller_Contribuyentes extends \Controller_App
         $Contribuyente->usuario = $Usuario->id;
         if ($Contribuyente->save()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Se actualizó el usuario administrador a '.$_POST['usuario'].'.', 'ok'
+                'Se actualizó el usuario administrador a '.$_POST['usuario'].'.',
+                'ok'
             );
         } else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible cambiar el administrador de la empresa.', 'error'
+                'No fue posible cambiar el administrador de la empresa.',
+                'error'
             );
         }
         $this->redirect('/dte/contribuyentes/usuarios#general');
@@ -893,7 +911,12 @@ class Controller_Contribuyentes extends \Controller_App
                 $this->Api->send('No está autorizado a operar con el emisor seleccionado para el tipo de búsqueda '.$tipo.'.', 404);
             }
             $datos_trigger = \sowerphp\core\Trigger::run(
-                'contribuyente_info', $Contribuyente, $tipo, $Emisor, $User, $datos
+                'contribuyente_info',
+                $Contribuyente,
+                $tipo,
+                $Emisor,
+                $User,
+                $datos
             );
             if (!empty($datos_trigger)) {
                 $datos = $datos_trigger;

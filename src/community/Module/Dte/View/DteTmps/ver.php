@@ -95,7 +95,7 @@ echo $t->generate([
 ?>
     <div class="row">
         <div class="col-md-3 mb-2">
-            <a class="btn btn-primary btn-lg col-12<?=!$DteTmp->getTipo()->permiteCotizacion()?' disabled':''?>" href="<?=$_base?>/dte/dte_tmps/cotizacion/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
+            <a class="btn btn-primary btn-lg col-12<?=!$DteTmp->getTipo()->permiteCotizacion() ? ' disabled' : ''?>" href="<?=$_base?>/dte/dte_tmps/cotizacion/<?=$DteTmp->receptor?>/<?=$DteTmp->dte?>/<?=$DteTmp->codigo?>" role="button">
                 <i class="far fa-file"></i>
                 Cotización
             </a>
@@ -179,9 +179,9 @@ echo $f->input([
 echo $f->end('Descargar PDF');
 $links = $DteTmp->getLinks();
 if ($DteTmp->getTipo()->permiteCobro()) :
-$share_telephone = $DteTmp->getCelular();
-$share_message = '¡Hola! Soy de '.$Emisor->getNombre().'. Te adjunto el enlace al PDF de la cotización N° '.$DteTmp->getFolio().': '.$links['pdf'];
-?>
+    $share_telephone = $DteTmp->getCelular();
+    $share_message = '¡Hola! Soy de '.$Emisor->getNombre().'. Te adjunto el enlace al PDF de la cotización N° '.$DteTmp->getFolio().': '.$links['pdf'];
+    ?>
     <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2">
         <div class="col mb-4">
             <div class="btn-group w-100" role="group">
@@ -204,7 +204,7 @@ $share_message = '¡Hola! Soy de '.$Emisor->getNombre().'. Te adjunto el enlace 
 <!-- INICIO ENVIAR POR EMAIL -->
 <div role="tabpanel" class="tab-pane" id="email" aria-labelledby="email-tab">
 <?php
-$asunto = 'Documento N° '.$DteTmp->getFolio().' de '.$Emisor->razon_social.' ('.$Emisor->getRUT().')';
+    $asunto = 'Documento N° '.$DteTmp->getFolio().' de '.$Emisor->razon_social.' ('.$Emisor->getRUT().')';
 if (!$email_html) {
     $mensaje = $Receptor->razon_social.','."\n\n";
     $mensaje .= 'Se adjunta documento N° '.$DteTmp->getFolio().' del día '.\sowerphp\general\Utility_Date::format($DteTmp->fecha).' por un monto total de $'.num($DteTmp->total).'.-'."\n\n";
@@ -231,7 +231,9 @@ if (!$email_html) {
         $mensaje .= implode(' - ', $contacto)."\n";
     }
     $mensaje .= $Emisor->direccion.', '.$Emisor->getComuna()->comuna."\n";
-} else $mensaje = '';
+} else {
+    $mensaje = '';
+}
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin([
     'action' => $_base.'/dte/dte_tmps/enviar_email/'.$DteTmp->receptor.'/'.$DteTmp->dte.'/'.$DteTmp->codigo,
@@ -264,9 +266,9 @@ echo $f->input([
     'name' => 'mensaje',
     'label' => 'Mensaje',
     'value' => $mensaje,
-    'rows' => !$email_html?10:4,
-    'check' => !$email_html?'notempty':'',
-    'help' => $email_html?('<a href="#" onclick="__.popup(\''.$_base.'/dte/dte_tmps/email_html/'.$DteTmp->receptor.'/'.$DteTmp->dte.'/'.$DteTmp->codigo.'\', 750, 550); return false">Correo por defecto es HTML</a>, si agrega un mensaje acá será añadido al campo {msg_txt} del mensaje HTML'):'',
+    'rows' => !$email_html ? 10 : 4,
+    'check' => !$email_html ? 'notempty' : '',
+    'help' => $email_html ? ('<a href="#" onclick="__.popup(\''.$_base.'/dte/dte_tmps/email_html/'.$DteTmp->receptor.'/'.$DteTmp->dte.'/'.$DteTmp->codigo.'\', 750, 550); return false">Correo por defecto es HTML</a>, si agrega un mensaje acá será añadido al campo {msg_txt} del mensaje HTML') : '',
 ]);
 echo $f->input(['type' => 'select', 'name' => 'cotizacion', 'label' => 'Enviar', 'options' => ['Previsualización', 'Cotización'], 'value' => 1]);
 echo $f->end('Enviar PDF por email');
@@ -297,7 +299,7 @@ if ($email_enviados) {
         <div class="row">
             <div class="col-sm-6 mb-2">
                 <div class="btn-group w-100" role="group">
-                    <a class="btn btn-primary btn-lg col-12<?=!empty($links['pagar'])?'':' disabled'?>" href="<?=!empty($links['pagar']) ? $links['pagar'] : ''?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=!empty($links['pagar']) ? '' : ' disabled'?>" href="<?=!empty($links['pagar']) ? $links['pagar'] : ''?>" role="button">
                         Enlace público para pagar
                     </a>
 <?php if (!empty($links['pagar'])) : ?>
@@ -360,30 +362,30 @@ echo $f->end('Actualizar fecha');
     <div class="card-body">
 <?php
 $f = new \sowerphp\general\View_Helper_Form(false);
-echo $f->begin([
-    'action' => $_base.'/dte/dte_tmps/editar_json/'.$DteTmp->receptor.'/'.$DteTmp->dte.'/'.$DteTmp->codigo,
-    'id' => 'editarJsonForm',
-    'onsubmit' => 'Form.check(\'editarJsonForm\')',
-]);
-echo $f->input([
-    'type' => 'textarea',
-    'name' => 'datos',
-    'label' => 'Datos',
-    'value' => json_encode(json_decode($DteTmp->datos), JSON_PRETTY_PRINT),
-    'check' => 'notempty',
-    'rows' => 20,
-]),'<br/>';
-echo $f->input([
-    'type' => 'textarea',
-    'name' => 'extra',
-    'label' => 'Extra',
-    'placeholder' => 'Datos extras del Documento Temporal (opcional)',
-    'value' => $DteTmp->extra ? json_encode($DteTmp->getExtra(), JSON_PRETTY_PRINT) : null,
-    'rows' => 10,
-]);
-echo '<button type="submit" class="btn btn-primary col-12 mt-4">Guardar JSON</button>';
-echo $f->end(false);
-?>
+    echo $f->begin([
+        'action' => $_base.'/dte/dte_tmps/editar_json/'.$DteTmp->receptor.'/'.$DteTmp->dte.'/'.$DteTmp->codigo,
+        'id' => 'editarJsonForm',
+        'onsubmit' => 'Form.check(\'editarJsonForm\')',
+    ]);
+    echo $f->input([
+        'type' => 'textarea',
+        'name' => 'datos',
+        'label' => 'Datos',
+        'value' => json_encode(json_decode($DteTmp->datos), JSON_PRETTY_PRINT),
+        'check' => 'notempty',
+        'rows' => 20,
+    ]),'<br/>';
+    echo $f->input([
+        'type' => 'textarea',
+        'name' => 'extra',
+        'label' => 'Extra',
+        'placeholder' => 'Datos extras del Documento Temporal (opcional)',
+        'value' => $DteTmp->extra ? json_encode($DteTmp->getExtra(), JSON_PRETTY_PRINT) : null,
+        'rows' => 10,
+    ]);
+    echo '<button type="submit" class="btn btn-primary col-12 mt-4">Guardar JSON</button>';
+    echo $f->end(false);
+    ?>
     </div>
 </div>
 <div class="card mt-4" id="avanzado_datos-documento-card">

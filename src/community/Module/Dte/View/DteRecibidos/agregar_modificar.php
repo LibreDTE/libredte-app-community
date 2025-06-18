@@ -37,7 +37,7 @@ function dte_recibido_tipo_transaccion() {
 <?php
 endif;
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit' => 'Form.check() && __.loading(\'Guardando DTE recibido...\')', 'focus' => (!isset($DteRecibido)?'emisorField':false)]);
+echo $f->begin(['onsubmit' => 'Form.check() && __.loading(\'Guardando DTE recibido...\')', 'focus' => (!isset($DteRecibido) ? 'emisorField' : false)]);
 $f->setColsLabel(5);
 echo '<div class="row">',"\n";
 echo '<div class="col-md-6">',"\n";
@@ -107,7 +107,7 @@ echo $f->input([
     'name' => 'impuesto_tipo',
     'label' => 'Tipo de impuesto',
     'value' => isset($DteRecibido) ? $DteRecibido->impuesto_tipo : 1,
-    'options' => [1=>'IVA', 2=>'Ley 18211'],
+    'options' => [1 => 'IVA', 2 => 'Ley 18211'],
 ]);
 echo $f->input([
     'name' => 'tasa',
@@ -281,7 +281,7 @@ echo $f->input([
 // fin formulario
 $f->setStyle(false);
 echo '<div class="row">',"\n";
-echo '<div class="col-md-4 offset-md-',(!isset($DteRecibido)?4:2),'">',"\n";
+echo '<div class="col-md-4 offset-md-',(!isset($DteRecibido) ? 4 : 2),'">',"\n";
 echo $f->input([
     'type' => 'submit',
     'name' => 'submit',

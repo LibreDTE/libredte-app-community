@@ -21,28 +21,27 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
-use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna;
-use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
-use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
-use \sowerphp\app\Sistema\Usuarios\Model_Usuarios;
-use \sowerphp\app\Utility_Apps;
-use \sowerphp\app\Utility_Rut;
-use \sowerphp\core\Exception_Model_Datasource_Database as DatabaseException;
-use \sowerphp\core\Model_Datasource_Session as Session;
-use \sowerphp\core\Network_Email;
-use \sowerphp\core\Network_Email_Imap;
-use \sowerphp\core\Network_Http_Rest;
-use \sowerphp\core\Trigger;
-use \sowerphp\core\Utility_Array;
-use \sowerphp\general\Utility_Date;
-use \sowerphp\general\Utility_File;
-use \sowerphp\general\Utility_Image;
-use \sowerphp\general\Utility_Mapas_Google;
-use \website\Dte\Admin\Model_DteFolio;
-use \website\Sistema\General\Model_ActividadEconomica;
+use sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna;
+use sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+use sowerphp\app\Sistema\Usuarios\Model_Usuario;
+use sowerphp\app\Sistema\Usuarios\Model_Usuarios;
+use sowerphp\app\Utility_Apps;
+use sowerphp\app\Utility_Rut;
+use sowerphp\core\Exception_Model_Datasource_Database as DatabaseException;
+use sowerphp\core\Model_Datasource_Session as Session;
+use sowerphp\core\Network_Email;
+use sowerphp\core\Network_Email_Imap;
+use sowerphp\core\Network_Http_Rest;
+use sowerphp\core\Trigger;
+use sowerphp\core\Utility_Array;
+use sowerphp\general\Utility_Date;
+use sowerphp\general\Utility_File;
+use sowerphp\general\Utility_Image;
+use sowerphp\general\Utility_Mapas_Google;
+use website\Dte\Admin\Model_DteFolio;
+use website\Sistema\General\Model_ActividadEconomica;
 
 /**
  * Clase para mapear la tabla contribuyente de la base de datos.
@@ -297,10 +296,8 @@ class Model_Contribuyente extends \Model_App
                     $this->$attr = null;
                 }
             }
-        }
-        catch (DatabaseException $e) {
-        }
-        catch (\Exception $e) {
+        } catch (DatabaseException $e) {
+        } catch (\Exception $e) {
         }
     }
 
@@ -378,7 +375,7 @@ class Model_Contribuyente extends \Model_App
         if (strpos($name, 'config_') === 0) {
             $key = str_replace('config_', '', $name);
             $c = substr($key, 0, strpos($key, '_'));
-            $v = substr($key, strpos($key, '_')+1);
+            $v = substr($key, strpos($key, '_') + 1);
             $value = ($value === false || $value === 0)
                 ? '0'
                 : (
@@ -504,10 +501,11 @@ class Model_Contribuyente extends \Model_App
                         $valor = Utility_Data::encrypt($valor);
                     }
                     $Config->valor = $valor;
-                    if ($valor !== null)
+                    if ($valor !== null) {
                         $Config->save();
-                    else
+                    } else {
                         $Config->delete();
+                    }
                 }
             }
         }
@@ -1435,8 +1433,7 @@ class Model_Contribuyente extends \Model_App
                 if ($filtros['receptor'][0] == '!') {
                     $where[] = 'd.receptor != :receptor';
                     $vars[':receptor'] = substr($filtros['receptor'], 1);
-                }
-                else {
+                } else {
                     $where[] = 'd.receptor = :receptor';
                     $vars[':receptor'] = $filtros['receptor'];
                 }
@@ -1584,14 +1581,12 @@ class Model_Contribuyente extends \Model_App
                     $i++;
                 }
                 $where[] = 'd.dte IN ('.implode(', ', $where_dte).')';
-            }
-            else {
+            } else {
                 $filtros['dte'] = (string)$filtros['dte'];
                 if ($filtros['dte'][0] == '!') {
                     $where[] = 'd.dte != :dte';
                     $vars[':dte'] = substr($filtros['dte'], 1);
-                }
-                else {
+                } else {
                     $where[] = 'd.dte = :dte';
                     $vars[':dte'] = $filtros['dte'];
                 }
@@ -1622,8 +1617,7 @@ class Model_Contribuyente extends \Model_App
                 if ($filtros['receptor'][0] == '!') {
                     $where[] = 'd.receptor != :receptor';
                     $vars[':receptor'] = substr($filtros['receptor'], 1);
-                }
-                else {
+                } else {
                     $where[] = 'd.receptor = :receptor';
                     $vars[':receptor'] = $filtros['receptor'];
                 }
@@ -2640,7 +2634,7 @@ class Model_Contribuyente extends \Model_App
     public function getGuias($periodo): array
     {
         $periodo_col = $this->db->date('Ym', 'e.fecha');
-        $tipo_col= $this->db->xml(
+        $tipo_col = $this->db->xml(
             'e.xml',
             '/EnvioDTE/SetDTE/DTE/Documento/Encabezado/IdDoc/IndTraslado',
             'http://www.sii.cl/SiiDte'
@@ -3489,7 +3483,8 @@ class Model_Contribuyente extends \Model_App
      */
     public function getDteEmitidosSinEnviar(?int $certificacion = null, int $creados_hace_horas = 0): array
     {
-        $certificacion = (int)($certificacion !== null
+        $certificacion = (int)(
+            $certificacion !== null
             ? $certificacion
             : $this->enCertificacion()
         );
@@ -3530,7 +3525,8 @@ class Model_Contribuyente extends \Model_App
      */
     public function getDteEmitidosSinEstado(?int $certificacion = null): array
     {
-        $certificacion = (int)($certificacion !== null
+        $certificacion = (int)(
+            $certificacion !== null
             ? $certificacion
             : $this->enCertificacion()
         );
@@ -3879,7 +3875,7 @@ class Model_Contribuyente extends \Model_App
             $periodo_where = $intercambio_periodo_where = '';
         }
         $periodos = array_map(
-            function($p) { return '(SELECT '.$p.' AS periodo)'; },
+            function ($p) { return '(SELECT '.$p.' AS periodo)'; },
             $periodos
         );
         $datos = $this->db->getTable('
@@ -4506,8 +4502,7 @@ class Model_Contribuyente extends \Model_App
                 if ($filtros['operacion'] == 'COMPRA') {
                     $url = sprintf(
                         '/sii/rcv/compras/detalle/%d-%s/%d/%d/%s?formato='
-                            . $filtros['formato'] . '&certificacion=%d&tipo=%s'
-                        ,
+                            . $filtros['formato'] . '&certificacion=%d&tipo=%s',
                         $this->rut,
                         $this->dv,
                         $filtros['periodo'],
@@ -4519,8 +4514,7 @@ class Model_Contribuyente extends \Model_App
                 } else {
                     $url = sprintf(
                         '/sii/rcv/ventas/detalle/%d-%s/%d/%d?formato='
-                            . $filtros['formato'] . '&certificacion=%d&tipo=%s'
-                        ,
+                            . $filtros['formato'] . '&certificacion=%d&tipo=%s',
                         $this->rut,
                         $this->dv,
                         $filtros['periodo'],

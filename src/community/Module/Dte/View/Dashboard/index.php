@@ -54,7 +54,7 @@ echo View_Helper_Dashboard::cards([
         'link_title' => 'Bandeja de intercambio',
     ],
 ]);
-?>
+                ?>
 
 <div class="row">
     <!-- PANEL IZQUIERDA -->
@@ -64,7 +64,7 @@ echo View_Helper_Dashboard::cards([
         </a>
         <!-- menú módulo -->
         <div class="list-group mb-4 card">
-            <?php foreach ($nav as $link=>&$info): ?>
+            <?php foreach ($nav as $link => &$info): ?>
                 <a href="<?=$_base.'/dte'.$link?>" title="<?=$info['desc']?>" class="list-group-item">
                     <i class="<?=$info['icon']?> fa-fw"></i> <?=$info['name']?>
                 </a>
@@ -152,7 +152,7 @@ echo View_Helper_Dashboard::cards([
             </div>
             <!-- fin alertas rcof con reparo por secuencia -->
         <?php endif; ?>
-        <?php if ($Firma && $Firma->getExpirationDays()<=20) : ?>
+        <?php if ($Firma && $Firma->getExpirationDays() <= 20) : ?>
             <!-- alerta vencimiento firma electrónica -->
             <div class="row">
                 <div class="col-sm-12">
@@ -300,7 +300,7 @@ echo View_Helper_Dashboard::cards([
                         <div class="card-header"><i class="fas fa-exclamation-circle fa-fw"></i> Emitidos reclamados</div>
                         <div class="card-body text-center">
                             <span class="lead">
-                                <?php if ($n_emitidos_reclamados>1) : ?>
+                                <?php if ($n_emitidos_reclamados > 1) : ?>
                                     <?=num($n_emitidos_reclamados)?> documentos<br/>
                                 <?php else : ?>
                                     Un documento<br/>
@@ -321,7 +321,7 @@ echo View_Helper_Dashboard::cards([
                         <div class="card-header"><i class="fas fa-paperclip fa-fw"></i> Recibidos pendientes en SII</div>
                         <div class="card-body text-center">
                             <span class="lead">
-                                <?php if ($n_registro_compra_pendientes>1) : ?>
+                                <?php if ($n_registro_compra_pendientes > 1) : ?>
                                     <?=num($n_registro_compra_pendientes)?> documentos<br/>
                                 <?php else : ?>
                                     Un documento<br/>
@@ -343,13 +343,13 @@ echo View_Helper_Dashboard::cards([
                     <div class="list-group">
                         <?php foreach ($registro_compra_pendientes_dias as $p) : ?>
                             <?php
-                                if ($p['dias_aceptacion_automatica']<=1) {
-                                    $color = 'danger';
-                                } elseif ($p['dias_aceptacion_automatica']<=4) {
-                                    $color = 'warning';
-                                } else {
-                                    $color = 'success';
-                                }
+                                                if ($p['dias_aceptacion_automatica'] <= 1) {
+                                                    $color = 'danger';
+                                                } elseif ($p['dias_aceptacion_automatica'] <= 4) {
+                                                    $color = 'warning';
+                                                } else {
+                                                    $color = 'success';
+                                                }
                             ?>
                             <a href="<?=$_base?>/dte/registro_compras/pendientes?fecha_recepcion_sii_desde=<?=$p['fecha_recepcion_sii']?>&amp;fecha_recepcion_sii_hasta=<?=$p['fecha_recepcion_sii']?>" class="list-group-item">
                                 <span class="badge rounded-pill bg-<?=$color?>"><?=\sowerphp\general\Utility_Date::format($p['fecha_aceptacion_automatica'])?> (en <?=$p['dias_aceptacion_automatica']?> días)</span>

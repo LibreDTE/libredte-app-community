@@ -33,7 +33,7 @@ class Shell_Command_DteEmitidos_EventosReceptor extends \Shell_App
         $this->db = \sowerphp\core\Model_Datasource_Database::get();
         try {
             $this->actualizarEventosReceptor($meses, $grupo, $certificacion);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             if ($this->verbose) {
                 $this->out('<error>'.$e->getMessage().'</error>');
             }
@@ -65,13 +65,13 @@ class Shell_Command_DteEmitidos_EventosReceptor extends \Shell_App
                     AND e.receptor_evento IS NULL
                     AND e.fecha  >=  (CURRENT_DATE - INTERVAL \''.(int)$meses.' MONTHS\')
             ', [
-                ':certificacion' => (int)$certificacion, 
+                ':certificacion' => (int)$certificacion,
                 ':grupo' => $grupo,
             ]);
         }
         $periodo_actual = (int)date('Ym');
         $periodos = [$periodo_actual];
-        for ($i = 0; $i < $meses-1; $i++) {
+        for ($i = 0; $i < $meses - 1; $i++) {
             $periodos[] = \sowerphp\general\Utility_Date::previousPeriod($periodos[$i]);
         }
         sort($periodos);

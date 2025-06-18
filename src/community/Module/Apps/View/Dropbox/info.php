@@ -36,7 +36,7 @@
                 <div class="card-body">
                     <span class="fas fa-database fa-fw fa-2x"></span>
                     <br/>
-                    <span class="lead"><?=num($accountSpace['used']/1024/1024/1024,1)?> / <?=num($accountSpace['allocation']['allocated']/1024/1024/1024,1)?> GB</span>
+                    <span class="lead"><?=num($accountSpace['used'] / 1024 / 1024 / 1024, 1)?> / <?=num($accountSpace['allocation']['allocated'] / 1024 / 1024 / 1024, 1)?> GB</span>
                 </div>
             </div>
         </div>

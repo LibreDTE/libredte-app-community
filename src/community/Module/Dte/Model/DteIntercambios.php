@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -94,8 +93,7 @@ class Model_DteIntercambios extends \Model_Plural_App
             if (is_numeric($filtros['emisor'])) {
                 $where[] = 'i.emisor = :emisor';
                 $vars['emisor'] = $filtros['emisor'];
-            }
-            elseif (strpos($filtros['emisor'], '-')) {
+            } elseif (strpos($filtros['emisor'], '-')) {
                 $part0 = explode('-', str_replace('.', '', $filtros['emisor']))[0];
                 if (is_numeric($part0)) {
                     $where[] = 'i.emisor = :emisor';
@@ -231,7 +229,7 @@ class Model_DteIntercambios extends \Model_Plural_App
                 dte_intercambio AS i
                 LEFT JOIN contribuyente AS e ON i.emisor = e.rut
                 LEFT JOIN usuario AS u ON i.usuario = u.id
-            WHERE '.implode(' AND ',$where).'
+            WHERE '.implode(' AND ', $where).'
         ', $vars);
     }
 
@@ -265,7 +263,7 @@ class Model_DteIntercambios extends \Model_Plural_App
                 dte_intercambio AS i
                 LEFT JOIN contribuyente AS e ON i.emisor = e.rut
                 LEFT JOIN usuario AS u ON i.usuario = u.id
-            WHERE '.implode(' AND ',$where).'
+            WHERE '.implode(' AND ', $where).'
             ORDER BY i.fecha_hora_email DESC
             '.$limit.'
         ', $vars);
@@ -280,7 +278,7 @@ class Model_DteIntercambios extends \Model_Plural_App
             if (!empty($i['documentos'])) {
                 $nuevo_dte = true;
                 $n_letras = strlen($i['documentos']);
-                for ($j=0; $j<$n_letras; $j++) {
+                for ($j = 0; $j < $n_letras; $j++) {
                     if ($i['documentos'][$j] == ',') {
                         $nuevo_dte = !$nuevo_dte;
                         if ($nuevo_dte) {
@@ -342,7 +340,8 @@ class Model_DteIntercambios extends \Model_Plural_App
         }
         if (!$Imap) {
             throw new \sowerphp\core\Exception(
-                'No fue posible conectar mediante IMAP a '.$this->getContribuyente()->config_email_intercambio_imap.', verificar mailbox, usuario y/o contraseña de correo de intercambio:<br/>'.implode('<br/>', imap_errors()), 500
+                'No fue posible conectar mediante IMAP a '.$this->getContribuyente()->config_email_intercambio_imap.', verificar mailbox, usuario y/o contraseña de correo de intercambio:<br/>'.implode('<br/>', imap_errors()),
+                500
             );
         }
         // obtener mensajes sin leer

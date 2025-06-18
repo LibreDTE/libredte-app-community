@@ -21,14 +21,13 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
-use \sowerphp\core\Utility_Array;
-use \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos;
-use \website\Dte\Admin\Mantenedores\Model_DteTipo;
-use \website\Dte\Admin\Mantenedores\Model_DteTipos;
+use sowerphp\core\Utility_Array;
 use stdClass;
+use website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos;
+use website\Dte\Admin\Mantenedores\Model_DteTipo;
+use website\Dte\Admin\Mantenedores\Model_DteTipos;
 
 /**
  * Clase para mapear la tabla dte_recibido de la base de datos.
@@ -538,7 +537,7 @@ class Model_DteRecibido extends \Model_App
             $iva_no_recuperable_codigo = explode(',', $datos['iva_no_recuperable_codigo']);
             $iva_no_recuperable_monto = explode(',', $datos['iva_no_recuperable_monto']);
             $n_codigos = count($iva_no_recuperable_codigo);
-            for ($i=0; $i<$n_codigos; $i++) {
+            for ($i = 0; $i < $n_codigos; $i++) {
                 $iva_no_recuperable[] = [
                     'codigo' => $iva_no_recuperable_codigo[$i],
                     'monto' => $iva_no_recuperable_monto[$i],
@@ -556,7 +555,7 @@ class Model_DteRecibido extends \Model_App
             $impuesto_adicional_tasa = explode(',', $datos['impuesto_adicional_tasa']);
             $impuesto_adicional_monto = explode(',', $datos['impuesto_adicional_monto']);
             $n_codigos = count($impuesto_adicional_codigo);
-            for ($i=0; $i<$n_codigos; $i++) {
+            for ($i = 0; $i < $n_codigos; $i++) {
                 $impuesto_adicional[] = [
                     'codigo' => $impuesto_adicional_codigo[$i],
                     'tasa' => $impuesto_adicional_tasa[$i],
@@ -1043,10 +1042,12 @@ class Model_DteRecibido extends \Model_App
             'hash' => $this->getReceptor()->getUsuario()->hash,
         ];
         $default_config = Utility_Array::mergeRecursiveDistinct(
-            $default_config, $config_emisor
+            $default_config,
+            $config_emisor
         );
         $config = Utility_Array::mergeRecursiveDistinct(
-            $default_config, $config
+            $default_config,
+            $config
         );
         // si es un DTE del portal MIPYME se busca el PDF ahí
         if ($this->mipyme) {

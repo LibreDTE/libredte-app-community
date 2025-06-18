@@ -38,7 +38,7 @@ foreach ($documentos as &$d) {
     }
     unset($d['estado'], $d['proveedor_rut'], $d['proveedor_dv'], $d['dte'], $d['folio'], $d['dettipotransaccion'], $d['desctipotransaccion']);
 }
-array_unshift($documentos, ['Proveedor','Documento', 'Fecha', 'Recepción SII', 'Exento', 'Neto', 'IVA', 'Total', 'Acciones']);
-new \sowerphp\general\View_Helper_Table($documentos);
-?>
+        array_unshift($documentos, ['Proveedor','Documento', 'Fecha', 'Recepción SII', 'Exento', 'Neto', 'IVA', 'Total', 'Acciones']);
+        new \sowerphp\general\View_Helper_Table($documentos);
+        ?>
 <a class="btn btn-primary btn-lg col-12" href="<?=$_base?>/dte/registro_compras/csv?<?=http_build_query($filtros)?>" role="button">Descargar detalle de documentos</a>

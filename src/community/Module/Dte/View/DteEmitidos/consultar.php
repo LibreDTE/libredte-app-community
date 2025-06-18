@@ -67,7 +67,7 @@ $f = new \sowerphp\general\View_Helper_Form(false);
         ['Receptor', 'Exento', 'Neto', 'IVA', 'Total'],
         [$DteEmitido->getReceptor()->razon_social, num($DteEmitido->exento), num($DteEmitido->neto), num($DteEmitido->iva), num($DteEmitido->total)],
     ]);
-?>
+    ?>
 <?php if ($DteEmitido->track_id) : ?>
                     <div class="text-center">
                         <p>
@@ -79,13 +79,13 @@ $f = new \sowerphp\general\View_Helper_Form(false);
 <?php endif; ?>
                     <div class="row mb-4">
                         <div class="col-md-6">
-                            <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$links['pdf']?>" role="button">
+                            <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML() ? ' disabled' : '')?>" href="<?=$links['pdf']?>" role="button">
                                 <span class="far fa-file-pdf"></span>
                                 Descargar PDF
                             </a>
                         </div>
                         <div class="col-md-6">
-                            <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML()?' disabled':'')?>" href="<?=$links['xml']?>" role="button">
+                            <a class="btn btn-primary btn-lg col-12<?=(!$DteEmitido->hasXML() ? ' disabled' : '')?>" href="<?=$links['xml']?>" role="button">
                                 <span class="far fa-file-code"></span>
                                 Descargar XML
                             </a>

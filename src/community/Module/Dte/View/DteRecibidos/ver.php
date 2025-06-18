@@ -73,19 +73,19 @@ echo $t->generate([
 ?>
             <div class="row mt-2">
                 <div class="col-md-4 mb-2">
-                    <a class="btn btn-primary btn-lg col-12<?=(!$DteRecibido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_recibidos/pdf/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=(!$DteRecibido->hasXML() ? ' disabled' : '')?>" href="<?=$_base?>/dte/dte_recibidos/pdf/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button">
                         <span class="far fa-file-pdf"></span>
                         Descargar PDF
                     </a>
                 </div>
                 <div class="col-md-4 mb-2">
-                    <a class="btn btn-primary btn-lg col-12<?=(!$DteRecibido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_recibidos/xml/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=(!$DteRecibido->hasXML() ? ' disabled' : '')?>" href="<?=$_base?>/dte/dte_recibidos/xml/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button">
                         <span class="far fa-file-code"></span>
                         Descargar XML
                     </a>
                 </div>
                 <div class="col-md-4 mb-2">
-                    <a class="btn btn-primary btn-lg col-12<?=(!$DteRecibido->hasXML()?' disabled':'')?>" href="<?=$_base?>/dte/dte_recibidos/json/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=(!$DteRecibido->hasXML() ? ' disabled' : '')?>" href="<?=$_base?>/dte/dte_recibidos/json/<?=$DteRecibido->emisor?>/<?=$DteRecibido->dte?>/<?=$DteRecibido->folio?>" role="button">
                         <span class="far fa-file-code"></span>
                         Descargar JSON
                     </a>
@@ -184,19 +184,19 @@ echo $f->end('Descargar PDF');
         <div class="card-body">
 <?php
 $de = $DteIntercambio->de;
-if ($DteIntercambio->de != $DteIntercambio->responder_a) {
-    $de .= '<br/><span>'.$DteIntercambio->responder_a.'</span>';
-}
-new \sowerphp\general\View_Helper_Table([
-    ['Recibido', 'De', 'Estado', 'Procesado'],
-    [
-        \sowerphp\general\Utility_Date::format($DteIntercambio->fecha_hora_email, 'd/m/Y H:i'),
-        $de,
-        $DteIntercambio->getEstado()->estado,
-        $DteIntercambio->getUsuario()->usuario,
-    ],
-]);
-?>
+    if ($DteIntercambio->de != $DteIntercambio->responder_a) {
+        $de .= '<br/><span>'.$DteIntercambio->responder_a.'</span>';
+    }
+    new \sowerphp\general\View_Helper_Table([
+        ['Recibido', 'De', 'Estado', 'Procesado'],
+        [
+            \sowerphp\general\Utility_Date::format($DteIntercambio->fecha_hora_email, 'd/m/Y H:i'),
+            $de,
+            $DteIntercambio->getEstado()->estado,
+            $DteIntercambio->getUsuario()->usuario,
+        ],
+    ]);
+    ?>
         </div>
     </div>
     <a href="<?=$_base?>/dte/dte_intercambios/ver/<?=$DteIntercambio->codigo?>" class="btn btn-primary btn-lg col-12">
@@ -215,20 +215,20 @@ new \sowerphp\general\View_Helper_Table([
         <div class="card-header">Documentos referenciados</div>
         <div class="card-body">
 <?php
-// referencias que este documento hace a otros
-if ($referenciados) {
-    foreach ($referenciados as &$referenciado) {
-        if (!empty($referenciado['FchRef'])) {
-            $referenciado['FchRef'] = \sowerphp\general\Utility_Date::format($referenciado['FchRef']);
+    // referencias que este documento hace a otros
+    if ($referenciados) {
+        foreach ($referenciados as &$referenciado) {
+            if (!empty($referenciado['FchRef'])) {
+                $referenciado['FchRef'] = \sowerphp\general\Utility_Date::format($referenciado['FchRef']);
+            }
         }
+        array_unshift($referenciados, ['#', 'Documento', 'Tipo', 'Folio', 'Ind. Global', 'RUT otro cont.', 'Fecha', 'Código ref.', 'Tipo ref.', 'Razón ref.', 'Vendedor', 'Caja']);
+        $t = new \sowerphp\general\View_Helper_Table();
+        $t->setShowEmptyCols(false);
+        echo $t->generate($referenciados);
+    } else {
+        echo '<p>Este documento no hace referencia a otros.</p>',"\n";
     }
-    array_unshift($referenciados, ['#', 'Documento', 'Tipo', 'Folio', 'Ind. Global', 'RUT otro cont.', 'Fecha', 'Código ref.', 'Tipo ref.', 'Razón ref.', 'Vendedor', 'Caja']);
-    $t = new \sowerphp\general\View_Helper_Table();
-    $t->setShowEmptyCols(false);
-    echo $t->generate($referenciados);
-} else {
-    echo '<p>Este documento no hace referencia a otros.</p>',"\n";
-}
 ?>
         </div>
     </div>

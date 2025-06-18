@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -40,7 +39,8 @@ class Controller_DteIntercambioRecibos extends \Controller_App
         $DteIntercambioRecibo = new Model_DteIntercambioRecibo($responde, $Emisor->rut, $codigo);
         if (!$DteIntercambioRecibo->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el recibo solicitado.', 'error'
+                'No existe el recibo solicitado.',
+                'error'
             );
             $this->redirect('/dte/dte_intercambios');
         }

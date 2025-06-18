@@ -12,24 +12,24 @@
     <div class="col-md-8">
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit' => 'Form.check()']);
-echo $f->input([
-    'type' => 'file',
-    'name' => 'firma',
-    'label' => 'Firma electrónica',
-    'help' => 'Certificado digital con extensión .p12 o .pfx',
-    'check' => 'notempty',
-    'attr' => 'accept=".p12,.pfx"',
-]);
-echo $f->input([
-    'type' => 'password',
-    'name' => 'contrasenia',
-    'label' => 'Contraseña firma',
-    'help' => 'Contraseña que permite abrir el certificado digital de la firma electrónica',
-    'check' => 'notempty',
-]);
-echo $f->end('Agregar o cambiar mi firma electrónica');
-?>
+        echo $f->begin(['onsubmit' => 'Form.check()']);
+        echo $f->input([
+            'type' => 'file',
+            'name' => 'firma',
+            'label' => 'Firma electrónica',
+            'help' => 'Certificado digital con extensión .p12 o .pfx',
+            'check' => 'notempty',
+            'attr' => 'accept=".p12,.pfx"',
+        ]);
+        echo $f->input([
+            'type' => 'password',
+            'name' => 'contrasenia',
+            'label' => 'Contraseña firma',
+            'help' => 'Contraseña que permite abrir el certificado digital de la firma electrónica',
+            'check' => 'notempty',
+        ]);
+        echo $f->end('Agregar o cambiar mi firma electrónica');
+        ?>
     </div>
     <div class="col-md-4">
         <div class="card mb-4">

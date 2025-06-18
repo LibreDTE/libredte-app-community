@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte\Admin;
 
 /**
@@ -87,7 +86,8 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
         $Clasificacion = new Model_ItemClasificacion($Contribuyente->rut, $codigo);
         if ($Clasificacion->enUso()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No es posible eliminar la clasificacion '.$Clasificacion->clasificacion.' ya que existen items que la usan.', 'error'
+                'No es posible eliminar la clasificacion '.$Clasificacion->clasificacion.' ya que existen items que la usan.',
+                'error'
             );
             $filterListar = !empty($_GET['listar']) ? base64_decode($_GET['listar']) : '';
             $this->redirect(
@@ -107,7 +107,8 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
             // verificar que se haya podido subir el archivo con el libro
             if (!isset($_FILES['archivo']) || $_FILES['archivo']['error']) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Ocurrió un error al subir el listado de clasificaciones de items.', 'error'
+                    'Ocurrió un error al subir el listado de clasificaciones de items.',
+                    'error'
                 );
                 return;
             }
@@ -122,7 +123,7 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
                 // crear objeto
                 $Clasificacion = new Model_ItemClasificacion();
                 $Clasificacion->contribuyente = $Contribuyente->rut;
-                for ($i=0; $i<$n_cols; $i++) {
+                for ($i = 0; $i < $n_cols; $i++) {
                     $Clasificacion->{$cols[$i]} = $c[$i];
                 }
                 // guardar
@@ -151,7 +152,8 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
                 );
             } else {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Se importó el archivo de clasificaciones de items.', 'ok'
+                    'Se importó el archivo de clasificaciones de items.',
+                    'ok'
                 );
                 $this->redirect('/dte/admin/item_clasificaciones/listar');
             }
@@ -170,7 +172,8 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
         ;
         if (!$clasificaciones) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No hay clasificaciones de items que exportar.', 'warning'
+                'No hay clasificaciones de items que exportar.',
+                'warning'
             );
             $this->redirect('/dte/admin/item_clasificaciones/listar');
         }

@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -197,7 +196,10 @@ class Model_Cobranza extends \Model_App
     public function getDocumento()
     {
         return (new \website\Dte\Model_DteEmitidos())->get(
-            $this->emisor, $this->dte, $this->folio, $this->certificacion
+            $this->emisor,
+            $this->dte,
+            $this->folio,
+            $this->certificacion
         );
     }
 

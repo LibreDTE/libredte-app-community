@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -61,7 +60,7 @@ class Controller_DteTmps extends \Controller_App
             if (!empty($pagina)) {
                 $filtros['limit'] = config('app.registers_per_page');
                 $filtros['offset'] = ($pagina - 1) * $filtros['limit'];
-                $paginas = $documentos_total ? ceil($documentos_total/$filtros['limit']) : 0;
+                $paginas = $documentos_total ? ceil($documentos_total / $filtros['limit']) : 0;
                 if ($pagina != 1 && $pagina > $paginas) {
                     $this->redirect('/dte/'.$this->request->getParsedParams()['controller'].'/listar'.$searchUrl);
                 }
@@ -69,7 +68,8 @@ class Controller_DteTmps extends \Controller_App
             $documentos = $Emisor->getDocumentosTemporales($filtros);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Error al recuperar los documentos:<br/>'.$e->getMessage(), 'error'
+                'Error al recuperar los documentos:<br/>'.$e->getMessage(),
+                'error'
             );
             $documentos_total = 0;
             $documentos = [];
@@ -99,7 +99,8 @@ class Controller_DteTmps extends \Controller_App
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el documento temporal solicitado.', 'error'
+                'No existe el documento temporal solicitado.',
+                'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
@@ -233,7 +234,8 @@ class Controller_DteTmps extends \Controller_App
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el documento temporal solicitado.', 'error'
+                'No existe el documento temporal solicitado.',
+                'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
@@ -279,7 +281,8 @@ class Controller_DteTmps extends \Controller_App
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             } else {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Se envió el PDF a: '.implode(', ', $emails), 'ok'
+                    'Se envió el PDF a: '.implode(', ', $emails),
+                    'ok'
                 );
             }
         }
@@ -462,7 +465,8 @@ class Controller_DteTmps extends \Controller_App
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el documento temporal solicitado.', 'error'
+                'No existe el documento temporal solicitado.',
+                'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
@@ -470,7 +474,8 @@ class Controller_DteTmps extends \Controller_App
         $xml = $DteTmp->getEnvioDte()->generar();
         if (!$xml) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible crear el XML para previsualización:<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+                'No fue posible crear el XML para previsualización:<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()),
+                'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
@@ -510,7 +515,8 @@ class Controller_DteTmps extends \Controller_App
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el documento temporal solicitado.', 'error'
+                'No existe el documento temporal solicitado.',
+                'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
@@ -531,7 +537,8 @@ class Controller_DteTmps extends \Controller_App
         // solo administrador puede eliminar masivamente los temporales
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Solo el administrador de la empresa está autorizado a eliminar masivamente los documentos temporales.', 'error'
+                'Solo el administrador de la empresa está autorizado a eliminar masivamente los documentos temporales.',
+                'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
@@ -548,7 +555,8 @@ class Controller_DteTmps extends \Controller_App
         (new Model_DteTmps())->setContribuyente($Emisor)->eliminar();
         // todo ok
         \sowerphp\core\Model_Datasource_Session::message(
-            'Se eliminaron todos los documentos temporales del emisor.', 'ok'
+            'Se eliminaron todos los documentos temporales del emisor.',
+            'ok'
         );
         $this->redirect('/dte/dte_tmps/listar');
     }
@@ -563,14 +571,16 @@ class Controller_DteTmps extends \Controller_App
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el documento temporal solicitado.', 'error'
+                'No existe el documento temporal solicitado.',
+                'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
         // verificar que el usuario pueda trabajar con el tipo de dte
         if (!$Emisor->documentoAutorizado($DteTmp->dte, $this->Auth->User)) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No está autorizado a eliminar el tipo de documento '.$DteTmp->dte, 'error'
+                'No está autorizado a eliminar el tipo de documento '.$DteTmp->dte,
+                'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
@@ -578,7 +588,8 @@ class Controller_DteTmps extends \Controller_App
         try {
             $DteTmp->delete();
             \sowerphp\core\Model_Datasource_Session::message(
-                'Documento temporal eliminado.', 'ok'
+                'Documento temporal eliminado.',
+                'ok'
             );
             $this->redirect('/dte/dte_tmps/listar');
         } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
@@ -656,13 +667,12 @@ class Controller_DteTmps extends \Controller_App
         );
         if ($response === false) {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
-        }
-        elseif ($response['status']['code'] != 200) {
+        } elseif ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
-        }
-        else {
+        } else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Se actualizó el documento temporal', 'ok'
+                'Se actualizó el documento temporal',
+                'ok'
             );
         }
         $this->redirect(sprintf('/dte/dte_tmps/ver/'.$receptor.'/'.$dte.'/'.$codigo));
@@ -703,7 +713,7 @@ class Controller_DteTmps extends \Controller_App
             $datos['Encabezado']['IdDoc']['FchCancel'] = false;
             if ($datos['Encabezado']['IdDoc']['FchVenc']) {
                 $dias = \sowerphp\general\Utility_Date::count($datos['Encabezado']['IdDoc']['FchVenc'], $FchEmis);
-                $datos['Encabezado']['IdDoc']['FchVenc'] = date('Y-m-d', strtotime($datos['Encabezado']['IdDoc']['FchEmis'])+$dias*86400);
+                $datos['Encabezado']['IdDoc']['FchVenc'] = date('Y-m-d', strtotime($datos['Encabezado']['IdDoc']['FchEmis']) + $dias * 86400);
             }
         }
         // actualizar precios de items (siempre que esten codificados)
@@ -828,7 +838,8 @@ class Controller_DteTmps extends \Controller_App
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el documento temporal solicitado.', 'error'
+                'No existe el documento temporal solicitado.',
+                'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
@@ -847,14 +858,16 @@ class Controller_DteTmps extends \Controller_App
         $DteTmp = new Model_DteTmp($Emisor->rut, $receptor, $dte, $codigo);
         if (!$DteTmp->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe el documento temporal solicitado.', 'error'
+                'No existe el documento temporal solicitado.',
+                'error'
             );
             $this->redirect('/dte/dte_tmps/listar');
         }
         // solo administrador puede editar el JSON
         if (!$Emisor->usuarioAutorizado($this->Auth->User, 'admin')) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Solo el administrador de la empresa está autorizado a editar el JSON del documento temporal.', 'error'
+                'Solo el administrador de la empresa está autorizado a editar el JSON del documento temporal.',
+                'error'
             );
             $this->redirect(str_replace('/editar_json/', '/ver/', $this->request->getRequestUriDecoded()));
         }
@@ -862,7 +875,8 @@ class Controller_DteTmps extends \Controller_App
         $datos = json_decode($_POST['datos']);
         if (!$datos) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'JSON es inválido, no se editó.', 'error'
+                'JSON es inválido, no se editó.',
+                'error'
             );
             $this->redirect(str_replace('/editar_json/', '/ver/', $this->request->getRequestUriDecoded()));
         }
@@ -872,11 +886,13 @@ class Controller_DteTmps extends \Controller_App
         $DteTmp->extra = $extra ? json_encode($extra) : null;
         if ($DteTmp->save()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'JSON guardado.', 'ok'
+                'JSON guardado.',
+                'ok'
             );
         } else {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible guardar el nuevo JSON.', 'error'
+                'No fue posible guardar el nuevo JSON.',
+                'error'
             );
         }
         $this->redirect(str_replace('/editar_json/', '/ver/', $this->request->getRequestUriDecoded()).'#avanzado');
@@ -905,11 +921,9 @@ class Controller_DteTmps extends \Controller_App
             ]);
             if ($response === false) {
                 \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
-            }
-            elseif ($response['status']['code'] != 200) {
+            } elseif ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
-            }
-            else {
+            } else {
                 $this->set([
                     'Emisor' => $Emisor,
                     'documentos' => $response['body'],

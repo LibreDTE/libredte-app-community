@@ -78,66 +78,66 @@ function calcular() {
 </script>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['id' => 'formBTE', 'onsubmit' => 'Form.check() && __.confirm(this, \'¿Desea emitir la boleta?\')']);
-echo $f->input([
-    'type' => 'select',
-    'name' => 'CdgSIISucur',
-    'label' => 'Sucursal Emisor',
-    'options' => $sucursales,
-    'check' => 'notempty',
-]);
-echo $f->input([
-    'type' => 'date',
-    'name' => 'FchEmis',
-    'label' => 'Fecha',
-    'value' => date('Y-m-d'),
-    'check' => 'notempty date',
-    'attr' => 'onblur="calcular()"',
-]);
-echo $f->input([
-    'name' => 'RUTRecep',
-    'label' => 'RUT receptor',
-    'check' => 'notempty rut',
-    'attr' => 'onblur="set_receptor(\'formBTE\')"',
-]);
-echo $f->input([
-    'name' => 'RznSocRecep',
-    'label' => 'Nombre',
-    'check' => 'notempty',
-    'attr' => 'maxlength="100"',
-]);
-echo $f->input([
-    'name' => 'DirRecep',
-    'label' => 'Dirección',
-    'check' => 'notempty',
-    'attr' => 'maxlength="70"',
-]);
-echo $f->input([
-    'type' => 'select',
-    'name' => 'CmnaRecep',
-    'label' => 'Comuna',
-    'options' => ['' => 'Seleccionar comuna'] + $comunas,
-    'check' => 'notempty',
-]);
-$f->setStyle(false);
-echo $f->input([
-    'type' => 'js',
-    'id' => 'prestaciones',
-    'label' => 'Prestaciones',
-    'titles' => ['Prestación profesional', 'Valor bruto'],
-    'inputs' => [
-        ['name' => 'NmbItem', 'check' => 'notempty', 'maxlength="100"'],
-        ['name' => 'MontoItem', 'attr' => 'onblur="calcular()"', 'check' => 'notempty integer'],
-    ],
-    'accesskey' => 'P',
-    'callback' => 'item_nuevo',
-]);
-$titles = ['Valor Bruto', 'Monto Retención', 'Líquido a pagar'];
-$totales = [
-    $f->input(['name' => 'MntBruto', 'value' => 0, 'attr' => 'readonly="readonly"']),
-    $f->input(['name' => 'MntRetencion', 'value' => 0, 'attr' => 'readonly="readonly"']),
-    $f->input(['name' => 'MntNeto', 'value' => 0, 'attr' => 'readonly="readonly"']),
-];
-new \sowerphp\general\View_Helper_Table([$titles, $totales]);
-$f->setStyle('horizontal');
-echo $f->end('Emitir boleta');
+        echo $f->begin(['id' => 'formBTE', 'onsubmit' => 'Form.check() && __.confirm(this, \'¿Desea emitir la boleta?\')']);
+        echo $f->input([
+            'type' => 'select',
+            'name' => 'CdgSIISucur',
+            'label' => 'Sucursal Emisor',
+            'options' => $sucursales,
+            'check' => 'notempty',
+        ]);
+        echo $f->input([
+            'type' => 'date',
+            'name' => 'FchEmis',
+            'label' => 'Fecha',
+            'value' => date('Y-m-d'),
+            'check' => 'notempty date',
+            'attr' => 'onblur="calcular()"',
+        ]);
+        echo $f->input([
+            'name' => 'RUTRecep',
+            'label' => 'RUT receptor',
+            'check' => 'notempty rut',
+            'attr' => 'onblur="set_receptor(\'formBTE\')"',
+        ]);
+        echo $f->input([
+            'name' => 'RznSocRecep',
+            'label' => 'Nombre',
+            'check' => 'notempty',
+            'attr' => 'maxlength="100"',
+        ]);
+        echo $f->input([
+            'name' => 'DirRecep',
+            'label' => 'Dirección',
+            'check' => 'notempty',
+            'attr' => 'maxlength="70"',
+        ]);
+        echo $f->input([
+            'type' => 'select',
+            'name' => 'CmnaRecep',
+            'label' => 'Comuna',
+            'options' => ['' => 'Seleccionar comuna'] + $comunas,
+            'check' => 'notempty',
+        ]);
+        $f->setStyle(false);
+        echo $f->input([
+            'type' => 'js',
+            'id' => 'prestaciones',
+            'label' => 'Prestaciones',
+            'titles' => ['Prestación profesional', 'Valor bruto'],
+            'inputs' => [
+                ['name' => 'NmbItem', 'check' => 'notempty', 'maxlength="100"'],
+                ['name' => 'MontoItem', 'attr' => 'onblur="calcular()"', 'check' => 'notempty integer'],
+            ],
+            'accesskey' => 'P',
+            'callback' => 'item_nuevo',
+        ]);
+        $titles = ['Valor Bruto', 'Monto Retención', 'Líquido a pagar'];
+        $totales = [
+            $f->input(['name' => 'MntBruto', 'value' => 0, 'attr' => 'readonly="readonly"']),
+            $f->input(['name' => 'MntRetencion', 'value' => 0, 'attr' => 'readonly="readonly"']),
+            $f->input(['name' => 'MntNeto', 'value' => 0, 'attr' => 'readonly="readonly"']),
+        ];
+        new \sowerphp\general\View_Helper_Table([$titles, $totales]);
+        $f->setStyle('horizontal');
+        echo $f->end('Emitir boleta');

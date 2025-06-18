@@ -62,7 +62,9 @@ class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
             }
             // crear objeto con el consumo de folios del día y ambiente solicitados
             $DteBoletaConsumo = new Model_DteBoletaConsumo(
-                $Contribuyente->rut, $dia, $Contribuyente->enCertificacion()
+                $Contribuyente->rut,
+                $dia,
+                $Contribuyente->enCertificacion()
             );
             // si no se indicó URI entonces se debe enviar directamente al SII
             if (!$uri) {
@@ -116,7 +118,7 @@ class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
         // definir ambiente en que se operará
         \sasco\LibreDTE\Sii::setAmbiente((int)$DteBoletaConsumo->certificacion);
         // realizar el envío al SII
-        for ($i=0; $i<$retry; $i++) {
+        for ($i = 0; $i < $retry; $i++) {
             $track_id = false;
             try {
                 $track_id = $DteBoletaConsumo->enviar();

@@ -15,38 +15,38 @@
 <div class="page-header"><h1>Buscar pagos programados ventas a crédito</h1></div>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit' => 'Form.check()']);
-echo $f->input([
-    'type' => 'date',
-    'name' => 'desde',
-    'label' => 'Desde',
-    'check' => 'date',
-]);
-echo $f->input([
-    'type' => 'date',
-    'name' => 'hasta',
-    'label' => 'Hasta',
-    'check' => 'date',
-]);
-echo $f->input([
-    'name' => 'receptor',
-    'label' => 'Receptor',
-    'placeholder' => 'RUT o razón social',
-]);
-echo $f->end('Buscar');
+            echo $f->begin(['onsubmit' => 'Form.check()']);
+            echo $f->input([
+                'type' => 'date',
+                'name' => 'desde',
+                'label' => 'Desde',
+                'check' => 'date',
+            ]);
+            echo $f->input([
+                'type' => 'date',
+                'name' => 'hasta',
+                'label' => 'Hasta',
+                'check' => 'date',
+            ]);
+            echo $f->input([
+                'name' => 'receptor',
+                'label' => 'Receptor',
+                'placeholder' => 'RUT o razón social',
+            ]);
+            echo $f->end('Buscar');
 
-if (isset($cobranza)) {
-    foreach ($cobranza as &$c) {
-        $c[] = '<a href="'.$_base.'/dte/cobranzas/ver/'.$c['dte'].'/'.$c['folio'].'/'.$c['fecha_pago'].'" title="Ver pago" class="btn btn-primary"><span class="fa fa-search fa-fw"></span></a>';
-        $c['fecha_emision'] = \sowerphp\general\Utility_Date::format($c['fecha_emision']);
-        $c['fecha_pago'] = \sowerphp\general\Utility_Date::format($c['fecha_pago']);
-        $c['total'] = num($c['total']);
-        $c['monto_pago'] = num($c['monto_pago']);
-        if ($c['pagado'] !== null) {
-            $c['pagado'] = num($c['pagado']);
-        }
-        unset($c['dte'], $c['rut']);
-    }
-    array_unshift($cobranza, ['Receptor', 'Emisión', 'Documento', 'Folio', 'Total', 'Fecha pago', 'Monto', 'Glosa', 'Parcial', 'Ver']);
-    new \sowerphp\general\View_Helper_Table($cobranza, 'pagos_programados_pendientes', true);
-}
+            if (isset($cobranza)) {
+                foreach ($cobranza as &$c) {
+                    $c[] = '<a href="'.$_base.'/dte/cobranzas/ver/'.$c['dte'].'/'.$c['folio'].'/'.$c['fecha_pago'].'" title="Ver pago" class="btn btn-primary"><span class="fa fa-search fa-fw"></span></a>';
+                    $c['fecha_emision'] = \sowerphp\general\Utility_Date::format($c['fecha_emision']);
+                    $c['fecha_pago'] = \sowerphp\general\Utility_Date::format($c['fecha_pago']);
+                    $c['total'] = num($c['total']);
+                    $c['monto_pago'] = num($c['monto_pago']);
+                    if ($c['pagado'] !== null) {
+                        $c['pagado'] = num($c['pagado']);
+                    }
+                    unset($c['dte'], $c['rut']);
+                }
+                array_unshift($cobranza, ['Receptor', 'Emisión', 'Documento', 'Folio', 'Total', 'Fecha pago', 'Monto', 'Glosa', 'Parcial', 'Ver']);
+                new \sowerphp\general\View_Helper_Table($cobranza, 'pagos_programados_pendientes', true);
+            }

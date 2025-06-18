@@ -21,10 +21,9 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Honorarios;
 
-use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+use sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
 
 /**
  * Clase para el controlador asociado a la tabla boleta_tercero de la base de
@@ -249,7 +248,7 @@ class Controller_BoletaTerceros extends \Controller_App
                 'Detalle' => [],
             ];
             $n_detalle = count($_POST['NmbItem']);
-            for ($i=0; $i<$n_detalle; $i++) {
+            for ($i = 0; $i < $n_detalle; $i++) {
                 if (!empty($_POST['NmbItem'][$i]) && !empty($_POST['MontoItem'][$i])) {
                     $boleta['Detalle'][] = [
                         'NmbItem' => $_POST['NmbItem'][$i],

@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Apps;
 
 /**
@@ -39,9 +38,9 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
 
     protected $logo = 'https://i.imgur.com/B0pnCvz.png';
 
-     /**
-     * Método que entrega el código HTML de la página de configuración de la aplicación.
-     */
+    /**
+    * Método que entrega el código HTML de la página de configuración de la aplicación.
+    */
     public function getConfigPageHTML(\sowerphp\general\View_Helper_Form $form)
     {
         $Dropbox = $this->getDropboxClient();

@@ -37,7 +37,7 @@ array_unshift($documentos, [
     $f->input(['name' => 'receptor', 'value' => (isset($search['receptor']) ? $search['receptor'] : '')]),
     $f->input(['type' => 'date', 'name' => 'fecha', 'value' => (isset($search['fecha']) ? $search['fecha'] : ''), 'check' => 'date']),
     $f->input(['name' => 'total', 'value' => (isset($search['total']) ? $search['total'] : ''), 'check' => 'integer', 'attr' => 'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"']),
-    $f->input(['type' => 'select', 'name' => 'sucursal_sii', 'options' => ['' => 'Todas'] + $sucursales, 'value' => (isset($search['sucursal_sii']) ? $search['sucursal_sii']:$sucursal)]),
+    $f->input(['type' => 'select', 'name' => 'sucursal_sii', 'options' => ['' => 'Todas'] + $sucursales, 'value' => (isset($search['sucursal_sii']) ? $search['sucursal_sii'] : $sucursal)]),
     $f->input(['type' => 'select', 'name' => 'usuario', 'options' => ['' => 'Todos'] + $usuarios, 'value' => (isset($search['usuario']) ? $search['usuario'] : '')]),
     '<button type="submit" class="btn btn-primary" onclick="return Form.check()"><i class="fas fa-search fa-fw"></i></button>',
 ]);

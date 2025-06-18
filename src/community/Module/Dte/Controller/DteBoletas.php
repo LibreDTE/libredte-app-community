@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -85,7 +84,8 @@ class Controller_DteBoletas extends \Controller_App
         $xml = $Libro->generar();
         if (!$Libro->schemaValidate()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible generar el libro de boletas<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
+                'No fue posible generar el libro de boletas<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()),
+                'error'
             );
             $this->redirect('/dte/dte_boletas');
         }
@@ -119,7 +119,7 @@ class Controller_DteBoletas extends \Controller_App
                 // se podrían calcular a partir del monto exento y monto total pero se
                 // dejan porque son útiles en el archivo para ser usados en el reporte
                 // de consumo de folios
-                'MntNeto' =>$boleta['neto'],
+                'MntNeto' => $boleta['neto'],
                 'MntIVA' => $boleta['iva'],
                 'TasaImp' => $boleta['tasa'],
             ]);

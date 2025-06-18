@@ -30,5 +30,5 @@ foreach ($periodos as &$p) {
     $p['liquido'] = num($p['liquido']);
     $p['retencion'] = num($p['retencion']);
 }
-array_unshift($periodos, ['Período','Boletas', 'Primera', 'Última', 'Honorarios', 'Líquido', 'Retención', 'Acciones']);
-new \sowerphp\general\View_Helper_Table($periodos);
+        array_unshift($periodos, ['Período','Boletas', 'Primera', 'Última', 'Honorarios', 'Líquido', 'Retención', 'Acciones']);
+        new \sowerphp\general\View_Helper_Table($periodos);

@@ -21,10 +21,9 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
-use \website\Dte\Admin\Mantenedores\Model_DteTipos;
+use website\Dte\Admin\Mantenedores\Model_DteTipos;
 
 /**
  * Controlador de ventas.
@@ -123,7 +122,7 @@ class Controller_DteVentas extends Controller_Base_Libros
         if (isset($_POST['TpoDoc'])) {
             $resumen = [];
             $n_tipos = count($_POST['TpoDoc']);
-            for ($i=0; $i<$n_tipos; $i++) {
+            for ($i = 0; $i < $n_tipos; $i++) {
                 $cols = [
                     'TpoDoc',
                     'TotDoc',
@@ -209,7 +208,7 @@ class Controller_DteVentas extends Controller_Base_Libros
             \sowerphp\core\Model_Datasource_Session::message('Libro de ventas del período '.$periodo.' generado localmente en LibreDTE. Recuerde que este libro se reemplazó con el Registro de Ventas en el SII.', 'ok');
             // si hay errores de resúmenes se muestran
             if (!empty($resumenes_errores)) {
-                \sowerphp\core\Model_Datasource_Session::message('Ocurrió algún problema al enviar los resúmenes al SII:<br/>- '.implode('<br/>- ',$resumenes_errores), 'warning');
+                \sowerphp\core\Model_Datasource_Session::message('Ocurrió algún problema al enviar los resúmenes al SII:<br/>- '.implode('<br/>- ', $resumenes_errores), 'warning');
             }
         }
         // guardar libro de ventas
@@ -232,7 +231,8 @@ class Controller_DteVentas extends Controller_Base_Libros
         $ventas = $Emisor->getVentas($periodo);
         if (!$ventas) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No hay documentos de venta del período '.$periodo.'.', 'warning'
+                'No hay documentos de venta del período '.$periodo.'.',
+                'warning'
             );
             $this->redirect(str_replace('descargar_registro_venta', 'ver', $this->request->getRequestUriDecoded()));
         }
@@ -256,7 +256,8 @@ class Controller_DteVentas extends Controller_Base_Libros
         $Libro = new Model_DteVenta($Emisor->rut, (int)$periodo, $Emisor->enCertificacion());
         if (!$Libro->exists()) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'Aun no se ha generado el XML del período '.$periodo.'.', 'error'
+                'Aun no se ha generado el XML del período '.$periodo.'.',
+                'error'
             );
             $this->redirect(str_replace('descargar_resumenes', 'ver', $this->request->getRequestUriDecoded()));
         }
@@ -266,7 +267,8 @@ class Controller_DteVentas extends Controller_Base_Libros
         $resumenes = $LibroCompraVenta->getResumenManual() + $LibroCompraVenta->getResumenBoletas();
         if (!$resumenes) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No hay resúmenes para el período '.$periodo.'.', 'warning'
+                'No hay resúmenes para el período '.$periodo.'.',
+                'warning'
             );
             $this->redirect(str_replace('descargar_resumenes', 'ver', $this->request->getRequestUriDecoded()));
         }
@@ -435,7 +437,7 @@ class Controller_DteVentas extends Controller_Base_Libros
         if ($periodo_glosa) {
             $historial_nuevo = [];
             foreach ($historial as $periodo => $monto) {
-                $mes = substr(\sowerphp\general\Utility_Date::$meses[((int)substr($periodo,4))-1],0,3);
+                $mes = substr(\sowerphp\general\Utility_Date::$meses[((int)substr($periodo, 4)) - 1], 0, 3);
                 $historial_nuevo[$mes] = $monto;
             }
             $historial = $historial_nuevo;

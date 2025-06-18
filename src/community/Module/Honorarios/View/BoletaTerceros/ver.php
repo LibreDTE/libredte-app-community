@@ -20,5 +20,5 @@ foreach ($boletas as &$b) {
     $b['anulada'] = $b['anulada'] ? 'Si' : '';
     unset($b['codigo'], $b['receptor_dv'], $b['sucursal_sii']);
 }
-array_unshift($boletas, ['RUT', 'Emisor', 'Número', 'Fecha', 'Emisión', 'Honorarios', 'Líquido', 'Retención', 'Anulada', 'Sucursal', 'Ver']);
-new \sowerphp\general\View_Helper_Table($boletas, 'bhe', true);
+        array_unshift($boletas, ['RUT', 'Emisor', 'Número', 'Fecha', 'Emisión', 'Honorarios', 'Líquido', 'Retención', 'Anulada', 'Sucursal', 'Ver']);
+        new \sowerphp\general\View_Helper_Table($boletas, 'bhe', true);

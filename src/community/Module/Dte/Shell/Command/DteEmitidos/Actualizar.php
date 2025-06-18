@@ -168,7 +168,7 @@ class Shell_Command_DteEmitidos_Actualizar extends \Shell_App
                         )
                     )
             ', [
-                ':certificacion' => (int)$certificacion, 
+                ':certificacion' => (int)$certificacion,
                 ':envio_boleta' => Model_DteEmitidos::ENVIO_BOLETA,
             ]);
         }

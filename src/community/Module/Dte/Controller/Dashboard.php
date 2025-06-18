@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -86,9 +85,9 @@ class Controller_Dashboard extends \Controller_App
             if (!$f['alerta']) {
                 $f['alerta'] = 1;
             }
-            $folios[$f['tipo']] = $f['disponibles'] ? round((1-($f['alerta']/$f['disponibles']))*100) : 0;
+            $folios[$f['tipo']] = $f['disponibles'] ? round((1 - ($f['alerta'] / $f['disponibles'])) * 100) : 0;
             // alerta vencimiento
-            if ($f['fecha_vencimiento'] && $f['meses_autorizacion']>=5) {
+            if ($f['fecha_vencimiento'] && $f['meses_autorizacion'] >= 5) {
                 $folios_meses_alerta[] = $f;
             }
         }

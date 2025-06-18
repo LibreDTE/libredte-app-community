@@ -21,10 +21,9 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte\Admin;
 
-use \sowerphp\app\Sistema\General\Model_MonedaCambios;
+use sowerphp\app\Sistema\General\Model_MonedaCambios;
 
 /**
  * Clase para mapear la tabla item de la base de datos.
@@ -274,7 +273,8 @@ class Model_Item extends \Model_App
     public function getItemClasificacion()
     {
         return (new Model_ItemClasificaciones())->get(
-            $this->contribuyente, $this->clasificacion
+            $this->contribuyente,
+            $this->clasificacion
         );
     }
 
@@ -304,7 +304,11 @@ class Model_Item extends \Model_App
             return $precio;
         }
         return (new Model_MonedaCambios())->convertir(
-            $this->moneda, $moneda, $precio, $fecha, $decimales
+            $this->moneda,
+            $moneda,
+            $precio,
+            $fecha,
+            $decimales
         );
     }
 
@@ -355,7 +359,11 @@ class Model_Item extends \Model_App
             return $descuento;
         }
         return (new Model_MonedaCambios())->convertir(
-            $this->moneda, $moneda, $descuento, $fecha, $decimales
+            $this->moneda,
+            $moneda,
+            $descuento,
+            $fecha,
+            $decimales
         );
     }
 

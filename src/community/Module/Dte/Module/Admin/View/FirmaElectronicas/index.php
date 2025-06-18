@@ -43,7 +43,7 @@ foreach ($firmas as &$f) {
     $f['hasta'] = \sowerphp\general\Utility_Date::format($f['hasta'], 'd/m/Y H:i');
     $f['administrador'] = $f['administrador'] ? 'si' : 'no';
 }
-array_unshift($firmas, ['RUN', 'Nombre', 'Email', 'Válida desde', 'Válida hasta', 'Emisor', 'Usuario', 'Administrador']);
-new \sowerphp\general\View_Helper_Table($firmas);
-?>
+    array_unshift($firmas, ['RUN', 'Nombre', 'Email', 'Válida desde', 'Válida hasta', 'Emisor', 'Usuario', 'Administrador']);
+    new \sowerphp\general\View_Helper_Table($firmas);
+    ?>
 <?php endif; ?>

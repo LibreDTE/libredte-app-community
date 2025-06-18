@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -208,7 +207,8 @@ class Controller_RegistroCompras extends \Controller_App
         $Firma = $Contribuyente->getFirma($this->Auth->User->id);
         if (!$Firma) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No existe firma asociada.', 'error'
+                'No existe firma asociada.',
+                'error'
             );
             $this->redirect('/dte/registro_compras/pendientes');
         }
@@ -231,7 +231,10 @@ class Controller_RegistroCompras extends \Controller_App
                     if (in_array($r['codigo'], [0,7])) {
                         try {
                             $RegistroCompra = new Model_RegistroCompra(
-                                $Contribuyente->enCertificacion(), $dte, $emisor_rut, $folio
+                                $Contribuyente->enCertificacion(),
+                                $dte,
+                                $emisor_rut,
+                                $folio
                             );
                             if (
                                 $RegistroCompra->estado == 0

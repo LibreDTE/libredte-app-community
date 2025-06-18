@@ -9,7 +9,7 @@
 <div class="page-header"><h1>Sincronización tipo de transacciones del período <?=$periodo?></h1></div>
 <?php
 foreach ($datos as &$d) {
-    $d[] = '<a href="'.$_base.'/dte/dte_recibidos/modificar/'.substr($d['emisor'],0,-2).'/'.$d['dte'].'/'.$d['folio'].'" class="btn btn-primary"><i class="fa fa-edit fa-fw"></i></a>';
+    $d[] = '<a href="'.$_base.'/dte/dte_recibidos/modificar/'.substr($d['emisor'], 0, -2).'/'.$d['dte'].'/'.$d['folio'].'" class="btn btn-primary"><i class="fa fa-edit fa-fw"></i></a>';
 }
-array_unshift($datos, ['RUT emisor', 'Tipo DTE', 'Folio', 'Tipo transacción', 'Código IVA e impuestos.']);
-new \sowerphp\general\View_Helper_Table($datos, 'tipo_transacciones_'.$periodo, true);
+        array_unshift($datos, ['RUT emisor', 'Tipo DTE', 'Folio', 'Tipo transacción', 'Código IVA e impuestos.']);
+        new \sowerphp\general\View_Helper_Table($datos, 'tipo_transacciones_'.$periodo, true);

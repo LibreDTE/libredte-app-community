@@ -10,14 +10,14 @@
 <p>Aquí podrá buscar entre sus documentos de la bandeja de intercambio.</p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form(false);
-echo $f->begin(['onsubmit' => 'Form.check()']);
-?>
+        echo $f->begin(['onsubmit' => 'Form.check()']);
+        ?>
 <div class="card mb-4">
     <div class="card-body">
         <div class="row mb-3">
             <div class="form-group col-md-6"><?=$f->input(['name' => 'emisor', 'placeholder' => 'Emisor: RUT o razón social'])?></div>
             <div class="form-group col-md-3"><?=$f->input(['type' => 'select', 'name' => 'estado', 'options' => ['Pendientes y procesados', 'Solo pendientes', 'Solo procesados', 'Solo aceptados', 'Solo rechazados']])?></div>
-            <div class="form-group col-md-3"><?=$f->input(['type' => 'select', 'name' => 'usuario', 'options' => ['' => 'Todos los usuarios']+$usuarios])?></div>
+            <div class="form-group col-md-3"><?=$f->input(['type' => 'select', 'name' => 'usuario', 'options' => ['' => 'Todos los usuarios'] + $usuarios])?></div>
         </div>
         <div class="row mb-3">
             <div class="form-group col-md-3"><?=$f->input(['type' => 'date', 'name' => 'recibido_desde', 'placeholder' => 'Fecha recepción desde', 'check' => 'date'])?></div>
@@ -46,51 +46,51 @@ echo $f->begin(['onsubmit' => 'Form.check()']);
             <div class="form-group col-md-6"><?=$f->input(['name' => 'item', 'placeholder' => 'Item (producto o servicio) que se compró'])?></div>
         </div>
 <?php
-echo $f->input([
-    'type' => 'js',
-    'id' => 'xml',
-    'titles' => ['Nodo', 'Valor'],
-    'inputs' => [
-        ['name' => 'xml_nodo', 'check' => 'notempty'],
-        ['name' => 'xml_valor', 'check' => 'notempty'],
-    ],
-    'values' => $values_xml,
-]);
-?>
+        echo $f->input([
+            'type' => 'js',
+            'id' => 'xml',
+            'titles' => ['Nodo', 'Valor'],
+            'inputs' => [
+                ['name' => 'xml_nodo', 'check' => 'notempty'],
+                ['name' => 'xml_valor', 'check' => 'notempty'],
+            ],
+            'values' => $values_xml,
+        ]);
+        ?>
         <p>Los nodos deben ser los del XML desde el tag Documento del DTE. Por ejemplo para buscar en los productos usar: Detalle/NmbItem</p>
     </div>
     <div class="card-footer small">Filtros al documento (sirven con intercambios con un documento asociado, con más de uno asociado no se garantiza el correcto funcionamiento)</div>
 </div>
 <div class="text-center"><?=$f->input(['type' => 'submit', 'name' => 'submit', 'value' => 'Buscar documentos'])?></div>
 <?php
-echo $f->end(false);
-// mostrar documentos
-if (!empty($intercambios)) {
-    foreach ($intercambios as &$i) {
-        $acciones = '<a href="'.$_base.'/dte/dte_intercambios/ver/'.$i['codigo'].'" title="Ver detalles del intercambio" class="btn btn-primary mb-2"><i class="fa fa-search fa-fw"></i></a>';
-        $acciones .= ' <a href="'.$_base.'/dte/dte_intercambios/xml/'.$i['codigo'].'" title="Descargar XML del intercambio" class="btn btn-primary mb-2"><i class="far fa-file-code fa-fw"></i></a>';
-        $acciones .= ' <a href="'.$_base.'/dte/dte_intercambios/pdf/'.$i['codigo'].'" title="Descargar PDF del intercambio" class="btn btn-primary mb-2"><i class="far fa-file-pdf fa-fw"></i></a>';
-        $i[] = $acciones;
-        if (is_numeric($i['emisor'])) {
-            $i['emisor'] = \sowerphp\app\Utility_Rut::addDV($i['emisor']);
+        echo $f->end(false);
+        // mostrar documentos
+        if (!empty($intercambios)) {
+            foreach ($intercambios as &$i) {
+                $acciones = '<a href="'.$_base.'/dte/dte_intercambios/ver/'.$i['codigo'].'" title="Ver detalles del intercambio" class="btn btn-primary mb-2"><i class="fa fa-search fa-fw"></i></a>';
+                $acciones .= ' <a href="'.$_base.'/dte/dte_intercambios/xml/'.$i['codigo'].'" title="Descargar XML del intercambio" class="btn btn-primary mb-2"><i class="far fa-file-code fa-fw"></i></a>';
+                $acciones .= ' <a href="'.$_base.'/dte/dte_intercambios/pdf/'.$i['codigo'].'" title="Descargar PDF del intercambio" class="btn btn-primary mb-2"><i class="far fa-file-pdf fa-fw"></i></a>';
+                $i[] = $acciones;
+                if (is_numeric($i['emisor'])) {
+                    $i['emisor'] = \sowerphp\app\Utility_Rut::addDV($i['emisor']);
+                }
+                $i['fecha_hora_email'] = \sowerphp\general\Utility_Date::format($i['fecha_hora_email']);
+                $i['documentos'] = is_array($i['documentos']) ? implode('<br/>', $i['documentos']) : num($i['documentos']);
+                $i['totales'] = implode('<br/>', array_map('num', $i['totales']));
+                if ($i['estado'] === null) {
+                    $i['estado'] = '<i class="fas fa-question-circle fa-fw text-warning"></i>';
+                } elseif ($i['estado'] === true) {
+                    $i['estado'] = '<i class="fas fa-check-circle fa-fw text-success"></i>';
+                } else {
+                    $i['estado'] = '<i class="fas fa-times-circle fa-fw text-danger"></i>';
+                }
+                unset($i['usuario']);
+            }
+            // agregar resumen
+            echo '<div class="card mt-4 mb-4"><div class="card-body lead text-center">Se encontraron '.num(count($intercambios)).' intercambios de documentos</div></div>';
+            // agregar tabla
+            array_unshift($intercambios, ['Código', 'Emisor', 'Recibido', 'Documento', 'Total', 'Estado', 'Acciones']);
+            $t = new \sowerphp\general\View_Helper_Table();
+            $t->setColsWidth([null, null, null, null, null, null, 160]);
+            echo $t->generate($intercambios);
         }
-        $i['fecha_hora_email'] = \sowerphp\general\Utility_Date::format($i['fecha_hora_email']);
-        $i['documentos'] = is_array($i['documentos']) ? implode('<br/>', $i['documentos']) : num($i['documentos']);
-        $i['totales'] = implode('<br/>', array_map('num', $i['totales']));
-        if ($i['estado'] === null) {
-            $i['estado'] = '<i class="fas fa-question-circle fa-fw text-warning"></i>';
-        } elseif ($i['estado'] === true) {
-            $i['estado'] = '<i class="fas fa-check-circle fa-fw text-success"></i>';
-        } else {
-            $i['estado'] = '<i class="fas fa-times-circle fa-fw text-danger"></i>';
-        }
-        unset($i['usuario']);
-    }
-    // agregar resumen
-    echo '<div class="card mt-4 mb-4"><div class="card-body lead text-center">Se encontraron '.num(count($intercambios)).' intercambios de documentos</div></div>';
-    // agregar tabla
-    array_unshift($intercambios, ['Código', 'Emisor', 'Recibido', 'Documento', 'Total', 'Estado', 'Acciones']);
-    $t = new \sowerphp\general\View_Helper_Table();
-    $t->setColsWidth([null, null, null, null, null, null, 160]);
-    echo $t->generate($intercambios);
-}

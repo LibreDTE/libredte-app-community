@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte;
 
 /**
@@ -221,7 +220,10 @@ class Model_DteIntercambioResultado extends \Model_App
             }
             // guardar recibo para el DTE
             $DteIntercambioResultadoDte = new Model_DteIntercambioResultadoDte(
-                $DteEmitido->emisor, $DteEmitido->dte, $DteEmitido->folio, $DteEmitido->certificacion
+                $DteEmitido->emisor,
+                $DteEmitido->dte,
+                $DteEmitido->folio,
+                $DteEmitido->certificacion
             );
             $DteIntercambioResultadoDte->responde = $this->responde;
             $DteIntercambioResultadoDte->codigo = $this->codigo;

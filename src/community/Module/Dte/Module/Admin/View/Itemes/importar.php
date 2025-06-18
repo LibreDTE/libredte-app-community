@@ -25,18 +25,18 @@
 </ol>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-echo $f->begin(['onsubmit' => 'Form.check() && __.confirm(this, \'¿Está seguro de importar el archivo seleccionado?\')']);
-echo $f->input([
-    'type' => 'file',
-    'name' => 'archivo',
-    'label' => 'Archivo con items',
-    'help' => 'Archivo con productos y/o servicios en formato CSV (separado por punto y coma, codificado en UTF-8). Puede consultar un <a href="'.$_base.'/dte/archivos/item.csv" download="item.csv">ejemplo</a> para conocer el formato esperado.',
-    'check' => 'notempty',
-    'attr' => 'accept="csv"',
-]);
-echo $f->end('Importar productos y/o servicios');
+        echo $f->begin(['onsubmit' => 'Form.check() && __.confirm(this, \'¿Está seguro de importar el archivo seleccionado?\')']);
+        echo $f->input([
+            'type' => 'file',
+            'name' => 'archivo',
+            'label' => 'Archivo con items',
+            'help' => 'Archivo con productos y/o servicios en formato CSV (separado por punto y coma, codificado en UTF-8). Puede consultar un <a href="'.$_base.'/dte/archivos/item.csv" download="item.csv">ejemplo</a> para conocer el formato esperado.',
+            'check' => 'notempty',
+            'attr' => 'accept="csv"',
+        ]);
+        echo $f->end('Importar productos y/o servicios');
 
-// tabla con los resultados
-if (!empty($resumen)) {
-    new \sowerphp\general\View_Helper_Table($items, 'items_importados', true);
-}
+        // tabla con los resultados
+        if (!empty($resumen)) {
+            new \sowerphp\general\View_Helper_Table($items, 'items_importados', true);
+        }

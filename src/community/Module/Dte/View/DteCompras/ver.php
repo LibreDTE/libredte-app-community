@@ -84,22 +84,22 @@ new \sowerphp\general\View_Helper_Table([
     ['Período', 'Recibidos', 'Envíados'],
     [$Libro->periodo, num($n_detalles), num($Libro->documentos)],
 ]);
-?>
+            ?>
             <div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 row-cols-lg-3">
                 <div class="col mb-4">
-                    <a class="btn btn-primary btn-lg col-12<?=!$n_detalles?' disabled':''?>" href="<?=$_base?>/dte/dte_compras/csv/<?=$Libro->periodo?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=!$n_detalles ? ' disabled' : ''?>" href="<?=$_base?>/dte/dte_compras/csv/<?=$Libro->periodo?>" role="button">
                         <i class="far fa-file-excel"></i>
                         Descargar CSV
                     </a>
                 </div>
                 <div class="col mb-4">
-                    <a class="btn btn-primary btn-lg col-12<?=!$Libro->xml?' disabled':''?>" href="<?=$_base?>/dte/dte_compras/pdf/<?=$Libro->periodo?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=!$Libro->xml ? ' disabled' : ''?>" href="<?=$_base?>/dte/dte_compras/pdf/<?=$Libro->periodo?>" role="button">
                         <i class="far fa-file-pdf"></i>
                         Descargar PDF
                     </a>
                 </div>
                 <div class="col mb-4">
-                    <a class="btn btn-primary btn-lg col-12<?=!$Libro->xml?' disabled':''?>" href="<?=$_base?>/dte/dte_compras/xml/<?=$Libro->periodo?>" role="button">
+                    <a class="btn btn-primary btn-lg col-12<?=!$Libro->xml ? ' disabled' : ''?>" href="<?=$_base?>/dte/dte_compras/xml/<?=$Libro->periodo?>" role="button">
                         <i class="far fa-file-code"></i>
                         Descargar XML
                     </a>
@@ -114,7 +114,7 @@ new \sowerphp\general\View_Helper_Table([
                     <p><?=str_replace("\n", '<br/>', $Libro->revision_detalle)?></p>
 <?php if ($Libro->track_id && $Libro->getEstado() != 'LRH') : ?>
                     <p>
-<?php if ($Libro->track_id!=-1) : ?>
+<?php if ($Libro->track_id != -1) : ?>
                         <a class="btn btn-primary" href="<?=$_base?>/dte/dte_compras/actualizar_estado/<?=$Libro->periodo?>" role="button" onclick="return __.loading('Actualizando estado del envío...')">Actualizar estado</a><br/>
                         <span class="small">
                             <a href="<?=$_base?>/dte/dte_compras/solicitar_revision/<?=$Libro->periodo?>" title="Solicitar revisión del libro al SII" onclick="return __.loading('Solicitando revisión del envío al SII...')">solicitar revisión del envío</a><br/>
@@ -130,7 +130,7 @@ new \sowerphp\general\View_Helper_Table([
 <?php else: ?>
                     <p>
                         <a class="btn btn-primary" href="<?=$_base?>/dte/dte_compras/enviar_sii/<?=$Libro->periodo?>" role="button" onclick="return __.confirm(this, '¿Confirmar la generación del libro?', 'Generando libro...')">
-                            <?=$Libro->periodo<201708?'Enviar libro al SII':'Generar libro local'?>
+                            <?=$Libro->periodo < 201708 ? 'Enviar libro al SII' : 'Generar libro local'?>
                         </a>
                     </p>
 <?php endif; ?>
@@ -146,50 +146,50 @@ new \sowerphp\general\View_Helper_Table([
 <!-- INICIO RESUMEN -->
 <div role="tabpanel" class="tab-pane" id="resumen" aria-labelledby="resumen-tab">
 <?php
-$total = ['TpoDoc' => '<strong>Total</strong>'];
-foreach ($resumen as &$r) {
-    foreach (['FctProp'] as $c) {
-        unset($r[$c]);
-    }
-    // sumar campos que se suman directamente
-    foreach (['TotDoc', 'TotAnulado', 'TotOpExe'] as $c) {
-        if (!isset($total[$c])) {
-            $total[$c] = 0;
+            $total = ['TpoDoc' => '<strong>Total</strong>'];
+    foreach ($resumen as &$r) {
+        foreach (['FctProp'] as $c) {
+            unset($r[$c]);
         }
-        $total[$c] += $r[$c];
-    }
-    // sumar o restar campos segun operación
-    foreach (['TotMntExe', 'TotMntNeto', 'TotMntIVA', 'TotIVAPropio', 'TotIVATerceros', 'TotLey18211', 'TotMntActivoFijo', 'TotMntIVAActivoFijo', 'TotIVANoRec', 'TotIVAUsoComun', 'TotCredIVAUsoComun', 'TotIVAFueraPlazo', 'TotOtrosImp', 'TotIVARetTotal', 'TotIVARetParcial', 'TotImpSinCredito', 'TotMntTotal', 'TotIVANoRetenido', 'TotMntNoFact', 'TotMntPeriodo', 'TotPsjNac', 'TotPsjInt', 'TotTabPuros', 'TotTabCigarrillos', 'TotTabElaborado', 'TotImpVehiculo'] as $c) {
-        if (!isset($total[$c])) {
-            $total[$c] = 0;
-        }
-        if (is_array($r[$c])) {
-            $valor = 0;
-            if ($c == 'TotOtrosImp') {
-                foreach ($r[$c] as $monto) {
-                    $valor += $monto['TotMntImp'];
-                }
-            } elseif ($c == 'TotIVANoRec') {
-                foreach ($r[$c] as $monto) {
-                    $valor += $monto['TotMntIVANoRec'];
-                }
+        // sumar campos que se suman directamente
+        foreach (['TotDoc', 'TotAnulado', 'TotOpExe'] as $c) {
+            if (!isset($total[$c])) {
+                $total[$c] = 0;
             }
-            $r[$c] = $valor;
-        }
-        if ($operaciones[$r['TpoDoc']] == 'S' || $r['TpoDoc'] == 46) {
             $total[$c] += $r[$c];
-        } elseif ($operaciones[$r['TpoDoc']] == 'R') {
-            $total[$c] -= $r[$c];
+        }
+        // sumar o restar campos segun operación
+        foreach (['TotMntExe', 'TotMntNeto', 'TotMntIVA', 'TotIVAPropio', 'TotIVATerceros', 'TotLey18211', 'TotMntActivoFijo', 'TotMntIVAActivoFijo', 'TotIVANoRec', 'TotIVAUsoComun', 'TotCredIVAUsoComun', 'TotIVAFueraPlazo', 'TotOtrosImp', 'TotIVARetTotal', 'TotIVARetParcial', 'TotImpSinCredito', 'TotMntTotal', 'TotIVANoRetenido', 'TotMntNoFact', 'TotMntPeriodo', 'TotPsjNac', 'TotPsjInt', 'TotTabPuros', 'TotTabCigarrillos', 'TotTabElaborado', 'TotImpVehiculo'] as $c) {
+            if (!isset($total[$c])) {
+                $total[$c] = 0;
+            }
+            if (is_array($r[$c])) {
+                $valor = 0;
+                if ($c == 'TotOtrosImp') {
+                    foreach ($r[$c] as $monto) {
+                        $valor += $monto['TotMntImp'];
+                    }
+                } elseif ($c == 'TotIVANoRec') {
+                    foreach ($r[$c] as $monto) {
+                        $valor += $monto['TotMntIVANoRec'];
+                    }
+                }
+                $r[$c] = $valor;
+            }
+            if ($operaciones[$r['TpoDoc']] == 'S' || $r['TpoDoc'] == 46) {
+                $total[$c] += $r[$c];
+            } elseif ($operaciones[$r['TpoDoc']] == 'R') {
+                $total[$c] -= $r[$c];
+            }
+        }
+        // dar formato de número
+        foreach ($r as &$v) {
+            if ($v) {
+                $v = num($v);
+            }
         }
     }
-    // dar formato de número
-    foreach ($r as &$v) {
-        if ($v) {
-            $v = num($v);
-        }
-    }
-}
-?>
+            ?>
     <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2">
         <div class="col">
             <div class="card mb-4">
@@ -216,16 +216,16 @@ foreach ($resumen as &$r) {
 <?php
 foreach ($total as &$tot) {
     if (is_numeric($tot)) {
-        $tot = $tot>0 ? num($tot) : null;
+        $tot = $tot > 0 ? num($tot) : null;
     }
 }
-$titulos = ['Tipo Doc.', '# docs', 'Anulados', 'Op. exen.', 'Exento', 'Neto', 'IVA', 'IVA propio', 'IVA terc.', 'Ley 18211', 'Activo fijo', 'IVA activo fijo', 'IVA no rec.', 'IVA uso común', 'Créd IVA uso común', 'IVA fuera plazo', 'Otros imp.', 'IVA ret. total', 'IVA ret. parcial', 'Imp. sin crédito', 'Monto total', 'IVA no retenido', 'No fact.', 'Total periodo', 'Pasaje nac.', 'Pasaje int.', 'Puros', 'Cigarrillos', 'Tabaco elaborado', 'Imp. vehículo'];
-array_unshift($resumen, $titulos);
-$resumen[] = $total;
-$t = new \sowerphp\general\View_Helper_Table();
-$t->setShowEmptyCols(false);
-echo $t->generate($resumen);
-?>
+            $titulos = ['Tipo Doc.', '# docs', 'Anulados', 'Op. exen.', 'Exento', 'Neto', 'IVA', 'IVA propio', 'IVA terc.', 'Ley 18211', 'Activo fijo', 'IVA activo fijo', 'IVA no rec.', 'IVA uso común', 'Créd IVA uso común', 'IVA fuera plazo', 'Otros imp.', 'IVA ret. total', 'IVA ret. parcial', 'Imp. sin crédito', 'Monto total', 'IVA no retenido', 'No fact.', 'Total periodo', 'Pasaje nac.', 'Pasaje int.', 'Puros', 'Cigarrillos', 'Tabaco elaborado', 'Imp. vehículo'];
+            array_unshift($resumen, $titulos);
+            $resumen[] = $total;
+            $t = new \sowerphp\general\View_Helper_Table();
+            $t->setShowEmptyCols(false);
+            echo $t->generate($resumen);
+            ?>
         </div>
     </div>
 </div>
@@ -235,9 +235,9 @@ echo $t->generate($resumen);
 <!-- INICIO DETALLES -->
 <div role="tabpanel" class="tab-pane" id="detalle" aria-labelledby="detalle-tab">
 <?php
-array_unshift($detalle, $libro_cols);
-new \sowerphp\general\View_Helper_Table($detalle);
-?>
+            array_unshift($detalle, $libro_cols);
+    new \sowerphp\general\View_Helper_Table($detalle);
+    ?>
 </div>
 <!-- FIN DETALLES -->
 <?php endif; ?>

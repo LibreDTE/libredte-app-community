@@ -21,7 +21,6 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-
 namespace website\Dte\Admin;
 
 /**
@@ -51,7 +50,8 @@ class Controller_FirmaElectronicas extends \Controller_App
             // verificar que se haya podido subir el archivo con la firma
             if (!isset($_FILES['firma']) || $_FILES['firma']['error']) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Ocurrió un error al subir la firma.', 'error'
+                    'Ocurrió un error al subir la firma.',
+                    'error'
                 );
                 return;
             }
@@ -65,7 +65,8 @@ class Controller_FirmaElectronicas extends \Controller_App
                 $Firma->check();
             } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    $e->getMessage(), 'error'
+                    $e->getMessage(),
+                    'error'
                 );
                 return;
             }
@@ -73,7 +74,8 @@ class Controller_FirmaElectronicas extends \Controller_App
             $FirmaElectronica = new Model_FirmaElectronica(trim($Firma->getID()));
             if ($FirmaElectronica->usuario && $FirmaElectronica->usuario != $this->Auth->User->id) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'La firma electrónica de '.$Firma->getID().' ya está asociada al usuario '.$FirmaElectronica->getUsuario()->usuario.', no es posible asignarla a su usuario '.$this->Auth->User->usuario.'. Si 2 empresas usan la misma firma, deberán tener ambas el mismo administrador principal en LibreDTE. En el caso que no desee tener el mismo administrador principal, deberá subir la firma de un usuario diferente, y que esté autorizada en SII.', 'error'
+                    'La firma electrónica de '.$Firma->getID().' ya está asociada al usuario '.$FirmaElectronica->getUsuario()->usuario.', no es posible asignarla a su usuario '.$this->Auth->User->usuario.'. Si 2 empresas usan la misma firma, deberán tener ambas el mismo administrador principal en LibreDTE. En el caso que no desee tener el mismo administrador principal, deberá subir la firma de un usuario diferente, y que esté autorizada en SII.',
+                    'error'
                 );
                 return;
             }
@@ -98,12 +100,14 @@ class Controller_FirmaElectronicas extends \Controller_App
             try {
                 $FirmaElectronica->save();
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Se asoció la firma electrónica de '.$Firma->getName().' ('.$Firma->getID().') al usuario '.$this->Auth->User->usuario.'.', 'ok'
+                    'Se asoció la firma electrónica de '.$Firma->getName().' ('.$Firma->getID().') al usuario '.$this->Auth->User->usuario.'.',
+                    'ok'
                 );
                 $this->redirect('/dte/admin/firma_electronicas');
             } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
-                    'Ocurrió un error al guardar la firma.<br/>'.$e->getMessage(), 'error'
+                    'Ocurrió un error al guardar la firma.<br/>'.$e->getMessage(),
+                    'error'
                 );
                 return;
             }
@@ -127,12 +131,14 @@ class Controller_FirmaElectronicas extends \Controller_App
         try {
             $FirmaElectronica->delete();
             \sowerphp\core\Model_Datasource_Session::message(
-                'Se eliminó la firma electrónica asociada a su usuario.', 'ok'
+                'Se eliminó la firma electrónica asociada a su usuario.',
+                'ok'
             );
             $this->redirect('/dte/admin/firma_electronicas');
         } catch (\sowerphp\core\Exception_Model_Datasource_Database $e) {
             \sowerphp\core\Model_Datasource_Session::message(
-                'No fue posible eliminar la firma electrónica:<br/>'.$e->getMessage(), 'error'
+                'No fue posible eliminar la firma electrónica:<br/>'.$e->getMessage(),
+                'error'
             );
             $this->redirect('/dte/admin/firma_electronicas');
         }

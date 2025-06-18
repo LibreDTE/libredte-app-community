@@ -17,9 +17,9 @@ foreach ($documentos as &$d) {
     $d['total'] = num($d['total']);
     unset($d['receptor'], $d['dte'], $d['intercambio'], $d['has_xml'], $d['track_id']);
 }
-array_unshift($documentos, ['Documento', 'Folio', 'Receptor', 'Fecha', 'Total', 'Estado SII', 'Sucursal', 'Usuario', 'Acciones']);
-$t = new \sowerphp\general\View_Helper_Table();
-$t->setColsWidth([null, null, null, null, null, null, null, null, 110]);
-$t->setId('dte_emitidos_'.$Evento->codigo.'_'.$Emisor->rut);
-$t->setExport(true);
-echo $t->generate($documentos);
+        array_unshift($documentos, ['Documento', 'Folio', 'Receptor', 'Fecha', 'Total', 'Estado SII', 'Sucursal', 'Usuario', 'Acciones']);
+        $t = new \sowerphp\general\View_Helper_Table();
+        $t->setColsWidth([null, null, null, null, null, null, null, null, 110]);
+        $t->setId('dte_emitidos_'.$Evento->codigo.'_'.$Emisor->rut);
+        $t->setExport(true);
+        echo $t->generate($documentos);

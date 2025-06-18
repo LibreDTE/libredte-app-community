@@ -54,7 +54,7 @@ class Shell_Command_DteIntercambios_Limpiar extends \Shell_App
 
     public function main($commit = false)
     {
-        $this->out('Limpieza de registros del '.date('Y-m-d H:i:s'),2);
+        $this->out('Limpieza de registros del '.date('Y-m-d H:i:s'), 2);
         // crear conexión a base de datos e iniciar transacción
         $this->db = \sowerphp\core\Model_Datasource_Database::get();
         $this->db->beginTransaction();
@@ -76,9 +76,9 @@ class Shell_Command_DteIntercambios_Limpiar extends \Shell_App
         // estadísticas
         $this->out();
         if (!empty($commit)) {
-            $this->out('Total registros eliminados: '.num($total),2);
+            $this->out('Total registros eliminados: '.num($total), 2);
         } else {
-            $this->out('Total registros simulados: '.num($total),2);
+            $this->out('Total registros simulados: '.num($total), 2);
         }
         $this->showStats();
         return 0;

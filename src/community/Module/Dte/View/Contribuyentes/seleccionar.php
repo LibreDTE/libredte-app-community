@@ -15,14 +15,14 @@ $t = new \sowerphp\general\View_Helper_Table();
 $t->setColsWidth([null, null, null, null, null, null]);
 echo $t->generate($empresas);
 if ($registrar_empresa) :
-?>
+    ?>
     <a class="btn btn-primary btn-lg col-12 mb-4" href="registrar" role="button">
         Registrar una nueva empresa y ser el administrador de la misma
     </a>
 <?php
 endif;
 if ($soporte) :
-?>
+    ?>
     <script>
         function soporte_ingresar_empresa(rut) {
             if (!Form.check()) {
