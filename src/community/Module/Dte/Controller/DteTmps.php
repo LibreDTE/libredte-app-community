@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte;
  */
 class Controller_DteTmps extends \Controller_App
 {
-
     /**
      * Se permite descargar las cotizaciones sin estar logueado.
      */
@@ -276,7 +275,7 @@ class Controller_DteTmps extends \Controller_App
             );
             if ($response === false) {
                 \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
-            } else if ($response['status']['code'] != 200) {
+            } elseif ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             } else {
                 \sowerphp\core\Model_Datasource_Session::message(
@@ -658,7 +657,7 @@ class Controller_DteTmps extends \Controller_App
         if ($response === false) {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
         }
-        else if ($response['status']['code'] != 200) {
+        elseif ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
         }
         else {
@@ -907,7 +906,7 @@ class Controller_DteTmps extends \Controller_App
             if ($response === false) {
                 \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
             }
-            else if ($response['status']['code'] != 200) {
+            elseif ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             }
             else {
@@ -1006,5 +1005,4 @@ class Controller_DteTmps extends \Controller_App
         // entregar documento
         $this->Api->send($DteTmp, 200);
     }
-
 }

@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte;
  */
 abstract class Model_Base_Envio extends Model_Base_Documento
 {
-
     /**
      * Método que solicita una nueva revisión por email del DTE enviado al SII.
      */
@@ -59,8 +58,7 @@ abstract class Model_Base_Envio extends Model_Base_Documento
             $token,
             $this->getContribuyente()->rut,
             $this->getContribuyente()->dv,
-            $this->track_id
+            $this->track_id,
         ]);
     }
-
 }

@@ -18,13 +18,13 @@ echo $f->input([
     'name' => 'xml',
     'label' => 'Archivo XML',
     'help' => 'Archivo XML del DTE emitido por la empresa que se desea cargar al sistema',
-    'check' => 'notempty'
+    'check' => 'notempty',
 ]);
 echo $f->input([
     'name' => 'track_id',
     'label' => 'Track ID',
     'help' => 'Identificador del envío del DTE al SII',
-    'check' => 'integer'
+    'check' => 'integer',
 ]);
 echo $f->end('Cargar XML');
 ?>

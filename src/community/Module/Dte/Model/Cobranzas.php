@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,9 +29,9 @@ namespace website\Dte;
  */
 class Model_Cobranzas extends \Model_Plural_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'cobranza'; ///< Tabla del
 
     /**
@@ -42,7 +42,7 @@ class Model_Cobranzas extends \Model_Plural_App
     {
         $where = [];
         $vars = [
-            ':emisor' => $this->getContribuyente()->rut, 
+            ':emisor' => $this->getContribuyente()->rut,
             ':certificacion' => $this->getContribuyente()->enCertificacion(),
         ];
         // estado de vencimiento
@@ -160,10 +160,9 @@ class Model_Cobranzas extends \Model_Plural_App
                 WHERE emisor = :emisor AND certificacion = :certificacion AND (pagado IS NULL OR pagado < monto) AND fecha > :dia
             )
         ', [
-            ':emisor' => $this->getContribuyente()->rut, 
-            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
+            ':emisor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
             ':dia' => $dia,
         ]);
     }
-
 }

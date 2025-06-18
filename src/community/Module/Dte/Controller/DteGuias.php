@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 /**
@@ -29,12 +29,11 @@ namespace website\Dte;
  */
 class Controller_DteGuias extends Controller_Base_Libros
 {
-
     protected $config = [
         'model' => [
             'singular' => 'Guia',
             'plural' => 'Guias',
-        ]
+        ],
     ]; ///< Configuración para las acciones del controlador
 
     /**
@@ -144,7 +143,7 @@ class Controller_DteGuias extends Controller_Base_Libros
             ]);
         }
         // facturar las guías seleccionadas
-        else if (!empty($_POST['guias'])) {
+        elseif (!empty($_POST['guias'])) {
             try {
                 $this->set([
                     'temporales' => (new Model_DteGuias())->setContribuyente($Emisor)->facturar($_POST['guias'], [
@@ -164,7 +163,7 @@ class Controller_DteGuias extends Controller_Base_Libros
                         'BcoPago' => !empty($_POST['BcoPago']) ? $_POST['BcoPago'] : false,
                         'NumCtaPago' => !empty($_POST['NumCtaPago']) ? $_POST['NumCtaPago'] : false,
                         'agrupar' => isset($_POST['agrupar']) ? (bool)$_POST['agrupar'] : false,
-                    ])
+                    ]),
                 ]);
             } catch (\Exception $e) {
                 \sowerphp\core\Model_Datasource_Session::message(
@@ -174,5 +173,4 @@ class Controller_DteGuias extends Controller_Base_Libros
             }
         }
     }
-
 }

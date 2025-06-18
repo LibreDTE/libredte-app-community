@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Pdf;
 
 /**
@@ -29,10 +29,12 @@ namespace website\Dte\Pdf;
  */
 class Utility_Apps_General extends Utility_Apps_Base_Formato
 {
-
     protected $activa = true;
+
     protected $nombre = 'Formato de PDF para Propósito General';
+
     protected $descripcion = 'Permite agregar imágenes, código de barras y gráfico con historial entre otras opciones. Es el formato por defecto en LibreDTE Edición Enterprise.';
+
     protected $logo = 'https://libredte.cl/img/logo.png';
 
     protected $config_flags = [
@@ -98,7 +100,7 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
             'label' => 'Sitio web',
             'placeholder' => $this->vars['Contribuyente']->config_extra_web,
             'value' => !empty($this->getConfig()->emisor->web)
-                ? $this->getConfig()->emisor->web 
+                ? $this->getConfig()->emisor->web
                 : null
             ,
             'attr' => 'maxlength="100"',
@@ -242,7 +244,7 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
                     ,
                     'check' => 'notempty integer',
                 ]),
-            ]
+            ],
         ]);
         $buffer .= '<p class="help-block text-muted small">El valor del ancho de cada columna deberá ser asignado en base a prueba y error revisando los PDF.</p>';
         $form->setStyle('horizontal');
@@ -260,5 +262,4 @@ class Utility_Apps_General extends Utility_Apps_Base_Formato
         // entregar buffer
         return $buffer;
     }
-
 }

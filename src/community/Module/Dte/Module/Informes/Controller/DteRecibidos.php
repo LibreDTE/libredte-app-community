@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte\Informes;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte\Informes;
  */
 class Controller_DteRecibidos extends \Controller_App
 {
-
     /**
      * Acción principal del informe de compras.
      */
@@ -106,7 +105,7 @@ class Controller_DteRecibidos extends \Controller_App
         ;
         if ($aux && $detalle) {
             $recibidos = [];
-            foreach($aux as $r) {
+            foreach ($aux as $r) {
                 foreach ($r['items'] as $item) {
                     if ($item[0] == 1 || $detalle == 2) {
                         $recibido = array_slice($r, 0, 15);
@@ -148,5 +147,4 @@ class Controller_DteRecibidos extends \Controller_App
             ]);
         }
     }
-
 }

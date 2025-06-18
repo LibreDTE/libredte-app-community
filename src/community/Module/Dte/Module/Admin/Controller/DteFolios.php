@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte\Admin;
 
 /**
@@ -30,7 +30,6 @@ namespace website\Dte\Admin;
  */
 class Controller_DteFolios extends \Controller_App
 {
-
     /**
      * Acción que muestra la página principal para mantener los folios de la
      * empresa.
@@ -890,5 +889,4 @@ class Controller_DteFolios extends \Controller_App
         }
         $this->Api->send($r['body']);
     }
-
 }

@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Pdf;
 
 /**
@@ -29,10 +29,12 @@ namespace website\Dte\Pdf;
  */
 class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
 {
-
     protected $activa = true;
+
     protected $nombre = 'Formato de PDF Estándar';
+
     protected $descripcion = 'Diseño sencillo que cumple con lo exigido por el SII. Es el formato por defecto en LibreDTE Edición Comunidad.';
+
     protected $logo = 'https://libredte.cl/img/logo.png';
 
     /**
@@ -158,7 +160,7 @@ class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
                     ,
                     'check' => 'notempty integer',
                 ]),
-            ]
+            ],
         ]);
         $buffer .= '<p class="help-block text-muted small">El valor del ancho de cada columna deberá ser asignado en base a prueba y error revisando los PDF.</p>';
         $form->setStyle('horizontal');
@@ -192,5 +194,4 @@ class Utility_Apps_Estandar extends Utility_Apps_Base_Formato
         // entregar buffer
         return $buffer;
     }
-
 }

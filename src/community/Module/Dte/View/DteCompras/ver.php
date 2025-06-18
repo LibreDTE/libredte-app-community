@@ -169,7 +169,7 @@ foreach ($resumen as &$r) {
                 foreach ($r[$c] as $monto) {
                     $valor += $monto['TotMntImp'];
                 }
-            } else if ($c == 'TotIVANoRec') {
+            } elseif ($c == 'TotIVANoRec') {
                 foreach ($r[$c] as $monto) {
                     $valor += $monto['TotMntIVANoRec'];
                 }
@@ -178,7 +178,7 @@ foreach ($resumen as &$r) {
         }
         if ($operaciones[$r['TpoDoc']] == 'S' || $r['TpoDoc'] == 46) {
             $total[$c] += $r[$c];
-        } else if ($operaciones[$r['TpoDoc']] == 'R') {
+        } elseif ($operaciones[$r['TpoDoc']] == 'R') {
             $total[$c] -= $r[$c];
         }
     }

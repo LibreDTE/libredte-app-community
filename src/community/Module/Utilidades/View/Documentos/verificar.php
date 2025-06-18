@@ -71,7 +71,7 @@ if (!empty($documentos)) {
             $EnvioDTE->getCaratula()['NroResol'],
             str_replace('T', ' ', $EnvioDTE->getCaratula()['TmstFirmaEnv']),
             $EnvioDTE->checkFirma() ? 'Ok' : ':-(',
-        ]
+        ],
     ]);
 
     // resultados de los documentos

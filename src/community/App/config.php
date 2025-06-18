@@ -138,7 +138,7 @@ return [
                     'desc' => 'Administración del módulo DTE',
                     'icon' => 'fa fa-cogs',
                 ],
-            ]
+            ],
         ],
         'honorarios' => [
             'link' => '/honorarios',
@@ -173,7 +173,7 @@ return [
     ],
 
     // Configuración para la base de datos
-    'database.default' => array(
+    'database.default' => [
         'type' => 'PostgreSQL', // solo se soporta la base de datos PostgreSQL
         'host' => env('LIBREDTE_APP_DATABASE_DEFAULT_HOST', 'localhost'),
         'port' => (int)env('LIBREDTE_APP_DATABASE_DEFAULT_PORT', 5432),
@@ -181,21 +181,21 @@ return [
         'pass' => env('LIBREDTE_APP_DATABASE_DEFAULT_PASS', ''),
         'name' => env('LIBREDTE_APP_DATABASE_DEFAULT_NAME', 'libredte'),
         'pers' => (bool)env('LIBREDTE_APP_DATABASE_DEFAULT_PERS', false),
-    ),
+    ],
 
     // Configuración para el correo electrónico
-    'email.default' => array(
+    'email.default' => [
         'type' => 'smtp-phpmailer',
         'host' => env('LIBREDTE_APP_EMAIL_DEFAULT_HOST', 'ssl://smtp.gmail.com'),
         'port' => (int)env('LIBREDTE_APP_EMAIL_DEFAULT_PORT', 465),
         'user' => env('LIBREDTE_APP_EMAIL_DEFAULT_USER', ''),
         'pass' => env('LIBREDTE_APP_EMAIL_DEFAULT_PASS', ''),
-        'from' => array(
+        'from' => [
             'email' => env('LIBREDTE_APP_EMAIL_DEFAULT_FROM_EMAIL', ''),
-            'name' => env('LIBREDTE_APP_EMAIL_DEFAULT_FROM_NAME', 'LibreDTE')
-        ),
+            'name' => env('LIBREDTE_APP_EMAIL_DEFAULT_FROM_NAME', 'LibreDTE'),
+        ],
         'to' => env('LIBREDTE_APP_EMAIL_DEFAULT_TO', ''),
-    ),
+    ],
 
     // Módulos que utiliza la aplicación
     'modules' => [

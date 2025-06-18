@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,9 +29,8 @@ namespace website\Dte;
  */
 class Model_ContribuyenteUsuarios extends \Model_Plural_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'contribuyente_usuario'; ///< Tabla del modelo
 
+    protected $_table = 'contribuyente_usuario'; ///< Tabla del modelo
 }

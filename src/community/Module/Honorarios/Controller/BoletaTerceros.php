@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Honorarios;
 
 use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
@@ -32,7 +32,6 @@ use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
  */
 class Controller_BoletaTerceros extends \Controller_App
 {
-
     /**
      * Acción que muestra un resumen por período donde hayan boletas emitidas.
      */
@@ -315,5 +314,4 @@ class Controller_BoletaTerceros extends \Controller_App
             $this->Api->send($e->getMessage(), 500);
         }
     }
-
 }

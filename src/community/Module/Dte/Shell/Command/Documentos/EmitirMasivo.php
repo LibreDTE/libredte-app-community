@@ -28,7 +28,6 @@ namespace website\Dte;
  */
 class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
 {
-
     private $monedas = [
         'USD' => 'DOLAR USA',
         'EUR' => 'EURO',
@@ -90,7 +89,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
                         $datos[$i][] = 'No está autorizado a emitir el tipo de documento '.$documento['Encabezado']['IdDoc']['TipoDTE'];
                     }
                     // si se quiere enviar por correo, verificar que exista correo
-                    else if ($email && empty($documento['Encabezado']['Receptor']['CorreoRecep'])) {
+                    elseif ($email && empty($documento['Encabezado']['Receptor']['CorreoRecep'])) {
                         $error_formato = true;
                         $datos[$i][] = 3;
                         $datos[$i][] = 'Debe indicar correo del receptor';
@@ -151,7 +150,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
         // ir generando cada documento
         $rest = new \sowerphp\core\Network_Http_Rest();
         $rest->setAuth($Usuario->hash);
-        foreach($documentos as $dte) {
+        foreach ($documentos as $dte) {
             if ($this->verbose) {
                 $this->out('Generando DTE T'.$dte['Encabezado']['IdDoc']['TipoDTE'].'F'.$dte['Encabezado']['IdDoc']['Folio']);
             }
@@ -582,7 +581,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
         $msg = $Usuario->nombre.','."\n\n";
         if ($file) {
             $msg .= 'Se adjunta archivo CSV con el detalle de la emisión para cada DTE solicitado.'."\n\n";
-        } else if ($datos) {
+        } elseif ($datos) {
             $msg .= 'Ha ocurrido un error y el archivo no ha podido ser procesado: '.$datos."\n\n";
         }
         $msg .= '- Generar DTE real: '.($dte_real?'Si':'No')."\n";
@@ -601,5 +600,4 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
             unlink($file['tmp_name']);
         }
     }
-
 }

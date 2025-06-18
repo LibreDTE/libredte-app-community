@@ -21,9 +21,15 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
+use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna;
+use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
+use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
+use \sowerphp\app\Sistema\Usuarios\Model_Usuarios;
+use \sowerphp\app\Utility_Apps;
+use \sowerphp\app\Utility_Rut;
 use \sowerphp\core\Exception_Model_Datasource_Database as DatabaseException;
 use \sowerphp\core\Model_Datasource_Session as Session;
 use \sowerphp\core\Network_Email;
@@ -31,12 +37,6 @@ use \sowerphp\core\Network_Email_Imap;
 use \sowerphp\core\Network_Http_Rest;
 use \sowerphp\core\Trigger;
 use \sowerphp\core\Utility_Array;
-use \sowerphp\app\Utility_Apps;
-use \sowerphp\app\Utility_Rut;
-use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna;
-use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
-use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
-use \sowerphp\app\Sistema\Usuarios\Model_Usuarios;
 use \sowerphp\general\Utility_Date;
 use \sowerphp\general\Utility_File;
 use \sowerphp\general\Utility_Image;
@@ -49,27 +49,37 @@ use \website\Sistema\General\Model_ActividadEconomica;
  */
 class Model_Contribuyente extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'contribuyente'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $rut; ///< integer(32) NOT NULL DEFAULT '' PK
+
     public $dv; ///< character(1) NOT NULL DEFAULT ''
+
     public $razon_social; ///< character varying(100) NOT NULL DEFAULT ''
+
     public $giro; ///< character varying(80) NOT NULL DEFAULT ''
+
     public $actividad_economica; ///< integer(32) NULL DEFAULT '' FK:actividad_economica.codigo
+
     public $telefono; ///< character varying(20) NULL DEFAULT ''
+
     public $email; ///< character varying(80) NULL DEFAULT ''
+
     public $direccion; ///< character varying(70) NOT NULL DEFAULT ''
+
     public $comuna; ///< character(5) NOT NULL DEFAULT '' FK:comuna.codigo
+
     public $usuario; ///< integer(32) NULL DEFAULT '' FK:usuario.id
+
     public $modificado; ///< timestamp without time zone() NOT NULL DEFAULT 'now()'
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'rut' => array(
+    public static $columnsInfo = [
+        'rut' => [
             'name'      => 'RUT',
             'comment'   => '',
             'type'      => 'integer',
@@ -78,9 +88,9 @@ class Model_Contribuyente extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'dv' => array(
+            'fk'        => null,
+        ],
+        'dv' => [
             'name'      => 'DV',
             'comment'   => '',
             'type'      => 'character',
@@ -89,9 +99,9 @@ class Model_Contribuyente extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'razon_social' => array(
+            'fk'        => null,
+        ],
+        'razon_social' => [
             'name'      => 'Razón Social',
             'comment'   => '',
             'type'      => 'character varying',
@@ -100,9 +110,9 @@ class Model_Contribuyente extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'giro' => array(
+            'fk'        => null,
+        ],
+        'giro' => [
             'name'      => 'Giro',
             'comment'   => '',
             'type'      => 'character varying',
@@ -111,9 +121,9 @@ class Model_Contribuyente extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'actividad_economica' => array(
+            'fk'        => null,
+        ],
+        'actividad_economica' => [
             'name'      => 'Actividad Económica',
             'comment'   => '',
             'type'      => 'integer',
@@ -122,9 +132,9 @@ class Model_Contribuyente extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => array('table' => 'actividad_economica', 'column' => 'codigo')
-        ),
-        'telefono' => array(
+            'fk'        => ['table' => 'actividad_economica', 'column' => 'codigo'],
+        ],
+        'telefono' => [
             'name'      => 'Teléfono',
             'comment'   => '',
             'type'      => 'character varying',
@@ -133,9 +143,9 @@ class Model_Contribuyente extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'email' => array(
+            'fk'        => null,
+        ],
+        'email' => [
             'name'      => 'Email',
             'comment'   => '',
             'type'      => 'character varying',
@@ -144,9 +154,9 @@ class Model_Contribuyente extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'direccion' => array(
+            'fk'        => null,
+        ],
+        'direccion' => [
             'name'      => 'Dirección',
             'comment'   => '',
             'type'      => 'character varying',
@@ -155,9 +165,9 @@ class Model_Contribuyente extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'comuna' => array(
+            'fk'        => null,
+        ],
+        'comuna' => [
             'name'      => 'Comuna',
             'comment'   => '',
             'type'      => 'character',
@@ -166,9 +176,9 @@ class Model_Contribuyente extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => array('table' => 'comuna', 'column' => 'codigo')
-        ),
-        'usuario' => array(
+            'fk'        => ['table' => 'comuna', 'column' => 'codigo'],
+        ],
+        'usuario' => [
             'name'      => 'Usuario',
             'comment'   => '',
             'type'      => 'integer',
@@ -177,9 +187,9 @@ class Model_Contribuyente extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => array('table' => 'usuario', 'column' => 'id')
-        ),
-        'modificado' => array(
+            'fk'        => ['table' => 'usuario', 'column' => 'id'],
+        ],
+        'modificado' => [
             'name'      => 'Modificado',
             'comment'   => '',
             'type'      => 'timestamp without time zone',
@@ -188,19 +198,19 @@ class Model_Contribuyente extends \Model_App
             'default'   => 'now()',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
+    public static $fkNamespace = [
         'Model_ActividadEconomica' => '\website\Sistema\General',
         'Model_Comuna' => '\sowerphp\app\Sistema\General\DivisionGeopolitica',
-        'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios'
-    ); ///< Namespaces que utiliza esta clase
+        'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios',
+    ]; ///< Namespaces que utiliza esta clase
 
     public static $encriptar = [
         'sii_pass',
@@ -226,7 +236,9 @@ class Model_Contribuyente extends \Model_App
     private static $autocompletar = true; ///< Indica si se deben autocompletar los datos de contribuyentes nuevos
 
     public $contribuyente; ///< Copia de razon_social
+
     private $config = null; ///< Caché para configuraciones
+
     private $firmas = []; ///< Caché de las firmas del contribuyente
 
     /**
@@ -291,7 +303,6 @@ class Model_Contribuyente extends \Model_App
         catch (\Exception $e) {
         }
     }
-
 
     /**
      * Método que entrega las configuraciones y parámetros extras para el
@@ -400,7 +411,7 @@ class Model_Contribuyente extends \Model_App
     public function set($array)
     {
         parent::set($array);
-        foreach($array as $name => $value) {
+        foreach ($array as $name => $value) {
             if (strpos($name, 'config_') === 0) {
                 $this->__set($name, $value);
             }
@@ -859,7 +870,7 @@ class Model_Contribuyente extends \Model_App
         }
         // si el usuario es de soporte se colocan los permisos completos del
         // usuario principal de la empresa
-        else if ($this->config_app_soporte && in_array('soporte', $usuario_grupos_reales)) {
+        elseif ($this->config_app_soporte && in_array('soporte', $usuario_grupos_reales)) {
             $usuario_grupos_sesion = $this->getUsuario()->groups(true);
         }
         // si es un usuario autorizado, entonces se copian los permisos
@@ -1691,11 +1702,11 @@ class Model_Contribuyente extends \Model_App
                 $where[] = 'd.track_id IS NULL';
             }
             // solo documentos sin estado (falta actualizar)
-            else if ($filtros['estado_sii'] == 'null') {
+            elseif ($filtros['estado_sii'] == 'null') {
                 $where[] = '(d.track_id IS NOT NULL AND d.revision_estado IS NULL)';
             }
             // solo documentos sin estado final (falta actualizar)
-            else if ($filtros['estado_sii'] == 'no_final') {
+            elseif ($filtros['estado_sii'] == 'no_final') {
                 $estados_no_final = implode('\', \'', Model_DteEmitidos::$revision_estados['no_final']);
                 $where[] = '(
                     (
@@ -1717,7 +1728,7 @@ class Model_Contribuyente extends \Model_App
                 )';
             }
             // solo documentos con estado rechazado (eliminar y, quizás, volver a emitir)
-            else if ($filtros['estado_sii'] == 'rechazados') {
+            elseif ($filtros['estado_sii'] == 'rechazados') {
                 $estados_rechazados = implode('\', \'', Model_DteEmitidos::$revision_estados['rechazados']);
                 $where[] = '(
                     d.revision_estado IS NOT NULL
@@ -1933,7 +1944,7 @@ class Model_Contribuyente extends \Model_App
             'pass' => $pass,
             'from' => [
                 'email' => $user,
-                'name' => str_replace(',', '', $this->getNombre())
+                'name' => str_replace(',', '', $this->getNombre()),
             ],
             'debug' => $debug,
         ]);
@@ -3857,7 +3868,7 @@ class Model_Contribuyente extends \Model_App
             do {
                 $periodos[] = $p_aux;
                 $p_aux = Utility_Date::nextPeriod($p_aux);
-            } while($p_aux <= $periodo_max);
+            } while ($p_aux <= $periodo_max);
         }
         // consulta SQL
         if ($periodo) {
@@ -4437,7 +4448,7 @@ class Model_Contribuyente extends \Model_App
                 }
             }
             // si el dte es solo uno se coloca como arreglo
-            else if (!is_array($filtros['dte'])) {
+            elseif (!is_array($filtros['dte'])) {
                 $filtros['dte'] = [$filtros['dte']];
             }
         }
@@ -4834,8 +4845,8 @@ class Model_Contribuyente extends \Model_App
         return [
             'pass' => [
                 'rut' => $this->rut . '-' . $this->dv,
-                'clave' => $this->config_sii_pass
-            ]
+                'clave' => $this->config_sii_pass,
+            ],
         ];
     }
 
@@ -5070,5 +5081,4 @@ class Model_Contribuyente extends \Model_App
         // no se encontró, se debe buscar en otra permutación
         return false;
     }
-
 }

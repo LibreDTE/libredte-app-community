@@ -28,7 +28,6 @@ namespace website\Honorarios;
  */
 class Shell_Command_Sii_Sincronizar extends \Shell_App
 {
-
     public function main($grupo = 'dte_plus', $meses = 2, $sincronizar = 'all')
     {
         // recorrer contribuyentes y obtener datos
@@ -82,5 +81,4 @@ class Shell_Command_Sii_Sincronizar extends \Shell_App
                 AND cc.valor IS NOT NULL
         ', [':grupo' => $grupo]);
     }
-
 }

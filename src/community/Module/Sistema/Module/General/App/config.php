@@ -24,27 +24,27 @@
 return [
 
     // Menú para el módulo
-    'nav.module' => array(
-        '/moneda_cambios/listar/1/fecha/D' => array(
+    'nav.module' => [
+        '/moneda_cambios/listar/1/fecha/D' => [
             'name' => 'Cambios de moneda',
             'desc' => 'Listado de tipos de cambio de monedas',
             'icon' => 'far fa-money-bill-alt',
-        ),
-        '/actividad_economicas/listar' => array(
+        ],
+        '/actividad_economicas/listar' => [
             'name' => 'Actividad económica',
             'desc' => 'Listado de actividades económicas del SII',
             'icon' => 'fas fa-dollar-sign',
-        ),
-        '/bancos/listar' => array(
+        ],
+        '/bancos/listar' => [
             'name' => 'Bancos',
             'desc' => 'Listado de bancos de Chile',
             'icon' => 'fas fa-university',
-        ),
-        '/division_geopolitica' => array(
+        ],
+        '/division_geopolitica' => [
             'name' => 'División geopolítica',
             'desc' => 'Regiones, provincias y comunas del país',
             'icon' => 'fa fa-globe',
-        ),
-    ),
+        ],
+    ],
 
 ];

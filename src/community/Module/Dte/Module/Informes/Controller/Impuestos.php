@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte\Informes;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte\Informes;
  */
 class Controller_Impuestos extends \Controller_App
 {
-
     /**
      * Acción que permite generar una propuesta del formulario 29 según las
      * compras y ventas del contribuyente para cierto período.
@@ -54,5 +53,4 @@ class Controller_Impuestos extends \Controller_App
             $PropuestaF29->download('propuesta_f29_'.$Emisor->rut.'_'.$periodo.'.xls');
         }
     }
-
 }

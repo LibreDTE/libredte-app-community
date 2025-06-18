@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 /**
@@ -30,7 +30,6 @@ namespace website\Dte;
  */
 class Controller_Contribuyentes extends \Controller_App
 {
-
     /**
      * Método que selecciona la empresa con la que se trabajará en el módulo DTE.
      * @param rut Si se pasa un RUT se tratará de seleccionar.
@@ -83,7 +82,7 @@ class Controller_Contribuyentes extends \Controller_App
             if ($redirect) {
                 \sowerphp\core\Model_Datasource_Session::delete('referer');
             }
-            else if ($url) {
+            elseif ($url) {
                 $redirect = base64_decode($url);
             }
             else {
@@ -816,7 +815,7 @@ class Controller_Contribuyentes extends \Controller_App
             }
         }
         // hacer test IMAP
-        else if ($protocol == 'imap') {
+        elseif ($protocol == 'imap') {
             try {
                 $Email = $Contribuyente->getEmailReceiver($email);
             } catch (\Exception $e) {
@@ -878,7 +877,7 @@ class Controller_Contribuyentes extends \Controller_App
                 $emisor = $rut;
             }
             // si no hay emisor con búsqueda de receptor error
-            else if ($tipo == 'receptor') {
+            elseif ($tipo == 'receptor') {
                 $this->Api->send('Debe indicar emisor para hacer una búsqueda de tipo receptor.', 400);
             }
         } else {
@@ -928,5 +927,4 @@ class Controller_Contribuyentes extends \Controller_App
         ];
         $this->Api->send($config, 200);
     }
-
 }

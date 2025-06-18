@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte;
  */
 class Controller_RegistroVentas extends \Controller_App
 {
-
     /**
      * API que permite obtener un resumen de los documentos emitidos
      * en el Registro de Ventas del SII.
@@ -56,5 +55,4 @@ class Controller_RegistroVentas extends \Controller_App
             'periodo' => $periodo,
         ]);
     }
-
 }

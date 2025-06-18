@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Admin;
 
 /**
@@ -29,21 +29,25 @@ namespace website\Dte\Admin;
  */
 class Model_ItemClasificacion extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'item_clasificacion'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $contribuyente; ///< integer(32) NOT NULL DEFAULT '' PK FK:item_clasificacion.contribuyente
+
     public $codigo; ///< character varying(35) NOT NULL DEFAULT '' PK
+
     public $clasificacion; ///< character varying(50) NOT NULL DEFAULT ''
+
     public $superior; ///< character varying(10) NULL DEFAULT '' FK:item_clasificacion.contribuyente
+
     public $activa; ///< boolean() NOT NULL DEFAULT 'true'
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'contribuyente' => array(
+    public static $columnsInfo = [
+        'contribuyente' => [
             'name'      => 'Contribuyente',
             'comment'   => '',
             'type'      => 'integer',
@@ -52,9 +56,9 @@ class Model_ItemClasificacion extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'item_clasificacion', 'column' => 'contribuyente')
-        ),
-        'codigo' => array(
+            'fk'        => ['table' => 'item_clasificacion', 'column' => 'contribuyente'],
+        ],
+        'codigo' => [
             'name'      => 'Código',
             'comment'   => '',
             'type'      => 'character varying',
@@ -63,9 +67,9 @@ class Model_ItemClasificacion extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'clasificacion' => array(
+            'fk'        => null,
+        ],
+        'clasificacion' => [
             'name'      => 'Glosa',
             'comment'   => '',
             'type'      => 'character varying',
@@ -74,9 +78,9 @@ class Model_ItemClasificacion extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'superior' => array(
+            'fk'        => null,
+        ],
+        'superior' => [
             'name'      => 'Superior',
             'comment'   => '',
             'type'      => 'character varying',
@@ -85,9 +89,9 @@ class Model_ItemClasificacion extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => array('table' => 'item_clasificacion', 'column' => 'contribuyente')
-        ),
-        'activa' => array(
+            'fk'        => ['table' => 'item_clasificacion', 'column' => 'contribuyente'],
+        ],
+        'activa' => [
             'name'      => 'Activa',
             'comment'   => '',
             'type'      => 'boolean',
@@ -96,18 +100,18 @@ class Model_ItemClasificacion extends \Model_App
             'default'   => 'true',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
+    public static $fkNamespace = [
         'Model_Contribuyente' => 'website\Dte',
-        'Model_ItemClasificacion' => 'website\Dte\Admin'
-    ); ///< Namespaces que utiliza esta clase
+        'Model_ItemClasificacion' => 'website\Dte\Admin',
+    ]; ///< Namespaces que utiliza esta clase
 
     /**
      * Constructor de la clasificación del item.
@@ -170,5 +174,4 @@ class Model_ItemClasificacion extends \Model_App
         );
         return $Itemes->getObjects();
     }
-
 }

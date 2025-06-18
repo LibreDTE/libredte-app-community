@@ -29,7 +29,6 @@ namespace website\Dte;
  */
 class Shell_Command_DteEmitidos_Migrar extends \Shell_App
 {
-
     public function main($servidor, $dia = null, $certificacion = 0)
     {
         $this->db = \sowerphp\core\Model_Datasource_Database::get();
@@ -55,7 +54,7 @@ class Shell_Command_DteEmitidos_Migrar extends \Shell_App
         if ($response === false) {
             $this->out(implode('<br/>', $rest->getErrors()));
         }
-        else if ($response['status']['code'] != 200) {
+        elseif ($response['status']['code'] != 200) {
             $this->out($response['body']);
         }
         else {
@@ -77,5 +76,4 @@ class Shell_Command_DteEmitidos_Migrar extends \Shell_App
             ':certificacion' => (int)$certificacion,
         ]);
     }
-
 }

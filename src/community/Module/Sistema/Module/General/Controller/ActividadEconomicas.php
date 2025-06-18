@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Sistema\General;
 
 /**
@@ -30,7 +30,5 @@ namespace website\Sistema\General;
  */
 class Controller_ActividadEconomicas extends \Controller_Maintainer
 {
-
     protected $namespace = __NAMESPACE__; ///< Namespace del controlador y modelos asociados
-
 }

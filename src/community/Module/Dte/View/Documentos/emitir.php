@@ -157,7 +157,7 @@ echo $f->input(['type' => 'hidden', 'name' => 'lista_precios', 'value' => 0]);
                     $f->input(['name' => 'Patente', 'attr' => 'maxlength="6" style="width:6em"', 'value' => !empty($datos['Encabezado']['Transporte']['Patente']) ? $datos['Encabezado']['Transporte']['Patente'] : '']),
                     $f->input(['name' => 'RUTChofer', 'check' => 'rut', 'attr' => 'style="width:8em"', 'value' => !empty($datos['Encabezado']['Transporte']['RUTChofer']) ? $datos['Encabezado']['Transporte']['RUTChofer'] : '']),
                     $f->input(['name' => 'NombreChofer', 'attr' => 'maxlength="30" style="width:8em"', 'value' => !empty($datos['Encabezado']['Transporte']['NombreChofer']) ? $datos['Encabezado']['Transporte']['NombreChofer'] : '']),
-                ]
+                ],
             ]); ?>
         </div>
     </div>
@@ -176,7 +176,7 @@ echo $f->input(['type' => 'hidden', 'name' => 'lista_precios', 'value' => 0]);
                     $f->input(['type' => 'select', 'name' => 'Nacionalidad', 'options' => ['' => ''] + $nacionalidades, 'check' => 'notempty', 'value' => !empty($datos['Encabezado']['Receptor']['Extranjero']['Nacionalidad']) ? $datos['Encabezado']['Receptor']['Extranjero']['Nacionalidad'] : '']),
                     $f->input(['name' => 'NumId', 'placeholder' => 'Número ID', 'attr' => 'maxlength="20"', 'popover' => 'ID si el cliente no tiene pasaporte, si lo tiene va en sección referencias (código 813)', 'value' => !empty($datos['Encabezado']['Receptor']['Extranjero']['NumId']) ? $datos['Encabezado']['Receptor']['Extranjero']['NumId'] : '']),
                     $f->input(['name' => 'TpoCambio', 'label' => 'Tipo de cambio', 'placeholder' => 'Tipo de cambio', 'popover' => 'Dejar vacío para determinar automáticamente', 'check' => 'real']),
-                ]
+                ],
             ]); ?>
         </div>
     </div>
@@ -282,7 +282,7 @@ echo $f->input($input_detalle);
     <div class="card-body">
 <?php
 $impuestos = [['Código', 'Impuesto', 'Tipo', 'Tasa']];
-foreach($ImpuestoAdicionales as $IA) {
+foreach ($ImpuestoAdicionales as $IA) {
     $impuestos[] = [
         $IA->codigo,
         $IA->nombre,
@@ -564,7 +564,7 @@ $(function() {
         <div class="modal-body">
 <?php
 $clientes = $Emisor->getClientes();
-foreach($clientes as &$c) {
+foreach ($clientes as &$c) {
     $c['rut'] = '<a href="#" onclick="$(\'.modal-buscar-receptor\').modal(\'hide\'); document.getElementById(\'RUTRecepField\').value=this.innerText; Receptor.setDatos(\'emitir_dte\')">'.num($c['rut']).'-'.$c['dv'].'</a>';
     if (!empty($c['codigo_interno'])) {
         $c['rut'] .= '<span>'.$c['codigo_interno'].'</span>';
@@ -630,9 +630,9 @@ window.addEventListener('load', function() {
     }
 });
 var observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
+    mutations.foreach (function(mutation) {
         if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-            mutation.addedNodes.forEach(function(addedNode) {
+            mutation.addedNodes.foreach (function(addedNode) {
                 if (addedNode.nodeName === 'TR' && addedNode.querySelector('.detalle_eliminar')) {
                     var eliminarButton = addedNode.querySelector('.detalle_eliminar');
                     eliminarButton.setAttribute('onClick','Form.delJS(this); DTE.calcular(); return false;');

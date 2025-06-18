@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 /**
@@ -30,7 +30,6 @@ namespace website\Dte;
  */
 class Controller_RegistroCompras extends \Controller_App
 {
-
     /**
      * Acción principal que redirecciona a los documentos pendientes, ya que no
      * se deberían estar cargando de otro tipo actualmente, quizás en el futuro (?).
@@ -269,5 +268,4 @@ class Controller_RegistroCompras extends \Controller_App
             $this->redirect('/dte/registro_compras/pendientes');
         }
     }
-
 }

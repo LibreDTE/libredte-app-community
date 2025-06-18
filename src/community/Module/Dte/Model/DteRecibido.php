@@ -21,65 +21,99 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
-use stdClass;
 use \sowerphp\core\Utility_Array;
+use \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos;
 use \website\Dte\Admin\Mantenedores\Model_DteTipo;
 use \website\Dte\Admin\Mantenedores\Model_DteTipos;
-use \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos;
+use stdClass;
 
 /**
  * Clase para mapear la tabla dte_recibido de la base de datos.
  */
 class Model_DteRecibido extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_recibido'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
+
     public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_tipo.codigo
+
     public $folio; ///< integer(32) NOT NULL DEFAULT '' PK
+
     public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK
+
     public $receptor; ///< integer(32) NOT NULL DEFAULT '' FK:contribuyente.rut
+
     public $tasa; ///< smallint(16) NOT NULL DEFAULT '0'
+
     public $fecha; ///< date() NOT NULL DEFAULT ''
+
     public $sucursal_sii; ///< integer(32) NULL DEFAULT ''
+
     public $exento; ///< integer(32) NULL DEFAULT ''
+
     public $neto; ///< integer(32) NULL DEFAULT ''
+
     public $iva; ///< integer(32) NOT NULL DEFAULT '0'
+
     public $total; ///< integer(32) NOT NULL DEFAULT ''
+
     public $usuario; ///< integer(32) NOT NULL DEFAULT '' FK:usuario.id
+
     public $intercambio; ///< integer(32) NULL DEFAULT ''
+
     public $iva_uso_comun; ///< integer(32) NULL DEFAULT ''
+
     public $iva_no_recuperable; ///< text() NULL DEFAULT ''
+
     public $impuesto_adicional; ///< text() NULL DEFAULT ''
+
     public $impuesto_tipo; ///< smallint(16) NOT NULL DEFAULT '1'
+
     public $anulado; ///< character(1) NULL DEFAULT ''
+
     public $impuesto_sin_credito; ///< integer(32) NULL DEFAULT ''
+
     public $monto_activo_fijo; ///< integer(32) NULL DEFAULT ''
+
     public $monto_iva_activo_fijo; ///< integer(32) NULL DEFAULT ''
+
     public $iva_no_retenido; ///< integer(32) NULL DEFAULT ''
+
     public $periodo; ///< integer(32) NULL DEFAULT ''
+
     public $impuesto_puros; ///< integer(32) NULL DEFAULT ''
+
     public $impuesto_cigarrillos; ///< integer(32) NULL DEFAULT ''
+
     public $impuesto_tabaco_elaborado; ///< integer(32) NULL DEFAULT ''
+
     public $impuesto_vehiculos; ///< integer(32) NULL DEFAULT ''
+
     public $numero_interno; ///< integer(32) NULL DEFAULT ''
+
     public $emisor_nc_nd_fc; ///< smallint(16) NULL DEFAULT ''
+
     public $sucursal_sii_receptor; ///< integer(32) NULL DEFAULT ''
+
     public $rcv_accion; ///< character(3) NULL DEFAULT ''
+
     public $tipo_transaccion; ///< smallint(16) NULL DEFAULT ''
+
     public $fecha_hora_creacion; ///< timestamp without time zone() NOT NULL DEFAULT ''
+
     public $mipyme; ///< bigint(64) NULL DEFAULT ''
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
+    public static $columnsInfo = [
+        'emisor' => [
             'name'      => 'Emisor',
             'comment'   => '',
             'type'      => 'integer',
@@ -88,9 +122,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'dte' => array(
+            'fk'        => ['table' => 'contribuyente', 'column' => 'rut'],
+        ],
+        'dte' => [
             'name'      => 'Dte',
             'comment'   => '',
             'type'      => 'smallint',
@@ -99,9 +133,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_tipo', 'column' => 'codigo')
-        ),
-        'folio' => array(
+            'fk'        => ['table' => 'dte_tipo', 'column' => 'codigo'],
+        ],
+        'folio' => [
             'name'      => 'Folio',
             'comment'   => '',
             'type'      => 'integer',
@@ -110,9 +144,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'certificacion' => array(
+            'fk'        => null,
+        ],
+        'certificacion' => [
             'name'      => 'Certificacion',
             'comment'   => '',
             'type'      => 'boolean',
@@ -121,9 +155,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => 'false',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'receptor' => array(
+            'fk'        => null,
+        ],
+        'receptor' => [
             'name'      => 'Receptor',
             'comment'   => '',
             'type'      => 'integer',
@@ -132,9 +166,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'tasa' => array(
+            'fk'        => ['table' => 'contribuyente', 'column' => 'rut'],
+        ],
+        'tasa' => [
             'name'      => 'Tasa',
             'comment'   => '',
             'type'      => 'smallint',
@@ -143,9 +177,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '0',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'fecha' => array(
+            'fk'        => null,
+        ],
+        'fecha' => [
             'name'      => 'Fecha',
             'comment'   => '',
             'type'      => 'date',
@@ -154,9 +188,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'sucursal_sii' => array(
+            'fk'        => null,
+        ],
+        'sucursal_sii' => [
             'name'      => 'Sucursal Sii',
             'comment'   => '',
             'type'      => 'integer',
@@ -165,9 +199,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'exento' => array(
+            'fk'        => null,
+        ],
+        'exento' => [
             'name'      => 'Exento',
             'comment'   => '',
             'type'      => 'integer',
@@ -176,9 +210,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'neto' => array(
+            'fk'        => null,
+        ],
+        'neto' => [
             'name'      => 'Neto',
             'comment'   => '',
             'type'      => 'integer',
@@ -187,9 +221,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'iva' => array(
+            'fk'        => null,
+        ],
+        'iva' => [
             'name'      => 'Iva',
             'comment'   => '',
             'type'      => 'integer',
@@ -198,9 +232,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '0',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'total' => array(
+            'fk'        => null,
+        ],
+        'total' => [
             'name'      => 'Total',
             'comment'   => '',
             'type'      => 'integer',
@@ -209,9 +243,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'usuario' => array(
+            'fk'        => null,
+        ],
+        'usuario' => [
             'name'      => 'Usuario',
             'comment'   => '',
             'type'      => 'integer',
@@ -220,9 +254,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => array('table' => 'usuario', 'column' => 'id')
-        ),
-        'intercambio' => array(
+            'fk'        => ['table' => 'usuario', 'column' => 'id'],
+        ],
+        'intercambio' => [
             'name'      => 'Intercambio',
             'comment'   => '',
             'type'      => 'integer',
@@ -231,9 +265,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'iva_uso_comun' => array(
+            'fk'        => null,
+        ],
+        'iva_uso_comun' => [
             'name'      => 'Iva Uso Comun',
             'comment'   => '',
             'type'      => 'smallint',
@@ -242,9 +276,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'iva_no_recuperable' => array(
+            'fk'        => null,
+        ],
+        'iva_no_recuperable' => [
             'name'      => 'Iva No Recuperable',
             'comment'   => '',
             'type'      => 'text',
@@ -253,9 +287,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'impuesto_adicional' => array(
+            'fk'        => null,
+        ],
+        'impuesto_adicional' => [
             'name'      => 'Impuesto Adicional',
             'comment'   => '',
             'type'      => 'text',
@@ -264,9 +298,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'impuesto_tipo' => array(
+            'fk'        => null,
+        ],
+        'impuesto_tipo' => [
             'name'      => 'Impuesto Tipo',
             'comment'   => '',
             'type'      => 'smallint',
@@ -275,9 +309,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '1',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'anulado' => array(
+            'fk'        => null,
+        ],
+        'anulado' => [
             'name'      => 'Anulado',
             'comment'   => '',
             'type'      => 'character',
@@ -286,9 +320,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'impuesto_sin_credito' => array(
+            'fk'        => null,
+        ],
+        'impuesto_sin_credito' => [
             'name'      => 'Impuesto Sin Credito',
             'comment'   => '',
             'type'      => 'integer',
@@ -297,9 +331,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'monto_activo_fijo' => array(
+            'fk'        => null,
+        ],
+        'monto_activo_fijo' => [
             'name'      => 'Monto Activo Fijo',
             'comment'   => '',
             'type'      => 'integer',
@@ -308,9 +342,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'monto_iva_activo_fijo' => array(
+            'fk'        => null,
+        ],
+        'monto_iva_activo_fijo' => [
             'name'      => 'Monto Iva Activo Fijo',
             'comment'   => '',
             'type'      => 'integer',
@@ -319,9 +353,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'iva_no_retenido' => array(
+            'fk'        => null,
+        ],
+        'iva_no_retenido' => [
             'name'      => 'Iva No Retenido',
             'comment'   => '',
             'type'      => 'integer',
@@ -330,9 +364,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'periodo' => array(
+            'fk'        => null,
+        ],
+        'periodo' => [
             'name'      => 'Período',
             'comment'   => '',
             'type'      => 'integer',
@@ -341,9 +375,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'impuesto_puros' => array(
+            'fk'        => null,
+        ],
+        'impuesto_puros' => [
             'name'      => 'Impuesto Puros',
             'comment'   => '',
             'type'      => 'integer',
@@ -352,9 +386,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'impuesto_cigarrillos' => array(
+            'fk'        => null,
+        ],
+        'impuesto_cigarrillos' => [
             'name'      => 'Impuesto Cigarrillos',
             'comment'   => '',
             'type'      => 'integer',
@@ -363,9 +397,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'impuesto_tabaco_elaborado' => array(
+            'fk'        => null,
+        ],
+        'impuesto_tabaco_elaborado' => [
             'name'      => 'Impuesto Tabaco Elaborado',
             'comment'   => '',
             'type'      => 'integer',
@@ -374,9 +408,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'impuesto_vehiculos' => array(
+            'fk'        => null,
+        ],
+        'impuesto_vehiculos' => [
             'name'      => 'Impuesto Vehiculos',
             'comment'   => '',
             'type'      => 'integer',
@@ -385,9 +419,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'numero_interno' => array(
+            'fk'        => null,
+        ],
+        'numero_interno' => [
             'name'      => 'Numero Interno',
             'comment'   => '',
             'type'      => 'integer',
@@ -396,9 +430,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'emisor_nc_nd_fc' => array(
+            'fk'        => null,
+        ],
+        'emisor_nc_nd_fc' => [
             'name'      => 'Emisor Nc Nd Fc',
             'comment'   => '',
             'type'      => 'smallint',
@@ -407,9 +441,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'sucursal_sii_receptor' => array(
+            'fk'        => null,
+        ],
+        'sucursal_sii_receptor' => [
             'name'      => 'Sucursal Sii Receptor',
             'comment'   => '',
             'type'      => 'integer',
@@ -418,9 +452,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'rcv_accion' => array(
+            'fk'        => null,
+        ],
+        'rcv_accion' => [
             'name'      => 'Acción RCV',
             'comment'   => '',
             'type'      => 'character',
@@ -429,9 +463,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'tipo_transaccion' => array(
+            'fk'        => null,
+        ],
+        'tipo_transaccion' => [
             'name'      => 'Tipo transacción',
             'comment'   => '',
             'type'      => 'smallint',
@@ -440,9 +474,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'fecha_hora_creacion' => array(
+            'fk'        => null,
+        ],
+        'fecha_hora_creacion' => [
             'name'      => 'Fecha Hora Creación',
             'comment'   => '',
             'type'      => 'timestamp without time zone',
@@ -451,9 +485,9 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'mipyme' => array(
+            'fk'        => null,
+        ],
+        'mipyme' => [
             'name'      => 'Código MIPYME',
             'comment'   => '',
             'type'      => 'bigint',
@@ -462,28 +496,33 @@ class Model_DteRecibido extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
+    public static $fkNamespace = [
         'Model_Contribuyente' => 'website\Dte',
         'Model_DteTipo' => 'website\Dte\Admin\Mantenedores',
         'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios',
         'Model_IvaNoRecuperable' => 'website\Dte\Admin\Mantenedores',
-        'Model_ImpuestoAdicional' => 'website\Dte\Admin\Mantenedores'
-    ); ///< Namespaces que utiliza esta clase
+        'Model_ImpuestoAdicional' => 'website\Dte\Admin\Mantenedores',
+    ]; ///< Namespaces que utiliza esta clase
 
     // cachés
     private $Dte; ///< Objeto con el DTE
+
     private $Emisor; ///< Objeto con el Emisor del DTE recibido
+
     private $DteIntercambio; ///< Objeto con el DTE de intercambio
+
     public $xml; ///< XML del DTE recibido, ya sea asociado del intercambio o por portal mipyme
+
     public $detalle; ///< Detalle del documento del intercambio
+
     private $datos; /// Datos del DTE
 
     /**
@@ -618,7 +657,7 @@ class Model_DteRecibido extends \Model_App
                                 'dte' => $this->dte,
                                 'folio' => $this->folio,
                                 'tipo_transaccion' => $this->tipo_transaccion,
-                                'codigo_iva' => $codigo_impuesto
+                                'codigo_iva' => $codigo_impuesto,
                             ],
                         ],
                     ]
@@ -804,7 +843,7 @@ class Model_DteRecibido extends \Model_App
                 ;
             }
             // es documento mipyme
-            else if ($this->mipyme) {
+            elseif ($this->mipyme) {
                 $XML = new \sasco\LibreDTE\XML();
                 $XML->loadXML($this->getXML());
                 $doc = $XML->toArray();
@@ -1031,7 +1070,7 @@ class Model_DteRecibido extends \Model_App
             return $r['body'];
         }
         // si es un DTE con intercambio se genera localmente en LibreDTE
-        else if ($this->intercambio) {
+        elseif ($this->intercambio) {
             // consultar servicio web del contribuyente
             $ApiDtePdfClient = $this->getEmisor()->getApiClient('dte_pdf');
             if ($ApiDtePdfClient) {
@@ -1039,7 +1078,7 @@ class Model_DteRecibido extends \Model_App
                 $response = $ApiDtePdfClient->post($ApiDtePdfClient->url, $config);
             }
             // crear a partir de formato de PDF no estándar
-            else if ($config['formato'] != 'estandar') {
+            elseif ($config['formato'] != 'estandar') {
                 $apps = $this->getEmisor()->getApps('dtepdfs');
                 if (
                     empty($apps[$config['formato']])
@@ -1132,7 +1171,7 @@ class Model_DteRecibido extends \Model_App
             $response = $ApiDteEscPosClient->post($ApiDteEscPosClient->url, $config);
         }
         // consultar aplicación de ESCPOS según el formato solicitado
-        else if ($apps = $this->getEmisor()->getApps('dteescpos')) {
+        elseif ($apps = $this->getEmisor()->getApps('dteescpos')) {
             if (
                 empty($apps[$config['formato']])
                 || empty($apps[$config['formato']]->getConfig()->disponible)
@@ -1152,5 +1191,4 @@ class Model_DteRecibido extends \Model_App
         // si dió código 200 se entrega la respuesta del servicio web
         return $response['body'];
     }
-
 }

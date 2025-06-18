@@ -27,7 +27,7 @@ return [
     'module.title' => 'Mantenedores módulo facturación',
 
     // Menú para el módulo
-    'nav.module' => array(
+    'nav.module' => [
         '/contribuyentes/importar' => [
             'name' => 'Importar contribuyentes',
             'desc' => 'Importar datos de constribuyntes',
@@ -56,6 +56,6 @@ return [
             'name' => 'Impuestos adicionales',
             'icon' => 'fas fa-dollar-sign',
         ],
-    ),
+    ],
 
 ];

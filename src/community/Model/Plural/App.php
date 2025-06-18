@@ -28,7 +28,6 @@ namespace website;
  */
 abstract class Model_Plural_App extends \sowerphp\app\Model_Plural
 {
-
     private $Contribuyente = null; ///< Contribuyente con el que se realizarán las consultas
 
     /**
@@ -51,5 +50,4 @@ abstract class Model_Plural_App extends \sowerphp\app\Model_Plural
         }
         return $this->Contribuyente;
     }
-
 }

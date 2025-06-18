@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Pdf;
 
 /**
@@ -29,10 +29,12 @@ namespace website\Dte\Pdf;
  */
 class Utility_Apps_ServiciosBasicos extends Utility_Apps_Base_Formato
 {
-
     protected $activa = true;
+
     protected $nombre = 'Formato de PDF para Servicios Básicos';
+
     protected $descripcion = 'Por ejemplo, para empresas de Agua Potable Rural.';
+
     protected $logo = 'https://i.imgur.com/j6lz7Aq.png';
 
     /**
@@ -171,5 +173,4 @@ class Utility_Apps_ServiciosBasicos extends Utility_Apps_Base_Formato
         // entregar configuración actualizada
         return $config;
     }
-
 }

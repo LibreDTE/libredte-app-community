@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Sistema\General;
 
 /**
@@ -29,20 +29,23 @@ namespace website\Sistema\General;
  */
 class Model_ActividadEconomica extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'actividad_economica'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $codigo; ///< Código de la actividad económica: integer(32) NOT NULL DEFAULT '' PK
+
     public $actividad_economica; ///< Glosa de la actividad económica: character varying(120) NOT NULL DEFAULT ''
+
     public $afecta_iva; ///< Si la actividad está o no afecta a IVA: boolean() NULL DEFAULT ''
+
     public $categoria; ///< Categoría a la que pertenece la actividad (tipo de contribuyente): smallint(16) NULL DEFAULT ''
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'codigo' => array(
+    public static $columnsInfo = [
+        'codigo' => [
             'name'      => 'Codigo',
             'comment'   => 'Código de la actividad económica',
             'type'      => 'integer',
@@ -51,9 +54,9 @@ class Model_ActividadEconomica extends \Model_App
             'default'   => "",
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'actividad_economica' => array(
+            'fk'        => null,
+        ],
+        'actividad_economica' => [
             'name'      => 'Actividad Economica',
             'comment'   => 'Glosa de la actividad económica',
             'type'      => 'character varying',
@@ -62,9 +65,9 @@ class Model_ActividadEconomica extends \Model_App
             'default'   => "",
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'afecta_iva' => array(
+            'fk'        => null,
+        ],
+        'afecta_iva' => [
             'name'      => 'Afecta Iva',
             'comment'   => 'Si la actividad está o no afecta a IVA',
             'type'      => 'boolean',
@@ -73,9 +76,9 @@ class Model_ActividadEconomica extends \Model_App
             'default'   => "",
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'categoria' => array(
+            'fk'        => null,
+        ],
+        'categoria' => [
             'name'      => 'Categoria',
             'comment'   => 'Categoría a la que pertenece la actividad (tipo de contribuyente)',
             'type'      => 'smallint',
@@ -84,14 +87,13 @@ class Model_ActividadEconomica extends \Model_App
             'default'   => "",
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = 'Actividades económicas del país';
 
-    public static $fkNamespace = array(); ///< Namespaces que utiliza esta clase
-
+    public static $fkNamespace = []; ///< Namespaces que utiliza esta clase
 }

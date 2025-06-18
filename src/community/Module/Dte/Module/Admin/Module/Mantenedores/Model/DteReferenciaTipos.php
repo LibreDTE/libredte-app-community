@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Admin\Mantenedores;
 
 /**
@@ -29,9 +29,8 @@ namespace website\Dte\Admin\Mantenedores;
  */
 class Model_DteReferenciaTipos extends \Model_Plural_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'dte_referencia_tipo'; ///< Tabla del modelo
 
+    protected $_table = 'dte_referencia_tipo'; ///< Tabla del modelo
 }

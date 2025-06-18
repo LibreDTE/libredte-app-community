@@ -29,7 +29,6 @@ namespace website\Dte;
  */
 class Shell_Command_Documentos_LimpiarEmitirMasivoPDF extends \Shell_App
 {
-
     public function main($validez = 86400)
     {
         $archivos = \sowerphp\general\Utility_File::browseDirectory(DIR_STATIC.'/emision_masiva_pdf');
@@ -46,5 +45,4 @@ class Shell_Command_Documentos_LimpiarEmitirMasivoPDF extends \Shell_App
         $this->showStats();
         return 0;
     }
-
 }

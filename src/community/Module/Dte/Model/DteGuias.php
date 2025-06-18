@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,9 +29,9 @@ namespace website\Dte;
  */
 class Model_DteGuias extends \Model_Plural_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_guia'; ///< Tabla del modelo
 
     /**
@@ -44,8 +44,8 @@ class Model_DteGuias extends \Model_Plural_App
         }
         $where = ['e.fecha = :fecha', 'e.anulado = false'];
         $vars = [
-            ':rut' => $this->getContribuyente()->rut, 
-            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
+            ':rut' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
             ':fecha' => $filtros['fecha'],
         ];
         if (!empty($filtros['receptor'])) {
@@ -145,10 +145,10 @@ class Model_DteGuias extends \Model_Plural_App
     {
         $where = ['e.fecha BETWEEN :desde AND :hasta AND anulado = :anulado'];
         $vars = [
-            ':rut' => $this->getContribuyente()->rut, 
-            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
-            ':desde' => $desde, 
-            ':hasta' => $hasta, 
+            ':rut' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
+            ':hasta' => $hasta,
             ':anulado' => 0,
         ];
         if ($receptor) {
@@ -346,5 +346,4 @@ class Model_DteGuias extends \Model_Plural_App
             $response['body']['codigo']
         );
     }
-
 }

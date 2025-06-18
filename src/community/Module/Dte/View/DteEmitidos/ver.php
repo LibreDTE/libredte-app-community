@@ -86,7 +86,7 @@ echo $t->generate([
         num($DteEmitido->exento),
         num($DteEmitido->neto),
         num($DteEmitido->iva),
-        num($DteEmitido->total)
+        num($DteEmitido->total),
     ],
 ]);
 ?>
@@ -493,7 +493,7 @@ if ($Cobro->datos) {
     $datos_cobro = $Cobro->getDatosNormalizados();
     if ($datos_cobro) {
         echo '<hr/><table class="table table-striped"><tbody>';
-        foreach($datos_cobro as $dato => $valor) {
+        foreach ($datos_cobro as $dato => $valor) {
             echo '<tr><th>',$dato,'</th><td>',$valor,'</td></tr>';
         }
         echo '</tbody></table>',"\n";
@@ -557,7 +557,7 @@ if ($cobranza) {
 <?php
 // referencias que este documento hace a otros
 if ($referenciados) {
-    foreach($referenciados as &$referenciado) {
+    foreach ($referenciados as &$referenciado) {
         if (!empty($referenciado['FchRef'])) {
             $referenciado['FchRef'] = \sowerphp\general\Utility_Date::format($referenciado['FchRef']);
         }
@@ -784,7 +784,7 @@ if ($DteEmitido->dte == 61) :
 echo $f->begin([
     'action' => $_base.'/dte/dte_emitidos/avanzado_iva_fuera_plazo/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
     'id' => 'avanzadoIVAFueraPlazoForm',
-    'onsubmit' => 'Form.check(\'avanzadoIVAFueraPlazoForm\')'
+    'onsubmit' => 'Form.check(\'avanzadoIVAFueraPlazoForm\')',
 ]);
 echo $f->input([
     'type' => 'select',
@@ -813,7 +813,7 @@ if ($DteEmitido->dte == 52) :
 echo $f->begin([
     'action' => $_base.'/dte/dte_emitidos/avanzado_anular/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
     'id' => 'avanzadoAnuladoForm',
-    'onsubmit' => 'Form.check(\'avanzadoAnuladoForm\')'
+    'onsubmit' => 'Form.check(\'avanzadoAnuladoForm\')',
 ]);
 echo $f->input([
     'type' => 'select',
@@ -842,7 +842,7 @@ if ($Emisor->usuarioAutorizado($_Auth->User, 'admin') && $DteEmitido->getTipo()-
     echo $f->begin([
         'action' => $_base.'/dte/dte_emitidos/avanzado_tipo_cambio/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
         'id' => 'avanzadoTipoCambioForm',
-        'onsubmit' => 'Form.check(\'avanzadoTipoCambioForm\') && __.confirm(this, \'¿Está seguro de querer modificar el tipo de cambio del documento?\')'
+        'onsubmit' => 'Form.check(\'avanzadoTipoCambioForm\') && __.confirm(this, \'¿Está seguro de querer modificar el tipo de cambio del documento?\')',
     ]);
     echo $f->input([
         'name' => 'tipo_cambio',
@@ -867,7 +867,7 @@ if ($Emisor->usuarioAutorizado($_Auth->User, 'admin') && $DteEmitido->getTipo()-
 echo $f->begin([
     'action' => $_base.'/dte/dte_emitidos/avanzado_track_id/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
     'id' => 'avanzadoTrackIdForm',
-    'onsubmit' => 'Form.check(\'avanzadoTrackIdForm\') && __.confirm(this, \'¿Está seguro de querer cambiar el Track ID?\n\n¡Perderá el valor actual!\', \'Actualizando el Track ID del DTE...\')'
+    'onsubmit' => 'Form.check(\'avanzadoTrackIdForm\') && __.confirm(this, \'¿Está seguro de querer cambiar el Track ID?\n\n¡Perderá el valor actual!\', \'Actualizando el Track ID del DTE...\')',
 ]);
 echo $f->input([
     'name' => 'track_id',
@@ -891,7 +891,7 @@ echo $f->end('Modificar Track ID');
 echo $f->begin([
     'action' => $_base.'/dte/dte_emitidos/avanzado_sucursal/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
     'id' => 'avanzadoSucursalForm',
-    'onsubmit' => 'Form.check(\'avanzadoSucursalForm\')'
+    'onsubmit' => 'Form.check(\'avanzadoSucursalForm\')',
 ]);
 echo $f->input([
     'type' => 'select',

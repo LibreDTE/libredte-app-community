@@ -26,7 +26,7 @@ if (!empty($Firma)) : ?>
     <div class="card-body">
 <?php new \sowerphp\general\View_Helper_Table([
     ['RUN', 'Nombre', 'Email'],
-    [$Firma->getID(), $Firma->getName(), $Firma->getEmail()]
+    [$Firma->getID(), $Firma->getName(), $Firma->getEmail()],
 ]) ?>
     </div>
 </div>
@@ -35,7 +35,7 @@ if (!empty($Firma)) : ?>
     <div class="card-body">
 <?php new \sowerphp\general\View_Helper_Table([
     ['Emisor', 'Válida desde', 'Válida hasta'],
-    [$Firma->getIssuer(), $Firma->getFrom(), $Firma->getTo()]
+    [$Firma->getIssuer(), $Firma->getFrom(), $Firma->getTo()],
 ]) ?>
     </div>
 </div>

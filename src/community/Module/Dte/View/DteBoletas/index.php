@@ -10,7 +10,7 @@
 foreach ($periodos as &$p) {
     $p['desde'] = \sowerphp\general\Utility_Date::format($p['desde']);
     $p['hasta'] = \sowerphp\general\Utility_Date::format($p['hasta']);
-    foreach(['exento', 'iva', 'neto', 'total'] as $col) {
+    foreach (['exento', 'iva', 'neto', 'total'] as $col) {
         $p[$col] = $p[$col] ? num($p[$col]) : '';
     }
     $p[] = '<a href="dte_boletas/csv/'.$p['periodo'].'" title="Descargar CSV del libro del período" class="btn btn-primary mb-2"><i class="far fa-file-excel fa-fw"></i></a>'

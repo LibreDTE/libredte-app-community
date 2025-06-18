@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website;
 
 /**
@@ -29,7 +29,6 @@ namespace website;
  */
 class Controller_Certificacion extends \Controller_App
 {
-
     private $nav = [
         '/set_pruebas' => [
             'name' => 'Etapa 1: Casos de prueba',
@@ -70,7 +69,7 @@ class Controller_Certificacion extends \Controller_App
         $this->set([
             'title' => 'Certificación DTE usando LibreDTE',
             'nav' => $this->nav,
-            'module' => 'certificacion'
+            'module' => 'certificacion',
         ]);
     }
 
@@ -231,7 +230,7 @@ class Controller_Certificacion extends \Controller_App
                         [
                             'CodRef' => 'SET',
                             'RazonRef' => 'CASO-'.$caso++,
-                        ]
+                        ],
                     ],
                 ];
             }
@@ -582,7 +581,7 @@ class Controller_Certificacion extends \Controller_App
         try {
             $Firma = new \sasco\LibreDTE\FirmaElectronica([
                 'data' => file_get_contents($_FILES['firma']['tmp_name']),
-                'pass' => $_POST['contrasenia']
+                'pass' => $_POST['contrasenia'],
             ]);
         } catch (\Exception $e) {
             \sowerphp\core\Model_Datasource_Session::message(
@@ -789,5 +788,4 @@ class Controller_Certificacion extends \Controller_App
             'nav' => $this->nav,
         ]);
     }
-
 }

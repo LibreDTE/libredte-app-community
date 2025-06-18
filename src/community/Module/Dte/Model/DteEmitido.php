@@ -21,60 +21,84 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
+use \sowerphp\app\Sistema\General\Model_MonedaCambio;
 use \sowerphp\core\Exception_Model_Datasource_Database as DatabaseException;
 use \sowerphp\core\Network_Http_Rest;
 use \sowerphp\core\Trigger;
 use \sowerphp\core\Utility_Array;
 use \sowerphp\general\Utility_Date;
-use \sowerphp\app\Sistema\General\Model_MonedaCambio;
-use \website\Dte\Admin\Model_DteFolio;
+use \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos;
 use \website\Dte\Admin\Mantenedores\Model_DteTipo;
 use \website\Dte\Admin\Mantenedores\Model_DteTipos;
-use \website\Dte\Admin\Mantenedores\Model_DteReferenciaTipos;
+use \website\Dte\Admin\Model_DteFolio;
 
 /**
  * Clase para mapear la tabla dte_emitido de la base de datos.
  */
 class Model_DteEmitido extends Model_Base_Envio
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_emitido'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
+
     public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_tipo.codigo
+
     public $folio; ///< integer(32) NOT NULL DEFAULT '' PK
+
     public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK
+
     public $tasa; ///< smallint(16) NOT NULL DEFAULT '0'
+
     public $fecha; ///< date() NOT NULL DEFAULT ''
+
     public $sucursal_sii; ///< integer(32) NULL DEFAULT ''
+
     public $receptor; ///< integer(32) NOT NULL DEFAULT '' FK:contribuyente.rut
+
     public $exento; ///< integer(32) NULL DEFAULT ''
+
     public $neto; ///< integer(32) NULL DEFAULT ''
+
     public $iva; ///< integer(32) NOT NULL DEFAULT '0'
+
     public $total; ///< integer(32) NOT NULL DEFAULT ''
+
     public $usuario; ///< integer(32) NOT NULL DEFAULT '' FK:usuario.id
+
     public $xml; ///< text() NOT NULL DEFAULT ''
+
     public $track_id; ///< bigint(64) NULL DEFAULT ''
+
     public $revision_estado; ///< character varying(100) NULL DEFAULT ''
+
     public $revision_detalle; ///< character text() NULL DEFAULT ''
+
     public $anulado; ///< boolean() NOT NULL DEFAULT 'false'
+
     public $iva_fuera_plazo; ///< boolean() NOT NULL DEFAULT 'false'
+
     public $cesion_xml; ///< text() NOT NULL DEFAULT ''
+
     public $cesion_track_id; ///< integer(32) NULL DEFAULT ''
+
     public $receptor_evento; ///< char(1) NULL DEFAULT ''
+
     public $fecha_hora_creacion; ///< timestamp without time zone() NOT NULL DEFAULT ''
+
     public $mipyme; ///< bigint(64) NULL DEFAULT ''
+
     public $extra; ///< text() NULL DEFAULT ''
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
+    public static $columnsInfo = [
+        'emisor' => [
             'name'      => 'Emisor',
             'comment'   => '',
             'type'      => 'integer',
@@ -83,9 +107,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'dte' => array(
+            'fk'        => ['table' => 'contribuyente', 'column' => 'rut'],
+        ],
+        'dte' => [
             'name'      => 'Dte',
             'comment'   => '',
             'type'      => 'smallint',
@@ -94,9 +118,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_tipo', 'column' => 'codigo')
-        ),
-        'folio' => array(
+            'fk'        => ['table' => 'dte_tipo', 'column' => 'codigo'],
+        ],
+        'folio' => [
             'name'      => 'Folio',
             'comment'   => '',
             'type'      => 'integer',
@@ -105,9 +129,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'certificacion' => array(
+            'fk'        => null,
+        ],
+        'certificacion' => [
             'name'      => 'Certificacion',
             'comment'   => '',
             'type'      => 'boolean',
@@ -116,9 +140,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => 'false',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'tasa' => array(
+            'fk'        => null,
+        ],
+        'tasa' => [
             'name'      => 'Tasa',
             'comment'   => '',
             'type'      => 'smallint',
@@ -127,9 +151,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '0',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'fecha' => array(
+            'fk'        => null,
+        ],
+        'fecha' => [
             'name'      => 'Fecha',
             'comment'   => '',
             'type'      => 'date',
@@ -138,9 +162,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'sucursal_sii' => array(
+            'fk'        => null,
+        ],
+        'sucursal_sii' => [
             'name'      => 'Sucursal Sii',
             'comment'   => '',
             'type'      => 'integer',
@@ -149,9 +173,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'receptor' => array(
+            'fk'        => null,
+        ],
+        'receptor' => [
             'name'      => 'Receptor',
             'comment'   => '',
             'type'      => 'integer',
@@ -160,9 +184,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'exento' => array(
+            'fk'        => ['table' => 'contribuyente', 'column' => 'rut'],
+        ],
+        'exento' => [
             'name'      => 'Exento',
             'comment'   => '',
             'type'      => 'integer',
@@ -171,9 +195,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'neto' => array(
+            'fk'        => null,
+        ],
+        'neto' => [
             'name'      => 'Neto',
             'comment'   => '',
             'type'      => 'integer',
@@ -182,9 +206,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'iva' => array(
+            'fk'        => null,
+        ],
+        'iva' => [
             'name'      => 'Iva',
             'comment'   => '',
             'type'      => 'integer',
@@ -193,9 +217,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '0',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'total' => array(
+            'fk'        => null,
+        ],
+        'total' => [
             'name'      => 'Total',
             'comment'   => '',
             'type'      => 'integer',
@@ -204,9 +228,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'usuario' => array(
+            'fk'        => null,
+        ],
+        'usuario' => [
             'name'      => 'Usuario',
             'comment'   => '',
             'type'      => 'integer',
@@ -215,9 +239,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => array('table' => 'usuario', 'column' => 'id')
-        ),
-        'xml' => array(
+            'fk'        => ['table' => 'usuario', 'column' => 'id'],
+        ],
+        'xml' => [
             'name'      => 'Xml',
             'comment'   => '',
             'type'      => 'text',
@@ -226,9 +250,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'track_id' => array(
+            'fk'        => null,
+        ],
+        'track_id' => [
             'name'      => 'Track Id',
             'comment'   => '',
             'type'      => 'bigint',
@@ -237,9 +261,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'revision_estado' => array(
+            'fk'        => null,
+        ],
+        'revision_estado' => [
             'name'      => 'Revision Estado',
             'comment'   => '',
             'type'      => 'character varying',
@@ -248,9 +272,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'revision_detalle' => array(
+            'fk'        => null,
+        ],
+        'revision_detalle' => [
             'name'      => 'Revision Detalle',
             'comment'   => '',
             'type'      => 'text',
@@ -259,9 +283,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'anulado' => array(
+            'fk'        => null,
+        ],
+        'anulado' => [
             'name'      => 'Anulado',
             'comment'   => '',
             'type'      => 'boolean',
@@ -270,9 +294,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => 'false',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'iva_fuera_plazo' => array(
+            'fk'        => null,
+        ],
+        'iva_fuera_plazo' => [
             'name'      => 'IVA fuera plazo',
             'comment'   => '',
             'type'      => 'boolean',
@@ -281,9 +305,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => 'false',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'cesion_xml' => array(
+            'fk'        => null,
+        ],
+        'cesion_xml' => [
             'name'      => 'Cesion Xml',
             'comment'   => '',
             'type'      => 'text',
@@ -292,9 +316,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'cesion_track_id' => array(
+            'fk'        => null,
+        ],
+        'cesion_track_id' => [
             'name'      => 'Cesion Track Id',
             'comment'   => '',
             'type'      => 'integer',
@@ -303,9 +327,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'receptor_evento' => array(
+            'fk'        => null,
+        ],
+        'receptor_evento' => [
             'name'      => 'Evento receptor',
             'comment'   => '',
             'type'      => 'character',
@@ -314,9 +338,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'fecha_hora_creacion' => array(
+            'fk'        => null,
+        ],
+        'fecha_hora_creacion' => [
             'name'      => 'Fecha Hora Creación',
             'comment'   => '',
             'type'      => 'timestamp without time zone',
@@ -325,9 +349,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'mipyme' => array(
+            'fk'        => null,
+        ],
+        'mipyme' => [
             'name'      => 'Código MIPYME',
             'comment'   => '',
             'type'      => 'bigint',
@@ -336,9 +360,9 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'extra' => array(
+            'fk'        => null,
+        ],
+        'extra' => [
             'name'      => 'Extra',
             'comment'   => '',
             'type'      => 'text',
@@ -347,27 +371,33 @@ class Model_DteEmitido extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
+    public static $fkNamespace = [
         'Model_DteTipo' => 'website\Dte\Admin\Mantenedores',
         'Model_Contribuyente' => 'website\Dte',
-        'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios'
-    ); ///< Namespaces que utiliza esta clase
+        'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios',
+    ]; ///< Namespaces que utiliza esta clase
 
     // cachés
     private $Dte; ///< Objeto con el DTE
+
     private $datos; ///< Arreglo con los datos del XML del DTE
+
     private $datos_cesion; ///< Arreglo con los datos del XML de cesión del DTE
+
     private $Emisor = null; /// caché para el receptor
+
     private $Receptor = null; /// caché para el receptor
+
     private $eliminable = null; /// caché para indicar si el DTE es eliminable
+
     private $eliminableXML = null; /// caché para indicar si el XML del DTE es eliminable
 
     private static $envio_sii_ayudas = [
@@ -444,7 +474,7 @@ class Model_DteEmitido extends Model_Base_Envio
             }
             // si es un XML, hay que corroborar el XML (firma) y además
             // codificar  en base64
-            else if (substr($this->xml,0,5) == '<?xml') {
+            elseif (substr($this->xml,0,5) == '<?xml') {
                 $datos = $this->getDatos();
                 // si el XML viene sin TED se rechaza el guardado
                 if (empty($datos['TED'])) {
@@ -583,7 +613,7 @@ class Model_DteEmitido extends Model_Base_Envio
                     }
                 }
                 // datos del receptor si es documento de exportación
-                else if (in_array($this->dte, [110, 111, 112])) {
+                elseif (in_array($this->dte, [110, 111, 112])) {
                     if ($this->hasLocalXML()) {
                         $datos = $this->getDte()->getDatos()['Encabezado']['Receptor'];
                         $this->Receptor->razon_social = $datos['RznSocRecep'];
@@ -647,7 +677,7 @@ class Model_DteEmitido extends Model_Base_Envio
                 }
             }
             // xml mipyme
-            else if ($this->mipyme) {
+            elseif ($this->mipyme) {
                 $XML = new \sasco\LibreDTE\XML();
                 $XML->loadXML($this->getXML());
                 $doc = $XML->toArray();
@@ -709,7 +739,7 @@ class Model_DteEmitido extends Model_Base_Envio
             ) {
                 $emails['Documento'] = strtolower($datos['Encabezado']['Receptor']['CorreoRecep']);
             }
-        } else if (!empty($datos['Referencia'])) {
+        } elseif (!empty($datos['Referencia'])) {
             if (!isset($datos['Referencia'][0])) {
                 $datos['Referencia'] = [$datos['Referencia']];
             }
@@ -1072,7 +1102,7 @@ class Model_DteEmitido extends Model_Base_Envio
                         return true;
                     }
                     // Solo las del mes actual
-                    else if ((int)$this->getEmisor()->config_boletas_eliminar == 2) {
+                    elseif ((int)$this->getEmisor()->config_boletas_eliminar == 2) {
                         $periodo_boleta = substr(str_replace('-', '', $this->fecha), 0, 6);
                         $periodo_actual = substr(str_replace('-', '', $today), 0, 6);
                         if ($periodo_boleta != $periodo_actual) {
@@ -1081,7 +1111,7 @@ class Model_DteEmitido extends Model_Base_Envio
                         return true;
                     }
                     // Las del mes actual y mes anterior (no recomendado)
-                    else if ((int)$this->getEmisor()->config_boletas_eliminar == 3) {
+                    elseif ((int)$this->getEmisor()->config_boletas_eliminar == 3) {
                         $periodo_boleta = substr(str_replace('-', '', $this->fecha), 0, 6);
                         $periodo_actual = substr(str_replace('-', '', $today), 0, 6);
                         $periodo_anterior = Utility_Date::previousPeriod($periodo_actual);
@@ -1091,7 +1121,7 @@ class Model_DteEmitido extends Model_Base_Envio
                         return true;
                     }
                     // Cualquier boleta (no recomendado)
-                    else if ((int)$this->getEmisor()->config_boletas_eliminar == 4) {
+                    elseif ((int)$this->getEmisor()->config_boletas_eliminar == 4) {
                         return true;
                     }
                 }
@@ -1334,7 +1364,7 @@ class Model_DteEmitido extends Model_Base_Envio
             if (!$this->revision_estado) {
                 $msg .= 'aun no se ha verificado su estado.';
             }
-            else if ($this->getEstado() != 'R') {
+            elseif ($this->getEstado() != 'R') {
                 $msg .= 'no está rechazado.';
             }
             throw new \Exception($msg);
@@ -1550,7 +1580,7 @@ class Model_DteEmitido extends Model_Base_Envio
                     $this->revision_detalle = 'DTE aceptado';
                 }
                 // DTE rechazado
-                else if ($resultado['RECHAZADOS']) {
+                elseif ($resultado['RECHAZADOS']) {
                     $this->revision_estado = 'RCH - DTE Rechazado';
                 }
                 // DTE con reparos
@@ -1637,7 +1667,7 @@ class Model_DteEmitido extends Model_Base_Envio
                     return [
                         'track_id' => $this->track_id,
                         'revision_estado' => $estado,
-                        'revision_detalle' => $detalle
+                        'revision_detalle' => $detalle,
                     ];
                 } catch (DatabaseException $e) {
                     throw new \Exception(
@@ -1677,7 +1707,7 @@ class Model_DteEmitido extends Model_Base_Envio
             ];
         }
         // si es nota de crédito se anula con nota de débito
-        else if ($this->dte == 61) {
+        elseif ($this->dte == 61) {
             return [
                 'titulo' => 'Anular documento',
                 'color' => 'danger',
@@ -1687,7 +1717,7 @@ class Model_DteEmitido extends Model_Base_Envio
             ];
         }
         // si es guía de despacho se factura
-        else if ($this->dte == 52) {
+        elseif ($this->dte == 52) {
             return [
                 'titulo' => 'Facturar guía',
                 'color' => 'success',
@@ -1698,7 +1728,7 @@ class Model_DteEmitido extends Model_Base_Envio
         }
         // si es factura de exportación o nota de débito de exportación
         // se anula con nota de crédito de exportación
-        else if (in_array($this->dte, [110, 111])) {
+        elseif (in_array($this->dte, [110, 111])) {
             return [
                 'titulo' => 'Anular documento',
                 'color' => 'danger',
@@ -1709,7 +1739,7 @@ class Model_DteEmitido extends Model_Base_Envio
         }
         // si es nota de crédito de exportación electrónica se anula con
         // nota de débito de exportación
-        else if ($this->dte == 112) {
+        elseif ($this->dte == 112) {
             return [
                 'titulo' => 'Anular documento',
                 'color' => 'danger',
@@ -1788,7 +1818,7 @@ class Model_DteEmitido extends Model_Base_Envio
             }
             $to = [$this->getReceptor()->config_email_intercambio_user];
         }
-        else if ($to == 'all') {
+        elseif ($to == 'all') {
             $to = $this->getEmails();
         }
         if (!is_array($to)) {
@@ -1858,11 +1888,11 @@ class Model_DteEmitido extends Model_Base_Envio
             $email->replyTo(
                 $this->getEmisor()->config_email_intercambio_sender->reply_to
             );
-        } else if ($this->getEmisor()->config_pagos_email) {
+        } elseif ($this->getEmisor()->config_pagos_email) {
             $email->replyTo(
                 $this->getEmisor()->config_pagos_email
             );
-        } else if ($this->getEmisor()->email) {
+        } elseif ($this->getEmisor()->email) {
             $email->replyTo(
                 $this->getEmisor()->email
             );
@@ -2036,7 +2066,7 @@ class Model_DteEmitido extends Model_Base_Envio
                 && $this->getDatos()['Encabezado']['Receptor']['Contacto'][0] == '+'
             ) {
                 $this->_telefono = $this->getDatos()['Encabezado']['Receptor']['Contacto'];
-            } else if (
+            } elseif (
                 !empty($this->getReceptor()->telefono)
                 && $this->getReceptor()->telefono[0] == '+'
             ) {
@@ -2154,8 +2184,8 @@ class Model_DteEmitido extends Model_Base_Envio
                     self::$envio_sii_ayudas[$estado]
                 );
             }
-	}
-	return null;
+        }
+        return null;
     }
 
     /**
@@ -2207,7 +2237,7 @@ class Model_DteEmitido extends Model_Base_Envio
         }
         // si no hay XML en la base de datos, se busca si es un DTE del Portal
         // MIPYME en cuyo casi se obtiene el XML directo desde el SII
-        else if ($this->mipyme) {
+        elseif ($this->mipyme) {
             $r = apigateway_consume(
                 sprintf(
                     '/sii/mipyme/emitidos/xml/%s/%d/%d',
@@ -2326,7 +2356,7 @@ class Model_DteEmitido extends Model_Base_Envio
             $response = $ApiDtePdfClient->post($ApiDtePdfClient->url, $config);
         }
         // crear a partir de formato de PDF no estándar
-        else if ($config['formato'] != 'estandar') {
+        elseif ($config['formato'] != 'estandar') {
             $apps = $this->getEmisor()->getApps('dtepdfs');
             if (
                 empty($apps[$config['formato']])
@@ -2438,7 +2468,7 @@ class Model_DteEmitido extends Model_Base_Envio
             );
         }
         // consultar aplicación de ESCPOS según el formato solicitado
-        else if ($apps = $this->getEmisor()->getApps('dteescpos')) {
+        elseif ($apps = $this->getEmisor()->getApps('dteescpos')) {
             if (
                 empty($apps[$config['formato']])
                 || empty($apps[$config['formato']]->getConfig()->disponible)
@@ -2490,5 +2520,4 @@ class Model_DteEmitido extends Model_Base_Envio
         }
         return (string)$this->track_id;
     }
-
 }

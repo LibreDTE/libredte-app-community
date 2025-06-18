@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,9 +29,9 @@ namespace website\Dte;
  */
 class Model_DteCompras extends \Model_Plural_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_compra'; ///< Tabla del modelo
 
     /**
@@ -98,7 +98,7 @@ class Model_DteCompras extends \Model_Plural_App
         // ir sumando en el resumen anual
         $resumen = [];
         if (!empty($libros[$anio])) {
-            foreach($libros[$anio] as $mes => $resumen_mensual) {
+            foreach ($libros[$anio] as $mes => $resumen_mensual) {
                 foreach ($resumen_mensual as $r) {
                     $cols = array_keys($r);
                     unset($cols[array_search('TpoDoc',$cols)]);
@@ -145,7 +145,7 @@ class Model_DteCompras extends \Model_Plural_App
                     }
                     $where[] = 'd.dte IN ('.implode(', ', $where_dte).')';
                 }
-                else if ($filtros['dte'][0] == '!') {
+                elseif ($filtros['dte'][0] == '!') {
                     $where[] = 'd.dte != :dte';
                     $vars[':dte'] = substr($filtros['dte'],1);
                 }
@@ -253,7 +253,7 @@ class Model_DteCompras extends \Model_Plural_App
                 'operacion' => 'COMPRA',
                 'periodo' => $periodo,
                 'estado' => 'REGISTRO',
-                'tipo' => 'iecv'
+                'tipo' => 'iecv',
             ]);
             $documentos_encontrados += count($documentos);
             $this->agregarMasivo($documentos, $config);
@@ -262,7 +262,7 @@ class Model_DteCompras extends \Model_Plural_App
                     'operacion' => 'COMPRA',
                     'periodo' => $periodo,
                     'estado' => 'NO_INCLUIR',
-                    'tipo' => 'iecv'
+                    'tipo' => 'iecv',
                 ])
             );
             $this->eliminarMasivo(
@@ -270,7 +270,7 @@ class Model_DteCompras extends \Model_Plural_App
                     'operacion' => 'COMPRA',
                     'periodo' => $periodo,
                     'estado' => 'RECLAMADO',
-                    'tipo' => 'iecv'
+                    'tipo' => 'iecv',
                 ])
             );
         }
@@ -330,7 +330,7 @@ class Model_DteCompras extends \Model_Plural_App
                         [
                             'codigo' => $doc['iva_no_recuperable_codigo'],
                             'monto' => $doc['iva_no_recuperable_monto'],
-                        ]
+                        ],
                     ])
                     : null
                 ;
@@ -431,7 +431,7 @@ class Model_DteCompras extends \Model_Plural_App
             $Emisores = new Model_Contribuyentes();
             $documentos = (array)$r['body'];
             $documentos_encontrados += count($documentos);
-            foreach($documentos as $dte) {
+            foreach ($documentos as $dte) {
                 $Emisor = $Emisores->get($dte['rut']);
                 $DteRecibido = new Model_DteRecibido(
                     $Emisor->rut, $dte['dte'],
@@ -451,5 +451,4 @@ class Model_DteCompras extends \Model_Plural_App
         }
         return $documentos_encontrados;
     }
-
 }

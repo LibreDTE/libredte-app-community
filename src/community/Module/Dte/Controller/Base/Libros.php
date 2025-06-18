@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 use \website\Dte\Admin\Mantenedores\Model_DteTipo;
@@ -31,7 +31,6 @@ use \website\Dte\Admin\Mantenedores\Model_DteTipo;
  */
 abstract class Controller_Base_Libros extends \Controller_App
 {
-
     /**
      * Acción que muestra el resumen de los períodos del libro.
      */
@@ -220,7 +219,7 @@ abstract class Controller_Base_Libros extends \Controller_App
         $estado = $Libro->solicitarRevision($this->Auth->User->id);
         if ($estado === false) {
             \sowerphp\core\Model_Datasource_Session::message('No fue posible solicitar una nueva revisión del libro.<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error');
-        } else if ((int)$estado->xpath('/SII:RESPUESTA/SII:RESP_HDR/SII:ESTADO')[0]) {
+        } elseif ((int)$estado->xpath('/SII:RESPUESTA/SII:RESP_HDR/SII:ESTADO')[0]) {
             \sowerphp\core\Model_Datasource_Session::message('No fue posible solicitar una nueva revisión del libro: '.$estado->xpath('/SII:RESPUESTA/SII:RESP_HDR/SII:GLOSA')[0], 'error');
         } else {
             \sowerphp\core\Model_Datasource_Session::message('Se solicitó nueva revisión del libro, verificar estado en unos segundos.', 'ok');
@@ -303,5 +302,4 @@ abstract class Controller_Base_Libros extends \Controller_App
         }
         return $response['body'];
     }
-
 }

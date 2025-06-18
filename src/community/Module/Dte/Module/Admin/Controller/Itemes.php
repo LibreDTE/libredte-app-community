@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte\Admin;
 
 use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
@@ -31,10 +31,10 @@ use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
  */
 class Controller_Itemes extends \Controller_Maintainer
 {
-
     protected $namespace = __NAMESPACE__; ///< Namespace del controlador y modelos asociados
+
     protected $columnsView = [
-        'listar' => ['codigo', 'item', 'precio', 'moneda', 'bruto', 'clasificacion', 'activo']
+        'listar' => ['codigo', 'item', 'precio', 'moneda', 'bruto', 'clasificacion', 'activo'],
     ]; ///< Columnas que se deben mostrar en las vistas
 
     /**
@@ -134,7 +134,7 @@ class Controller_Itemes extends \Controller_Maintainer
         else {
             if ($campo == 'libredte') {
                 $Item = (new Model_Itemes())->get($Empresa->rut, $codigo, $tipo);
-            } else if (is_libredte_enterprise()) {
+            } elseif (is_libredte_enterprise()) {
                 $Item = (new \libredte\enterprise\Inventario\Model_InventarioItemes())
                     ->setContribuyente($Empresa)
                     ->getItemFacturacion($codigo, $tipo, $campo)
@@ -316,7 +316,7 @@ class Controller_Itemes extends \Controller_Maintainer
             array_unshift($items, $cols);
             $this->set([
                 'resumen' => $resumen,
-                'items' => $items
+                'items' => $items,
             ]);
         }
     }
@@ -338,5 +338,4 @@ class Controller_Itemes extends \Controller_Maintainer
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($items);
         $this->response->sendAndExit($csv, 'items_'.$Contribuyente->rut.'.csv');
     }
-
 }

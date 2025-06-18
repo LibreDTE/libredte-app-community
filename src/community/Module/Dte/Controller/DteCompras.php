@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 /**
@@ -29,12 +29,11 @@ namespace website\Dte;
  */
 class Controller_DteCompras extends Controller_Base_Libros
 {
-
     protected $config = [
         'model' => [
             'singular' => 'Compra',
             'plural' => 'Compras',
-        ]
+        ],
     ]; ///< Configuración para las acciones del controlador
 
     /**
@@ -111,7 +110,7 @@ class Controller_DteCompras extends Controller_Base_Libros
                     if ($estado === false) {
                         $guardar = false;
                         $noGuardado[] = 'T'.$DteRecibido->dte.'F'.$DteRecibido->folio.': '.implode(' / ', \sasco\LibreDTE\Log::readAll());
-                    } else if (in_array($estado['ESTADO'], ['DNK', 'FAU', 'FNA', 'EMP'])) {
+                    } elseif (in_array($estado['ESTADO'], ['DNK', 'FAU', 'FNA', 'EMP'])) {
                         $guardar = false;
                         $noGuardado[] = 'T'.$DteRecibido->dte.'F'.$DteRecibido->folio.' Estado DTE: '.(is_array($estado)?implode('. ', $estado):$estado);
                     }
@@ -537,5 +536,4 @@ class Controller_DteCompras extends Controller_Base_Libros
         }
         return (new Model_DteCompras())->setContribuyente($Receptor)->getResumen($this->Api->data);
     }
-
 }

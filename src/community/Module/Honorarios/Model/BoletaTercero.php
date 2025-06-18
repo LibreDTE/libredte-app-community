@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Honorarios;
 
 /**
@@ -29,27 +29,37 @@ namespace website\Honorarios;
  */
 class Model_BoletaTercero extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'boleta_tercero'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
+
     public $numero; ///< integer(32) NOT NULL DEFAULT '' PK
+
     public $codigo; ///< character varying(30) NOT NULL DEFAULT ''
+
     public $receptor; ///< integer(32) NOT NULL DEFAULT '' FK:contribuyente.rut
+
     public $fecha; ///< date() NOT NULL DEFAULT ''
+
     public $fecha_emision; ///< date() NOT NULL DEFAULT ''
+
     public $total_honorarios; ///< integer(32) NOT NULL DEFAULT ''
+
     public $total_retencion; ///< integer(32) NOT NULL DEFAULT ''
+
     public $total_liquido; ///< integer(32) NOT NULL DEFAULT ''
+
     public $anulada; ///< boolean() NOT NULL DEFAULT 'false'
+
     public $sucursal_sii; ///< integer(32) NULL DEFAULT ''
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
+    public static $columnsInfo = [
+        'emisor' => [
             'name'      => 'Emisor',
             'comment'   => '',
             'type'      => 'integer',
@@ -58,9 +68,9 @@ class Model_BoletaTercero extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => ['table' => 'contribuyente', 'column' => 'rut']
-        ),
-        'numero' => array(
+            'fk'        => ['table' => 'contribuyente', 'column' => 'rut'],
+        ],
+        'numero' => [
             'name'      => 'Numero',
             'comment'   => '',
             'type'      => 'integer',
@@ -69,9 +79,9 @@ class Model_BoletaTercero extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'codigo' => array(
+            'fk'        => null,
+        ],
+        'codigo' => [
             'name'      => 'Codigo',
             'comment'   => '',
             'type'      => 'character varying',
@@ -80,9 +90,9 @@ class Model_BoletaTercero extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'receptor' => array(
+            'fk'        => null,
+        ],
+        'receptor' => [
             'name'      => 'Receptor',
             'comment'   => '',
             'type'      => 'integer',
@@ -91,9 +101,9 @@ class Model_BoletaTercero extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => ['table' => 'contribuyente', 'column' => 'rut']
-        ),
-        'fecha' => array(
+            'fk'        => ['table' => 'contribuyente', 'column' => 'rut'],
+        ],
+        'fecha' => [
             'name'      => 'Fecha',
             'comment'   => '',
             'type'      => 'date',
@@ -102,9 +112,9 @@ class Model_BoletaTercero extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'fecha_emision' => array(
+            'fk'        => null,
+        ],
+        'fecha_emision' => [
             'name'      => 'Fecha Emision',
             'comment'   => '',
             'type'      => 'date',
@@ -113,9 +123,9 @@ class Model_BoletaTercero extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'total_honorarios' => array(
+            'fk'        => null,
+        ],
+        'total_honorarios' => [
             'name'      => 'Total Honorarios',
             'comment'   => '',
             'type'      => 'integer',
@@ -124,9 +134,9 @@ class Model_BoletaTercero extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'total_retencion' => array(
+            'fk'        => null,
+        ],
+        'total_retencion' => [
             'name'      => 'Total Retencion',
             'comment'   => '',
             'type'      => 'integer',
@@ -135,9 +145,9 @@ class Model_BoletaTercero extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'total_liquido' => array(
+            'fk'        => null,
+        ],
+        'total_liquido' => [
             'name'      => 'Total Liquido',
             'comment'   => '',
             'type'      => 'integer',
@@ -146,9 +156,9 @@ class Model_BoletaTercero extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'anulada' => array(
+            'fk'        => null,
+        ],
+        'anulada' => [
             'name'      => 'Anulada',
             'comment'   => '',
             'type'      => 'boolean',
@@ -157,9 +167,9 @@ class Model_BoletaTercero extends \Model_App
             'default'   => 'false',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'sucursal_sii' => array(
+            'fk'        => null,
+        ],
+        'sucursal_sii' => [
             'name'      => 'Sucursal SII',
             'comment'   => '',
             'type'      => 'integer',
@@ -168,17 +178,17 @@ class Model_BoletaTercero extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
+    public static $fkNamespace = [
         'Model_Contribuyente' => 'website\Dte',
-    ); ///< Namespaces que utiliza esta clase
+    ]; ///< Namespaces que utiliza esta clase
 
     /**
      * Método que entrega el objeto del emisor de la boleta.
@@ -218,5 +228,4 @@ class Model_BoletaTercero extends \Model_App
         }
         return $r['body'];
     }
-
 }

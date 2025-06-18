@@ -28,7 +28,6 @@ namespace website\Apps;
  */
 class Controller_Dropbox extends \Controller_App
 {
-
     /**
      * Acción para vincular LibreDTE con Dropbox.
      */
@@ -61,7 +60,7 @@ class Controller_Dropbox extends \Controller_App
                         'display_name' => $account->getDisplayName(),
                         'email' => $account->getEmail(),
                         'token' => $token,
-                    ]
+                    ],
                 ]);
                 $Contribuyente->save();
                 \sowerphp\core\Model_Datasource_Session::message(
@@ -157,5 +156,4 @@ class Controller_Dropbox extends \Controller_App
             'uso' => round(($accountSpace['used']/$accountSpace['allocation']['allocated'])*100),
         ]);
     }
-
 }

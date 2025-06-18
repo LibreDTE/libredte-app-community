@@ -67,7 +67,7 @@ echo $t->generate([
         num($DteRecibido->exento),
         num($DteRecibido->neto),
         num($DteRecibido->iva),
-        num($DteRecibido->total)
+        num($DteRecibido->total),
     ],
 ]);
 ?>
@@ -193,7 +193,7 @@ new \sowerphp\general\View_Helper_Table([
         \sowerphp\general\Utility_Date::format($DteIntercambio->fecha_hora_email, 'd/m/Y H:i'),
         $de,
         $DteIntercambio->getEstado()->estado,
-        $DteIntercambio->getUsuario()->usuario
+        $DteIntercambio->getUsuario()->usuario,
     ],
 ]);
 ?>
@@ -217,7 +217,7 @@ new \sowerphp\general\View_Helper_Table([
 <?php
 // referencias que este documento hace a otros
 if ($referenciados) {
-    foreach($referenciados as &$referenciado) {
+    foreach ($referenciados as &$referenciado) {
         if (!empty($referenciado['FchRef'])) {
             $referenciado['FchRef'] = \sowerphp\general\Utility_Date::format($referenciado['FchRef']);
         }

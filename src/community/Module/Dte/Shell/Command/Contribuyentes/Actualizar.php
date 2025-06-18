@@ -37,7 +37,6 @@ namespace website\Dte;
  */
 class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
 {
-
     /**
      * Método principal del comando.
      */
@@ -206,5 +205,4 @@ class Shell_Command_Contribuyentes_Actualizar extends \Shell_App
             unset($Contribuyente);
         }
     }
-
 }

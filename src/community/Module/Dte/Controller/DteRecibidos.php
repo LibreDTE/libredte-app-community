@@ -21,19 +21,18 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 use \website\Dte\Admin\Mantenedores\Model_DteTipos;
-use \website\Dte\Admin\Mantenedores\Model_IvaNoRecuperables;
 use \website\Dte\Admin\Mantenedores\Model_ImpuestoAdicionales;
+use \website\Dte\Admin\Mantenedores\Model_IvaNoRecuperables;
 
 /**
  * Controlador de dte recibidos.
  */
 class Controller_DteRecibidos extends \Controller_App
 {
-
     /**
      * Acción que permite mostrar los documentos recibidos por el contribuyente.
      */
@@ -191,7 +190,7 @@ class Controller_DteRecibidos extends \Controller_App
     {
         $Receptor = $this->getContribuyente();
         // revisar datos minimos
-        foreach(['emisor', 'dte', 'folio', 'fecha', 'tasa'] as $attr) {
+        foreach (['emisor', 'dte', 'folio', 'fecha', 'tasa'] as $attr) {
             if (!isset($_POST[$attr][0])) {
                 \sowerphp\core\Model_Datasource_Session::message(
                     'Debe indicar '.$attr.'.', 'error'
@@ -351,7 +350,7 @@ class Controller_DteRecibidos extends \Controller_App
                     'No se pudo obtener el estado del DTE.<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
                 );
                 return;
-            } else if (in_array($estado['ESTADO'], ['DNK', 'FAU', 'FNA', 'EMP'])) {
+            } elseif (in_array($estado['ESTADO'], ['DNK', 'FAU', 'FNA', 'EMP'])) {
                 \sowerphp\core\Model_Datasource_Session::message(
                     'Estado DTE: '.(is_array($estado) ? implode('. ', $estado) : $estado), 'error'
                 );
@@ -819,7 +818,7 @@ class Controller_DteRecibidos extends \Controller_App
             if ($response === false) {
                 \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
             }
-            else if ($response['status']['code'] != 200) {
+            elseif ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             }
             else {
@@ -889,5 +888,4 @@ class Controller_DteRecibidos extends \Controller_App
         ;
         $this->Api->send($documentos, 200);
     }
-
 }

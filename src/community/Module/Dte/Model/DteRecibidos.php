@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,9 +29,9 @@ namespace website\Dte;
  */
 class Model_DteRecibidos extends \Model_Plural_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_recibido'; ///< Tabla del modelo
 
     /**
@@ -165,7 +165,7 @@ class Model_DteRecibidos extends \Model_Plural_App
         // determinar receptor, fecha desde y hasta para la busqueda
         if (!empty($filtros['fecha'])) {
             $fecha_desde = $fecha_hasta = $filtros['fecha'];
-        } else if (!empty($filtros['fecha_desde']) && !empty($filtros['fecha_hasta'])) {
+        } elseif (!empty($filtros['fecha_desde']) && !empty($filtros['fecha_hasta'])) {
             $fecha_desde = $filtros['fecha_desde'];
             $fecha_hasta = $filtros['fecha_hasta'];
         }
@@ -174,8 +174,8 @@ class Model_DteRecibidos extends \Model_Plural_App
         }
         $where = ['d.receptor = :receptor', 'd.fecha BETWEEN :fecha_desde AND :fecha_hasta'];
         $vars = [
-            ':receptor' => $this->getContribuyente()->rut, 
-            ':fecha_desde' => $fecha_desde, 
+            ':receptor' => $this->getContribuyente()->rut,
+            ':fecha_desde' => $fecha_desde,
             ':fecha_hasta' => $fecha_hasta,
         ];
         // filtro emisor
@@ -192,7 +192,7 @@ class Model_DteRecibidos extends \Model_Plural_App
         if (!empty($filtros['total'])) {
             $where[] = 'd.total = :total';
             $vars[':total'] = $filtros['total'];
-        } else if (!empty($filtros['total_desde']) && !empty($filtros['total_hasta'])) {
+        } elseif (!empty($filtros['total_desde']) && !empty($filtros['total_hasta'])) {
             $where[] = 'd.total BETWEEN :total_desde AND :total_hasta';
             $vars[':total_desde'] = $filtros['total_desde'];
             $vars[':total_hasta'] = $filtros['total_hasta'];
@@ -270,9 +270,9 @@ class Model_DteRecibidos extends \Model_Plural_App
                 AND r.fecha BETWEEN :desde AND :hasta
             ORDER BY r.fecha, r.dte, r.folio
         ', [
-            ':receptor' => $this->getContribuyente()->rut, 
-            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
-            ':desde' => $desde, 
+            ':receptor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
             ':hasta' => $hasta,
         ]);
         foreach ($datos as &$dato) {
@@ -323,9 +323,9 @@ class Model_DteRecibidos extends \Model_Plural_App
             GROUP BY t.tipo
             ORDER BY total DESC
         ', [
-            ':receptor' => $this->getContribuyente()->rut, 
-            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
-            ':desde' => $desde, 
+            ':receptor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
             ':hasta' => $hasta,
         ]);
     }
@@ -345,9 +345,9 @@ class Model_DteRecibidos extends \Model_Plural_App
             GROUP BY fecha
             ORDER BY fecha
         ', [
-            ':receptor' => $this->getContribuyente()->rut, 
-            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
-            ':desde' => $desde, 
+            ':receptor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
             ':hasta' => $hasta,
         ]);
     }
@@ -367,12 +367,12 @@ class Model_DteRecibidos extends \Model_Plural_App
             GROUP BY sucursal
             ORDER BY total DESC
         ', [
-            ':receptor' => $this->getContribuyente()->rut, 
-            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
-            ':desde' => $desde, 
+            ':receptor' => $this->getContribuyente()->rut,
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
             ':hasta' => $hasta,
         ]);
-        foreach($datos as &$d) {
+        foreach ($datos as &$d) {
             $d['sucursal'] = $this->getContribuyente()->getSucursal($d['sucursal'])->sucursal;
         }
         return $datos;
@@ -394,8 +394,8 @@ class Model_DteRecibidos extends \Model_Plural_App
             ORDER BY total DESC
         ', [
             ':receptor' => $this->getContribuyente()->rut,
-            ':certificacion' => $this->getContribuyente()->enCertificacion(), 
-            ':desde' => $desde, 
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
+            ':desde' => $desde,
             ':hasta' => $hasta,
         ]);
     }
@@ -441,5 +441,4 @@ class Model_DteRecibidos extends \Model_Plural_App
             ':hasta' => $hasta,
         ]);
     }
-
 }

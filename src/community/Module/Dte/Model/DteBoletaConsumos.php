@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,9 +29,9 @@ namespace website\Dte;
  */
 class Model_DteBoletaConsumos extends \Model_Plural_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_boleta_consumo'; ///< Tabla del modelo
 
     /**
@@ -114,7 +114,7 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
             ':emisor' => $this->getContribuyente()->rut,
             ':certificacion' => $this->getContribuyente()->enCertificacion(),
             ':multiplicador_dias' => $multiplicador_dias,
-            ':secuencia_maxima' => $secuencia_maxima
+            ':secuencia_maxima' => $secuencia_maxima,
         ]);
     }
 
@@ -126,11 +126,11 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
         $where = [
             'emisor = :emisor',
             'certificacion = :certificacion',
-            '(revision_estado = \'ERRONEO\' OR SUBSTRING(revision_estado FROM 1 FOR 3) = \'106\')'
+            '(revision_estado = \'ERRONEO\' OR SUBSTRING(revision_estado FROM 1 FOR 3) = \'106\')',
         ];
         $vars = [
             ':emisor' => $this->getContribuyente()->rut,
-            ':certificacion' => $this->getContribuyente()->enCertificacion()
+            ':certificacion' => $this->getContribuyente()->enCertificacion(),
         ];
         if ($desde) {
             $where[] = 'dia >= :desde';
@@ -205,5 +205,4 @@ class Model_DteBoletaConsumos extends \Model_Plural_App
         ]);
         return !empty($aux['total']) ? $aux : null;
     }
-
 }

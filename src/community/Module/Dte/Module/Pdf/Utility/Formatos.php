@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Pdf;
 
 /**
@@ -29,8 +29,8 @@ namespace website\Dte\Pdf;
  */
 class Utility_Formatos
 {
-
     private $Contribuyente;
+
     private $formatos;
 
     /**
@@ -68,5 +68,4 @@ class Utility_Formatos
         }
         return $this->formatos;
     }
-
 }

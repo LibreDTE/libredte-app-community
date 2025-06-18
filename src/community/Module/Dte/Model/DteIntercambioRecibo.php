@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,24 +29,31 @@ namespace website\Dte;
  */
 class Model_DteIntercambioRecibo extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_intercambio_recibo'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $responde; ///< integer(32) NOT NULL DEFAULT '' PK
+
     public $recibe; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
+
     public $codigo; ///< character(32) NOT NULL DEFAULT '' PK
+
     public $contacto; ///< character varying(40) NULL DEFAULT ''
+
     public $telefono; ///< character varying(40) NULL DEFAULT ''
+
     public $email; ///< character varying(80) NULL DEFAULT ''
+
     public $fecha_hora; ///< timestamp without time zone() NOT NULL DEFAULT ''
+
     public $xml; ///< text() NOT NULL DEFAULT ''
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'responde' => array(
+    public static $columnsInfo = [
+        'responde' => [
             'name'      => 'Responde',
             'comment'   => '',
             'type'      => 'integer',
@@ -55,9 +62,9 @@ class Model_DteIntercambioRecibo extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'recibe' => array(
+            'fk'        => null,
+        ],
+        'recibe' => [
             'name'      => 'Recibe',
             'comment'   => '',
             'type'      => 'integer',
@@ -66,9 +73,9 @@ class Model_DteIntercambioRecibo extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'codigo' => array(
+            'fk'        => ['table' => 'contribuyente', 'column' => 'rut'],
+        ],
+        'codigo' => [
             'name'      => 'Codigo',
             'comment'   => '',
             'type'      => 'character',
@@ -77,9 +84,9 @@ class Model_DteIntercambioRecibo extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'contacto' => array(
+            'fk'        => null,
+        ],
+        'contacto' => [
             'name'      => 'Contacto',
             'comment'   => '',
             'type'      => 'character varying',
@@ -88,9 +95,9 @@ class Model_DteIntercambioRecibo extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'telefono' => array(
+            'fk'        => null,
+        ],
+        'telefono' => [
             'name'      => 'Telefono',
             'comment'   => '',
             'type'      => 'character varying',
@@ -99,9 +106,9 @@ class Model_DteIntercambioRecibo extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'email' => array(
+            'fk'        => null,
+        ],
+        'email' => [
             'name'      => 'Email',
             'comment'   => '',
             'type'      => 'character varying',
@@ -110,9 +117,9 @@ class Model_DteIntercambioRecibo extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'fecha_hora' => array(
+            'fk'        => null,
+        ],
+        'fecha_hora' => [
             'name'      => 'Fecha Hora',
             'comment'   => '',
             'type'      => 'timestamp without time zone',
@@ -121,9 +128,9 @@ class Model_DteIntercambioRecibo extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'xml' => array(
+            'fk'        => null,
+        ],
+        'xml' => [
             'name'      => 'Xml',
             'comment'   => '',
             'type'      => 'text',
@@ -132,17 +139,17 @@ class Model_DteIntercambioRecibo extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte'
-    ); ///< Namespaces que utiliza esta clase
+    public static $fkNamespace = [
+        'Model_Contribuyente' => 'website\Dte',
+    ]; ///< Namespaces que utiliza esta clase
 
     /**
      * Método que guarda el XML del Recibo de un intercambio.
@@ -230,5 +237,4 @@ class Model_DteIntercambioRecibo extends \Model_App
         $this->db->commit();
         return true;
     }
-
 }

@@ -153,7 +153,7 @@ if (isset($temporales)) {
             $DteTmp->getFolio(),
             $DteTmp->getReceptor()->razon_social,
             num($DteTmp->total),
-            $acciones
+            $acciones,
         ];
     }
     array_unshift($tabla, ['Folio', 'Receptor', 'Total', 'Acciones']);

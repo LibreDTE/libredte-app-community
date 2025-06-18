@@ -28,7 +28,6 @@ namespace website\Dte;
  */
 class Shell_Command_Sii_Mipyme extends \Shell_App
 {
-
     public function main($grupo = 'dte_mipyme', $meses = 2, $sincronizar = 'compras,ventas')
     {
         $contribuyentes = $this->getContribuyentes($grupo);
@@ -131,5 +130,4 @@ class Shell_Command_Sii_Mipyme extends \Shell_App
                 AND cc.valor != \'0\'
         ', [':grupo' => $grupo]);
     }
-
 }

@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Admin;
 
 /**
@@ -29,9 +29,9 @@ namespace website\Dte\Admin;
  */
 class Model_FirmaElectronicas extends \Model_Plural_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'firma_electronica'; ///< Tabla del modelo
 
     /**
@@ -49,5 +49,4 @@ class Model_FirmaElectronicas extends \Model_Plural_App
         $this->clear('where');
         return $firmas ? $firmas[0] : false;
     }
-
 }

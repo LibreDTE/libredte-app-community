@@ -110,7 +110,7 @@ echo $f->input([
         ['name' => 'TotMntPeriodo', 'check' => 'integer'],
     ],
     'values' => [],
-    'help' => 'Resúmenes manuales para boletas no electrónicas y pagos electrónicos (ej: transbank) que se deben incluir en el libro de ventas'
+    'help' => 'Resúmenes manuales para boletas no electrónicas y pagos electrónicos (ej: transbank) que se deben incluir en el libro de ventas',
 ]);
 echo $f->input([
     'type' => 'file',

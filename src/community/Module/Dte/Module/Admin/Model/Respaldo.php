@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Admin;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte\Admin;
  */
 class Model_Respaldo
 {
-
     private $tablas = [
         'cobranza' => [
             'rut' => 'emisor',
@@ -349,5 +348,4 @@ class Model_Respaldo
         // entregar nombre del directorio con el respaldo
         return $dir;
     }
-
 }

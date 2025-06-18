@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Admin;
 
 /**
@@ -29,9 +29,9 @@ namespace website\Dte\Admin;
  */
 class Model_Itemes extends \Model_Plural_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'item'; ///< Tabla del modelo
 
     /**
@@ -99,5 +99,4 @@ class Model_Itemes extends \Model_Plural_App
             ORDER BY clasificacion, codigo_tipo, codigo
         ', [':contribuyente' => $this->getContribuyente()->rut]);
     }
-
 }

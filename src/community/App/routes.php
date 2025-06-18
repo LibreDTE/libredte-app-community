@@ -56,5 +56,5 @@
 \sowerphp\core\Routing_Router::connect('/utilidades', [
   'module' => 'Utilidades',
   'controller' => 'module',
-  'action' => 'index'
+  'action' => 'index',
 ]);

@@ -28,7 +28,6 @@ namespace website;
  */
 class Controller_Module extends \sowerphp\general\Controller_Module
 {
-
     /**
      * Método para capturar solicitudes de módulos, si existe un dashboard
      * asociado al módulo y el usuario está autorizado para verlo el usuario
@@ -49,5 +48,4 @@ class Controller_Module extends \sowerphp\general\Controller_Module
         }
         parent::display();
     }
-
 }

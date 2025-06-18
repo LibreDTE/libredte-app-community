@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte;
  */
 class Controller_DteIntercambios extends \Controller_App
 {
-
     /**
      * Acción para mostrar la bandeja de intercambio de DTE.
      */
@@ -542,7 +541,7 @@ class Controller_DteIntercambios extends \Controller_App
             if ($response === false) {
                 \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
             }
-            else if ($response['status']['code'] != 200) {
+            elseif ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             }
             else {
@@ -703,5 +702,4 @@ class Controller_DteIntercambios extends \Controller_App
             $this->set('archivos', $archivos);
         }
     }
-
 }

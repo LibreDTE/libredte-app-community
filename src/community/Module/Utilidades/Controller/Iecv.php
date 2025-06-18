@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Utilidades;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Utilidades;
  */
 class Controller_Iecv extends \Controller_App
 {
-
     /**
      * Método que permite generar un libro de Compras o Ventas a partir de un
      * archivo CSV con el detalle del mismo.
@@ -204,5 +203,4 @@ class Controller_Iecv extends \Controller_App
             exit; // TODO: enviar usando response()->send() / LibroCompraVenta::Output() / PDF
         }
     }
-
 }

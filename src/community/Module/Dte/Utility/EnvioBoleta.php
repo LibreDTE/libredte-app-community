@@ -31,7 +31,6 @@ namespace website\Dte;
  */
 class Utility_EnvioBoleta
 {
-
     /**
      * Método que envía un XML de EnvioBoleta al SII y entrega el Track ID del envío.
      */
@@ -88,5 +87,4 @@ class Utility_EnvioBoleta
             'detalle' => $r['body']['revision_detalle'],
         ];
     }
-
 }

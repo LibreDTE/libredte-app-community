@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte\Admin;
 
 /**
@@ -30,10 +30,10 @@ namespace website\Dte\Admin;
  */
 class Controller_ItemClasificaciones extends \Controller_Maintainer
 {
-
     protected $namespace = __NAMESPACE__; ///< Namespace del controlador y modelos asociados
+
     protected $columnsView = [
-        'listar' => ['codigo', 'clasificacion', 'superior', 'activa']
+        'listar' => ['codigo', 'clasificacion', 'superior', 'activa'],
     ]; ///< Columnas que se deben mostrar en las vistas
 
     /**
@@ -207,5 +207,4 @@ class Controller_ItemClasificaciones extends \Controller_Maintainer
             ->getTable()
         ;
     }
-
 }

@@ -70,7 +70,7 @@ if (isset($resumen)) {
         foreach ($cols as $c) {
             if ($operaciones[$r['TpoDoc']] == 'S') {
                 $total[$c] += $r[$c];
-            } else if ($operaciones[$r['TpoDoc']] == 'R') {
+            } elseif ($operaciones[$r['TpoDoc']] == 'R') {
                 $total[$c] -= $r[$c];
             }
         }

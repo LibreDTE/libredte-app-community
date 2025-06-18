@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte;
  */
 class Controller_Cesiones extends \Controller_App
 {
-
     /**
      * Acción que permite mostrar las cesiones de documentos emitidos por el
      * contribuyente.
@@ -137,5 +136,4 @@ class Controller_Cesiones extends \Controller_App
             ]);
         }
     }
-
 }

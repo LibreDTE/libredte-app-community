@@ -28,7 +28,6 @@ namespace website\Dte;
  */
 class Shell_Command_DteEmitidos_ExportacionCorregirTotal extends \Shell_App
 {
-
     public function main($grupo, $certificacion = 0)
     {
         $this->db = \sowerphp\core\Model_Datasource_Database::get();
@@ -81,5 +80,4 @@ class Shell_Command_DteEmitidos_ExportacionCorregirTotal extends \Shell_App
             ':grupo' => $grupo,
         ]);
     }
-
 }

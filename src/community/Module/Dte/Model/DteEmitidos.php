@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,9 +29,9 @@ namespace website\Dte;
  */
 class Model_DteEmitidos extends \Model_Plural_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_emitido'; ///< Tabla del modelo
 
     public static $revision_estados = [
@@ -271,7 +271,7 @@ class Model_DteEmitidos extends \Model_Plural_App
             ':desde' => $desde,
             ':hasta' => $hasta,
         ]);
-        foreach($datos as &$d) {
+        foreach ($datos as &$d) {
             $d['sucursal'] = $this->getContribuyente()->getSucursal($d['sucursal'])->sucursal;
         }
         return $datos;
@@ -578,8 +578,7 @@ class Model_DteEmitidos extends \Model_Plural_App
             ':emisor' => $this->getContribuyente()->rut,
             ':certificacion' => $this->getContribuyente()->enCertificacion(),
             ':desde' => $desde,
-            ':hasta' => $hasta
+            ':hasta' => $hasta,
         ]);
     }
-
 }

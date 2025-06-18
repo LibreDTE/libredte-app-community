@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,19 +29,21 @@ namespace website\Dte;
  */
 class Model_ContribuyenteUsuarioDte extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'contribuyente_usuario_dte'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $contribuyente; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
+
     public $usuario; ///< integer(32) NOT NULL DEFAULT '' PK FK:usuario.id
+
     public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_tipo.codigo
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'contribuyente' => array(
+    public static $columnsInfo = [
+        'contribuyente' => [
             'name'      => 'Contribuyente',
             'comment'   => '',
             'type'      => 'integer',
@@ -50,9 +52,9 @@ class Model_ContribuyenteUsuarioDte extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'usuario' => array(
+            'fk'        => ['table' => 'contribuyente', 'column' => 'rut'],
+        ],
+        'usuario' => [
             'name'      => 'Usuario',
             'comment'   => '',
             'type'      => 'integer',
@@ -61,9 +63,9 @@ class Model_ContribuyenteUsuarioDte extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'usuario', 'column' => 'id')
-        ),
-        'dte' => array(
+            'fk'        => ['table' => 'usuario', 'column' => 'id'],
+        ],
+        'dte' => [
             'name'      => 'Dte',
             'comment'   => '',
             'type'      => 'smallint',
@@ -72,18 +74,18 @@ class Model_ContribuyenteUsuarioDte extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_tipo', 'column' => 'codigo')
-        ),
+            'fk'        => ['table' => 'dte_tipo', 'column' => 'codigo'],
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
+    public static $fkNamespace = [
         'Model_Contribuyente' => 'website\Dte',
         'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios',
-        'Model_DteTipo' => 'website\Dte'
-    ); ///< Namespaces que utiliza esta clase
+        'Model_DteTipo' => 'website\Dte',
+    ]; ///< Namespaces que utiliza esta clase
 
 }

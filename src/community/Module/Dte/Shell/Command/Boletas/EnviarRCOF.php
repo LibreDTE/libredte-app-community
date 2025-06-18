@@ -31,7 +31,6 @@ namespace website\Dte;
  */
 class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
 {
-
     /**
      * Método principal del comando
      * @param uri Formato: sftp://usuario:clave@servidor:puerto/ubicacion/desde/raiz
@@ -180,5 +179,4 @@ class Shell_Command_Boletas_EnviarRCOF extends \Shell_App
             ':certificacion_t' => (int)$certificacion,
         ]);
     }
-
 }

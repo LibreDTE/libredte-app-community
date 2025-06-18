@@ -28,7 +28,6 @@ namespace website\Dte\Admin;
  */
 class Shell_Command_DteFolios_Estados extends \Shell_App
 {
-
     private $time_start;
 
     public function main($emisor, $documentos, $estados = 'recibidos,anulados,pendientes', $usuario = null)
@@ -83,7 +82,7 @@ class Shell_Command_DteFolios_Estados extends \Shell_App
         $msg = $Usuario->nombre.','."\n\n";
         if ($file) {
             $msg .= 'Se adjunta archivo con el detalle de los folios por cada estado.'."\n\n";
-        } else if ($datos) {
+        } elseif ($datos) {
             $msg .= 'Ha ocurrido un error y el archivo no ha podido ser procesado: '.$datos."\n\n";
         }
         $msg .= '- Tiempo ejecución: '.num($tiempo).' segundos'."\n";
@@ -92,5 +91,4 @@ class Shell_Command_DteFolios_Estados extends \Shell_App
             unlink($file['tmp_name']);
         }
     }
-
 }

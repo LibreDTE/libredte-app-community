@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Utilidades;
 
 use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna;
@@ -33,7 +33,6 @@ use \website\Sistema\General\Model_ActividadEconomicas;
  */
 class Controller_Documentos extends \Controller_App
 {
-
     /**
      * Acción que permite la generación del XML del EnvioDTE a partir de los
      * datos en JSON.
@@ -251,7 +250,7 @@ class Controller_Documentos extends \Controller_App
                                 'fecha' => $DTE->getFechaEmision(),
                                 'total' => $DTE->getMontoTotal(),
                                 'firma' => str_replace("\n", '', $DTE->getFirma()['SignatureValue']),
-                            ]
+                            ],
                         ]
                     );
                     if ($r['status']['code'] != 200) {
@@ -407,7 +406,7 @@ class Controller_Documentos extends \Controller_App
         try {
             $Firma = new \sasco\LibreDTE\FirmaElectronica([
                 'data' => base64_decode($this->Api->data['firma']['data']),
-                'pass' => $this->Api->data['firma']['pass']
+                'pass' => $this->Api->data['firma']['pass'],
             ]);
         } catch (\Exception $e) {
             $this->Api->send('No fue posible abrir la firma digital, quizás contraseña incorrecta', 506);
@@ -533,7 +532,7 @@ class Controller_Documentos extends \Controller_App
         // recuperar contenido del logo (si existe)
         if (isset($this->Api->data['logo'])) {
             $logo = base64_decode($this->Api->data['logo']);
-        } else if (isset($_FILES['logo']) && !$_FILES['logo']['error']) {
+        } elseif (isset($_FILES['logo']) && !$_FILES['logo']['error']) {
             $logo = file_get_contents($_FILES['logo']['tmp_name']);
         } else {
             $logo_file = DIR_STATIC.'/contribuyentes/'.mb_substr($Caratula['RutEmisor'], 0, -2).'/logo.png';
@@ -860,5 +859,4 @@ class Controller_Documentos extends \Controller_App
             return false;
         }
     }
-
 }

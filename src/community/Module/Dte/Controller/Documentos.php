@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte;
  */
 class Controller_Documentos extends \Controller_App
 {
-
     private $IndTraslado = [
         1 => 'Operación constituye venta',
         2 => 'Ventas por efectuar',
@@ -99,7 +98,7 @@ class Controller_Documentos extends \Controller_App
         foreach ($Detalle as $d) {
             if (empty($d['IndExe'])) {
                 $netos++;
-            } else if ($d['IndExe'] == 1) {
+            } elseif ($d['IndExe'] == 1) {
                 $exentos++;
             }
         }
@@ -113,7 +112,7 @@ class Controller_Documentos extends \Controller_App
             }
         }
         // es boleta
-        else if ($tipo == 39 || $tipo == 41) {
+        elseif ($tipo == 39 || $tipo == 41) {
             if ($tipo == 39 && !$netos && $exentos) {
                 return 41;
             }
@@ -218,7 +217,7 @@ class Controller_Documentos extends \Controller_App
                         'DirOrigen' => $Emisor->direccion,
                         'CmnaOrigen' => $Emisor->getComuna()->comuna,
                     ],
-                ]
+                ],
             ];
         }
         // arreglo vacio si no se normaliza (se debe enviar completo el DTE)
@@ -797,7 +796,7 @@ class Controller_Documentos extends \Controller_App
                 if ($_POST['IndServicio'] == 1) {
                     $_POST['IndServicio'] = 2;
                 }
-                else if ($_POST['IndServicio'] == 2) {
+                elseif ($_POST['IndServicio'] == 2) {
                     $_POST['IndServicio'] = 1;
                 }
             }
@@ -807,7 +806,7 @@ class Controller_Documentos extends \Controller_App
                     $_POST['IndServicio'] = false;
                 }
             }
-            else if (in_array($dte['Encabezado']['IdDoc']['TipoDTE'], [110, 111, 112])) {
+            elseif (in_array($dte['Encabezado']['IdDoc']['TipoDTE'], [110, 111, 112])) {
                 if (!in_array($_POST['IndServicio'], [1, 3, 4, 5])) {
                     $_POST['IndServicio'] = false;
                 }
@@ -907,7 +906,7 @@ class Controller_Documentos extends \Controller_App
             // contabilizar item afecto o exento
             if (empty($detalle['IndExe'])) {
                 $n_itemAfecto++;
-            } else if ($detalle['IndExe'] == 1) {
+            } elseif ($detalle['IndExe'] == 1) {
                 $n_itemExento++;
             }
         }
@@ -1290,7 +1289,7 @@ class Controller_Documentos extends \Controller_App
             }
         }
         // buscar si es documento real
-        else if ($q[0] == 'T') {
+        elseif ($q[0] == 'T') {
             $aux = explode('F', $q);
             if (count($aux) == 2) {
                 $dte = (int)substr($aux[0], 1);
@@ -1442,5 +1441,4 @@ class Controller_Documentos extends \Controller_App
             $this->response->sendAndExit($csv, substr($_FILES['archivo']['name'], 0, -4).'_resultado_buscar_masivo.csv');
         }
     }
-
 }

@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,24 +29,31 @@ namespace website\Dte;
  */
 class Model_DteIntercambioRecepcionDte extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_intercambio_recepcion_dte'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:dte_emitido.emisor
+
     public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_emitido.emisor
+
     public $folio; ///< integer(32) NOT NULL DEFAULT '' PK FK:dte_emitido.emisor
+
     public $certificacion; ///< boolean() NOT NULL DEFAULT '' PK FK:dte_emitido.emisor
+
     public $responde; ///< integer(32) NOT NULL DEFAULT '' FK:dte_intercambio_recepcion.responde
+
     public $codigo; ///< character(32) NOT NULL DEFAULT '' FK:dte_intercambio_recepcion.responde
+
     public $estado; ///< integer(32) NOT NULL DEFAULT ''
+
     public $glosa; ///< character varying(256) NOT NULL DEFAULT ''
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
+    public static $columnsInfo = [
+        'emisor' => [
             'name'      => 'Emisor',
             'comment'   => '',
             'type'      => 'integer',
@@ -55,9 +62,9 @@ class Model_DteIntercambioRecepcionDte extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'dte' => array(
+            'fk'        => ['table' => 'dte_emitido', 'column' => 'emisor'],
+        ],
+        'dte' => [
             'name'      => 'Dte',
             'comment'   => '',
             'type'      => 'smallint',
@@ -66,9 +73,9 @@ class Model_DteIntercambioRecepcionDte extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'folio' => array(
+            'fk'        => ['table' => 'dte_emitido', 'column' => 'emisor'],
+        ],
+        'folio' => [
             'name'      => 'Folio',
             'comment'   => '',
             'type'      => 'integer',
@@ -77,9 +84,9 @@ class Model_DteIntercambioRecepcionDte extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'certificacion' => array(
+            'fk'        => ['table' => 'dte_emitido', 'column' => 'emisor'],
+        ],
+        'certificacion' => [
             'name'      => 'Certificacion',
             'comment'   => '',
             'type'      => 'boolean',
@@ -88,9 +95,9 @@ class Model_DteIntercambioRecepcionDte extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'responde' => array(
+            'fk'        => ['table' => 'dte_emitido', 'column' => 'emisor'],
+        ],
+        'responde' => [
             'name'      => 'Responde',
             'comment'   => '',
             'type'      => 'integer',
@@ -99,9 +106,9 @@ class Model_DteIntercambioRecepcionDte extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => array('table' => 'dte_intercambio_recepcion', 'column' => 'responde')
-        ),
-        'codigo' => array(
+            'fk'        => ['table' => 'dte_intercambio_recepcion', 'column' => 'responde'],
+        ],
+        'codigo' => [
             'name'      => 'Codigo',
             'comment'   => '',
             'type'      => 'character',
@@ -110,9 +117,9 @@ class Model_DteIntercambioRecepcionDte extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => array('table' => 'dte_intercambio_recepcion', 'column' => 'responde')
-        ),
-        'estado' => array(
+            'fk'        => ['table' => 'dte_intercambio_recepcion', 'column' => 'responde'],
+        ],
+        'estado' => [
             'name'      => 'Estado',
             'comment'   => '',
             'type'      => 'integer',
@@ -121,9 +128,9 @@ class Model_DteIntercambioRecepcionDte extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'glosa' => array(
+            'fk'        => null,
+        ],
+        'glosa' => [
             'name'      => 'Glosa',
             'comment'   => '',
             'type'      => 'character varying',
@@ -132,18 +139,18 @@ class Model_DteIntercambioRecepcionDte extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
+    public static $fkNamespace = [
         'Model_DteEmitido' => 'website\Dte',
         'Model_DteIntercambioRecepcion' => 'website\Dte',
-    ); ///< Namespaces que utiliza esta clase
+    ]; ///< Namespaces que utiliza esta clase
 
     /**
      * Método que entrega el sobre (xml) donde veía la recepción.
@@ -152,5 +159,4 @@ class Model_DteIntercambioRecepcionDte extends \Model_App
     {
         return new Model_DteIntercambioRecepcion($this->responde, $this->emisor, $this->codigo);
     }
-
 }

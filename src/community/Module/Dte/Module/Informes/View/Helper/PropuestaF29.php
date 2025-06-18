@@ -28,7 +28,6 @@ namespace website\Dte\Informes;
  */
 class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
 {
-
     private $compras = [
         'giro' => [
             'nombre' => 'Facturas de compra del giro',
@@ -160,8 +159,11 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
     ]; ///< Fórmulas del formulario 29
 
     private $datos = []; ///< Datos del F29, arreglo con código y valor
+
     private $linea = 1; ///< Línea del formulario en la que se va imprimiendo
+
     private $ubicaciones = []; ///< Celdas en que se encuentran los datos del formulario
+
     private $electronicos = [33, 34, 39, 41, 46, 52, 56, 61]; ///< Código de documentos que son electrónicos
 
     /**
@@ -458,7 +460,7 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
             $this->getActiveSheet()->getStyle('B'.$i)->applyFromArray([
                 'alignment' => [
                     'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                ]
+                ],
             ]);
             $this->getActiveSheet()->setCellValue('B'.$i, $this->linea++);
         }
@@ -888,5 +890,4 @@ class View_Helper_PropuestaF29 extends \sowerphp\general\View_Helper_Spreadsheet
         }
         return null;
     }
-
 }

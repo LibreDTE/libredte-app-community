@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte\Informes;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte\Informes;
  */
 class Controller_Despachos extends \Controller_App
 {
-
     /**
      * Acción principal que muestra el formulario para solcitar el reporte de
      * despachos.
@@ -60,5 +59,4 @@ class Controller_Despachos extends \Controller_App
             ]);
         }
     }
-
 }

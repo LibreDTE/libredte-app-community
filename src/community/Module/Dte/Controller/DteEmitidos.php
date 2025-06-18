@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte;
  */
 class Controller_DteEmitidos extends \Controller_App
 {
-
     /**
      * Método para permitir acciones sin estar autenticado.
      */
@@ -102,7 +101,7 @@ class Controller_DteEmitidos extends \Controller_App
         if ($response === false) {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
         }
-        else if ($response['status']['code'] != 200) {
+        elseif ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
         }
         else {
@@ -123,7 +122,7 @@ class Controller_DteEmitidos extends \Controller_App
         if ($response === false) {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
         }
-        else if ($response['status']['code'] != 200) {
+        elseif ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
         }
         else {
@@ -186,7 +185,7 @@ class Controller_DteEmitidos extends \Controller_App
         if ($response === false) {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
         }
-        else if ($response['status']['code'] != 200) {
+        elseif ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
         }
         else {
@@ -216,7 +215,7 @@ class Controller_DteEmitidos extends \Controller_App
                 \sowerphp\core\Model_Datasource_Session::message(
                     'No fue posible solicitar una nueva revisión del DTE.<br/>'.implode('<br/>', \sasco\LibreDTE\Log::readAll()), 'error'
                 );
-            } else if ((int)$estado->xpath('/SII:RESPUESTA/SII:RESP_HDR/SII:ESTADO')[0]) {
+            } elseif ((int)$estado->xpath('/SII:RESPUESTA/SII:RESP_HDR/SII:ESTADO')[0]) {
                 \sowerphp\core\Model_Datasource_Session::message(
                     'No fue posible solicitar una nueva revisión del DTE: '.$estado->xpath('/SII:RESPUESTA/SII:RESP_HDR/SII:GLOSA')[0], 'error'
                 );
@@ -247,7 +246,7 @@ class Controller_DteEmitidos extends \Controller_App
         if ($response === false) {
             \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
         }
-        else if ($response['status']['code'] != 200) {
+        elseif ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
         }
         else {
@@ -566,7 +565,7 @@ class Controller_DteEmitidos extends \Controller_App
                     'error'
                 );
             }
-            else if ($response['status']['code'] != 200) {
+            elseif ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message(
                     $response['body'],
                     'error'
@@ -1170,7 +1169,7 @@ class Controller_DteEmitidos extends \Controller_App
             if ($response === false) {
                 \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
             }
-            else if ($response['status']['code'] != 200) {
+            elseif ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             }
             else {
@@ -1220,7 +1219,7 @@ class Controller_DteEmitidos extends \Controller_App
             if ($response === false) {
                 \sowerphp\core\Model_Datasource_Session::message(implode('<br/>', $rest->getErrors()), 'error');
             }
-            else if ($response['status']['code'] != 200) {
+            elseif ($response['status']['code'] != 200) {
                 \sowerphp\core\Model_Datasource_Session::message($response['body'], 'error');
             }
             else {
@@ -1464,12 +1463,12 @@ class Controller_DteEmitidos extends \Controller_App
         if ($formato == 'xml') {
             return base64_encode($ted);
         }
-        else if ($formato == 'png') {
+        elseif ($formato == 'png') {
             $pdf417 = new \TCPDF2DBarcode($ted, 'PDF417,,'.$ecl);
             $this->response->type('image/png');
             $this->Api->send($pdf417->getBarcodePNGData($size, $size, [0,0,0]));
         }
-        else if ($formato == 'bmp') {
+        elseif ($formato == 'bmp') {
             $pdf417 = new \TCPDF2DBarcode($ted, 'PDF417,,'.$ecl);
             $png = $pdf417->getBarcodePngData($size, $size, [0,0,0]);
             $im = imagecreatefromstring($png);
@@ -1477,7 +1476,7 @@ class Controller_DteEmitidos extends \Controller_App
             \imagebmp($im);
             exit; // TODO: enviar usando $this->Api->send() / TCPDF2DBarcode::getBarcodePngData()
         }
-        else if ($formato == 'svg') {
+        elseif ($formato == 'svg') {
             $pdf417 = new \TCPDF2DBarcode($ted, 'PDF417,,'.$ecl);
             $pdf417->getBarcodeSVG(1, 1, 'black');
             exit; // TODO: enviar usando $this->Api->send() / TCPDF2DBarcode::getBarcodeSVG()
@@ -1975,5 +1974,4 @@ class Controller_DteEmitidos extends \Controller_App
         // enviar DteEmitido
         return $DteEmitido;
     }
-
 }

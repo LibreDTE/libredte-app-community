@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Admin;
 
 /**
@@ -29,23 +29,29 @@ namespace website\Dte\Admin;
  */
 class Model_DteFolio extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_folio'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
+
     public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_tipo.codigo
+
     public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK
+
     public $siguiente; ///< integer(32) NOT NULL DEFAULT ''
+
     public $disponibles; ///< integer(32) NOT NULL DEFAULT ''
+
     public $alerta; ///< integer(32) NOT NULL DEFAULT ''
+
     public $alertado; ///< boolean() NOT NULL DEFAULT 'false'
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
+    public static $columnsInfo = [
+        'emisor' => [
             'name'      => 'Emisor',
             'comment'   => '',
             'type'      => 'integer',
@@ -54,9 +60,9 @@ class Model_DteFolio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'dte' => array(
+            'fk'        => ['table' => 'contribuyente', 'column' => 'rut'],
+        ],
+        'dte' => [
             'name'      => 'Dte',
             'comment'   => '',
             'type'      => 'smallint',
@@ -65,9 +71,9 @@ class Model_DteFolio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_tipo', 'column' => 'codigo')
-        ),
-        'certificacion' => array(
+            'fk'        => ['table' => 'dte_tipo', 'column' => 'codigo'],
+        ],
+        'certificacion' => [
             'name'      => 'Certificacion',
             'comment'   => '',
             'type'      => 'boolean',
@@ -76,9 +82,9 @@ class Model_DteFolio extends \Model_App
             'default'   => 'false',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'siguiente' => array(
+            'fk'        => null,
+        ],
+        'siguiente' => [
             'name'      => 'Siguiente',
             'comment'   => '',
             'type'      => 'integer',
@@ -87,9 +93,9 @@ class Model_DteFolio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'disponibles' => array(
+            'fk'        => null,
+        ],
+        'disponibles' => [
             'name'      => 'Disponibles',
             'comment'   => '',
             'type'      => 'integer',
@@ -98,9 +104,9 @@ class Model_DteFolio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'alerta' => array(
+            'fk'        => null,
+        ],
+        'alerta' => [
             'name'      => 'Alerta',
             'comment'   => '',
             'type'      => 'integer',
@@ -109,9 +115,9 @@ class Model_DteFolio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'alertado' => array(
+            'fk'        => null,
+        ],
+        'alertado' => [
             'name'      => 'Alertado',
             'comment'   => '',
             'type'      => 'boolean',
@@ -120,18 +126,18 @@ class Model_DteFolio extends \Model_App
             'default'   => 'false',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
+    public static $fkNamespace = [
         'Model_Contribuyente' => 'website\Dte\Admin',
-        'Model_DteTipo' => 'website\Dte\Admin'
-    ); ///< Namespaces que utiliza esta clase
+        'Model_DteTipo' => 'website\Dte\Admin',
+    ]; ///< Namespaces que utiliza esta clase
 
     /**
      * Método para guardar el mantenedor del folio usando una transacción
@@ -500,7 +506,7 @@ class Model_DteFolio extends \Model_App
             ]
         )->setOrderByStatement('desde')->getObjects();
         // recorrer cada caf e ir extrayendo los campos
-        foreach($cafs as $DteCaf) {
+        foreach ($cafs as $DteCaf) {
             // obtener folios recibidos
             if (in_array('recibidos', $estados)) {
                 for ($i=0; $i<$retry; $i++) {
@@ -546,5 +552,4 @@ class Model_DteFolio extends \Model_App
         }
         return $folios;
     }
-
 }

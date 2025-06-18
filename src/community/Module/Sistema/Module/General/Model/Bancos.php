@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Sistema\General;
 
 /**
@@ -29,9 +29,8 @@ namespace website\Sistema\General;
  */
 class Model_Bancos extends \Model_Plural_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
-    protected $_table = 'banco'; ///< Tabla del modelo
 
+    protected $_table = 'banco'; ///< Tabla del modelo
 }

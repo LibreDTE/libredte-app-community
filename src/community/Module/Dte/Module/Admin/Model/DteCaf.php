@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Admin;
 
 /**
@@ -29,22 +29,27 @@ namespace website\Dte\Admin;
  */
 class Model_DteCaf extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_caf'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:dte_folio.emisor
+
     public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_folio.emisor
+
     public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK FK:dte_folio.emisor
+
     public $desde; ///< integer(32) NOT NULL DEFAULT '' PK
+
     public $hasta; ///< integer(32) NOT NULL DEFAULT ''
+
     public $xml; ///< text() NOT NULL DEFAULT ''
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
+    public static $columnsInfo = [
+        'emisor' => [
             'name'      => 'Emisor',
             'comment'   => '',
             'type'      => 'integer',
@@ -53,9 +58,9 @@ class Model_DteCaf extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_folio', 'column' => 'emisor')
-        ),
-        'dte' => array(
+            'fk'        => ['table' => 'dte_folio', 'column' => 'emisor'],
+        ],
+        'dte' => [
             'name'      => 'Dte',
             'comment'   => '',
             'type'      => 'smallint',
@@ -64,9 +69,9 @@ class Model_DteCaf extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_folio', 'column' => 'emisor')
-        ),
-        'certificacion' => array(
+            'fk'        => ['table' => 'dte_folio', 'column' => 'emisor'],
+        ],
+        'certificacion' => [
             'name'      => 'Certificacion',
             'comment'   => '',
             'type'      => 'boolean',
@@ -75,9 +80,9 @@ class Model_DteCaf extends \Model_App
             'default'   => 'false',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_folio', 'column' => 'emisor')
-        ),
-        'desde' => array(
+            'fk'        => ['table' => 'dte_folio', 'column' => 'emisor'],
+        ],
+        'desde' => [
             'name'      => 'Desde',
             'comment'   => '',
             'type'      => 'integer',
@@ -86,9 +91,9 @@ class Model_DteCaf extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'hasta' => array(
+            'fk'        => null,
+        ],
+        'hasta' => [
             'name'      => 'Hasta',
             'comment'   => '',
             'type'      => 'integer',
@@ -97,9 +102,9 @@ class Model_DteCaf extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'xml' => array(
+            'fk'        => null,
+        ],
+        'xml' => [
             'name'      => 'Xml',
             'comment'   => '',
             'type'      => 'text',
@@ -108,19 +113,19 @@ class Model_DteCaf extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
+    public static $fkNamespace = [
         'Model_DteFolio' => 'website\Dte\Admin',
         'Model_DteFolio' => 'website\Dte\Admin',
-        'Model_DteFolio' => 'website\Dte\Admin'
-    ); ///< Namespaces que utiliza esta clase
+        'Model_DteFolio' => 'website\Dte\Admin',
+    ]; ///< Namespaces que utiliza esta clase
 
     /**
      * Método que entrega el objeto del contribuyente asociado al mantenedor de folios.
@@ -243,5 +248,4 @@ class Model_DteCaf extends \Model_App
     {
         return (new \website\Dte\Admin\Mantenedores\Model_DteTipos())->get($this->dte);
     }
-
 }

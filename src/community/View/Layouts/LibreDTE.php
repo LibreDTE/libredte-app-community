@@ -71,7 +71,7 @@ Edición Enterprise de LibreDTE, con soporte oficial, disponible en <https://www
                                 echo '<li class="nav-item dropdown',$active,'">',"\n";
                                 echo '<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" id="',$dropdown_id,'" title="',$title,'">',$icon,$name['name'],'</a>',"\n";
                                 echo '<div class="dropdown-menu" aria-labelledby="',$dropdown_id,'">',"\n";
-                                foreach($name['nav'] as $l=>$n) {
+                                foreach ($name['nav'] as $l=>$n) {
                                     if ($l[0] == '/') $l = $link.$l;
                                     echo '<a href="',$l,'" class="dropdown-item">',$n,'</a>',"\n";
                                 }

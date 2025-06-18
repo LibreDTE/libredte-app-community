@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte;
  */
 class Controller_Dashboard extends \Controller_App
 {
-
     /**
      * Acción principal que muestra el dashboard.
      */
@@ -105,7 +104,7 @@ class Controller_Dashboard extends \Controller_App
         foreach ($emitidos_eventos as &$evento) {
             if (!$evento['evento']) {
                 $evento['evento'] = 'Sin evento';
-            } else if ($evento['evento'] == 'R') {
+            } elseif ($evento['evento'] == 'R') {
                 $n_emitidos_reclamados = $evento['total'];
             }
         }
@@ -161,5 +160,4 @@ class Controller_Dashboard extends \Controller_App
             'registro_compra_pendientes_rango_montos' => $RegistroCompras->getByRangoMontos(),
         ]);
     }
-
 }

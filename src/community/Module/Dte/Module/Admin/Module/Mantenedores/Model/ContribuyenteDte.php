@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Admin\Mantenedores;
 
 /**
@@ -29,19 +29,21 @@ namespace website\Dte\Admin\Mantenedores;
  */
 class Model_ContribuyenteDte extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'contribuyente_dte'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $contribuyente; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
+
     public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_tipo.codigo
+
     public $activo; ///< boolean() NOT NULL DEFAULT 'true'
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'contribuyente' => array(
+    public static $columnsInfo = [
+        'contribuyente' => [
             'name'      => 'Contribuyente',
             'comment'   => '',
             'type'      => 'integer',
@@ -50,9 +52,9 @@ class Model_ContribuyenteDte extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'dte' => array(
+            'fk'        => ['table' => 'contribuyente', 'column' => 'rut'],
+        ],
+        'dte' => [
             'name'      => 'DTE',
             'comment'   => '',
             'type'      => 'smallint',
@@ -61,9 +63,9 @@ class Model_ContribuyenteDte extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_tipo', 'column' => 'codigo')
-        ),
-        'activo' => array(
+            'fk'        => ['table' => 'dte_tipo', 'column' => 'codigo'],
+        ],
+        'activo' => [
             'name'      => '¿Activo?',
             'comment'   => 'Indica si el documento está o no activo',
             'type'      => 'boolean',
@@ -72,17 +74,17 @@ class Model_ContribuyenteDte extends \Model_App
             'default'   => 'true',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
+    public static $fkNamespace = [
         'Model_Contribuyente' => 'website\Dte',
-        'Model_DteTipo' => 'website\Dte\Admin\Mantenedores'
-    ); ///< Namespaces que utiliza esta clase
+        'Model_DteTipo' => 'website\Dte\Admin\Mantenedores',
+    ]; ///< Namespaces que utiliza esta clase
 
 }

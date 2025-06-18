@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,21 +29,25 @@ namespace website\Dte;
  */
 class Model_ContribuyenteConfig extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'contribuyente_config'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $contribuyente; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
+
     public $configuracion; ///< character varying(32) NOT NULL DEFAULT '' PK
+
     public $variable; ///< character varying(64) NOT NULL DEFAULT '' PK
+
     public $valor; ///< text() NOT NULL DEFAULT ''
+
     public $json; ///< boolean() NOT NULL DEFAULT 'false'
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'contribuyente' => array(
+    public static $columnsInfo = [
+        'contribuyente' => [
             'name'      => 'Contribuyente',
             'comment'   => '',
             'type'      => 'integer',
@@ -52,9 +56,9 @@ class Model_ContribuyenteConfig extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'configuracion' => array(
+            'fk'        => ['table' => 'contribuyente', 'column' => 'rut'],
+        ],
+        'configuracion' => [
             'name'      => 'Configuracion',
             'comment'   => '',
             'type'      => 'character varying',
@@ -63,9 +67,9 @@ class Model_ContribuyenteConfig extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'variable' => array(
+            'fk'        => null,
+        ],
+        'variable' => [
             'name'      => 'Variable',
             'comment'   => '',
             'type'      => 'character varying',
@@ -74,9 +78,9 @@ class Model_ContribuyenteConfig extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'valor' => array(
+            'fk'        => null,
+        ],
+        'valor' => [
             'name'      => 'Valor',
             'comment'   => '',
             'type'      => 'text',
@@ -85,9 +89,9 @@ class Model_ContribuyenteConfig extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'json' => array(
+            'fk'        => null,
+        ],
+        'json' => [
             'name'      => 'Json',
             'comment'   => '',
             'type'      => 'boolean',
@@ -96,16 +100,16 @@ class Model_ContribuyenteConfig extends \Model_App
             'default'   => 'false',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte'
-    ); ///< Namespaces que utiliza esta clase
+    public static $fkNamespace = [
+        'Model_Contribuyente' => 'website\Dte',
+    ]; ///< Namespaces que utiliza esta clase
 
 }

@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Apps;
 
 /**
@@ -29,11 +29,14 @@ namespace website\Apps;
  */
 class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
 {
-
     protected $activa = true;
+
     protected $nombre = 'Dropbox';
+
     protected $descripcion = 'Servicio de alojamiento de archivos multiplataforma en la nube. Cada usuario cuenta con 2 GB de espacio gratuito para almacenar sus archivos.';
+
     protected $url = 'https://www.dropbox.com';
+
     protected $logo = 'https://i.imgur.com/B0pnCvz.png';
 
      /**
@@ -131,5 +134,4 @@ class Utility_Apps_Dropbox extends \sowerphp\app\Utility_Apps_Base_Apps
     {
         return $this->vars['url'].'/apps/dropbox/pair';
     }
-
 }

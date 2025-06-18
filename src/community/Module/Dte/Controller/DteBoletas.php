@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte;
  */
 class Controller_DteBoletas extends \Controller_App
 {
-
     /**
      * Acción principal que lista los períodos con boletas.
      */
@@ -135,5 +134,4 @@ class Controller_DteBoletas extends \Controller_App
         $csv = \sowerphp\general\Utility_Spreadsheet_CSV::get($detalle);
         $this->response->sendAndExit($csv, $file.'.csv');
     }
-
 }

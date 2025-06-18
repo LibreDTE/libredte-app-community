@@ -67,7 +67,7 @@ foreach ($documentos as &$i) {
     $i['totales'] = implode('<br/>', array_map('num', $i['totales']));
     if ($i['estado'] === null) {
         $i['estado'] = '<i class="fas fa-question-circle fa-fw text-warning"></i>';
-    } else if ($i['estado'] === true) {
+    } elseif ($i['estado'] === true) {
         $i['estado'] = '<i class="fas fa-check-circle fa-fw text-success"></i>';
     } else {
         $i['estado'] = '<i class="fas fa-times-circle fa-fw text-danger"></i>';

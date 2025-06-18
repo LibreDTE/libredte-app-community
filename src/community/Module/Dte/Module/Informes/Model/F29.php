@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Informes;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte\Informes;
  */
 class Model_F29
 {
-
     private $datos; ///< Arreglo con código y valores del formulario 29
 
     /**
@@ -119,5 +118,4 @@ class Model_F29
     {
         return $this->datos;
     }
-
 }

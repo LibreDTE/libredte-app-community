@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte\Admin;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte\Admin;
  */
 class Controller_Respaldos extends \Controller_App
 {
-
     /**
      * Acción que permite exportar todos los datos de un contribuyente.
      */
@@ -68,5 +67,4 @@ class Controller_Respaldos extends \Controller_App
             }
         }
     }
-
 }

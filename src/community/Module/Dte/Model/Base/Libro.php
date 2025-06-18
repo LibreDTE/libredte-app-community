@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte;
  */
 abstract class Model_Base_Libro extends Model_Base_Envio
 {
-
     /**
      * Método que actualiza el estado del libro enviado al SII, en realidad.
      * es un wrapper para las verdaderas llamadas.
@@ -192,5 +191,4 @@ abstract class Model_Base_Libro extends Model_Base_Envio
         $LibroCompraVenta->loadXML(base64_decode($this->xml));
         return $LibroCompraVenta->toArray();
     }
-
 }

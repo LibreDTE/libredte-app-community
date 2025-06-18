@@ -51,7 +51,7 @@ echo $f->input([
     'titles' => ['Código del tipo de documento', 'Folio inicial presente en el CAF que se cargará'],
     'inputs' => [
         ['name' => 'folios', 'placeholder' => 'Ejemplo: 33 (para factura afecta)'],
-        ['name' => 'desde', 'placeholder' => 'Ejemplo: 123 (para partir con el folio 123)']
+        ['name' => 'desde', 'placeholder' => 'Ejemplo: 123 (para partir con el folio 123)'],
     ],
     'check' => 'notempty',
     'help' => 'Por defecto los folios que se asignarán partirán en 1. Si se desea asignar un folio inicial diferente indicar acá el tipo de documento y el folio inicial a usar.',
@@ -81,7 +81,7 @@ echo $f->input([
     'options' => ['Normal', 'Simplificado'],
     'value' => 1,
     'check' => 'notempty',
-    'help' => 'Si el contribuyente nunca ha sido autorizado a emitir DTE debe ser simplificado.'
+    'help' => 'Si el contribuyente nunca ha sido autorizado a emitir DTE debe ser simplificado.',
 ]);
 echo $f->input([
     'name' => 'PeriodoTributario',

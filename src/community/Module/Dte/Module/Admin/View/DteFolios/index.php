@@ -38,7 +38,7 @@ foreach ($folios as &$f) {
         } else {
             $f['fecha_vencimiento'] = '<span class="badge bg-danger">'.$f['fecha_vencimiento'].'</span>';
         }
-    } else if ($f['meses_autorizacion']) {
+    } elseif ($f['meses_autorizacion']) {
         $f['fecha_vencimiento'] = '<span class="badge bg-success">Vigente</span>';
     } else {
         $f['fecha_vencimiento'] = '<span class="badge bg-warning">No disponible</span>';

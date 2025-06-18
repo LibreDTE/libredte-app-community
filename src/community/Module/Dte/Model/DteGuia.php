@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,24 +29,31 @@ namespace website\Dte;
  */
 class Model_DteGuia extends Model_Base_Libro
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_guia'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
+
     public $periodo; ///< integer(32) NOT NULL DEFAULT '' PK
+
     public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK
+
     public $documentos; ///< integer(32) NOT NULL DEFAULT ''
+
     public $xml; ///< text() NOT NULL DEFAULT ''
+
     public $track_id; ///< integer(32) NULL DEFAULT ''
+
     public $revision_estado; ///< character varying(100) NULL DEFAULT ''
+
     public $revision_detalle; ///< text() NULL DEFAULT ''
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
+    public static $columnsInfo = [
+        'emisor' => [
             'name'      => 'Emisor',
             'comment'   => '',
             'type'      => 'integer',
@@ -55,9 +62,9 @@ class Model_DteGuia extends Model_Base_Libro
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'periodo' => array(
+            'fk'        => ['table' => 'contribuyente', 'column' => 'rut'],
+        ],
+        'periodo' => [
             'name'      => 'Periodo',
             'comment'   => '',
             'type'      => 'integer',
@@ -66,9 +73,9 @@ class Model_DteGuia extends Model_Base_Libro
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'certificacion' => array(
+            'fk'        => null,
+        ],
+        'certificacion' => [
             'name'      => 'Certificacion',
             'comment'   => '',
             'type'      => 'boolean',
@@ -77,9 +84,9 @@ class Model_DteGuia extends Model_Base_Libro
             'default'   => 'false',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'documentos' => array(
+            'fk'        => null,
+        ],
+        'documentos' => [
             'name'      => 'Documentos',
             'comment'   => '',
             'type'      => 'integer',
@@ -88,9 +95,9 @@ class Model_DteGuia extends Model_Base_Libro
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'xml' => array(
+            'fk'        => null,
+        ],
+        'xml' => [
             'name'      => 'Xml',
             'comment'   => '',
             'type'      => 'text',
@@ -99,9 +106,9 @@ class Model_DteGuia extends Model_Base_Libro
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'track_id' => array(
+            'fk'        => null,
+        ],
+        'track_id' => [
             'name'      => 'Track Id',
             'comment'   => '',
             'type'      => 'integer',
@@ -110,9 +117,9 @@ class Model_DteGuia extends Model_Base_Libro
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'revision_estado' => array(
+            'fk'        => null,
+        ],
+        'revision_estado' => [
             'name'      => 'Revision Estado',
             'comment'   => '',
             'type'      => 'character varying',
@@ -121,9 +128,9 @@ class Model_DteGuia extends Model_Base_Libro
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'revision_detalle' => array(
+            'fk'        => null,
+        ],
+        'revision_detalle' => [
             'name'      => 'Revision Detalle',
             'comment'   => '',
             'type'      => 'text',
@@ -132,17 +139,17 @@ class Model_DteGuia extends Model_Base_Libro
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte'
-    ); ///< Namespaces que utiliza esta clase
+    public static $fkNamespace = [
+        'Model_Contribuyente' => 'website\Dte',
+    ]; ///< Namespaces que utiliza esta clase
 
     public static $libro_cols = [
         'folio' => 'Folio',
@@ -193,5 +200,4 @@ class Model_DteGuia extends Model_Base_Libro
     {
         return $this->getEmisor()->getGuiasDiarias($this->periodo);
     }
-
 }

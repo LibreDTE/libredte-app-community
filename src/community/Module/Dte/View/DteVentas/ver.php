@@ -143,7 +143,7 @@ foreach ($resumen as &$r) {
     foreach (['TotMntExe', 'TotMntNeto', 'TotMntIVA', 'TotIVAPropio', 'TotIVATerceros', 'TotLey18211', 'TotMntTotal', 'TotMntNoFact', 'TotMntPeriodo'] as $c) {
         if ($operaciones[$r['TpoDoc']] == 'S') {
             $total[$c] += $r[$c];
-        } else if ($operaciones[$r['TpoDoc']] == 'R') {
+        } elseif ($operaciones[$r['TpoDoc']] == 'R') {
             $total[$c] -= $r[$c];
         }
     }
@@ -237,7 +237,7 @@ $f = new \sowerphp\general\View_Helper_Form(false);
 echo $f->begin([
     'id' => 'enviar_sii',
     'action' => $_base.'/dte/dte_ventas/enviar_sii/'.$Libro->periodo,
-    'onsubmit' => 'Form.check(\'enviar_sii\') && __.confirm(this)'
+    'onsubmit' => 'Form.check(\'enviar_sii\') && __.confirm(this)',
 ]);
 echo $f->input([
     'type' => 'js',
@@ -328,7 +328,7 @@ foreach ($documentos_por_estado_receptor as $evento) {
     $tabla[] = [
         $evento['glosa'],
         num($evento['documentos']),
-        '<a href="'.$_base.'/dte/dte_ventas/eventos_receptor/'.$Libro->periodo.'/'.$evento['codigo'].'" class="btn btn-primary" title="Ver documentos con estado '.$evento['glosa'].'"><span class="fa fa-search"></span></a>'
+        '<a href="'.$_base.'/dte/dte_ventas/eventos_receptor/'.$Libro->periodo.'/'.$evento['codigo'].'" class="btn btn-primary" title="Ver documentos con estado '.$evento['glosa'].'"><span class="fa fa-search"></span></a>',
     ];
 }
 new \sowerphp\general\View_Helper_Table($tabla, 'eventos_receptor', false, false);

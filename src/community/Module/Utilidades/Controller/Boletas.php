@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Utilidades;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Utilidades;
  */
 class Controller_Boletas extends \Controller_App
 {
-
     /**
      * Acción que permite la generación del XML del RCOF.
      */
@@ -136,5 +135,4 @@ class Controller_Boletas extends \Controller_App
             \sasco\LibreDTE\File::compress($dir, ['format' => 'zip', 'delete' => true]);
         }
     }
-
 }

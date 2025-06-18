@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Utilidades;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Utilidades;
  */
 class Controller_Factoring extends \Controller_App
 {
-
     /**
      * Acción para crear el AEC.
      */
@@ -82,5 +81,4 @@ class Controller_Factoring extends \Controller_App
             $this->response->sendAndExit($xml);
         }
     }
-
 }

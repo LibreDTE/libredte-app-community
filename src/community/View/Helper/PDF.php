@@ -28,9 +28,10 @@ namespace website;
  */
 class View_Helper_PDF extends \sowerphp\general\View_Helper_PDF
 {
-
     public $Contribuyente; ///< Empresa que está generando el PDF
+
     public $titulo; ///< Título del PDF
+
     public $subtitulo; ///< Subtítulo del PDF
 
     /**
@@ -72,5 +73,4 @@ class View_Helper_PDF extends \sowerphp\general\View_Helper_PDF
         $link = 'http'.(isset($_SERVER['HTTPS'])?'s':null).'://'.$_SERVER['HTTP_HOST'];
         $this->Texto('Documento generado el '. date('d/m/Y').' a las '.date('H:i').' usando LibreDTE ('.$link.')');
     }
-
 }

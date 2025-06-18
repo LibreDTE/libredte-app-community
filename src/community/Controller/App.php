@@ -28,7 +28,6 @@ namespace website;
  */
 abstract class Controller_App extends \sowerphp\app\Controller_App
 {
-
     public $components = [
         'Auth' => [
             'redirect' => [
@@ -55,6 +54,7 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
     ]; ///< Componentes usados por el controlador
 
     protected $Contribuyente_class = '\website\Dte\Model_Contribuyente'; ///< Clase para instanciar el contribuyente
+
     private $Contribuyente = null; ///< Contribuyente con el que se está trabajando
 
     /**
@@ -129,5 +129,4 @@ abstract class Controller_App extends \sowerphp\app\Controller_App
         }
         return $this->Contribuyente;
     }
-
 }

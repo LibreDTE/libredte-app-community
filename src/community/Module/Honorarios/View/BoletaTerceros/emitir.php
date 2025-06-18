@@ -57,7 +57,7 @@ function item_nuevo(tr) {
 function get_tasa_retencion() {
     periodo = document.getElementById('FchEmisField').value.replace('-','').substring(0,6);
     tasa = 0;
-    Object.keys(tasas_retencion).forEach(function(k) {
+    Object.keys(tasas_retencion).foreach (function(k) {
         if (periodo >= k) {
             tasa = tasas_retencion[k];
         }

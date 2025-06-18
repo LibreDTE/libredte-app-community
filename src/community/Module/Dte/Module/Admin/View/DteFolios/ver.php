@@ -98,7 +98,7 @@ foreach ($cafs as &$caf) {
         } else {
             $caf['fecha_vencimiento'] = '<span class="badge bg-danger">'.$caf['fecha_vencimiento'].'</span>';
         }
-    } else if ($caf['fecha_autorizacion']) {
+    } elseif ($caf['fecha_autorizacion']) {
         $caf['fecha_vencimiento'] = '<span class="badge bg-success">Vigente</span>';
     } else {
         $caf['fecha_vencimiento'] = '<span class="badge bg-warning">No disponible</span>';

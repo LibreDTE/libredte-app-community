@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Pdf;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte\Pdf;
  */
 abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base_Apps
 {
-
     protected $namespace = 'dtepdfs'; ///< nombre del grupo de las aplicaciones que heredan esta clase
 
     /**
@@ -173,5 +172,4 @@ abstract class Utility_Apps_Base_Formato extends \sowerphp\app\Utility_Apps_Base
         // generar PDF mediante funcionalidades extras
         return apigateway_consume('/libredte/dte/documentos/pdf', $config);
     }
-
 }

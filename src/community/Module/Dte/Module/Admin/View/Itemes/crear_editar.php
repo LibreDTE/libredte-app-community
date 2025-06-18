@@ -37,7 +37,7 @@ $(function() { __.tabs(); });
 <div role="tabpanel" class="tab-pane active" id="datos" aria-labelledby="datos-tab">
 <?php
 $f = new \sowerphp\general\View_Helper_Form ();
-echo $f->begin(array('onsubmit' => 'Form.check()'));
+echo $f->begin(['onsubmit' => 'Form.check()']);
 echo $f->input([
     'name' => 'codigo_tipo',
     'label' => 'Tipo de código',

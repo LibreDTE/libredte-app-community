@@ -28,7 +28,6 @@ namespace website\Dte;
  */
 class Shell_Command_DteEmitidos_EventosReceptor extends \Shell_App
 {
-
     public function main($grupo = null, $certificacion = 0, $meses = 2)
     {
         $this->db = \sowerphp\core\Model_Datasource_Database::get();
@@ -99,5 +98,4 @@ class Shell_Command_DteEmitidos_EventosReceptor extends \Shell_App
             }
         }
     }
-
 }

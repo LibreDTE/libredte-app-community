@@ -31,7 +31,6 @@ use \sowerphp\app\Sistema\General\Model_MonedaCambio;
  */
 class Shell_Command_Indicadores_Uf extends \sowerphp\core\Shell_App
 {
-
     /**
      * Método principal del comando.
      * @param anio Año para el cual se desea obtener la UF o null para año actual.
@@ -131,5 +130,4 @@ class Shell_Command_Indicadores_Uf extends \sowerphp\core\Shell_App
             }
         }
     }
-
 }

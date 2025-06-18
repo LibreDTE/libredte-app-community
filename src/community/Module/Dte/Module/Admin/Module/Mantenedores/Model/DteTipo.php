@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Admin\Mantenedores;
 
 /**
@@ -29,25 +29,33 @@ namespace website\Dte\Admin\Mantenedores;
  */
 class Model_DteTipo extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_tipo'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $codigo; ///< Código asignado por el SII al tipo de documento: smallint(16) NOT NULL DEFAULT '' PK
+
     public $tipo; ///< Nombre del tipo de documento: character varying(60) NOT NULL DEFAULT ''
+
     public $electronico; ///< Indica si el documento es o no electrónico: boolean() NOT NULL DEFAULT 'true'
+
     public $compra; ///< boolean() NOT NULL DEFAULT 'false'
+
     public $venta; ///< boolean() NOT NULL DEFAULT 'false'
+
     public $categoria; ///< character(1) NOT NULL DEFAULT 'T'
+
     public $enviar; ///< boolean() NOT NULL DEFAULT 'false'
+
     public $cedible; ///< boolean() NOT NULL DEFAULT 'false'
+
     public $operacion; ///< character(1) NULL DEFAULT ''
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'codigo' => array(
+    public static $columnsInfo = [
+        'codigo' => [
             'name'      => 'Código',
             'comment'   => 'Código asignado por el SII al tipo de documento',
             'type'      => 'smallint',
@@ -56,9 +64,9 @@ class Model_DteTipo extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'tipo' => array(
+            'fk'        => null,
+        ],
+        'tipo' => [
             'name'      => 'Tipo',
             'comment'   => 'Nombre del tipo de documento',
             'type'      => 'character varying',
@@ -67,9 +75,9 @@ class Model_DteTipo extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'electronico' => array(
+            'fk'        => null,
+        ],
+        'electronico' => [
             'name'      => 'Electrónico',
             'comment'   => 'Indica si el documento es o no electrónico',
             'type'      => 'boolean',
@@ -78,9 +86,9 @@ class Model_DteTipo extends \Model_App
             'default'   => 'true',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'compra' => array(
+            'fk'        => null,
+        ],
+        'compra' => [
             'name'      => 'Compra',
             'comment'   => '',
             'type'      => 'boolean',
@@ -89,9 +97,9 @@ class Model_DteTipo extends \Model_App
             'default'   => 'false',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'venta' => array(
+            'fk'        => null,
+        ],
+        'venta' => [
             'name'      => 'Venta',
             'comment'   => '',
             'type'      => 'boolean',
@@ -100,9 +108,9 @@ class Model_DteTipo extends \Model_App
             'default'   => 'false',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'categoria' => array(
+            'fk'        => null,
+        ],
+        'categoria' => [
             'name'      => 'Categoría',
             'comment'   => '',
             'type'      => 'character',
@@ -111,9 +119,9 @@ class Model_DteTipo extends \Model_App
             'default'   => 'T',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'enviar' => array(
+            'fk'        => null,
+        ],
+        'enviar' => [
             'name'      => 'Enviar',
             'comment'   => '',
             'type'      => 'boolean',
@@ -122,9 +130,9 @@ class Model_DteTipo extends \Model_App
             'default'   => 'false',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'cedible' => array(
+            'fk'        => null,
+        ],
+        'cedible' => [
             'name'      => 'Cedible',
             'comment'   => '',
             'type'      => 'boolean',
@@ -133,9 +141,9 @@ class Model_DteTipo extends \Model_App
             'default'   => 'false',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'operacion' => array(
+            'fk'        => null,
+        ],
+        'operacion' => [
             'name'      => 'Operación',
             'comment'   => '',
             'type'      => 'character',
@@ -144,15 +152,15 @@ class Model_DteTipo extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = 'Tipos de documentos (electrónicos y no electrónicos)';
 
-    public static $fkNamespace = array(); ///< Namespaces que utiliza esta clase
+    public static $fkNamespace = []; ///< Namespaces que utiliza esta clase
 
     /**
      * Constructor del tipo de dte.
@@ -213,5 +221,4 @@ class Model_DteTipo extends \Model_App
     {
         return in_array($this->codigo, [110, 111, 112]);
     }
-
 }

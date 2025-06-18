@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 /**
@@ -30,7 +30,6 @@ namespace website\Dte;
  */
 class Controller_DteIntercambioRecepciones extends \Controller_App
 {
-
     /**
      * Acción que descarga el XML de la recepción.
      */
@@ -52,5 +51,4 @@ class Controller_DteIntercambioRecepciones extends \Controller_App
         $this->response->header('Content-Disposition', 'attachement; filename="'.$DteIntercambioRecepcion->responde.'_'.$DteIntercambioRecepcion->codigo.'.xml"');
         $this->response->sendAndExit($xml);
     }
-
 }

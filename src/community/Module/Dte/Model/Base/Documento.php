@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte;
  */
 abstract class Model_Base_Documento extends \Model_App
 {
-
     /**
      * Método que entrega el objeto del emisor o receptor del dte según
      * corresponda (si es compra es receptor, otro caso es emisor).
@@ -63,5 +62,4 @@ abstract class Model_Base_Documento extends \Model_App
             : null
         ;
     }
-
 }

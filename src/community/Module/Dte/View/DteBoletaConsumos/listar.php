@@ -26,20 +26,20 @@ $titles[] = 'Acciones';
 $colsWidth[] = $actionsColsWidth;
 
 // crear arreglo para la tabla y agregar títulos de columnas
-$data = array($titles);
+$data = [$titles];
 
 // agregar fila para búsqueda mediante formulario
-$row = array();
+$row = [];
 $form = new \sowerphp\general\View_Helper_Form(false);
-$optionsBoolean = array(array('', 'Todos'), array('1', 'Si'), array('0', 'No'));
+$optionsBoolean = [['', 'Todos'], ['1', 'Si'], ['0', 'No']];
 $types_check = ['integer' => 'integer', 'real' => 'real'];
 foreach ($columns as $column => &$info) {
     // si es un tipo de dato de fecha o fecha con hora se muestra un input para fecha
     if (in_array($info['type'], ['date', 'timestamp', 'timestamp without time zone'])) {
-        $row[] = $form->input(array('type' => 'date', 'name' => $column, 'value' => (isset($search[$column]) ? $search[$column] : '')));
+        $row[] = $form->input(['type' => 'date', 'name' => $column, 'value' => (isset($search[$column]) ? $search[$column] : '')]);
     }
     // si es el estado se muestra un select
-    else if ($column == 'revision_estado') {
+    elseif ($column == 'revision_estado') {
         $row[] = $form->input([
             'type' => 'select',
             'name' => $column,
@@ -78,8 +78,8 @@ function resumen2string($resumen)
         'MntTotal' => 'Total',
     ];
     $aux = [];
-    foreach($resumen as $dte => $data) {
-        foreach($cols as $from => $to) {
+    foreach ($resumen as $dte => $data) {
+        foreach ($cols as $from => $to) {
             if (!empty($data[$from])) {
                 $aux[$dte][$to] = $data[$from];
             }
@@ -87,9 +87,9 @@ function resumen2string($resumen)
     }
     // armar el string con los datos preparados
     $string = [];
-    foreach($aux as $dte => $data) {
+    foreach ($aux as $dte => $data) {
         $values = [];
-        foreach($data as $k => $v) {
+        foreach ($data as $k => $v) {
             $values[] = $k.': '.num($v);
         }
         $string[] = implode(' / ', $values);
@@ -99,13 +99,13 @@ function resumen2string($resumen)
 
 // crear filas de la tabla
 foreach ($Objs as &$obj) {
-    $row = array();
+    $row = [];
     foreach ($columns as $column => &$info) {
         if (in_array($info['type'], ['date', 'timestamp', 'timestamp without time zone'])) {
             $row[] = \sowerphp\general\Utility_Date::format($obj->{$column});
         }
         // si es la columna de detalle dependerá del estado
-        else if ($column == 'revision_detalle' && $obj->revision_estado == 'CORRECTO') {
+        elseif ($column == 'revision_detalle' && $obj->revision_estado == 'CORRECTO') {
             $row[] = resumen2string($obj->getResumen());
         }
         // si es cualquier otro tipo de datos
@@ -139,7 +139,7 @@ foreach ($Objs as &$obj) {
 $maintainer = new \sowerphp\app\View_Helper_Maintainer ([
     'link' => $_base.$module_url.$controller,
     'linkEnd' => $linkEnd,
-    'listarFilterUrl' => $listarFilterUrl
+    'listarFilterUrl' => $listarFilterUrl,
 ]);
 $maintainer->setId($models);
 $maintainer->setColsWidth($colsWidth);

@@ -43,7 +43,7 @@ if (isset($resumen)) :
         foreach (['TotMntExe', 'TotMntNeto', 'TotMntIVA', 'TotIVAPropio', 'TotIVATerceros', 'TotLey18211', 'TotMntTotal', 'TotMntNoFact', 'TotMntPeriodo'] as $c) {
             if ($operaciones[$r['TpoDoc']] == 'S') {
                 $total[$c] += $r[$c];
-            } else if ($operaciones[$r['TpoDoc']] == 'R') {
+            } elseif ($operaciones[$r['TpoDoc']] == 'R') {
                 $total[$c] -= $r[$c];
             }
         }

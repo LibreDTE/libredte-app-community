@@ -23,14 +23,14 @@ echo $f->input([
     'label' => 'Secuencia',
     'value' => 1,
     'check' => 'notempty integer',
-    'help' => 'Número de secuencia del envío, si es el primer envío del día es la 1, si es un segundo envío, es la 2, etc.'
+    'help' => 'Número de secuencia del envío, si es el primer envío del día es la 1, si es un segundo envío, es la 2, etc.',
 ]);
 echo $f->input([
     'type' => 'file',
     'name' => 'detalle',
     'label' => 'Archivo',
     'check' => 'notempty',
-    'help' => 'Archivo CSV (separado por punto y coma, codificado en UTF-8) con el detalle de las boletas emitidas en el formato del libro de boletas.'
+    'help' => 'Archivo CSV (separado por punto y coma, codificado en UTF-8) con el detalle de las boletas emitidas en el formato del libro de boletas.',
 ]);
 echo $f->input([
     'type' => 'file',

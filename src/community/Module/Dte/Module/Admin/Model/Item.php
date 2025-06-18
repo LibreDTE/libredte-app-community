@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Admin;
 
 use \sowerphp\app\Sistema\General\Model_MonedaCambios;
@@ -31,31 +31,45 @@ use \sowerphp\app\Sistema\General\Model_MonedaCambios;
  */
 class Model_Item extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'item'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $contribuyente; ///< integer(32) NOT NULL DEFAULT '' PK FK:item_clasificacion.contribuyente
+
     public $codigo_tipo; ///< character varying(10) NOT NULL DEFAULT 'INT1' PK
+
     public $codigo; ///< character varying(35) NOT NULL DEFAULT '' PK
+
     public $item; ///< character varying(80) NOT NULL DEFAULT ''
+
     public $descripcion; ///< character varying(1000) NULL DEFAULT ''
+
     public $clasificacion; ///< character varying(35) NOT NULL DEFAULT '' FK:item_clasificacion.contribuyente
+
     public $unidad; ///< character varying(4) NULL DEFAULT ''
+
     public $precio; ///< real(24) NOT NULL DEFAULT ''
+
     public $moneda; ///< character varying(3) NOT NULL DEFAULT ''
+
     public $bruto; ///< boolean() NOT NULL DEFAULT 'false'
+
     public $exento; ///< smallint(16) NOT NULL DEFAULT '0'
+
     public $descuento; ///< real(24) NOT NULL DEFAULT '0'
+
     public $descuento_tipo; ///< character(1) NOT NULL DEFAULT '%'
+
     public $impuesto_adicional; ///< smallint(16) NULL DEFAULT '' FK:impuesto_adicional.codigo
+
     public $activo; ///< boolean() NOT NULL DEFAULT 'true'
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'contribuyente' => array(
+    public static $columnsInfo = [
+        'contribuyente' => [
             'name'      => 'Contribuyente',
             'comment'   => '',
             'type'      => 'integer',
@@ -64,9 +78,9 @@ class Model_Item extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'item_clasificacion', 'column' => 'contribuyente')
-        ),
-        'codigo_tipo' => array(
+            'fk'        => ['table' => 'item_clasificacion', 'column' => 'contribuyente'],
+        ],
+        'codigo_tipo' => [
             'name'      => 'Codigo Tipo',
             'comment'   => '',
             'type'      => 'character varying',
@@ -75,9 +89,9 @@ class Model_Item extends \Model_App
             'default'   => 'INT1',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'codigo' => array(
+            'fk'        => null,
+        ],
+        'codigo' => [
             'name'      => 'Código',
             'comment'   => '',
             'type'      => 'character varying',
@@ -86,9 +100,9 @@ class Model_Item extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'item' => array(
+            'fk'        => null,
+        ],
+        'item' => [
             'name'      => 'Nombre',
             'comment'   => '',
             'type'      => 'character varying',
@@ -97,9 +111,9 @@ class Model_Item extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'descripcion' => array(
+            'fk'        => null,
+        ],
+        'descripcion' => [
             'name'      => 'Descripcion',
             'comment'   => '',
             'type'      => 'character varying',
@@ -108,9 +122,9 @@ class Model_Item extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'clasificacion' => array(
+            'fk'        => null,
+        ],
+        'clasificacion' => [
             'name'      => 'Clasificación',
             'comment'   => '',
             'type'      => 'character varying',
@@ -119,9 +133,9 @@ class Model_Item extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => array('table' => 'item_clasificacion', 'column' => 'contribuyente')
-        ),
-        'unidad' => array(
+            'fk'        => ['table' => 'item_clasificacion', 'column' => 'contribuyente'],
+        ],
+        'unidad' => [
             'name'      => 'Unidad',
             'comment'   => '',
             'type'      => 'character varying',
@@ -130,9 +144,9 @@ class Model_Item extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'precio' => array(
+            'fk'        => null,
+        ],
+        'precio' => [
             'name'      => 'Precio',
             'comment'   => '',
             'type'      => 'real',
@@ -141,9 +155,9 @@ class Model_Item extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'moneda' => array(
+            'fk'        => null,
+        ],
+        'moneda' => [
             'name'      => 'Moneda',
             'comment'   => '',
             'type'      => 'character varying',
@@ -152,9 +166,9 @@ class Model_Item extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'bruto' => array(
+            'fk'        => null,
+        ],
+        'bruto' => [
             'name'      => 'Bruto',
             'comment'   => '',
             'type'      => 'boolean',
@@ -163,9 +177,9 @@ class Model_Item extends \Model_App
             'default'   => 'false',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'exento' => array(
+            'fk'        => null,
+        ],
+        'exento' => [
             'name'      => 'Exento',
             'comment'   => '',
             'type'      => 'smallint',
@@ -174,9 +188,9 @@ class Model_Item extends \Model_App
             'default'   => '0',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'descuento' => array(
+            'fk'        => null,
+        ],
+        'descuento' => [
             'name'      => 'Descuento',
             'comment'   => '',
             'type'      => 'real',
@@ -185,9 +199,9 @@ class Model_Item extends \Model_App
             'default'   => '0',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'descuento_tipo' => array(
+            'fk'        => null,
+        ],
+        'descuento_tipo' => [
             'name'      => 'Descuento Tipo',
             'comment'   => '',
             'type'      => 'character',
@@ -196,9 +210,9 @@ class Model_Item extends \Model_App
             'default'   => '0',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'impuesto_adicional' => array(
+            'fk'        => null,
+        ],
+        'impuesto_adicional' => [
             'name'      => 'Impuesto Adicional',
             'comment'   => '',
             'type'      => 'smallint',
@@ -207,9 +221,9 @@ class Model_Item extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => array('table' => 'impuesto_adicional', 'column' => 'codigo')
-        ),
-        'activo' => array(
+            'fk'        => ['table' => 'impuesto_adicional', 'column' => 'codigo'],
+        ],
+        'activo' => [
             'name'      => 'Activo',
             'comment'   => '',
             'type'      => 'boolean',
@@ -218,22 +232,23 @@ class Model_Item extends \Model_App
             'default'   => 'true',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
+    public static $fkNamespace = [
         'Model_Contribuyente' => 'website\Dte',
         'Model_ItemClasificacion' => 'website\Dte\Admin',
-        'Model_ImpuestoAdicional' => 'website\Dte\Admin\Mantenedores'
-    ); ///< Namespaces que utiliza esta clase
+        'Model_ImpuestoAdicional' => 'website\Dte\Admin\Mantenedores',
+    ]; ///< Namespaces que utiliza esta clase
 
     // cachés
     private $ItemInventario;
+
     private $ItemTienda;
 
     /**
@@ -392,5 +407,4 @@ class Model_Item extends \Model_App
         }
         return $this->ItemTienda;
     }
-
 }

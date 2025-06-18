@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,24 +29,31 @@ namespace website\Dte;
  */
 class Model_DteBoletaConsumo extends Model_Base_Envio
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_boleta_consumo'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
+
     public $dia; ///< date() NOT NULL DEFAULT '' PK
+
     public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK
+
     public $secuencia; ///< integer(32) NOT NULL DEFAULT ''
+
     public $xml; ///< text() NOT NULL DEFAULT ''
+
     public $track_id; ///< integer(32) NULL DEFAULT ''
+
     public $revision_estado; ///< character varying(100) NULL DEFAULT ''
+
     public $revision_detalle; ///< text() NULL DEFAULT ''
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
+    public static $columnsInfo = [
+        'emisor' => [
             'name'      => 'Emisor',
             'comment'   => '',
             'type'      => 'integer',
@@ -55,9 +62,9 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'dia' => array(
+            'fk'        => ['table' => 'contribuyente', 'column' => 'rut'],
+        ],
+        'dia' => [
             'name'      => 'Día',
             'comment'   => '',
             'type'      => 'date',
@@ -66,9 +73,9 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'certificacion' => array(
+            'fk'        => null,
+        ],
+        'certificacion' => [
             'name'      => 'Certificacion',
             'comment'   => '',
             'type'      => 'boolean',
@@ -77,9 +84,9 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
             'default'   => 'false',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'secuencia' => array(
+            'fk'        => null,
+        ],
+        'secuencia' => [
             'name'      => 'Secuencia',
             'comment'   => '',
             'type'      => 'integer',
@@ -88,9 +95,9 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'xml' => array(
+            'fk'        => null,
+        ],
+        'xml' => [
             'name'      => 'Xml',
             'comment'   => '',
             'type'      => 'text',
@@ -99,9 +106,9 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'track_id' => array(
+            'fk'        => null,
+        ],
+        'track_id' => [
             'name'      => 'Track ID',
             'comment'   => '',
             'type'      => 'integer',
@@ -110,9 +117,9 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'revision_estado' => array(
+            'fk'        => null,
+        ],
+        'revision_estado' => [
             'name'      => 'Estado',
             'comment'   => '',
             'type'      => 'character varying',
@@ -121,9 +128,9 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'revision_detalle' => array(
+            'fk'        => null,
+        ],
+        'revision_detalle' => [
             'name'      => 'Detalle',
             'comment'   => '',
             'type'      => 'text',
@@ -132,17 +139,17 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
-        'Model_Contribuyente' => 'website\Dte'
-    ); ///< Namespaces que utiliza esta clase
+    public static $fkNamespace = [
+        'Model_Contribuyente' => 'website\Dte',
+    ]; ///< Namespaces que utiliza esta clase
 
     private $_Emisor; //< Para emisor
 
@@ -202,12 +209,12 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
                     \sowerphp\general\Utility_Date::format($this->getEmisor()->config_sii_envio_rcof_desde),
                     \sowerphp\general\Utility_Date::format($this->getEmisor()->config_sii_envio_rcof_hasta)
                 );
-            } else if ($this->getEmisor()->config_sii_envio_rcof_desde) {
+            } elseif ($this->getEmisor()->config_sii_envio_rcof_desde) {
                 $msg .= sprintf(
                     ' Y solo desde el día %s.',
                     \sowerphp\general\Utility_Date::format($this->getEmisor()->config_sii_envio_rcof_desde)
                 );
-            } else if ($this->getEmisor()->config_sii_envio_rcof_hasta) {
+            } elseif ($this->getEmisor()->config_sii_envio_rcof_hasta) {
                 $msg .= sprintf(
                     ' Y solo hasta el día %s.',
                     \sowerphp\general\Utility_Date::format($this->getEmisor()->config_sii_envio_rcof_hasta)
@@ -366,7 +373,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
         if ($estado == 'EPR') {
             $this->revision_estado = 'CORRECTO';
         }
-        else if (in_array($estado, \website\Dte\Model_DteEmitidos::$revision_estados['rechazados'])) {
+        elseif (in_array($estado, \website\Dte\Model_DteEmitidos::$revision_estados['rechazados'])) {
             $this->revision_estado = 'ERRONEO';
         }
         // guardar estado del dte
@@ -461,7 +468,7 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
         if (!empty($rcof['ConsumoFolios']['DocumentoConsumoFolios']['Resumen'])) {
             if (!isset($rcof['ConsumoFolios']['DocumentoConsumoFolios']['Resumen'][0])) {
                 $rcof['ConsumoFolios']['DocumentoConsumoFolios']['Resumen'] = [
-                    $rcof['ConsumoFolios']['DocumentoConsumoFolios']['Resumen']
+                    $rcof['ConsumoFolios']['DocumentoConsumoFolios']['Resumen'],
                 ];
             }
             foreach ($rcof['ConsumoFolios']['DocumentoConsumoFolios']['Resumen'] as $r) {
@@ -472,5 +479,4 @@ class Model_DteBoletaConsumo extends Model_Base_Envio
         }
         return $resumen;
     }
-
 }

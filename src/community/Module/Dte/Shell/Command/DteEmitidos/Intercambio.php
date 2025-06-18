@@ -31,7 +31,6 @@ namespace website\Dte;
  */
 class Shell_Command_DteEmitidos_Intercambio extends \Shell_App
 {
-
     public function main($grupo = 'dte_plus', $desde = 7, $certificacion = false)
     {
         $this->db = \sowerphp\core\Model_Datasource_Database::get();
@@ -109,5 +108,4 @@ class Shell_Command_DteEmitidos_Intercambio extends \Shell_App
             ) AS t
         ', $vars);
     }
-
 }

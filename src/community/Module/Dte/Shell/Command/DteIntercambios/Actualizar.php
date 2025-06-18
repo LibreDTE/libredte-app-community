@@ -28,7 +28,6 @@ namespace website\Dte;
  */
 class Shell_Command_DteIntercambios_Actualizar extends \Shell_App
 {
-
     public function main($grupo = null, $dias = 7, $meses = 2)
     {
         $contribuyentes = $this->getContribuyentes($grupo);
@@ -123,5 +122,4 @@ class Shell_Command_DteIntercambios_Actualizar extends \Shell_App
             ORDER BY c.razon_social
         ', $vars);
     }
-
 }

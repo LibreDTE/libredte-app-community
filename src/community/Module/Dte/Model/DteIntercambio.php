@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
@@ -31,37 +31,57 @@ use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
  */
 class Model_DteIntercambio extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_intercambio'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $receptor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
+
     public $codigo; ///< integer(32) NOT NULL DEFAULT '' PK
+
     public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK
+
     public $fecha_hora_email; ///< timestamp without time zone() NOT NULL DEFAULT ''
+
     public $asunto; ///< character varying(100) NOT NULL DEFAULT ''
+
     public $de; ///< character varying(80) NOT NULL DEFAULT ''
+
     public $responder_a; ///< character varying(80) NULL DEFAULT ''
+
     public $mensaje; ///< text() NULL DEFAULT ''
+
     public $mensaje_html; ///< text() NULL DEFAULT ''
+
     public $emisor; ///< integer(32) NOT NULL DEFAULT ''
+
     public $fecha_hora_firma; ///< timestamp without time zone() NOT NULL DEFAULT ''
+
     public $documentos; ///< smallint(16) NOT NULL DEFAULT ''
+
     public $archivo; ///< character varying(100) NOT NULL DEFAULT ''
+
     public $archivo_xml; ///< text() NOT NULL DEFAULT ''
+
     public $archivo_md5; ///< character(32) NOT NULL DEFAULT ''
+
     public $fecha_hora_respuesta; ///< timestamp without time zone() NULL DEFAULT ''
+
     public $estado; ///< smallint(16) NULL DEFAULT ''
+
     public $recepcion_xml; ///< text() NULL DEFAULT ''
+
     public $recibos_xml; ///< text() NULL DEFAULT ''
+
     public $resultado_xml; ///< text() NULL DEFAULT ''
+
     public $usuario; ///< integer(32) NULL DEFAULT '' FK:usuario.id
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'receptor' => array(
+    public static $columnsInfo = [
+        'receptor' => [
             'name'      => 'Receptor',
             'comment'   => '',
             'type'      => 'integer',
@@ -70,9 +90,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'codigo' => array(
+            'fk'        => ['table' => 'contribuyente', 'column' => 'rut'],
+        ],
+        'codigo' => [
             'name'      => 'Codigo',
             'comment'   => '',
             'type'      => 'integer',
@@ -81,9 +101,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'certificacion' => array(
+            'fk'        => null,
+        ],
+        'certificacion' => [
             'name'      => 'Certificacion',
             'comment'   => '',
             'type'      => 'boolean',
@@ -92,9 +112,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => 'false',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'fecha_hora_email' => array(
+            'fk'        => null,
+        ],
+        'fecha_hora_email' => [
             'name'      => 'Fecha Hora Email',
             'comment'   => '',
             'type'      => 'timestamp without time zone',
@@ -103,9 +123,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'asunto' => array(
+            'fk'        => null,
+        ],
+        'asunto' => [
             'name'      => 'Asunto',
             'comment'   => '',
             'type'      => 'character varying',
@@ -114,9 +134,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'de' => array(
+            'fk'        => null,
+        ],
+        'de' => [
             'name'      => 'De',
             'comment'   => '',
             'type'      => 'character varying',
@@ -125,9 +145,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'responder_a' => array(
+            'fk'        => null,
+        ],
+        'responder_a' => [
             'name'      => 'Responder A',
             'comment'   => '',
             'type'      => 'character varying',
@@ -136,9 +156,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'mensaje' => array(
+            'fk'        => null,
+        ],
+        'mensaje' => [
             'name'      => 'Mensaje',
             'comment'   => '',
             'type'      => 'text',
@@ -147,9 +167,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'mensaje_html' => array(
+            'fk'        => null,
+        ],
+        'mensaje_html' => [
             'name'      => 'Mensaje Html',
             'comment'   => '',
             'type'      => 'text',
@@ -158,9 +178,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'emisor' => array(
+            'fk'        => null,
+        ],
+        'emisor' => [
             'name'      => 'Emisor',
             'comment'   => '',
             'type'      => 'integer',
@@ -169,9 +189,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'fecha_hora_firma' => array(
+            'fk'        => null,
+        ],
+        'fecha_hora_firma' => [
             'name'      => 'Fecha Hora Firma',
             'comment'   => '',
             'type'      => 'timestamp without time zone',
@@ -180,9 +200,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'documentos' => array(
+            'fk'        => null,
+        ],
+        'documentos' => [
             'name'      => 'Documentos',
             'comment'   => '',
             'type'      => 'smallint',
@@ -191,9 +211,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'archivo' => array(
+            'fk'        => null,
+        ],
+        'archivo' => [
             'name'      => 'Archivo',
             'comment'   => '',
             'type'      => 'character varying',
@@ -202,9 +222,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'archivo_xml' => array(
+            'fk'        => null,
+        ],
+        'archivo_xml' => [
             'name'      => 'Archivo Xml',
             'comment'   => '',
             'type'      => 'text',
@@ -213,9 +233,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'archivo_md5' => array(
+            'fk'        => null,
+        ],
+        'archivo_md5' => [
             'name'      => 'Archivo Md5',
             'comment'   => '',
             'type'      => 'character',
@@ -224,9 +244,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'fecha_hora_respuesta' => array(
+            'fk'        => null,
+        ],
+        'fecha_hora_respuesta' => [
             'name'      => 'Fecha Hora Respuesta',
             'comment'   => '',
             'type'      => 'timestamp without time zone',
@@ -235,9 +255,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'estado' => array(
+            'fk'        => null,
+        ],
+        'estado' => [
             'name'      => 'Estado',
             'comment'   => '',
             'type'      => 'smallint',
@@ -246,9 +266,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'recepcion_xml' => array(
+            'fk'        => null,
+        ],
+        'recepcion_xml' => [
             'name'      => 'Recepcion Xml',
             'comment'   => '',
             'type'      => 'text',
@@ -257,9 +277,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'recibos_xml' => array(
+            'fk'        => null,
+        ],
+        'recibos_xml' => [
             'name'      => 'Recibos Xml',
             'comment'   => '',
             'type'      => 'text',
@@ -268,9 +288,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'resultado_xml' => array(
+            'fk'        => null,
+        ],
+        'resultado_xml' => [
             'name'      => 'Resultado Xml',
             'comment'   => '',
             'type'      => 'text',
@@ -279,9 +299,9 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'usuario' => array(
+            'fk'        => null,
+        ],
+        'usuario' => [
             'name'      => 'Usuario',
             'comment'   => '',
             'type'      => 'integer',
@@ -290,18 +310,18 @@ class Model_DteIntercambio extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => array('table' => 'usuario', 'column' => 'id')
-        ),
+            'fk'        => ['table' => 'usuario', 'column' => 'id'],
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
+    public static $fkNamespace = [
         'Model_Contribuyente' => 'website\Dte',
-        'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios'
-    ); ///< Namespaces que utiliza esta clase
+        'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios',
+    ]; ///< Namespaces que utiliza esta clase
 
     /**
      * Método que indica si ya existe previamente el documento (mismo archivo).
@@ -639,11 +659,11 @@ class Model_DteIntercambio extends \Model_App
             $accion = ['recibir' => $recibir, 'reclamar' => $reclamar];
         }
         // si es un arreglo con un índice númerico entonces se pasó el arreglo con los documentos directamente
-        else if (is_array($accion) && isset($accion[0])) {
+        elseif (is_array($accion) && isset($accion[0])) {
             $documentos = $accion;
         }
         // si no es arreglo o faltan ambos índices aceptar o reclamar -> error
-        else if (!is_array($accion) || (empty($accion['recibir']) && empty($accion['reclamar']))) {
+        elseif (!is_array($accion) || (empty($accion['recibir']) && empty($accion['reclamar']))) {
             throw new \Exception('Acción no válida para responder el intercambio.');
         }
         // armar un único arreglo con los documentos a procesar
@@ -1034,7 +1054,7 @@ class Model_DteIntercambio extends \Model_App
                             $meses = \sowerphp\general\Utility_Date::countMonths($periodo_dte, $DteRecibido->periodo);
                             if ($meses > 2) {
                                 $DteRecibido->iva_no_recuperable = json_encode([
-                                    ['codigo' => 2, 'monto' => $DteRecibido->iva]
+                                    ['codigo' => 2, 'monto' => $DteRecibido->iva],
                                 ]);
                             }
                         }
@@ -1076,12 +1096,12 @@ class Model_DteIntercambio extends \Model_App
                         // si es empresa exenta el IVA es no recuperable
                         if ($DteRecibido->iva && $this->getReceptor()->config_extra_exenta) {
                             $DteRecibido->iva_no_recuperable = json_encode([
-                                ['codigo' => 1, 'monto' => $DteRecibido->iva]
+                                ['codigo' => 1, 'monto' => $DteRecibido->iva],
                             ]);
                         }
                     }
                     // si ya estaba recibido y no existe intercambio se asigna
-                    else if (!$DteRecibido->intercambio) {
+                    elseif (!$DteRecibido->intercambio) {
                         $DteRecibido->intercambio = $this->codigo;
                     }
                     // guardar DTE recibido (actualiza acción RCV si existe)
@@ -1180,7 +1200,7 @@ class Model_DteIntercambio extends \Model_App
             $response = $ApiDtePdfClient->post($ApiDtePdfClient->url, $config);
         }
         // crear a partir de formato de PDF no estándar
-        else if ($config['formato'] != 'estandar') {
+        elseif ($config['formato'] != 'estandar') {
             $apps = $this->getEmisor()->getApps('dtepdfs');
             if (
                 empty($apps[$config['formato']])
@@ -1240,5 +1260,4 @@ class Model_DteIntercambio extends \Model_App
         ;
         return $ultimo_codigo == $this->codigo;
     }
-
 }

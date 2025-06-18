@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Utilidades;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Utilidades;
  */
 class Controller_Guias extends \Controller_App
 {
-
     /**
      * Método que permite generar un libro de guías de despacho a partir de un
      * archivo CSV con el detalle del mismo.
@@ -111,5 +110,4 @@ class Controller_Guias extends \Controller_App
         \sasco\LibreDTE\File::compress($file, ['format' => 'zip', 'delete' => true]);
         exit; // TODO: enviar usando response()->send() / File::compress()
     }
-
 }

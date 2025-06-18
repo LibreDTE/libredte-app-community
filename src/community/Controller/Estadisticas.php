@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website;
 
 /**
@@ -29,7 +29,6 @@ namespace website;
  */
 class Controller_Estadisticas extends \Controller_App
 {
-
     protected $allowedActions = [
         'index',
         'produccion',
@@ -138,7 +137,7 @@ class Controller_Estadisticas extends \Controller_App
                 $contribuyentes_activos = $Contribuyentes->getConMovimientos(
                     $desde, $hasta, $certificacion, false
                 );
-                foreach($contribuyentes_activos as &$c) {
+                foreach ($contribuyentes_activos as &$c) {
                     if ($enterprise) {
                         $c['email'] = null;
                     }
@@ -199,7 +198,7 @@ class Controller_Estadisticas extends \Controller_App
                 if (count($parts) !== 2) {
                     return false;
                 }
-                $parts[1] = str_replace(array('"', "'"), '', $parts[1]);
+                $parts[1] = str_replace(['"', "'"], '', $parts[1]);
                 return $parts;
             }, file($file)));
             foreach ($lines as $line) {
@@ -239,5 +238,4 @@ class Controller_Estadisticas extends \Controller_App
             ],
         ];
     }
-
 }

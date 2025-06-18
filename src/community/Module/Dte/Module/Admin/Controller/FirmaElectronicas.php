@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte\Admin;
 
 /**
@@ -30,7 +30,6 @@ namespace website\Dte\Admin;
  */
 class Controller_FirmaElectronicas extends \Controller_App
 {
-
     /**
      * Acción que muestra el mantenedor de firmas electrónicas.
      */
@@ -160,5 +159,4 @@ class Controller_FirmaElectronicas extends \Controller_App
         $this->response->header('Content-Disposition', 'attachement; filename="'.$file.'"');
         $this->response->sendAndExit($firma);
     }
-
 }

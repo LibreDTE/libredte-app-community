@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,9 +29,9 @@ namespace website\Dte;
  */
 class Model_DteIntercambios extends \Model_Plural_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_intercambio'; ///< Tabla del modelo
 
     /**
@@ -95,7 +95,7 @@ class Model_DteIntercambios extends \Model_Plural_App
                 $where[] = 'i.emisor = :emisor';
                 $vars['emisor'] = $filtros['emisor'];
             }
-            else if (strpos($filtros['emisor'], '-')) {
+            elseif (strpos($filtros['emisor'], '-')) {
                 $part0 = explode('-', str_replace('.', '', $filtros['emisor']))[0];
                 if (is_numeric($part0)) {
                     $where[] = 'i.emisor = :emisor';
@@ -123,18 +123,18 @@ class Model_DteIntercambios extends \Model_Plural_App
                 $where[] = 'i.estado IS NULL';
             }
             // solo procesados
-            else if ($filtros['estado'] == 2) {
+            elseif ($filtros['estado'] == 2) {
                 $where[] = 'i.estado IS NOT NULL';
             }
             // solo aceptados
-            else if ($filtros['estado'] == 3) {
+            elseif ($filtros['estado'] == 3) {
                 $where[] = 'i.estado = 0';
             }
             // solo rechazados
-            else if ($filtros['estado'] == 4) {
+            elseif ($filtros['estado'] == 4) {
                 $where[] = 'i.estado != 0';
             }
-        } else if ($filtros['soloPendientes']) {
+        } elseif ($filtros['soloPendientes']) {
             $where[] = 'i.estado IS NULL';
         }
         if (!empty($filtros['usuario'])) {
@@ -328,7 +328,7 @@ class Model_DteIntercambios extends \Model_Plural_App
             ];
         }
         // si el trigger entrega un arreglo es el resultado de la actualización de la bandeja
-        else if (is_array($trigger_actualizar)) {
+        elseif (is_array($trigger_actualizar)) {
             return $trigger_actualizar;
         }
         // obtener correo
@@ -369,7 +369,7 @@ class Model_DteIntercambios extends \Model_Plural_App
                     $uid,
                     [
                         'subtype' => ['PLAIN', 'HTML', 'XML'],
-                        'extension' => ['xml']
+                        'extension' => ['xml'],
                     ]
                 );
             } catch (\Exception $e) {
@@ -514,7 +514,7 @@ class Model_DteIntercambios extends \Model_Plural_App
             $caratula['SubTotDTE'] = [$caratula['SubTotDTE']];
         }
         $documentos = 0;
-        foreach($caratula['SubTotDTE'] as $SubTotDTE) {
+        foreach ($caratula['SubTotDTE'] as $SubTotDTE) {
             $documentos += $SubTotDTE['NroDTE'];
         }
         if (!$documentos) {
@@ -634,5 +634,4 @@ class Model_DteIntercambios extends \Model_Plural_App
             WHERE '.implode(' AND ', $where).'
         ', $vars);
     }
-
 }

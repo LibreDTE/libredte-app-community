@@ -43,7 +43,7 @@ if (isset($documentos)) {
             $d['folio'],
             \sowerphp\general\Utility_Date::format($d['fecha']),
             num($d['total']),
-            $acciones
+            $acciones,
         ];
     }
     // agregar resumen

@@ -11,7 +11,7 @@ $resumen['CdgSIISucur'] = $Emisor->getSucursal($resumen['CdgSIISucur'])->sucursa
 unset($resumen['NroDoc'], $resumen['TasaImp']);
 new \sowerphp\general\View_Helper_Table([
     ['Documento', 'Fecha emisión', 'Sucursal', 'RUT receptor', 'Razón social receptor', 'Exento', 'Neto', 'IVA', 'Total'],
-    $resumen
+    $resumen,
 ]);
 ?>
 <div class="row">

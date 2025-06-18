@@ -21,11 +21,11 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
-use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
 use \sowerphp\app\Sistema\General\Model_MonedaCambio;
+use \sowerphp\app\Sistema\Usuarios\Model_Usuario;
 use \website\Dte\Admin\Mantenedores\Model_DteTipo;
 use \website\Dte\Admin\Mantenedores\Model_DteTipos;
 
@@ -34,26 +34,35 @@ use \website\Dte\Admin\Mantenedores\Model_DteTipos;
  */
 class Model_DteTmp extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_tmp'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
+
     public $receptor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
+
     public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_tipo.codigo
+
     public $codigo; ///< character(32) NOT NULL DEFAULT '' PK
+
     public $fecha; ///< date() NOT NULL DEFAULT ''
+
     public $total; ///< integer(32) NOT NULL DEFAULT ''
+
     public $datos; ///< text() NOT NULL DEFAULT ''
+
     public $sucursal_sii; ///< integer(32) NULL DEFAULT ''
+
     public $usuario; ///< integer(32) NULL DEFAULT ''
+
     public $extra; ///< text() NULL DEFAULT ''
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
+    public static $columnsInfo = [
+        'emisor' => [
             'name'      => 'Emisor',
             'comment'   => '',
             'type'      => 'integer',
@@ -62,9 +71,9 @@ class Model_DteTmp extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'receptor' => array(
+            'fk'        => ['table' => 'contribuyente', 'column' => 'rut'],
+        ],
+        'receptor' => [
             'name'      => 'Receptor',
             'comment'   => '',
             'type'      => 'integer',
@@ -73,9 +82,9 @@ class Model_DteTmp extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'dte' => array(
+            'fk'        => ['table' => 'contribuyente', 'column' => 'rut'],
+        ],
+        'dte' => [
             'name'      => 'Dte',
             'comment'   => '',
             'type'      => 'smallint',
@@ -84,9 +93,9 @@ class Model_DteTmp extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_tipo', 'column' => 'codigo')
-        ),
-        'codigo' => array(
+            'fk'        => ['table' => 'dte_tipo', 'column' => 'codigo'],
+        ],
+        'codigo' => [
             'name'      => 'Codigo',
             'comment'   => '',
             'type'      => 'character',
@@ -95,9 +104,9 @@ class Model_DteTmp extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'fecha' => array(
+            'fk'        => null,
+        ],
+        'fecha' => [
             'name'      => 'Fecha',
             'comment'   => '',
             'type'      => 'date',
@@ -106,9 +115,9 @@ class Model_DteTmp extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'total' => array(
+            'fk'        => null,
+        ],
+        'total' => [
             'name'      => 'Total',
             'comment'   => '',
             'type'      => 'integer',
@@ -117,9 +126,9 @@ class Model_DteTmp extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'datos' => array(
+            'fk'        => null,
+        ],
+        'datos' => [
             'name'      => 'Datos',
             'comment'   => '',
             'type'      => 'text',
@@ -128,9 +137,9 @@ class Model_DteTmp extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'sucursal_sii' => array(
+            'fk'        => null,
+        ],
+        'sucursal_sii' => [
             'name'      => 'Sucursal SII',
             'comment'   => '',
             'type'      => 'integer',
@@ -139,9 +148,9 @@ class Model_DteTmp extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'usuario' => array(
+            'fk'        => null,
+        ],
+        'usuario' => [
             'name'      => 'Usuario',
             'comment'   => '',
             'type'      => 'integer',
@@ -150,9 +159,9 @@ class Model_DteTmp extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => array('table' => 'usuario', 'column' => 'id')
-        ),
-        'extra' => array(
+            'fk'        => ['table' => 'usuario', 'column' => 'id'],
+        ],
+        'extra' => [
             'name'      => 'Extra',
             'comment'   => '',
             'type'      => 'text',
@@ -161,21 +170,22 @@ class Model_DteTmp extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
+    public static $fkNamespace = [
         'Model_Contribuyente' => 'website\Dte',
         'Model_DteTipo' => 'website\Dte\Admin\Mantenedores',
         'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios',
-    ); ///< Namespaces que utiliza esta clase
+    ]; ///< Namespaces que utiliza esta clase
 
     private $Receptor; ///< Caché para el receptor
+
     private $cache_datos; ///< Caché para los datos del documento
 
     /**
@@ -322,7 +332,7 @@ class Model_DteTmp extends \Model_App
                     }
                 }
                 // datos del receptor si es documento de exportación
-                else if (in_array($this->dte, [110, 111, 112])) {
+                elseif (in_array($this->dte, [110, 111, 112])) {
                     $datos = json_decode($this->datos, true)['Encabezado']['Receptor'];
                     $this->Receptor->razon_social = $datos['RznSocRecep'];
                     $this->Receptor->direccion = $datos['DirRecep'];
@@ -378,13 +388,13 @@ class Model_DteTmp extends \Model_App
             );
         }
         // facturador del Portal MIPYME del SII
-        else if ($this->getEmisor()->config_libredte_facturador == 1) {
+        elseif ($this->getEmisor()->config_libredte_facturador == 1) {
             return $this->generarConFacturadorSii(
                 $user_id, $fecha_emision
             );
         }
         // facturador mixto
-        else if ($this->getEmisor()->config_libredte_facturador == 2) {
+        elseif ($this->getEmisor()->config_libredte_facturador == 2) {
             // facturador local de LibreDTE para boletas
             if (in_array($this->dte, [39, 41])) {
                 return $this->generarConFacturadorLocal(
@@ -752,7 +762,7 @@ class Model_DteTmp extends \Model_App
             if (in_array($origen, [0, 1, 2]) && !empty($datos['Encabezado']['Receptor']['CorreoRecep'])) {
                 $emails['Documento'] = strtolower($datos['Encabezado']['Receptor']['CorreoRecep']);
             }
-        } else if (!empty($datos['Referencia'])) {
+        } elseif (!empty($datos['Referencia'])) {
             if (!isset($datos['Referencia'][0])) {
                 $datos['Referencia'] = [$datos['Referencia']];
             }
@@ -819,7 +829,7 @@ class Model_DteTmp extends \Model_App
             $links = $this->getLinks();
             if (!empty($links['pagar'])) {
                 $msg .= 'Enlace pago en línea: '.$links['pagar']."\n\n";
-            } else if (!empty($links['pdf'])) {
+            } elseif (!empty($links['pdf'])) {
                 $msg .= 'Puede descargar el documento en: '.$links['pdf']."\n\n";
             }
         }
@@ -833,9 +843,9 @@ class Model_DteTmp extends \Model_App
         // agregar reply to si corresponde
         if (!empty($this->getEmisor()->config_email_intercambio_sender->reply_to)) {
             $email->replyTo($this->getEmisor()->config_email_intercambio_sender->reply_to);
-        } else if ($this->getEmisor()->config_pagos_email) {
+        } elseif ($this->getEmisor()->config_pagos_email) {
             $email->replyTo($this->getEmisor()->config_pagos_email);
-        } else if ($this->getEmisor()->email) {
+        } elseif ($this->getEmisor()->email) {
             $email->replyTo($this->getEmisor()->email);
         }
         // adjuntar PDF
@@ -979,7 +989,7 @@ class Model_DteTmp extends \Model_App
                 && $this->getDatos()['Encabezado']['Receptor']['Contacto'][0] == '+'
             ) {
                 $this->_telefono = $this->getDatos()['Encabezado']['Receptor']['Contacto'];
-            } else if (
+            } elseif (
                 !empty($this->getReceptor()->telefono)
                 && $this->getReceptor()->telefono[0] == '+'
             ) {
@@ -1103,7 +1113,7 @@ class Model_DteTmp extends \Model_App
             $response = $ApiDtePdfClient->post($ApiDtePdfClient->url, $config);
         }
         // crear a partir de formato de PDF no estándar
-        else if ($config['formato'] != 'estandar') {
+        elseif ($config['formato'] != 'estandar') {
             $apps = $this->getEmisor()->getApps('dtepdfs');
             if (
                 empty($apps[$config['formato']])
@@ -1192,7 +1202,7 @@ class Model_DteTmp extends \Model_App
             $response = $ApiDteEscPosClient->post($ApiDteEscPosClient->url, $config);
         }
         // consultar aplicación de ESCPOS según el formato solicitado
-        else if ($apps = $this->getEmisor()->getApps('dteescpos')) {
+        elseif ($apps = $this->getEmisor()->getApps('dteescpos')) {
             if (
                 empty($apps[$config['formato']])
                 || empty($apps[$config['formato']]->getConfig()->disponible)
@@ -1212,5 +1222,4 @@ class Model_DteTmp extends \Model_App
         // si dió código 200 se entrega la respuesta del servicio web
         return $response['body'];
     }
-
 }

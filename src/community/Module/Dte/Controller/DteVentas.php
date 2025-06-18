@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 use \website\Dte\Admin\Mantenedores\Model_DteTipos;
@@ -31,12 +31,11 @@ use \website\Dte\Admin\Mantenedores\Model_DteTipos;
  */
 class Controller_DteVentas extends Controller_Base_Libros
 {
-
     protected $config = [
         'model' => [
             'singular' => 'Venta',
             'plural' => 'Ventas',
-        ]
+        ],
     ]; ///< Configuración para las acciones del controlador
 
     /**
@@ -461,14 +460,14 @@ class Controller_DteVentas extends Controller_Base_Libros
                 new \Libchart\View\Color\Color(255, 255, 255),
                 new \Libchart\View\Color\Color(255, 255, 255),
                 new \Libchart\View\Color\Color(255, 255, 255),
-                new \Libchart\View\Color\Color(255, 255, 255)
+                new \Libchart\View\Color\Color(255, 255, 255),
             ]);
             $chart->getPlot()->getPalette()->setAxisColor([
                 new \Libchart\View\Color\Color(0, 0, 0),
-                new \Libchart\View\Color\Color(0, 0, 0)
+                new \Libchart\View\Color\Color(0, 0, 0),
             ]);
             $chart->getPlot()->getPalette()->setBarColor([
-                new \Libchart\View\Color\Color(100, 100, 100)
+                new \Libchart\View\Color\Color(100, 100, 100),
             ]);
             $chart->getConfig()->setShowPointCaption(false);
             ob_clean();
@@ -533,5 +532,4 @@ class Controller_DteVentas extends Controller_Base_Libros
             $this->response->sendAndExit($csv, 'rv_'.$Emisor->rut.'_'.$periodo.'_'.$tipo.'.csv');
         }
     }
-
 }

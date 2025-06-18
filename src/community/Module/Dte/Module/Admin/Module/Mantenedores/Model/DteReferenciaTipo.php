@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Admin\Mantenedores;
 
 /**
@@ -29,18 +29,19 @@ namespace website\Dte\Admin\Mantenedores;
  */
 class Model_DteReferenciaTipo extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_referencia_tipo'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $codigo; ///< smallint(16) NOT NULL DEFAULT '' PK
+
     public $tipo; ///< character varying(20) NOT NULL DEFAULT ''
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'codigo' => array(
+    public static $columnsInfo = [
+        'codigo' => [
             'name'      => 'Código',
             'comment'   => '',
             'type'      => 'smallint',
@@ -49,9 +50,9 @@ class Model_DteReferenciaTipo extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'tipo' => array(
+            'fk'        => null,
+        ],
+        'tipo' => [
             'name'      => 'Tipo',
             'comment'   => '',
             'type'      => 'character varying',
@@ -60,14 +61,13 @@ class Model_DteReferenciaTipo extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(); ///< Namespaces que utiliza esta clase
-
+    public static $fkNamespace = []; ///< Namespaces que utiliza esta clase
 }

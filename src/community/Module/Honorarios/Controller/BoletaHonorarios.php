@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Honorarios;
 
 /**
@@ -30,7 +30,6 @@ namespace website\Honorarios;
  */
 class Controller_BoletaHonorarios extends \Controller_App
 {
-
     /**
      * Acción que muestra un resumen por período donde hayan boletas recibidas.
      */
@@ -210,5 +209,4 @@ class Controller_BoletaHonorarios extends \Controller_App
         }
         $this->redirect('/honorarios/boleta_honorarios');
     }
-
 }

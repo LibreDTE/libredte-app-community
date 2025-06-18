@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,9 +29,9 @@ namespace website\Dte;
  */
 class Model_DteVentas extends \Model_Plural_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_venta'; ///< Tabla del modelo
 
     /**
@@ -100,7 +100,7 @@ class Model_DteVentas extends \Model_Plural_App
         // ir sumando en el resumen anual
         $resumen = [];
         if (!empty($libros[$anio])) {
-            foreach($libros[$anio] as $mes => $resumen_mensual) {
+            foreach ($libros[$anio] as $mes => $resumen_mensual) {
                 foreach ($resumen_mensual as $r) {
                     $cols = array_keys($r);
                     unset($cols[array_search('TpoDoc',$cols)]);
@@ -147,7 +147,7 @@ class Model_DteVentas extends \Model_Plural_App
                     }
                     $where[] = 'd.dte IN ('.implode(', ', $where_dte).')';
                 }
-                else if ($filtros['dte'][0] == '!') {
+                elseif ($filtros['dte'][0] == '!') {
                     $where[] = 'd.dte != :dte';
                     $vars[':dte'] = substr($filtros['dte'],1);
                 }
@@ -231,7 +231,7 @@ class Model_DteVentas extends \Model_Plural_App
             $documentos = $this->getContribuyente()->getRCV([
                 'operacion' => 'VENTA',
                 'periodo' => $periodo,
-                'tipo' => 'iecv'
+                'tipo' => 'iecv',
             ]);
             $documentos_encontrados += count($documentos);
             $this->agregarMasivo($documentos, $config);
@@ -324,7 +324,7 @@ class Model_DteVentas extends \Model_Plural_App
             $Receptores = new Model_Contribuyentes();
             $documentos = (array)$r['body'];
             $documentos_encontrados += count($documentos);
-            foreach($documentos as $dte) {
+            foreach ($documentos as $dte) {
                 $Receptor = $Receptores->get($dte['rut']);
                 $DteEmitido = new Model_DteEmitido(
                     $this->getContribuyente()->rut,
@@ -348,5 +348,4 @@ class Model_DteVentas extends \Model_Plural_App
         }
         return $documentos_encontrados;
     }
-
 }

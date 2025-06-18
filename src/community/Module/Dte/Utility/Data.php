@@ -29,7 +29,6 @@ namespace website\Dte;
  */
 class Utility_Data
 {
-
     /**
      * Método que encripta un texto plano.
      * @param string $plaintext Texto plano a encriptar.
@@ -53,5 +52,4 @@ class Utility_Data
             $ciphertext_base64, config('dte.pkey')
         ));
     }
-
 }

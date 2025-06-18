@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte;
  */
 class Controller_Sii extends \Controller_App
 {
-
     /**
      * Acción que permite obtener los datos de la empresa desde el SII.
      */
@@ -319,5 +318,4 @@ class Controller_Sii extends \Controller_App
             $this->redirect('https://'.\sasco\LibreDTE\Sii::getServidor().'.sii.cl/rtc/RTC/RTCObtCertif.html');
         }
     }
-
 }

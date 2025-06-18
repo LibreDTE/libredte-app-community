@@ -142,7 +142,7 @@ echo $f->input([
             'name' => 'config_extra_otras_actividades_giro',
             'placeholder' => 'Mismo giro actividad principal',
             'attr' => 'maxlength="80" style="min-width:20em"',
-        ]
+        ],
     ],
     'values' => $config_extra_otras_actividades,
     'help' => 'Indique las actividades económicas secundarias de la empresa y los giros (si son diferentes al principal)',
@@ -168,7 +168,7 @@ echo $f->input([
         [
             'name' => 'config_extra_sucursales_codigo',
             'check' => 'notempty integer',
-            'attr' => 'style="max-width:8em"'
+            'attr' => 'style="max-width:8em"',
         ],
         [
             'name' => 'config_extra_sucursales_sucursal',
@@ -190,8 +190,8 @@ echo $f->input([
             'type' => 'select',
             'name' => 'config_extra_sucursales_actividad_economica',
             'options' => ['' => 'Misma casa matriz'] + (isset($Contribuyente) ? $Contribuyente->getListActividades():[]),
-            'attr' => 'style="max-width:14em"'
-        ]
+            'attr' => 'style="max-width:14em"',
+        ],
     ],
     'values' => $config_extra_sucursales,
     'help' => 'Sucursales de la empresa con código asignado por el SII',
@@ -582,7 +582,7 @@ echo $f->input([
         [
             'name' => 'config_extra_impuestos_adicionales_tasa',
             'check' => 'notempty',
-        ]
+        ],
     ],
     'values' => $config_extra_impuestos_adicionales,
     'help' => 'Indique los impuestos adicionales o retenciones que desea utilizar en la emisión de documentos',
@@ -613,7 +613,7 @@ if (!empty($tipos_dte)) {
                 'name' => 'config_emision_observaciones_glosa',
                 'check' => 'notempty',
                 'attr' => 'maxlength="100"',
-            ]
+            ],
         ],
         'values' => $config_emision_observaciones,
         'help' => 'Observación por defecto según tipo de DTE emitido',
@@ -913,7 +913,7 @@ if ($formatos_pdf) {
         <div class="card-body">
 <?php
 $AppsConfigHelper = new \sowerphp\app\View_Helper_AppsConfig('dte_pdf', $f);
-foreach($dtepdfs as $App) {
+foreach ($dtepdfs as $App) {
     $App->setVars([
         'url' => $_url,
     ]);
@@ -982,7 +982,7 @@ $f->setStyle('horizontal');
             <p>LibreDTE puede utilizar aplicaciones externas para entregar más funcionalidades y características.</p>
 <?php
 $AppsConfigHelper = new \sowerphp\app\View_Helper_AppsConfig('apps', $f);
-foreach($apps as $App) {
+foreach ($apps as $App) {
     $App->setVars([
         'url' => $_url,
     ]);

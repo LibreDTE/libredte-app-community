@@ -30,7 +30,6 @@ namespace website\Dte;
  */
 class Shell_Command_DteEmitidos_Actualizar extends \Shell_App
 {
-
     public function main($grupo = null, $certificacion = 0, $creados_hace_horas = 8, $retry = 1)
     {
         $this->db = \sowerphp\core\Model_Datasource_Database::get();
@@ -174,5 +173,4 @@ class Shell_Command_DteEmitidos_Actualizar extends \Shell_App
             ]);
         }
     }
-
 }

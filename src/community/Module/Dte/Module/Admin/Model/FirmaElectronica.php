@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Admin;
 
 /**
@@ -29,25 +29,33 @@ namespace website\Dte\Admin;
  */
 class Model_FirmaElectronica extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'firma_electronica'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $run; ///< character varying(10) NOT NULL DEFAULT '' PK
+
     public $nombre; ///< character varying(100) NOT NULL DEFAULT ''
+
     public $email; ///< character varying(100) NOT NULL DEFAULT ''
+
     public $desde; ///< timestamp without time zone() NOT NULL DEFAULT ''
+
     public $hasta; ///< timestamp without time zone() NOT NULL DEFAULT ''
+
     public $emisor; ///< character varying(100) NOT NULL DEFAULT ''
+
     public $usuario; ///< integer(32) NOT NULL DEFAULT '' FK:usuario.id
+
     public $archivo; ///< text() NOT NULL DEFAULT ''
+
     public $contrasenia; ///< character varying(255) NOT NULL DEFAULT ''
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'run' => array(
+    public static $columnsInfo = [
+        'run' => [
             'name'      => 'Run',
             'comment'   => '',
             'type'      => 'character varying',
@@ -56,9 +64,9 @@ class Model_FirmaElectronica extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'nombre' => array(
+            'fk'        => null,
+        ],
+        'nombre' => [
             'name'      => 'Nombre',
             'comment'   => '',
             'type'      => 'character varying',
@@ -67,9 +75,9 @@ class Model_FirmaElectronica extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'email' => array(
+            'fk'        => null,
+        ],
+        'email' => [
             'name'      => 'Email',
             'comment'   => '',
             'type'      => 'character varying',
@@ -78,9 +86,9 @@ class Model_FirmaElectronica extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'desde' => array(
+            'fk'        => null,
+        ],
+        'desde' => [
             'name'      => 'Desde',
             'comment'   => '',
             'type'      => 'timestamp without time zone',
@@ -89,9 +97,9 @@ class Model_FirmaElectronica extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'hasta' => array(
+            'fk'        => null,
+        ],
+        'hasta' => [
             'name'      => 'Hasta',
             'comment'   => '',
             'type'      => 'timestamp without time zone',
@@ -100,9 +108,9 @@ class Model_FirmaElectronica extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'emisor' => array(
+            'fk'        => null,
+        ],
+        'emisor' => [
             'name'      => 'Emisor',
             'comment'   => '',
             'type'      => 'character varying',
@@ -111,9 +119,9 @@ class Model_FirmaElectronica extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'usuario' => array(
+            'fk'        => null,
+        ],
+        'usuario' => [
             'name'      => 'Usuario',
             'comment'   => '',
             'type'      => 'integer',
@@ -122,9 +130,9 @@ class Model_FirmaElectronica extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => array('table' => 'usuario', 'column' => 'id')
-        ),
-        'archivo' => array(
+            'fk'        => ['table' => 'usuario', 'column' => 'id'],
+        ],
+        'archivo' => [
             'name'      => 'Archivo',
             'comment'   => '',
             'type'      => 'text',
@@ -133,9 +141,9 @@ class Model_FirmaElectronica extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'contrasenia' => array(
+            'fk'        => null,
+        ],
+        'contrasenia' => [
             'name'      => 'Contrasenia',
             'comment'   => '',
             'type'      => 'character varying',
@@ -144,17 +152,17 @@ class Model_FirmaElectronica extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
-        'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios'
-    ); ///< Namespaces que utiliza esta clase
+    public static $fkNamespace = [
+        'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios',
+    ]; ///< Namespaces que utiliza esta clase
 
     /**
      * Método para obtener la contraseña de la firma electrónica en texto plano.
@@ -163,5 +171,4 @@ class Model_FirmaElectronica extends \Model_App
     {
         return  \website\Dte\Utility_Data::decrypt($this->contrasenia);
     }
-
 }

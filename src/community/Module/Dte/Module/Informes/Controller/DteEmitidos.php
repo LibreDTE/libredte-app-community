@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte\Informes;
 
 use \website\Dte\Model_DteEmitidos;
@@ -31,7 +31,6 @@ use \website\Dte\Model_DteEmitidos;
  */
 class Controller_DteEmitidos extends \Controller_App
 {
-
     /**
      * Acción principal del informe de ventas.
      */
@@ -124,7 +123,7 @@ class Controller_DteEmitidos extends \Controller_App
         ;
         if ($aux && $detalle) {
             $emitidos = [];
-            foreach($aux as $e) {
+            foreach ($aux as $e) {
                 foreach ($e['items'] as $item) {
                     if ($item[0] == 1 || $detalle == 2) {
                         $emitido = array_slice($e, 0, $n_cols_no_item);
@@ -361,5 +360,4 @@ class Controller_DteEmitidos extends \Controller_App
             ]);
         }
     }
-
 }

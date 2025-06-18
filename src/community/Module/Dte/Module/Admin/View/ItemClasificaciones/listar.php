@@ -35,20 +35,20 @@ $titles[] = 'Acciones';
 $colsWidth[] = $actionsColsWidth;
 
 // crear arreglo para la tabla y agregar títulos de columnas
-$data = array($titles);
+$data = [$titles];
 
 // agregar fila para búsqueda mediante formulario
-$row = array();
+$row = [];
 $form = new \sowerphp\general\View_Helper_Form(false);
-$optionsBoolean = array(array('', 'Seleccione una opción'), array('1', 'Si'), array('0', 'No'));
+$optionsBoolean = [['', 'Seleccione una opción'], ['1', 'Si'], ['0', 'No']];
 $types_check = ['integer' => 'integer', 'real' => 'real'];
 foreach ($columns as $column => &$info) {
     // si es de tipo boolean se muestra lista desplegable
     if ($info['type'] == 'boolean' || $info['type'] == 'tinyint') {
-        $row[] = $form->input(array('type' => 'select', 'name' => $column, 'options' => $optionsBoolean, 'value' => (isset($search[$column]) ? $search[$column] : '')));
+        $row[] = $form->input(['type' => 'select', 'name' => $column, 'options' => $optionsBoolean, 'value' => (isset($search[$column]) ? $search[$column] : '')]);
     }
     // si es llave foránea
-    else if ($info['fk']) {
+    elseif ($info['fk']) {
         $class = 'Model_'.\sowerphp\core\Utility_Inflector::camelize(
             $info['fk']['table']
         );
@@ -57,12 +57,12 @@ foreach ($columns as $column => &$info) {
         );
         $objs = new $classs();
         $options = $objs->getList();
-        array_unshift($options, array('', 'Seleccione una opción'));
-        $row[] = $form->input(array('type' => 'select', 'name' => $column, 'options' => $options, 'value' => (isset($search[$column]) ? $search[$column] : '')));
+        array_unshift($options, ['', 'Seleccione una opción']);
+        $row[] = $form->input(['type' => 'select', 'name' => $column, 'options' => $options, 'value' => (isset($search[$column]) ? $search[$column] : '')]);
     }
     // si es un tipo de dato de fecha o fecha con hora se muestra un input para fecha
-    else if (in_array($info['type'], ['date', 'timestamp', 'timestamp without time zone'])) {
-        $row[] = $form->input(array('type' => 'date', 'name' => $column, 'value' => (isset($search[$column]) ? $search[$column] : '')));
+    elseif (in_array($info['type'], ['date', 'timestamp', 'timestamp without time zone'])) {
+        $row[] = $form->input(['type' => 'date', 'name' => $column, 'value' => (isset($search[$column]) ? $search[$column] : '')]);
     }
     // si es cualquier otro tipo de datos
     else {
@@ -78,7 +78,7 @@ $data[] = $row;
 
 // crear filas de la tabla
 foreach ($Objs as &$obj) {
-    $row = array();
+    $row = [];
     foreach ($columns as $column => &$info) {
         // si es un archivo
         if ($info['type'] == 'file') {
@@ -88,11 +88,11 @@ foreach ($Objs as &$obj) {
                 $row[] = '';
         }
         // si es boolean se usa Si o No según corresponda
-        else if ($info['type'] == 'boolean' || $info['type'] == 'tinyint') {
+        elseif ($info['type'] == 'boolean' || $info['type'] == 'tinyint') {
             $row[] = $obj->{$column} == 't' || $obj->{$column} == '1' ? 'Si' : 'No';
         }
         // si es llave foránea
-        else if ($info['fk']) {
+        elseif ($info['fk']) {
             // si no es vacía la columna
             if (!empty($obj->{$column})) {
                 $method = 'get'.\sowerphp\core\Utility_Inflector::camelize($info['fk']['table']);
@@ -126,7 +126,7 @@ foreach ($Objs as &$obj) {
 $maintainer = new \sowerphp\app\View_Helper_Maintainer ([
     'link' => $_base.$module_url.$controller,
     'linkEnd' => $linkEnd,
-    'listarFilterUrl' => $listarFilterUrl
+    'listarFilterUrl' => $listarFilterUrl,
 ]);
 $maintainer->setId($models);
 $maintainer->setColsWidth($colsWidth);

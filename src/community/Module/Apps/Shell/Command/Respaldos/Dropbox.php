@@ -29,7 +29,6 @@ namespace website\Apps;
  */
 class Shell_Command_Respaldos_Dropbox extends \Shell_App
 {
-
     public function main($grupo = null, $compress = 'tgz', $fecha = null)
     {
         ini_set('memory_limit', '4096M');
@@ -100,7 +99,7 @@ class Shell_Command_Respaldos_Dropbox extends \Shell_App
         if ($Contribuyente->getUsuario()->inGroup('dte_plus')) {
             $dir_uncompressed = (new \website\Dte\Admin\Model_Respaldo())->generar($Contribuyente->rut);
             $filename = date('N').'_'.\sowerphp\general\Utility_Date::$dias[date('w')];
-        } else if ($Contribuyente->getUsuario()->inGroup('dte_mipyme')) {
+        } elseif ($Contribuyente->getUsuario()->inGroup('dte_mipyme')) {
             if (!$fecha) {
                 $fecha = \sowerphp\general\Utility_Date::getPrevious(date('Y-m-d'), 'D');
             }
@@ -131,5 +130,4 @@ class Shell_Command_Respaldos_Dropbox extends \Shell_App
             ORDER BY c.razon_social
         ', [':grupo' => $grupo]);
     }
-
 }

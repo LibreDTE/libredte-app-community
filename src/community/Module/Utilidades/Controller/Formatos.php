@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Utilidades;
 
 /**
@@ -30,7 +30,6 @@ namespace website\Utilidades;
  */
 class Controller_Formatos extends \Controller_App
 {
-
     /**
      * Acción que convierte los datos en un formato de entrada soportado y crea
      * un archivo JSON.
@@ -79,5 +78,4 @@ class Controller_Formatos extends \Controller_App
         }
         return $formatos;
     }
-
 }

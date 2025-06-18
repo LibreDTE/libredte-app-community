@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 /**
@@ -29,12 +29,15 @@ namespace website\Dte;
  */
 class Controller_DteBoletaConsumos extends \Controller_Maintainer
 {
-
     protected $namespace = __NAMESPACE__; ///< Namespace del controlador y modelos asociados
+
     protected $columnsView = [
-        'listar' => ['dia', 'secuencia', 'glosa', 'track_id', 'revision_estado', 'revision_detalle']
-    ]; ///< Columnas que se deben mostrar en las vistas
+        'listar' => ['dia', 'secuencia', 'glosa', 'track_id', 'revision_estado', 'revision_detalle'],
+    ];
+
+ ///< Columnas que se deben mostrar en las vistas
     protected $deleteRecord = false; ///< Indica si se permite o no borrar registros
+
     protected $actionsColsWidth = 90; ///< Ancho de columna para acciones en vista listar
 
     /**
@@ -243,5 +246,4 @@ class Controller_DteBoletaConsumos extends \Controller_Maintainer
             'pendientes' => $pendientes,
         ]);
     }
-
 }

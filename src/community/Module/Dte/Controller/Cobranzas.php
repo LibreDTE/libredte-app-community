@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte;
 
 /**
@@ -30,7 +30,6 @@ namespace website\Dte;
  */
 class Controller_Cobranzas extends \Controller_App
 {
-
     /**
      * Acción que permite buscar los pagos pendientes.
      */
@@ -74,7 +73,7 @@ class Controller_Cobranzas extends \Controller_App
         $this->set([
             '_header_extra' => ['js' => ['/dte/js/cobranzas.js']],
             'Emisor' => $Emisor,
-            'Pago' => $Pago
+            'Pago' => $Pago,
         ]);
         if (isset($_POST['submit'])) {
             $Pago->pagado = $_POST['pagado'];
@@ -132,5 +131,4 @@ class Controller_Cobranzas extends \Controller_App
             $this->redirect(str_replace('/eliminar/', '/ver/', $this->request->getRequestUriDecoded()));
         }
     }
-
 }

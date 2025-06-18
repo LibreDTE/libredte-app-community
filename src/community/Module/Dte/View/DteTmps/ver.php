@@ -89,7 +89,7 @@ echo $t->generate([
         \sowerphp\general\Utility_Date::format($DteTmp->fecha),
         !empty($datos['Encabezado']['IdDoc']['FchVenc']) ? \sowerphp\general\Utility_Date::format($datos['Encabezado']['IdDoc']['FchVenc']) : null,
         $Receptor->razon_social,
-        num($DteTmp->total)
+        num($DteTmp->total),
     ],
 ]);
 ?>
@@ -210,7 +210,7 @@ if (!$email_html) {
     $mensaje .= 'Se adjunta documento N° '.$DteTmp->getFolio().' del día '.\sowerphp\general\Utility_Date::format($DteTmp->fecha).' por un monto total de $'.num($DteTmp->total).'.-'."\n\n";
     if (!empty($links['pagar'])) {
         $mensaje .= 'Enlace pago en línea: '.$links['pagar']."\n\n";
-    } else if (!empty($links['pdf'])) {
+    } elseif (!empty($links['pdf'])) {
         $mensaje .= 'Puede descargar el documento en: '.$links['pdf']."\n\n";
     }
     $mensaje .= 'Saluda atentamente,'."\n\n";
@@ -327,7 +327,7 @@ $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin([
     'action' => $_base.'/dte/dte_tmps/actualizar/'.$DteTmp->receptor.'/'.$DteTmp->dte.'/'.$DteTmp->codigo,
     'id' => 'actualizarFechaForm',
-    'onsubmit' => 'Form.check(\'actualizarFechaForm\')'
+    'onsubmit' => 'Form.check(\'actualizarFechaForm\')',
 ]);
 echo $f->input([
     'type' => 'date',
@@ -363,7 +363,7 @@ $f = new \sowerphp\general\View_Helper_Form(false);
 echo $f->begin([
     'action' => $_base.'/dte/dte_tmps/editar_json/'.$DteTmp->receptor.'/'.$DteTmp->dte.'/'.$DteTmp->codigo,
     'id' => 'editarJsonForm',
-    'onsubmit' => 'Form.check(\'editarJsonForm\')'
+    'onsubmit' => 'Form.check(\'editarJsonForm\')',
 ]);
 echo $f->input([
     'type' => 'textarea',

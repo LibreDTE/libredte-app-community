@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Utilidades;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Utilidades;
  */
 class Controller_Xml extends \Controller_App
 {
-
     /**
      * Acción para firmar un XML.
      */
@@ -40,7 +39,7 @@ class Controller_Xml extends \Controller_App
             // obtener nombre del tag y del ID
             $XML = new \sasco\LibreDTE\XML();
             $XML->loadXML($xml);
-            foreach($XML->documentElement->childNodes as $child) {
+            foreach ($XML->documentElement->childNodes as $child) {
                 if ($child instanceof \DOMElement) {
                     $tag = $child->tagName;
                     $id = $child->getAttribute('ID');
@@ -50,7 +49,7 @@ class Controller_Xml extends \Controller_App
             // firmar
             $Firma = new \sasco\LibreDTE\FirmaElectronica([
                 'file' => $_FILES['firma']['tmp_name'],
-                'pass' => $_POST['contrasenia']
+                'pass' => $_POST['contrasenia'],
             ]);
             $xmlSigned = $Firma->signXML($xml, $id, $tag);
             // entregar datos
@@ -60,5 +59,4 @@ class Controller_Xml extends \Controller_App
             $this->response->sendAndExit($xmlSigned);
         }
     }
-
 }

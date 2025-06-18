@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte\Informes;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte\Informes;
  */
 class Controller_DocumentosUsados extends \Controller_App
 {
-
     /**
      * Acción principal que muestra el resumen del uso de documentos.
      */
@@ -41,5 +40,4 @@ class Controller_DocumentosUsados extends \Controller_App
             'documentos' => $Emisor->getDocumentosUsados(),
         ]);
     }
-
 }

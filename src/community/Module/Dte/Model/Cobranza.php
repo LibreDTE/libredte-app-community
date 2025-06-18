@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,27 +29,37 @@ namespace website\Dte;
  */
 class Model_Cobranza extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'cobranza'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:dte_emitido.emisor
+
     public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_emitido.emisor
+
     public $folio; ///< integer(32) NOT NULL DEFAULT '' PK FK:dte_emitido.emisor
+
     public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK FK:dte_emitido.emisor
+
     public $fecha; ///< date() NOT NULL DEFAULT '' PK
+
     public $monto; ///< integer(32) NOT NULL DEFAULT ''
+
     public $glosa; ///< character varying(40) NULL DEFAULT ''
+
     public $pagado; ///< integer(32) NULL DEFAULT ''
+
     public $observacion; ///< text() NULL DEFAULT ''
+
     public $usuario; ///< integer(32) NULL DEFAULT '' FK:usuario.id
+
     public $modificado; ///< date() NULL DEFAULT ''
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
+    public static $columnsInfo = [
+        'emisor' => [
             'name'      => 'Emisor',
             'comment'   => '',
             'type'      => 'integer',
@@ -58,9 +68,9 @@ class Model_Cobranza extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'dte' => array(
+            'fk'        => ['table' => 'dte_emitido', 'column' => 'emisor'],
+        ],
+        'dte' => [
             'name'      => 'Dte',
             'comment'   => '',
             'type'      => 'smallint',
@@ -69,9 +79,9 @@ class Model_Cobranza extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'folio' => array(
+            'fk'        => ['table' => 'dte_emitido', 'column' => 'emisor'],
+        ],
+        'folio' => [
             'name'      => 'Folio',
             'comment'   => '',
             'type'      => 'integer',
@@ -80,9 +90,9 @@ class Model_Cobranza extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'certificacion' => array(
+            'fk'        => ['table' => 'dte_emitido', 'column' => 'emisor'],
+        ],
+        'certificacion' => [
             'name'      => 'Certificacion',
             'comment'   => '',
             'type'      => 'boolean',
@@ -91,9 +101,9 @@ class Model_Cobranza extends \Model_App
             'default'   => 'false',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_emitido', 'column' => 'emisor')
-        ),
-        'fecha' => array(
+            'fk'        => ['table' => 'dte_emitido', 'column' => 'emisor'],
+        ],
+        'fecha' => [
             'name'      => 'Fecha',
             'comment'   => '',
             'type'      => 'date',
@@ -102,9 +112,9 @@ class Model_Cobranza extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'monto' => array(
+            'fk'        => null,
+        ],
+        'monto' => [
             'name'      => 'Monto',
             'comment'   => '',
             'type'      => 'integer',
@@ -113,9 +123,9 @@ class Model_Cobranza extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'glosa' => array(
+            'fk'        => null,
+        ],
+        'glosa' => [
             'name'      => 'Glosa',
             'comment'   => '',
             'type'      => 'character varying',
@@ -124,9 +134,9 @@ class Model_Cobranza extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'pagado' => array(
+            'fk'        => null,
+        ],
+        'pagado' => [
             'name'      => 'Pagado',
             'comment'   => '',
             'type'      => 'integer',
@@ -135,9 +145,9 @@ class Model_Cobranza extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'observacion' => array(
+            'fk'        => null,
+        ],
+        'observacion' => [
             'name'      => 'Observacion',
             'comment'   => '',
             'type'      => 'text',
@@ -146,9 +156,9 @@ class Model_Cobranza extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
-        'usuario' => array(
+            'fk'        => null,
+        ],
+        'usuario' => [
             'name'      => 'Usuario',
             'comment'   => '',
             'type'      => 'integer',
@@ -157,9 +167,9 @@ class Model_Cobranza extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => array('table' => 'usuario', 'column' => 'id')
-        ),
-        'modificado' => array(
+            'fk'        => ['table' => 'usuario', 'column' => 'id'],
+        ],
+        'modificado' => [
             'name'      => 'Modificado',
             'comment'   => '',
             'type'      => 'date',
@@ -168,18 +178,18 @@ class Model_Cobranza extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
+    public static $fkNamespace = [
         'Model_DteEmitido' => 'website\Dte',
-        'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios'
-    ); ///< Namespaces que utiliza esta clase
+        'Model_Usuario' => '\sowerphp\app\Sistema\Usuarios',
+    ]; ///< Namespaces que utiliza esta clase
 
     /**
      * Método que entrega el DTE emitido asociado al pago que.
@@ -211,8 +221,7 @@ class Model_Cobranza extends \Model_App
             ':dte' => $this->dte,
             ':folio' => $this->folio,
             ':certificacion' => $this->certificacion,
-            ':fecha' => $this->fecha
+            ':fecha' => $this->fecha,
         ]);
     }
-
 }

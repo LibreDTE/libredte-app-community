@@ -26,7 +26,7 @@
 <p>Esta es la página del resumen del registro de ventas del período <?=$periodo?> de la empresa <?=$Emisor->razon_social?>.</p>
 <?php
 foreach ($resumen as &$r) {
-    foreach(['rsmnMntExe', 'rsmnMntNeto', 'rsmnMntIVA', 'rsmnMntIVANoRec', 'rsmnIVAUsoComun', 'rsmnMntTotal', 'rsmnTotDoc'] as $col) {
+    foreach (['rsmnMntExe', 'rsmnMntNeto', 'rsmnMntIVA', 'rsmnMntIVANoRec', 'rsmnIVAUsoComun', 'rsmnMntTotal', 'rsmnTotDoc'] as $col) {
         $r[$col] = num($r[$col]);
     }
     $r[] = $r['rsmnLink'] ? ('<a href="'.$_base.'/dte/dte_ventas/rcv_detalle/'.$periodo.'/'.$r['rsmnTipoDocInteger'].'" title="Ver detalles de los documentos" class="btn btn-primary" onclick="return __.loading(\'Consultando datos al SII...\')"><i class="fa fa-search fa-fw"></i></a>') : '';

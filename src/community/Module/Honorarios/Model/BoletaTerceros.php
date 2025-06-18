@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Honorarios;
 
 use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
@@ -31,9 +31,9 @@ use \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comunas;
  */
 class Model_BoletaTerceros extends \Model_Plural_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'boleta_tercero'; ///< Tabla del modelo
 
     private $tasas_retencion = [
@@ -297,5 +297,4 @@ class Model_BoletaTerceros extends \Model_Plural_App
         krsort($this->tasas_retencion);
         return $this->tasas_retencion;
     }
-
 }

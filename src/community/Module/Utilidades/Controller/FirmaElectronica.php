@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Utilidades;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Utilidades;
  */
 class Controller_FirmaElectronica extends \Controller_App
 {
-
     /**
      * Acción para ver los datos de la firma.
      */
@@ -47,5 +46,4 @@ class Controller_FirmaElectronica extends \Controller_App
             }
         }
     }
-
 }

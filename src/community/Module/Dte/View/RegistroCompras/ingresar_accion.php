@@ -36,6 +36,6 @@ echo $f->input([
     'label' => 'Acción',
     'options' => \sasco\LibreDTE\Sii\RegistroCompraVenta::$acciones,
     'check' => 'notempty',
-    'help' => 'Si rechaza un DTE no podrá aceptarlo en el futuro. Si acepta un DTE no podrá rechazarlo en el futuro.'
+    'help' => 'Si rechaza un DTE no podrá aceptarlo en el futuro. Si acepta un DTE no podrá rechazarlo en el futuro.',
 ]);
 echo $f->end('Ingresar acción al registro');

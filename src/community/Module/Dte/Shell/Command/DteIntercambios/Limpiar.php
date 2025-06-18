@@ -43,7 +43,6 @@ namespace website\Dte;
  */
 class Shell_Command_DteIntercambios_Limpiar extends \Shell_App
 {
-
     private $reglas = [
         'Recibidos certificación >1 mes' => 'DELETE FROM dte_recibido WHERE certificacion = true AND fecha < (NOW() - INTERVAL \'1 MONTH\')',
         'Guías recibidas con receptor igual al emisor' => 'DELETE FROM dte_recibido WHERE emisor = receptor and dte = 52',
@@ -97,5 +96,4 @@ class Shell_Command_DteIntercambios_Limpiar extends \Shell_App
             return 0;
         }
     }
-
 }

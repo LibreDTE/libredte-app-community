@@ -27,7 +27,7 @@ return [
     'module.title' => 'Informes facturación',
 
     // Menú para el módulo
-    'nav.module' => array(
+    'nav.module' => [
         '/dte_emitidos' => [
             'name' => 'Gráficos y detalle documentos emitidos',
             'desc' => 'Informe de documentos emitidos',
@@ -103,6 +103,6 @@ return [
             'desc' => 'Propuesta para el formulario 29',
             'icon' => 'fa fa-file',
         ],
-    ),
+    ],
 
 ];

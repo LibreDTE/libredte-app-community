@@ -167,7 +167,7 @@ echo View_Helper_Dashboard::cards([
             <!-- alerta vencimiento folios -->
             <div class="row">
                 <div class="col-sm-12">
-                    <?php foreach($folios_meses_alerta as $f) : ?>
+                    <?php foreach ($folios_meses_alerta as $f) : ?>
                         <?php if ($f['meses_autorizacion'] >= 6) : ?>
                             <a class="btn btn-danger btn-lg col-12 mb-4" href="<?=$_base?>/dte/admin/dte_folios/ver/<?=$f['dte']?>" role="button" title="Ir al mantenedor de folios">
                                 Folios <?=str_replace(' electrónica', '', $f['tipo'])?> vencidos
@@ -345,7 +345,7 @@ echo View_Helper_Dashboard::cards([
                             <?php
                                 if ($p['dias_aceptacion_automatica']<=1) {
                                     $color = 'danger';
-                                } else if ($p['dias_aceptacion_automatica']<=4) {
+                                } elseif ($p['dias_aceptacion_automatica']<=4) {
                                     $color = 'warning';
                                 } else {
                                     $color = 'success';
@@ -460,7 +460,7 @@ const centerText = {
         const { ctx, chartArea: { left, right, top, bottom, width, height } } = chart
         ctx.save()
 
-        if(chart._active.length > 0){
+        if (chart._active.length > 0){
 
             const textLabel = chart.config.data.labels[chart._active[0].index]
             const numberLabel = chart.config.data.datasets[chart._active[0].datasetIndex].data[chart._active[0].index]

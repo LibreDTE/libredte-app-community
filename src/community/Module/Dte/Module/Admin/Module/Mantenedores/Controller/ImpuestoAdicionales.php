@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte\Admin\Mantenedores;
 
 /**
@@ -30,10 +30,10 @@ namespace website\Dte\Admin\Mantenedores;
  */
 class Controller_ImpuestoAdicionales extends \Controller_Maintainer
 {
-
     protected $namespace = __NAMESPACE__; ///< Namespace del controlador y modelos asociados
+
     protected $columnsView = [
-        'listar' => ['codigo', 'nombre', 'tipo', 'tasa']
+        'listar' => ['codigo', 'nombre', 'tipo', 'tasa'],
     ]; ///< Columnas que se deben mostrar en las vistas
 
 }

@@ -28,7 +28,6 @@ namespace website\Dte\Admin;
  */
 class View_Helper_DteFolios_Estados extends \sowerphp\general\View_Helper_Spreadsheet
 {
-
     public function generar($datos)
     {
         $sheet = 0;
@@ -85,5 +84,4 @@ class View_Helper_DteFolios_Estados extends \sowerphp\general\View_Helper_Spread
         }
         return $this;
     }
-
 }

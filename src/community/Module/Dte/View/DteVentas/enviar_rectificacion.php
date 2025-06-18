@@ -18,7 +18,7 @@ function get_codigo_reemplazo() {
 $f = new \sowerphp\general\View_Helper_Form();
 echo $f->begin([
     'action' => $_base.'/dte/dte_ventas/enviar_sii/'.$periodo,
-    'onsubmit' => 'Form.check() && __.confirm(this, \'¿Está seguro de enviar la rectificación del libro?\')'
+    'onsubmit' => 'Form.check() && __.confirm(this, \'¿Está seguro de enviar la rectificación del libro?\')',
 ]);
 echo $f->input([
     'name' => 'CodAutRec',

@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte;
 
 /**
@@ -29,24 +29,31 @@ namespace website\Dte;
  */
 class Model_DteReferencia extends \Model_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'dte_referencia'; ///< Tabla del modelo
 
     // Atributos de la clase (columnas en la base de datos)
     public $emisor; ///< integer(32) NOT NULL DEFAULT '' PK FK:contribuyente.rut
+
     public $dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_tipo.codigo
+
     public $folio; ///< integer(32) NOT NULL DEFAULT '' PK
+
     public $certificacion; ///< boolean() NOT NULL DEFAULT 'false' PK
+
     public $referencia_dte; ///< smallint(16) NOT NULL DEFAULT '' PK FK:dte_tipo.codigo
+
     public $referencia_folio; ///< integer(32) NOT NULL DEFAULT '' PK
+
     public $codigo; ///< smallint(16) NULL DEFAULT '' FK:dte_referencia_tipo.codigo
+
     public $razon; ///< character varying(90) NULL DEFAULT ''
 
     // Información de las columnas de la tabla en la base de datos
-    public static $columnsInfo = array(
-        'emisor' => array(
+    public static $columnsInfo = [
+        'emisor' => [
             'name'      => 'Emisor',
             'comment'   => '',
             'type'      => 'integer',
@@ -55,9 +62,9 @@ class Model_DteReferencia extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'contribuyente', 'column' => 'rut')
-        ),
-        'dte' => array(
+            'fk'        => ['table' => 'contribuyente', 'column' => 'rut'],
+        ],
+        'dte' => [
             'name'      => 'Dte',
             'comment'   => '',
             'type'      => 'smallint',
@@ -66,9 +73,9 @@ class Model_DteReferencia extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_tipo', 'column' => 'codigo')
-        ),
-        'folio' => array(
+            'fk'        => ['table' => 'dte_tipo', 'column' => 'codigo'],
+        ],
+        'folio' => [
             'name'      => 'Folio',
             'comment'   => '',
             'type'      => 'integer',
@@ -77,9 +84,9 @@ class Model_DteReferencia extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'certificacion' => array(
+            'fk'        => null,
+        ],
+        'certificacion' => [
             'name'      => 'Certificacion',
             'comment'   => '',
             'type'      => 'boolean',
@@ -88,9 +95,9 @@ class Model_DteReferencia extends \Model_App
             'default'   => 'false',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'referencia_dte' => array(
+            'fk'        => null,
+        ],
+        'referencia_dte' => [
             'name'      => 'Referencia Dte',
             'comment'   => '',
             'type'      => 'smallint',
@@ -99,9 +106,9 @@ class Model_DteReferencia extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => array('table' => 'dte_tipo', 'column' => 'codigo')
-        ),
-        'referencia_folio' => array(
+            'fk'        => ['table' => 'dte_tipo', 'column' => 'codigo'],
+        ],
+        'referencia_folio' => [
             'name'      => 'Referencia Folio',
             'comment'   => '',
             'type'      => 'integer',
@@ -110,9 +117,9 @@ class Model_DteReferencia extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => true,
-            'fk'        => null
-        ),
-        'codigo' => array(
+            'fk'        => null,
+        ],
+        'codigo' => [
             'name'      => 'Codigo',
             'comment'   => '',
             'type'      => 'smallint',
@@ -121,9 +128,9 @@ class Model_DteReferencia extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => array('table' => 'dte_referencia_tipo', 'column' => 'codigo')
-        ),
-        'razon' => array(
+            'fk'        => ['table' => 'dte_referencia_tipo', 'column' => 'codigo'],
+        ],
+        'razon' => [
             'name'      => 'Razon',
             'comment'   => '',
             'type'      => 'character varying',
@@ -132,19 +139,19 @@ class Model_DteReferencia extends \Model_App
             'default'   => '',
             'auto'      => false,
             'pk'        => false,
-            'fk'        => null
-        ),
+            'fk'        => null,
+        ],
 
-    );
+    ];
 
     // Comentario de la tabla en la base de datos
     public static $tableComment = '';
 
-    public static $fkNamespace = array(
+    public static $fkNamespace = [
         'Model_Contribuyente' => 'website\Dte',
         'Model_DteTipo' => 'website\Dte',
-        'Model_DteReferenciaTipo' => 'website\Dte'
-    ); ///< Namespaces que utiliza esta clase
+        'Model_DteReferenciaTipo' => 'website\Dte',
+    ]; ///< Namespaces que utiliza esta clase
 
     /**
      * Método que entrega el documento asociado a la referencia.
@@ -152,11 +159,10 @@ class Model_DteReferencia extends \Model_App
     public function getDocumento()
     {
         return (new Model_DteEmitidos())->get(
-            $this->emisor, 
-            $this->referencia_dte, 
-            $this->referencia_folio, 
+            $this->emisor,
+            $this->referencia_dte,
+            $this->referencia_folio,
             (int)$this->certificacion
         );
     }
-
 }

@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del modelo
+
 namespace website\Dte\Admin;
 
 /**
@@ -29,9 +29,9 @@ namespace website\Dte\Admin;
  */
 class Model_ItemClasificaciones extends \Model_Plural_App
 {
-
     // Datos para la conexión a la base de datos
     protected $_database = 'default'; ///< Base de datos del modelo
+
     protected $_table = 'item_clasificacion'; ///< Tabla del modelo
 
     /**
@@ -98,7 +98,7 @@ class Model_ItemClasificaciones extends \Model_Plural_App
                             AND (i.codigo IS NULL OR i.activo = true)
                         ORDER BY c.clasificacion, i.item
                     ', [
-                        ':rut' => $this->getContribuyente()->rut
+                        ':rut' => $this->getContribuyente()->rut,
                     ]),
                     3,
                     'items'
@@ -121,5 +121,4 @@ class Model_ItemClasificaciones extends \Model_Plural_App
             ORDER BY superior, codigo
         ', [':contribuyente' => $this->getContribuyente()->rut]);
     }
-
 }

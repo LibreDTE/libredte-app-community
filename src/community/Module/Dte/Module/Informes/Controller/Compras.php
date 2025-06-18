@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Dte\Informes;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Dte\Informes;
  */
 class Controller_Compras extends \Controller_App
 {
-
     /**
      * Acción para listar las compras de activos fijos.
      */
@@ -71,5 +70,4 @@ class Controller_Compras extends \Controller_App
             ]);
         }
     }
-
 }

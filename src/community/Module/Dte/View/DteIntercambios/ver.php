@@ -70,7 +70,7 @@ new \sowerphp\general\View_Helper_Table([
         \sowerphp\general\Utility_Date::format($DteIntercambio->fecha_hora_firma, 'd/m/Y H:i'),
         num($DteIntercambio->documentos),
         $DteIntercambio->getEstado()->estado,
-        $DteIntercambio->getUsuario()->usuario
+        $DteIntercambio->getUsuario()->usuario,
     ],
 ]);
 ?>
@@ -97,7 +97,7 @@ new \sowerphp\general\View_Helper_Table([
             </a>
             <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="visually-hidden">Toggle Dropdown</span></button>
             <div class="dropdown-menu dropdown-menu-end">
-<?php foreach(\sasco\LibreDTE\Sii\Dte\PDF\Dte::$papel as $codigo => $glosa): if ($codigo): ?>
+<?php foreach (\sasco\LibreDTE\Sii\Dte\PDF\Dte::$papel as $codigo => $glosa): if ($codigo): ?>
                 <a href="<?=$_base?>/dte/dte_intercambios/pdf/<?=$DteIntercambio->codigo?>?papelContinuo=<?=$codigo?>" class="dropdown-item">Descargar PDF en <?=$glosa?></a>
 <?php endif; endforeach; ?>
             </div>
@@ -210,7 +210,7 @@ foreach ($Documentos as $Dte) {
     $acciones .= '<a href="'.$_base.'/dte/dte_intercambios/pdf/'.$DteIntercambio->codigo.'/0/'.$Dte->getEmisor().'/'.$Dte->getTipo().'/'.$Dte->getFolio().'" title="Ver PDF del documento" class="btn btn-primary" role="button"><i class="far fa-file-pdf fa-fw"></i></a>';
     $acciones .= '<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="visually-hidden">Toggle Dropdown</span></button>';
     $acciones .= '<div class="dropdown-menu dropdown-menu-end">';
-    foreach(\sasco\LibreDTE\Sii\Dte\PDF\Dte::$papel as $codigo => $glosa) {
+    foreach (\sasco\LibreDTE\Sii\Dte\PDF\Dte::$papel as $codigo => $glosa) {
         if ($codigo) {
             $acciones .= '<a href="'.$_base.'/dte/dte_intercambios/pdf/'.$DteIntercambio->codigo.'/0/'.$Dte->getEmisor().'/'.$Dte->getTipo().'/'.$Dte->getFolio().'?papelContinuo='.$codigo.'" class="dropdown-item">Descargar PDF en '.$glosa.'</a>';
         }

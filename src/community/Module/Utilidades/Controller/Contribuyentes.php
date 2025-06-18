@@ -21,7 +21,7 @@
  * En caso contrario, consulte <http://www.gnu.org/licenses/agpl.html>.
  */
 
-// namespace del controlador
+
 namespace website\Utilidades;
 
 /**
@@ -29,7 +29,6 @@ namespace website\Utilidades;
  */
 class Controller_Contribuyentes extends \Controller_App
 {
-
     /**
      * Acción que permite buscar los datos de un contribuyente.
      */
@@ -46,5 +45,4 @@ class Controller_Contribuyentes extends \Controller_App
             }
         }
     }
-
 }
