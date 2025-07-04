@@ -255,7 +255,7 @@ $inputs = [['name' => 'usuario', 'check' => 'notempty']];
         if ($transferir_contribuyente) {
             echo $f->end('Cambiar usuario administrador');
         }
-?>
+        ?>
         </div>
     </div>
 </div>

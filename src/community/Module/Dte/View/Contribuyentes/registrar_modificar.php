@@ -1058,7 +1058,7 @@ $AppsConfigHelper = new \sowerphp\app\View_Helper_AppsConfig('dte_pdf', $f);
         'value' => $Contribuyente->config_app_soporte,
         'help' => 'Se permite al equipo de soporte de LibreDTE trabajar con el contribuyente',
     ]);
-?>
+    ?>
         </div>
     </div>
 </div>
@@ -1070,7 +1070,7 @@ $AppsConfigHelper = new \sowerphp\app\View_Helper_AppsConfig('dte_pdf', $f);
 </div>
 
 <?php
-echo $f->end($boton);
+    echo $f->end($boton);
 ?>
 <script>
 $('input[name="config_api_credenciales[]"]').attr('type', 'password');
