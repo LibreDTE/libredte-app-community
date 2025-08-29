@@ -630,9 +630,9 @@ window.addEventListener('load', function() {
     }
 });
 var observer = new MutationObserver(function(mutations) {
-    mutations.foreach (function(mutation) {
+    mutations.forEach (function(mutation) {
         if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-            mutation.addedNodes.foreach (function(addedNode) {
+            mutation.addedNodes.forEach (function(addedNode) {
                 if (addedNode.nodeName === 'TR' && addedNode.querySelector('.detalle_eliminar')) {
                     var eliminarButton = addedNode.querySelector('.detalle_eliminar');
                     eliminarButton.setAttribute('onClick','Form.delJS(this); DTE.calcular(); return false;');
