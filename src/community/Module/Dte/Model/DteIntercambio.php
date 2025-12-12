@@ -399,16 +399,18 @@ class Model_DteIntercambio extends \Model_App
     public function getDocumentos()
     {
         if (!isset($this->Documentos)) {
-            $this->Documentos = $this->getEnvioDte()->getDocumentos(false); // usar saveXML en vez de C14N
+            // Usar saveXML en vez de C14N.
+            $this->Documentos = $this->getEnvioDte()->getDocumentos(false);
         }
+
         return $this->Documentos;
     }
 
     /**
      * Método que entrega un objetos Dte con el documento solicitado o false si no se encontró.
-     * @return \sasco\LibreDTE\Sii\Dte
+     * @return \sasco\LibreDTE\Sii\Dte|false
      */
-    public function getDocumento($emisor, $dte, $folio): \sasco\LibreDTE\Sii\Dte
+    public function getDocumento($emisor, $dte, $folio)
     {
         return $this->getEnvioDte()->getDocumento($emisor, $dte, $folio);
     }
