@@ -563,7 +563,7 @@ $(function() {
             </div>
         <div class="modal-body">
 <?php
-        $clientes = $Emisor->getClientes();
+        $clientes = !$Emisor->config_emision_ocultar_clientes ? $Emisor->getClientes() : [];
         foreach ($clientes as &$c) {
             $c['rut'] = '<a href="#" onclick="$(\'.modal-buscar-receptor\').modal(\'hide\'); document.getElementById(\'RUTRecepField\').value=this.innerText; Receptor.setDatos(\'emitir_dte\')">'.num($c['rut']).'-'.$c['dv'].'</a>';
             if (!empty($c['codigo_interno'])) {
