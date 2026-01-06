@@ -225,7 +225,7 @@ class Model_DteVentas extends \Model_Plural_App
         // sincronizar periodos
         foreach ($periodos as $periodo) {
             $config = ['periodo' => $periodo];
-            $documentos = $this->getContribuyente()->getRCV([
+            $documentos = $this->getContribuyente()->getAsyncRCV([
                 'operacion' => 'VENTA',
                 'periodo' => $periodo,
                 'tipo' => 'iecv',
@@ -247,31 +247,50 @@ class Model_DteVentas extends \Model_Plural_App
         ], $config);
         $Receptores = new Model_Contribuyentes();
         foreach ($documentos as $doc) {
-            // si el documento está anulado se omite
-            if ($doc['anulado']) {
+            // Si el documento está anulado se omite (formato síncrono).
+            // No viene en el Async, pero si en el Sync.
+            if (!empty($doc['anulado'])) {
                 continue;
             }
-            // si el documento no tiene RUT es probable que sea un resumen -> se omite
-            if (!$doc['rut']) {
+            // Si el documento no tiene RUT se omite.
+            //
+            if (empty($doc['rut']) || $doc['rut'] == '-') {
                 continue;
             }
-            // agregar el documento emitido si no existe
-            $Receptor = $Receptores->get(substr($doc['rut'], 0, -2));
+            // Extraer RUT sin dígito verificador.
+            // Formato nuevo: "74899900-0" -> extraer antes del guión.
+            // Formato antiguo: "748999000" -> quitar últimos 2 caracteres.
+            if (strpos($doc['rut'], '-') !== false) {
+                $rutSinDv = explode('-', $doc['rut'])[0];
+            } else {
+                $rutSinDv = substr($doc['rut'], 0, -2);
+            }
+            // Agregar el documento emitido si no existe.
+            $Receptor = $Receptores->get($rutSinDv);
             $DteEmitido = new Model_DteEmitido(
                 $this->getContribuyente()->rut,
-                $doc['dte'],
-                $doc['folio'],
+                // Si viene en el Async y en el Sync.
+                (int)$doc['dte'],
+                // Si viene en el Async y en el Sync.
+                (int)$doc['folio'],
                 $this->getContribuyente()->enCertificacion()
             );
             if (!$DteEmitido->usuario || $DteEmitido->mipyme) {
-                $DteEmitido->tasa = $doc['tasa'] ? $doc['tasa'] : 0;
+                // No viene en el Async, pero si en el Sync.
+                $DteEmitido->tasa = !empty($doc['tasa']) ? $doc['tasa'] : 0;
+                // Si viene en el Async y en el Sync.
                 $DteEmitido->fecha = $doc['fecha'];
-                $DteEmitido->sucursal_sii = $doc['sucursal_sii'] ? $doc['sucursal_sii'] : null;
+                // Viene en el Async y en el Sync.
+                $DteEmitido->sucursal_sii = !empty($doc['sucursal_sii']) && $doc['sucursal_sii'] !== '0' ? $doc['sucursal_sii'] : null;
                 $DteEmitido->receptor = $Receptor->rut;
-                $DteEmitido->exento = $doc['exento'] ? $doc['exento'] : null;
-                $DteEmitido->neto = $doc['neto'] ? $doc['neto'] : null;
-                $DteEmitido->iva = $doc['iva'] ? $doc['iva'] : 0;
-                $DteEmitido->total = $doc['total'] ? $doc['total'] : 0;
+                // Si viene en el Async y en el Sync.
+                $DteEmitido->exento = !empty($doc['exento']) && $doc['exento'] !== '0' ? $doc['exento'] : null;
+                // Si viene en el Async y en el Sync.
+                $DteEmitido->neto = !empty($doc['neto']) && $doc['neto'] !== '0' ? $doc['neto'] : null;
+                // Si viene en el Async y en el Sync.
+                $DteEmitido->iva = !empty($doc['iva']) ? $doc['iva'] : 0;
+                // Si viene en el Async y en el Sync.
+                $DteEmitido->total = !empty($doc['total']) ? $doc['total'] : 0;
                 $DteEmitido->usuario = $this->getContribuyente()->getUsuario()->id;
                 $DteEmitido->track_id = -2;
                 $DteEmitido->save();
