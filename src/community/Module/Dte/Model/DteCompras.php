@@ -238,14 +238,14 @@ class Model_DteCompras extends \Model_Plural_App
     public function sincronizarRegistroComprasSII(int $meses = 2): int
     {
         $documentos_encontrados = 0;
-        // periodos a procesar
+        // Periodos a procesar.
         $periodo_actual = (int)date('Ym');
         $periodos = [$periodo_actual];
         for ($i = 0; $i < $meses - 1; $i++) {
             $periodos[] = \sowerphp\general\Utility_Date::previousPeriod($periodos[$i]);
         }
         sort($periodos);
-        // sincronizar periodos
+        // Sincronizar periodos.
         foreach ($periodos as $periodo) {
             $config = ['periodo' => $periodo];
             $documentos = $this->getContribuyente()->getRCV([
@@ -290,13 +290,17 @@ class Model_DteCompras extends \Model_Plural_App
             ->setContribuyente($this->getContribuyente())
         ;
         foreach ($documentos as $doc) {
-            // si el documento está anulado se omite
-            if ($doc['anulado']) {
+            // Si el documento está anulado se omite.
+            if (!empty($doc['anulado'])) {
                 continue;
             }
-            // aceptar intercambios
+
+            // Extraer RUT sin DV.
+            $rut = explode('-', $doc['rut'])[0];
+
+            // Aceptar intercambios.
             $intercambios = $DteIntercambios->buscarIntercambiosDte(
-                substr($doc['rut'], 0, -2),
+                $rut,
                 $doc['dte'],
                 $doc['folio']
             );
@@ -307,8 +311,8 @@ class Model_DteCompras extends \Model_Plural_App
                     }
                 }
             }
-            // agregar el documento recibido si no existe
-            $Emisor = $Emisores->get(substr($doc['rut'], 0, -2));
+            // Agregar el documento recibido si no existe.
+            $Emisor = $Emisores->get($rut);
             $DteRecibido = new Model_DteRecibido(
                 $Emisor->rut,
                 $doc['dte'],
@@ -316,15 +320,24 @@ class Model_DteCompras extends \Model_Plural_App
                 $this->getContribuyente()->enCertificacion()
             );
             if (!$DteRecibido->usuario || $DteRecibido->mipyme) {
-                $DteRecibido->tasa = (float)$doc['tasa'];
+                // No viene en el Async, pero si en el Sync.
+                $DteRecibido->tasa = (float)($doc['tasa'] ?? 0);
+                // Si viene en el Async y en el Sync.
                 $DteRecibido->fecha = $doc['fecha'];
-                $DteRecibido->sucursal_sii = $doc['sucursal_sii'];
-                $DteRecibido->exento = $doc['exento'];
-                $DteRecibido->neto = $doc['neto'];
-                $DteRecibido->iva = $doc['iva'] ? $doc['iva'] : 0;
-                $DteRecibido->total = $doc['total'] ? $doc['total'] : 0;
-                $DteRecibido->iva_uso_comun = $doc['iva_uso_comun'];
-                $DteRecibido->iva_no_recuperable = $doc['iva_no_recuperable_monto']
+                // No viene en el Async, pero si en el Sync.
+                $DteRecibido->sucursal_sii = $doc['sucursal_sii'] ?? null;
+                // Si viene en el Async y en el Sync.
+                $DteRecibido->exento = (int)($doc['exento'] ?? 0);
+                // Si viene en el Async y en el Sync.
+                $DteRecibido->neto = (int)($doc['neto'] ?? 0);
+                // Si viene en el Async y en el Sync.
+                $DteRecibido->iva = (int)($doc['iva'] ?? 0);
+                // Si viene en el Async y en el Sync.
+                $DteRecibido->total = (int)($doc['total'] ?? 0);
+                // No viene en el Async, pero si en el Sync.
+                $DteRecibido->iva_uso_comun = $doc['iva_uso_comun'] ?? null;
+                // Si viene en el Async y en el Sync.
+                $DteRecibido->iva_no_recuperable = !empty($doc['iva_no_recuperable_monto'])
                     ? json_encode([
                         [
                             'codigo' => $doc['iva_no_recuperable_codigo'],
@@ -333,29 +346,42 @@ class Model_DteCompras extends \Model_Plural_App
                     ])
                     : null
                 ;
+                // Solo viene en async, pero no hay ejemplo de como se llena.
                 $DteRecibido->impuesto_adicional = null;
-                $DteRecibido->impuesto_tipo = $doc['impuesto_tipo'];
-                $DteRecibido->impuesto_sin_credito = $doc['impuesto_sin_credito'];
-                $DteRecibido->monto_activo_fijo = $doc['monto_activo_fijo'];
-                $DteRecibido->monto_iva_activo_fijo = $doc['monto_iva_activo_fijo'];
-                $DteRecibido->iva_no_retenido = $doc['iva_no_retenido'];
+                // No viene en el Async, pero si en el Sync.
+                $DteRecibido->impuesto_tipo = $doc['impuesto_tipo'] ?? null;
+                // Si viene en el Async y en el Sync.
+                $DteRecibido->impuesto_sin_credito = $doc['impuesto_sin_credito'] ?? null;
+                // Si viene en el Async y en el Sync.
+                $DteRecibido->monto_activo_fijo = (int)($doc['monto_activo_fijo'] ?? 0);
+                // Si viene en el Async y en el Sync.
+                $DteRecibido->monto_iva_activo_fijo = (int)($doc['monto_iva_activo_fijo'] ?? 0);
+                // Si viene en el Async y en el Sync.
+                $DteRecibido->iva_no_retenido = $doc['iva_no_retenido'] ?? null;
                 $DteRecibido->periodo = $config['periodo'];
-                $DteRecibido->impuesto_puros = $doc['impuesto_puros'];
-                $DteRecibido->impuesto_cigarrillos = $doc['impuesto_cigarrillos'];
-                $DteRecibido->impuesto_tabaco_elaborado = $doc['impuesto_tabaco_elaborado'];
-                $DteRecibido->impuesto_vehiculos = $doc['impuesto_vehiculos'];
-                $DteRecibido->numero_interno = $doc['numero_interno'];
-                $DteRecibido->emisor_nc_nd_fc = $doc['emisor_nc_nd_fc'];
+                // Si viene en el Async y en el Sync.
+                $DteRecibido->impuesto_puros = $doc['impuesto_puros'] ?? null;
+                // Si viene en el Async y en el Sync.
+                $DteRecibido->impuesto_cigarrillos = $doc['impuesto_cigarrillos'] ?? null;
+                // Si viene en el Async y en el Sync.
+                $DteRecibido->impuesto_tabaco_elaborado = $doc['impuesto_tabaco_elaborado'] ?? null;
+                // No viene en el Async, pero si en el Sync.
+                $DteRecibido->impuesto_vehiculos = $doc['impuesto_vehiculos'] ?? null;
+                // No viene en el Async, pero si en el Sync.
+                $DteRecibido->numero_interno = $doc['numero_interno'] ?? null;
+                // Si viene en el Async y en el Sync.
+                $DteRecibido->emisor_nc_nd_fc = $doc['emisor_nc_nd_fc'] ?? null;
                 $DteRecibido->sucursal_sii_receptor = $config['sucursal'];
                 $DteRecibido->rcv_accion = null;
+                // Solo viene en async.
                 $DteRecibido->tipo_transaccion = null;
                 $DteRecibido->receptor = $this->getContribuyente()->rut;
                 $DteRecibido->usuario = $this->getContribuyente()->getUsuario()->id;
                 $DteRecibido->save();
             }
-            // si el documento existe
+            // Si el documento existe.
             else {
-                // corregir periodo si tenía uno incorrecto
+                // Corregir periodo si tenía uno incorrecto.
                 if ($DteRecibido->periodo != $config['periodo']) {
                     $DteRecibido->periodo = $config['periodo'];
                     $DteRecibido->save();

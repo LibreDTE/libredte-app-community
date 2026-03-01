@@ -4493,7 +4493,7 @@ class Model_Contribuyente extends \Model_App
                         . ' (' . $error . ').'
                 );
             }
-            return $r['body']['data'];
+            return $r['body']['data'] ?? [];
         }
         // consumir servicio web de detalle
         else {
@@ -4528,7 +4528,7 @@ class Model_Contribuyente extends \Model_App
                     throw new \Exception('Error al obtener el detalle del RCV: ' . $r['body']);
                 }
                 if ($filtros['tipo'] == 'rcv_csv') {
-                    return $r['body'];
+                    return $r['body'] ?? [];
                 } else {
                     if ($r['body']['respEstado']['codRespuesta']) {
                         $error = isset($errores[$r['body']['respEstado']['codRespuesta']])
@@ -4541,11 +4541,205 @@ class Model_Contribuyente extends \Model_App
                                 . ' (' . $error . ').'
                         );
                     }
-                    $detalle = array_merge($detalle, $r['body']['data']);
+                    $detalle = array_merge($detalle, $r['body']['data'] ?? []);
                 }
             }
             return $detalle;
         }
+    }
+
+    public function getAsyncRCV(array $filtros = []): array
+    {
+        // Definir autenticación.
+        try {
+            $auth = $this->getSiiAuth();
+        } catch (\Exception $e) {
+            $auth = $this->getSiiAuthUser();
+        }
+        // Filtros por defecto.
+        $filtros = array_merge([
+            'operacion' => 'COMPRA',
+            'estado' => 'REGISTRO',
+            'periodo' => date('Ym'),
+            'dte' => null,
+            'formato' => 'json',
+        ], $filtros);
+        // Errores.
+        $errores = [
+            1 => 'Error de negocio',
+            2 => 'Error de aplicación',
+            3 => 'Sin datos',
+            99 => 'Consulta no válida',
+        ];
+        $rcv_solicitar_detalle = [];
+        // Si se pide el detalle pero no se indicó el tipo de documento.
+        // se buscan todos los posible.
+        if (!$filtros['dte']) {
+            $dtes = [];
+
+            // Si se pide la operación de compra.
+            if ($filtros['operacion'] == 'COMPRA') {
+                $url = sprintf(
+                    '/sii/rcv/compras/resumen/%d-%s/%d/%s?formato=json&certificacion=%d',
+                    $this->rut,
+                    $this->dv,
+                    $filtros['periodo'],
+                    $filtros['estado'],
+                    $this->enCertificacion()
+                );
+            } else {
+                $url = sprintf(
+                    '/sii/rcv/ventas/resumen/%d-%s/%d?formato=json&certificacion=%d',
+                    $this->rut,
+                    $this->dv,
+                    $filtros['periodo'],
+                    $this->enCertificacion()
+                );
+            }
+            try {
+                $response_resumen = apigateway_consume($url, ['auth' => $auth]);
+            } catch (\Exception $e) {
+                if ($response_resumen['status']['code'] != 200) {
+                    throw new \Exception('Error al obtener el resumen del RCV: '.$response_resumen['body']);
+                }
+                if ($response_resumen['body']['respEstado']['codRespuesta']) {
+                    $error = isset($errores[$response_resumen['body']['respEstado']['codRespuesta']])
+                        ? $errores[$response_resumen['body']['respEstado']['codRespuesta']]
+                        : ('Código ' . $response_resumen['body']['respEstado']['codRespuesta'])
+                    ;
+                    if ($error == 'Sin datos') {
+                        return [];
+                    }
+                    throw new \Exception(
+                        'No fue posible obtener el resumen: '
+                            . $response_resumen['body']['respEstado']['msgeRespuesta']
+                            . ' (' . $error . ').'
+                    );
+                }
+            }
+            if ($response_resumen['status']['code'] != 200) {
+                throw new \Exception('Error al obtener el resumen del RCV: ' . $response_resumen['body']);
+            }
+            foreach ($response_resumen['body']['data'] as $r) {
+                if ($r['rsmnTotDoc']) {
+                    $dtes[] = $r['rsmnTipoDocInteger'];
+                }
+            }
+            $filtros['dte'] = $dtes;
+        // Si el dte es solo uno se coloca como arreglo.
+        } elseif (!is_array($filtros['dte'])) {
+            $filtros['dte'] = [$filtros['dte']];
+        }
+
+        // Solicitar detalle para cada tipo de documento
+        foreach ($filtros['dte'] as $dte) {
+            if ($filtros['operacion'] == 'COMPRA') {
+                $url = sprintf(
+                    '/sii/rcv/compras/async/solicitar/%d-%s/%d/%d/%s?formato='
+                        . $filtros['formato'] . '&certificacion=%d',
+                    $this->rut,
+                    $this->dv,
+                    $filtros['periodo'],
+                    $dte,
+                    $filtros['estado'],
+                    $this->enCertificacion(),
+                );
+            } else {
+                $url = sprintf(
+                    '/sii/rcv/ventas/async/solicitar/%d-%s/%d/%d?formato='
+                        . $filtros['formato'] . '&certificacion=%d',
+                    $this->rut,
+                    $this->dv,
+                    $filtros['periodo'],
+                    $dte,
+                    $this->enCertificacion(),
+                );
+            }
+            $response_solicitar = apigateway_consume($url, ['auth' => $auth]);
+            if ($response_solicitar['status']['code'] != 200) {
+                throw new \Exception('Error al solicitar el detalle del RCV: ' . $response_solicitar['body']);
+            }
+            if (!empty($response_solicitar['body'])) {
+                $rcv_solicitar_detalle[] = $response_solicitar['body'];
+            }
+        }
+
+        // Consultar estado hasta que todos estén terminados
+        $rcv_estado_detalle = [];
+        while (count($rcv_solicitar_detalle) > 0) {
+            $key = array_key_first($rcv_solicitar_detalle);
+            $solicitud = $rcv_solicitar_detalle[$key];
+
+            if ($filtros['operacion'] == 'COMPRA') {
+                $url = sprintf(
+                    '/sii/rcv/compras/async/estado/%d-%s/%d/%d/%d/%s?formato='
+                        . $filtros['formato'] . '&certificacion=%d',
+                    $this->rut,
+                    $this->dv,
+                    $filtros['periodo'],
+                    $solicitud['id'],
+                    $solicitud['dte'],
+                    $filtros['estado'],
+                    $this->enCertificacion(),
+                );
+            } else {
+                $url = sprintf(
+                    '/sii/rcv/ventas/async/estado/%d-%s/%d/%d/%d?formato='
+                        . $filtros['formato'] . '&certificacion=%d',
+                    $this->rut,
+                    $this->dv,
+                    $filtros['periodo'],
+                    $solicitud['id'],
+                    $solicitud['dte'],
+                    $this->enCertificacion(),
+                );
+            }
+            $response_consultar = apigateway_consume($url, ['auth' => $auth]);
+            if ($response_consultar['status']['code'] != 200) {
+                throw new \Exception('Error al consultar el detalle del RCV: ' . $response_consultar['body']);
+            }
+            if ($response_consultar['body']['estado'] == 'TERMINADO') {
+                unset($rcv_solicitar_detalle[$key]);
+                $rcv_estado_detalle[] = $response_consultar['body'];
+            }
+        }
+
+        // Descargar detalle de cada solicitud terminada
+        $rcv_descargar_detalle = [];
+        foreach ($rcv_estado_detalle as $detalle) {
+            if ($filtros['operacion'] == 'COMPRA') {
+                $url = sprintf(
+                    '/sii/rcv/compras/async/detalle/%d-%s/%d/%d/%d/%s?formato='
+                        . $filtros['formato'] . '&certificacion=%d',
+                    $this->rut,
+                    $this->dv,
+                    $filtros['periodo'],
+                    $detalle['id'],
+                    $detalle['dte'],
+                    $filtros['estado'],
+                    $this->enCertificacion(),
+                );
+            } else {
+                $url = sprintf(
+                    '/sii/rcv/ventas/async/detalle/%d-%s/%d/%d/%d?formato='
+                        . $filtros['formato'] . '&certificacion=%d',
+                    $this->rut,
+                    $this->dv,
+                    $filtros['periodo'],
+                    $detalle['id'],
+                    $detalle['dte'],
+                    $this->enCertificacion(),
+                );
+            }
+            $response_descargar = apigateway_consume($url, ['auth' => $auth]);
+            if ($response_descargar['status']['code'] != 200) {
+                throw new \Exception('Error al descargar el detalle del RCV: ' . $response_descargar['body']);
+            }
+            if (!empty($response_descargar['body'])) {
+                $rcv_descargar_detalle = array_merge($rcv_descargar_detalle, $response_descargar['body']);
+            }
+        }
+        return $rcv_descargar_detalle;
     }
 
     /**
