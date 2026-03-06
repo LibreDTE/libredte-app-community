@@ -1,5 +1,7 @@
-# contenido propio de la instancia
+.vscode/
+vendor/
+.phpunit.result.cache
+composer.lock
+
 /.env*
-/storage
-/vendor
-.vscode
+/storage/
