@@ -232,7 +232,7 @@ class Model_Contribuyente extends \Model_App
         88888888,
     ]; ///< RUTs que están reservados y no serán modificados al guardar el contribuyente
 
-    private static $autocompletar = true; ///< Indica si se deben autocompletar los datos de contribuyentes nuevos
+    private static $autocompletar = false; ///< Indica si se deben autocompletar los datos de contribuyentes nuevos
 
     public $contribuyente; ///< Copia de razon_social
 
