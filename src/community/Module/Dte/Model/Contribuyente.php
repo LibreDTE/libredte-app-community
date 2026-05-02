@@ -2885,8 +2885,11 @@ class Model_Contribuyente extends \Model_App
                 d.total,
                 d.intercambio,
                 u.usuario,
-                d.emisor,
-                d.mipyme
+                d.mipyme,
+                d.periodo,
+                d.sucursal_sii_receptor,
+                d.rcv_accion,
+                d.tipo_transaccion
             FROM
                 dte_recibido AS d
                 JOIN dte_tipo AS t ON

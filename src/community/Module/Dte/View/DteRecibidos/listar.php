@@ -31,25 +31,25 @@ foreach ($documentos as &$d) {
     $d[] = $acciones;
     $d['fecha'] = \sowerphp\general\Utility_Date::format($d['fecha']);
     $d['total'] = num($d['total']);
-    unset($d['emisor'], $d['dte'], $d['intercambio'], $d['mipyme']);
+    unset($d['emisor'], $d['dte'], $d['intercambio'], $d['mipyme'], $d['periodo'], $d['sucursal_sii_receptor'], $d['rcv_accion'], $d['tipo_transaccion']);
 }
-        $f = new \sowerphp\general\View_Helper_Form(false);
-        array_unshift($documentos, [
-            $f->input(['name' => 'emisor', 'value' => (isset($search['emisor']) ? $search['emisor'] : '')]),
-            $f->input(['type' => 'select', 'name' => 'dte', 'options' => ['' => 'Todos'] + $tipos_dte, 'value' => (isset($search['dte']) ? $search['dte'] : '')]),
-            $f->input(['name' => 'folio', 'value' => (isset($search['folio']) ? $search['folio'] : ''), 'check' => 'integer']),
-            $f->input(['type' => 'date', 'name' => 'fecha', 'value' => (isset($search['fecha']) ? $search['fecha'] : ''), 'check' => 'date']),
-            $f->input(['name' => 'total', 'value' => (isset($search['total']) ? $search['total'] : ''), 'check' => 'integer', 'attr' => 'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"']),
-            $f->input(['type' => 'select', 'name' => 'usuario', 'options' => ['' => 'Todos'] + $usuarios, 'value' => (isset($search['usuario']) ? $search['usuario'] : '')]),
-            '<button type="submit" class="btn btn-primary" onclick="return Form.check()"><i class="fas fa-search fa-fw" aria-hidden="true"></i></button>',
-        ]);
-        array_unshift($documentos, ['Emisor', 'Documento', 'Folio', 'Fecha', 'Total', 'Usuario', 'Acciones']);
+$f = new \sowerphp\general\View_Helper_Form(false);
+array_unshift($documentos, [
+    $f->input(['name' => 'emisor', 'value' => (isset($search['emisor']) ? $search['emisor'] : '')]),
+    $f->input(['type' => 'select', 'name' => 'dte', 'options' => ['' => 'Todos'] + $tipos_dte, 'value' => (isset($search['dte']) ? $search['dte'] : '')]),
+    $f->input(['name' => 'folio', 'value' => (isset($search['folio']) ? $search['folio'] : ''), 'check' => 'integer']),
+    $f->input(['type' => 'date', 'name' => 'fecha', 'value' => (isset($search['fecha']) ? $search['fecha'] : ''), 'check' => 'date']),
+    $f->input(['name' => 'total', 'value' => (isset($search['total']) ? $search['total'] : ''), 'check' => 'integer', 'attr' => 'onkeyup="this.value=this.value.replace(/[$.]/g, \'\')"']),
+    $f->input(['type' => 'select', 'name' => 'usuario', 'options' => ['' => 'Todos'] + $usuarios, 'value' => (isset($search['usuario']) ? $search['usuario'] : '')]),
+    '<button type="submit" class="btn btn-primary" onclick="return Form.check()"><i class="fas fa-search fa-fw" aria-hidden="true"></i></button>',
+]);
+array_unshift($documentos, ['Emisor', 'Documento', 'Folio', 'Fecha', 'Total', 'Usuario', 'Acciones']);
 
-        // renderizar el mantenedor
-        $maintainer = new \sowerphp\app\View_Helper_Maintainer([
-            'link' => $_base.'/dte/dte_recibidos',
-            'linkEnd' => $searchUrl,
-        ]);
-        $maintainer->setId('dte_recibidos_'.$Receptor->rut);
-        $maintainer->setColsWidth([null, null, null, null, null, null, 110]);
-        echo $maintainer->listar($documentos, $paginas, $pagina, false);
+// renderizar el mantenedor
+$maintainer = new \sowerphp\app\View_Helper_Maintainer([
+    'link' => $_base.'/dte/dte_recibidos',
+    'linkEnd' => $searchUrl,
+]);
+$maintainer->setId('dte_recibidos_'.$Receptor->rut);
+$maintainer->setColsWidth([null, null, null, null, null, null, 110]);
+echo $maintainer->listar($documentos, $paginas, $pagina, false);
