@@ -27,36 +27,36 @@
 </p>
 <?php
 $f = new \sowerphp\general\View_Helper_Form();
-            echo $f->begin(['onsubmit' => 'Form.check() && __.loading(\'Buscando en el SII...\')']);
-            echo $f->input([
-                'type' => 'date',
-                'name' => 'desde',
-                'label' => 'Desde',
-                'value' => !empty($_POST['desde']) ? $_POST['desde'] : $desde,
-                'check' => 'notempty date',
-                'help' => 'Desde qué fecha de recepción en el SII buscar las cesiones.',
-            ]);
-            echo $f->input([
-                'type' => 'date',
-                'name' => 'hasta',
-                'label' => 'Hasta',
-                'value' => !empty($_POST['hasta']) ? $_POST['hasta'] : $hasta,
-                'check' => 'notempty date',
-                'help' => 'Hasta qué fecha de recepción en el SII buscar las cesiones.',
-            ]);
-            echo $f->end('Buscar listado de cesiones como '.$consulta);
+echo $f->begin(['onsubmit' => 'Form.check() && __.loading(\'Buscando en el SII...\')']);
+echo $f->input([
+    'type' => 'date',
+    'name' => 'desde',
+    'label' => 'Desde',
+    'value' => !empty($_POST['desde']) ? $_POST['desde'] : $desde,
+    'check' => 'notempty date',
+    'help' => 'Desde qué fecha de recepción en el SII buscar las cesiones.',
+]);
+echo $f->input([
+    'type' => 'date',
+    'name' => 'hasta',
+    'label' => 'Hasta',
+    'value' => !empty($_POST['hasta']) ? $_POST['hasta'] : $hasta,
+    'check' => 'notempty date',
+    'help' => 'Hasta qué fecha de recepción en el SII buscar las cesiones.',
+]);
+echo $f->end('Buscar listado de cesiones como '.$consulta);
 
-            if (isset($cesiones)) {
-                foreach ($cesiones as &$cesion) {
-                    unset($cesion['TIPO_DOC']);
-                }
-                $titulos = ['Vendedor', 'Estado', 'Deudor', 'Documento', 'Folio', 'Emisión', 'Total', 'RUT cedente', 'Cedente', 'Mail cedente', 'RUT cesionario', 'Cesionario', 'Mail cesionario', 'Fecha cesión', 'Monto cesión', 'Vencimiento'];
-                array_unshift($cesiones, $titulos);
-                $t = new \sowerphp\general\View_Helper_Table();
-                $t->setID('cesion_'.$Contribuyente->rut.'_'.$_POST['desde'].'_'.$_POST['hasta'].'_'.$consulta);
-                $t->setExport(true);
-                echo $t->generate($cesiones);
-                ?>
-<script type="text/javascript"> $(document).ready(function(){ dataTable("#cesion_<?=$Contribuyente->rut?>_<?=$_POST['desde']?>_<?=$_POST['hasta']?>_<?=$consulta?>"); }); </script>
+if (isset($cesiones)) {
+    foreach ($cesiones as &$cesion) {
+        unset($cesion['TIPO_DOC']);
+    }
+    $titulos = ['Vendedor', 'Estado', 'Deudor', 'Documento', 'Folio', 'Emisión', 'Total', 'RUT cedente', 'Cedente', 'Mail cedente', 'RUT cesionario', 'Cesionario', 'Mail cesionario', 'Fecha cesión', 'Monto cesión', 'Vencimiento'];
+    array_unshift($cesiones, $titulos);
+    $t = new \sowerphp\general\View_Helper_Table();
+    $t->setID('cesion_'.$Contribuyente->rut.'_'.$_POST['desde'].'_'.$_POST['hasta'].'_'.$consulta);
+    $t->setExport(true);
+    echo $t->generate($cesiones);
+?>
+    <script type="text/javascript"> $(document).ready(function(){ dataTable("#cesion_<?=$Contribuyente->rut?>_<?=$_POST['desde']?>_<?=$_POST['hasta']?>_<?=$consulta?>"); }); </script>
 <?php
-            }
+}
