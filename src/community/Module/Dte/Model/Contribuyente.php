@@ -1838,7 +1838,6 @@ class Model_Contribuyente extends \Model_App
                     '.$razon_social_xpath.'
                 END AS razon_social,
                 d.fecha,
-                d.fecha_hora_creacion,
                 d.total,
                 d.revision_estado AS estado,
                 i.glosa AS intercambio,
@@ -1849,7 +1848,8 @@ class Model_Contribuyente extends \Model_App
                 ELSE
                     false
                 END AS has_xml,
-                d.track_id
+                d.track_id,
+                d.fecha_hora_creacion
             FROM
                 dte_emitido AS d
                 JOIN ('.$query.') AS e ON
@@ -2883,7 +2883,6 @@ class Model_Contribuyente extends \Model_App
                 t.tipo,
                 d.folio,
                 d.fecha,
-                d.fecha_hora_creacion,
                 d.total,
                 d.intercambio,
                 u.usuario,
@@ -2891,7 +2890,8 @@ class Model_Contribuyente extends \Model_App
                 d.periodo,
                 d.sucursal_sii_receptor,
                 d.rcv_accion,
-                d.tipo_transaccion
+                d.tipo_transaccion,
+                d.fecha_hora_creacion
             FROM
                 dte_recibido AS d
                 JOIN dte_tipo AS t ON
