@@ -390,6 +390,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
             }
             $documento['Encabezado']['IdDoc']['PeriodoHasta'] = $datos[21];
         }
+        // Datos de documentos de exportación.
         if (in_array($documento['Encabezado']['IdDoc']['TipoDTE'], [110,111,112])) {
             // agregar moneda
             if (empty($datos[33])) {
@@ -404,6 +405,7 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
                 $documento['Encabezado']['Receptor']['Extranjero']['NumId'] = mb_substr(trim($datos[34]), 0, 20);
             }
         }
+        // Descuento global a MntExe (items exentos).
         if (!empty($datos[35])) {
             if (strpos($datos[35], '%')) {
                 $TpoValor_global = '%';
@@ -416,18 +418,36 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
                 'TpoMov' => 'D',
                 'TpoValor' => $TpoValor_global,
                 'ValorDR' => $ValorDR_global,
-                'IndExeDR' => 1,
+                'IndExeDR' => 1, // Solo afecta a monto exento.
             ];
         }
+        // Nombre para el archivo PDF del DTE.
         if (!empty($datos[36])) {
             $documento['LibreDTE']['pdf']['nombre'] = $datos[36];
         }
+        // Forma de pago.
         if (!empty($datos[37])) {
             if (!in_array($datos[37], [1,2,3])) {
                 throw new \Exception('Forma de pago de código '.$datos[37].' es incorrecta, debe ser: 1 (contado), 2 (crédito) o 3 (sin costo).');
             }
             $documento['Encabezado']['IdDoc']['FmaPago'] = (int)$datos[37];
         }
+        // Descuento global a MntNeto (items afectos).
+        if (!empty($datos[39])) {
+            if (strpos($datos[39], '%')) {
+                $TpoValor_global = '%';
+                $ValorDR_global = (float)substr($datos[39], 0, -1);
+            } else {
+                $TpoValor_global = '$';
+                $ValorDR_global = (float)$datos[39];
+            }
+            $documento['DscRcgGlobal'][] = [
+                'TpoMov' => 'D',
+                'TpoValor' => $TpoValor_global,
+                'ValorDR' => $ValorDR_global,
+            ];
+        }
+        // Dato del item.
         $datosItem = array_merge(
             // Datos originales del item (vienen juntos en el archivo).
             array_slice($datos, 11, 8),
