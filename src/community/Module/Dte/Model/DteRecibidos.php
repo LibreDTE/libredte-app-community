@@ -200,6 +200,7 @@ class Model_DteRecibidos extends \Model_Plural_App
         return $this->db->getTable('
             SELECT
                 d.fecha,
+                d.fecha_hora_creacion,
                 d.emisor,
                 e.razon_social,
                 d.dte,

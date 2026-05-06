@@ -26,7 +26,7 @@ if (!empty($documentos)) {
         $d['fecha'] = \sowerphp\general\Utility_Date::format($d['fecha']);
         $d[] = $acciones;
         $d['total'] = num($d['total']);
-        unset($d['emisor'], $d['dte'], $d['intercambio'], $d['mipyme'], $d['periodo'], $d['sucursal_sii_receptor'], $d['rcv_accion'], $d['tipo_transaccion']);
+        unset($d['emisor'], $d['dte'], $d['intercambio'], $d['mipyme'], $d['periodo'], $d['sucursal_sii_receptor'], $d['rcv_accion'], $d['tipo_transaccion'], $d['fecha_hora_creacion']);
     }
     $f = new \sowerphp\general\View_Helper_Form(false);
     array_unshift($documentos, ['Documento', 'Folio', 'Emisor', 'Fecha', 'Total', 'Usuario', 'Acciones']);

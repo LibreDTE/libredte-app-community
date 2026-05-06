@@ -1838,6 +1838,7 @@ class Model_Contribuyente extends \Model_App
                     '.$razon_social_xpath.'
                 END AS razon_social,
                 d.fecha,
+                d.fecha_hora_creacion,
                 d.total,
                 d.revision_estado AS estado,
                 i.glosa AS intercambio,
@@ -2882,6 +2883,7 @@ class Model_Contribuyente extends \Model_App
                 t.tipo,
                 d.folio,
                 d.fecha,
+                d.fecha_hora_creacion,
                 d.total,
                 d.intercambio,
                 u.usuario,
