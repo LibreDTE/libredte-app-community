@@ -1046,6 +1046,45 @@ class Controller_DteEmitidos extends \Controller_App
     }
 
     /**
+     * Acción que permite cambiar el estado de revisión del SII de un DTE.
+     */
+    public function avanzado_estado($dte, $folio)
+    {
+        $Emisor = $this->getContribuyente();
+        $User = $this->Auth->User;
+        if (!$User->inGroup('soporte')) {
+            \sowerphp\core\Model_Datasource_Session::message('Solo el equipo de soporte puede cambiar el estado de revisión del SII.', 'error');
+            $this->redirect(str_replace('avanzado_estado', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
+        }
+        if (!$Emisor->usuarioAutorizado($User, '/dte/dte_emitidos/avanzado_estado')) {
+            \sowerphp\core\Model_Datasource_Session::message('No está autorizado a cambiar el estado de revisión del SII.', 'error');
+            $this->redirect(str_replace('avanzado_estado', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
+        }
+        $DteEmitido = new Model_DteEmitido($Emisor->rut, $dte, $folio, $Emisor->enCertificacion());
+        if (!$DteEmitido->exists()) {
+            \sowerphp\core\Model_Datasource_Session::message('No existe el DTE solicitado.', 'error');
+            $this->redirect('/dte/dte_emitidos/listar');
+        }
+        if (!$DteEmitido->track_id || !$DteEmitido->getTipo()->esBoleta() || $DteEmitido->tieneEstadoRevisionEnvioSIIFinal()) {
+            \sowerphp\core\Model_Datasource_Session::message('Solo es posible cambiar el estado de revisión del SII de boletas que tienen Track ID y no tienen estado de revisión final.', 'error');
+            $this->redirect(str_replace('avanzado_estado', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
+        }
+        if (empty($_POST['estado'])) {
+            \sowerphp\core\Model_Datasource_Session::message('Falta el estado de revisión del SII.', 'error');
+            $this->redirect(str_replace('avanzado_estado', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
+        }
+        if ($_POST['estado'] == $DteEmitido->revision_estado) {
+            \sowerphp\core\Model_Datasource_Session::message('El estado de revisión del SII ya es el solicitado.', 'error');
+            $this->redirect(str_replace('avanzado_estado', 'ver', $this->request->getRequestUriDecoded()).'#avanzado');
+        }
+        $DteEmitido->revision_estado = $_POST['estado'];
+        $DteEmitido->revision_detalle = date('Y-m-d H:i:s') . ' (libredte)';
+        $DteEmitido->save();
+        \sowerphp\core\Model_Datasource_Session::message('Se cambió el estado de revisión del SII.', 'ok');
+        $this->redirect(str_replace('avanzado_estado', 'ver', $this->request->getRequestUriDecoded()).'#datos');
+    }
+
+    /**
      * Acción que permite actualizar el tipo de cambio de un documento de exportación.
      */
     public function avanzado_tipo_cambio($dte, $folio)

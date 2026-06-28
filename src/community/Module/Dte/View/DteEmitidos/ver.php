@@ -783,21 +783,21 @@ new \sowerphp\general\View_Helper_Table([
     </div>
     <div class="card-body">
 <?php
-        echo $f->begin([
-            'action' => $_base.'/dte/dte_emitidos/avanzado_iva_fuera_plazo/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
-            'id' => 'avanzadoIVAFueraPlazoForm',
-            'onsubmit' => 'Form.check(\'avanzadoIVAFueraPlazoForm\')',
-        ]);
-        echo $f->input([
-            'type' => 'select',
-            'name' => 'iva_fuera_plazo',
-            'label' => '¿Fuera de plazo?',
-            'options' => ['No', 'Si'],
-            'value' => $DteEmitido->iva_fuera_plazo,
-            'help' => 'Marcar el IVA como fuera de plazo (no recuperable, no descuenta IVA débito)',
-        ]);
-        echo $f->end('Guardar');
-        ?>
+echo $f->begin([
+    'action' => $_base.'/dte/dte_emitidos/avanzado_iva_fuera_plazo/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
+    'id' => 'avanzadoIVAFueraPlazoForm',
+    'onsubmit' => 'Form.check(\'avanzadoIVAFueraPlazoForm\')',
+]);
+echo $f->input([
+    'type' => 'select',
+    'name' => 'iva_fuera_plazo',
+    'label' => '¿Fuera de plazo?',
+    'options' => ['No', 'Si'],
+    'value' => $DteEmitido->iva_fuera_plazo,
+    'help' => 'Marcar el IVA como fuera de plazo (no recuperable, no descuenta IVA débito)',
+]);
+echo $f->end('Guardar');
+?>
     </div>
 </div>
 <?php endif; ?>
@@ -812,21 +812,21 @@ if ($DteEmitido->dte == 52) :
     </div>
     <div class="card-body">
 <?php
-    echo $f->begin([
-        'action' => $_base.'/dte/dte_emitidos/avanzado_anular/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
-        'id' => 'avanzadoAnuladoForm',
-        'onsubmit' => 'Form.check(\'avanzadoAnuladoForm\')',
-    ]);
-    echo $f->input([
-        'type' => 'select',
-        'name' => 'anulado',
-        'label' => '¿Anulado?',
-        'options' => ['No', 'Si'],
-        'value' => $DteEmitido->anulado,
-        'help' => 'Marcar el DTE como anulado',
-    ]);
-    echo $f->end('Guardar');
-    ?>
+echo $f->begin([
+    'action' => $_base.'/dte/dte_emitidos/avanzado_anular/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
+    'id' => 'avanzadoAnuladoForm',
+    'onsubmit' => 'Form.check(\'avanzadoAnuladoForm\')',
+]);
+echo $f->input([
+    'type' => 'select',
+    'name' => 'anulado',
+    'label' => '¿Anulado?',
+    'options' => ['No', 'Si'],
+    'value' => $DteEmitido->anulado,
+    'help' => 'Marcar el DTE como anulado',
+]);
+echo $f->end('Guardar');
+?>
     </div>
 </div>
 <?php endif; ?>
@@ -841,18 +841,18 @@ if ($Emisor->usuarioAutorizado($_Auth->User, 'admin') && $DteEmitido->getTipo()-
     </div>
     <div class="card-body">
 <?php
-        echo $f->begin([
-            'action' => $_base.'/dte/dte_emitidos/avanzado_tipo_cambio/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
-            'id' => 'avanzadoTipoCambioForm',
-            'onsubmit' => 'Form.check(\'avanzadoTipoCambioForm\') && __.confirm(this, \'¿Está seguro de querer modificar el tipo de cambio del documento?\')',
-        ]);
-    echo $f->input([
-        'name' => 'tipo_cambio',
-        'label' => 'Tipo de cambio',
-        'check' => 'notempty real',
-        'help' => 'Monto en pesos (CLP) equivalente a 1 '.$DteEmitido->getDte()->getMoneda().' del día '.\sowerphp\general\Utility_Date::format($DteEmitido->fecha),
-    ]);
-    echo $f->end('Modificar el tipo de cambio');
+echo $f->begin([
+    'action' => $_base.'/dte/dte_emitidos/avanzado_tipo_cambio/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
+    'id' => 'avanzadoTipoCambioForm',
+    'onsubmit' => 'Form.check(\'avanzadoTipoCambioForm\') && __.confirm(this, \'¿Está seguro de querer modificar el tipo de cambio del documento?\')',
+]);
+echo $f->input([
+    'name' => 'tipo_cambio',
+    'label' => 'Tipo de cambio',
+    'check' => 'notempty real',
+    'help' => 'Monto en pesos (CLP) equivalente a 1 '.$DteEmitido->getDte()->getMoneda().' del día '.\sowerphp\general\Utility_Date::format($DteEmitido->fecha),
+]);
+echo $f->end('Modificar el tipo de cambio');
     ?>
     </div>
 </div>
@@ -865,21 +865,21 @@ if ($Emisor->usuarioAutorizado($_Auth->User, 'admin') && $DteEmitido->getTipo()-
     </div>
     <div class="card-body">
 <?php
-    // permitir cambiar el track id
-    echo $f->begin([
-        'action' => $_base.'/dte/dte_emitidos/avanzado_track_id/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
-        'id' => 'avanzadoTrackIdForm',
-        'onsubmit' => 'Form.check(\'avanzadoTrackIdForm\') && __.confirm(this, \'¿Está seguro de querer cambiar el Track ID?\n\n¡Perderá el valor actual!\', \'Actualizando el Track ID del DTE...\')',
-    ]);
-    echo $f->input([
-        'name' => 'track_id',
-        'label' => 'Track ID',
-        'value' => $DteEmitido->track_id,
-        'check' => 'notempty integer',
-        'help' => 'Identificador de envío del XML del DTE al SII',
-    ]);
-    echo $f->end('Modificar Track ID');
-    ?>
+// permitir cambiar el track id
+echo $f->begin([
+    'action' => $_base.'/dte/dte_emitidos/avanzado_track_id/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
+    'id' => 'avanzadoTrackIdForm',
+    'onsubmit' => 'Form.check(\'avanzadoTrackIdForm\') && __.confirm(this, \'¿Está seguro de querer cambiar el Track ID?\n\n¡Perderá el valor actual!\', \'Actualizando el Track ID del DTE...\')',
+]);
+echo $f->input([
+    'name' => 'track_id',
+    'label' => 'Track ID',
+    'value' => $DteEmitido->track_id,
+    'check' => 'notempty integer',
+    'help' => 'Identificador de envío del XML del DTE al SII',
+]);
+echo $f->end('Modificar Track ID');
+?>
     </div>
 </div>
 <?php endif; ?>
@@ -890,11 +890,11 @@ if ($Emisor->usuarioAutorizado($_Auth->User, 'admin') && $DteEmitido->getTipo()-
     </div>
     <div class="card-body">
 <?php
-    echo $f->begin([
-        'action' => $_base.'/dte/dte_emitidos/avanzado_sucursal/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
-        'id' => 'avanzadoSucursalForm',
-        'onsubmit' => 'Form.check(\'avanzadoSucursalForm\')',
-    ]);
+echo $f->begin([
+    'action' => $_base.'/dte/dte_emitidos/avanzado_sucursal/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
+    'id' => 'avanzadoSucursalForm',
+    'onsubmit' => 'Form.check(\'avanzadoSucursalForm\')',
+]);
 echo $f->input([
     'type' => 'select',
     'name' => 'sucursal',
@@ -907,6 +907,43 @@ echo $f->end('Modificar sucursal');
 ?>
     </div>
 </div>
+
+<?php if ($_Auth->User->inGroup('soporte') && $DteEmitido->track_id && $DteEmitido->getTipo()->esBoleta() && !$DteEmitido->tieneEstadoRevisionEnvioSIIFinal() && $DteEmitido->revision_estado !== 'EPR') : ?>
+    <div class="card mt-4" id="avanzado_cambiar-estado-card">
+    <div class="card-header">
+        <i class="fas fa-flag"></i>
+        Cambiar estado de revisión del SII
+    </div>
+    <div class="card-body">
+<?php
+echo $f->begin([
+    'action' => $_base.'/dte/dte_emitidos/avanzado_estado/'.$DteEmitido->dte.'/'.$DteEmitido->folio,
+    'id' => 'avanzadoEstadoForm',
+    'onsubmit' => 'Form.check(\'avanzadoEstadoForm\')',
+]);
+echo $f->input([
+    'type' => 'div',
+    'label' => 'Track ID',
+    'value' => $DteEmitido->track_id,
+]);
+echo $f->input([
+    'type' => 'select',
+    'name' => 'estado',
+    'label' => 'Estado',
+    'options' => [$DteEmitido->revision_estado => $DteEmitido->revision_estado, 'EPR' => 'EPR'],
+    'value' => $DteEmitido->revision_estado,
+    'help' => 'Solo asignar el estado si coincide con el oficial en el <a href="https://www4c.sii.cl/bolcoreinternetui/#!/home" target="_blank">sitio web del SII</a>.',
+]);
+echo $f->end('Modificar estado');
+?>
+    </div>
+    <div class="card-footer small">
+        <i class="fas fa-info-circle fa-fw text-warning"></i>
+        Solo el equipo de soporte de LibreDTE puede cambiar el estado de revisión del SII.
+    </div>
+</div>
+<?php endif; ?>
+
 <div class="card mt-4 mb-4" id="avanzado_datos-documento-card">
     <div class="card-header">
         <i class="fas fa-file-code"></i>
