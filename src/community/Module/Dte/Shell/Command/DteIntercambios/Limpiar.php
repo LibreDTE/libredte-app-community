@@ -50,6 +50,7 @@ class Shell_Command_DteIntercambios_Limpiar extends \Shell_App
         'Receptor igual al emisor en intercambio' => 'DELETE FROM dte_intercambio WHERE emisor = receptor',
         'Intercambios sin estado >4 meses' => 'DELETE FROM dte_intercambio WHERE estado IS NULL AND fecha_hora_email < (NOW() - INTERVAL \'4 MONTH\')',
         'Intercambios rechazados >2 meses' => 'DELETE FROM dte_intercambio AS i WHERE i.estado IS NOT NULL AND i.estado != 0 AND i.fecha_hora_email < (NOW() - INTERVAL \'2 MONTH\')',
+        'Pendientes del registro de compras >10 días' => "DELETE FROM registro_compra WHERE detFchDoc < CURRENT_DATE - INTERVAL '10 days'",
     ];
 
     public function main($commit = false)
