@@ -36,7 +36,11 @@ class Shell_Command_DteEmitidos_Intercambio extends \Shell_App
         $this->db = \sowerphp\core\Model_Datasource_Database::get();
         $documentos = $this->getDocumentos($grupo, $desde, $certificacion);
         foreach ($documentos as $documento) {
-            $this->enviarDTE($documento, $certificacion);
+            try {
+                $this->enviarDTE($documento, $certificacion);
+            } catch (\Throwable $e) {
+                $this->out('Error enviando DTE '.$documento['dte'].'F'.$documento['folio'].' de '.$documento['emisor'].': '.$e->getMessage());
+            }
         }
         $this->showStats();
         return 0;

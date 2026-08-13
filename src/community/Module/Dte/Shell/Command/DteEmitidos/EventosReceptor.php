@@ -76,25 +76,29 @@ class Shell_Command_DteEmitidos_EventosReceptor extends \Shell_App
         }
         sort($periodos);
         foreach ($contribuyentes as $rut) {
-            $Contribuyente = (new Model_Contribuyentes())->get($rut);
-            if ($Contribuyente->enCertificacion() != (int)$certificacion) {
-                continue;
-            }
-            if ($this->verbose) {
-                $this->out('Buscando eventos receptor de '.$Contribuyente->razon_social);
-            }
-            $DteEmitidos = (new Model_DteEmitidos())->setContribuyente($Contribuyente);
             try {
-                foreach ($periodos as $periodo) {
-                    $DteEmitidos->actualizarEstadoReceptor($periodo);
+                $Contribuyente = (new Model_Contribuyentes())->get($rut);
+                if ($Contribuyente->enCertificacion() != (int)$certificacion) {
+                    continue;
+                }
+                if ($this->verbose) {
+                    $this->out('Buscando eventos receptor de '.$Contribuyente->razon_social);
+                }
+                $DteEmitidos = (new Model_DteEmitidos())->setContribuyente($Contribuyente);
+                try {
+                    foreach ($periodos as $periodo) {
+                        $DteEmitidos->actualizarEstadoReceptor($periodo);
+                        if ($this->verbose) {
+                            $this->out('  Procesado período '.$periodo);
+                        }
+                    }
+                } catch (\Exception $e) {
                     if ($this->verbose) {
-                        $this->out('  Procesado período '.$periodo);
+                        $this->out('  '.$e->getMessage());
                     }
                 }
-            } catch (\Exception $e) {
-                if ($this->verbose) {
-                    $this->out('  '.$e->getMessage());
-                }
+            } catch (\Throwable $e) {
+                $this->out('Error actualizando eventos receptor de '.$rut.': '.$e->getMessage());
             }
         }
     }

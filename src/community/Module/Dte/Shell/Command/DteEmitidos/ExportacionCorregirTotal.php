@@ -33,7 +33,11 @@ class Shell_Command_DteEmitidos_ExportacionCorregirTotal extends \Shell_App
         $this->db = \sowerphp\core\Model_Datasource_Database::get();
         $documentos = $this->getDocumentos($grupo, $certificacion);
         foreach ($documentos as $doc) {
-            $this->corregirMonto($doc['emisor'], $doc['dte'], $doc['folio'], $certificacion);
+            try {
+                $this->corregirMonto($doc['emisor'], $doc['dte'], $doc['folio'], $certificacion);
+            } catch (\Throwable $e) {
+                $this->out('Error corrigiendo DTE '.$doc['dte'].'F'.$doc['folio'].' de '.$doc['emisor'].': '.$e->getMessage());
+            }
         }
         $this->showStats();
         return 0;

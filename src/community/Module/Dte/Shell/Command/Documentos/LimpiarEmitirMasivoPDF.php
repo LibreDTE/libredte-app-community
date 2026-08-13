@@ -39,7 +39,11 @@ class Shell_Command_Documentos_LimpiarEmitirMasivoPDF extends \Shell_App
                 if ($this->verbose) {
                     $this->out('Eliminando archivos PDF '.$pdf);
                 }
-                unlink($archivo);
+                try {
+                    unlink($archivo);
+                } catch (\Throwable $e) {
+                    $this->out('Error eliminando archivo PDF '.$pdf.': '.$e->getMessage());
+                }
             }
         }
         $this->showStats();

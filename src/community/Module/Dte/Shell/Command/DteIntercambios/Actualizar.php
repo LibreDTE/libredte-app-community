@@ -32,11 +32,21 @@ class Shell_Command_DteIntercambios_Actualizar extends \Shell_App
     {
         $contribuyentes = $this->getContribuyentes($grupo);
         foreach ($contribuyentes as $rut) {
-            if ($dias) {
-                $this->actualizarIntercambio($rut, $dias);
+            // Actualizar bandeja de intercambio.
+            try {
+                if ($dias) {
+                    $this->actualizarIntercambio($rut, $dias);
+                }
+            } catch (\Throwable $e) {
+                $this->out('Error actualizando intercambio del contribuyente '.$rut.': '.$e->getMessage());
             }
-            if ($meses) {
-                $this->sincronizarConRegistroComprasSII($rut, $meses);
+            // Sincronizar con registro compras SII.
+            try {
+                if ($meses) {
+                    $this->sincronizarConRegistroComprasSII($rut, $meses);
+                }
+            } catch (\Throwable $e) {
+                $this->out('Error sincronizando con registro compras SII del contribuyente '.$rut.': '.$e->getMessage());
             }
         }
         $this->showStats();

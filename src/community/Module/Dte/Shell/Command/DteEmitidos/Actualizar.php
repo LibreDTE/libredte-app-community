@@ -38,7 +38,11 @@ class Shell_Command_DteEmitidos_Actualizar extends \Shell_App
         }
         $contribuyentes = $this->getContribuyentes($grupo, $certificacion);
         foreach ($contribuyentes as $rut) {
-            $this->actualizarDocumentosEmitidos($rut, $certificacion, $creados_hace_horas, $retry);
+            try {
+                $this->actualizarDocumentosEmitidos($rut, $certificacion, $creados_hace_horas, $retry);
+            } catch (\Throwable $e) {
+                $this->out('Error actualizando documentos emitidos de '.$rut.': '.$e->getMessage());
+            }
         }
         $this->showStats();
         return 0;
