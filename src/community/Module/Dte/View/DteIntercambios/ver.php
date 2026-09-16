@@ -280,6 +280,8 @@ $de = $DteIntercambio->de;
 
 <!-- INICIO AVANZADO -->
 <div role="tabpanel" class="tab-pane" id="avanzado" aria-labelledby="avanzado-tab">
+
+<!-- Error de validación de esquema del XML de EnvioDTE -->
 <?php if ($estado_enviodte == 1) : ?>
 <div class="card mb-4">
     <div class="card-header"><i class="fas fa-code"></i> Error validación de esquema del XML de EnvioDTE</div>
@@ -290,6 +292,8 @@ $de = $DteIntercambio->de;
     </div>
 </div>
 <?php endif; ?>
+
+<!-- Error de validación firma del XML de EnvioDTE -->
 <?php if ($estado_enviodte == 2) : ?>
 <div class="card mb-4">
     <div class="card-header"><i class="fas fa-certificate"></i> Error validación firma del XML de EnvioDTE</div>
@@ -298,25 +302,29 @@ $de = $DteIntercambio->de;
     </div>
 </div>
 <?php endif; ?>
+
+<!-- Documentos incluídos en el XML de EnvioDTE -->
 <div class="card mb-4">
     <div class="card-header"><i class="fas fa-file"></i> Documentos incluídos en el XML de EnvioDTE</div>
     <div class="card-body">
 <?php
-            $tabla = [['DTE', 'Folio', 'Tasa', 'Fecha', 'Sucursal', 'Receptor', 'Razón social receptor', 'Exento', 'Neto', 'IVA', 'Total', 'Firma']];
-        foreach ($Documentos as $Dte) {
-            $resumen = $Dte->getResumen();
-            foreach (['MntExe', 'MntIVA', 'MntNeto', 'MntTotal'] as $monto) {
-                if ($resumen[$monto]) {
-                    $resumen[$monto] = num($resumen[$monto]);
-                }
-            }
-            $resumen[] = '<div class="text-center"><i class="fa fa-'.($Dte->checkFirma() ? 'check text-success' : 'times text-danger').' fa-fw"></i></div>';
-            $tabla[] = $resumen;
+$tabla = [['DTE', 'Folio', 'Tasa', 'Fecha', 'Sucursal', 'Receptor', 'Razón social receptor', 'Exento', 'Neto', 'IVA', 'Total', 'Firma']];
+foreach ($Documentos as $Dte) {
+    $resumen = $Dte->getResumen();
+    foreach (['MntExe', 'MntIVA', 'MntNeto', 'MntTotal'] as $monto) {
+        if ($resumen[$monto]) {
+            $resumen[$monto] = num($resumen[$monto]);
         }
-        new \sowerphp\general\View_Helper_Table($tabla);
-        ?>
+    }
+    $resumen[] = '<div class="text-center"><i class="fa fa-'.($Dte->checkFirma() ? 'check text-success' : 'times text-danger').' fa-fw"></i></div>';
+    $tabla[] = $resumen;
+}
+new \sowerphp\general\View_Helper_Table($tabla);
+?>
     </div>
 </div>
+
+<!-- XML del intercambio con problema -->
 <?php if ($test_xml !== true) : ?>
 <div class="card mb-4">
     <div class="card-header"><i class="fa fa-exclamation-circle text-danger"></i> XML del intercambio con problema</div>
@@ -325,9 +333,16 @@ $de = $DteIntercambio->de;
     </div>
 </div>
 <?php endif; ?>
-<a class="btn btn-danger btn-lg col-12" href="<?=$_base?>/dte/dte_intercambios/eliminar/<?=$DteIntercambio->codigo?>" role="button" title="Eliminar intercambio" onclick="return __.confirm(this, '¿Confirmar la eliminación del intercambio?<br/><br/><span class=\'small\'>Podrá recuperar el XML desde su correo de intercambio si existe ahí.</span>')">
+
+<a class="btn btn-primary btn-lg col-12 mb-4" href="<?=$_base?>/dte/dte_intercambios/probar_respuesta_automatica/<?=$DteIntercambio->codigo?>" role="button" title="Probar webhook de respuesta automática">
+    Probar webhook de respuesta automática
+</a>
+
+<!-- Eliminar archivo EnvioDTE de intercambio -->
+<a class="btn btn-danger btn-lg col-12 mb-4" href="<?=$_base?>/dte/dte_intercambios/eliminar/<?=$DteIntercambio->codigo?>" role="button" title="Eliminar intercambio" onclick="return __.confirm(this, '¿Confirmar la eliminación del intercambio?<br/><br/><span class=\'small\'>Podrá recuperar el XML desde su correo de intercambio si existe ahí.</span>')">
     Eliminar archivo EnvioDTE de intercambio
 </a>
+
 </div>
 <!-- FIN AVANZADO -->
 

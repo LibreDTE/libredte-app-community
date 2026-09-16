@@ -520,6 +520,54 @@ class Controller_DteIntercambios extends \Controller_App
         $this->redirect(str_replace('responder', 'ver', $this->request->getRequestUriDecoded()));
     }
 
+     /**
+     * Acción que procesa y responde al intercambio recibido.
+     */
+    public function probar_respuesta_automatica($codigo)
+    {
+        $Emisor = $this->getContribuyente();
+        // obtener objeto de intercambio
+        $DteIntercambio = new Model_DteIntercambio($Emisor->rut, (int)$codigo, $Emisor->enCertificacion());
+        if (!$DteIntercambio->exists()) {
+            \sowerphp\core\Model_Datasource_Session::message(
+                'No existe el intercambio solicitado.',
+                'error'
+            );
+            $this->redirect('/dte/dte_intercambios/listar');
+        }
+        // obtener API de respuesta automática
+        $ApiDteIntercambioResponder = $Emisor->getApiClient('dte_intercambio_responder');
+        if (!$ApiDteIntercambioResponder) {
+            \sowerphp\core\Model_Datasource_Session::message(
+                __(
+                    'El webhook de respuesta automática no está configurado. Configure el webhook [aquí](%s).',
+                    url('/dte/contribuyentes/modificar#apps:webhooks')
+                ),
+                'error'
+            );
+            $this->redirect(str_replace('probar_respuesta_automatica', 'ver', $this->request->getRequestUriDecoded()));
+        }
+        // procesar respuesta automática
+        $response = $ApiDteIntercambioResponder->post(
+            $ApiDteIntercambioResponder->url,
+            ['xml' => $this->archivo_xml]
+        );
+        if ($response['status']['code'] != 200) {
+            \sowerphp\core\Model_Datasource_Session::message(
+                'Error al procesar la respuesta automática: '.$response['body'],
+                'error'
+            );
+            $this->redirect(str_replace('probar_respuesta_automatica', 'ver', $this->request->getRequestUriDecoded()));
+        }
+        // Mostrar resultado codificándolo como JSON.
+        \sowerphp\core\Model_Datasource_Session::message(
+            'Respuesta automática recibida: ' . json_encode($response['body']),
+            'ok'
+        );
+        // Redireccionar.
+        $this->redirect(str_replace('probar_respuesta_automatica', 'ver', $this->request->getRequestUriDecoded()));
+    }
+
     /**
      * Acción que permite realizar una búsqueda avanzada dentro de los
      * documentos de intercambio.
