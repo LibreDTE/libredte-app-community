@@ -520,7 +520,7 @@ class Controller_DteIntercambios extends \Controller_App
         $this->redirect(str_replace('responder', 'ver', $this->request->getRequestUriDecoded()));
     }
 
-     /**
+    /**
      * Acción que procesa y responde al intercambio recibido.
      */
     public function probar_respuesta_automatica($codigo)
@@ -550,7 +550,7 @@ class Controller_DteIntercambios extends \Controller_App
         // procesar respuesta automática
         $response = $ApiDteIntercambioResponder->post(
             $ApiDteIntercambioResponder->url,
-            ['xml' => $this->archivo_xml]
+            ['xml' => $DteIntercambio->archivo_xml]
         );
         if ($response['status']['code'] != 200) {
             \sowerphp\core\Model_Datasource_Session::message(
