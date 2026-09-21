@@ -614,9 +614,9 @@ class Shell_Command_Documentos_EmitirMasivo extends \Shell_App
         // mensaje por consola con el resultado (mismo que se envía por email)
         $this->out("\n".$msg."\n");
         if ($Emisor->notificar($titulo, $msg, $Usuario->email, null, $file)) {
-            $this->out('Correo enviado al emisor con el resultado.'."\n");
+            $this->out('Correo enviado al emisor ' . $Usuario->email . ' con el resultado.'."\n");
         } else {
-            $this->out('No fue posible enviar el correo al emisor con el resultado.'."\n");
+            $this->out('No fue posible enviar el correo al emisor ' . $Usuario->email . ' con el resultado.'."\n");
         }
         // borrar archivo si existe
         if ($file) {
