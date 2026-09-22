@@ -58,10 +58,9 @@ class Shell_Command_DteEmitidos_Intercambio extends \Shell_App
         }
         $this->out('Enviando XML del DTE T'.$DteEmitido->dte.'F'.$DteEmitido->folio.' de '.$DteEmitido->getEmisor()->razon_social.' al correo '.$email);
         try {
-            $status = $DteEmitido->email();
-            if ($status !== true) {
-                $this->out('  [error] '.$status['message']);
-            }
+            // Si destinatario como primer argumento email() envía al correo
+            // de intercambio si está disponible.
+            $DteEmitido->email(); // Retorna los destinatarios ($to).
         } catch (\Exception $e) {
             $this->out('  [error] '.$e->getMessage());
         }
