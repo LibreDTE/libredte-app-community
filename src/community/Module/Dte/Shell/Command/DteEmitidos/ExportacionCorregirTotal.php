@@ -24,7 +24,7 @@
 namespace website\Dte;
 
 /**
- * Comando para actualizar la bandeja de intercambio de los contribuyentes.
+ * Comando para corregir el total en documentos de exportación.
  */
 class Shell_Command_DteEmitidos_ExportacionCorregirTotal extends \Shell_App
 {

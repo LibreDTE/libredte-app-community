@@ -50,14 +50,29 @@ class Shell_Command_DteEmitidos_Actualizar extends \Shell_App
 
     private function actualizarDocumentosEmitidos($rut, $certificacion, $creados_hace_horas, $retry)
     {
+        // Obtener el contribuyente.
         $Contribuyente = (new Model_Contribuyentes())->get($rut);
+
+        // Si el contribuyente es de otro ambiente al solicitado no se actualiza.
         if ($Contribuyente->enCertificacion() != (int)$certificacion) {
             return;
         }
+
+        // Verificar si el contribuyente tiene firma electrónica. La firma debe
+        // ser del usuario administrador del contribuyente. No sirve una firma
+        // se un usuario autorizado.
+        if (!$Contribuyente->getFirma()) {
+            throw new \Exception(
+                'El usuario administrador del contribuyente no tiene firma electrónica.'
+            );
+        }
+        $firmaSinPermisos = false;
+
         if ($this->verbose) {
             $this->out('Buscando documentos del contribuyente '.$Contribuyente->razon_social);
         }
-        // actualizar estado de DTE enviados
+
+        // Actualizar estado de DTE enviados.
         $documentos_rechazados = [];
         $sin_estado = $Contribuyente->getDteEmitidosSinEstado($certificacion);
         foreach ($sin_estado as $d) {
@@ -66,7 +81,10 @@ class Shell_Command_DteEmitidos_Actualizar extends \Shell_App
             }
             $DteEmitido = new Model_DteEmitido($Contribuyente->rut, $d['dte'], $d['folio'], $Contribuyente->enCertificacion());
             try {
+                // Actualizar el estado del DTE.
                 $DteEmitido->actualizarEstado();
+
+                // Si el DTE está rechazado, se agrega a la lista de documentos rechazados.
                 if ($DteEmitido->getEstado() == 'R') {
                     $documentos_rechazados[] = [
                         'dte' => $DteEmitido->dte,
@@ -75,8 +93,26 @@ class Shell_Command_DteEmitidos_Actualizar extends \Shell_App
                         'revision_detalle' => $DteEmitido->revision_detalle,
                     ];
                 }
+
                 if ($this->verbose) {
                     $this->out($DteEmitido->revision_estado);
+                }
+
+                // Si no fue posible obtener el estado del envío porque el
+                // usuario no tiene permisos en la empresa, se agrega a la lista
+                // de documentos rechazados. No significa que el documento esté
+                // rechazado, pero no se puede seguir intentando consultar los
+                // estados y el usuario deberá tomar una acción en el SII para
+                // resolver el problema de permisos.
+                if ($DteEmitido->revision_estado === '106 - Usuario no tiene permiso en empresa') {
+                    $documentos_rechazados[] = [
+                        'dte' => $DteEmitido->dte,
+                        'folio' => $DteEmitido->folio,
+                        'revision_estado' => $DteEmitido->revision_estado,
+                        'revision_detalle' => $DteEmitido->revision_detalle,
+                    ];
+                    $firmaSinPermisos = true;
+                    break;
                 }
             } catch (\Exception $e) {
                 if ($this->verbose) {
@@ -84,7 +120,8 @@ class Shell_Command_DteEmitidos_Actualizar extends \Shell_App
                 }
             }
         }
-        // se envía un solo correo con todos los documentos rechazados
+
+        // Se envía un solo correo con todos los documentos rechazados.
         if (!empty($documentos_rechazados)) {
             $n_documentos = num(count($documentos_rechazados));
             $msg = $Contribuyente->razon_social.','."\n\n";
@@ -96,7 +133,13 @@ class Shell_Command_DteEmitidos_Actualizar extends \Shell_App
             $msg .= 'Es URGENTE que revise este listado de documento(s) y el estado en '.url('/dte')."\n\n";
             $Contribuyente->notificar('Estado rechazado en SII en '.$n_documentos.' documentos(s)', $msg);
         }
-        // enviar lo generado sin track id
+
+        // Si la firma no tiene permisos no se trata de enviar documentos sin envío.
+        if ($firmaSinPermisos) {
+            return;
+        }
+
+        // Enviar lo generado sin Track ID.
         $sin_enviar = $Contribuyente->getDteEmitidosSinEnviar($certificacion, $creados_hace_horas);
         foreach ($sin_enviar as $d) {
             if ($this->verbose) {

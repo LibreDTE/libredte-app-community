@@ -1012,7 +1012,7 @@ class Model_DteEmitido extends Model_Base_Envio
 
     /**
      * Método que entrega el estado del envío del DTE al SII.
-     * @return string R: si es RSC, RCT, RCH, =null otros casos.
+     * @return string R: rechazado, N: no final, F: final. null si no hay estado.
      */
     public function getEstado(): ?string
     {
