@@ -774,13 +774,18 @@ class Controller_Documentos extends \Controller_App
             $dte['Encabezado']['IdDoc']['IndTraslado'] = $_POST['IndTraslado'];
             if (
                 !empty($_POST['Patente'])
+                || !empty($_POST['PatenteCarro'])
                 || !empty($_POST['RUTTrans'])
                 || (!empty($_POST['RUTChofer']) && !empty($_POST['NombreChofer']))
                 || !empty($_POST['DirDest'])
                 || !empty($_POST['CmnaDest'])
+                || !empty($_POST['FchSalida'])
+                || !empty($_POST['HraSalida'])
+                || !empty($_POST['FchLlegada'])
             ) {
                 $dte['Encabezado']['Transporte'] = [
                     'Patente' => !empty($_POST['Patente']) ? $_POST['Patente'] : false,
+                    'PatenteCarro' => !empty($_POST['PatenteCarro']) ? $_POST['PatenteCarro'] : false,
                     'RUTTrans' => !empty($_POST['RUTTrans']) ? str_replace('.', '', $_POST['RUTTrans']) : false,
                     'Chofer' => (!empty($_POST['RUTChofer']) && !empty($_POST['NombreChofer'])) ? [
                         'RUTChofer' => str_replace('.', '', $_POST['RUTChofer']),
@@ -791,6 +796,9 @@ class Controller_Documentos extends \Controller_App
                         ? (new \sowerphp\app\Sistema\General\DivisionGeopolitica\Model_Comuna($_POST['CmnaDest']))->comuna
                         : false
                     ,
+                    'FchSalida' => !empty($_POST['FchSalida']) ? $_POST['FchSalida'] : false,
+                    'HraSalida' => !empty($_POST['HraSalida']) ? preg_replace('/^(\d{2}:\d{2})$/', '$1:00', $_POST['HraSalida']) : false,
+                    'FchLlegada' => !empty($_POST['FchLlegada']) ? $_POST['FchLlegada'] : false,
                 ];
             }
         }

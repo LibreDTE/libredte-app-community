@@ -42,6 +42,8 @@ $(function() {
 });
 </script>
 <?php
+$popover_growup = ' <i class="fa fa-question-circle fa-fw text-muted" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="Haz doble clic en el campo para ampliarlo" onmouseover="$(this).popover(\'show\')" onmouseout="$(this).popover(\'hide\')"></i>';
+
 $f = new \sowerphp\general\View_Helper_Form(false);
         echo $f->begin(['id' => 'emitir_dte', 'action' => $_base.'/dte/documentos/previsualizacion', 'onsubmit' => 'DTE.check(this)']);
         // si es un documento temporal que se reemplaza se asignan los datos del documento
@@ -147,18 +149,29 @@ $f = new \sowerphp\general\View_Helper_Form(false);
         </div>
         <!-- DATOS DE TRANSPORTE EN CASO QUE SEA GUÍA DE DESPACHO -->
         <div id="datosTransporte" style="display:none">
-            <?php new \sowerphp\general\View_Helper_Table([
-                        ['Tipo de despacho o traslado', 'Dirección', 'Comuna', 'Transportista', 'Patente', 'RUT chofer', 'Nombre chofer'],
-                        [
-                            $f->input(['type' => 'select', 'name' => 'IndTraslado', 'options' => $IndTraslado, 'attr' => 'style="width:8em"', 'value' => !empty($datos['Encabezado']['IdDoc']['IndTraslado']) ? $datos['Encabezado']['IdDoc']['IndTraslado'] : '']),
-                            $f->input(['name' => 'DirDest', 'attr' => 'maxlength="70"', 'value' => !empty($datos['Encabezado']['Transporte']['DirDest']) ? $datos['Encabezado']['Transporte']['DirDest'] : '']),
-                            $f->input(['type' => 'select', 'name' => 'CmnaDest', 'options' => ['' => ''] + $comunas, 'attr' => 'style="width:7em"', 'value' => !empty($datos['Encabezado']['Transporte']['CmnaDest']) ? $datos['Encabezado']['Transporte']['CmnaDest'] : '']),
-                            $f->input(['name' => 'RUTTrans', 'placeholder' => '99.999.999-9', 'check' => 'rut', 'attr' => 'style="width:8em"', 'value' => !empty($datos['Encabezado']['Transporte']['RUTTrans']) ? $datos['Encabezado']['Transporte']['RUTTrans'] : '']),
-                            $f->input(['name' => 'Patente', 'attr' => 'maxlength="6" style="width:6em"', 'value' => !empty($datos['Encabezado']['Transporte']['Patente']) ? $datos['Encabezado']['Transporte']['Patente'] : '']),
-                            $f->input(['name' => 'RUTChofer', 'check' => 'rut', 'attr' => 'style="width:8em"', 'value' => !empty($datos['Encabezado']['Transporte']['RUTChofer']) ? $datos['Encabezado']['Transporte']['RUTChofer'] : '']),
-                            $f->input(['name' => 'NombreChofer', 'attr' => 'maxlength="30" style="width:8em"', 'value' => !empty($datos['Encabezado']['Transporte']['NombreChofer']) ? $datos['Encabezado']['Transporte']['NombreChofer'] : '']),
-                        ],
-                    ]); ?>
+<?php
+new \sowerphp\general\View_Helper_Table([
+    ['Tipo de despacho o traslado', 'Dirección'.$popover_growup, 'Comuna', 'Fecha salida', 'Hora salida', 'Fecha llegada'],
+    [
+        $f->input(['type' => 'select', 'name' => 'IndTraslado', 'options' => $IndTraslado, 'attr' => 'style="width:8em"', 'value' => !empty($datos['Encabezado']['IdDoc']['IndTraslado']) ? $datos['Encabezado']['IdDoc']['IndTraslado'] : '']),
+        $f->input(['name' => 'DirDest', 'attr' => 'maxlength="70"', 'value' => !empty($datos['Encabezado']['Transporte']['DirDest']) ? $datos['Encabezado']['Transporte']['DirDest'] : '', 'growup' => true]),
+        $f->input(['type' => 'select', 'name' => 'CmnaDest', 'options' => ['' => ''] + $comunas, 'attr' => 'style="width:7em"', 'value' => !empty($datos['Encabezado']['Transporte']['CmnaDest']) ? $datos['Encabezado']['Transporte']['CmnaDest'] : '']),
+        $f->input(['type' => 'date', 'name' => 'FchSalida', 'value' => !empty($datos['Encabezado']['Transporte']['FchSalida']) ? $datos['Encabezado']['Transporte']['FchSalida'] : '']),
+        $f->input(['type' => 'text', 'name' => 'HraSalida', 'value' => !empty($datos['Encabezado']['Transporte']['HraSalida']) ? substr($datos['Encabezado']['Transporte']['HraSalida'], 0, 5) : '', 'placeholder' => 'Ejemplo: ' . date('H:i')]),
+        $f->input(['type' => 'date', 'name' => 'FchLlegada', 'value' => !empty($datos['Encabezado']['Transporte']['FchLlegada']) ? $datos['Encabezado']['Transporte']['FchLlegada'] : '']),
+    ],
+]);
+new \sowerphp\general\View_Helper_Table([
+    ['Transportista', 'Patente', 'Patente carro', 'RUT chofer', 'Nombre chofer'.$popover_growup,],
+    [
+        $f->input(['name' => 'RUTTrans', 'placeholder' => '99.999.999-9', 'check' => 'rut', 'attr' => 'style="width:10em"', 'value' => !empty($datos['Encabezado']['Transporte']['RUTTrans']) ? $datos['Encabezado']['Transporte']['RUTTrans'] : '']),
+        $f->input(['name' => 'Patente', 'attr' => 'maxlength="6" style="width:6em"', 'value' => !empty($datos['Encabezado']['Transporte']['Patente']) ? $datos['Encabezado']['Transporte']['Patente'] : '']),
+        $f->input(['name' => 'PatenteCarro', 'attr' => 'maxlength="8" style="width:10em"', 'value' => !empty($datos['Encabezado']['Transporte']['PatenteCarro']) ? $datos['Encabezado']['Transporte']['PatenteCarro'] : '']),
+        $f->input(['name' => 'RUTChofer', 'check' => 'rut', 'attr' => 'style="width:10em"', 'value' => !empty($datos['Encabezado']['Transporte']['RUTChofer']) ? $datos['Encabezado']['Transporte']['RUTChofer'] : '']),
+        $f->input(['name' => 'NombreChofer', 'attr' => 'maxlength="30"', 'value' => !empty($datos['Encabezado']['Transporte']['NombreChofer']) ? $datos['Encabezado']['Transporte']['NombreChofer'] : '', 'growup' => true]),
+    ],
+]);
+?>
         </div>
     </div>
 </div>
@@ -196,76 +209,75 @@ $f = new \sowerphp\general\View_Helper_Form(false);
         <!--<div class="table-responsive">-->
         <div>
 <?php
-        $popover_growup = ' <i class="fa fa-question-circle fa-fw text-muted" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="Haz doble clic en el campo para ampliarlo" onmouseover="$(this).popover(\'show\')" onmouseout="$(this).popover(\'hide\')"></i>';
-        $titles = [
-            'Código',
-            'Nombre'.$popover_growup,
-            'Detalle'.$popover_growup,
-            ['Exento', '4em'],
-            'Cant.',
-            'Unidad',
-            'P. Unitario <i class="fa fa-question-circle fa-fw text-muted" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="Precio unitario y neto del item" onmouseover="$(this).popover(\'show\')" onmouseout="$(this).popover(\'hide\')"></i>',
-            'Desc.',
-            ['% / $', '4em'],
-        ];
-        if ($Emisor->config_extra_impuestos_adicionales) {
-            $titles[] = ['A / R', '6em'];
-        }
-        $titles[] = 'Subtotal';
-        $inputs = [
-            ['name' => 'VlrCodigo', 'attr' => 'maxlength="35" style="text-align:center;width:5em" onblur="DTE.setItem('.$Emisor->rut.', this)" autocomplete="off"', 'class' => 'typeahead', 'check' => ($Emisor->config_emision_solo_items_codificados ? 'notempty' : false)],
-            ['name' => 'NmbItem', 'attr' => 'maxlength="80"'.($Emisor->config_emision_solo_items_codificados ? ' readonly="readonly"' : ''), 'growup' => true],
-            ['name' => 'DscItem', 'attr' => 'maxlength="1000"', 'growup' => true],
-            ['name' => 'IndExe', 'type' => 'select', 'options' => ['No', 'Si', 'NF'], 'onblur' => 'DTE.calcular()', 'value' => (int)$Emisor->config_extra_exenta],
-            ['name' => 'QtyItem', 'value' => 1, 'attr' => 'maxlength="19" style="text-align:center;width:4em" onblur="DTE.calcular()"'],
-            ['name' => 'UnmdItem', 'attr' => 'maxlength="4" style="width:5em"'],
-            ['name' => 'PrcItem', 'attr' => 'maxlength="12" style="text-align:center;width:7em" onblur="DTE.calcular()"'.($Emisor->config_emision_solo_items_codificados ? ' readonly="readonly"' : '')],
-            ['name' => 'ValorDR', 'value' => 0, 'attr' => 'maxlength="12" style="text-align:center;width:5em" onblur="DTE.calcular()"'],
-            ['name' => 'TpoValor', 'type' => 'select', 'options' => ['%' => '%','$' => '$'], 'onblur' => 'DTE.calcular()'],
-        ];
-        if ($Emisor->config_extra_impuestos_adicionales) {
-            $inputs[] = ['name' => 'CodImpAdic', 'type' => 'select', 'options' => ['' => 'Sin impuesto adicional ni retención'] + $impuesto_adicionales, 'onblur' => 'DTE.calcular()'];
-        }
-        $inputs[] = ['name' => 'subtotal', 'value' => 0, 'attr' => 'readonly="readonly" style="text-align:center;width:7em"'];
-        $input_detalle = [
-            'type' => 'js',
-            'id' => 'detalle',
-            'label' => 'Detalle',
-            'titles' => $titles,
-            'inputs' => $inputs,
-            'accesskey' => 'I',
-            'callback' => 'item_nuevo',
-        ];
-        if (isset($datos)) {
-            $Detalle = $datos['Detalle'];
-            if (!isset($Detalle[0])) {
-                $Detalle = [$Detalle];
+$titles = [
+    'Código',
+    'Nombre'.$popover_growup,
+    'Detalle'.$popover_growup,
+    ['Exento', '4em'],
+    'Cant.',
+    'Unidad',
+    'P. Unitario <i class="fa fa-question-circle fa-fw text-muted" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="Precio unitario y neto del item" onmouseover="$(this).popover(\'show\')" onmouseout="$(this).popover(\'hide\')"></i>',
+    'Desc.',
+    ['% / $', '4em'],
+];
+if ($Emisor->config_extra_impuestos_adicionales) {
+    $titles[] = ['A / R', '6em'];
+}
+$titles[] = 'Subtotal';
+$inputs = [
+    ['name' => 'VlrCodigo', 'attr' => 'maxlength="35" style="text-align:center;width:5em" onblur="DTE.setItem('.$Emisor->rut.', this)" autocomplete="off"', 'class' => 'typeahead', 'check' => ($Emisor->config_emision_solo_items_codificados ? 'notempty' : false)],
+    ['name' => 'NmbItem', 'attr' => 'maxlength="80"'.($Emisor->config_emision_solo_items_codificados ? ' readonly="readonly"' : ''), 'growup' => true],
+    ['name' => 'DscItem', 'attr' => 'maxlength="1000"', 'growup' => true],
+    ['name' => 'IndExe', 'type' => 'select', 'options' => ['No', 'Si', 'NF'], 'onblur' => 'DTE.calcular()', 'value' => (int)$Emisor->config_extra_exenta],
+    ['name' => 'QtyItem', 'value' => 1, 'attr' => 'maxlength="19" style="text-align:center;width:4em" onblur="DTE.calcular()"'],
+    ['name' => 'UnmdItem', 'attr' => 'maxlength="4" style="width:5em"'],
+    ['name' => 'PrcItem', 'attr' => 'maxlength="12" style="text-align:center;width:7em" onblur="DTE.calcular()"'.($Emisor->config_emision_solo_items_codificados ? ' readonly="readonly"' : '')],
+    ['name' => 'ValorDR', 'value' => 0, 'attr' => 'maxlength="12" style="text-align:center;width:5em" onblur="DTE.calcular()"'],
+    ['name' => 'TpoValor', 'type' => 'select', 'options' => ['%' => '%','$' => '$'], 'onblur' => 'DTE.calcular()'],
+];
+if ($Emisor->config_extra_impuestos_adicionales) {
+    $inputs[] = ['name' => 'CodImpAdic', 'type' => 'select', 'options' => ['' => 'Sin impuesto adicional ni retención'] + $impuesto_adicionales, 'onblur' => 'DTE.calcular()'];
+}
+$inputs[] = ['name' => 'subtotal', 'value' => 0, 'attr' => 'readonly="readonly" style="text-align:center;width:7em"'];
+$input_detalle = [
+    'type' => 'js',
+    'id' => 'detalle',
+    'label' => 'Detalle',
+    'titles' => $titles,
+    'inputs' => $inputs,
+    'accesskey' => 'I',
+    'callback' => 'item_nuevo',
+];
+if (isset($datos)) {
+    $Detalle = $datos['Detalle'];
+    if (!isset($Detalle[0])) {
+        $Detalle = [$Detalle];
+    }
+    $detalle = [];
+    foreach ($Detalle as $d) {
+        if ($datos['Encabezado']['IdDoc']['TipoDTE'] == 39 && (!isset($d['IndExe']) || !$d['IndExe'])) {
+            $d['PrcItem'] = round($d['PrcItem'] / (1 + (\sasco\LibreDTE\Sii::getIVA()) / 100), (int)$Emisor->config_items_decimales);
+            if (!empty($d['DescuentoMonto'])) {
+                $d['DescuentoMonto'] = round($d['DescuentoMonto'] / (1 + (\sasco\LibreDTE\Sii::getIVA()) / 100));
             }
-            $detalle = [];
-            foreach ($Detalle as $d) {
-                if ($datos['Encabezado']['IdDoc']['TipoDTE'] == 39 && (!isset($d['IndExe']) || !$d['IndExe'])) {
-                    $d['PrcItem'] = round($d['PrcItem'] / (1 + (\sasco\LibreDTE\Sii::getIVA()) / 100), (int)$Emisor->config_items_decimales);
-                    if (!empty($d['DescuentoMonto'])) {
-                        $d['DescuentoMonto'] = round($d['DescuentoMonto'] / (1 + (\sasco\LibreDTE\Sii::getIVA()) / 100));
-                    }
-                }
-                $detalle[] = [
-                    'VlrCodigo' => isset($d['CdgItem']['VlrCodigo']) ? $d['CdgItem']['VlrCodigo'] : '',
-                    'NmbItem' => isset($d['NmbItem']) ? $d['NmbItem'] : '',
-                    'DscItem' => isset($d['DscItem']) ? $d['DscItem'] : '',
-                    'IndExe' => empty($d['IndExe']) ? 0 : (int)$d['IndExe'],
-                    'QtyItem' => isset($d['QtyItem']) ? $d['QtyItem'] : '',
-                    'UnmdItem' => isset($d['UnmdItem']) ? $d['UnmdItem'] : '',
-                    'PrcItem' => isset($d['PrcItem']) ? $d['PrcItem'] : '',
-                    'ValorDR' => (float)(!empty($d['DescuentoPct']) ? $d['DescuentoPct'] : (!empty($d['DescuentoMonto']) ? $d['DescuentoMonto'] : 0)),
-                    'TpoValor' => !empty($d['DescuentoPct']) ? '%' : (!empty($d['DescuentoMonto']) ? '$' : '%'),
-                    'CodImpAdic' => isset($d['CodImpAdic']) ? $d['CodImpAdic'] : '',
-                ];
-            }
-            $input_detalle['values'] = $detalle;
         }
-        echo $f->input($input_detalle);
-        ?>
+        $detalle[] = [
+            'VlrCodigo' => isset($d['CdgItem']['VlrCodigo']) ? $d['CdgItem']['VlrCodigo'] : '',
+            'NmbItem' => isset($d['NmbItem']) ? $d['NmbItem'] : '',
+            'DscItem' => isset($d['DscItem']) ? $d['DscItem'] : '',
+            'IndExe' => empty($d['IndExe']) ? 0 : (int)$d['IndExe'],
+            'QtyItem' => isset($d['QtyItem']) ? $d['QtyItem'] : '',
+            'UnmdItem' => isset($d['UnmdItem']) ? $d['UnmdItem'] : '',
+            'PrcItem' => isset($d['PrcItem']) ? $d['PrcItem'] : '',
+            'ValorDR' => (float)(!empty($d['DescuentoPct']) ? $d['DescuentoPct'] : (!empty($d['DescuentoMonto']) ? $d['DescuentoMonto'] : 0)),
+            'TpoValor' => !empty($d['DescuentoPct']) ? '%' : (!empty($d['DescuentoMonto']) ? '$' : '%'),
+            'CodImpAdic' => isset($d['CodImpAdic']) ? $d['CodImpAdic'] : '',
+        ];
+    }
+    $input_detalle['values'] = $detalle;
+}
+echo $f->input($input_detalle);
+?>
         </div>
     </div>
     <div class="card-footer text-muted small">
